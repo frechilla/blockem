@@ -1,0 +1,59 @@
+
+Blockem package
+===============
+
+This is a package that contains the latest version of the game Blockem.
+Blockem is a strategy board game based on the well-known game blokus (R)
+
+Currently it only supports 1vs1 mode to be played against the computer (which
+has a bit of AI). It's still a very early release but it's a fully functional
+package (with a lot of improvement to be done)
+
+This is the URL of the project, where you'll be able to find much more than
+what is written in this README:
+
+http://sourceforge.net/projects/blockem
+
+Any query, please contact frechilla@gmail.com. I'll be glad to help.
+
+
+Documentation
+-------------
+
+There's not much documentation about this project yet, but there should be more
+information online than there is in this README file. You should find the most 
+updated version of the source code along with some documentation and help.
+
+
+Building and installing
+-----------------------
+
+Blockem has been developed using OS independent C++ and GTKmm (the C++ version
+of GTK+) to build the GUI. It *should* compile in every platform where GTKmm
+has been ported, but it has only been tested in linux so far. You'll need the
+following libraries to be able to compile this package:
+ * gtkmm-2.4
+ * glademm-2.4
+ 
+ In a Debian based system (i.e. ubuntu) Try to install the following packages:
+  * libgtkmm-2.4-dev
+  * libglademm-2.4-dev
+ 
+ Once those libraries are present in your system untar the package, cd into it,
+ and run from the root of the package 'make'. After the compiling process is
+ finished you'll see a binary called 'blockem' which contains the program.
+ 
+ At the moment the program expects the pixmaps in a directory called ./pixmaps
+ where . is the directory where blockem is being run. The images won't be 
+ loaded correctly if the directory pixmaps is not found. Everything else will
+ work as expected
+ 
+ 
+ Developers
+ ----------
+ 
+ I haven't had enough time to build the doxygen documentation for the project,
+ but I tried to document a lot in code using the doxygen standard. There will
+ be (at some point) a small introduction to the project, including some class 
+ diagrams to explain the system easily for whoever wants to participate (or
+ whoever is curious enough to know what is going on in this project)
