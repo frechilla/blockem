@@ -42,9 +42,9 @@
 #include "Heuristic.h"
 
 // needed to load the gui into the application. See big comment in gui.h
-extern const char _binary_src_gui_gui_glade_start[];
-extern const char _binary_src_gui_gui_glade_end[];
-extern int _binary_src_gui_gui_glade_size[];
+extern const char _binary_gui_glade_start[];
+extern const char _binary_gui_glade_end[];
+extern int _binary_gui_glade_size[];
 
 int main(int argc, char **argv)
 {
@@ -56,8 +56,8 @@ int main(int argc, char **argv)
     try
     {
         refXml = Gnome::Glade::Xml::create_from_buffer(
-                reinterpret_cast<const char *>(_binary_src_gui_gui_glade_start),
-                reinterpret_cast<long int>(_binary_src_gui_gui_glade_size),
+                reinterpret_cast<const char *>(_binary_gui_glade_start),
+                reinterpret_cast<long int>(_binary_gui_glade_size),
                 "",
                 "");
     }
@@ -69,8 +69,8 @@ int main(int argc, char **argv)
 #else
     std::auto_ptr<Gnome::Glade::XmlError> error;
     refXml = Gnome::Glade::Xml::create_from_buffer(
-            reinterpret_cast<const char *>(_binary_src_gui_gui_glade_start),
-            reinterpret_cast<long int>(_binary_src_gui_gui_glade_size),
+            reinterpret_cast<const char *>(_binary_gui_glade_start),
+            reinterpret_cast<long int>(_binary_gui_glade_size),
             "",
             "",
             error);
