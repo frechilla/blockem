@@ -2,10 +2,18 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.64])
-AC_INIT([blockem], [0.1], [frechilla@gmail.com])
-AM_INIT_AUTOMAKE(blockem, 0.1)
-AC_CONFIG_SRCDIR([src/main.cpp])
+
+m4_define([MAJOR_VERSION], 0)
+m4_define([MINOR_VERSION], 1)
+m4_define([MICRO_VERSION], 0)
+
+define([svnversion], esyscmd([sh -c "svnversion|tr -d '\n'"]))
+
+AC_INIT([blockem], [MAJOR_VERSION.MINOR_VERSION.MICRO_VERSION], [frechilla -at- gmail -dot- com])
+AM_INIT_AUTOMAKE(blockem, [MAJOR_VERSION.MINOR_VERSION.MICRO_VERSION])
+AC_CONFIG_SRCDIR([src/Player.cpp])
 AC_CONFIG_HEADERS([config.h])
+AC_DEFINE(SVN_REVISION, "svnversion", [SVN Revision])
 
 # Checks for programs.
 AC_PROG_CXX
@@ -40,7 +48,18 @@ AC_TYPE_UINT8_T
 
 # Checks for library functions.
 
+USER_CFLAGS=
+CXXFLAGS="-Wall -O3 -g3 -DNDEBUG"
+
+AC_ARG_ENABLE(debug,
+    AC_HELP_STRING([--enable-debug], [Enable debugging code]),
+    [ if test x$enableval = xyes; then
+        debug=yes
+        CXXFLAGS="${USER_CFLAGS} -Wall -O0 -ggdb -DDEBUG"
+    fi])
+
 AC_OUTPUT([
 Makefile
 src/Makefile
+src/tests/Makefile
 ])

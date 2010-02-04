@@ -42,16 +42,15 @@ tested in ubuntu 9.10:
  * libglademm-2.4-dev
  
 Once those libraries are present in your system untar the package, cd into it,
-and run the famous ./configure && make. Once the compiling process is done
-you'll see a binary called 'blockem' in the directory src/. That is the 
-program you were looking for.
+and run the famous ./configure && make. && make install.
+Once the compiling process is done you'll be able to run a binary called 
+'blockem' which should be installed in the default binary directory (normally
+something like /usr/local/bin or /usr/bin). The installation process also
+creates a data directory in a default location (normally /usr/local/share or
+/usr/share) where the pixmaps and other program resources are stored.
  
-At the moment the program expects the pixmaps in a directory called ./pixmaps
-(. is the directory where blockem is being run). So if you didn't change 
-anything after the `configure && make` process was finished try to run the
-program like this: 
-
-$ ./src/blockem
+To run the app just open up a terminal and run:
+$ blockem
 
 The images should be loaded correctly. If it doesn't happen, do not worry (and
 be happy), everything else will work as expected, but the app will be a bit

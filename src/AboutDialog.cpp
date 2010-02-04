@@ -50,7 +50,8 @@ AboutDialog::AboutDialog(Glib::RefPtr<Gnome::Glade::Xml> a_refXml) throw (GUIExc
     {
         picture.reset();
        std::cerr
-           << "WARNING: Exception occurred when setting the logo into the AboutDialog. Using default..."
+           << "WARNING: Exception occurred when setting the logo into the AboutDialog from "
+           << GUI_PATH_TO_LOGO
            << std::endl;
     }
     if (picture)
@@ -67,7 +68,8 @@ AboutDialog::AboutDialog(Glib::RefPtr<Gnome::Glade::Xml> a_refXml) throw (GUIExc
     {
         picture.reset();
        std::cerr
-           << "WARNING: Exception occurred when setting the 16x16 icon into the AboutDialog"
+           << "WARNING: Exception occurred when setting the 16x16 icon into the AboutDialog from "
+           << GUI_PATH_TO_16PICTURE
            << std::endl;
     }
     if (picture)

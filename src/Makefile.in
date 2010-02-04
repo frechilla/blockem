@@ -170,11 +170,16 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 INCLUDES = -I$(srcdir)
-AM_CXXFLAGS = $(GTKMM_CFLAGS) $(GLADEMM_CFLAGS)
-CLEANFILES = gui_glade_obj.o
+AM_CXXFLAGS = $(GTKMM_CFLAGS) $(GLADEMM_CFLAGS) -DDATADIR=\"$(datadir)/blockem\"
+AM_LDFLAGS = -lpthread
 blockem_DEPENDENCIES = gui_glade_obj.o
 blockem_LDADD = gui_glade_obj.o $(GTKMM_LIBS) $(GLADEMM_LIBS)
+CLEANFILES = gui_glade_obj.o compiletime.h
+EXTRA_DIST = \
+gui.glade
+
 blockem_SOURCES = \
+compiletime.h \
 Board.cpp \
 Board.h \
 Coordinate.h \
@@ -512,6 +517,11 @@ gui_glade_obj.o: gui.glade
 	@echo 'turn the xml gui file into an object file to be embedded into the final binary'
 	ld -r -b binary -o $@ $<
 	objcopy --rename-section .data=.rodata,alloc,load,readonly,data,contents $@ $@
+	@echo ' '
+
+compiletime.h:
+	@echo "Saving the current date into compiletime.h"
+	date '+#define COMPILETIME "%x %X"' > compiletime.h
 	@echo ' '
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

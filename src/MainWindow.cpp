@@ -103,7 +103,8 @@ MainWindow::MainWindow(
     {
         icon.reset();
        std::cerr
-           << "WARNING: Exception occurred when setting the 16x16 icon into the Main Window"
+           << "WARNING: Exception occurred when setting the 16x16 icon into the Main Window from "
+           << GUI_PATH_TO_16PICTURE
            << std::endl;
     }
     if (icon)

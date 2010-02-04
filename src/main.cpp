@@ -34,7 +34,11 @@
 #include <fstream>
 #include <libglademm/xml.h>
 #include <gtkmm.h>
+#include "config.h" // autotools header file
 #include "assert.h"
+
+// header file created during the make process which saves the current date
+#include "compiletime.h"
 
 #include "MainWindow.h"
 #include "Game1v1.h"
@@ -46,8 +50,54 @@ extern const char _binary_gui_glade_start[];
 extern const char _binary_gui_glade_end[];
 extern int _binary_gui_glade_size[];
 
+/// @brief parse the command line arguments
+/// @return 0 if the command line arguments were correct but the execution is finished
+///         >0 if the command line arguments were correct and the execution has to continue
+///         <0 if the command line arguments were not correct, so the execution is finished
+int parseCommandLine(int argc, char** argv)
+{
+    //TODO this should be done using some library when it gets more complicated.
+    // have a look at boost::program_options::options_description
+
+    if (argc > 2)
+    {
+        std::cout << argv[0] << ": unrecognized options. Try: " << argv[0] << " --help" << std::endl;
+        return -1;
+    }
+    else if (argc == 2)
+    {
+        if ((strcmp(argv[1], "--version") == 0) || (strcmp(argv[1], "-v") == 0))
+        {
+            std::cout << "Blockem, version " << VERSION << " (r" << SVN_REVISION << ")" << std::endl;
+            std::cout << "  Compiled " << COMPILETIME << std::endl << std::endl;
+            std::cout << "Copyright (C) Faustino Frechilla" << std::endl;
+            std::cout << "Blockem is open source software, see http://sourceforge.net/projects/blockem" << std::endl;
+
+            return 0;
+        }
+        else if((strcmp(argv[1], "--help") == 0) || (strcmp(argv[1], "-h") == 0))
+        {
+            std::cout << "usage: " << argv[0] << " [OPTION]" << std::endl << std::endl;
+            std::cout << "  -v, --version     prints the current version of the software and exists" << std::endl;
+            std::cout << "  -h, --help        prints this help text and exists" << std::endl;
+
+            return 0;
+        }
+
+        return -1;
+    }
+
+    return 1;
+}
+
 int main(int argc, char **argv)
 {
+    int rv = parseCommandLine(argc, argv);
+    if (rv <= 0)
+    {
+        return rv;
+    }
+
     //////////////////
     // GUI
     Gtk::Main kit(argc, argv);
