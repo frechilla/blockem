@@ -1,0 +1,14 @@
+This is a sketch of an organized TODO document. There are a couple of very
+basic things that need to be done:
+
+ + Options in menu Game and View should do something. This shoulod be pretty 
+   straight-forward
+ + Those ugly buttons that represent pieces should be changed by actual pieces
+ + Opponent's (computer's) pieces should be shown at all times (as well as the
+   score)
+ + Lots of calculation time is being wasted now. The decission tree should be
+   calculated and kept in memory, and even updated while the human player is
+   thinking (normally the uman player takes longer than the computer to "think"
+   the next move)
+ + The GUI code is horrible. It really needs a refactoring
+ + It should be possible to generate doxygen. Add it to the makefiles

@@ -2741,7 +2741,7 @@ am__tar='${AMTAR} chof - "$$tardir"'; am__untar='${AMTAR} xf -'
 ac_config_headers="$ac_config_headers config.h"
 
 
-$as_echo "#define SVN_REVISION \"102\"" >>confdefs.h
+$as_echo "#define SVN_REVISION \"103M\"" >>confdefs.h
 
 
 # Checks for programs.
@@ -5219,7 +5219,7 @@ if test "${enable_debug+set}" = set; then :
 fi
 
 
-ac_config_files="$ac_config_files Makefile src/Makefile src/tests/Makefile"
+ac_config_files="$ac_config_files Makefile src/Makefile src/tests/Makefile doc/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -5936,6 +5936,7 @@ do
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
     "src/tests/Makefile") CONFIG_FILES="$CONFIG_FILES src/tests/Makefile" ;;
+    "doc/Makefile") CONFIG_FILES="$CONFIG_FILES doc/Makefile" ;;
 
   *) as_fn_error "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac

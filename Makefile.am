@@ -1,6 +1,6 @@
 AUTOMAKE_OPTIONS = foreign
 # SUBDIRS = src doc examples man scripts
-SUBDIRS = src src/tests
+SUBDIRS = src src/tests doc
 
 # other stuff to be distributed without compiling
 EXTRA_DIST = \
