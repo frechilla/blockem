@@ -30,7 +30,7 @@
 #ifndef MAINWINDOWWORKERTHREAD_H_
 #define MAINWINDOWWORKERTHREAD_H_
 
-#include <pthread.h>
+#include <glib.h>             // glib-2.0/glib.h
 #include <sigc++/trackable.h> // sigc++-2.0/sigc++
 #include <sigc++/signal.h>    // sigc++-2.0/sigc++
 #include "Game1v1.h"
@@ -93,11 +93,11 @@ private:
     bool m_terminate;
 
     /// the actual thread
-    pthread_t m_thread;
+    GThread* m_thread;
     /// Mutex to protect the queue
-    pthread_mutex_t m_mutex;
+    GMutex* m_mutex;
     /// Conditional variable to wake up threads
-    pthread_cond_t  m_cond;
+    GCond* m_cond;
 
     /// signal to be sent when the computing is finished
     sigc::signal<void, const Piece&, const Coordinate&, int32_t> m_signal_computingFinished;

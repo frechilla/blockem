@@ -598,6 +598,8 @@ LIBOBJS
 EGREP
 GREP
 CPP
+GTHREAD_LIBS
+GTHREAD_CFLAGS
 GLADEMM_LIBS
 GLADEMM_CFLAGS
 GTKMM_LIBS
@@ -710,6 +712,8 @@ GTKMM_CFLAGS
 GTKMM_LIBS
 GLADEMM_CFLAGS
 GLADEMM_LIBS
+GTHREAD_CFLAGS
+GTHREAD_LIBS
 CPP'
 
 
@@ -1348,6 +1352,10 @@ Some influential environment variables:
               C compiler flags for GLADEMM, overriding pkg-config
   GLADEMM_LIBS
               linker flags for GLADEMM, overriding pkg-config
+  GTHREAD_CFLAGS
+              C compiler flags for GTHREAD, overriding pkg-config
+  GTHREAD_LIBS
+              linker flags for GTHREAD, overriding pkg-config
   CPP         C preprocessor
 
 Use these variables to override the choices made by `configure' or to help
@@ -2741,7 +2749,7 @@ am__tar='${AMTAR} chof - "$$tardir"'; am__untar='${AMTAR} xf -'
 ac_config_headers="$ac_config_headers config.h"
 
 
-$as_echo "#define SVN_REVISION \"9\"" >>confdefs.h
+$as_echo "#define SVN_REVISION \"107M\"" >>confdefs.h
 
 
 # Checks for programs.
@@ -4571,6 +4579,98 @@ else
 $as_echo "yes" >&6; }
 	:
 fi
+
+pkg_failed=no
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for GTHREAD" >&5
+$as_echo_n "checking for GTHREAD... " >&6; }
+
+if test -n "$PKG_CONFIG"; then
+    if test -n "$GTHREAD_CFLAGS"; then
+        pkg_cv_GTHREAD_CFLAGS="$GTHREAD_CFLAGS"
+    else
+        if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gthread-2.0 >= 1.0.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "gthread-2.0 >= 1.0.0") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_GTHREAD_CFLAGS=`$PKG_CONFIG --cflags "gthread-2.0 >= 1.0.0" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+    fi
+else
+	pkg_failed=untried
+fi
+if test -n "$PKG_CONFIG"; then
+    if test -n "$GTHREAD_LIBS"; then
+        pkg_cv_GTHREAD_LIBS="$GTHREAD_LIBS"
+    else
+        if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gthread-2.0 >= 1.0.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "gthread-2.0 >= 1.0.0") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_GTHREAD_LIBS=`$PKG_CONFIG --libs "gthread-2.0 >= 1.0.0" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+    fi
+else
+	pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        GTHREAD_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "gthread-2.0 >= 1.0.0"`
+        else
+	        GTHREAD_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "gthread-2.0 >= 1.0.0"`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$GTHREAD_PKG_ERRORS" >&5
+
+	as_fn_error "Package requirements (gthread-2.0 >= 1.0.0) were not met:
+
+$GTHREAD_PKG_ERRORS
+
+Consider adjusting the PKG_CONFIG_PATH environment variable if you
+installed software in a non-standard prefix.
+
+Alternatively, you may set the environment variables GTHREAD_CFLAGS
+and GTHREAD_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+" "$LINENO" 5
+elif test $pkg_failed = untried; then
+	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error "The pkg-config script could not be found or is too old.  Make sure it
+is in your PATH or set the PKG_CONFIG environment variable to the full
+path to pkg-config.
+
+Alternatively, you may set the environment variables GTHREAD_CFLAGS
+and GTHREAD_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+
+To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+See \`config.log' for more details." "$LINENO" 5; }
+else
+	GTHREAD_CFLAGS=$pkg_cv_GTHREAD_CFLAGS
+	GTHREAD_LIBS=$pkg_cv_GTHREAD_LIBS
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+	:
+fi
+
+
 
 
 

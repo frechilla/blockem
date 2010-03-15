@@ -27,21 +27,30 @@
 ///
 // ============================================================================
 
+//TODO iostream should go away once gthreads are handled correctly
+#include <iostream>
 #include "MainWindowWorkerThread.h"
 
 MainWindowWorkerThread::MainWindowWorkerThread():
         m_localGame(),
         m_localLatestPiece(e_noPiece),
         m_computeNextMove(false),
-        m_terminate(false)
+        m_terminate(false),
+        m_thread(NULL),
+        m_mutex(NULL),
+        m_cond(NULL)
 {
-    if (pthread_mutex_init(&m_mutex, NULL) != 0)
+    m_mutex = g_mutex_new();
+    if (m_mutex == NULL)
     {
+        std::cerr << "Mutex in worker thread couldn't be initialised" << std::endl;
         assert(0);
     }
 
-    if (pthread_cond_init(&m_cond, NULL) != 0)
+    m_cond = g_cond_new();
+    if (m_cond == NULL)
     {
+        std::cerr << "Conditional variable in worker thread couldn't be initialised" << std::endl;
         assert(0);
     }
 
@@ -50,60 +59,68 @@ MainWindowWorkerThread::MainWindowWorkerThread():
 
 MainWindowWorkerThread::~MainWindowWorkerThread()
 {
-    pthread_cond_destroy(&m_cond);
-    pthread_mutex_destroy(&m_mutex);
+    g_cond_free(m_cond);
+    g_mutex_free(m_mutex);
 }
 
 void MainWindowWorkerThread::SpawnThread()
 {
-    pthread_attr_t attr;
-    pthread_attr_init(&attr);
-    // add the option JOINABLE to the attribute struct
-    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
+    // configure the option JOINABLE to the thread creation
+    bool joinable = true;
+    GError* err   = NULL;
 
-    if (pthread_create(
-            &m_thread,
-            &attr,
-            MainWindowWorkerThread::ThreadRoutine,
-            reinterpret_cast<void*>(this)) != 0)
+//    GThread * g_thread_create  ( GThreadFunc func,
+//                                 gpointer data,
+//                                 gboolean joinable,
+//                                 GError **error);
+    m_thread = g_thread_create(
+            reinterpret_cast<GThreadFunc>(MainWindowWorkerThread::ThreadRoutine),
+            reinterpret_cast<void*>(this),
+            joinable,
+            &err);
+
+    if (m_thread == NULL)
     {
+        std::cerr << "Worker Thread creation failed. System won't work as expected" << std::endl;
+        std::cerr << "    " << err->message << std::endl;
+        g_error_free(err) ;
         assert(0);
     }
 }
 
 bool MainWindowWorkerThread::Join()
 {
-    void* dataReturned;
-
-    pthread_mutex_lock(&m_mutex);
+    g_mutex_lock(m_mutex);
 
     m_terminate = true;
 
     // wake up the worker thread to exit the ThreadRoutine
-    pthread_cond_broadcast(&m_cond);
+    g_cond_broadcast(m_cond);
 
-    pthread_mutex_unlock(&m_mutex);
+    g_mutex_unlock(m_mutex);
 
-    if (pthread_join(m_thread, &dataReturned) != 0)
-    {
-        return false;
-    }
+    void* dataReturned;
+    dataReturned = g_thread_join(m_thread);
 
     return true;
 }
 
 void MainWindowWorkerThread::Terminate()
 {
-    pthread_cancel(m_thread);
+    //pthread_cancel(m_thread);
+    //TODO No cancelling available in gthreads
+    // There should be a way to notify the worker thread to stop calculating the next move
+    // look inside the Game1v1 class
+    std::cerr << "GThreads can't be cancelled. This call should be deleted at some point" << std::endl;
 }
 
 bool MainWindowWorkerThread::IsThreadComputingMove()
 {
     bool rv;
 
-    pthread_mutex_lock(&m_mutex);
+    g_mutex_lock(m_mutex);
     rv = m_computeNextMove;
-    pthread_mutex_unlock(&m_mutex);
+    g_mutex_unlock(m_mutex);
 
     return rv;
 }
@@ -115,7 +132,7 @@ bool MainWindowWorkerThread::ComputeMove(
 {
     bool rv = false;
 
-    pthread_mutex_lock(&m_mutex);
+    g_mutex_lock(m_mutex);
     if (m_computeNextMove == false)
     {
         // copy the 1v1Game, latest piece (and coord) put down by the opponent
@@ -133,10 +150,10 @@ bool MainWindowWorkerThread::ComputeMove(
     if (rv == true)
     {
         // wake up the worker thread to start computing the next move
-        pthread_cond_broadcast(&m_cond);
+        g_cond_broadcast(m_cond);
     }
 
-    pthread_mutex_unlock(&m_mutex);
+    g_mutex_unlock(m_mutex);
 
     return rv;
 }
@@ -156,13 +173,12 @@ void* MainWindowWorkerThread::ThreadRoutine(void *a_ThreadParam)
     bool terminate = false;
     while (terminate == false)
     {
-        pthread_mutex_lock(&thisThread->m_mutex);
+        g_mutex_lock(thisThread->m_mutex);
 
-        int32_t retcode;
         while ( (thisThread->m_terminate == false) &&
                 (thisThread->m_computeNextMove == false) )
         {
-            retcode = pthread_cond_wait(&thisThread->m_cond, &thisThread->m_mutex);
+            g_cond_wait(thisThread->m_cond, thisThread->m_mutex);
         }
 
         // save the protected variables into a temporary one
@@ -170,7 +186,7 @@ void* MainWindowWorkerThread::ThreadRoutine(void *a_ThreadParam)
         terminate   = thisThread->m_terminate;
 
         // get out of the mutex
-        pthread_mutex_unlock(&thisThread->m_mutex);
+        g_mutex_unlock(thisThread->m_mutex);
 
         if ( doMove && (terminate == false) )
         {
@@ -212,9 +228,9 @@ void* MainWindowWorkerThread::ThreadRoutine(void *a_ThreadParam)
                       (resultPiece.GetType() != e_noPiece) );
 
             // the move has been calculated. Update the variable accordingly
-            pthread_mutex_lock(&thisThread->m_mutex);
+            g_mutex_lock(thisThread->m_mutex);
             thisThread->m_computeNextMove = false;
-            pthread_mutex_unlock(&thisThread->m_mutex);
+            g_mutex_unlock(thisThread->m_mutex);
         }
     }
 

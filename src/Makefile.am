@@ -4,14 +4,17 @@ bin_PROGRAMS = blockem
 
 INCLUDES = -I$(srcdir)
 
-AM_CXXFLAGS = $(GTKMM_CFLAGS) $(GLADEMM_CFLAGS) -DDATADIR=\"$(datadir)/blockem\"
-AM_LDFLAGS = -lpthread
+AM_CXXFLAGS = $(GTKMM_CFLAGS) $(GLADEMM_CFLAGS) $(GTHREAD_CFLAGS) -DDATADIR=\"$(datadir)/blockem\"
+AM_LDFLAGS = 
 
 gui_glade_obj.o: gui.glade
 	@echo 'turn the xml gui file into an object file to be embedded into the final binary'
 	ld -r -b binary -o $@ $<
 	objcopy --rename-section .data=.rodata,alloc,load,readonly,data,contents $@ $@
 	@echo ' '
+
+main.o: compiletime.h
+
 
 compiletime.h:
 	@echo "Saving the current date into compiletime.h"
@@ -20,7 +23,7 @@ compiletime.h:
 
 blockem_DEPENDENCIES = gui_glade_obj.o
 
-blockem_LDADD = gui_glade_obj.o $(GTKMM_LIBS) $(GLADEMM_LIBS)
+blockem_LDADD = gui_glade_obj.o $(GTKMM_LIBS) $(GLADEMM_LIBS) $(GTHREAD_LIBS)
 
 CLEANFILES = gui_glade_obj.o compiletime.h
 

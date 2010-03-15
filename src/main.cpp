@@ -32,6 +32,7 @@
 #include <math.h>
 #include <iostream>
 #include <fstream>
+#include <glib.h>
 #include <libglademm/xml.h>
 #include <gtkmm.h>
 #include "config.h" // autotools header file
@@ -132,6 +133,18 @@ int main(int argc, char **argv)
     }
 #endif // GLIBMM_EXCEPTIONS_ENABLED
 
+    // Initialise gthreads
+    if(!g_thread_supported())
+    {
+        g_thread_init(NULL);
+        gdk_threads_init();
+    }
+    else
+    {
+        std::cerr << "g_thread_supported call failed when initialising gthreads" << std::endl;
+    }
+
+    //TODO this is the only Game mode supported at the moment
     Game1v1 theGame;
     try
     {

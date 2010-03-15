@@ -28,11 +28,14 @@ AC_CHECK_TOOL([LD], [ld], [])
 # Checks for libraries.
 PKG_CHECK_MODULES([GTKMM], [gtkmm-2.4 >= 1.0.0])
 PKG_CHECK_MODULES([GLADEMM], [libglademm-2.4 >= 1.0.0])
+PKG_CHECK_MODULES([GTHREAD], [gthread-2.0 >= 1.0.0])
 
 AC_SUBST(GTKMM_CFLAGS)
 AC_SUBST(GTKMM_LIBS)
 AC_SUBST(GLADEMM_CFLAGS)
 AC_SUBST(GLADEMM_LIBS)
+AC_SUBST(GTHREAD_CFLAGS)
+AC_SUBST(GTHREAD_LIBS)
 
 # Checks for header files.
 AC_CHECK_HEADERS([stdint.h stdlib.h])
