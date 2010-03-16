@@ -12,3 +12,5 @@ basic things that need to be done:
    the next move)
  + The GUI code is horrible. It really needs a refactoring
  + It should be possible to generate doxygen. Add it to the makefiles
+ + Installer for the windows platform. Pixmaps don't work in that platform 
+   either
