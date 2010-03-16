@@ -145,7 +145,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 
 # EXTRA_DIST = CHANGELOG CREDIT HACKING 
-EXTRA_DIST = CHANGELOG TODO
+EXTRA_DIST = CHANGELOG TODO HOWTO_WINDOWS
 all: all-am
 
 .SUFFIXES:

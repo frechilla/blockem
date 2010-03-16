@@ -9,8 +9,8 @@ AM_LDFLAGS =
 
 gui_glade_obj.o: gui.glade
 	@echo 'turn the xml gui file into an object file to be embedded into the final binary'
-	ld -r -b binary -o $@ $<
-	objcopy --rename-section .data=.rodata,alloc,load,readonly,data,contents $@ $@
+	$(LD) -r -b binary -o $@ $<
+	$(OBJCOPY) --rename-section .data=.rodata,alloc,load,readonly,data,contents $@ $@
 	@echo ' '
 
 main.o: compiletime.h

@@ -30,6 +30,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <string.h> // strcmp
 #include <iostream>
 #include <fstream>
 #include <glib.h>
@@ -46,10 +47,32 @@
 
 #include "Heuristic.h"
 
-// needed to load the gui into the application. See big comment in gui.h
+// the following code is needed to load the gui into the application. 
+// (See big comment in gui.h)
+// objdump in windows and linux is different and they create 
+// the following variables different from one another.
+// Windows hasn't got any underscore at the start, while the object in linux
+// has it. This is enough to check whether we are in the windows environment
+// or not
+#ifdef WIN32
+extern const char binary_gui_glade_start[];
+extern const char binary_gui_glade_end[];
+extern int        binary_gui_glade_size[];
+
+#define __BIN_GUI_GLADE_START__ binary_gui_glade_start
+#define __BIN_GUI_GLADE_END__   binary_gui_glade_end
+#define __BIN_GUI_GLADE_SIZE__  binary_gui_glade_size
+
+#else
 extern const char _binary_gui_glade_start[];
 extern const char _binary_gui_glade_end[];
-extern int _binary_gui_glade_size[];
+extern int        _binary_gui_glade_size[];
+
+#define __BIN_GUI_GLADE_START__ _binary_gui_glade_start
+#define __BIN_GUI_GLADE_END__   _binary_gui_glade_end
+#define __BIN_GUI_GLADE_SIZE__  _binary_gui_glade_size
+
+#endif // ifdef WIN32
 
 /// @brief parse the command line arguments
 /// @return 0 if the command line arguments were correct but the execution is finished
@@ -107,8 +130,8 @@ int main(int argc, char **argv)
     try
     {
         refXml = Gnome::Glade::Xml::create_from_buffer(
-                reinterpret_cast<const char *>(_binary_gui_glade_start),
-                reinterpret_cast<long int>(_binary_gui_glade_size),
+                reinterpret_cast<const char *>(__BIN_GUI_GLADE_START__),
+                reinterpret_cast<long int>(__BIN_GUI_GLADE_SIZE__),
                 "",
                 "");
     }
@@ -120,8 +143,8 @@ int main(int argc, char **argv)
 #else
     std::auto_ptr<Gnome::Glade::XmlError> error;
     refXml = Gnome::Glade::Xml::create_from_buffer(
-            reinterpret_cast<const char *>(_binary_gui_glade_start),
-            reinterpret_cast<long int>(_binary_gui_glade_size),
+            reinterpret_cast<const char *>(__BIN_GUI_GLADE_START__),
+            reinterpret_cast<long int>(__BIN_GUI_GLADE_SIZE__),
             "",
             "",
             error);
@@ -137,7 +160,12 @@ int main(int argc, char **argv)
     if(!g_thread_supported())
     {
         g_thread_init(NULL);
-        gdk_threads_init();
+        //TODO this call freezes up the app at start-up in windows
+        // It's not really needed since there's only 1 extra thread
+        // (apart from the main one) and it doesn't update the GUI
+        // straight away. It uses signals for that matter (see comment
+        // in MainWindow::WorkerThread_computingFinished)
+        //gdk_threads_init();
     }
     else
     {

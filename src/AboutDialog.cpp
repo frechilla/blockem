@@ -33,6 +33,8 @@
 AboutDialog::AboutDialog(Glib::RefPtr<Gnome::Glade::Xml> a_refXml) throw (GUIException):
     m_refXml(a_refXml)
 {
+    Glib::RefPtr< Gdk::Pixbuf > picture;
+
     // retrieve the about dialog from and set it up
     m_refXml->get_widget(GUI_ABOUT_DIALOG_NAME, m_theAboutDialog);
     if (m_theAboutDialog == NULL)
@@ -41,40 +43,47 @@ AboutDialog::AboutDialog(Glib::RefPtr<Gnome::Glade::Xml> a_refXml) throw (GUIExc
     }
 
     // try to set the big logo in the AboutDialog
-    Glib::RefPtr< Gdk::Pixbuf > picture;
-    try
+    if (g_file_test(GUI_PATH_TO_LOGO, G_FILE_TEST_IS_REGULAR))
     {
-        picture = Gdk::Pixbuf::create_from_file(GUI_PATH_TO_LOGO);
-    }
-    catch(...)
-    {
-        picture.reset();
-       std::cerr
-           << "WARNING: Exception occurred when setting the logo into the AboutDialog from "
-           << GUI_PATH_TO_LOGO
-           << std::endl;
-    }
-    if (picture)
-    {
-       m_theAboutDialog->set_logo(picture);
+        try
+        {
+            picture = Gdk::Pixbuf::create_from_file(GUI_PATH_TO_LOGO);
+        }
+        catch(...)
+        {
+            picture.reset();
+            std::cerr
+               << "WARNING: Exception occurred when setting the logo into the AboutDialog from "
+               << GUI_PATH_TO_LOGO
+               << std::endl;
+        }
+    
+        if (picture)
+        {
+           m_theAboutDialog->set_logo(picture);
+        }
     }
 
     // try to set up the icon in the AboutDialog
-    try
+    if (g_file_test(GUI_PATH_TO_16PICTURE, G_FILE_TEST_IS_REGULAR))
     {
-        picture = Gdk::Pixbuf::create_from_file(GUI_PATH_TO_16PICTURE);
-    }
-    catch(...)
-    {
-        picture.reset();
-       std::cerr
-           << "WARNING: Exception occurred when setting the 16x16 icon into the AboutDialog from "
-           << GUI_PATH_TO_16PICTURE
-           << std::endl;
-    }
-    if (picture)
-    {
-       m_theAboutDialog->set_icon(picture);
+        try
+        {
+            picture = Gdk::Pixbuf::create_from_file(GUI_PATH_TO_16PICTURE);
+        }
+        catch(...)
+        {
+            picture.reset();
+            std::cerr
+               << "WARNING: Exception occurred when setting the 16x16 icon into the AboutDialog from "
+               << GUI_PATH_TO_16PICTURE
+               << std::endl;
+        }
+
+        if (picture)
+        {
+           m_theAboutDialog->set_icon(picture);
+        }
     }
 }
 

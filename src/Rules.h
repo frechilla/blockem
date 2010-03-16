@@ -35,9 +35,6 @@
 #include "Player.h"
 #include "Coordinate.h"
 
-// to be used in heuristics algorithms
-const int32_t INFINITE = 2147483647;
-
 /// @brief this class contains all the methods that define any blokus game
 class Rules
 {

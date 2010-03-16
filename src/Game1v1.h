@@ -40,6 +40,9 @@
 #include "Coordinate.h"
 #include "CoordinateSet.h"
 
+/// our own version of INFINITE
+const int32_t INFINITE = 2147483647;
+
 /// standard number of rows for a 1vs1 game
 const int32_t BOARD_1VS1_ROWS    = 14;
 /// standard number of columns for a 1vs1 game

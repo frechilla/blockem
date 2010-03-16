@@ -1,0 +1,27 @@
+This note is meant to explain how to compile this project in windows.
+
+First of all you'll need to install the MinGW environment in your windows
+machine. Have a look at: 
+http://www.mingw.org/wiki/HOWTO_Install_the_MinGW_GCC_Compiler_Suite
+
+You'll also need the port of the GTKmm library for windows. Have a look at:
+http://live.gnome.org/gtkmm/MSWindows/
+
+I installed the following packages in my windows machine to compile blockem
+in windows. And it works:
+
+gtkmm-win32-devel-2.16.0-4.exe
+gcc-c++-4.4.0-mingw32-bin.tar.gz
+gcc-c++-4.4.0-mingw32-dll.tar.gz
+gcc-core-4.4.0-mingw32-bin.tar.gz
+gcc-core-4.4.0-mingw32-dll.tar.gz
+gmp-4.2.4-mingw32-dll.tar.gz
+mpfr-2.4.1-mingw32-dll.tar.gz
+libiconv-1.13.1-1-mingw32-dll-2.tar.Izma
+w32api-3.14-mingw32-dev.tar.gz
+MSYS-1.0.11.exe
+mingwrt-3.18-mingw32-dev.tar.gz
+mingwrt-3.18-mingw32-dll.tar.gz
+binutils-2.20.1-2-ming232-bin.tar.gz
+make-3.81-20090914-mingw32-bin.tar.gz
+

@@ -96,20 +96,25 @@ MainWindow::MainWindow(
     }
 
     Glib::RefPtr< Gdk::Pixbuf > icon;
-    try
+    // gboolean g_file_test(const gchar *filename, GFileTest test);
+    if (g_file_test(GUI_PATH_TO_16PICTURE, G_FILE_TEST_IS_REGULAR))
     {
-        icon = Gdk::Pixbuf::create_from_file(GUI_PATH_TO_16PICTURE);
-    } catch(...)
-    {
-        icon.reset();
-       std::cerr
-           << "WARNING: Exception occurred when setting the 16x16 icon into the Main Window from "
-           << GUI_PATH_TO_16PICTURE
-           << std::endl;
-    }
-    if (icon)
-    {
-        m_theWindow->set_icon(icon);
+        try
+        {
+            icon = Gdk::Pixbuf::create_from_file(GUI_PATH_TO_16PICTURE);
+        } catch(...)
+        {
+            icon.reset();
+           std::cerr
+               << "WARNING: Exception occurred when setting the 16x16 icon into the Main Window from "
+               << GUI_PATH_TO_16PICTURE
+               << std::endl;
+        }
+
+        if (icon)
+        {
+            m_theWindow->set_icon(icon);
+        }
     }
 
 
