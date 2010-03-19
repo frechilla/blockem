@@ -1,7 +1,7 @@
 This is a sketch of an organized TODO document. There are a couple of very
 basic things that need to be done:
 
- + Options in menu Game and View should do something. This shoulod be pretty 
+ + Options in menu Game and View should do something. This should be pretty 
    straight-forward
  + Those ugly buttons that represent pieces should be changed by actual pieces
  + Opponent's (computer's) pieces should be shown at all times (as well as the
@@ -12,5 +12,4 @@ basic things that need to be done:
    the next move)
  + The GUI code is horrible. It really needs a refactoring
  + It should be possible to generate doxygen. Add it to the makefiles
- + Installer for the windows platform. Pixmaps don't work in that platform 
-   either
+ + Installer for the windows platform

@@ -34,6 +34,7 @@
                       <widget class="GtkImageMenuItem" id="imagemenuitem_game_open">
                         <property name="label">gtk-open</property>
                         <property name="visible">True</property>
+                        <property name="sensitive">False</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
                       </widget>
@@ -42,6 +43,7 @@
                       <widget class="GtkImageMenuItem" id="imagemenuitem_game_save">
                         <property name="label">gtk-save</property>
                         <property name="visible">True</property>
+                        <property name="sensitive">False</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
                       </widget>
@@ -50,6 +52,7 @@
                       <widget class="GtkImageMenuItem" id="imagemenuitem_game_saveas">
                         <property name="label">gtk-save-as</property>
                         <property name="visible">True</property>
+                        <property name="sensitive">False</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
                       </widget>
@@ -83,6 +86,7 @@
                       <widget class="GtkImageMenuItem" id="imagemenuitem_settings_preferences">
                         <property name="label">gtk-preferences</property>
                         <property name="visible">True</property>
+                        <property name="sensitive">False</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
                       </widget>

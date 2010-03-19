@@ -88,7 +88,7 @@ const char GUI_PATH_TO_LOGO[]       = "pixmaps/blokemlogo.png";
 const char GUI_PATH_TO_16PICTURE[]  = "pixmaps/blokemlogo16.png";
 const char GUI_PATH_TO_48PICTURE[]  = "pixmaps/blokemlogo48.png";
 const char GUI_PATH_TO_128PICTURE[] = "pixmaps/blokemlogo128.png";
-#endif
+#endif // DATADIR
 
 // have a look at the name of the glade interfaces
 const char GUI_MAIN_WINDOW_NAME[]          = "window_main";

@@ -1,12 +1,14 @@
-now: working version
+19/03/2010: Version 0.1.1
+    - pthread dependecy has been moved to gthread
     - Port to windows done. Code compiles in both linux and windows
+    - Unhandled menus in GUI are now blurred so the user can't select them
 
 04/02/2010: Version 0.1.0
     - This is the first release of this project.
     - At the moment it contains a fully functional 1vs1 game based on the 
       board game blokus (http://blokus.com)
     - 1vs1 means man versus computer, where the computer moves are calculated
-      by a simple (and improvable) heuristic.
+      by a simple (and a bit foolish) heuristic.
     - It can be compiled and installed using the well-known autotools.
     - There's still a long way to walk on this project. Have a look at the
       document TODO for a small snapshot of it

@@ -4,7 +4,7 @@ bin_PROGRAMS = blockem
 
 INCLUDES = -I$(srcdir)
 
-AM_CXXFLAGS = $(GTKMM_CFLAGS) $(GLADEMM_CFLAGS) $(GTHREAD_CFLAGS) -DDATADIR=\"$(datadir)/blockem\"
+AM_CXXFLAGS = $(GTKMM_CFLAGS) $(GLADEMM_CFLAGS) $(GTHREAD_CFLAGS) -DDATADIR=\"$(datadir)/@PACKAGE@\"
 AM_LDFLAGS = 
 
 gui_glade_obj.o: gui.glade
