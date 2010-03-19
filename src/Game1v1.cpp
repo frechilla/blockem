@@ -239,6 +239,7 @@ int32_t Game1v1::MinMax(
         int32_t                      depth,
         Piece                        &out_resultPiece,
         Coordinate                   &out_coord,
+        const volatile sig_atomic_t  &stopProcessingFlag,
         const Coordinate             &a_lastOpponentPieceCoord,
         const Piece                  &a_lastOpponentPiece)
 {
@@ -398,7 +399,19 @@ int32_t Game1v1::MinMax(
                                                         depth - 1,
                                                         -beta,
                                                         -alpha,
+                                                        stopProcessingFlag,
                                                         timesCalled);
+
+                                if (stopProcessingFlag)
+                                {
+                                    // something happened and we were told to stop
+                                    // processing (that is probably why MinMaxAlphaBetaCompute
+                                    // returned. This function just returns as it is described on
+                                    // the description of the function:
+                                    // " (...) output or returned value will have unexpected
+                                    //   undescribed values "
+                                    return 0;
+                                }
 
                                 if (maxValue > alpha)
                                 {
@@ -507,6 +520,7 @@ int32_t Game1v1::MinMaxAlphaBetaCompute(
         int32_t                      depth,
         int32_t                      alpha,
         int32_t                      beta,
+        const volatile sig_atomic_t  &stopProcessingFlag,
         int32_t                      &times)
 {
     times++;
@@ -641,7 +655,19 @@ int32_t Game1v1::MinMaxAlphaBetaCompute(
                                                         depth - 1,
                                                         -beta,
                                                         -alpha,
+                                                        stopProcessingFlag,
                                                         times);
+
+                                if (stopProcessingFlag)
+                                {
+                                    // something happened and we were told to stop
+                                    // processing (that is probably why MinMaxAlphaBetaCompute
+                                    // returned. This function just returns as it is described on
+                                    // the description of the function:
+                                    // " (...) output or returned value will have unexpected
+                                    //   undescribed values "
+                                    return 0;
+                                }
 
                                 if (maxValue > alpha)
                                 {
@@ -711,7 +737,19 @@ int32_t Game1v1::MinMaxAlphaBetaCompute(
                                 depth - 1,
                                 -beta,
                                 -alpha,
+                                stopProcessingFlag,
                                 times);
+
+        if (stopProcessingFlag)
+        {
+            // something happened and we were told to stop
+            // processing (that is probably why MinMaxAlphaBetaCompute
+            // returned. This function just returns as it is described on
+            // the description of the function:
+            // " (...) output or returned value will have unexpected
+            //   undescribed values "
+            return 0;
+        }
 
         if (maxValue > alpha)
         {

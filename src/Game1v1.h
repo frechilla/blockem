@@ -32,6 +32,7 @@
 
 #include <istream>
 #include <ostream>
+#include <csignal>
 #include "Piece.h"
 #include "Player.h"
 #include "Board.h"
@@ -139,6 +140,12 @@ public:
 	/// @param maximum depth for the search tree
 	/// @param a reference to a piece where the result will be stored
 	/// @param a reference to a Coordinate where the result will be storerd
+    /// @param parameter with a reference to a variable that could be set
+    ///        to non-zero by a different thread indicating to the thread currently stuck
+    ///        in the calculation algorithm to stop. If the current thread notices
+    ///        this flag variable is set to non-zero it will stop immediately, which means
+    ///        every reference used as an output or returned value will have unexpected
+    ///        undescribed values.
     /// @param optional parameter with the coordinate where the
     ///        opponent put down the latest piece
 	/// @param optional parameter with the latest piece put down by the opponent
@@ -147,6 +154,7 @@ public:
             int32_t                      depth,
             Piece                        &out_resultPiece,
             Coordinate                   &out_coord,
+            const volatile sig_atomic_t  &stopProcessingFlag,
             const Coordinate             &a_lastOpponentPieceCoord = Coordinate(),
             const Piece                  &a_lastOpponentPiece = Piece(e_noPiece));
 
@@ -232,6 +240,13 @@ private:
     /// The parameters alpha and beta must be set to -INFINITE and INFINITE respectively (in the 1st call)
     /// or the algorithm won't work correctly (those are the default values for the call)
     /// It'll call iself recursively until depth is lower or equal 0
+    ///
+    /// stopProcessingFlag is a reference to a variable that could be set
+    /// to non-zero by a different thread indicating to the thread currently stuck
+    /// in the calculation algorithm to stop. If the current thread notices
+    /// this flag variable is set to non-zero it will stop immediately, which means
+    /// every reference used as an output or returned value will have unexpected
+    /// undescribed values.
     static int32_t MinMaxAlphaBetaCompute(
             Board                        &a_board,
             Player                       &a_playerMe,
@@ -245,6 +260,7 @@ private:
             int32_t                      depth,
             int32_t                      alpha,  //  = -INFINITE (for the 1st call)
             int32_t                      beta, //);  //  = INFINITE  (for the 1st call)
+            const volatile sig_atomic_t  &stopProcessingFlag,
             int32_t                      &times);
 
     /// @returns true if the player 'a_player' can put down at least 1 piece in a_board

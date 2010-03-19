@@ -293,14 +293,6 @@ MainWindow::MainWindow(
 
 MainWindow::~MainWindow()
 {
-    // MainWindow_DeleteEvent or MenuItemGameQuit_Activate take care of killing
-    /// the thread when necessary.
-    // All MainWindow needs is waiting until the worker thread is properly dead
-    // Joining the thread suspends the execution of this thread to wait for the other
-    // If pthread_join is called twice over the same thread, it will fail,
-    // but the app won't core
-    m_workerThread.Join();
-
     delete (m_theWindow);
 }
 
@@ -354,15 +346,9 @@ bool MainWindow::MainWindow_DeleteEvent(GdkEventAny*)
             // cancel delete event
             return true;
         }
+    }
 
-        // the thread is computing a new move, but the user wants to exit.
-        // we don't know how long it will take to join, so we "killed" the thread
-        m_workerThread.Terminate();
-    }
-    else
-    {
-        m_workerThread.Join();
-    }
+    m_workerThread.Join();
 
     // continue with delete event
     return false;
@@ -385,15 +371,9 @@ void MainWindow::MenuItemGameQuit_Activate()
             // cancel delete event
             return;
         }
+    }
 
-        // the thread is computing a new move, but the user wants to exit.
-        // we don't know how long it will take to join, so we "killed" the thread
-        m_workerThread.Terminate();
-    }
-    else
-    {
-        m_workerThread.Join();
-    }
+    m_workerThread.Join();
 
     // exit the app
     m_theWindow->hide();

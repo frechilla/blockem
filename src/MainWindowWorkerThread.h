@@ -65,11 +65,6 @@ public:
     /// @return true if success. False otherwise
     bool Join();
 
-    /// requests the cancelation of the thread.
-    /// The cancellation processing in the target thread runs asynchronously
-    /// with respect to the calling thread
-    void Terminate();
-
     /// The routine that will be called by the posix thread
     static void* ThreadRoutine(void *a_ThreadParam);
 
@@ -90,7 +85,7 @@ private:
     /// it'll be set to false once the move's been already calculated
     bool m_computeNextMove;
     /// set to true whenever we want the thread to terminate by itself
-    bool m_terminate;
+    volatile sig_atomic_t m_terminate;
 
     /// the actual thread
     GThread* m_thread;

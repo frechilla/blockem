@@ -31,11 +31,14 @@
 #include <iostream>
 #include "MainWindowWorkerThread.h"
 
+#define PROCESSING_STOP   1
+#define PROCESSING_ACTIVE 0
+
 MainWindowWorkerThread::MainWindowWorkerThread():
         m_localGame(),
         m_localLatestPiece(e_noPiece),
         m_computeNextMove(false),
-        m_terminate(false),
+        m_terminate(PROCESSING_ACTIVE),
         m_thread(NULL),
         m_mutex(NULL),
         m_cond(NULL)
@@ -92,7 +95,7 @@ bool MainWindowWorkerThread::Join()
 {
     g_mutex_lock(m_mutex);
 
-    m_terminate = true;
+    m_terminate = PROCESSING_STOP;
 
     // wake up the worker thread to exit the ThreadRoutine
     g_cond_broadcast(m_cond);
@@ -103,15 +106,6 @@ bool MainWindowWorkerThread::Join()
     dataReturned = g_thread_join(m_thread);
 
     return true;
-}
-
-void MainWindowWorkerThread::Terminate()
-{
-    //pthread_cancel(m_thread);
-    //TODO No cancelling available in gthreads
-    // There should be a way to notify the worker thread to stop calculating the next move
-    // look inside the Game1v1 class
-    std::cerr << "GThreads can't be cancelled. This call should be deleted at some point" << std::endl;
 }
 
 bool MainWindowWorkerThread::IsThreadComputingMove()
@@ -170,68 +164,68 @@ void* MainWindowWorkerThread::ThreadRoutine(void *a_ThreadParam)
     // the returned value by the computing process
     int32_t resultReturnedValue;
 
-    bool terminate = false;
-    while (terminate == false)
+    while (thisThread->m_terminate == PROCESSING_ACTIVE)
     {
         g_mutex_lock(thisThread->m_mutex);
 
-        while ( (thisThread->m_terminate == false) &&
+        while ( (thisThread->m_terminate == PROCESSING_ACTIVE) &&
                 (thisThread->m_computeNextMove == false) )
         {
             g_cond_wait(thisThread->m_cond, thisThread->m_mutex);
         }
 
-        // save the protected variables into a temporary one
-        bool doMove = thisThread->m_computeNextMove;
-        terminate   = thisThread->m_terminate;
+        if ( (thisThread->m_computeNextMove == false) ||
+             (thisThread->m_terminate == PROCESSING_STOP) )
+        {
+            g_mutex_unlock(thisThread->m_mutex);
+            continue;
+        }
 
         // get out of the mutex
         g_mutex_unlock(thisThread->m_mutex);
 
-        if ( doMove && (terminate == false) )
+        // we've been told to calculate the move
+        do
         {
-            // we've been told to calculate the move
-            do
+            resultPiece = Piece(e_noPiece);
+            resultCoord.m_X = resultCoord.m_Y = 0;
+
+            int32_t depth = 3;
+            Heuristic::calculateMethod_t heuristicMethod = Heuristic::CalculateNKWeighted;
+            if (thisThread->m_localGame.GetPlayerMe().NumberOfPiecesAvailable() < 14)
             {
-                resultPiece = Piece(e_noPiece);
-                resultCoord.m_X = resultCoord.m_Y = 0;
+                depth = 5;
+            }
 
-                int32_t depth = 3;
-                Heuristic::calculateMethod_t heuristicMethod = Heuristic::CalculateNKWeighted;
-                if (thisThread->m_localGame.GetPlayerMe().NumberOfPiecesAvailable() < 14)
-                {
-                    depth = 5;
-                }
+            resultReturnedValue = thisThread->m_localGame.MinMax(
+                                        heuristicMethod,
+                                        depth,
+                                        resultPiece,
+                                        resultCoord,
+                                        thisThread->m_terminate,
+                                        thisThread->m_localLatestCoord,
+                                        thisThread->m_localLatestPiece);
 
-                resultReturnedValue = thisThread->m_localGame.MinMax(
-                                            heuristicMethod,
-                                            depth,
-                                            resultPiece,
-                                            resultCoord,
-                                            thisThread->m_localLatestCoord,
-                                            thisThread->m_localLatestPiece);
+            // notify the result
+            thisThread->signal_computingFinished().emit(
+                    resultPiece,
+                    resultCoord,
+                    resultReturnedValue);
 
-                // notify the result
-                thisThread->signal_computingFinished().emit(
-                        resultPiece,
-                        resultCoord,
-                        resultReturnedValue);
+            // update the local game as well in case the computer has
+            // put more than 1 move in a row
+            if (resultPiece.GetType() != e_noPiece)
+            {
+                thisThread->m_localGame.PutDownPieceMe(resultPiece, resultCoord);
+            }
 
-                // update the local game asa well in case the computer has
-                // put more than 1 move in a row
-                if (resultPiece.GetType() != e_noPiece)
-                {
-                    thisThread->m_localGame.PutDownPieceMe(resultPiece, resultCoord);
-                }
+        } while ( (thisThread->m_localGame.CanPlayerOpponentGo() == false) &&
+                  (resultPiece.GetType() != e_noPiece) );
 
-            } while ( (thisThread->m_localGame.CanPlayerOpponentGo() == false) &&
-                      (resultPiece.GetType() != e_noPiece) );
-
-            // the move has been calculated. Update the variable accordingly
-            g_mutex_lock(thisThread->m_mutex);
-            thisThread->m_computeNextMove = false;
-            g_mutex_unlock(thisThread->m_mutex);
-        }
+        // the move has been calculated. Update the variable accordingly
+        g_mutex_lock(thisThread->m_mutex);
+        thisThread->m_computeNextMove = false;
+        g_mutex_unlock(thisThread->m_mutex);
     }
 
     return NULL;
