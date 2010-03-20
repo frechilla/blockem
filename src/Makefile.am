@@ -7,6 +7,13 @@ INCLUDES = -I$(srcdir)
 AM_CXXFLAGS = $(GTKMM_CFLAGS) $(GLADEMM_CFLAGS) $(GTHREAD_CFLAGS) -DDATADIR=\"$(datadir)/@PACKAGE@\"
 AM_LDFLAGS = 
 
+.PHONY: compiletime.h
+
+compiletime.h:
+	@echo "Saving the current date into compiletime.h"
+	date '+#define COMPILETIME "%x %X"' > compiletime.h
+	@echo ' '
+
 gui_glade_obj.o: gui.glade
 	@echo 'turn the xml gui file into an object file to be embedded into the final binary'
 	$(LD) -r -b binary -o $@ $<
@@ -14,12 +21,6 @@ gui_glade_obj.o: gui.glade
 	@echo ' '
 
 main.o: compiletime.h
-
-
-compiletime.h:
-	@echo "Saving the current date into compiletime.h"
-	date '+#define COMPILETIME "%x %X"' > compiletime.h
-	@echo ' '
 
 blockem_DEPENDENCIES = gui_glade_obj.o
 
