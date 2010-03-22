@@ -7,7 +7,8 @@ INCLUDES = -I$(srcdir)
 AM_CXXFLAGS = $(GTKMM_CFLAGS) $(GLADEMM_CFLAGS) $(GTHREAD_CFLAGS) -DDATADIR=\"$(datadir)/@PACKAGE@\"
 AM_LDFLAGS = 
 
-.PHONY: compiletime.h
+# if uncommented compiletime.h will be overwritten everytime the `make` command is run
+#.PHONY: compiletime.h
 
 compiletime.h:
 	@echo "Saving the current date into compiletime.h"

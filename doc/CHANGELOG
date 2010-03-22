@@ -1,3 +1,7 @@
+now: next version
+    - The ugly buttons that used to represent pieces have been changed by 
+      real (and beautiful) pieces
+
 19/03/2010: Version 0.1.1
     - pthread dependecy has been moved to gthread
     - Port to windows done. Code compiles in both linux and windows

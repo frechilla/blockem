@@ -3,7 +3,6 @@ basic things that need to be done:
 
  + Options in menu Game and View should do something. This should be pretty 
    straight-forward
- + Those ugly buttons that represent pieces should be changed by actual pieces
  + Opponent's (computer's) pieces should be shown at all times (as well as the
    score)
  + Lots of calculation time is being wasted now. The decission tree should be

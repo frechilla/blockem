@@ -78,6 +78,61 @@ static const float GHOST_PIECE_WRONG_BLUE         = 0.0;
 static const float GHOST_PIECE_ALPHA_TRANSPARENCY = 0.2;
 
 
+//TODO all this code should go to another class/file at some point
+const int32_t PICK_PLAYER_PIECES_ARRAY_NROWS = 7;
+const int32_t PICK_PLAYER_PIECES_ARRAY_NCOLS = 32;
+
+// sorry for the length of this array (more than 600 characters per line)
+// it helps out the editing when done in this way if you've got an horizontal
+// editing bar, though it _might_ be a _bit_ complicated to edit it in a
+// console
+const ePieceType_t pickPlayerPiecesArray
+        [PICK_PLAYER_PIECES_ARRAY_NROWS][PICK_PLAYER_PIECES_ARRAY_NCOLS] =
+{
+{e_1Piece_BabyPiece , e_noPiece          , e_2Piece_TwoPiece  , e_2Piece_TwoPiece , e_noPiece         , e_noPiece         , e_3Piece_Triangle, e_3Piece_Triangle, e_noPiece        , e_4Piece_LongPiece, e_4Piece_LongPiece , e_4Piece_LongPiece , e_4Piece_LongPiece, e_noPiece       , e_noPiece       , e_noPiece       , e_4Piece_LittleL, e_4Piece_LittleL, e_4Piece_LittleL, e_noPiece           , e_noPiece           , e_4Piece_LittleS    , e_4Piece_LittleS    , e_noPiece      , e_4Piece_FullSquare, e_4Piece_FullSquare, e_noPiece           , e_5Piece_CuntPiece  , e_5Piece_CuntPiece, e_5Piece_CuntPiece, e_noPiece    , e_5Piece_BigPenis},
+{e_noPiece          , e_noPiece          , e_noPiece          , e_noPiece         , e_noPiece         , e_noPiece         , e_noPiece        , e_3Piece_Triangle, e_noPiece        , e_noPiece         , e_noPiece          , e_noPiece          , e_noPiece         , e_noPiece       , e_4Piece_LittleT, e_noPiece       , e_noPiece       , e_noPiece       , e_4Piece_LittleL, e_noPiece           , e_4Piece_LittleS    , e_4Piece_LittleS    , e_noPiece           , e_noPiece      , e_4Piece_FullSquare, e_4Piece_FullSquare, e_noPiece           , e_5Piece_CuntPiece  , e_noPiece         , e_5Piece_CuntPiece, e_noPiece    , e_5Piece_BigPenis},
+{e_5Piece_HalfSquare, e_noPiece          , e_noPiece          , e_3Piece_LongPiece, e_3Piece_LongPiece, e_3Piece_LongPiece, e_noPiece        , e_noPiece        , e_noPiece        , e_noPiece         , e_5Piece_SquarePlus, e_5Piece_SquarePlus, e_noPiece         , e_4Piece_LittleT, e_4Piece_LittleT, e_4Piece_LittleT, e_noPiece       , e_noPiece       , e_noPiece       , e_noPiece           , e_noPiece           , e_noPiece           , e_noPiece           , e_noPiece      , e_noPiece          , e_noPiece          , e_noPiece           , e_noPiece           , e_noPiece         , e_noPiece         , e_noPiece    , e_5Piece_BigPenis},
+{e_5Piece_HalfSquare, e_noPiece          , e_noPiece          , e_noPiece         , e_noPiece         , e_noPiece         , e_noPiece        , e_noPiece        , e_noPiece        , e_noPiece         , e_5Piece_SquarePlus, e_5Piece_SquarePlus, e_noPiece         , e_noPiece       , e_noPiece       , e_noPiece       , e_noPiece       , e_5Piece_Cross  , e_noPiece       , e_noPiece           , e_noPiece           , e_noPiece           , e_5Piece_WPiece     , e_5Piece_WPiece, e_noPiece          , e_noPiece          , e_noPiece           , e_5Piece_TheUltimate, e_noPiece         , e_5Piece_BigL     , e_noPiece    , e_5Piece_BigPenis},
+{e_5Piece_HalfSquare, e_5Piece_HalfSquare, e_5Piece_HalfSquare, e_noPiece         , e_5Piece_BigS     , e_5Piece_BigS     , e_noPiece        , e_5Piece_SafPiece, e_noPiece        , e_noPiece         , e_5Piece_SquarePlus, e_noPiece          , e_noPiece         , e_noPiece       , e_5Piece_MrT    , e_noPiece       , e_5Piece_Cross  , e_5Piece_Cross  , e_5Piece_Cross  , e_noPiece           , e_noPiece           , e_noPiece           , e_noPiece           , e_5Piece_WPiece, e_5Piece_WPiece    , e_noPiece          , e_5Piece_TheUltimate, e_5Piece_TheUltimate, e_noPiece         , e_5Piece_BigL     , e_noPiece    , e_5Piece_BigPenis},
+{e_noPiece          , e_noPiece          , e_noPiece          , e_noPiece         , e_5Piece_BigS     , e_noPiece         , e_noPiece        , e_5Piece_SafPiece, e_5Piece_SafPiece, e_noPiece         , e_noPiece          , e_noPiece          , e_5Piece_MrT      , e_5Piece_MrT    , e_5Piece_MrT    , e_noPiece       , e_noPiece       , e_5Piece_Cross  , e_noPiece       , e_noPiece           , e_noPiece           , e_5Piece_BoringPiece, e_noPiece           , e_noPiece      , e_5Piece_WPiece    , e_noPiece          , e_5Piece_TheUltimate, e_noPiece           , e_noPiece         , e_5Piece_BigL     , e_noPiece    , e_noPiece        },
+{e_noPiece          , e_noPiece          , e_noPiece          , e_5Piece_BigS     , e_5Piece_BigS     , e_noPiece         , e_5Piece_SafPiece, e_5Piece_SafPiece, e_noPiece        , e_noPiece         , e_noPiece          , e_noPiece          , e_noPiece         , e_noPiece       , e_5Piece_MrT    , e_noPiece       , e_noPiece       , e_noPiece       , e_noPiece       , e_5Piece_BoringPiece, e_5Piece_BoringPiece, e_5Piece_BoringPiece, e_5Piece_BoringPiece, e_noPiece      , e_noPiece          , e_noPiece          , e_5Piece_TheUltimate, e_noPiece           , e_noPiece         , e_5Piece_BigL     , e_5Piece_BigL, e_noPiece        }
+};
+
+
+// This is a more human readable appearance of the pickPLayerPiecesArray if:
+// e_noPiece            = 0
+// e_1Piece_BabyPiece   = 1,
+// e_2Piece_TwoPiece    = 2,
+// e_3Piece_LongPiece   = 3,
+// e_3Piece_Triangle    = 4,
+// e_4Piece_LongPiece   = 5,
+// e_4Piece_LittleS     = 6,
+// e_4Piece_LittleT     = 7,
+// e_4Piece_LittleL     = 8,
+// e_4Piece_FullSquare  = 9,
+// e_5Piece_BigS        = 10,
+// e_5Piece_SafPiece    = 11,
+// e_5Piece_WPiece      = 12,
+// e_5Piece_CuntPiece   = 13,
+// e_5Piece_BigPenis    = 14,
+// e_5Piece_Cross       = 15,
+// e_5Piece_HalfSquare  = 16,
+// e_5Piece_BigL        = 17,
+// e_5Piece_MrT         = 18,
+// e_5Piece_SquarePlus  = 19,
+// e_5Piece_BoringPiece = 20,
+// e_5Piece_TheUltimate = 21,
+//
+// {
+//   {1 , 0 , 2 , 2 , 0 , 0 , 4 , 4 , 0 , 5 , 5 , 5 , 5 , 0 , 0 , 0 , 8 , 8 , 8 , 0 , 0 , 6 , 6 , 0 , 9 , 9 , 0 , 13, 13, 13, 0 , 14},
+//   {0 , 0 , 0 , 0 , 0 , 0 , 0 , 4 , 0 , 0 , 0 , 0 , 0 , 0 , 7 , 0 , 0 , 0 , 8 , 0 , 6 , 6 , 0 , 0 , 9 , 9 , 0 , 13, 0 , 13, 0 , 14},
+//   {16, 0 , 0 , 3 , 3 , 3 , 0 , 0 , 0 , 0 , 19, 19, 0 , 7 , 7 , 7 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 14},
+//   {16, 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 19, 19, 0 , 0 , 0 , 0 , 0 , 15, 0 , 0 , 0 , 0 , 12, 12, 0 , 0 , 0 , 21, 0 , 17, 0 , 14},
+//   {16, 16, 16, 0 , 10, 10, 0 , 11, 0 , 0 , 19, 0 , 0 , 0 , 18, 0 , 15, 15, 15, 0 , 0 , 0 , 0 , 12, 12, 0 , 21, 21, 0 , 17, 0 , 14},
+//   {0 , 0 , 0 , 0 , 10, 0 , 0 , 11, 11, 0 , 0 , 0 , 18, 18, 18, 0 , 0 , 15, 0 , 0 , 0 , 20, 0 , 0 , 12, 0 , 21, 0 , 0 , 17, 0 , 0 },
+//   {0 , 0 , 0 , 10, 10, 0 , 11, 11, 0 , 0 , 0 , 0 , 0 , 0 , 18, 0 , 0 , 0 , 0 , 20, 20, 20, 20, 0 , 0 , 0 , 21 ,0 , 0 , 17, 17, 0 }
+// };
+
 MainWindow::MainWindow(
 		Game1v1 &a_theGame,
 		Glib::RefPtr<Gnome::Glade::Xml> a_refXml) throw (GUIException) :
@@ -171,6 +226,12 @@ MainWindow::MainWindow(
 		throw new GUIException(std::string("Edit pieces drawing area retrieval failed"));
 	}
 
+    m_refXml->get_widget(GUI_DRAWINGAREA_PICK_PIECES, m_pickPiecesDrawingArea);
+    if (m_pickPiecesDrawingArea == NULL)
+    {
+        throw new GUIException(std::string("Pick pieces drawing area retrieval failed"));
+    }
+
 	m_refXml->get_widget(GUI_BUTTON_ROTATE_NAME, m_rotateButton);
 	if (m_rotateButton == NULL)
 	{
@@ -183,36 +244,6 @@ MainWindow::MainWindow(
 		throw new GUIException(std::string("mirror button retrieval failed"));
 	}
 
-	// toggle buttons to select the pieces
-	m_refXml->get_widget(GUI_TOGGBTN_PIECE_1BABY, m_selectPieceToggleButtons[e_1Piece_BabyPiece]);
-	m_refXml->get_widget(GUI_TOGGBTN_PIECE_2LONG, m_selectPieceToggleButtons[e_2Piece_TwoPiece]);
-	m_refXml->get_widget(GUI_TOGGBTN_PIECE_3LONG, m_selectPieceToggleButtons[e_3Piece_LongPiece]);
-	m_refXml->get_widget(GUI_TOGGBTN_PIECE_3TRIANGLE, m_selectPieceToggleButtons[e_3Piece_Triangle]);
-	m_refXml->get_widget(GUI_TOGGBTN_PIECE_4LONG, m_selectPieceToggleButtons[e_4Piece_LongPiece]);
-	m_refXml->get_widget(GUI_TOGGBTN_PIECE_4LITTEL_S, m_selectPieceToggleButtons[e_4Piece_LittleS]);
-	m_refXml->get_widget(GUI_TOGGBTN_PIECE_4LITTLE_T, m_selectPieceToggleButtons[e_4Piece_LittleT]);
-	m_refXml->get_widget(GUI_TOGGBTN_PIECE_4LITTLE_L, m_selectPieceToggleButtons[e_4Piece_LittleL]);
-	m_refXml->get_widget(GUI_TOGGBTN_PIECE_4FULLSQUARE, m_selectPieceToggleButtons[e_4Piece_FullSquare]);
-	m_refXml->get_widget(GUI_TOGGBTN_PIECE_5BIG_S, m_selectPieceToggleButtons[e_5Piece_BigS]);
-	m_refXml->get_widget(GUI_TOGGBTN_PIECE_5SAF, m_selectPieceToggleButtons[e_5Piece_SafPiece]);
-	m_refXml->get_widget(GUI_TOGGBTN_PIECE_5W, m_selectPieceToggleButtons[e_5Piece_WPiece]);
-	m_refXml->get_widget(GUI_TOGGBTN_PIECE_5CUNT, m_selectPieceToggleButtons[e_5Piece_CuntPiece]);
-	m_refXml->get_widget(GUI_TOGGBTN_PIECE_5LONG, m_selectPieceToggleButtons[e_5Piece_BigPenis]);
-	m_refXml->get_widget(GUI_TOGGBTN_PIECE_5CROSS, m_selectPieceToggleButtons[e_5Piece_Cross]);
-	m_refXml->get_widget(GUI_TOGGBTN_PIECE_5HALFSQUARE, m_selectPieceToggleButtons[e_5Piece_HalfSquare]);
-	m_refXml->get_widget(GUI_TOGGBTN_PIECE_5BIG_L, m_selectPieceToggleButtons[e_5Piece_BigL]);
-	m_refXml->get_widget(GUI_TOGGBTN_PIECE_5MR_T, m_selectPieceToggleButtons[e_5Piece_MrT]);
-	m_refXml->get_widget(GUI_TOGGBTN_PIECE_5SQUAREPLUS, m_selectPieceToggleButtons[e_5Piece_SquarePlus]);
-	m_refXml->get_widget(GUI_TOGGBTN_PIECE_5BORING, m_selectPieceToggleButtons[e_5Piece_BoringPiece]);
-	m_refXml->get_widget(GUI_TOGGBTN_PIECE_5ULTIMATE, m_selectPieceToggleButtons[e_5Piece_TheUltimate]);
-
-	for (int8_t i = e_minimumPieceIndex; i < e_numberOfPieces; i++)
-	{
-		if (m_selectPieceToggleButtons[i] == NULL)
-		{
-			throw new GUIException(std::string("toggle button retrieval failed for piece " + i));
-		}
-	}
 
 	// connect the signals to the handlers
 	// if the handler is not part of an object use sigc::ptr_fun
@@ -233,6 +264,12 @@ MainWindow::MainWindow(
 	m_boardDrawingArea->signal_motion_notify_event().connect(
 			sigc::mem_fun(*this, &MainWindow::BoardDrawingArea_MotionNotify));
 
+	m_pickPiecesDrawingArea->signal_expose_event().connect(
+            sigc::mem_fun(*this, &MainWindow::PickPiecesDrawingArea_ExposeEvent));
+	m_pickPiecesDrawingArea->add_events(Gdk::BUTTON_PRESS_MASK);
+	m_pickPiecesDrawingArea->signal_button_press_event().connect(
+	            sigc::mem_fun(*this, &MainWindow::PickPiecesDrawingArea_ButtonPressed));
+
 	m_editPiecesDrawingArea->signal_expose_event().connect(
 			sigc::mem_fun(*this, &MainWindow::EditPiecesDrawingArea_ExposeEvent));
 
@@ -241,49 +278,6 @@ MainWindow::MainWindow(
 	m_mirrorButton->signal_clicked().connect(
 			sigc::mem_fun(*this, &MainWindow::MirrorButton_ButtonPressed));
 
-
-	m_selectPieceToggleButtons[e_1Piece_BabyPiece]->signal_toggled().connect(
-			sigc::mem_fun(*this, &MainWindow::Togglebtn_1baby));
-	m_selectPieceToggleButtons[e_2Piece_TwoPiece]->signal_toggled().connect(
-			sigc::mem_fun(*this, &MainWindow::Togglebtn_2long));
-	m_selectPieceToggleButtons[e_3Piece_LongPiece]->signal_toggled().connect(
-			sigc::mem_fun(*this, &MainWindow::Togglebtn_3long));
-	m_selectPieceToggleButtons[e_3Piece_Triangle]->signal_toggled().connect(
-			sigc::mem_fun(*this, &MainWindow::Togglebtn_3triangle));
-	m_selectPieceToggleButtons[e_4Piece_LongPiece]->signal_toggled().connect(
-			sigc::mem_fun(*this, &MainWindow::Togglebtn_4long));
-	m_selectPieceToggleButtons[e_4Piece_LittleS]->signal_toggled().connect(
-			sigc::mem_fun(*this, &MainWindow::Togglebtn_4littleS));
-	m_selectPieceToggleButtons[e_4Piece_LittleT]->signal_toggled().connect(
-			sigc::mem_fun(*this, &MainWindow::Togglebtn_4littleT));
-	m_selectPieceToggleButtons[e_4Piece_LittleL]->signal_toggled().connect(
-			sigc::mem_fun(*this, &MainWindow::Togglebtn_4littleL));
-	m_selectPieceToggleButtons[e_4Piece_FullSquare]->signal_toggled().connect(
-			sigc::mem_fun(*this, &MainWindow::Togglebtn_4fullSquare));
-	m_selectPieceToggleButtons[e_5Piece_BigS]->signal_toggled().connect(
-			sigc::mem_fun(*this, &MainWindow::Togglebtn_5bigS));
-	m_selectPieceToggleButtons[e_5Piece_SafPiece]->signal_toggled().connect(
-			sigc::mem_fun(*this, &MainWindow::Togglebtn_5saf));
-	m_selectPieceToggleButtons[e_5Piece_WPiece]->signal_toggled().connect(
-			sigc::mem_fun(*this, &MainWindow::Togglebtn_5w));
-	m_selectPieceToggleButtons[e_5Piece_CuntPiece]->signal_toggled().connect(
-			sigc::mem_fun(*this, &MainWindow::Togglebtn_5cunt));
-	m_selectPieceToggleButtons[e_5Piece_BigPenis]->signal_toggled().connect(
-			sigc::mem_fun(*this, &MainWindow::Togglebtn_5penis));
-	m_selectPieceToggleButtons[e_5Piece_Cross]->signal_toggled().connect(
-			sigc::mem_fun(*this, &MainWindow::Togglebtn_5cross));
-	m_selectPieceToggleButtons[e_5Piece_HalfSquare]->signal_toggled().connect(
-			sigc::mem_fun(*this, &MainWindow::Togglebtn_5halfSquare));
-	m_selectPieceToggleButtons[e_5Piece_BigL]->signal_toggled().connect(
-			sigc::mem_fun(*this, &MainWindow::Togglebtn_5bigL));
-	m_selectPieceToggleButtons[e_5Piece_MrT]->signal_toggled().connect(
-			sigc::mem_fun(*this, &MainWindow::Togglebtn_5mrT));
-	m_selectPieceToggleButtons[e_5Piece_SquarePlus]->signal_toggled().connect(
-			sigc::mem_fun(*this, &MainWindow::Togglebtn_5squarePlusPlus));
-	m_selectPieceToggleButtons[e_5Piece_BoringPiece]->signal_toggled().connect(
-			sigc::mem_fun(*this, &MainWindow::Togglebtn_5boring));
-	m_selectPieceToggleButtons[e_5Piece_TheUltimate]->signal_toggled().connect(
-			sigc::mem_fun(*this, &MainWindow::Togglebtn_5ultimate));
 
 	// set the rotate and mirror button to not sensitive, since at the beginning
 	// there's no piece loaded in the edit piece drawing area
@@ -430,17 +424,10 @@ void MainWindow::MenuItemGameNew_Activate()
         // reset the current game, and update the view
         m_the1v1Game.Reset();
         InvalidateDrawingArea(m_boardDrawingArea);
+        InvalidateDrawingArea(m_pickPiecesDrawingArea);
         InvalidateDrawingArea(m_editPiecesDrawingArea);
         m_rotateButton->set_sensitive(false);
         m_mirrorButton->set_sensitive(false);
-
-        for (int8_t i = e_minimumPieceIndex; i < e_numberOfPieces; i++)
-        {
-            if (m_selectPieceToggleButtons[i]->sensitive() == false)
-            {
-                m_selectPieceToggleButtons[i]->set_sensitive(true);
-            }
-        }
 
         UpdateSelectedPiece(e_noPiece);
     }
@@ -739,11 +726,11 @@ bool MainWindow::BoardDrawingArea_ButtonPressed(GdkEventButton *event)
                 << std::endl;
         }
 
-        // disable (make it not-clickable) the toggle button that represents the
-        // piece what was just put down
-        m_selectPieceToggleButtons[m_editPiece.GetType()]->set_sensitive(false);
         // remove the actual piece being edited from the edit piece drawing area
         UpdateSelectedPiece(e_noPiece);
+
+        // force the pick pieces drawing area to redraw because a piece has just been deployed
+        InvalidateDrawingArea(m_pickPiecesDrawingArea);
 
         // force the board to be redraw
         InvalidateDrawingArea(m_boardDrawingArea);
@@ -779,6 +766,130 @@ bool MainWindow::BoardDrawingArea_MotionNotify(GdkEventMotion *event)
 	}
 
 	return true;
+}
+
+bool MainWindow::PickPiecesDrawingArea_ExposeEvent(GdkEventExpose* event)
+{
+    Glib::RefPtr<Gdk::Window> window = m_pickPiecesDrawingArea->get_window();
+    if(window)
+    {
+        Gtk::Allocation allocation = m_pickPiecesDrawingArea->get_allocation();
+
+        int32_t width  = allocation.get_width();
+        int32_t height = allocation.get_height();
+
+        int32_t littleSquare = std::min(
+                                height / PICK_PLAYER_PIECES_ARRAY_NROWS,
+                                width / PICK_PLAYER_PIECES_ARRAY_NCOLS);
+        int32_t squareHeight = littleSquare * PICK_PLAYER_PIECES_ARRAY_NROWS;
+        int32_t squareWidth  = littleSquare * PICK_PLAYER_PIECES_ARRAY_NCOLS;
+
+        // coordinates for the centre of the window
+        int32_t xc = width  / 2;
+        int32_t yc = height / 2;
+
+        // get the pen to draw
+        Cairo::RefPtr<Cairo::Context> cr = window->create_cairo_context();
+
+        // clip to the area indicated by the expose event so that we only redraw
+        // the portion of the window that needs to be redrawn
+        cr->rectangle(event->area.x, event->area.y,
+            event->area.width, event->area.height);
+        cr->clip();
+
+        // line width and colour for the border of the board
+        cr->set_line_width(BOARD_LINE_WIDTH);
+        cr->set_source_rgb(
+                PLAYER_OPPONENT_RED,
+                PLAYER_OPPONENT_GREEN,
+                PLAYER_OPPONENT_BLUE);
+
+        // draw the opponent's pieces left
+        int32_t hzIndex = (xc - squareWidth/2) + (littleSquare/2);
+        int32_t vtIndex = (yc - squareHeight/2) + (littleSquare/2);
+        for (int32_t row = 0; row < PICK_PLAYER_PIECES_ARRAY_NROWS; row++)
+        {
+            for (int32_t col = 0; col < PICK_PLAYER_PIECES_ARRAY_NCOLS; col++)
+            {
+                ePieceType_t pieceType = pickPlayerPiecesArray[row][col];
+                if ( (pieceType != e_noPiece) &&
+                     (m_the1v1Game.GetPlayerOpponent().IsPieceAvailable(pieceType)) )
+                {
+                    cr->rectangle(
+                            (hzIndex - littleSquare/2) + 1,
+                            (vtIndex - littleSquare/2) + 1,
+                            littleSquare - 2,
+                            littleSquare - 2);
+
+                    cr->fill();
+                }
+                hzIndex += littleSquare;
+            }
+
+            hzIndex = (xc - squareWidth/2) + (littleSquare/2);
+            vtIndex += littleSquare;
+        }
+
+        // commit the changes to the screen!
+        cr->stroke();
+    }
+
+    return true;
+}
+
+bool MainWindow::PickPiecesDrawingArea_ButtonPressed(GdkEventButton *event)
+{
+    std::cout << "clicked in (" << event->x << ", " << event->y << ")" << std::endl;
+
+    Glib::RefPtr<Gdk::Window> window = m_pickPiecesDrawingArea->get_window();
+    if (!window)
+    {
+        return false;
+    }
+
+    Gtk::Allocation allocation = m_pickPiecesDrawingArea->get_allocation();
+
+    int32_t width  = allocation.get_width();
+    int32_t height = allocation.get_height();
+
+    int32_t littleSquare = std::min(
+                            height / PICK_PLAYER_PIECES_ARRAY_NROWS,
+                            width / PICK_PLAYER_PIECES_ARRAY_NCOLS);
+    int32_t squareHeight = littleSquare * PICK_PLAYER_PIECES_ARRAY_NROWS;
+    int32_t squareWidth  = littleSquare * PICK_PLAYER_PIECES_ARRAY_NCOLS;
+
+    int32_t xc = width  / 2;
+    int32_t yc = height / 2;
+
+    if ( ( ((event->x) > (xc - squareWidth/2))  && ((event->x) < (xc + squareWidth/2))  ) &&
+         ( ((event->y) > (yc - squareHeight/2)) && ((event->y) < (yc + squareHeight/2)) ) )
+    {
+        int32_t x, y;
+        for (x = 0; x < PICK_PLAYER_PIECES_ARRAY_NCOLS; x++)
+        {
+            if (event->x < ((xc - squareWidth/2) + (littleSquare * x)))
+            {
+                break;
+            }
+        }
+
+        for (y = 1; y < PICK_PLAYER_PIECES_ARRAY_NROWS; y++)
+        {
+            if (event->y < ((yc - squareHeight/2) + (littleSquare * y)))
+            {
+                break;
+            }
+        }
+
+        ePieceType_t pieceType = pickPlayerPiecesArray[y - 1][x - 1];
+        if ( (pieceType != e_noPiece) &&
+             (m_the1v1Game.GetPlayerOpponent().IsPieceAvailable(pieceType)) )
+        {
+            UpdateSelectedPiece(pieceType);
+        }
+    }
+
+    return true;
 }
 
 bool MainWindow::EditPiecesDrawingArea_ExposeEvent(GdkEventExpose* event)
@@ -877,111 +988,6 @@ void MainWindow::MirrorButton_ButtonPressed()
 	InvalidateDrawingArea(m_editPiecesDrawingArea);
 }
 
-void MainWindow::Togglebtn_1baby()
-    {
-        UpdateSelectedPiece(e_1Piece_BabyPiece);
-    }
-
-void MainWindow::Togglebtn_2long()
-{
-    UpdateSelectedPiece(e_2Piece_TwoPiece);
-}
-
-void MainWindow::Togglebtn_3long()
-{
-    UpdateSelectedPiece(e_3Piece_LongPiece);
-}
-
-void MainWindow::Togglebtn_3triangle()
-{
-    UpdateSelectedPiece(e_3Piece_Triangle);
-}
-
-void MainWindow::Togglebtn_4long()
-{
-    UpdateSelectedPiece(e_4Piece_LongPiece);
-}
-
-void MainWindow::Togglebtn_4littleS()
-{
-    UpdateSelectedPiece(e_4Piece_LittleS);
-}
-
-void MainWindow::Togglebtn_4littleL()
-{
-    UpdateSelectedPiece(e_4Piece_LittleL);
-}
-
-void MainWindow::Togglebtn_4littleT()
-{
-    UpdateSelectedPiece(e_4Piece_LittleT);
-}
-
-void MainWindow::Togglebtn_4fullSquare()
-{
-    UpdateSelectedPiece(e_4Piece_FullSquare);
-}
-
-void MainWindow::Togglebtn_5bigS()
-{
-    UpdateSelectedPiece(e_5Piece_BigS);
-}
-
-void MainWindow::Togglebtn_5saf()
-{
-    UpdateSelectedPiece(e_5Piece_SafPiece);
-}
-
-void MainWindow::Togglebtn_5w()
-{
-    UpdateSelectedPiece(e_5Piece_WPiece);
-}
-
-void MainWindow::Togglebtn_5cunt()
-{
-    UpdateSelectedPiece(e_5Piece_CuntPiece);
-}
-
-void MainWindow::Togglebtn_5penis()
-{
-    UpdateSelectedPiece(e_5Piece_BigPenis);
-}
-
-void MainWindow::Togglebtn_5cross()
-{
-    UpdateSelectedPiece(e_5Piece_Cross);
-}
-
-void MainWindow::Togglebtn_5halfSquare()
-{
-    UpdateSelectedPiece(e_5Piece_HalfSquare);
-}
-
-void MainWindow::Togglebtn_5bigL()
-{
-    UpdateSelectedPiece(e_5Piece_BigL);
-}
-
-void MainWindow::Togglebtn_5mrT()
-{
-    UpdateSelectedPiece(e_5Piece_MrT);
-}
-
-void MainWindow::Togglebtn_5squarePlusPlus()
-{
-    UpdateSelectedPiece(e_5Piece_SquarePlus);
-}
-
-void MainWindow::Togglebtn_5boring()
-{
-    UpdateSelectedPiece(e_5Piece_BoringPiece);
-}
-
-void MainWindow::Togglebtn_5ultimate()
-{
-    UpdateSelectedPiece(e_5Piece_TheUltimate);
-}
-
 bool MainWindow::WindowToBoardCoord(
 		int32_t a_windowX,
 		int32_t a_windowY,
@@ -1069,20 +1075,6 @@ void MainWindow::SetSquareInBoard(const Coordinate &a_coord, Cairo::RefPtr<Cairo
 
 void MainWindow::UpdateSelectedPiece(ePieceType_t a_newPiece)
 {
-    if ( (a_newPiece < e_numberOfPieces) &&
-         (m_selectPieceToggleButtons[a_newPiece]->get_active() == false) )
-    {
-        return;
-    }
-
-    for (int8_t i = e_minimumPieceIndex; i < e_numberOfPieces; i++)
-    {
-        if (static_cast<ePieceType_t>(i) != a_newPiece)
-        {
-            m_selectPieceToggleButtons[i]->set_active(false);
-        }
-    }
-
     m_editPiece = Piece(a_newPiece);
     if (m_editPiece.CanRotateOriginally())
     {

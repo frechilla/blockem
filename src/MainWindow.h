@@ -42,6 +42,7 @@
 #include "Coordinate.h"
 #include "Piece.h"
 
+
 /// @brief class to handle the main window in the GUI
 class MainWindow
 {
@@ -86,6 +87,12 @@ public:
     /// @brief callback to be called when the mouse moves inside the board drawing area
     bool BoardDrawingArea_MotionNotify(GdkEventMotion *event);
 
+    /// @brief callback to be called when the pick piece drawing area is redraw on screen
+    bool PickPiecesDrawingArea_ExposeEvent(GdkEventExpose* event);
+
+    /// @brief callback to be called when a button is pressed inside the pick pieces drawing area
+    bool PickPiecesDrawingArea_ButtonPressed(GdkEventButton *event);
+
     /// @brief callback to be called when the edit piece drawing area is redraw on screen
     bool EditPiecesDrawingArea_ExposeEvent(GdkEventExpose* event);
 
@@ -94,69 +101,6 @@ public:
 
     /// @brief callback to be called when the mirror button is pressed
     void MirrorButton_ButtonPressed();
-
-    /// @brief callback to be called when the 1babypiece toggle button is toggled (changed state)
-    void Togglebtn_1baby();
-
-    /// @brief callback to be called when the 2longpiece toggle button is toggled (changed state)
-    void Togglebtn_2long();
-
-    /// @brief callback to be called when the 3longpiece toggle button is toggled (changed state)
-    void Togglebtn_3long();
-
-    /// @brief callback to be called when the 3trianglepiece toggle button is toggled (changed state)
-    void Togglebtn_3triangle();
-
-    /// @brief callback to be called when the 4longpiece toggle button is toggled (changed state)
-    void Togglebtn_4long();
-
-    /// @brief callback to be called when the 4littleSpiece toggle button is toggled (changed state)
-    void Togglebtn_4littleS();
-
-    /// @brief callback to be called when the 4littleLpiece toggle button is toggled (changed state)
-    void Togglebtn_4littleL();
-
-    /// @brief callback to be called when the 4littleTpiece toggle button is toggled (changed state)
-    void Togglebtn_4littleT();
-
-    /// @brief callback to be called when the 4fullSquarepiece toggle button is toggled (changed state)
-    void Togglebtn_4fullSquare();
-
-    /// @brief callback to be called when the 5bigSpiece toggle button is toggled (changed state)
-    void Togglebtn_5bigS();
-
-    /// @brief callback to be called when the 5safpiece toggle button is toggled (changed state)
-    void Togglebtn_5saf();
-
-    /// @brief callback to be called when the 5wpiece toggle button is toggled (changed state)
-    void Togglebtn_5w();
-
-    /// @brief callback to be called when the 5cuntpiece toggle button is toggled (changed state)
-    void Togglebtn_5cunt();
-
-    /// @brief callback to be called when the 5penispiece toggle button is toggled (changed state)
-    void Togglebtn_5penis();
-
-    /// @brief callback to be called when the 5crosspiece toggle button is toggled (changed state)
-    void Togglebtn_5cross();
-
-    /// @brief callback to be called when the 5halfSquarepiece toggle button is toggled (changed state)
-    void Togglebtn_5halfSquare();
-
-    /// @brief callback to be called when the 5bigLpiece toggle button is toggled (changed state)
-    void Togglebtn_5bigL();
-
-    /// @brief callback to be called when the 5mrTpiece toggle button is toggled (changed state)
-    void Togglebtn_5mrT();
-
-    /// @brief callback to be called when the 5squarePlusPluspiece toggle button is toggled (changed state)
-    void Togglebtn_5squarePlusPlus();
-
-    /// @brief callback to be called when the 5boringpiece toggle button is toggled (changed state)
-    void Togglebtn_5boring();
-
-    /// @brief callback to be called when the 5ultimatepiece toggle button is toggled (changed state)
-    void Togglebtn_5ultimate();
 
 private:
     /// @brief the 1vs1 game which will be represented in the window
@@ -190,6 +134,9 @@ private:
     /// @brief the drawing area where the board is draw
     Gtk::DrawingArea* m_boardDrawingArea;
 
+    /// @brief the drawing area where the pieces are picked
+    Gtk::DrawingArea* m_pickPiecesDrawingArea;
+
     /// @brief the drawing area where the pieces are edited
     Gtk::DrawingArea* m_editPiecesDrawingArea;
 
@@ -198,9 +145,6 @@ private:
 
     /// @brief the mirros button to edit the pieces in the edit pieces drawing area
     Gtk::Button* m_mirrorButton;
-
-    /// @brief array of toggleButtons used to select the pieces
-    Gtk::ToggleButton* m_selectPieceToggleButtons[e_numberOfPieces];
 
     /// Signal class for inter-thread communication to
     /// notify the next move has been computed

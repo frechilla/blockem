@@ -515,7 +515,8 @@ uninstall-am: uninstall-binPROGRAMS
 	uninstall-am uninstall-binPROGRAMS
 
 
-.PHONY: compiletime.h
+# if uncommented compiletime.h will be overwritten everytime the `make` command is run
+#.PHONY: compiletime.h
 
 compiletime.h:
 	@echo "Saving the current date into compiletime.h"
