@@ -14,7 +14,7 @@
 // details.
 //
 // You should have received a copy of the GNU General Public License along
-// with Foobar. If not, see http://www.gnu.org/licenses/.
+// with Blockem. If not, see http://www.gnu.org/licenses/.
 //
 /// @file  Player.h
 /// @brief
@@ -118,49 +118,49 @@ public:
     /// returns true if this player has a nucleation point in the coords specified
     inline bool IsNucleationPoint(const Coordinate &a_coord) const
     {
-        return IsNucleationPoint(a_coord.m_X, a_coord.m_Y);
+        return IsNucleationPoint(a_coord.m_row, a_coord.m_col);
     }
 
     /// returns true if this player has a nucleation point in the coords specified
-    inline bool IsNucleationPoint(int32_t a_coordX, int32_t a_coordY) const
+    inline bool IsNucleationPoint(int32_t a_row, int32_t a_col) const
     {
 #ifdef DEBUG
-    	assert((a_coordX >= 0) && (a_coordX < m_nRowsInBoard));
-    	assert((a_coordY >= 0) && (a_coordY < m_nColumnsInBoard));
+    	assert((a_row >= 0) && (a_row < m_nRowsInBoard));
+    	assert((a_col >= 0) && (a_col < m_nColumnsInBoard));
 #endif
-    	return static_cast<bool>(m_nkPoints[a_coordX][a_coordY]);
+    	return static_cast<bool>(m_nkPoints[a_row][a_col]);
     }
 
     /// save a nucleation point in the coords passed as parameters
-    inline void SetNucleationPoint(int32_t a_coordX, int32_t a_coordY)
+    inline void SetNucleationPoint(int32_t a_row, int32_t a_col)
     {
 #ifdef DEBUG
-    	assert((a_coordX >= 0) && (a_coordX < m_nRowsInBoard));
-    	assert((a_coordY >= 0) && (a_coordY < m_nColumnsInBoard));
+    	assert((a_row >= 0) && (a_row < m_nRowsInBoard));
+    	assert((a_col >= 0) && (a_col < m_nColumnsInBoard));
 #endif
-        if (m_nkPoints[a_coordX][a_coordY] == 0)
+        if (m_nkPoints[a_row][a_col] == 0)
         {
 #ifdef DEBUG
             assert(m_nkPointsCount < (m_nRowsInBoard * m_nColumnsInBoard));
 #endif
-            m_nkPoints[a_coordX][a_coordY] = 1;
+            m_nkPoints[a_row][a_col] = 1;
             m_nkPointsCount++;
         }
     }
 
     /// delete a nucleation point in the coords passed as parameters
-    inline void UnsetNucleationPoint(int32_t a_coordX, int32_t a_coordY)
+    inline void UnsetNucleationPoint(int32_t a_row, int32_t a_col)
     {
 #ifdef DEBUG
-    	assert((a_coordX >= 0) && (a_coordX < m_nRowsInBoard));
-    	assert((a_coordY >= 0) && (a_coordY < m_nColumnsInBoard));
+    	assert((a_row >= 0) && (a_row < m_nRowsInBoard));
+    	assert((a_col >= 0) && (a_col < m_nColumnsInBoard));
 #endif
-        if (m_nkPoints[a_coordX][a_coordY])
+        if (m_nkPoints[a_row][a_col])
         {
 #ifdef DEBUG
              assert(m_nkPointsCount > 0);
 #endif
-            m_nkPoints[a_coordX][a_coordY] = 0;
+            m_nkPoints[a_row][a_col] = 0;
             m_nkPointsCount--;
         }
     }
@@ -195,9 +195,9 @@ public:
         int32_t nNucleationPoints = 0;
         Coordinate thisCoord;
 
-        for (thisCoord.m_X = 0; thisCoord.m_X < m_nRowsInBoard ; thisCoord.m_X++)
+        for (thisCoord.m_row = 0; thisCoord.m_row < m_nRowsInBoard ; thisCoord.m_row++)
         {
-            for (thisCoord.m_Y = 0; thisCoord.m_Y < m_nColumnsInBoard ; thisCoord.m_Y++)
+            for (thisCoord.m_col = 0; thisCoord.m_col < m_nColumnsInBoard ; thisCoord.m_col++)
             {
                 if (IsNucleationPoint(thisCoord))
                 {

@@ -14,7 +14,7 @@
 // details.
 //
 // You should have received a copy of the GNU General Public License along
-// with Foobar. If not, see http://www.gnu.org/licenses/.
+// with Blockem. If not, see http://www.gnu.org/licenses/.
 //
 /// @file  Player.cpp
 /// @brief
@@ -278,8 +278,8 @@ int32_t Player::GetAllNucleationPoints(
             {
                 if (nNucleationPoints < a_size)
                 {
-                    out_nucleationPoints[nNucleationPoints].m_X = rowCount;
-                    out_nucleationPoints[nNucleationPoints].m_Y = columnCount;
+                    out_nucleationPoints[nNucleationPoints].m_row = rowCount;
+                    out_nucleationPoints[nNucleationPoints].m_col = columnCount;
                 }
                 nNucleationPoints++;
             }
@@ -295,9 +295,9 @@ int32_t Player::GetAllNucleationPoints(
     int32_t nNucleationPoints = 0;
     Coordinate thisCoord;
 
-    for (thisCoord.m_X = 0; thisCoord.m_X < m_nRowsInBoard ; thisCoord.m_X++)
+    for (thisCoord.m_row = 0; thisCoord.m_row < m_nRowsInBoard ; thisCoord.m_row++)
     {
-        for (thisCoord.m_Y = 0; thisCoord.m_Y < m_nColumnsInBoard ; thisCoord.m_Y++)
+        for (thisCoord.m_col = 0; thisCoord.m_col < m_nColumnsInBoard ; thisCoord.m_col++)
         {
             if (IsNucleationPoint(thisCoord))
             {
@@ -332,8 +332,8 @@ bool Player::GetFirstNucleationPointSpiral(
                     {
                         if (IsNucleationPoint(i, j))
                         {
-                        	out_coord.m_X = i;
-                        	out_coord.m_Y = j;
+                        	out_coord.m_row = i;
+                        	out_coord.m_col = j;
 
                             return true;
                         }
@@ -356,8 +356,8 @@ bool Player::GetNextNucleationPointSpiral(
 	int32_t j;
 
     // check the current line before incrementing this row
-    i = in_out_coord.m_X;
-    for (j = (in_out_coord.m_Y + 1) ; j <= (columnCount + iterator) ; j++)
+    i = in_out_coord.m_row;
+    for (j = (in_out_coord.m_col + 1) ; j <= (columnCount + iterator) ; j++)
     {
         if ( (i >= 0) && (i < m_nRowsInBoard) && (j >= 0) && (j < m_nColumnsInBoard) )
         {
@@ -366,8 +366,8 @@ bool Player::GetNextNucleationPointSpiral(
             {
                 if (IsNucleationPoint(i, j))
                 {
-                	in_out_coord.m_X = i;
-                	in_out_coord.m_Y = j;
+                	in_out_coord.m_row = i;
+                	in_out_coord.m_col = j;
 
                     return true;
                 }
@@ -376,7 +376,7 @@ bool Player::GetNextNucleationPointSpiral(
     }
 
     // check all the possibilities for this particular 'i' before incrementing the rotational index
-    for (i = (in_out_coord.m_X + 1) ; i <= (rowCount + iterator) ; i++)
+    for (i = (in_out_coord.m_row + 1) ; i <= (rowCount + iterator) ; i++)
     {
         for (j = (columnCount - iterator) ; j <= (columnCount + iterator) ; j++)
         {
@@ -387,8 +387,8 @@ bool Player::GetNextNucleationPointSpiral(
                 {
                     if (IsNucleationPoint(i, j))
                     {
-                    	in_out_coord.m_X = i;
-                    	in_out_coord.m_Y = j;
+                    	in_out_coord.m_row = i;
+                    	in_out_coord.m_col = j;
 
                         return true;
                     }
@@ -414,8 +414,8 @@ bool Player::GetNextNucleationPointSpiral(
                     {
                         if (IsNucleationPoint(i, j))
                         {
-                        	in_out_coord.m_X = i;
-                        	in_out_coord.m_Y = j;
+                        	in_out_coord.m_row = i;
+                        	in_out_coord.m_col = j;
 
                             return true;
                         }

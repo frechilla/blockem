@@ -14,7 +14,7 @@
 // details.
 //
 // You should have received a copy of the GNU General Public License along
-// with Foobar. If not, see http://www.gnu.org/licenses/.
+// with Blockem. If not, see http://www.gnu.org/licenses/.
 //
 /// @file  GameTotalAllocation.cpp
 /// @brief
@@ -56,30 +56,30 @@ void GameTotalAllocation::RemovePiece(
         const Coordinate &a_coord)
 {
 #ifdef DEBUG
-    assert(a_coord.m_X >= 0);
-    assert(a_coord.m_X < m_board.GetNRows());
+    assert(a_coord.m_row >= 0);
+    assert(a_coord.m_row < m_board.GetNRows());
 
-    assert(a_coord.m_Y >= 0);
-    assert(a_coord.m_Y < m_board.GetNColumns());
+    assert(a_coord.m_col >= 0);
+    assert(a_coord.m_col < m_board.GetNColumns());
 #endif
 
     for (uint8_t i = 0 ; i < a_piece.GetNSquares() ; i++)
     {
 #ifdef DEBUG
-        assert( ((a_coord.m_X + a_piece.m_coords[i].m_X) >= 0) &&
-        		((a_coord.m_X + a_piece.m_coords[i].m_X) < m_board.GetNRows())    );
-        assert( ((a_coord.m_Y + a_piece.m_coords[i].m_Y) >= 0) &&
-        		((a_coord.m_Y + a_piece.m_coords[i].m_Y) < m_board.GetNColumns()) );
+        assert( ((a_coord.m_row + a_piece.m_coords[i].m_row) >= 0) &&
+        		((a_coord.m_row + a_piece.m_coords[i].m_row) < m_board.GetNRows())    );
+        assert( ((a_coord.m_col + a_piece.m_coords[i].m_col) >= 0) &&
+        		((a_coord.m_col + a_piece.m_coords[i].m_col) < m_board.GetNColumns()) );
 
         assert(m_board.IsPlayerInCoord(
-        		a_coord.m_X + a_piece.m_coords[i].m_X,
-        		a_coord.m_Y + a_piece.m_coords[i].m_Y,
+        		a_coord.m_row + a_piece.m_coords[i].m_row,
+        		a_coord.m_col + a_piece.m_coords[i].m_col,
         		m_player));
 #endif
 
         m_board.BlankCoord(
-        		a_coord.m_X + a_piece.m_coords[i].m_X,
-        		a_coord.m_Y + a_piece.m_coords[i].m_Y);
+        		a_coord.m_row + a_piece.m_coords[i].m_row,
+        		a_coord.m_col + a_piece.m_coords[i].m_col);
     }
 
     // recalculate all the nk points around the piece we just put down
@@ -91,29 +91,29 @@ void GameTotalAllocation::PutDownPiece(
         const Coordinate &a_coord)
 {
 #ifdef DEBUG
-    assert(a_coord.m_X >= 0);
-    assert(a_coord.m_X < m_board.GetNRows());
+    assert(a_coord.m_row >= 0);
+    assert(a_coord.m_row < m_board.GetNRows());
 
-    assert(a_coord.m_Y >= 0);
-    assert(a_coord.m_Y < m_board.GetNColumns());
+    assert(a_coord.m_col >= 0);
+    assert(a_coord.m_col < m_board.GetNColumns());
 #endif
 
     for (int i = 0 ; i < a_piece.GetNSquares() ; i++)
     {
 #ifdef DEBUG
-        assert( ((a_coord.m_X + a_piece.m_coords[i].m_X) >= 0) &&
-        		((a_coord.m_X + a_piece.m_coords[i].m_X) < m_board.GetNRows())    );
-        assert( ((a_coord.m_Y + a_piece.m_coords[i].m_Y) >= 0) &&
-        		((a_coord.m_Y + a_piece.m_coords[i].m_Y) < m_board.GetNColumns()) );
+        assert( ((a_coord.m_row + a_piece.m_coords[i].m_row) >= 0) &&
+        		((a_coord.m_row + a_piece.m_coords[i].m_row) < m_board.GetNRows())    );
+        assert( ((a_coord.m_col + a_piece.m_coords[i].m_col) >= 0) &&
+        		((a_coord.m_col + a_piece.m_coords[i].m_col) < m_board.GetNColumns()) );
 
         assert(m_board.IsCoordEmpty(
-        		a_coord.m_X + a_piece.m_coords[i].m_X,
-        		a_coord.m_Y + a_piece.m_coords[i].m_Y));
+        		a_coord.m_row + a_piece.m_coords[i].m_row,
+        		a_coord.m_col + a_piece.m_coords[i].m_col));
 #endif
 
         m_board.SetPlayerInCoord(
-        		a_coord.m_X + a_piece.m_coords[i].m_X,
-        		a_coord.m_Y + a_piece.m_coords[i].m_Y,
+        		a_coord.m_row + a_piece.m_coords[i].m_row,
+        		a_coord.m_col + a_piece.m_coords[i].m_col,
         		m_player);
     }
 

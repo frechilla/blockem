@@ -14,7 +14,7 @@
 // details.
 //
 // You should have received a copy of the GNU General Public License along
-// with Foobar. If not, see http://www.gnu.org/licenses/.
+// with Blockem. If not, see http://www.gnu.org/licenses/.
 //
 /// @file MainWindow.cpp
 /// @brief
@@ -89,13 +89,13 @@ const int32_t PICK_PLAYER_PIECES_ARRAY_NCOLS = 32;
 const ePieceType_t pickPlayerPiecesArray
         [PICK_PLAYER_PIECES_ARRAY_NROWS][PICK_PLAYER_PIECES_ARRAY_NCOLS] =
 {
-{e_1Piece_BabyPiece , e_noPiece          , e_2Piece_TwoPiece  , e_2Piece_TwoPiece , e_noPiece         , e_noPiece         , e_3Piece_Triangle, e_3Piece_Triangle, e_noPiece        , e_4Piece_LongPiece, e_4Piece_LongPiece , e_4Piece_LongPiece , e_4Piece_LongPiece, e_noPiece       , e_noPiece       , e_noPiece       , e_4Piece_LittleL, e_4Piece_LittleL, e_4Piece_LittleL, e_noPiece           , e_noPiece           , e_4Piece_LittleS    , e_4Piece_LittleS    , e_noPiece      , e_4Piece_FullSquare, e_4Piece_FullSquare, e_noPiece           , e_5Piece_CuntPiece  , e_5Piece_CuntPiece, e_5Piece_CuntPiece, e_noPiece    , e_5Piece_BigPenis},
-{e_noPiece          , e_noPiece          , e_noPiece          , e_noPiece         , e_noPiece         , e_noPiece         , e_noPiece        , e_3Piece_Triangle, e_noPiece        , e_noPiece         , e_noPiece          , e_noPiece          , e_noPiece         , e_noPiece       , e_4Piece_LittleT, e_noPiece       , e_noPiece       , e_noPiece       , e_4Piece_LittleL, e_noPiece           , e_4Piece_LittleS    , e_4Piece_LittleS    , e_noPiece           , e_noPiece      , e_4Piece_FullSquare, e_4Piece_FullSquare, e_noPiece           , e_5Piece_CuntPiece  , e_noPiece         , e_5Piece_CuntPiece, e_noPiece    , e_5Piece_BigPenis},
-{e_5Piece_HalfSquare, e_noPiece          , e_noPiece          , e_3Piece_LongPiece, e_3Piece_LongPiece, e_3Piece_LongPiece, e_noPiece        , e_noPiece        , e_noPiece        , e_noPiece         , e_5Piece_SquarePlus, e_5Piece_SquarePlus, e_noPiece         , e_4Piece_LittleT, e_4Piece_LittleT, e_4Piece_LittleT, e_noPiece       , e_noPiece       , e_noPiece       , e_noPiece           , e_noPiece           , e_noPiece           , e_noPiece           , e_noPiece      , e_noPiece          , e_noPiece          , e_noPiece           , e_noPiece           , e_noPiece         , e_noPiece         , e_noPiece    , e_5Piece_BigPenis},
-{e_5Piece_HalfSquare, e_noPiece          , e_noPiece          , e_noPiece         , e_noPiece         , e_noPiece         , e_noPiece        , e_noPiece        , e_noPiece        , e_noPiece         , e_5Piece_SquarePlus, e_5Piece_SquarePlus, e_noPiece         , e_noPiece       , e_noPiece       , e_noPiece       , e_noPiece       , e_5Piece_Cross  , e_noPiece       , e_noPiece           , e_noPiece           , e_noPiece           , e_5Piece_WPiece     , e_5Piece_WPiece, e_noPiece          , e_noPiece          , e_noPiece           , e_5Piece_TheUltimate, e_noPiece         , e_5Piece_BigL     , e_noPiece    , e_5Piece_BigPenis},
-{e_5Piece_HalfSquare, e_5Piece_HalfSquare, e_5Piece_HalfSquare, e_noPiece         , e_5Piece_BigS     , e_5Piece_BigS     , e_noPiece        , e_5Piece_SafPiece, e_noPiece        , e_noPiece         , e_5Piece_SquarePlus, e_noPiece          , e_noPiece         , e_noPiece       , e_5Piece_MrT    , e_noPiece       , e_5Piece_Cross  , e_5Piece_Cross  , e_5Piece_Cross  , e_noPiece           , e_noPiece           , e_noPiece           , e_noPiece           , e_5Piece_WPiece, e_5Piece_WPiece    , e_noPiece          , e_5Piece_TheUltimate, e_5Piece_TheUltimate, e_noPiece         , e_5Piece_BigL     , e_noPiece    , e_5Piece_BigPenis},
-{e_noPiece          , e_noPiece          , e_noPiece          , e_noPiece         , e_5Piece_BigS     , e_noPiece         , e_noPiece        , e_5Piece_SafPiece, e_5Piece_SafPiece, e_noPiece         , e_noPiece          , e_noPiece          , e_5Piece_MrT      , e_5Piece_MrT    , e_5Piece_MrT    , e_noPiece       , e_noPiece       , e_5Piece_Cross  , e_noPiece       , e_noPiece           , e_noPiece           , e_5Piece_BoringPiece, e_noPiece           , e_noPiece      , e_5Piece_WPiece    , e_noPiece          , e_5Piece_TheUltimate, e_noPiece           , e_noPiece         , e_5Piece_BigL     , e_noPiece    , e_noPiece        },
-{e_noPiece          , e_noPiece          , e_noPiece          , e_5Piece_BigS     , e_5Piece_BigS     , e_noPiece         , e_5Piece_SafPiece, e_5Piece_SafPiece, e_noPiece        , e_noPiece         , e_noPiece          , e_noPiece          , e_noPiece         , e_noPiece       , e_5Piece_MrT    , e_noPiece       , e_noPiece       , e_noPiece       , e_noPiece       , e_5Piece_BoringPiece, e_5Piece_BoringPiece, e_5Piece_BoringPiece, e_5Piece_BoringPiece, e_noPiece      , e_noPiece          , e_noPiece          , e_5Piece_TheUltimate, e_noPiece           , e_noPiece         , e_5Piece_BigL     , e_5Piece_BigL, e_noPiece        }
+    {e_1Piece_BabyPiece , e_noPiece          , e_2Piece_TwoPiece  , e_2Piece_TwoPiece , e_noPiece         , e_noPiece         , e_3Piece_Triangle, e_3Piece_Triangle, e_noPiece        , e_4Piece_LongPiece, e_4Piece_LongPiece , e_4Piece_LongPiece , e_4Piece_LongPiece, e_noPiece       , e_noPiece       , e_noPiece       , e_4Piece_LittleL, e_4Piece_LittleL, e_4Piece_LittleL, e_noPiece           , e_noPiece           , e_4Piece_LittleS    , e_4Piece_LittleS    , e_noPiece      , e_4Piece_FullSquare, e_4Piece_FullSquare, e_noPiece           , e_5Piece_CuntPiece  , e_5Piece_CuntPiece, e_5Piece_CuntPiece, e_noPiece    , e_5Piece_BigPenis},
+    {e_noPiece          , e_noPiece          , e_noPiece          , e_noPiece         , e_noPiece         , e_noPiece         , e_noPiece        , e_3Piece_Triangle, e_noPiece        , e_noPiece         , e_noPiece          , e_noPiece          , e_noPiece         , e_noPiece       , e_4Piece_LittleT, e_noPiece       , e_noPiece       , e_noPiece       , e_4Piece_LittleL, e_noPiece           , e_4Piece_LittleS    , e_4Piece_LittleS    , e_noPiece           , e_noPiece      , e_4Piece_FullSquare, e_4Piece_FullSquare, e_noPiece           , e_5Piece_CuntPiece  , e_noPiece         , e_5Piece_CuntPiece, e_noPiece    , e_5Piece_BigPenis},
+    {e_5Piece_HalfSquare, e_noPiece          , e_noPiece          , e_3Piece_LongPiece, e_3Piece_LongPiece, e_3Piece_LongPiece, e_noPiece        , e_noPiece        , e_noPiece        , e_noPiece         , e_5Piece_SquarePlus, e_5Piece_SquarePlus, e_noPiece         , e_4Piece_LittleT, e_4Piece_LittleT, e_4Piece_LittleT, e_noPiece       , e_noPiece       , e_noPiece       , e_noPiece           , e_noPiece           , e_noPiece           , e_noPiece           , e_noPiece      , e_noPiece          , e_noPiece          , e_noPiece           , e_noPiece           , e_noPiece         , e_noPiece         , e_noPiece    , e_5Piece_BigPenis},
+    {e_5Piece_HalfSquare, e_noPiece          , e_noPiece          , e_noPiece         , e_noPiece         , e_noPiece         , e_noPiece        , e_noPiece        , e_noPiece        , e_noPiece         , e_5Piece_SquarePlus, e_5Piece_SquarePlus, e_noPiece         , e_noPiece       , e_noPiece       , e_noPiece       , e_noPiece       , e_5Piece_Cross  , e_noPiece       , e_noPiece           , e_noPiece           , e_noPiece           , e_5Piece_WPiece     , e_5Piece_WPiece, e_noPiece          , e_noPiece          , e_noPiece           , e_5Piece_TheUltimate, e_noPiece         , e_5Piece_BigL     , e_noPiece    , e_5Piece_BigPenis},
+    {e_5Piece_HalfSquare, e_5Piece_HalfSquare, e_5Piece_HalfSquare, e_noPiece         , e_5Piece_BigS     , e_5Piece_BigS     , e_noPiece        , e_5Piece_SafPiece, e_noPiece        , e_noPiece         , e_5Piece_SquarePlus, e_noPiece          , e_noPiece         , e_noPiece       , e_5Piece_MrT    , e_noPiece       , e_5Piece_Cross  , e_5Piece_Cross  , e_5Piece_Cross  , e_noPiece           , e_noPiece           , e_noPiece           , e_noPiece           , e_5Piece_WPiece, e_5Piece_WPiece    , e_noPiece          , e_5Piece_TheUltimate, e_5Piece_TheUltimate, e_noPiece         , e_5Piece_BigL     , e_noPiece    , e_5Piece_BigPenis},
+    {e_noPiece          , e_noPiece          , e_noPiece          , e_noPiece         , e_5Piece_BigS     , e_noPiece         , e_noPiece        , e_5Piece_SafPiece, e_5Piece_SafPiece, e_noPiece         , e_noPiece          , e_noPiece          , e_5Piece_MrT      , e_5Piece_MrT    , e_5Piece_MrT    , e_noPiece       , e_noPiece       , e_5Piece_Cross  , e_noPiece       , e_noPiece           , e_noPiece           , e_5Piece_BoringPiece, e_noPiece           , e_noPiece      , e_5Piece_WPiece    , e_noPiece          , e_5Piece_TheUltimate, e_noPiece           , e_noPiece         , e_5Piece_BigL     , e_noPiece    , e_noPiece        },
+    {e_noPiece          , e_noPiece          , e_noPiece          , e_5Piece_BigS     , e_5Piece_BigS     , e_noPiece         , e_5Piece_SafPiece, e_5Piece_SafPiece, e_noPiece        , e_noPiece         , e_noPiece          , e_noPiece          , e_noPiece         , e_noPiece       , e_5Piece_MrT    , e_noPiece       , e_noPiece       , e_noPiece       , e_noPiece       , e_5Piece_BoringPiece, e_5Piece_BoringPiece, e_5Piece_BoringPiece, e_5Piece_BoringPiece, e_noPiece      , e_noPiece          , e_noPiece          , e_5Piece_TheUltimate, e_noPiece           , e_noPiece         , e_5Piece_BigL     , e_5Piece_BigL, e_noPiece        }
 };
 
 
@@ -453,11 +453,11 @@ bool MainWindow::BoardDrawingArea_ExposeEvent(GdkEventExpose* event)
 		int32_t height = allocation.get_height();
 		int32_t squareSize = std::min(width, height);
 
-		int32_t littleSquareHeight = squareSize / m_the1v1Game.GetBoard().GetNColumns();
-		int32_t littleSquareWidth  = squareSize / m_the1v1Game.GetBoard().GetNRows();
+		int32_t littleSquareHeight = squareSize / m_the1v1Game.GetBoard().GetNRows();
+		int32_t littleSquareWidth  = squareSize / m_the1v1Game.GetBoard().GetNColumns();
 
-		int32_t squareHeight = littleSquareHeight * m_the1v1Game.GetBoard().GetNColumns();
-		int32_t squareWidth  = littleSquareWidth  * m_the1v1Game.GetBoard().GetNRows();
+		int32_t squareHeight = littleSquareHeight * m_the1v1Game.GetBoard().GetNRows();
+		int32_t squareWidth  = littleSquareWidth  * m_the1v1Game.GetBoard().GetNColumns();
 
 		// coordinates for the centre of the window
 		int32_t xc = width  / 2;
@@ -575,7 +575,7 @@ bool MainWindow::BoardDrawingArea_ExposeEvent(GdkEventExpose* event)
         cr->line_to(xc - squareWidth/2, yc - squareHeight/2);
 
         // commit the changes to the screen!
-        cr->stroke();
+        //cr->stroke();
 
         // line for the insides of the board
         cr->set_line_width(BOARD_LINE_WIDTH);
@@ -604,8 +604,8 @@ bool MainWindow::BoardDrawingArea_ExposeEvent(GdkEventExpose* event)
 	    // print the current selected piece in the place where the mouse pointer is
 	    // using a bit of transparency
 	    if ( (m_editPiece.GetType() != e_noPiece)   &&
-             (m_lastCoord.m_X != COORD_UNITIALISED) &&
-             (m_lastCoord.m_Y != COORD_UNITIALISED) )
+             (m_lastCoord.m_row != COORD_UNITIALISED) &&
+             (m_lastCoord.m_col != COORD_UNITIALISED) )
 	    {
 	    	if (m_the1v1Game.GetPlayerOpponent().NumberOfPiecesAvailable() == e_numberOfPieces)
 	    	{
@@ -656,8 +656,8 @@ bool MainWindow::BoardDrawingArea_ExposeEvent(GdkEventExpose* event)
 			{
 				SetSquareInBoard(
 						Coordinate(
-								m_lastCoord.m_X + m_editPiece.m_coords[i].m_X,
-								m_lastCoord.m_Y + m_editPiece.m_coords[i].m_Y),
+								m_lastCoord.m_row + m_editPiece.m_coords[i].m_row,
+								m_lastCoord.m_col + m_editPiece.m_coords[i].m_col),
 						cr);
 				cr->fill();
 			}
@@ -687,7 +687,7 @@ bool MainWindow::BoardDrawingArea_ButtonPressed(GdkEventButton *event)
 	    return true;
 	}
 
-	std::cout << "SQUARE: (" << thisCoord.m_X << ", " << thisCoord.m_Y << ")" << std::endl;
+	std::cout << "SQUARE: (" << thisCoord.m_row << ", " << thisCoord.m_col << ")" << std::endl;
 
     if( ( (m_the1v1Game.GetPlayerOpponent().NumberOfPiecesAvailable() == e_numberOfPieces) &&
           (!Rules::IsPieceDeployableInStartingPoint(
@@ -746,20 +746,20 @@ bool MainWindow::BoardDrawingArea_MotionNotify(GdkEventMotion *event)
 	Coordinate thisCoord;
 	if (WindowToBoardCoord(event->x, event->y, thisCoord))
 	{
-		if ( (m_lastCoord.m_X != thisCoord.m_X) ||
-             (m_lastCoord.m_Y != thisCoord.m_Y) )
+		if ( (m_lastCoord.m_row != thisCoord.m_row) ||
+             (m_lastCoord.m_col != thisCoord.m_col) )
 		{
-			m_lastCoord.m_X = thisCoord.m_X;
-			m_lastCoord.m_Y = thisCoord.m_Y;
+			m_lastCoord.m_row = thisCoord.m_row;
+			m_lastCoord.m_col = thisCoord.m_col;
 
 			// force the board to be redraw
 			InvalidateDrawingArea(m_boardDrawingArea);
 		}
 	}
-	else if ( (m_lastCoord.m_X != COORD_UNITIALISED) ||
-              (m_lastCoord.m_Y != COORD_UNITIALISED) )
+	else if ( (m_lastCoord.m_row != COORD_UNITIALISED) ||
+              (m_lastCoord.m_col != COORD_UNITIALISED) )
 	{
-		m_lastCoord.m_X = m_lastCoord.m_Y = COORD_UNITIALISED;
+		m_lastCoord.m_row = m_lastCoord.m_col = COORD_UNITIALISED;
 
 		// force the board to be redraw
 		InvalidateDrawingArea(m_boardDrawingArea);
@@ -839,7 +839,7 @@ bool MainWindow::PickPiecesDrawingArea_ExposeEvent(GdkEventExpose* event)
 
 bool MainWindow::PickPiecesDrawingArea_ButtonPressed(GdkEventButton *event)
 {
-    std::cout << "clicked in (" << event->x << ", " << event->y << ")" << std::endl;
+    //std::cout << "clicked in (" << event->x << ", " << event->y << ")" << std::endl;
 
     Glib::RefPtr<Gdk::Window> window = m_pickPiecesDrawingArea->get_window();
     if (!window)
@@ -864,24 +864,24 @@ bool MainWindow::PickPiecesDrawingArea_ButtonPressed(GdkEventButton *event)
     if ( ( ((event->x) > (xc - squareWidth/2))  && ((event->x) < (xc + squareWidth/2))  ) &&
          ( ((event->y) > (yc - squareHeight/2)) && ((event->y) < (yc + squareHeight/2)) ) )
     {
-        int32_t x, y;
-        for (x = 0; x < PICK_PLAYER_PIECES_ARRAY_NCOLS; x++)
+        int32_t row, col;
+        for (col = 0; col < PICK_PLAYER_PIECES_ARRAY_NCOLS; col++)
         {
-            if (event->x < ((xc - squareWidth/2) + (littleSquare * x)))
+            if (event->x < ((xc - squareWidth/2) + (littleSquare * col)))
             {
                 break;
             }
         }
 
-        for (y = 1; y < PICK_PLAYER_PIECES_ARRAY_NROWS; y++)
+        for (row = 1; row < PICK_PLAYER_PIECES_ARRAY_NROWS; row++)
         {
-            if (event->y < ((yc - squareHeight/2) + (littleSquare * y)))
+            if (event->y < ((yc - squareHeight/2) + (littleSquare * row)))
             {
                 break;
             }
         }
 
-        ePieceType_t pieceType = pickPlayerPiecesArray[y - 1][x - 1];
+        ePieceType_t pieceType = pickPlayerPiecesArray[row - 1][col - 1];
         if ( (pieceType != e_noPiece) &&
              (m_the1v1Game.GetPlayerOpponent().IsPieceAvailable(pieceType)) )
         {
@@ -934,8 +934,8 @@ bool MainWindow::EditPiecesDrawingArea_ExposeEvent(GdkEventExpose* event)
             for (uint8_t i = 0; i < m_editPiece.GetNSquares(); i++)
             {
                 cr->rectangle(
-                        (xc - littleSquare/2) + (littleSquare * m_editPiece.m_coords[i].m_X) + 1,
-                        (yc - littleSquare/2) + (littleSquare * m_editPiece.m_coords[i].m_Y) + 1,
+                        (xc - littleSquare/2) + (littleSquare * m_editPiece.m_coords[i].m_col) + 1,
+                        (yc - littleSquare/2) + (littleSquare * m_editPiece.m_coords[i].m_row) + 1,
                         littleSquare - 2,
                         littleSquare - 2);
 
@@ -1005,11 +1005,11 @@ bool MainWindow::WindowToBoardCoord(
 	int32_t height = allocation.get_height();
 	int32_t squareSize = std::min(width, height);
 
-	int32_t littleSquareHeight = squareSize / m_the1v1Game.GetBoard().GetNColumns();
-	int32_t littleSquareWidth  = squareSize / m_the1v1Game.GetBoard().GetNRows();
+	int32_t littleSquareHeight = squareSize / m_the1v1Game.GetBoard().GetNRows();
+	int32_t littleSquareWidth  = squareSize / m_the1v1Game.GetBoard().GetNColumns();
 
-	int32_t squareHeight = littleSquareHeight * m_the1v1Game.GetBoard().GetNColumns();
-	int32_t squareWidth  = littleSquareWidth  * m_the1v1Game.GetBoard().GetNRows();
+	int32_t squareHeight = littleSquareHeight * m_the1v1Game.GetBoard().GetNRows();
+	int32_t squareWidth  = littleSquareWidth  * m_the1v1Game.GetBoard().GetNColumns();
 
 	int32_t xc = width  / 2;
 	int32_t yc = height / 2;
@@ -1017,25 +1017,25 @@ bool MainWindow::WindowToBoardCoord(
 	if ( ( (a_windowX > (xc - squareWidth/2))  && (a_windowX < (xc + squareWidth/2))  ) &&
          ( (a_windowY > (yc - squareHeight/2)) && (a_windowY < (yc + squareHeight/2)) ) )
 	{
-		int32_t x, y;
-		for (x = 0; x < m_the1v1Game.GetBoard().GetNRows(); x++)
+		int32_t row, col;
+		for (row = 0; row < m_the1v1Game.GetBoard().GetNRows(); row++)
 		{
-			if (a_windowX < ((xc - squareWidth/2) + (littleSquareWidth * x)))
+			if (a_windowY < ((yc - squareHeight/2) + (littleSquareHeight * row)))
 			{
 				break;
 			}
 		}
 
-		for (y = 1; y < m_the1v1Game.GetBoard().GetNColumns(); y++)
+		for (col = 1; col < m_the1v1Game.GetBoard().GetNColumns(); col++)
 		{
-			if (a_windowY < ((yc - squareHeight/2) + (littleSquareHeight * y)))
+			if (a_windowX < ((xc - squareWidth/2) + (littleSquareWidth * col)))
 			{
 				break;
 			}
 		}
 
-		out_boardCoord.m_X = x - 1;
-		out_boardCoord.m_Y = y - 1;
+		out_boardCoord.m_row = row - 1;
+		out_boardCoord.m_col = col - 1;
 
 		return true;
 	}
@@ -1054,18 +1054,18 @@ void MainWindow::SetSquareInBoard(const Coordinate &a_coord, Cairo::RefPtr<Cairo
 		int32_t height = allocation.get_height();
 		int32_t squareSize = std::min(width, height);
 
-		int32_t littleSquareHeight = squareSize / m_the1v1Game.GetBoard().GetNColumns();
-		int32_t littleSquareWidth  = squareSize / m_the1v1Game.GetBoard().GetNRows();
+		int32_t littleSquareHeight = squareSize / m_the1v1Game.GetBoard().GetNRows();
+		int32_t littleSquareWidth  = squareSize / m_the1v1Game.GetBoard().GetNColumns();
 
-		int32_t squareHeight = littleSquareHeight * m_the1v1Game.GetBoard().GetNColumns();
-		int32_t squareWidth  = littleSquareWidth  * m_the1v1Game.GetBoard().GetNRows();
+		int32_t squareHeight = littleSquareHeight * m_the1v1Game.GetBoard().GetNRows();
+		int32_t squareWidth  = littleSquareWidth  * m_the1v1Game.GetBoard().GetNColumns();
 
 		int32_t xc = width  / 2;
 		int32_t yc = height / 2;
 
 		cr->rectangle(
-				(xc - squareWidth/2) +  (littleSquareWidth  * a_coord.m_X) + 1,
-				(yc - squareHeight/2) + (littleSquareHeight * a_coord.m_Y) + 1,
+				(xc - squareWidth/2) +  (littleSquareWidth  * a_coord.m_col) + 1,
+				(yc - squareHeight/2) + (littleSquareHeight * a_coord.m_row) + 1,
 				littleSquareWidth  - 2,
 				littleSquareHeight - 2);
 

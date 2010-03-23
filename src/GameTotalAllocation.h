@@ -14,7 +14,7 @@
 // details.
 //
 // You should have received a copy of the GNU General Public License along
-// with Foobar. If not, see http://www.gnu.org/licenses/.
+// with Blockem. If not, see http://www.gnu.org/licenses/.
 //
 /// @file  GameTotalAllocation.h
 /// @brief
@@ -87,7 +87,7 @@ private:
     ///        iterations of the game
     /// @param an array with pointers to sets with the nucleation points of the previous
     ///        itearations of the game
-    /// @return true if it succeded. False otherwise
+    /// @return true if it succeeded. False otherwise
     bool AllocateAllPieces(
             Piece*              a_lastPieces[e_numberOfPieces],
             STLCoordinateSet_t* a_oldNkPoints[e_numberOfPieces]);

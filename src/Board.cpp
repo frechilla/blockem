@@ -14,7 +14,7 @@
 // details.
 //
 // You should have received a copy of the GNU General Public License along
-// with Foobar. If not, see http://www.gnu.org/licenses/.
+// with Blockem. If not, see http://www.gnu.org/licenses/.
 //
 /// @file  Board.cpp
 /// @brief
@@ -127,15 +127,15 @@ void Board::CopyFromObject(const Board &a_src)
     }
 }
 
-void Board::SetSquare(char a_char, int32_t a_coordX, int32_t a_coordY)
+void Board::SetSquare(char a_char, int32_t a_row, int32_t a_col)
 {
 #ifdef DEBUG
-    assert(a_coordX >= 0);
-    assert(a_coordX < m_nRows);
-    assert(a_coordY >= 0);
-    assert(a_coordY < m_nColumns);
+    assert(a_row >= 0);
+    assert(a_row < m_nRows);
+    assert(a_col >= 0);
+    assert(a_col < m_nColumns);
 #endif
-    m_theBoard[a_coordX][a_coordY] = a_char;
+    m_theBoard[a_row][a_col] = a_char;
 }
 
 void Board::PrintBoard(std::ostream& a_outStream) const

@@ -14,7 +14,7 @@
 // details.
 //
 // You should have received a copy of the GNU General Public License along
-// with Foobar. If not, see http://www.gnu.org/licenses/.
+// with Blockem. If not, see http://www.gnu.org/licenses/.
 //
 /// @file  AboutDialog.cpp
 /// @brief
@@ -57,7 +57,7 @@ AboutDialog::AboutDialog(Glib::RefPtr<Gnome::Glade::Xml> a_refXml) throw (GUIExc
                << GUI_PATH_TO_LOGO
                << std::endl;
         }
-    
+
         if (picture)
         {
            m_theAboutDialog->set_logo(picture);

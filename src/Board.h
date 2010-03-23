@@ -14,7 +14,7 @@
 // details.
 //
 // You should have received a copy of the GNU General Public License along
-// with Foobar. If not, see http://www.gnu.org/licenses/.
+// with Blockem. If not, see http://www.gnu.org/licenses/.
 //
 /// @file  Board.h
 /// @brief
@@ -40,7 +40,7 @@ class Board
 {
 public:
     /// @param a_emptyChar. Character to be used to represent an empty place in the board
-    /// @param a_board. array that should be a_rRows wide X a_nColumns height which will
+    /// @param a_board. array that should be a_nRows height X a_nColumns wide which will
     ///        initialize the board status
     Board(int32_t a_rows, int32_t a_columns, char a_emptyChar = ' ', char** a_board = NULL);
     virtual ~Board();
@@ -50,57 +50,57 @@ public:
     /// @brief operator=. Needed because there's some dynamic memory
     Board& operator= (const Board &a_src);
 
-    /// @return true if the position specified by a_coordX is empty
+    /// @return true if the position specified by a_coord is empty
     inline bool IsCoordEmpty(Coordinate a_coord) const
     {
-    	return IsCoordEmpty(a_coord.m_X, a_coord.m_Y);
+    	return IsCoordEmpty(a_coord.m_row, a_coord.m_col);
     }
-    /// @return true if the position (a_coordX, a_coordY) is empty
-    inline bool IsCoordEmpty(int32_t a_coordX, int32_t a_coordY) const
+    /// @return true if the position (a_row, a_col) is empty
+    inline bool IsCoordEmpty(int32_t a_row, int32_t a_col) const
     {
 #ifdef DEBUG
-    	assert(a_coordX >= 0);
-    	assert(a_coordY >= 0);
-    	assert(a_coordX < m_nRows);
-    	assert(a_coordY < m_nColumns);
+    	assert(a_row >= 0);
+    	assert(a_col >= 0);
+    	assert(a_row < m_nRows);
+    	assert(a_col < m_nColumns);
 #endif
-    	return (m_theBoard[a_coordX][a_coordY] == m_emptyChar);
+    	return (m_theBoard[a_row][a_col] == m_emptyChar);
     }
 
     /// @brief set the coord passed as parameter to empty in the board
-    inline void BlankCoord(int32_t a_coordX, int32_t a_coordY)
+    inline void BlankCoord(int32_t a_row, int32_t a_col)
     {
 #ifdef DEBUG
-    	assert(a_coordX >= 0);
-    	assert(a_coordY >= 0);
-    	assert(a_coordX < m_nRows);
-    	assert(a_coordY < m_nColumns);
+    	assert(a_row >= 0);
+    	assert(a_col >= 0);
+    	assert(a_row < m_nRows);
+    	assert(a_col < m_nColumns);
 #endif
-        m_theBoard[a_coordX][a_coordY] = m_emptyChar;
+        m_theBoard[a_row][a_col] = m_emptyChar;
     }
 
-    /// @return true if the player is in the coords (a_coordX, a_coordY)
-    inline bool IsPlayerInCoord(int32_t a_coordX, int32_t a_coordY, const Player &a_player) const
+    /// @return true if the player is in the coords (a_row, a_col)
+    inline bool IsPlayerInCoord(int32_t a_row, int32_t a_col, const Player &a_player) const
     {
 #ifdef DEBUG
-    	assert(a_coordX >= 0);
-    	assert(a_coordY >= 0);
-    	assert(a_coordX < m_nRows);
-    	assert(a_coordY < m_nColumns);
+    	assert(a_row >= 0);
+    	assert(a_col >= 0);
+    	assert(a_row < m_nRows);
+    	assert(a_col < m_nColumns);
 #endif
-    	return (m_theBoard[a_coordX][a_coordY] == a_player.PresentationChar());
+    	return (m_theBoard[a_row][a_col] == a_player.PresentationChar());
     }
 
     /// @brief set the coord passed as paramater to be occupied by the player 'a_player'
-    inline void SetPlayerInCoord(int32_t a_coordX, int32_t a_coordY, const Player &a_player)
+    inline void SetPlayerInCoord(int32_t a_row, int32_t a_col, const Player &a_player)
     {
 #ifdef DEBUG
-    	assert(a_coordX >= 0);
-    	assert(a_coordY >= 0);
-    	assert(a_coordX < m_nRows);
-    	assert(a_coordY < m_nColumns);
+    	assert(a_row >= 0);
+    	assert(a_col >= 0);
+    	assert(a_row < m_nRows);
+    	assert(a_col < m_nColumns);
 #endif
-    	m_theBoard[a_coordX][a_coordY] = a_player.PresentationChar();
+    	m_theBoard[a_row][a_col] = a_player.PresentationChar();
     }
 
     /// Get the number of rows of the board
@@ -122,7 +122,8 @@ public:
     void Reset();
 
     /// set a square of the board to a particular value
-    void SetSquare(char a_char, int32_t a_coordX, int32_t a_coordY);
+    /// should be used as little as possible. Better to use SetPlayerInCoord
+    void SetSquare(char a_char, int32_t a_row, int32_t a_col);
 
 private:
     /// the actual board

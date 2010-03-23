@@ -14,7 +14,7 @@
 // details.
 //
 // You should have received a copy of the GNU General Public License along
-// with Foobar. If not, see http://www.gnu.org/licenses/.
+// with Blockem. If not, see http://www.gnu.org/licenses/.
 //
 /// @file  Heuristic.cpp
 /// @brief
@@ -188,29 +188,29 @@ int32_t Heuristic::CalculateCircularWeight(
 
 bool Heuristic::IsPointTouchingPlayer(
             const Board &a_board,
-            int32_t x,
-            int32_t y,
+            int32_t a_row,
+            int32_t a_col,
             const Player &a_player)
 {
-    if ( (y > 0) &&
-         (a_board.IsPlayerInCoord(x, y-1, a_player)))
+    if ( (a_col > 0) &&
+         (a_board.IsPlayerInCoord(a_row, a_col-1, a_player)))
     {
         return true;
     }
-    if ( (y < a_board.GetNColumns() - 1) &&
-         (a_board.IsPlayerInCoord(x, y+1, a_player)))
-    {
-        return true;
-    }
-
-    if ( (x > 0) &&
-         (a_board.IsPlayerInCoord(x-1, y, a_player)) )
+    if ( (a_col < a_board.GetNColumns() - 1) &&
+         (a_board.IsPlayerInCoord(a_row, a_col+1, a_player)))
     {
         return true;
     }
 
-    if ( (x < a_board.GetNRows() - 1) &&
-         (a_board.IsPlayerInCoord(x+1, y, a_player)) )
+    if ( (a_row > 0) &&
+         (a_board.IsPlayerInCoord(a_row-1, a_col, a_player)) )
+    {
+        return true;
+    }
+
+    if ( (a_row < a_board.GetNRows() - 1) &&
+         (a_board.IsPlayerInCoord(a_row+1, a_col, a_player)) )
     {
         return true;
     }

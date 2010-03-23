@@ -14,7 +14,7 @@
 // details.
 //
 // You should have received a copy of the GNU General Public License along
-// with Foobar. If not, see http://www.gnu.org/licenses/.
+// with Blockem. If not, see http://www.gnu.org/licenses/.
 //
 /// @file  Heuristic.h
 /// @brief
@@ -91,8 +91,8 @@ protected:
     ///          note that touching a corner is not 'touching' for this function
     static bool IsPointTouchingPlayer(
             const Board &a_board,
-            int32_t x,
-            int32_t y,
+            int32_t a_row,
+            int32_t a_column,
             const Player &a_player);
 
 private:

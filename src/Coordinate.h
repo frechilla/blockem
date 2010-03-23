@@ -14,7 +14,7 @@
 // details.
 //
 // You should have received a copy of the GNU General Public License along
-// with Foobar. If not, see http://www.gnu.org/licenses/.
+// with Blockem. If not, see http://www.gnu.org/licenses/.
 //
 /// @file  Coordinate.h
 /// @brief
@@ -35,21 +35,21 @@ class Coordinate
 {
 public:
 	Coordinate():
-		m_X(0),
-		m_Y(0)
+	    m_row(0),
+	    m_col(0)
 	{};
-	Coordinate(int32_t a_coordX, int32_t a_coordY):
-		m_X(a_coordX),
-		m_Y(a_coordY)
+	Coordinate(int32_t a_row, int32_t a_column):
+	    m_row(a_row),
+	    m_col(a_column)
 	{};
 	virtual ~Coordinate()
 	{}
 
 	/// @brief sets the value of the coordinate
-	void Set(int32_t a_coordX, int32_t a_coordY)
+	void Set(int32_t a_row, int32_t a_column)
 	{
-		m_X = a_coordX;
-		m_Y = a_coordY;
+	    m_row = a_row;
+	    m_col = a_column;
 	};
 
 	///@brief struct to be used as a comparator.
@@ -62,8 +62,8 @@ public:
 		///@brief returns true if its first argument is less than its second argument, and false otherwise
 		bool operator()(const Coordinate& coord1, const Coordinate& coord2) const
 		{
-			if ( (coord1.m_X < coord2.m_X) ||
-				 ( (coord1.m_X == coord2.m_X) && (coord1.m_Y < coord2.m_Y) ) )
+			if ( (coord1.m_row < coord2.m_row) ||
+				 ( (coord1.m_row == coord2.m_row) && (coord1.m_col < coord2.m_col) ) )
 			{
 				return true;
 			}
@@ -72,8 +72,10 @@ public:
 		}
 	};
 
-	int32_t m_X;
-	int32_t m_Y;
+	/// row of this coordinate
+	int32_t m_row;
+	/// column of this coordinate
+	int32_t m_col;
 };
 
 #endif /* COORDINATE_H_ */

@@ -14,7 +14,7 @@
 // details.
 //
 // You should have received a copy of the GNU General Public License along
-// with Foobar. If not, see http://www.gnu.org/licenses/.
+// with Blockem. If not, see http://www.gnu.org/licenses/.
 //
 /// @file  Game1v1.h
 /// @brief
@@ -75,7 +75,7 @@ public:
 
 	/// @brief builds the game
 	/// It creates a board and two players,
-    ///   * 'me' (computer) which the MinMax algorithm will try to make win
+    ///   * 'me' (computer) which the MinMax algorithm will maximise to win
     ///   * the 'opponent' (user), which the MinMax algorithm will try to beat
     Game1v1();
 	virtual ~Game1v1();
@@ -139,7 +139,7 @@ public:
 	/// @param the heuristic method for the min max algorithm
 	/// @param maximum depth for the search tree
 	/// @param a reference to a piece where the result will be stored
-	/// @param a reference to a Coordinate where the result will be storerd
+	/// @param a reference to a Coordinate where the result will be stored
     /// @param parameter with a reference to a variable that could be set
     ///        to non-zero by a different thread indicating to the thread currently stuck
     ///        in the calculation algorithm to stop. If the current thread notices
@@ -200,8 +200,7 @@ private:
     /// before calling this function since it just will set to empty the squares
 	/// @param the board
     /// @param the piece
-    /// @param the ABSOLUTE coord X
-    /// @param the absolute coord Y
+    /// @param the ABSOLUTE coord
     /// @param the player that owns the piece to be removed
 	/// @param the opponent of the player that owns the piece
     static void RemovePiece(
@@ -214,8 +213,7 @@ private:
     /// put down a piece on the board. The user is supposed to check if there is space for it before calling
     /// @param the board
     /// @param the piece
-    /// @param the ABSOLUTE coord X
-    /// @param the absolute coord Y
+    /// @param the ABSOLUTE coord
     /// @param the player that owns the piece to be put down
     /// @param the opponent of the player that owns the piece
     static void PutDownPiece(
@@ -258,8 +256,8 @@ private:
             Heuristic::calculateMethod_t a_heuristicMethod,
             int32_t                      originalDepth,
             int32_t                      depth,
-            int32_t                      alpha,  //  = -INFINITE (for the 1st call)
-            int32_t                      beta, //);  //  = INFINITE  (for the 1st call)
+            int32_t                      alpha,  //  = -INFINITE (in the 1st call)
+            int32_t                      beta,   //  = INFINITE  (in the 1st call)
             const volatile sig_atomic_t  &stopProcessingFlag,
             int32_t                      &times);
 

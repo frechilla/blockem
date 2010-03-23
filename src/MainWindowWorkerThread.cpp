@@ -14,7 +14,7 @@
 // details.
 //
 // You should have received a copy of the GNU General Public License along
-// with Foobar. If not, see http://www.gnu.org/licenses/.
+// with Blockem. If not, see http://www.gnu.org/licenses/.
 //
 /// @file MainWindowWorkerThread.cpp
 /// @brief
@@ -188,7 +188,7 @@ void* MainWindowWorkerThread::ThreadRoutine(void *a_ThreadParam)
         do
         {
             resultPiece = Piece(e_noPiece);
-            resultCoord.m_X = resultCoord.m_Y = 0;
+            resultCoord.m_row = resultCoord.m_col = 0;
 
             int32_t depth = 3;
             Heuristic::calculateMethod_t heuristicMethod = Heuristic::CalculateNKWeighted;

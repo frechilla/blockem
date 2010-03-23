@@ -14,7 +14,7 @@
 // details.
 //
 // You should have received a copy of the GNU General Public License along
-// with Foobar. If not, see http://www.gnu.org/licenses/.
+// with Blockem. If not, see http://www.gnu.org/licenses/.
 //
 /// @file  Rules.cpp
 /// @brief
@@ -47,8 +47,8 @@ bool Rules::IsPieceDeployable(
 
     for (uint8_t i = 0 ; i < a_piece.GetNSquares() ; i++)
     {
-        int32_t row    = a_coord.m_X + a_piece.m_coords[i].m_X;
-        int32_t column = a_coord.m_Y + a_piece.m_coords[i].m_Y;
+        int32_t row    = a_coord.m_row + a_piece.m_coords[i].m_row;
+        int32_t column = a_coord.m_col + a_piece.m_coords[i].m_col;
 
         if ( (row    < 0) || (row    >= a_board.GetNRows())    ||
              (column < 0) || (column >= a_board.GetNColumns()) ||
@@ -112,8 +112,8 @@ bool Rules::IsPieceDeployableInNKPoint(
 
     for (uint8_t i = 0 ; i < a_piece.GetNSquares() ; i++)
     {
-        int32_t row    = a_coord.m_X + a_piece.m_coords[i].m_X;
-        int32_t column = a_coord.m_Y + a_piece.m_coords[i].m_Y;
+        int32_t row    = a_coord.m_row + a_piece.m_coords[i].m_row;
+        int32_t column = a_coord.m_col + a_piece.m_coords[i].m_col;
 
         if ( (row    < 0) || (row    >= a_board.GetNRows())    ||
              (column < 0) || (column >= a_board.GetNColumns()) ||
@@ -151,7 +151,7 @@ bool Rules::IsPieceDeployableInNKPoint(
 			return false;
 		}
 
-        if ( (row == a_nkPoint.m_X) && (column == a_nkPoint.m_Y) )
+        if ( (row == a_nkPoint.m_row) && (column == a_nkPoint.m_col) )
         {
         	touchesNKPoint = true;
         }
@@ -170,8 +170,8 @@ bool Rules::IsPieceDeployableInStartingPoint(
 
     for (uint8_t i = 0 ; i < a_piece.GetNSquares() ; i++)
     {
-        int32_t row    = a_coord.m_X + a_piece.m_coords[i].m_X;
-        int32_t column = a_coord.m_Y + a_piece.m_coords[i].m_Y;
+        int32_t row    = a_coord.m_row + a_piece.m_coords[i].m_row;
+        int32_t column = a_coord.m_col + a_piece.m_coords[i].m_col;
 
         if ( (row    < 0) || (row    >= a_board.GetNRows())    ||
              (column < 0) || (column >= a_board.GetNColumns()) ||
@@ -181,7 +181,7 @@ bool Rules::IsPieceDeployableInStartingPoint(
             return false;
         }
 
-        if ( (row == a_startingPoint.m_X) && (column == a_startingPoint.m_Y) )
+        if ( (row == a_startingPoint.m_row) && (column == a_startingPoint.m_col) )
         {
         	touchesStartingPoint = true;
         }
@@ -294,8 +294,8 @@ int32_t Rules::CalculateValidCoordsInNucleationPoint(
             for (int16_t j = -increment ; j <= increment ; j++)
             {
             	Coordinate thisCoord(
-            			a_nkPointCoord.m_X + i,
-            			a_nkPointCoord.m_Y + j);
+            			a_nkPointCoord.m_row + i,
+            			a_nkPointCoord.m_col + j);
 
 				if (IsPieceDeployableInNKPoint(
 						a_board, a_piece, thisCoord, a_nkPointCoord, a_player))
@@ -352,17 +352,17 @@ int32_t Rules::CalculateValidCoordsInStartingPoint(
 				for (uint8_t k = 0 ; k < a_piece.GetNSquares() ; k++)
 				{
 					Coordinate thisCoord(
-							a_startingPointCoord.m_X + i + a_piece.m_coords[k].m_X,
-							a_startingPointCoord.m_Y + j + a_piece.m_coords[k].m_Y);
+							a_startingPointCoord.m_row + i + a_piece.m_coords[k].m_row,
+							a_startingPointCoord.m_col + j + a_piece.m_coords[k].m_col);
 
-					if ( (thisCoord.m_X < 0) || (thisCoord.m_X >= a_board.GetNRows()) ||
-						 (thisCoord.m_Y < 0) || (thisCoord.m_Y >= a_board.GetNColumns()) )
+					if ( (thisCoord.m_row < 0) || (thisCoord.m_row >= a_board.GetNRows()) ||
+						 (thisCoord.m_col < 0) || (thisCoord.m_col >= a_board.GetNColumns()) )
 					{
 						validCoord = false;
 						break; // exit this fucking loop. The piece can't be place there 'cos it will be out of the board
 					}
-					else if ( (thisCoord.m_X == a_startingPointCoord.m_X) &&
-							  (thisCoord.m_Y == a_startingPointCoord.m_Y) )
+					else if ( (thisCoord.m_row == a_startingPointCoord.m_row) &&
+							  (thisCoord.m_col == a_startingPointCoord.m_col) )
 					{
 						// this square of this piece would be touching the selected starting point
 						validCoord = true;
@@ -377,8 +377,8 @@ int32_t Rules::CalculateValidCoordsInStartingPoint(
 					// check if there's too many valid coords to be saved in this array
 					if (nValidCoords < a_size)
 					{
-                        out_validCoords[nValidCoords].m_X = a_startingPointCoord.m_X + i;
-                        out_validCoords[nValidCoords].m_Y = a_startingPointCoord.m_Y + j;
+                        out_validCoords[nValidCoords].m_row = a_startingPointCoord.m_row + i;
+                        out_validCoords[nValidCoords].m_col = a_startingPointCoord.m_col + j;
 					}
 
 					nValidCoords++;
@@ -393,8 +393,8 @@ int32_t Rules::CalculateValidCoordsInStartingPoint(
         assert(a_board.IsCoordEmpty(a_startingPointCoord));
     	assert(0 < a_size);
 #endif
-		out_validCoords[nValidCoords].m_X = a_startingPointCoord.m_X;
-		out_validCoords[nValidCoords].m_Y = a_startingPointCoord.m_Y;
+		out_validCoords[nValidCoords].m_row = a_startingPointCoord.m_row;
+		out_validCoords[nValidCoords].m_col = a_startingPointCoord.m_col;
 
 		nValidCoords++;
     }
@@ -444,10 +444,10 @@ void Rules::RecalculateNKAroundPiece(
 	// will be (increment x 2) + 1
     int32_t increment = a_piece.GetSquareSideHalfSize() + 1;
 
-    int32_t startX = std::max(0, (a_coord.m_X - increment));
-    int32_t startY = std::max(0, (a_coord.m_Y - increment));
-    int32_t endX   = std::min(a_coord.m_X + increment, a_board.GetNRows() - 1);
-    int32_t endY   = std::min(a_coord.m_Y + increment, a_board.GetNColumns() - 1);
+    int32_t startX = std::max(0, (a_coord.m_row - increment));
+    int32_t startY = std::max(0, (a_coord.m_col - increment));
+    int32_t endX   = std::min(a_coord.m_row + increment, a_board.GetNRows() - 1);
+    int32_t endY   = std::min(a_coord.m_col + increment, a_board.GetNColumns() - 1);
 
     for (int32_t x = startX ; x <= endX; x++)
     {

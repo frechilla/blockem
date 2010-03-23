@@ -14,7 +14,7 @@
 // details.
 //
 // You should have received a copy of the GNU General Public License along
-// with Foobar. If not, see http://www.gnu.org/licenses/.
+// with Blockem. If not, see http://www.gnu.org/licenses/.
 //
 /// @file  Piece.cpp
 /// @brief
@@ -128,13 +128,13 @@ void Piece::SetPiece(Coordinate a_coords[PIECE_MAX_SQUARES], uint8_t a_nSquares,
     uint8_t i;
     for (i = 0; i < a_nSquares ; i++)
     {
-        m_coords[i].m_X = m_origCoords[i].m_X = a_coords[i].m_X;
-        m_coords[i].m_Y = m_origCoords[i].m_Y = a_coords[i].m_Y;
+        m_coords[i].m_row = m_origCoords[i].m_row = a_coords[i].m_row;
+        m_coords[i].m_col = m_origCoords[i].m_col = a_coords[i].m_col;
     }
     for (i = a_nSquares; i < PIECE_MAX_SQUARES ; i++)
     {
-        m_coords[i].m_X = m_origCoords[i].m_X = 0;
-        m_coords[i].m_Y = m_origCoords[i].m_Y = 0;
+        m_coords[i].m_row = m_origCoords[i].m_row = 0;
+        m_coords[i].m_col = m_origCoords[i].m_col = 0;
     }
 
     m_initialised = true;
@@ -149,13 +149,13 @@ void Piece::Reset()
     uint8_t i;
     for (i = 0; i < m_nSquares ; i++)
     {
-        m_coords[i].m_X = m_origCoords[i].m_X;
-        m_coords[i].m_Y = m_origCoords[i].m_Y;
+        m_coords[i].m_row = m_origCoords[i].m_row;
+        m_coords[i].m_col = m_origCoords[i].m_col;
     }
     for (i = m_nSquares; i < PIECE_MAX_SQUARES ; i++)
     {
-        m_coords[i].m_X = m_origCoords[i].m_X;
-        m_coords[i].m_Y = m_origCoords[i].m_Y;
+        m_coords[i].m_row = m_origCoords[i].m_row;
+        m_coords[i].m_col = m_origCoords[i].m_col;
     }
 
     m_nMirrors   = 0;
@@ -177,33 +177,33 @@ int8_t Piece::Rotate()
     for (uint8_t i = 0; i < m_nSquares; i++)
     {
     	int8_t aux;
-        if ((m_coords[i].m_X >= 0) && (m_coords[i].m_Y >= 0))
+        if ((m_coords[i].m_row >= 0) && (m_coords[i].m_col >= 0))
         {
             // X will be positive. Y negative
-            aux = m_coords[i].m_X;
-            m_coords[i].m_X = m_coords[i].m_Y;
-            m_coords[i].m_Y = -aux;
+            aux = m_coords[i].m_row;
+            m_coords[i].m_row = m_coords[i].m_col;
+            m_coords[i].m_col = -aux;
         }
-        else if ((m_coords[i].m_X >= 0) && (m_coords[i].m_Y < 0))
+        else if ((m_coords[i].m_row >= 0) && (m_coords[i].m_col < 0))
         {
             // both will be negative
-            aux = m_coords[i].m_X;
-            m_coords[i].m_X = m_coords[i].m_Y;
-            m_coords[i].m_Y = -aux;
+            aux = m_coords[i].m_row;
+            m_coords[i].m_row = m_coords[i].m_col;
+            m_coords[i].m_col = -aux;
         }
-        else if ((m_coords[i].m_X < 0) && (m_coords[i].m_Y < 0))
+        else if ((m_coords[i].m_row < 0) && (m_coords[i].m_col < 0))
         {
             // X will be negative. Y positive
-            aux = m_coords[i].m_X;
-            m_coords[i].m_X = m_coords[i].m_Y;
-            m_coords[i].m_Y = -aux;
+            aux = m_coords[i].m_row;
+            m_coords[i].m_row = m_coords[i].m_col;
+            m_coords[i].m_col = -aux;
         }
-        else // ((m_coords[i].m_X < 0) && (m_coords[i].m_Y >= 0))
+        else // ((m_coords[i].m_row < 0) && (m_coords[i].m_col >= 0))
         {
             // both will be positive
-            aux = m_coords[i].m_X;
-            m_coords[i].m_X = m_coords[i].m_Y;
-            m_coords[i].m_Y = -aux;
+            aux = m_coords[i].m_row;
+            m_coords[i].m_row = m_coords[i].m_col;
+            m_coords[i].m_col = -aux;
         }
     }
 
@@ -231,7 +231,7 @@ bool Piece::Mirror()
 
 	for (uint8_t i = 0; i < m_nSquares; i++)
 	{
-		m_coords[i].m_X = -m_coords[i].m_X;
+		m_coords[i].m_row = -m_coords[i].m_row;
 	}
 
 	m_nMirrors++;

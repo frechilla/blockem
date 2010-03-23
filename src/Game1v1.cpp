@@ -14,7 +14,7 @@
 // details.
 //
 // You should have received a copy of the GNU General Public License along
-// with Foobar. If not, see http://www.gnu.org/licenses/.
+// with Blockem. If not, see http://www.gnu.org/licenses/.
 //
 /// @file  Game1v1.cpp
 /// @brief
@@ -43,7 +43,8 @@ const int8_t VALID_COORDS_SIZE = 5;
 
 /// Assume makes an ass out of u and me, but sometimes assumptions must be made
 /// This constant represents how many 5-square pieces will be put in-a-row before even
-/// considering to put a 4,3,2 or 1 square piece on the board (for the MinMax algorithm)
+/// considering to put a 4,3,2 or 1 square piece on the board
+/// the goal is improvimg the speed of the MinMax algorithm
 const int8_t MIN_5SQUARE_PIECES_AT_START = 5;
 
 
@@ -68,42 +69,42 @@ void Game1v1::RemovePiece(
         Player           &a_playerOpponent)
 {
 #ifdef DEBUG
-    assert(a_coord.m_X >= 0);
-    assert(a_coord.m_X < a_theBoard.GetNRows());
+    assert(a_coord.m_row >= 0);
+    assert(a_coord.m_row < a_theBoard.GetNRows());
 
-    assert(a_coord.m_Y >= 0);
-    assert(a_coord.m_Y < a_theBoard.GetNColumns());
+    assert(a_coord.m_col >= 0);
+    assert(a_coord.m_col < a_theBoard.GetNColumns());
 #endif
 
     for (uint8_t i = 0 ; i < a_piece.GetNSquares() ; i++)
     {
 #ifdef DEBUG
-        assert( ((a_coord.m_X + a_piece.m_coords[i].m_X) >= 0) &&
-        		((a_coord.m_X + a_piece.m_coords[i].m_X) < a_theBoard.GetNRows()) );
-        assert( ((a_coord.m_Y + a_piece.m_coords[i].m_Y) >= 0) &&
-        		((a_coord.m_Y + a_piece.m_coords[i].m_Y) < a_theBoard.GetNColumns()) );
+        assert( ((a_coord.m_row + a_piece.m_coords[i].m_row) >= 0) &&
+        		((a_coord.m_row + a_piece.m_coords[i].m_row) < a_theBoard.GetNRows()) );
+        assert( ((a_coord.m_col + a_piece.m_coords[i].m_col) >= 0) &&
+        		((a_coord.m_col + a_piece.m_coords[i].m_col) < a_theBoard.GetNColumns()) );
 
         assert(a_theBoard.IsPlayerInCoord(
-        		a_coord.m_X + a_piece.m_coords[i].m_X,
-        		a_coord.m_Y + a_piece.m_coords[i].m_Y,
+        		a_coord.m_row + a_piece.m_coords[i].m_row,
+        		a_coord.m_col + a_piece.m_coords[i].m_col,
         		a_playerMe));
 #endif
 
         a_theBoard.BlankCoord(
-        		a_coord.m_X + a_piece.m_coords[i].m_X,
-        		a_coord.m_Y + a_piece.m_coords[i].m_Y);
+        		a_coord.m_row + a_piece.m_coords[i].m_row,
+        		a_coord.m_col + a_piece.m_coords[i].m_col);
 
         // (a_coordX + pieceX, a_coordY + pieceY) is now empty
         // is it now a nucleation point for the opponent? (it couldn't be before, as it was occupied by 'me')
         if (Rules::IsNucleationPointCompute(
                 a_theBoard,
         		a_playerOpponent,
-        		a_coord.m_X + a_piece.m_coords[i].m_X,
-        		a_coord.m_Y + a_piece.m_coords[i].m_Y))
+        		a_coord.m_row + a_piece.m_coords[i].m_row,
+        		a_coord.m_col + a_piece.m_coords[i].m_col))
         {
         	a_playerOpponent.SetNucleationPoint(
-        			a_coord.m_X + a_piece.m_coords[i].m_X,
-        			a_coord.m_Y + a_piece.m_coords[i].m_Y);
+        			a_coord.m_row + a_piece.m_coords[i].m_row,
+        			a_coord.m_col + a_piece.m_coords[i].m_col);
         }
     }
 
@@ -119,37 +120,37 @@ void Game1v1::PutDownPiece(
         Player           &a_playerOpponent)
 {
 #ifdef DEBUG
-    assert(a_coord.m_X >= 0);
-    assert(a_coord.m_X < a_theBoard.GetNRows());
+    assert(a_coord.m_row >= 0);
+    assert(a_coord.m_row < a_theBoard.GetNRows());
 
-    assert(a_coord.m_Y >= 0);
-    assert(a_coord.m_Y < a_theBoard.GetNColumns());
+    assert(a_coord.m_col >= 0);
+    assert(a_coord.m_col < a_theBoard.GetNColumns());
 #endif
 
     for (int i = 0 ; i < a_piece.GetNSquares() ; i++)
     {
 #ifdef DEBUG
 
-        assert( ((a_coord.m_X + a_piece.m_coords[i].m_X) >= 0) &&
-        		((a_coord.m_X + a_piece.m_coords[i].m_X) < a_theBoard.GetNRows()) );
-        assert( ((a_coord.m_Y + a_piece.m_coords[i].m_Y) >= 0) &&
-        		((a_coord.m_Y + a_piece.m_coords[i].m_Y) < a_theBoard.GetNColumns()) );
+        assert( ((a_coord.m_row + a_piece.m_coords[i].m_row) >= 0) &&
+        		((a_coord.m_row + a_piece.m_coords[i].m_row) < a_theBoard.GetNRows()) );
+        assert( ((a_coord.m_col + a_piece.m_coords[i].m_col) >= 0) &&
+        		((a_coord.m_col + a_piece.m_coords[i].m_col) < a_theBoard.GetNColumns()) );
 
         assert(a_theBoard.IsCoordEmpty(
-        		a_coord.m_X + a_piece.m_coords[i].m_X,
-        		a_coord.m_Y + a_piece.m_coords[i].m_Y));
+        		a_coord.m_row + a_piece.m_coords[i].m_row,
+        		a_coord.m_col + a_piece.m_coords[i].m_col));
 #endif
 
         a_theBoard.SetPlayerInCoord(
-        		a_coord.m_X + a_piece.m_coords[i].m_X,
-        		a_coord.m_Y + a_piece.m_coords[i].m_Y,
+        		a_coord.m_row + a_piece.m_coords[i].m_row,
+        		a_coord.m_col + a_piece.m_coords[i].m_col,
         		a_playerMe);
 
         // this new point is being occupied by the player 'me'. It can't be a nucleation point
         // for the opponent any more
         a_playerOpponent.UnsetNucleationPoint(
-        		a_coord.m_X + a_piece.m_coords[i].m_X,
-        		a_coord.m_Y + a_piece.m_coords[i].m_Y);
+        		a_coord.m_row + a_piece.m_coords[i].m_row,
+        		a_coord.m_col + a_piece.m_coords[i].m_col);
     }
 
     // recalculate all the nk points around the piece we just put down (player 'me')
@@ -416,8 +417,8 @@ int32_t Game1v1::MinMax(
                                 if (maxValue > alpha)
                                 {
                                     bestPiece = m_playerMe.m_pieces[i];
-                                    bestCoord.m_X = validCoords[k].m_X;
-                                    bestCoord.m_Y = validCoords[k].m_Y;
+                                    bestCoord.m_row = validCoords[k].m_row;
+                                    bestCoord.m_col = validCoords[k].m_col;
 
                                     alpha = maxValue;
                                 }
@@ -465,8 +466,8 @@ int32_t Game1v1::MinMax(
 
     // only the highest node (root node) of the tree saves the result of the algorithm
     out_resultPiece = bestPiece;
-    out_coord.m_X   = bestCoord.m_X;
-    out_coord.m_Y   = bestCoord.m_Y;
+    out_coord.m_row   = bestCoord.m_row;
+    out_coord.m_col   = bestCoord.m_col;
 
     std::cout << "Times called " << timesCalled << std::endl;
 
@@ -493,8 +494,8 @@ int32_t Game1v1::ComputeFirstPiece(
         out_resultPiece.Rotate();
         out_resultPiece.Rotate();
 
-        out_coord.m_X = a_board.GetNRows()    - a_lastOpponentPieceCoord.m_X - 1;
-        out_coord.m_Y = a_board.GetNColumns() - a_lastOpponentPieceCoord.m_Y - 1;
+        out_coord.m_row = a_board.GetNRows()    - a_lastOpponentPieceCoord.m_row - 1;
+        out_coord.m_col = a_board.GetNColumns() - a_lastOpponentPieceCoord.m_col - 1;
     }
     else
     {

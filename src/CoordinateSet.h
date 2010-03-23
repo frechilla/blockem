@@ -14,7 +14,7 @@
 // details.
 //
 // You should have received a copy of the GNU General Public License along
-// with Foobar. If not, see http://www.gnu.org/licenses/.
+// with Blockem. If not, see http://www.gnu.org/licenses/.
 //
 /// @file  CoordinateSet.h
 /// @brief
@@ -43,7 +43,7 @@ const int8_t COORD_SET_NOT_PRESENT = 0;
 
 
 /// @brief set of coordinates
-/// This class represents a set of coordinates. It has to be instantiated with the number of ROWS nad COLUMNS
+/// This class represents a set of coordinates. It has to be instantiated with the number of ROWS and COLUMNS
 /// it will create an array[ROWS][COLUMNS] to represent whether a coordinate is contained or not in the set
 template<int32_t ROWS, int32_t COLUMNS>
 class CoordinateSet
@@ -61,22 +61,22 @@ public:
     inline bool isPresent(const Coordinate &a_coord) const
     {
 #ifdef DEBUG
-        assert( (a_coord.m_X >= 0) && (a_coord.m_X < ROWS));
-        assert( (a_coord.m_Y >= 0) && (a_coord.m_Y < COLUMNS));
+        assert( (a_coord.m_row >= 0) && (a_coord.m_row < ROWS));
+        assert( (a_coord.m_col >= 0) && (a_coord.m_col < COLUMNS));
 #endif
-        return (m_theSet[a_coord.m_X][a_coord.m_Y] == COORD_SET_PRESENT);
+        return (m_theSet[a_coord.m_row][a_coord.m_col] == COORD_SET_PRESENT);
     }
 
     /// insert items into a set
     inline void insert(const Coordinate &a_coord)
     {
 #ifdef DEBUG
-        assert( (a_coord.m_X >= 0) && (a_coord.m_X < ROWS));
-        assert( (a_coord.m_Y >= 0) && (a_coord.m_Y < COLUMNS));
+        assert( (a_coord.m_row >= 0) && (a_coord.m_row < ROWS));
+        assert( (a_coord.m_col >= 0) && (a_coord.m_col < COLUMNS));
 #endif
-        if (m_theSet[a_coord.m_X][a_coord.m_Y] == COORD_SET_NOT_PRESENT)
+        if (m_theSet[a_coord.m_row][a_coord.m_col] == COORD_SET_NOT_PRESENT)
         {
-            m_theSet[a_coord.m_X][a_coord.m_Y] = COORD_SET_PRESENT;
+            m_theSet[a_coord.m_row][a_coord.m_col] = COORD_SET_PRESENT;
             m_nElems++;
         }
     }
@@ -86,7 +86,7 @@ public:
     {
         for (int32_t i = 0; i < ROWS; i++)
         {
-            for (int32_t j = 0; j < ROWS; j++)
+            for (int32_t j = 0; j < COLUMNS; j++)
             {
                 m_theSet[i][j] = COORD_SET_NOT_PRESENT;
             }

@@ -14,7 +14,7 @@
 // details.
 //
 // You should have received a copy of the GNU General Public License along
-// with Foobar. If not, see http://www.gnu.org/licenses/.
+// with Blockem. If not, see http://www.gnu.org/licenses/.
 //
 /// @file main.cpp
 /// @brief
@@ -47,9 +47,9 @@
 
 #include "Heuristic.h"
 
-// the following code is needed to load the gui into the application. 
+// the following code is needed to load the gui into the application.
 // (See big comment in gui.h)
-// objdump in windows and linux is different and they create 
+// objdump in windows and linux is different and they create
 // the following variables different from one another.
 // Windows hasn't got any underscore at the start, while the object in linux
 // has it. This is enough to check whether we are in the windows environment
