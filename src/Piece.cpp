@@ -231,7 +231,7 @@ bool Piece::Mirror()
 
 	for (uint8_t i = 0; i < m_nSquares; i++)
 	{
-		m_coords[i].m_row = -m_coords[i].m_row;
+		m_coords[i].m_col = -m_coords[i].m_col;
 	}
 
 	m_nMirrors++;
@@ -300,7 +300,7 @@ void Piece::LoadPiece_4LittleS(Piece &thisPiece)
     Coordinate coords[4];
 
 	coords[0].Set(0, 0);
-	coords[1].Set(-1, 1);
+	coords[1].Set(1, -1);
 	coords[2].Set(1, 0);
 	coords[3].Set(0, 1);
 
@@ -454,14 +454,16 @@ void Piece::LoadPiece_5HalfSquare(Piece &thisPiece)
 void Piece::LoadPiece_5BigL(Piece &thisPiece)
 {
     // X
-    // X X X X
+    // X
+    // X
+    // X X
     Coordinate coords[5];
 
 	coords[0].Set(0, 0);
-	coords[1].Set(0, 2);
-	coords[2].Set(-1, -1);
-	coords[3].Set(0, -1);
-	coords[4].Set(0, 1);
+	coords[1].Set(-2, 0);
+	coords[2].Set(1, 1);
+	coords[3].Set(-1, 0);
+	coords[4].Set(1, 0);
 
     thisPiece.SetPiece(coords, 5, true,  4, 2);
 }

@@ -82,10 +82,13 @@ public:
     bool BoardDrawingArea_ExposeEvent(GdkEventExpose* event);
 
     /// @brief callback to be called when a button is pressed inside the board drawing area
-    bool BoardDrawingArea_ButtonPressed(GdkEventButton *event);
+    bool BoardDrawingArea_ButtonPressed(GdkEventButton* event);
 
     /// @brief callback to be called when the mouse moves inside the board drawing area
-    bool BoardDrawingArea_MotionNotify(GdkEventMotion *event);
+    bool BoardDrawingArea_MotionNotify(GdkEventMotion* event);
+
+    /// @brief callback to be called when the mouse leaves the board drawing area
+    bool BoardDrawingArea_LeaveAreaNotify(GdkEventCrossing* event);
 
     /// @brief callback to be called when the pick piece drawing area is redraw on screen
     bool PickPiecesDrawingArea_ExposeEvent(GdkEventExpose* event);

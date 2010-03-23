@@ -159,7 +159,7 @@
                     <property name="row_spacing">2</property>
                     <child>
                       <widget class="GtkButton" id="button_rotate">
-                        <property name="label" translatable="yes">&lt;- Rotate</property>
+                        <property name="label" translatable="yes">Rotate -&gt;</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>

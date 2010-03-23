@@ -263,6 +263,10 @@ MainWindow::MainWindow(
 	m_boardDrawingArea->add_events(Gdk::POINTER_MOTION_MASK);
 	m_boardDrawingArea->signal_motion_notify_event().connect(
 			sigc::mem_fun(*this, &MainWindow::BoardDrawingArea_MotionNotify));
+	m_boardDrawingArea->add_events(Gdk::LEAVE_NOTIFY_MASK);
+	m_boardDrawingArea->signal_leave_notify_event().connect(
+	            sigc::mem_fun(*this, &MainWindow::BoardDrawingArea_LeaveAreaNotify));
+
 
 	m_pickPiecesDrawingArea->signal_expose_event().connect(
             sigc::mem_fun(*this, &MainWindow::PickPiecesDrawingArea_ExposeEvent));
@@ -768,6 +772,20 @@ bool MainWindow::BoardDrawingArea_MotionNotify(GdkEventMotion *event)
 	return true;
 }
 
+bool MainWindow::BoardDrawingArea_LeaveAreaNotify(GdkEventCrossing* event)
+{
+    if ( (m_lastCoord.m_row != COORD_UNITIALISED) ||
+         (m_lastCoord.m_col != COORD_UNITIALISED) )
+    {
+        m_lastCoord.m_row = m_lastCoord.m_col = COORD_UNITIALISED;
+
+        // force the board to be redraw
+        InvalidateDrawingArea(m_boardDrawingArea);
+    }
+
+    return true;
+}
+
 bool MainWindow::PickPiecesDrawingArea_ExposeEvent(GdkEventExpose* event)
 {
     Glib::RefPtr<Gdk::Window> window = m_pickPiecesDrawingArea->get_window();
@@ -881,13 +899,22 @@ bool MainWindow::PickPiecesDrawingArea_ButtonPressed(GdkEventButton *event)
             }
         }
 
-        ePieceType_t pieceType = pickPlayerPiecesArray[row - 1][col - 1];
+        ePieceType_t pieceType = pickPlayerPiecesArray[row-1][col-1];
         if ( (pieceType != e_noPiece) &&
              (m_the1v1Game.GetPlayerOpponent().IsPieceAvailable(pieceType)) )
         {
-            UpdateSelectedPiece(pieceType);
+            if (pieceType != m_editPiece.GetType())
+            {
+                UpdateSelectedPiece(pieceType);
+            }
+
+            return true;
         }
     }
+
+    // got to here. The User clicked in somewhere where there was no piece.
+    // selected piece is restarted (no piece will be shown)
+    UpdateSelectedPiece(e_noPiece);
 
     return true;
 }

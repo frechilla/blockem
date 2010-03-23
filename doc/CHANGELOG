@@ -1,11 +1,13 @@
 now: next version
     - The ugly buttons that used to represent pieces have been changed by 
-      real (and beautiful) pieces
+      real (and beautiful) pieces.
+    - Ghost pieces on the board were kept painted even when the mouse
+      pointer had left the board drawing area. That has been fixed.
 
 19/03/2010: Version 0.1.1
-    - pthread dependecy has been moved to gthread
-    - Port to windows done. Code compiles in both linux and windows
-    - Unhandled menus in GUI are now blurred so the user can't select them
+    - pthread dependecy has been moved to gthread.
+    - Port to windows done. Code compiles in both linux and windows.
+    - Unhandled menus in GUI are now blurred so the user can't select them.
 
 04/02/2010: Version 0.1.0
     - This is the first release of this project.
@@ -15,4 +17,4 @@ now: next version
       by a simple (and a bit foolish) heuristic.
     - It can be compiled and installed using the well-known autotools.
     - There's still a long way to walk on this project. Have a look at the
-      document TODO for a small snapshot of it
+      document TODO for a small snapshot of it.
