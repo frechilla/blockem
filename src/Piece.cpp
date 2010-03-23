@@ -271,13 +271,13 @@ void Piece::LoadPiece_3LongPiece(Piece &thisPiece)
 }
 void Piece::LoadPiece_3Triangle(Piece &thisPiece)
 {
-    // X
     // X X
+    //   X
     Coordinate coords[3];
 
 	coords[0].Set(0, 0);
-	coords[1].Set(0, 1);
-	coords[2].Set(-1, 0);
+	coords[1].Set(0, -1);
+	coords[2].Set(1, 0);
 
     thisPiece.SetPiece(coords, 3, false, 4, 1);
 }
@@ -295,14 +295,14 @@ void Piece::LoadPiece_4LongPiece(Piece &thisPiece)
 }
 void Piece::LoadPiece_4LittleS(Piece &thisPiece)
 {
-    // X X
     //   X X
+    // X X
     Coordinate coords[4];
 
 	coords[0].Set(0, 0);
-	coords[1].Set(-1, -1);
-	coords[2].Set(0, 1);
-	coords[3].Set(-1, 0);
+	coords[1].Set(-1, 1);
+	coords[2].Set(1, 0);
+	coords[3].Set(0, 1);
 
     thisPiece.SetPiece(coords, 4, true, 2, 1);
 }
@@ -321,14 +321,14 @@ void Piece::LoadPiece_4LittleT(Piece &thisPiece)
 }
 void Piece::LoadPiece_4littleL(Piece &thisPiece)
 {
-    // X
     // X X X
+    //     X
     Coordinate coords[4];
 
 	coords[0].Set(0, 0);
-	coords[1].Set(-1, -1);
-	coords[2].Set(0, 1);
-	coords[3].Set(0, -1);
+	coords[1].Set(1, 1);
+	coords[2].Set(0, -1);
+	coords[3].Set(0, 1);
 
     thisPiece.SetPiece(coords, 4, true, 4, 1);
 }
@@ -347,14 +347,14 @@ void Piece::LoadPiece_4FullSquare(Piece &thisPiece)
 }
 void Piece::LoadPiece_5BigS(Piece &thisPiece)
 {
-    // X X
-    //   X
     //   X X
+    //   X
+    // X X
     Coordinate coords[5];
 
 	coords[0].Set(0, 0);
-	coords[1].Set(-1, -1);
-	coords[2].Set(1, 1);
+	coords[1].Set(-1, 1);
+	coords[2].Set(1, -1);
 	coords[3].Set(-1, 0);
 	coords[4].Set(1, 0);
 
@@ -362,13 +362,13 @@ void Piece::LoadPiece_5BigS(Piece &thisPiece)
 }
 void Piece::LoadPiece_5SafPiece(Piece &thisPiece)
 {
-    // X X
-    //   X X
     //   X
+    //   X X
+    // X X
     Coordinate coords[5];
 
 	coords[0].Set(0, 0);
-	coords[1].Set(-1, -1);
+	coords[1].Set(1, -1);
 	coords[2].Set(0, 1);
 	coords[3].Set(1, 0);
 	coords[4].Set(-1, 0);
@@ -392,13 +392,13 @@ void Piece::LoadPiece_5WPiece(Piece &thisPiece)
 }
 void Piece::LoadPiece_5CuntPiece(Piece &thisPiece)
 {
-    // X   X
     // X X X
+    // X   X
     Coordinate coords[5];
 
 	coords[0].Set(0, 0);
-	coords[1].Set(-1, -1);
-	coords[2].Set(-1, 1);
+	coords[1].Set(1, -1);
+	coords[2].Set(1, 1);
 	coords[3].Set(0, -1);
 	coords[4].Set(0, 1);
 
@@ -406,14 +406,18 @@ void Piece::LoadPiece_5CuntPiece(Piece &thisPiece)
 }
 void Piece::LoadPiece_5BigPenis(Piece &thisPiece)
 {
-    // X X X X X
+    // X
+    // X
+    // X
+    // X
+    // X
     Coordinate coords[5];
 
 	coords[0].Set(0, 0);
-	coords[1].Set(0, -2);
-	coords[2].Set(0, 2);
-	coords[3].Set(0, -1);
-	coords[4].Set(0, 1);
+	coords[1].Set(-2, 0);
+	coords[2].Set(2, 0);
+	coords[3].Set(-1, 0);
+	coords[4].Set(1, 0);
 
     thisPiece.SetPiece(coords, 5, false, 2, 2);
 }
@@ -463,30 +467,31 @@ void Piece::LoadPiece_5BigL(Piece &thisPiece)
 }
 void Piece::LoadPiece_5MrT(Piece &thisPiece)
 {
-    // X
+    //     X
     // X X X
-    // X
+    //     X
     Coordinate coords[5];
 
 	coords[0].Set(0, 0);
-	coords[1].Set(-1, -1);
-	coords[2].Set(1, -1);
-	coords[3].Set(0, 1);
-	coords[4].Set(0, -1);
+	coords[1].Set(-1, 1);
+	coords[2].Set(1, 1);
+	coords[3].Set(0, -1);
+	coords[4].Set(0, 1);
 
     thisPiece.SetPiece(coords, 5, false, 4, 1);
 }
 void Piece::LoadPiece_5SquareAppen(Piece &thisPiece)
 {
     // X X
-    // X X X
+    // X X
+    // X
     Coordinate coords[5];
 
 	coords[0].Set(0, 0);
-	coords[1].Set(-1, -1);
-	coords[2].Set(0, 1);
+	coords[1].Set(-1, 1);
+	coords[2].Set(1, 0);
 	coords[3].Set(-1, 0);
-	coords[4].Set(0, -1);
+	coords[4].Set(0, 1);
 
     thisPiece.SetPiece(coords, 5, true,  4, 1);
 }
@@ -506,15 +511,17 @@ void Piece::LoadPiece_5BoringPiece(Piece &thisPiece)
 }
 void Piece::LoadPiece_5TheUltimate(Piece &thisPiece)
 {
+    //   X
     // X X
-    //   X X X
+    // X
+    // X
     Coordinate coords[5];
 
 	coords[0].Set(0, 0);
-	coords[1].Set (0, 2);
-	coords[2].Set(-1, -1);
-	coords[3].Set(-1, 0);
-	coords[4].Set(0, 1);
+	coords[1].Set(2, 0);
+	coords[2].Set(-1, 1);
+	coords[3].Set(0, 1);
+	coords[4].Set(1, 0);
 
     thisPiece.SetPiece(coords, 5, true,  4, 2);
 }
