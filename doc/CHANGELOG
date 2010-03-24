@@ -3,6 +3,7 @@ now: next version
       real (and beautiful) pieces.
     - Ghost pieces on the board were kept painted even when the mouse
       pointer had left the board drawing area. That has been fixed.
+    - Icon added to the executable file in the windows version. 
 
 19/03/2010: Version 0.1.1
     - pthread dependecy has been moved to gthread.
@@ -12,7 +13,7 @@ now: next version
 04/02/2010: Version 0.1.0
     - This is the first release of this project.
     - At the moment it contains a fully functional 1vs1 game based on the 
-      board game blokus (http://blokus.com)
+      board game blokus (http://blokus.com).
     - 1vs1 means man versus computer, where the computer moves are calculated
       by a simple (and a bit foolish) heuristic.
     - It can be compiled and installed using the well-known autotools.
