@@ -27,18 +27,22 @@ blockem_DEPENDENCIES = gui_glade_obj.o
 
 blockem_LDADD = gui_glade_obj.o $(GTKMM_LIBS) $(GLADEMM_LIBS) $(GTHREAD_LIBS)
 
+CLEANFILES = gui_glade_obj.o compiletime.h
+
 # win32 specific commands
 if OS_WIN32
 blockem_res.o: blockem.rc
 	$(WINDRES) -i blockem.rc --input-format=rc -o blockem_res.o -O coff
 
+CLEANFILES += blockem_res.o
+blockem_DEPENDENCIES += blockem_res.o
 blockem_LDADD += blockem_res.o
 endif
 
-CLEANFILES = gui_glade_obj.o compiletime.h
 
 EXTRA_DIST = \
-gui.glade
+gui.glade    \
+blockem.rc
 
 blockem_SOURCES = \
 compiletime.h \

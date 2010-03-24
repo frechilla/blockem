@@ -605,9 +605,17 @@ GLADEMM_CFLAGS
 GTKMM_LIBS
 GTKMM_CFLAGS
 PKG_CONFIG
+WINDRES
 OS_WIN32_FALSE
 OS_WIN32_TRUE
-WINDRES
+host_os
+host_vendor
+host_cpu
+host
+build_os
+build_vendor
+build_cpu
+build
 LD
 OBJCOPY
 am__fastdepCC_FALSE
@@ -1320,6 +1328,10 @@ Program names:
   --program-prefix=PREFIX            prepend PREFIX to installed program names
   --program-suffix=SUFFIX            append SUFFIX to installed program names
   --program-transform-name=PROGRAM   run sed PROGRAM on installed program names
+
+System types:
+  --build=BUILD     configure for building on BUILD [guessed]
+  --host=HOST       cross-compile to build programs to run on HOST [BUILD]
 _ACEOF
 fi
 
@@ -2752,7 +2764,7 @@ am__tar='${AMTAR} chof - "$$tardir"'; am__untar='${AMTAR} xf -'
 ac_config_headers="$ac_config_headers config.h"
 
 
-$as_echo "#define SVN_REVISION \"27\"" >>confdefs.h
+$as_echo "#define SVN_REVISION \"27:28M\"" >>confdefs.h
 
 
 # Checks for programs.
@@ -4284,14 +4296,103 @@ else
 fi
 
 
-# OS dependant checking
+# OS dependant checking. http://www.airs.com/ian/configure/configure_5.html
+# This macro will arrange to define a few shell variables...
+# Make sure we can run config.sub.
+$SHELL "$ac_aux_dir/config.sub" sun4 >/dev/null 2>&1 ||
+  as_fn_error "cannot run $SHELL $ac_aux_dir/config.sub" "$LINENO" 5
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking build system type" >&5
+$as_echo_n "checking build system type... " >&6; }
+if test "${ac_cv_build+set}" = set; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_build_alias=$build_alias
+test "x$ac_build_alias" = x &&
+  ac_build_alias=`$SHELL "$ac_aux_dir/config.guess"`
+test "x$ac_build_alias" = x &&
+  as_fn_error "cannot guess build type; you must specify one" "$LINENO" 5
+ac_cv_build=`$SHELL "$ac_aux_dir/config.sub" $ac_build_alias` ||
+  as_fn_error "$SHELL $ac_aux_dir/config.sub $ac_build_alias failed" "$LINENO" 5
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_build" >&5
+$as_echo "$ac_cv_build" >&6; }
+case $ac_cv_build in
+*-*-*) ;;
+*) as_fn_error "invalid value of canonical build" "$LINENO" 5;;
+esac
+build=$ac_cv_build
+ac_save_IFS=$IFS; IFS='-'
+set x $ac_cv_build
+shift
+build_cpu=$1
+build_vendor=$2
+shift; shift
+# Remember, the first character of IFS is used to create $*,
+# except with old shells:
+build_os=$*
+IFS=$ac_save_IFS
+case $build_os in *\ *) build_os=`echo "$build_os" | sed 's/ /-/g'`;; esac
+
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking host system type" >&5
+$as_echo_n "checking host system type... " >&6; }
+if test "${ac_cv_host+set}" = set; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test "x$host_alias" = x; then
+  ac_cv_host=$ac_cv_build
+else
+  ac_cv_host=`$SHELL "$ac_aux_dir/config.sub" $host_alias` ||
+    as_fn_error "$SHELL $ac_aux_dir/config.sub $host_alias failed" "$LINENO" 5
+fi
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_host" >&5
+$as_echo "$ac_cv_host" >&6; }
+case $ac_cv_host in
+*-*-*) ;;
+*) as_fn_error "invalid value of canonical host" "$LINENO" 5;;
+esac
+host=$ac_cv_host
+ac_save_IFS=$IFS; IFS='-'
+set x $ac_cv_host
+shift
+host_cpu=$1
+host_vendor=$2
+shift; shift
+# Remember, the first character of IFS is used to create $*,
+# except with old shells:
+host_os=$*
+IFS=$ac_save_IFS
+case $host_os in *\ *) host_os=`echo "$host_os" | sed 's/ /-/g'`;; esac
+
+
+
 # win32 check from: http://git.gnome.org/browse/gedit/tree/configure.ac
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for native win32" >&5
 $as_echo_n "checking for native win32... " >&6; }
 case "$host" in
     *-*-mingw*)
         os_win32=yes
-        if test -n "$ac_tool_prefix"; then
+        ;;
+    *)
+        os_win32=no
+        ;;
+esac
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $os_win32" >&5
+$as_echo "$os_win32" >&6; }
+ if test "$os_win32"="yes"; then
+  OS_WIN32_TRUE=
+  OS_WIN32_FALSE='#'
+else
+  OS_WIN32_TRUE='#'
+  OS_WIN32_FALSE=
+fi
+
+if test "$os_win32" = "yes"; then
+    if test -n "$ac_tool_prefix"; then
   # Extract the first word of "${ac_tool_prefix}windres", so it can be a program name with args.
 set dummy ${ac_tool_prefix}windres; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
@@ -4383,21 +4484,7 @@ else
   WINDRES="$ac_cv_prog_WINDRES"
 fi
 
-        ;;
-    *)
-        os_win32=no
-        ;;
-esac
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $os_win32" >&5
-$as_echo "$os_win32" >&6; }
- if test "$os_win32"="yes"; then
-  OS_WIN32_TRUE=
-  OS_WIN32_FALSE='#'
-else
-  OS_WIN32_TRUE='#'
-  OS_WIN32_FALSE=
 fi
-
 
 # Checks for libraries.
 

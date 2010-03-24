@@ -34,8 +34,12 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
+build_triplet = @build@
+host_triplet = @host@
 bin_PROGRAMS = blockem$(EXEEXT)
 @OS_WIN32_TRUE@am__append_1 = blockem_res.o
+@OS_WIN32_TRUE@am__append_2 = blockem_res.o
+@OS_WIN32_TRUE@am__append_3 = blockem_res.o
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -142,14 +146,22 @@ am__quote = @am__quote@
 am__tar = @am__tar@
 am__untar = @am__untar@
 bindir = @bindir@
+build = @build@
 build_alias = @build_alias@
+build_cpu = @build_cpu@
+build_os = @build_os@
+build_vendor = @build_vendor@
 builddir = @builddir@
 datadir = @datadir@
 datarootdir = @datarootdir@
 docdir = @docdir@
 dvidir = @dvidir@
 exec_prefix = @exec_prefix@
+host = @host@
 host_alias = @host_alias@
+host_cpu = @host_cpu@
+host_os = @host_os@
+host_vendor = @host_vendor@
 htmldir = @htmldir@
 includedir = @includedir@
 infodir = @infodir@
@@ -176,12 +188,13 @@ top_srcdir = @top_srcdir@
 INCLUDES = -I$(srcdir)
 AM_CXXFLAGS = $(GTKMM_CFLAGS) $(GLADEMM_CFLAGS) $(GTHREAD_CFLAGS) -DDATADIR=\"$(datadir)/@PACKAGE@\"
 AM_LDFLAGS = 
-blockem_DEPENDENCIES = gui_glade_obj.o
+blockem_DEPENDENCIES = gui_glade_obj.o $(am__append_2)
 blockem_LDADD = gui_glade_obj.o $(GTKMM_LIBS) $(GLADEMM_LIBS) \
-	$(GTHREAD_LIBS) $(am__append_1)
-CLEANFILES = gui_glade_obj.o compiletime.h
+	$(GTHREAD_LIBS) $(am__append_3)
+CLEANFILES = gui_glade_obj.o compiletime.h $(am__append_1)
 EXTRA_DIST = \
-gui.glade
+gui.glade    \
+blockem.rc
 
 blockem_SOURCES = \
 compiletime.h \
@@ -224,9 +237,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign src/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu src/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --foreign src/Makefile
+	  $(AUTOMAKE) --gnu src/Makefile
 .PRECIOUS: Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
