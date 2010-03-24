@@ -35,6 +35,7 @@ NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
 bin_PROGRAMS = blockem$(EXEEXT)
+@OS_WIN32_TRUE@am__append_1 = blockem_res.o
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -128,6 +129,7 @@ SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
 VERSION = @VERSION@
+WINDRES = @WINDRES@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
@@ -175,7 +177,8 @@ INCLUDES = -I$(srcdir)
 AM_CXXFLAGS = $(GTKMM_CFLAGS) $(GLADEMM_CFLAGS) $(GTHREAD_CFLAGS) -DDATADIR=\"$(datadir)/@PACKAGE@\"
 AM_LDFLAGS = 
 blockem_DEPENDENCIES = gui_glade_obj.o
-blockem_LDADD = gui_glade_obj.o $(GTKMM_LIBS) $(GLADEMM_LIBS) $(GTHREAD_LIBS)
+blockem_LDADD = gui_glade_obj.o $(GTKMM_LIBS) $(GLADEMM_LIBS) \
+	$(GTHREAD_LIBS) $(am__append_1)
 CLEANFILES = gui_glade_obj.o compiletime.h
 EXTRA_DIST = \
 gui.glade
@@ -530,6 +533,10 @@ gui_glade_obj.o: gui.glade
 	@echo ' '
 
 main.o: compiletime.h
+
+# win32 specific commands
+@OS_WIN32_TRUE@blockem_res.o: blockem.rc
+@OS_WIN32_TRUE@	$(WINDRES) -i blockem.rc --input-format=rc -o blockem_res.o -O coff
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

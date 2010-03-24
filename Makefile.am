@@ -4,16 +4,18 @@ SUBDIRS = src src/tests doc
 
 # other stuff to be distributed without compiling
 EXTRA_DIST = \
-pixmaps/blokemlogo128.png \
-pixmaps/blokemlogo16.png \
-pixmaps/blokemlogo48.png \
-pixmaps/blokemlogo.png
+pixmaps/blockemicon.ico    \
+pixmaps/blockemlogo128.png \
+pixmaps/blockemlogo16.png  \
+pixmaps/blockemlogo48.png  \
+pixmaps/blockemlogo.png
 
 pixmapdir = $(datadir)/@PACKAGE@/pixmaps
 
 pixmap_DATA = \
-pixmaps/blokemlogo128.png \
-pixmaps/blokemlogo16.png \
-pixmaps/blokemlogo48.png \
-pixmaps/blokemlogo.png
+pixmaps/blockemicon.ico    \
+pixmaps/blockemlogo128.png \
+pixmaps/blockemlogo16.png  \
+pixmaps/blockemlogo48.png  \
+pixmaps/blockemlogo.png
 

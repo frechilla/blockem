@@ -179,6 +179,7 @@ SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
 VERSION = @VERSION@
+WINDRES = @WINDRES@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
@@ -228,17 +229,19 @@ SUBDIRS = src src/tests doc
 
 # other stuff to be distributed without compiling
 EXTRA_DIST = \
-pixmaps/blokemlogo128.png \
-pixmaps/blokemlogo16.png \
-pixmaps/blokemlogo48.png \
-pixmaps/blokemlogo.png
+pixmaps/blockemicon.ico    \
+pixmaps/blockemlogo128.png \
+pixmaps/blockemlogo16.png  \
+pixmaps/blockemlogo48.png  \
+pixmaps/blockemlogo.png
 
 pixmapdir = $(datadir)/@PACKAGE@/pixmaps
 pixmap_DATA = \
-pixmaps/blokemlogo128.png \
-pixmaps/blokemlogo16.png \
-pixmaps/blokemlogo48.png \
-pixmaps/blokemlogo.png
+pixmaps/blockemicon.ico    \
+pixmaps/blockemlogo128.png \
+pixmaps/blockemlogo16.png  \
+pixmaps/blockemlogo48.png  \
+pixmaps/blockemlogo.png
 
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive

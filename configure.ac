@@ -24,6 +24,20 @@ AC_CHECK_TOOL([OBJCOPY], [objcopy], [])
 
 AC_CHECK_TOOL([LD], [ld], [])
 
+# OS dependant checking
+# win32 check from: http://git.gnome.org/browse/gedit/tree/configure.ac
+AC_MSG_CHECKING([for native win32])
+case "$host" in
+    *-*-mingw*)
+        os_win32=yes
+        AC_CHECK_TOOL([WINDRES], [windres], [])
+        ;;
+    *)
+        os_win32=no
+        ;;
+esac
+AC_MSG_RESULT([$os_win32])
+AM_CONDITIONAL(OS_WIN32, test "$os_win32"="yes")
 
 # Checks for libraries.
 PKG_CHECK_MODULES([GTKMM], [gtkmm-2.4 >= 1.0.0])

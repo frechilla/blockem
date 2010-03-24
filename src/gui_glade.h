@@ -79,15 +79,15 @@
 
 // path to the pictures and logos
 #ifdef DATADIR
-const char GUI_PATH_TO_LOGO[]       = DATADIR"/pixmaps/blokemlogo.png";
-const char GUI_PATH_TO_16PICTURE[]  = DATADIR"/pixmaps/blokemlogo16.png";
-const char GUI_PATH_TO_48PICTURE[]  = DATADIR"/pixmaps/blokemlogo48.png";
-const char GUI_PATH_TO_128PICTURE[] = DATADIR"/pixmaps/blokemlogo128.png";
+const char GUI_PATH_TO_LOGO[]       = DATADIR"/pixmaps/blockemlogo.png";
+const char GUI_PATH_TO_16PICTURE[]  = DATADIR"/pixmaps/blockemlogo16.png";
+const char GUI_PATH_TO_48PICTURE[]  = DATADIR"/pixmaps/blockemlogo48.png";
+const char GUI_PATH_TO_128PICTURE[] = DATADIR"/pixmaps/blockemlogo128.png";
 #else
-const char GUI_PATH_TO_LOGO[]       = "pixmaps/blokemlogo.png";
-const char GUI_PATH_TO_16PICTURE[]  = "pixmaps/blokemlogo16.png";
-const char GUI_PATH_TO_48PICTURE[]  = "pixmaps/blokemlogo48.png";
-const char GUI_PATH_TO_128PICTURE[] = "pixmaps/blokemlogo128.png";
+const char GUI_PATH_TO_LOGO[]       = "pixmaps/blockemlogo.png";
+const char GUI_PATH_TO_16PICTURE[]  = "pixmaps/blockemlogo16.png";
+const char GUI_PATH_TO_48PICTURE[]  = "pixmaps/blockemlogo48.png";
+const char GUI_PATH_TO_128PICTURE[] = "pixmaps/blockemlogo128.png";
 #endif // DATADIR
 
 // have a look at the name of the glade interfaces
