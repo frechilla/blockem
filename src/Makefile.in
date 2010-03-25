@@ -53,7 +53,8 @@ CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_blockem_OBJECTS = Board.$(OBJEXT) Game1v1.$(OBJEXT) \
-	GameTotalAllocation.$(OBJEXT) Heuristic.$(OBJEXT) \
+	GameTotalAllocation.$(OBJEXT) \
+	gui_drawing_area_show_pieces.$(OBJEXT) Heuristic.$(OBJEXT) \
 	Piece.$(OBJEXT) Player.$(OBJEXT) Rules.$(OBJEXT) \
 	AboutDialog.$(OBJEXT) main.$(OBJEXT) MainWindow.$(OBJEXT) \
 	MainWindowWorkerThread.$(OBJEXT)
@@ -207,6 +208,8 @@ Game1v1.h \
 GameTotalAllocation.cpp \
 GameTotalAllocation.h \
 GUIException.h \
+gui_drawing_area_show_pieces.cpp \
+gui_drawing_area_show_pieces.h   \
 Heuristic.cpp \
 Heuristic.h \
 Piece.cpp \
@@ -237,9 +240,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign src/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu src/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --foreign src/Makefile
+	  $(AUTOMAKE) --gnu src/Makefile
 .PRECIOUS: Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
@@ -315,6 +318,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Piece.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Player.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Rules.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_drawing_area_show_pieces.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
 
 .cpp.o:

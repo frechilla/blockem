@@ -55,6 +55,8 @@ Game1v1.h \
 GameTotalAllocation.cpp \
 GameTotalAllocation.h \
 GUIException.h \
+gui_drawing_area_show_pieces.cpp \
+gui_drawing_area_show_pieces.h   \
 Heuristic.cpp \
 Heuristic.h \
 Piece.cpp \

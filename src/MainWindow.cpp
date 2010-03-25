@@ -141,7 +141,8 @@ MainWindow::MainWindow(
 			m_lastCoord(COORD_UNITIALISED, COORD_UNITIALISED),
 			m_workerThread(),
 			m_aboutDialog(a_refXml),
-			m_refXml(a_refXml)
+			m_refXml(a_refXml),
+			m_pickPiecesDrawingArea(a_refXml, a_theGame.GetPlayerOpponent())
 {
     // first of all retrieve the Gtk::window object and set its icon
     m_refXml->get_widget(GUI_MAIN_WINDOW_NAME, m_theWindow);
@@ -226,10 +227,10 @@ MainWindow::MainWindow(
 		throw new GUIException(std::string("Edit pieces drawing area retrieval failed"));
 	}
 
-    m_refXml->get_widget(GUI_DRAWINGAREA_PICK_PIECES, m_pickPiecesDrawingArea);
-    if (m_pickPiecesDrawingArea == NULL)
+    m_refXml->get_widget(GUI_HBOX_PIECES_AREA_NAME, m_piecesHBox);
+    if (m_piecesHBox == NULL)
     {
-        throw new GUIException(std::string("Pick pieces drawing area retrieval failed"));
+        throw new GUIException(std::string("PiecesHBox retrieval failed"));
     }
 
 	m_refXml->get_widget(GUI_BUTTON_ROTATE_NAME, m_rotateButton);
@@ -244,6 +245,13 @@ MainWindow::MainWindow(
 		throw new GUIException(std::string("mirror button retrieval failed"));
 	}
 
+	// put the custom widgets where they are expected to be
+	// pack_start (Widget& child, bool expand, bool fill, guint padding=0)
+	m_piecesHBox->pack_start(m_pickPiecesDrawingArea.DrawingArea(), true, true);
+
+	// handle the signal coming from the pickPiecesDrawingArea
+	m_pickPiecesDrawingArea.signal_piecePicked().connect(
+	        sigc::mem_fun(*this, &MainWindow::PickPiecesDrawingArea_PiecePickedEvent));
 
 	// connect the signals to the handlers
 	// if the handler is not part of an object use sigc::ptr_fun
@@ -267,12 +275,6 @@ MainWindow::MainWindow(
 	m_boardDrawingArea->signal_leave_notify_event().connect(
 	            sigc::mem_fun(*this, &MainWindow::BoardDrawingArea_LeaveAreaNotify));
 
-
-	m_pickPiecesDrawingArea->signal_expose_event().connect(
-            sigc::mem_fun(*this, &MainWindow::PickPiecesDrawingArea_ExposeEvent));
-	m_pickPiecesDrawingArea->add_events(Gdk::BUTTON_PRESS_MASK);
-	m_pickPiecesDrawingArea->signal_button_press_event().connect(
-	            sigc::mem_fun(*this, &MainWindow::PickPiecesDrawingArea_ButtonPressed));
 
 	m_editPiecesDrawingArea->signal_expose_event().connect(
 			sigc::mem_fun(*this, &MainWindow::EditPiecesDrawingArea_ExposeEvent));
@@ -324,6 +326,17 @@ void MainWindow::WorkerThread_computingFinished(
         {
             std::cout << "Computer can't move" << std::endl;
         }
+    }
+}
+
+void MainWindow::PickPiecesDrawingArea_PiecePickedEvent(ePieceType_t a_piecePicked)
+{
+    if (a_piecePicked != m_editPiece.GetType())
+    {
+        // update the piece picked even if it is e_noPiece
+        // when the selected piece is e_noPiece the editPiecesDrawingArea
+        // will be cleared out
+        UpdateSelectedPiece(a_piecePicked);
     }
 }
 
@@ -428,8 +441,8 @@ void MainWindow::MenuItemGameNew_Activate()
         // reset the current game, and update the view
         m_the1v1Game.Reset();
         InvalidateDrawingArea(m_boardDrawingArea);
-        InvalidateDrawingArea(m_pickPiecesDrawingArea);
         InvalidateDrawingArea(m_editPiecesDrawingArea);
+        m_pickPiecesDrawingArea.Invalidate();
         m_rotateButton->set_sensitive(false);
         m_mirrorButton->set_sensitive(false);
 
@@ -734,7 +747,7 @@ bool MainWindow::BoardDrawingArea_ButtonPressed(GdkEventButton *event)
         UpdateSelectedPiece(e_noPiece);
 
         // force the pick pieces drawing area to redraw because a piece has just been deployed
-        InvalidateDrawingArea(m_pickPiecesDrawingArea);
+        m_pickPiecesDrawingArea.Invalidate();
 
         // force the board to be redraw
         InvalidateDrawingArea(m_boardDrawingArea);
@@ -782,139 +795,6 @@ bool MainWindow::BoardDrawingArea_LeaveAreaNotify(GdkEventCrossing* event)
         // force the board to be redraw
         InvalidateDrawingArea(m_boardDrawingArea);
     }
-
-    return true;
-}
-
-bool MainWindow::PickPiecesDrawingArea_ExposeEvent(GdkEventExpose* event)
-{
-    Glib::RefPtr<Gdk::Window> window = m_pickPiecesDrawingArea->get_window();
-    if(window)
-    {
-        Gtk::Allocation allocation = m_pickPiecesDrawingArea->get_allocation();
-
-        int32_t width  = allocation.get_width();
-        int32_t height = allocation.get_height();
-
-        int32_t littleSquare = std::min(
-                                height / PICK_PLAYER_PIECES_ARRAY_NROWS,
-                                width / PICK_PLAYER_PIECES_ARRAY_NCOLS);
-        int32_t squareHeight = littleSquare * PICK_PLAYER_PIECES_ARRAY_NROWS;
-        int32_t squareWidth  = littleSquare * PICK_PLAYER_PIECES_ARRAY_NCOLS;
-
-        // coordinates for the centre of the window
-        int32_t xc = width  / 2;
-        int32_t yc = height / 2;
-
-        // get the pen to draw
-        Cairo::RefPtr<Cairo::Context> cr = window->create_cairo_context();
-
-        // clip to the area indicated by the expose event so that we only redraw
-        // the portion of the window that needs to be redrawn
-        cr->rectangle(event->area.x, event->area.y,
-            event->area.width, event->area.height);
-        cr->clip();
-
-        // line width and colour for the border of the board
-        cr->set_line_width(BOARD_LINE_WIDTH);
-        cr->set_source_rgb(
-                PLAYER_OPPONENT_RED,
-                PLAYER_OPPONENT_GREEN,
-                PLAYER_OPPONENT_BLUE);
-
-        // draw the opponent's pieces left
-        int32_t hzIndex = (xc - squareWidth/2) + (littleSquare/2);
-        int32_t vtIndex = (yc - squareHeight/2) + (littleSquare/2);
-        for (int32_t row = 0; row < PICK_PLAYER_PIECES_ARRAY_NROWS; row++)
-        {
-            for (int32_t col = 0; col < PICK_PLAYER_PIECES_ARRAY_NCOLS; col++)
-            {
-                ePieceType_t pieceType = pickPlayerPiecesArray[row][col];
-                if ( (pieceType != e_noPiece) &&
-                     (m_the1v1Game.GetPlayerOpponent().IsPieceAvailable(pieceType)) )
-                {
-                    cr->rectangle(
-                            (hzIndex - littleSquare/2) + 1,
-                            (vtIndex - littleSquare/2) + 1,
-                            littleSquare - 2,
-                            littleSquare - 2);
-
-                    cr->fill();
-                }
-                hzIndex += littleSquare;
-            }
-
-            hzIndex = (xc - squareWidth/2) + (littleSquare/2);
-            vtIndex += littleSquare;
-        }
-
-        // commit the changes to the screen!
-        cr->stroke();
-    }
-
-    return true;
-}
-
-bool MainWindow::PickPiecesDrawingArea_ButtonPressed(GdkEventButton *event)
-{
-    //std::cout << "clicked in (" << event->x << ", " << event->y << ")" << std::endl;
-
-    Glib::RefPtr<Gdk::Window> window = m_pickPiecesDrawingArea->get_window();
-    if (!window)
-    {
-        return false;
-    }
-
-    Gtk::Allocation allocation = m_pickPiecesDrawingArea->get_allocation();
-
-    int32_t width  = allocation.get_width();
-    int32_t height = allocation.get_height();
-
-    int32_t littleSquare = std::min(
-                            height / PICK_PLAYER_PIECES_ARRAY_NROWS,
-                            width / PICK_PLAYER_PIECES_ARRAY_NCOLS);
-    int32_t squareHeight = littleSquare * PICK_PLAYER_PIECES_ARRAY_NROWS;
-    int32_t squareWidth  = littleSquare * PICK_PLAYER_PIECES_ARRAY_NCOLS;
-
-    int32_t xc = width  / 2;
-    int32_t yc = height / 2;
-
-    if ( ( ((event->x) > (xc - squareWidth/2))  && ((event->x) < (xc + squareWidth/2))  ) &&
-         ( ((event->y) > (yc - squareHeight/2)) && ((event->y) < (yc + squareHeight/2)) ) )
-    {
-        int32_t row, col;
-        for (col = 0; col < PICK_PLAYER_PIECES_ARRAY_NCOLS; col++)
-        {
-            if (event->x < ((xc - squareWidth/2) + (littleSquare * col)))
-            {
-                break;
-            }
-        }
-
-        for (row = 1; row < PICK_PLAYER_PIECES_ARRAY_NROWS; row++)
-        {
-            if (event->y < ((yc - squareHeight/2) + (littleSquare * row)))
-            {
-                break;
-            }
-        }
-
-        ePieceType_t pieceType = pickPlayerPiecesArray[row-1][col-1];
-        if ( (pieceType != e_noPiece) &&
-             (m_the1v1Game.GetPlayerOpponent().IsPieceAvailable(pieceType)) )
-        {
-            if (pieceType != m_editPiece.GetType())
-            {
-                UpdateSelectedPiece(pieceType);
-            }
-
-            return true;
-        }
-    }
-
-    // got to here. The User clicked in somewhere where there was no piece.
-    // selected piece is restarted (no piece will be shown)
-    UpdateSelectedPiece(e_noPiece);
 
     return true;
 }

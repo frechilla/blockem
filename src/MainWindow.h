@@ -35,6 +35,7 @@
 #include <libglademm/xml.h>
 #include <gtkmm.h>
 
+#include "gui_drawing_area_show_pieces.h"
 #include "AboutDialog.h"
 #include "MainWindowWorkerThread.h"
 #include "GUIException.h"
@@ -64,6 +65,9 @@ public:
             const Coordinate &a_coord,
             int32_t           a_returnValue);
 
+    /// @brief callback to be called whenever the user picks a piece in the PickPiecesDrawingArea
+    void PickPiecesDrawingArea_PiecePickedEvent(ePieceType_t a_piecePicked);
+
     /// @brief callback to be called when the window is about to be closed
     ///        using the X on the corner
     bool MainWindow_DeleteEvent(GdkEventAny*);
@@ -89,12 +93,6 @@ public:
 
     /// @brief callback to be called when the mouse leaves the board drawing area
     bool BoardDrawingArea_LeaveAreaNotify(GdkEventCrossing* event);
-
-    /// @brief callback to be called when the pick piece drawing area is redraw on screen
-    bool PickPiecesDrawingArea_ExposeEvent(GdkEventExpose* event);
-
-    /// @brief callback to be called when a button is pressed inside the pick pieces drawing area
-    bool PickPiecesDrawingArea_ButtonPressed(GdkEventButton *event);
 
     /// @brief callback to be called when the edit piece drawing area is redraw on screen
     bool EditPiecesDrawingArea_ExposeEvent(GdkEventExpose* event);
@@ -127,6 +125,9 @@ private:
     /// @brief the Gtk window object
     Gtk::Window* m_theWindow;
 
+    /// @brief the drawing area where the pieces can be picked up by the user
+    DrawingAreaPickPieces m_pickPiecesDrawingArea;
+
     Gtk::MenuItem* m_newMenuItem;
     Gtk::MenuItem* m_quitMenuItem;
     Gtk::MenuItem* m_helpAboutMenuItem;
@@ -137,8 +138,8 @@ private:
     /// @brief the drawing area where the board is draw
     Gtk::DrawingArea* m_boardDrawingArea;
 
-    /// @brief the drawing area where the pieces are picked
-    Gtk::DrawingArea* m_pickPiecesDrawingArea;
+    /// @brief the horizontal box where the pieces are picked + edited
+    Gtk::HBox* m_piecesHBox;
 
     /// @brief the drawing area where the pieces are edited
     Gtk::DrawingArea* m_editPiecesDrawingArea;

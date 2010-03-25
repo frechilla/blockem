@@ -140,14 +140,7 @@
                 <property name="visible">True</property>
                 <property name="spacing">10</property>
                 <child>
-                  <widget class="GtkDrawingArea" id="drawingarea_pick_pieces">
-                    <property name="width_request">360</property>
-                    <property name="visible">True</property>
-                  </widget>
-                  <packing>
-                    <property name="padding">2</property>
-                    <property name="position">0</property>
-                  </packing>
+                  <placeholder/>
                 </child>
                 <child>
                   <widget class="GtkTable" id="table_editing_piece">
@@ -275,5 +268,9 @@ You should have received a copy of the GNU General Public License along with blo
         </child>
       </widget>
     </child>
+  </widget>
+  <widget class="GtkDrawingArea" id="drawingarea_pick_pieces">
+    <property name="width_request">360</property>
+    <property name="visible">True</property>
   </widget>
 </glade-interface>
