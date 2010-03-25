@@ -45,7 +45,6 @@ gui.glade    \
 blockem.rc
 
 blockem_SOURCES = \
-compiletime.h \
 Board.cpp \
 Board.h \
 Coordinate.h \
