@@ -39,7 +39,7 @@ case "$host" in
         ;;
 esac
 AC_MSG_RESULT([$os_win32])
-AM_CONDITIONAL(OS_WIN32, test "$os_win32"="yes")
+AM_CONDITIONAL(OS_WIN32, test "$os_win32" = "yes")
 if test "$os_win32" = "yes"; then
     AC_CHECK_TOOL([WINDRES], [windres], [])
 fi

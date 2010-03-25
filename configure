@@ -2764,7 +2764,7 @@ am__tar='${AMTAR} chof - "$$tardir"'; am__untar='${AMTAR} xf -'
 ac_config_headers="$ac_config_headers config.h"
 
 
-$as_echo "#define SVN_REVISION \"29\"" >>confdefs.h
+$as_echo "#define SVN_REVISION \"31M\"" >>confdefs.h
 
 
 # Checks for programs.
@@ -4383,7 +4383,7 @@ case "$host" in
 esac
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $os_win32" >&5
 $as_echo "$os_win32" >&6; }
- if test "$os_win32"="yes"; then
+ if test "$os_win32" = "yes"; then
   OS_WIN32_TRUE=
   OS_WIN32_FALSE='#'
 else
