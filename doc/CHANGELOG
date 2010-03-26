@@ -1,3 +1,6 @@
+now: Version current
+    - Correct version shown on the AboutDialog when help->About is pressed
+
 26/03/2010: Version 0.1.2
     - The ugly buttons that used to represent pieces have been changed by 
       real (and beautiful) pieces.

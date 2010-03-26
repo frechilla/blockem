@@ -28,6 +28,7 @@
 // ============================================================================
 
 #include <iostream> // std::cerr
+#include "config.h" // PACKAGE_VERSION
 #include "gui_about_dialog.h"
 #include "gui_glade_defs.h"
 
@@ -42,6 +43,9 @@ AboutDialog::AboutDialog(Glib::RefPtr<Gnome::Glade::Xml> a_refXml) throw (GUIExc
     {
        throw new GUIException(std::string("AboutDialog retrieval failed"));
     }
+
+    // set the current version on the about dialog
+    m_theAboutDialog->set_version(PACKAGE_VERSION);
 
     // try to set the big logo in the AboutDialog
     if (g_file_test(GUI_PATH_TO_LOGO, G_FILE_TEST_IS_REGULAR))
