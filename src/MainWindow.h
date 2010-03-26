@@ -35,10 +35,10 @@
 #include <libglademm/xml.h>
 #include <gtkmm.h>
 
+#include "gui_exception.h"
 #include "gui_drawing_area_show_pieces.h"
-#include "AboutDialog.h"
+#include "gui_about_dialog.h"
 #include "MainWindowWorkerThread.h"
-#include "GUIException.h"
 #include "Game1v1.h"
 #include "Coordinate.h"
 #include "Piece.h"

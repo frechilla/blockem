@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License along
 // with Blockem. If not, see http://www.gnu.org/licenses/.
 //
-/// @file  AboutDialog.h
+/// @file  gui_about_dialog.h
 /// @brief
 ///
 /// @author Faustino Frechilla
@@ -33,8 +33,7 @@
 #include <libglademm/xml.h>
 #include <gtkmm.h>
 
-#include "gui_glade.h"
-#include "GUIException.h"
+#include "gui_exception.h"
 
 class AboutDialog
 {

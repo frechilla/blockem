@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License along
 // with Blockem. If not, see http://www.gnu.org/licenses/.
 //
-/// @file  AboutDialog.cpp
+/// @file  gui_about_dialog.cpp
 /// @brief
 ///
 /// @author Faustino Frechilla
@@ -27,8 +27,9 @@
 ///
 // ============================================================================
 
-#include <iostream>
-#include "AboutDialog.h"
+#include <iostream> // std::cerr
+#include "gui_about_dialog.h"
+#include "gui_glade_defs.h"
 
 AboutDialog::AboutDialog(Glib::RefPtr<Gnome::Glade::Xml> a_refXml) throw (GUIException):
     m_refXml(a_refXml)

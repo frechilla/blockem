@@ -29,7 +29,7 @@
 
 #include <iostream>
 #include "MainWindow.h"
-#include "gui_glade.h"
+#include "gui_glade_defs.h"
 
 /// @brief uninitialised coord value
 static const int32_t COORD_UNITIALISED = 0xffffffff;
@@ -77,61 +77,6 @@ static const float GHOST_PIECE_WRONG_GREEN        = 0.0;
 static const float GHOST_PIECE_WRONG_BLUE         = 0.0;
 static const float GHOST_PIECE_ALPHA_TRANSPARENCY = 0.2;
 
-
-//TODO all this code should go to another class/file at some point
-const int32_t PICK_PLAYER_PIECES_ARRAY_NROWS = 7;
-const int32_t PICK_PLAYER_PIECES_ARRAY_NCOLS = 32;
-
-// sorry for the length of this array (more than 600 characters per line)
-// it helps out the editing when done in this way if you've got an horizontal
-// editing bar, though it _might_ be a _bit_ complicated to edit it in a
-// console
-const ePieceType_t pickPlayerPiecesArray
-        [PICK_PLAYER_PIECES_ARRAY_NROWS][PICK_PLAYER_PIECES_ARRAY_NCOLS] =
-{
-    {e_1Piece_BabyPiece , e_noPiece          , e_2Piece_TwoPiece  , e_2Piece_TwoPiece , e_noPiece         , e_noPiece         , e_3Piece_Triangle, e_3Piece_Triangle, e_noPiece        , e_4Piece_LongPiece, e_4Piece_LongPiece , e_4Piece_LongPiece , e_4Piece_LongPiece, e_noPiece       , e_noPiece       , e_noPiece       , e_4Piece_LittleL, e_4Piece_LittleL, e_4Piece_LittleL, e_noPiece           , e_noPiece           , e_4Piece_LittleS    , e_4Piece_LittleS    , e_noPiece      , e_4Piece_FullSquare, e_4Piece_FullSquare, e_noPiece           , e_5Piece_CuntPiece  , e_5Piece_CuntPiece, e_5Piece_CuntPiece, e_noPiece    , e_5Piece_BigPenis},
-    {e_noPiece          , e_noPiece          , e_noPiece          , e_noPiece         , e_noPiece         , e_noPiece         , e_noPiece        , e_3Piece_Triangle, e_noPiece        , e_noPiece         , e_noPiece          , e_noPiece          , e_noPiece         , e_noPiece       , e_4Piece_LittleT, e_noPiece       , e_noPiece       , e_noPiece       , e_4Piece_LittleL, e_noPiece           , e_4Piece_LittleS    , e_4Piece_LittleS    , e_noPiece           , e_noPiece      , e_4Piece_FullSquare, e_4Piece_FullSquare, e_noPiece           , e_5Piece_CuntPiece  , e_noPiece         , e_5Piece_CuntPiece, e_noPiece    , e_5Piece_BigPenis},
-    {e_5Piece_HalfSquare, e_noPiece          , e_noPiece          , e_3Piece_LongPiece, e_3Piece_LongPiece, e_3Piece_LongPiece, e_noPiece        , e_noPiece        , e_noPiece        , e_noPiece         , e_5Piece_SquarePlus, e_5Piece_SquarePlus, e_noPiece         , e_4Piece_LittleT, e_4Piece_LittleT, e_4Piece_LittleT, e_noPiece       , e_noPiece       , e_noPiece       , e_noPiece           , e_noPiece           , e_noPiece           , e_noPiece           , e_noPiece      , e_noPiece          , e_noPiece          , e_noPiece           , e_noPiece           , e_noPiece         , e_noPiece         , e_noPiece    , e_5Piece_BigPenis},
-    {e_5Piece_HalfSquare, e_noPiece          , e_noPiece          , e_noPiece         , e_noPiece         , e_noPiece         , e_noPiece        , e_noPiece        , e_noPiece        , e_noPiece         , e_5Piece_SquarePlus, e_5Piece_SquarePlus, e_noPiece         , e_noPiece       , e_noPiece       , e_noPiece       , e_noPiece       , e_5Piece_Cross  , e_noPiece       , e_noPiece           , e_noPiece           , e_noPiece           , e_5Piece_WPiece     , e_5Piece_WPiece, e_noPiece          , e_noPiece          , e_noPiece           , e_5Piece_TheUltimate, e_noPiece         , e_5Piece_BigL     , e_noPiece    , e_5Piece_BigPenis},
-    {e_5Piece_HalfSquare, e_5Piece_HalfSquare, e_5Piece_HalfSquare, e_noPiece         , e_5Piece_BigS     , e_5Piece_BigS     , e_noPiece        , e_5Piece_SafPiece, e_noPiece        , e_noPiece         , e_5Piece_SquarePlus, e_noPiece          , e_noPiece         , e_noPiece       , e_5Piece_MrT    , e_noPiece       , e_5Piece_Cross  , e_5Piece_Cross  , e_5Piece_Cross  , e_noPiece           , e_noPiece           , e_noPiece           , e_noPiece           , e_5Piece_WPiece, e_5Piece_WPiece    , e_noPiece          , e_5Piece_TheUltimate, e_5Piece_TheUltimate, e_noPiece         , e_5Piece_BigL     , e_noPiece    , e_5Piece_BigPenis},
-    {e_noPiece          , e_noPiece          , e_noPiece          , e_noPiece         , e_5Piece_BigS     , e_noPiece         , e_noPiece        , e_5Piece_SafPiece, e_5Piece_SafPiece, e_noPiece         , e_noPiece          , e_noPiece          , e_5Piece_MrT      , e_5Piece_MrT    , e_5Piece_MrT    , e_noPiece       , e_noPiece       , e_5Piece_Cross  , e_noPiece       , e_noPiece           , e_noPiece           , e_5Piece_BoringPiece, e_noPiece           , e_noPiece      , e_5Piece_WPiece    , e_noPiece          , e_5Piece_TheUltimate, e_noPiece           , e_noPiece         , e_5Piece_BigL     , e_noPiece    , e_noPiece        },
-    {e_noPiece          , e_noPiece          , e_noPiece          , e_5Piece_BigS     , e_5Piece_BigS     , e_noPiece         , e_5Piece_SafPiece, e_5Piece_SafPiece, e_noPiece        , e_noPiece         , e_noPiece          , e_noPiece          , e_noPiece         , e_noPiece       , e_5Piece_MrT    , e_noPiece       , e_noPiece       , e_noPiece       , e_noPiece       , e_5Piece_BoringPiece, e_5Piece_BoringPiece, e_5Piece_BoringPiece, e_5Piece_BoringPiece, e_noPiece      , e_noPiece          , e_noPiece          , e_5Piece_TheUltimate, e_noPiece           , e_noPiece         , e_5Piece_BigL     , e_5Piece_BigL, e_noPiece        }
-};
-
-
-// This is a more human readable appearance of the pickPLayerPiecesArray if:
-// e_noPiece            = 0
-// e_1Piece_BabyPiece   = 1,
-// e_2Piece_TwoPiece    = 2,
-// e_3Piece_LongPiece   = 3,
-// e_3Piece_Triangle    = 4,
-// e_4Piece_LongPiece   = 5,
-// e_4Piece_LittleS     = 6,
-// e_4Piece_LittleT     = 7,
-// e_4Piece_LittleL     = 8,
-// e_4Piece_FullSquare  = 9,
-// e_5Piece_BigS        = 10,
-// e_5Piece_SafPiece    = 11,
-// e_5Piece_WPiece      = 12,
-// e_5Piece_CuntPiece   = 13,
-// e_5Piece_BigPenis    = 14,
-// e_5Piece_Cross       = 15,
-// e_5Piece_HalfSquare  = 16,
-// e_5Piece_BigL        = 17,
-// e_5Piece_MrT         = 18,
-// e_5Piece_SquarePlus  = 19,
-// e_5Piece_BoringPiece = 20,
-// e_5Piece_TheUltimate = 21,
-//
-// {
-//   {1 , 0 , 2 , 2 , 0 , 0 , 4 , 4 , 0 , 5 , 5 , 5 , 5 , 0 , 0 , 0 , 8 , 8 , 8 , 0 , 0 , 6 , 6 , 0 , 9 , 9 , 0 , 13, 13, 13, 0 , 14},
-//   {0 , 0 , 0 , 0 , 0 , 0 , 0 , 4 , 0 , 0 , 0 , 0 , 0 , 0 , 7 , 0 , 0 , 0 , 8 , 0 , 6 , 6 , 0 , 0 , 9 , 9 , 0 , 13, 0 , 13, 0 , 14},
-//   {16, 0 , 0 , 3 , 3 , 3 , 0 , 0 , 0 , 0 , 19, 19, 0 , 7 , 7 , 7 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 14},
-//   {16, 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 19, 19, 0 , 0 , 0 , 0 , 0 , 15, 0 , 0 , 0 , 0 , 12, 12, 0 , 0 , 0 , 21, 0 , 17, 0 , 14},
-//   {16, 16, 16, 0 , 10, 10, 0 , 11, 0 , 0 , 19, 0 , 0 , 0 , 18, 0 , 15, 15, 15, 0 , 0 , 0 , 0 , 12, 12, 0 , 21, 21, 0 , 17, 0 , 14},
-//   {0 , 0 , 0 , 0 , 10, 0 , 0 , 11, 11, 0 , 0 , 0 , 18, 18, 18, 0 , 0 , 15, 0 , 0 , 0 , 20, 0 , 0 , 12, 0 , 21, 0 , 0 , 17, 0 , 0 },
-//   {0 , 0 , 0 , 10, 10, 0 , 11, 11, 0 , 0 , 0 , 0 , 0 , 0 , 18, 0 , 0 , 0 , 0 , 20, 20, 20, 20, 0 , 0 , 0 , 21 ,0 , 0 , 17, 17, 0 }
-// };
 
 MainWindow::MainWindow(
 		Game1v1 &a_theGame,
@@ -263,6 +208,7 @@ MainWindow::MainWindow(
 	        sigc::mem_fun(*this, &MainWindow::MenuItemGameQuit_Activate));
 	m_helpAboutMenuItem->signal_activate().connect(
 	            sigc::mem_fun(*this, &MainWindow::MenuItemHelpAbout_Activate));
+
 	m_boardDrawingArea->signal_expose_event().connect(
 			sigc::mem_fun(*this, &MainWindow::BoardDrawingArea_ExposeEvent));
 	m_boardDrawingArea->add_events(Gdk::BUTTON_PRESS_MASK);
@@ -274,7 +220,6 @@ MainWindow::MainWindow(
 	m_boardDrawingArea->add_events(Gdk::LEAVE_NOTIFY_MASK);
 	m_boardDrawingArea->signal_leave_notify_event().connect(
 	            sigc::mem_fun(*this, &MainWindow::BoardDrawingArea_LeaveAreaNotify));
-
 
 	m_editPiecesDrawingArea->signal_expose_event().connect(
 			sigc::mem_fun(*this, &MainWindow::EditPiecesDrawingArea_ExposeEvent));
@@ -293,6 +238,7 @@ MainWindow::MainWindow(
 
 MainWindow::~MainWindow()
 {
+    // it calls the destructor of all the gui elements that it contains
     delete (m_theWindow);
 }
 

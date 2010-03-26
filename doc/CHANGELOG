@@ -1,9 +1,10 @@
-now: next version
+26/03/2010: Version 0.1.2
     - The ugly buttons that used to represent pieces have been changed by 
       real (and beautiful) pieces.
     - Ghost pieces on the board were kept painted even when the mouse
       pointer had left the board drawing area. That has been fixed.
     - Icon added to the executable file in the windows version. 
+    - Part of the gui code has been refactored (there's a lot of work left)
 
 19/03/2010: Version 0.1.1
     - pthread dependecy has been moved to gthread.

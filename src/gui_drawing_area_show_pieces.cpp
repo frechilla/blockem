@@ -28,7 +28,7 @@
 // ============================================================================
 
 #include "gui_drawing_area_show_pieces.h"
-#include "gui_glade.h"
+#include "gui_glade_defs.h"
 
 
 // default colours to draw the pieces
@@ -55,6 +55,40 @@ const ePieceType_t pickPlayerPiecesArray
     {e_noPiece          , e_noPiece          , e_noPiece          , e_noPiece         , e_5Piece_BigS     , e_noPiece         , e_noPiece        , e_5Piece_SafPiece, e_5Piece_SafPiece, e_noPiece         , e_noPiece          , e_noPiece          , e_5Piece_MrT      , e_5Piece_MrT    , e_5Piece_MrT    , e_noPiece       , e_noPiece       , e_5Piece_Cross  , e_noPiece       , e_noPiece           , e_noPiece           , e_5Piece_BoringPiece, e_noPiece           , e_noPiece      , e_5Piece_WPiece    , e_noPiece          , e_5Piece_TheUltimate, e_noPiece           , e_noPiece         , e_5Piece_BigL     , e_noPiece    , e_noPiece        },
     {e_noPiece          , e_noPiece          , e_noPiece          , e_5Piece_BigS     , e_5Piece_BigS     , e_noPiece         , e_5Piece_SafPiece, e_5Piece_SafPiece, e_noPiece        , e_noPiece         , e_noPiece          , e_noPiece          , e_noPiece         , e_noPiece       , e_5Piece_MrT    , e_noPiece       , e_noPiece       , e_noPiece       , e_noPiece       , e_5Piece_BoringPiece, e_5Piece_BoringPiece, e_5Piece_BoringPiece, e_5Piece_BoringPiece, e_noPiece      , e_noPiece          , e_noPiece          , e_5Piece_TheUltimate, e_noPiece           , e_noPiece         , e_5Piece_BigL     , e_5Piece_BigL, e_noPiece        }
 };
+
+// This is a more human readable appearance of the pickPLayerPiecesArray if:
+// e_noPiece            = 0
+// e_1Piece_BabyPiece   = 1,
+// e_2Piece_TwoPiece    = 2,
+// e_3Piece_LongPiece   = 3,
+// e_3Piece_Triangle    = 4,
+// e_4Piece_LongPiece   = 5,
+// e_4Piece_LittleS     = 6,
+// e_4Piece_LittleT     = 7,
+// e_4Piece_LittleL     = 8,
+// e_4Piece_FullSquare  = 9,
+// e_5Piece_BigS        = 10,
+// e_5Piece_SafPiece    = 11,
+// e_5Piece_WPiece      = 12,
+// e_5Piece_CuntPiece   = 13,
+// e_5Piece_BigPenis    = 14,
+// e_5Piece_Cross       = 15,
+// e_5Piece_HalfSquare  = 16,
+// e_5Piece_BigL        = 17,
+// e_5Piece_MrT         = 18,
+// e_5Piece_SquarePlus  = 19,
+// e_5Piece_BoringPiece = 20,
+// e_5Piece_TheUltimate = 21,
+//
+// {
+//   {1 , 0 , 2 , 2 , 0 , 0 , 4 , 4 , 0 , 5 , 5 , 5 , 5 , 0 , 0 , 0 , 8 , 8 , 8 , 0 , 0 , 6 , 6 , 0 , 9 , 9 , 0 , 13, 13, 13, 0 , 14},
+//   {0 , 0 , 0 , 0 , 0 , 0 , 0 , 4 , 0 , 0 , 0 , 0 , 0 , 0 , 7 , 0 , 0 , 0 , 8 , 0 , 6 , 6 , 0 , 0 , 9 , 9 , 0 , 13, 0 , 13, 0 , 14},
+//   {16, 0 , 0 , 3 , 3 , 3 , 0 , 0 , 0 , 0 , 19, 19, 0 , 7 , 7 , 7 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 14},
+//   {16, 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 19, 19, 0 , 0 , 0 , 0 , 0 , 15, 0 , 0 , 0 , 0 , 12, 12, 0 , 0 , 0 , 21, 0 , 17, 0 , 14},
+//   {16, 16, 16, 0 , 10, 10, 0 , 11, 0 , 0 , 19, 0 , 0 , 0 , 18, 0 , 15, 15, 15, 0 , 0 , 0 , 0 , 12, 12, 0 , 21, 21, 0 , 17, 0 , 14},
+//   {0 , 0 , 0 , 0 , 10, 0 , 0 , 11, 11, 0 , 0 , 0 , 18, 18, 18, 0 , 0 , 15, 0 , 0 , 0 , 20, 0 , 0 , 12, 0 , 21, 0 , 0 , 17, 0 , 0 },
+//   {0 , 0 , 0 , 10, 10, 0 , 11, 11, 0 , 0 , 0 , 0 , 0 , 0 , 18, 0 , 0 , 0 , 0 , 20, 20, 20, 20, 0 , 0 , 0 , 21 ,0 , 0 , 17, 17, 0 }
+// };
 
 
 DrawingAreaPickPieces::DrawingAreaPickPieces(Glib::RefPtr<Gnome::Glade::Xml> a_refXml, const Player &a_player)

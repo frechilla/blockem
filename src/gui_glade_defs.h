@@ -105,5 +105,6 @@ const char GUI_BUTTON_MIRROR_NAME[]        = "button_mirror";
 const char GUI_DRAWINGAREA_EDITING_PIECE[] = "drawingarea_editing_piece";
 const char GUI_TABLE_PICK_PIECES[]         = "table_pick_pieces";
 const char GUI_DRAWINGAREA_PICK_PIECES[]   = "drawingarea_pick_pieces";
+const char GUI_STATUSBAR_NAME[]            = "statusbar";
 
 #endif /* GUI_GLADE_H_ */

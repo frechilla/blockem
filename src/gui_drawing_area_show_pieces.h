@@ -30,7 +30,7 @@
 #include <libglademm/xml.h>
 #include <gtkmm.h>
 
-#include "GUIException.h"
+#include "gui_exception.h"
 #include "Player.h"
 #include "Piece.h"
 

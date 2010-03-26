@@ -53,9 +53,12 @@ Game1v1.cpp \
 Game1v1.h \
 GameTotalAllocation.cpp \
 GameTotalAllocation.h \
-GUIException.h \
+gui_exception.h \
+gui_about_dialog.cpp \
+gui_about_dialog.h \
 gui_drawing_area_show_pieces.cpp \
 gui_drawing_area_show_pieces.h   \
+gui_glade_defs.h \
 Heuristic.cpp \
 Heuristic.h \
 Piece.cpp \
@@ -64,9 +67,6 @@ Player.cpp \
 Player.h \
 Rules.cpp \
 Rules.h \
-AboutDialog.cpp \
-AboutDialog.h \
-gui_glade.h \
 main.cpp \
 MainWindow.cpp \
 MainWindow.h \

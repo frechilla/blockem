@@ -5,7 +5,7 @@ AC_PREREQ([2.64])
 
 m4_define([MAJOR_VERSION], 0)
 m4_define([MINOR_VERSION], 1)
-m4_define([MICRO_VERSION], 1)
+m4_define([MICRO_VERSION], 2)
 
 define([svnversion], esyscmd([sh -c "svnversion|tr -d '\n'"]))
 
