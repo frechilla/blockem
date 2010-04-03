@@ -1,14 +1,17 @@
 This is a sketch of an organized TODO document. There are a couple of very
 basic things that need to be done:
 
- + Options in menu Game and View should do something. This should be pretty 
-   straight-forward
- + Opponent's (computer's) pieces should be shown at all times (as well as the
-   score)
+ + Options in menu Settings and Preferences should do something. This should 
+   be pretty straight-forward
+ + The status bar should contain a progress bar when the computer is processing
+   the next move
+ + The latest piece put down by the computer should be noted, for example
+   flashing the piece or using another colour
  + Lots of calculation time is being wasted now. The decission tree should be
    calculated and kept in memory, and even updated while the human player is
    thinking (normally the uman player takes longer than the computer to "think"
    the next move)
- + The GUI code is horrible. It really needs a refactoring
+ + The GUI code is improvable. Some work has been done on it, bus there's still
+   a long way to walk
  + It should be possible to generate doxygen. Add it to the makefiles
  + Installer for the windows platform

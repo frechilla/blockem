@@ -23,28 +23,35 @@
 /// @history
 /// Ref       Who                When         What
 ///           Faustino Frechilla 25-Mar-2010  Original development
+///           Faustino Frechilla 31-Mar-2010  No dependencies from any glade design
+///           Faustino Frechilla 01-Apr-2010  Orientation option added to facilitate reusability
 /// @endhistory
 ///
 // ============================================================================
 
 #include "gui_drawing_area_show_pieces.h"
-#include "gui_glade_defs.h"
 
 
 // default colours to draw the pieces
-static const float DEFAULT_PLAYER_RED   = 0.3;
-static const float DEFAULT_PLAYER_GREEN = 0.8;
-static const float DEFAULT_PLAYER_BLUE  = 0.3;
+static const float DEFAULT_PLAYER_RED   = 0.5;
+static const float DEFAULT_PLAYER_GREEN = 0.5;
+static const float DEFAULT_PLAYER_BLUE  = 0.5;
+
+// minimum size requested. The user won't be able to set the size of the window
+// if it sets the size of this widget to something smaller than this value
+// ican be applied to height or width depending on the way the widget will be used
+// (vertical or horizontal)
+static const int32_t MINIMUM_WIDGET_SIZE = 360;
 
 // size of the array used to display the pieces for the user to select them
-const int32_t PICK_PLAYER_PIECES_ARRAY_NROWS = 7;
-const int32_t PICK_PLAYER_PIECES_ARRAY_NCOLS = 32;
+static const int32_t PICK_PLAYER_PIECES_ARRAY_NROWS = 7;
+static const int32_t PICK_PLAYER_PIECES_ARRAY_NCOLS = 32;
 
 // sorry for the length of this array (more than 600 characters per line)
 // it helps out the editing when done in this way if you've got an horizontal
 // editing bar, though it _might_ be a _bit_ complicated to edit it in a
 // console
-const ePieceType_t pickPlayerPiecesArray
+static const ePieceType_t pickPlayerPiecesArray
         [PICK_PLAYER_PIECES_ARRAY_NROWS][PICK_PLAYER_PIECES_ARRAY_NCOLS] =
 {
     {e_1Piece_BabyPiece , e_noPiece          , e_2Piece_TwoPiece  , e_2Piece_TwoPiece , e_noPiece         , e_noPiece         , e_3Piece_Triangle, e_3Piece_Triangle, e_noPiece        , e_4Piece_LongPiece, e_4Piece_LongPiece , e_4Piece_LongPiece , e_4Piece_LongPiece, e_noPiece       , e_noPiece       , e_noPiece       , e_4Piece_LittleL, e_4Piece_LittleL, e_4Piece_LittleL, e_noPiece           , e_noPiece           , e_4Piece_LittleS    , e_4Piece_LittleS    , e_noPiece      , e_4Piece_FullSquare, e_4Piece_FullSquare, e_noPiece           , e_5Piece_CuntPiece  , e_5Piece_CuntPiece, e_5Piece_CuntPiece, e_noPiece    , e_5Piece_BigPenis},
@@ -91,155 +98,360 @@ const ePieceType_t pickPlayerPiecesArray
 // };
 
 
-DrawingAreaPickPieces::DrawingAreaPickPieces(Glib::RefPtr<Gnome::Glade::Xml> a_refXml, const Player &a_player)
-throw (GUIException) :
-    m_refXml(a_refXml),
+DrawingAreaShowPieces::DrawingAreaShowPieces(const Player &a_player, eOrientation_t a_orientation):
+	Gtk::DrawingArea(),
     m_thePlayer(a_player),
+    m_orientation(a_orientation),
     m_red(DEFAULT_PLAYER_RED),
     m_green(DEFAULT_PLAYER_GREEN),
     m_blue(DEFAULT_PLAYER_BLUE)
 {
-    if (!m_refXml)
-    {
-        throw new GUIException(std::string("Invalid reference to Gnome::Glade::Xml in DrawingAreaPickPieces"));
-    }
+	// the drawing area will handle the button_press event
+    this->add_events(Gdk::BUTTON_PRESS_MASK);
 
-    m_refXml->get_widget(GUI_DRAWINGAREA_PICK_PIECES, m_theDrawingArea);
-    if (m_theDrawingArea == NULL)
-    {
-        throw new GUIException(std::string("Pick pieces drawing area retrieval failed"));
-    }
+    //default configuration of this widget
+    set_visible(true);
 
-    // connect the signals to the handlers
-    m_theDrawingArea->signal_expose_event().connect(
-            sigc::mem_fun(*this, &DrawingAreaPickPieces::ExposeEvent));
-    m_theDrawingArea->add_events(Gdk::BUTTON_PRESS_MASK);
-    m_theDrawingArea->signal_button_press_event().connect(
-                sigc::mem_fun(*this, &DrawingAreaPickPieces::ButtonPressed));
+    switch (m_orientation)
+    {
+    case eOrientation_leftToRight:
+    case eOrientation_rightToLeft:
+    	set_size_request(MINIMUM_WIDGET_SIZE, -1);
+    	break;
+
+    case eOrientation_bottomToTop:
+    case eOrientation_topToBottom:
+    	set_size_request(-1, MINIMUM_WIDGET_SIZE);
+    	break;
+    }
 }
 
-DrawingAreaPickPieces::~DrawingAreaPickPieces()
+DrawingAreaShowPieces::~DrawingAreaShowPieces()
 {
 }
 
-void DrawingAreaPickPieces::SetPlayerRGB(float a_red, float a_green, float a_blue)
+void DrawingAreaShowPieces::SetPlayerRGB(float a_red, float a_green, float a_blue)
 {
     m_red   = a_red;
     m_green = a_green;
     m_blue  = a_blue;
 }
 
-bool DrawingAreaPickPieces::ExposeEvent(GdkEventExpose* event)
+bool DrawingAreaShowPieces::on_expose_event(GdkEventExpose* event)
 {
-    Glib::RefPtr<Gdk::Window> window = m_theDrawingArea->get_window();
-    if(window)
-    {
-        Gtk::Allocation allocation = m_theDrawingArea->get_allocation();
-
-        int32_t width  = allocation.get_width();
-        int32_t height = allocation.get_height();
-
-        int32_t littleSquare = std::min(
-                                height / PICK_PLAYER_PIECES_ARRAY_NROWS,
-                                width / PICK_PLAYER_PIECES_ARRAY_NCOLS);
-        int32_t squareHeight = littleSquare * PICK_PLAYER_PIECES_ARRAY_NROWS;
-        int32_t squareWidth  = littleSquare * PICK_PLAYER_PIECES_ARRAY_NCOLS;
-
-        // coordinates for the centre of the window
-        int32_t xc = width  / 2;
-        int32_t yc = height / 2;
-
-        // get the pen to draw
-        Cairo::RefPtr<Cairo::Context> cr = window->create_cairo_context();
-
-        // clip to the area indicated by the expose event so that we only redraw
-        // the portion of the window that needs to be redrawn
-        cr->rectangle(event->area.x, event->area.y,
-            event->area.width, event->area.height);
-        cr->clip();
-
-        // colour of the pieces
-        cr->set_source_rgb(
-                m_red,
-                m_green,
-                m_blue);
-
-        // draw the opponent's pieces left
-        int32_t hzIndex = (xc - squareWidth/2) + (littleSquare/2);
-        int32_t vtIndex = (yc - squareHeight/2) + (littleSquare/2);
-        for (int32_t row = 0; row < PICK_PLAYER_PIECES_ARRAY_NROWS; row++)
-        {
-            for (int32_t col = 0; col < PICK_PLAYER_PIECES_ARRAY_NCOLS; col++)
-            {
-                ePieceType_t pieceType = pickPlayerPiecesArray[row][col];
-                if ( (pieceType != e_noPiece) &&
-                     (m_thePlayer.IsPieceAvailable(pieceType)) )
-                {
-                    cr->rectangle(
-                            (hzIndex - littleSquare/2) + 1,
-                            (vtIndex - littleSquare/2) + 1,
-                            littleSquare - 2,
-                            littleSquare - 2);
-
-                    cr->fill();
-                }
-                hzIndex += littleSquare;
-            }
-
-            hzIndex = (xc - squareWidth/2) + (littleSquare/2);
-            vtIndex += littleSquare;
-        }
-
-        // commit the changes to the screen!
-        cr->stroke();
-    }
-
-    return true;
-}
-
-bool DrawingAreaPickPieces::ButtonPressed(GdkEventButton *event)
-{
-    //std::cout << "clicked in (" << event->x << ", " << event->y << ")" << std::endl;
-
-    Glib::RefPtr<Gdk::Window> window = m_theDrawingArea->get_window();
+    Glib::RefPtr<Gdk::Window> window = this->get_window();
     if (!window)
     {
         return false;
     }
 
-    Gtk::Allocation allocation = m_theDrawingArea->get_allocation();
+	Gtk::Allocation allocation = this->get_allocation();
+
+	int32_t width  = allocation.get_width();
+	int32_t height = allocation.get_height();
+
+	// side of the small square which makes up the pieces
+	int32_t littleSquare;
+
+	// coordinates for the centre of the drawing area
+	// they are different depending on the orientation of the drawing area
+	int32_t xc;
+	int32_t yc;
+
+	switch(m_orientation)
+	{
+	case eOrientation_leftToRight:
+	case eOrientation_rightToLeft:
+	{
+		// horizontal orientation
+		littleSquare = std::min(
+							height / PICK_PLAYER_PIECES_ARRAY_NROWS,
+							width  / PICK_PLAYER_PIECES_ARRAY_NCOLS);
+
+		xc = width  / 2;
+		yc = height / 2;
+		break;
+	}
+
+	case eOrientation_bottomToTop:
+	case eOrientation_topToBottom:
+	{
+		// height and width are turn around here because the drawing area
+		// will be shown vertically
+		littleSquare = std::min(
+							width  / PICK_PLAYER_PIECES_ARRAY_NROWS,
+							height / PICK_PLAYER_PIECES_ARRAY_NCOLS);
+
+		xc = height / 2;
+		yc = width  / 2;
+
+		break;
+	}
+	} // switch(m_orientation)
+
+	// the sides of the rectangle which contains the pieces
+	int32_t rectHeight = littleSquare * PICK_PLAYER_PIECES_ARRAY_NROWS;
+	int32_t rectWidth  = littleSquare * PICK_PLAYER_PIECES_ARRAY_NCOLS;
+
+	// get the pen to draw
+	Cairo::RefPtr<Cairo::Context> cr = window->create_cairo_context();
+
+	// clip to the area indicated by the expose event so that we only redraw
+	// the portion of the window that needs to be redrawn
+	cr->rectangle(event->area.x, event->area.y,
+		event->area.width, event->area.height);
+	cr->clip();
+
+	// colour of the pieces
+	cr->set_source_rgb(
+			m_red,
+			m_green,
+			m_blue);
+
+	int32_t hzIndex = (xc - rectWidth/2) + (littleSquare/2);
+	int32_t vtIndex = (yc - rectHeight/2) + (littleSquare/2);
+
+	// draw player's pieces left
+	switch(m_orientation)
+	{
+	case eOrientation_leftToRight:
+	{
+		for (int32_t row = 0; row < PICK_PLAYER_PIECES_ARRAY_NROWS; row++)
+		{
+			for (int32_t col = 0; col < PICK_PLAYER_PIECES_ARRAY_NCOLS; col++)
+			{
+				ePieceType_t pieceType = pickPlayerPiecesArray[row][col];
+				if ( (pieceType != e_noPiece) &&
+					 (m_thePlayer.IsPieceAvailable(pieceType)) )
+				{
+					cr->rectangle(
+							(hzIndex - littleSquare/2) + 1,
+							(vtIndex - littleSquare/2) + 1,
+							littleSquare - 1,
+							littleSquare - 1);
+
+					cr->fill();
+				}
+
+				hzIndex += littleSquare;
+			}
+
+			hzIndex = (xc - rectWidth/2) + (littleSquare/2);
+			vtIndex += littleSquare;
+		}
+
+		break;
+	}
+	case eOrientation_rightToLeft:
+	{
+		for (int32_t row = PICK_PLAYER_PIECES_ARRAY_NROWS - 1; row >= 0; row--)
+		{
+			for (int32_t col = 0; col < PICK_PLAYER_PIECES_ARRAY_NCOLS; col++)
+			{
+				ePieceType_t pieceType = pickPlayerPiecesArray[row][col];
+				if ( (pieceType != e_noPiece) &&
+					 (m_thePlayer.IsPieceAvailable(pieceType)) )
+				{
+					cr->rectangle(
+							(hzIndex - littleSquare/2) + 1,
+							(vtIndex - littleSquare/2) + 1,
+							littleSquare - 1,
+							littleSquare - 1);
+
+					cr->fill();
+				}
+
+				hzIndex += littleSquare;
+			}
+
+			hzIndex = (xc - rectWidth/2) + (littleSquare/2);
+			vtIndex += littleSquare;
+		}
+
+		break;
+	}
+	case eOrientation_bottomToTop:
+	{
+		for (int32_t row = 0; row < PICK_PLAYER_PIECES_ARRAY_NROWS; row++)
+		{
+			for (int32_t col = PICK_PLAYER_PIECES_ARRAY_NCOLS - 1; col >= 0; col--)
+			{
+				ePieceType_t pieceType = pickPlayerPiecesArray[row][col];
+				if ( (pieceType != e_noPiece) &&
+					 (m_thePlayer.IsPieceAvailable(pieceType)) )
+				{
+					cr->rectangle(
+							(vtIndex - littleSquare/2) + 1,
+							(hzIndex - littleSquare/2) + 1,
+							littleSquare - 1,
+							littleSquare - 1);
+
+					cr->fill();
+				}
+
+				hzIndex += littleSquare;
+			}
+
+			hzIndex = (xc - rectWidth/2) + (littleSquare/2);
+			vtIndex += littleSquare;
+		}
+
+		break;
+	}
+	case eOrientation_topToBottom:
+	{
+		for (int32_t row = PICK_PLAYER_PIECES_ARRAY_NROWS - 1; row >= 0; row--)
+		{
+			for (int32_t col = 0; col < PICK_PLAYER_PIECES_ARRAY_NCOLS; col++)
+			{
+				ePieceType_t pieceType = pickPlayerPiecesArray[row][col];
+				if ( (pieceType != e_noPiece) &&
+					 (m_thePlayer.IsPieceAvailable(pieceType)) )
+				{
+					cr->rectangle(
+							(vtIndex - littleSquare/2) + 1,
+							(hzIndex - littleSquare/2) + 1,
+							littleSquare - 1,
+							littleSquare - 1);
+
+					cr->fill();
+				}
+
+				hzIndex += littleSquare;
+			}
+
+			hzIndex = (xc - rectWidth/2) + (littleSquare/2);
+			vtIndex += littleSquare;
+		}
+
+		break;
+	}
+	} // switch(m_orientation)
+
+	// commit the changes to the screen!
+	cr->stroke();
+
+    return true;
+}
+
+bool DrawingAreaShowPieces::on_button_press_event(GdkEventButton *event)
+{
+    Glib::RefPtr<Gdk::Window> window = this->get_window();
+    if (!window)
+    {
+        return false;
+    }
+
+    Gtk::Allocation allocation = this->get_allocation();
 
     int32_t width  = allocation.get_width();
     int32_t height = allocation.get_height();
 
-    int32_t littleSquare = std::min(
-                            height / PICK_PLAYER_PIECES_ARRAY_NROWS,
-                            width / PICK_PLAYER_PIECES_ARRAY_NCOLS);
-    int32_t squareHeight = littleSquare * PICK_PLAYER_PIECES_ARRAY_NROWS;
-    int32_t squareWidth  = littleSquare * PICK_PLAYER_PIECES_ARRAY_NCOLS;
+    // side of the small square which makes up the pieces
+    int32_t littleSquare;
 
+    // the sides of the rectangle which contains the pieces
+    int32_t rectHeight;
+    int32_t rectWidth;
+
+    switch(m_orientation)
+    {
+    case eOrientation_leftToRight:
+    case eOrientation_rightToLeft:
+    {
+    	// horizontal orientation
+        littleSquare = std::min(
+							height / PICK_PLAYER_PIECES_ARRAY_NROWS,
+							width  / PICK_PLAYER_PIECES_ARRAY_NCOLS);
+
+        rectHeight = littleSquare * PICK_PLAYER_PIECES_ARRAY_NROWS;
+        rectWidth  = littleSquare * PICK_PLAYER_PIECES_ARRAY_NCOLS;
+
+    	break;
+    }
+
+    case eOrientation_bottomToTop:
+    case eOrientation_topToBottom:
+    {
+    	// height and width are turn around here because the drawing area
+    	// will be shown vertically
+        littleSquare = std::min(
+							width  / PICK_PLAYER_PIECES_ARRAY_NROWS,
+							height / PICK_PLAYER_PIECES_ARRAY_NCOLS);
+
+        rectHeight = littleSquare * PICK_PLAYER_PIECES_ARRAY_NCOLS;
+        rectWidth  = littleSquare * PICK_PLAYER_PIECES_ARRAY_NROWS;
+
+    	break;
+    }
+    } // switch(m_orientation)
+
+    // coordinates for the centre of the drawing area
     int32_t xc = width  / 2;
     int32_t yc = height / 2;
 
-    if ( ( ((event->x) > (xc - squareWidth/2))  && ((event->x) < (xc + squareWidth/2))  ) &&
-         ( ((event->y) > (yc - squareHeight/2)) && ((event->y) < (yc + squareHeight/2)) ) )
+    if ( ( ((event->x) > (xc - rectWidth/2))  && ((event->x) < (xc + rectWidth/2))  ) &&
+         ( ((event->y) > (yc - rectHeight/2)) && ((event->y) < (yc + rectHeight/2)) ) )
     {
         int32_t row, col;
-        for (col = 0; col < PICK_PLAYER_PIECES_ARRAY_NCOLS; col++)
-        {
-            if (event->x < ((xc - squareWidth/2) + (littleSquare * col)))
-            {
-                break;
-            }
-        }
 
-        for (row = 1; row < PICK_PLAYER_PIECES_ARRAY_NROWS; row++)
+        if ( (m_orientation == eOrientation_leftToRight) ||
+             (m_orientation == eOrientation_rightToLeft) )
         {
-            if (event->y < ((yc - squareHeight/2) + (littleSquare * row)))
-            {
-                break;
-            }
+			for (col = 1; col < PICK_PLAYER_PIECES_ARRAY_NCOLS; col++)
+			{
+				if (event->x < ((xc - rectWidth/2) + (littleSquare * col) + 1))
+				{
+					break;
+				}
+			}
+
+			for (row = 1; row < PICK_PLAYER_PIECES_ARRAY_NROWS; row++)
+			{
+				if (event->y < ((yc - rectHeight/2) + (littleSquare * row) + 1))
+				{
+					break;
+				}
+			}
+
+			if (m_orientation == eOrientation_rightToLeft)
+			{
+				// row must be adapted to retrieve the real piece out of
+				// pickPlayerPiecesArray
+				row = PICK_PLAYER_PIECES_ARRAY_NROWS - row + 1;
+			}
         }
+        else // eOrientation_bottomToTop OR eOrientation_topToBottom
+        {
+			for (row = 1; row < PICK_PLAYER_PIECES_ARRAY_NROWS; row++)
+			{
+				if (event->x < ((xc - rectWidth/2) + (littleSquare * row) + 1))
+				{
+					break;
+				}
+			}
+
+			for (col = 1; col < PICK_PLAYER_PIECES_ARRAY_NCOLS; col++)
+			{
+				if (event->y < ((yc - rectHeight/2) + (littleSquare * col) + 1))
+				{
+					break;
+				}
+			}
+
+			if (m_orientation == eOrientation_bottomToTop)
+			{
+				// col must be adapted to retrieve the real piece out of
+				// pickPlayerPiecesArray
+				col = PICK_PLAYER_PIECES_ARRAY_NCOLS - col + 1;
+			}
+			else // (m_orientation == eOrientation_topToBottom)
+			{
+				// row must be adapted to retrieve the real piece out of
+				// pickPlayerPiecesArray
+				row = PICK_PLAYER_PIECES_ARRAY_NROWS - row + 1;
+			}
+        } // if ( (m_orientation == eOrientation_leftToRight) ...
 
         ePieceType_t pieceType = pickPlayerPiecesArray[row-1][col-1];
         if ( (pieceType != e_noPiece) &&
@@ -248,13 +460,6 @@ bool DrawingAreaPickPieces::ButtonPressed(GdkEventButton *event)
             // the user clicked where some piece was being shown
             // notify it to whoever listens
             m_signalPiecePicked.emit(pieceType);
-
-            /*
-            if (pieceType != m_editPiece.GetType())
-            {
-                UpdateSelectedPiece(pieceType);
-            }
-             */
 
             return true;
         }
@@ -267,17 +472,17 @@ bool DrawingAreaPickPieces::ButtonPressed(GdkEventButton *event)
     return true;
 }
 
-bool DrawingAreaPickPieces::Invalidate()
+bool DrawingAreaShowPieces::Invalidate()
 {
     // force the drawing area to be redraw
-    Glib::RefPtr<Gdk::Window> window = m_theDrawingArea->get_window();
+    Glib::RefPtr<Gdk::Window> window = this->get_window();
     if(window)
     {
         Gdk::Rectangle rect(
                 0,
                 0,
-                m_theDrawingArea->get_allocation().get_width(),
-                m_theDrawingArea->get_allocation().get_height());
+                this->get_allocation().get_width(),
+                this->get_allocation().get_height());
 
         window->invalidate_rect(rect, false);
         return true;

@@ -59,6 +59,8 @@ gui_about_dialog.h \
 gui_drawing_area_show_pieces.cpp \
 gui_drawing_area_show_pieces.h   \
 gui_glade_defs.h \
+gui_table_edit_piece.cpp \
+gui_table_edit_piece.h   \
 Heuristic.cpp \
 Heuristic.h \
 Piece.cpp \

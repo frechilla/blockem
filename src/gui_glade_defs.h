@@ -97,14 +97,14 @@ const char GUI_MENU_ITEM_GAME_NEW[]        = "imagemenuitem_game_new";
 const char GUI_MENU_ITEM_GAME_QUIT[]       = "imagemenuitem_game_quit";
 const char GUI_MENU_ITEM_HELP_ABOUT[]      = "imagemenuitem_help_about";
 const char GUI_VBOX_DRAWING_NAME[]         = "vbox_drawing";
+const char GUI_HBOX_GAME_STATUS_NAME[]     = "hbox_gamestatus";
 const char GUI_DRAWINGAREA_BOARD_NAME[]    = "drawingarea_board";
-const char GUI_HBOX_PIECES_AREA_NAME[]     = "hbox_pieces";
+const char GUI_HBOX_COMPUTER_PIECES_NAME[] = "hbox_computerpieces";
+const char GUI_HBOX_PIECES_AREA_NAME[]     = "hbox_editpieces";
 const char GUI_TABLE_EDITING_PIECE_NAME[]  = "table_editing_piece";
 const char GUI_BUTTON_ROTATE_NAME[]        = "button_rotate";
 const char GUI_BUTTON_MIRROR_NAME[]        = "button_mirror";
 const char GUI_DRAWINGAREA_EDITING_PIECE[] = "drawingarea_editing_piece";
-const char GUI_TABLE_PICK_PIECES[]         = "table_pick_pieces";
-const char GUI_DRAWINGAREA_PICK_PIECES[]   = "drawingarea_pick_pieces";
-const char GUI_STATUSBAR_NAME[]            = "statusbar";
+const char GUI_STATUSBAR_NAME[]            = "statusbar1";
 
 #endif /* GUI_GLADE_H_ */

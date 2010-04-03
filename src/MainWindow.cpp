@@ -23,6 +23,7 @@
 /// @history
 /// Ref       Who                When         What
 ///           Faustino Frechilla 13-Nov-2009  Original development
+///           Faustino Frechilla 01-Apr-2010  Add drawing board with computer's pieces left
 /// @endhistory
 ///
 // ============================================================================
@@ -34,9 +35,6 @@
 /// @brief uninitialised coord value
 static const int32_t COORD_UNITIALISED = 0xffffffff;
 
-/// @brief number of squares of the edit piece board
-static const int32_t NSQUARES_EDIT_PIECES_BOARD = 5;
-
 /// message to be shown to the user when he/she requested the
 /// application to be closed, and the worker thread is busy computing
 static const char MESSAGE_ASK_BEFORE_CLOSE[] =
@@ -45,11 +43,10 @@ static const char MESSAGE_ASK_BEFORE_CLOSE[] =
 /// length of the custom messages to be shown to the user
 static const int32_t MESSAGE_LENGTH = 100;
 
-// drawing area options
-static const float DEFAULT_RED   = 0.5;
-static const float DEFAULT_GREEN = 0.5;
-static const float DEFAULT_BLUE  = 0.5;
+/// number of squares the game starts with
+static const int8_t NSQUARES_TOTAL = 89;
 
+// drawing area options
 static const float BOARD_BORDER_RED        = 0.8;
 static const float BOARD_BORDER_GREEN      = 0.0;
 static const float BOARD_BORDER_BLUE       = 0.0;
@@ -81,13 +78,16 @@ static const float GHOST_PIECE_ALPHA_TRANSPARENCY = 0.2;
 MainWindow::MainWindow(
 		Game1v1 &a_theGame,
 		Glib::RefPtr<Gnome::Glade::Xml> a_refXml) throw (GUIException) :
+			m_refXml(a_refXml),
 			m_the1v1Game(a_theGame),
-			m_editPiece(e_noPiece),
 			m_lastCoord(COORD_UNITIALISED, COORD_UNITIALISED),
 			m_workerThread(),
 			m_aboutDialog(a_refXml),
-			m_refXml(a_refXml),
-			m_pickPiecesDrawingArea(a_refXml, a_theGame.GetPlayerOpponent())
+			m_pickPiecesDrawingArea(a_theGame.GetPlayerOpponent(), DrawingAreaShowPieces::eOrientation_leftToRight),
+			m_showComputerPiecesDrawingArea(a_theGame.GetPlayerMe(), DrawingAreaShowPieces::eOrientation_bottomToTop),
+			m_editPieceTable(a_refXml),
+			m_computerSquaresLeft(NSQUARES_TOTAL),
+			m_userSquaresLeft(NSQUARES_TOTAL)
 {
     // first of all retrieve the Gtk::window object and set its icon
     m_refXml->get_widget(GUI_MAIN_WINDOW_NAME, m_theWindow);
@@ -96,6 +96,7 @@ MainWindow::MainWindow(
         throw new GUIException(std::string("couldn't retrieve the MainWindow from the .glade file"));
     }
 
+    // icon of the window
     Glib::RefPtr< Gdk::Pixbuf > icon;
     // gboolean g_file_test(const gchar *filename, GFileTest test);
     if (g_file_test(GUI_PATH_TO_16PICTURE, G_FILE_TEST_IS_REGULAR))
@@ -117,23 +118,6 @@ MainWindow::MainWindow(
             m_theWindow->set_icon(icon);
         }
     }
-
-
-    // connect the interthread communication (GLib::Dispatcher) to invalidate the
-    // board drawing area
-    m_signal_moveComputed.connect(
-            sigc::mem_fun(*this, &MainWindow::NotifyMoveComputed));
-
-    // connect the interthread communication (GLib::Dispatcher) to notify the
-    // user that the game is finished
-    m_signal_gameFinished.connect(
-            sigc::mem_fun(*this, &MainWindow::NotifyGameFinished));
-
-    // connect the worker thread signal
-    m_workerThread.signal_computingFinished().connect(
-            sigc::mem_fun(*this, &MainWindow::WorkerThread_computingFinished));
-            //sigc::ptr_fun(f) );
-
 
     // retrieve the objects from the GUI design
     m_refXml->get_widget(GUI_MENU_ITEM_GAME_NEW, m_newMenuItem);
@@ -160,45 +144,75 @@ MainWindow::MainWindow(
 		throw new GUIException(std::string("Drawing area vbox retrieval failed"));
 	}
 
+    m_refXml->get_widget(GUI_HBOX_GAME_STATUS_NAME, m_hBoxGameStatus);
+    if (m_hBoxGameStatus == NULL)
+    {
+    	throw new GUIException(std::string("Game status hbox retrieval failed"));
+    }
+
 	m_refXml->get_widget(GUI_DRAWINGAREA_BOARD_NAME, m_boardDrawingArea);
 	if (m_boardDrawingArea == NULL)
 	{
 		throw new GUIException(std::string("Board drawing area retrieval failed"));
 	}
 
-	m_refXml->get_widget(GUI_DRAWINGAREA_EDITING_PIECE, m_editPiecesDrawingArea);
-	if (m_editPiecesDrawingArea == NULL)
-	{
-		throw new GUIException(std::string("Edit pieces drawing area retrieval failed"));
-	}
+    m_refXml->get_widget(GUI_HBOX_COMPUTER_PIECES_NAME, m_hBoxComputerPieces);
+    if (m_hBoxComputerPieces == NULL)
+    {
+    	throw new GUIException(std::string("Computer pieces hbox retrieval failed"));
+    }
 
-    m_refXml->get_widget(GUI_HBOX_PIECES_AREA_NAME, m_piecesHBox);
-    if (m_piecesHBox == NULL)
+    m_refXml->get_widget(GUI_HBOX_PIECES_AREA_NAME, m_hBoxEditPieces);
+    if (m_hBoxEditPieces == NULL)
     {
         throw new GUIException(std::string("PiecesHBox retrieval failed"));
     }
 
-	m_refXml->get_widget(GUI_BUTTON_ROTATE_NAME, m_rotateButton);
-	if (m_rotateButton == NULL)
-	{
-		throw new GUIException(std::string("rotate button retrieval failed"));
-	}
+    m_refXml->get_widget(GUI_STATUSBAR_NAME, m_statusBar);
+    if (m_statusBar == NULL)
+    {
+        throw new GUIException(std::string("Status Bar retrieval failed"));
+    }
 
-	m_refXml->get_widget(GUI_BUTTON_MIRROR_NAME, m_mirrorButton);
-	if (m_mirrorButton == NULL)
-	{
-		throw new GUIException(std::string("mirror button retrieval failed"));
-	}
+
+    // prepare and add the score labels to the status bar
+    m_computerLabel.set_visible();
+    m_userLabel.set_visible();
+    UpdateScoreStatus();
+    m_statusBar->pack_start(m_computerLabel, true, true);
+    m_statusBar->pack_start(m_userLabel, true, true);
 
 	// put the custom widgets where they are expected to be
 	// pack_start (Widget& child, bool expand, bool fill, guint padding=0)
-	m_piecesHBox->pack_start(m_pickPiecesDrawingArea.DrawingArea(), true, true);
+    m_hBoxEditPieces->pack_start(m_pickPiecesDrawingArea, true, true);
+    m_hBoxEditPieces->pack_start(m_editPieceTable.Table(), false, false);
+
+
+	m_hBoxComputerPieces->pack_start(
+			m_showComputerPiecesDrawingArea,
+			true,
+			true);
+
+    // connect the interthread communication (GLib::Dispatcher) to invalidate the
+    // board drawing area
+    m_signal_moveComputed.connect(
+            sigc::mem_fun(*this, &MainWindow::NotifyMoveComputed));
+
+    // connect the interthread communication (GLib::Dispatcher) to notify the
+    // user that the game is finished
+    m_signal_gameFinished.connect(
+            sigc::mem_fun(*this, &MainWindow::NotifyGameFinished));
+
+    // connect the worker thread signal
+    m_workerThread.signal_computingFinished().connect(
+            sigc::mem_fun(*this, &MainWindow::WorkerThread_computingFinished));
+            //sigc::ptr_fun(f) );
 
 	// handle the signal coming from the pickPiecesDrawingArea
 	m_pickPiecesDrawingArea.signal_piecePicked().connect(
 	        sigc::mem_fun(*this, &MainWindow::PickPiecesDrawingArea_PiecePickedEvent));
 
-	// connect the signals to the handlers
+	// connect the rest of the signals to the handlers
 	// if the handler is not part of an object use sigc::ptr_fun
 	m_theWindow->signal_delete_event().connect(
 	        sigc::mem_fun(*this, &MainWindow::MainWindow_DeleteEvent));
@@ -207,7 +221,7 @@ MainWindow::MainWindow(
 	m_quitMenuItem->signal_activate().connect(
 	        sigc::mem_fun(*this, &MainWindow::MenuItemGameQuit_Activate));
 	m_helpAboutMenuItem->signal_activate().connect(
-	            sigc::mem_fun(*this, &MainWindow::MenuItemHelpAbout_Activate));
+	        sigc::mem_fun(*this, &MainWindow::MenuItemHelpAbout_Activate));
 
 	m_boardDrawingArea->signal_expose_event().connect(
 			sigc::mem_fun(*this, &MainWindow::BoardDrawingArea_ExposeEvent));
@@ -221,19 +235,11 @@ MainWindow::MainWindow(
 	m_boardDrawingArea->signal_leave_notify_event().connect(
 	            sigc::mem_fun(*this, &MainWindow::BoardDrawingArea_LeaveAreaNotify));
 
-	m_editPiecesDrawingArea->signal_expose_event().connect(
-			sigc::mem_fun(*this, &MainWindow::EditPiecesDrawingArea_ExposeEvent));
-
-	m_rotateButton->signal_clicked().connect(
-			sigc::mem_fun(*this, &MainWindow::RotateButton_ButtonPressed));
-	m_mirrorButton->signal_clicked().connect(
-			sigc::mem_fun(*this, &MainWindow::MirrorButton_ButtonPressed));
-
-
-	// set the rotate and mirror button to not sensitive, since at the beginning
-	// there's no piece loaded in the edit piece drawing area
-	m_rotateButton->set_sensitive(false);
-	m_mirrorButton->set_sensitive(false);
+	//TODO the colours should be configured in a beter way. This will do it now
+	m_showComputerPiecesDrawingArea.SetPlayerRGB(
+			PLAYER_ME_RED, PLAYER_ME_GREEN, PLAYER_ME_BLUE);
+	m_pickPiecesDrawingArea.SetPlayerRGB(
+			PLAYER_OPPONENT_RED, PLAYER_OPPONENT_GREEN, PLAYER_OPPONENT_BLUE);
 }
 
 MainWindow::~MainWindow()
@@ -250,6 +256,12 @@ void MainWindow::WorkerThread_computingFinished(
     if (a_piece.GetType() != e_noPiece)
     {
         m_the1v1Game.PutDownPieceMe(a_piece, a_coord);
+
+        // update the amount of computer's squares left
+        // this method is run by another thread.
+        // once the m_signal_moveComputed signal is emited the
+        // real widget will be updated
+        m_computerSquaresLeft -= a_piece.GetNSquares();
     }
 
     // this signal is being issued from the MainWindowWorkerThread
@@ -277,12 +289,13 @@ void MainWindow::WorkerThread_computingFinished(
 
 void MainWindow::PickPiecesDrawingArea_PiecePickedEvent(ePieceType_t a_piecePicked)
 {
-    if (a_piecePicked != m_editPiece.GetType())
+	// only update the piece if it changes
+    if (a_piecePicked != m_editPieceTable.GetPiece().GetType())
     {
         // update the piece picked even if it is e_noPiece
         // when the selected piece is e_noPiece the editPiecesDrawingArea
         // will be cleared out
-        UpdateSelectedPiece(a_piecePicked);
+    	m_editPieceTable.SetPiece(a_piecePicked);
     }
 }
 
@@ -386,13 +399,13 @@ void MainWindow::MenuItemGameNew_Activate()
     {
         // reset the current game, and update the view
         m_the1v1Game.Reset();
-        InvalidateDrawingArea(m_boardDrawingArea);
-        InvalidateDrawingArea(m_editPiecesDrawingArea);
+        InvalidateBoardDrawingArea();
         m_pickPiecesDrawingArea.Invalidate();
-        m_rotateButton->set_sensitive(false);
-        m_mirrorButton->set_sensitive(false);
+        m_showComputerPiecesDrawingArea.Invalidate();
+        m_editPieceTable.SetPiece(e_noPiece);
 
-        UpdateSelectedPiece(e_noPiece);
+        m_computerSquaresLeft = m_userSquaresLeft = NSQUARES_TOTAL;
+        UpdateScoreStatus();
     }
 }
 
@@ -404,6 +417,7 @@ void MainWindow::MenuItemHelpAbout_Activate()
 
 bool MainWindow::BoardDrawingArea_ExposeEvent(GdkEventExpose* event)
 {
+	//TODO remove
 	//std::cout << "in BoardDrawingArea_ExposeEvent" << std::endl;
 
 	// This is where we draw on the window
@@ -499,7 +513,6 @@ bool MainWindow::BoardDrawingArea_ExposeEvent(GdkEventExpose* event)
 	        }
 	    }
 
-
 		// fill the squares where the player 'opponent' is in right now
 		cr->set_source_rgb(
 				PLAYER_OPPONENT_RED,
@@ -537,9 +550,6 @@ bool MainWindow::BoardDrawingArea_ExposeEvent(GdkEventExpose* event)
         cr->line_to(xc - squareWidth/2, yc + squareHeight/2);
         cr->line_to(xc - squareWidth/2, yc - squareHeight/2);
 
-        // commit the changes to the screen!
-        //cr->stroke();
-
         // line for the insides of the board
         cr->set_line_width(BOARD_LINE_WIDTH);
         cr->set_source_rgb(
@@ -563,10 +573,10 @@ bool MainWindow::BoardDrawingArea_ExposeEvent(GdkEventExpose* event)
         // commit the changes to the screen!
         cr->stroke();
 
-
 	    // print the current selected piece in the place where the mouse pointer is
-	    // using a bit of transparency
-	    if ( (m_editPiece.GetType() != e_noPiece)   &&
+	    // using a bit of transparency (if it is to be edited)
+        const Piece &currentEditPiece = m_editPieceTable.GetPiece();
+	    if ( (currentEditPiece.GetType() != e_noPiece)   &&
              (m_lastCoord.m_row != COORD_UNITIALISED) &&
              (m_lastCoord.m_col != COORD_UNITIALISED) )
 	    {
@@ -574,7 +584,7 @@ bool MainWindow::BoardDrawingArea_ExposeEvent(GdkEventExpose* event)
 	    	{
 	    		if (Rules::IsPieceDeployableInStartingPoint(
 		    			m_the1v1Game.GetBoard(),
-		    			m_editPiece,
+		    			currentEditPiece,
 		    			m_lastCoord,
 		    			Coordinate(STARTING_COORD_X_OPPONENT, STARTING_COORD_Y_OPPONENT)))
 	    		{
@@ -595,7 +605,7 @@ bool MainWindow::BoardDrawingArea_ExposeEvent(GdkEventExpose* event)
 	    	}
 	    	else if (Rules::IsPieceDeployable(
 	    			m_the1v1Game.GetBoard(),
-	    			m_editPiece,
+	    			currentEditPiece,
 	    			m_lastCoord,
 	    			m_the1v1Game.GetPlayerOpponent()))
 	    	{
@@ -615,12 +625,12 @@ bool MainWindow::BoardDrawingArea_ExposeEvent(GdkEventExpose* event)
 	    	}
 
 			// draw the piece in the edit pieces drawing area
-			for (uint8_t i = 0; i < m_editPiece.GetNSquares(); i++)
+			for (uint8_t i = 0; i < currentEditPiece.GetNSquares(); i++)
 			{
 				SetSquareInBoard(
 						Coordinate(
-								m_lastCoord.m_row + m_editPiece.m_coords[i].m_row,
-								m_lastCoord.m_col + m_editPiece.m_coords[i].m_col),
+								m_lastCoord.m_row + currentEditPiece.m_coords[i].m_row,
+								m_lastCoord.m_col + currentEditPiece.m_coords[i].m_col),
 						cr);
 				cr->fill();
 			}
@@ -632,10 +642,12 @@ bool MainWindow::BoardDrawingArea_ExposeEvent(GdkEventExpose* event)
 
 bool MainWindow::BoardDrawingArea_ButtonPressed(GdkEventButton *event)
 {
+	//TODO remove
     //std::cout << "clicked in (" << event->x << ", " << event->y << ")" << std::endl;
 
+	const Piece &currentEditPiece = m_editPieceTable.GetPiece();
 	Coordinate thisCoord;
-	if ( (m_editPiece.GetType() == e_noPiece) ||
+	if ( (currentEditPiece.GetType() == e_noPiece) ||
 	     (WindowToBoardCoord(event->x, event->y, thisCoord) == false) )
 	{
 	    return true;
@@ -650,21 +662,23 @@ bool MainWindow::BoardDrawingArea_ButtonPressed(GdkEventButton *event)
 	    return true;
 	}
 
-	std::cout << "SQUARE: (" << thisCoord.m_row << ", " << thisCoord.m_col << ")" << std::endl;
+	//TODO remove
+	//std::cout << "SQUARE: (" << thisCoord.m_row << ", " << thisCoord.m_col << ")" << std::endl;
 
     if( ( (m_the1v1Game.GetPlayerOpponent().NumberOfPiecesAvailable() == e_numberOfPieces) &&
           (!Rules::IsPieceDeployableInStartingPoint(
                     m_the1v1Game.GetBoard(),
-                    m_editPiece,
+                    currentEditPiece,
                     m_lastCoord,
                     Coordinate(STARTING_COORD_X_OPPONENT, STARTING_COORD_Y_OPPONENT))) ) ||
         ( (m_the1v1Game.GetPlayerOpponent().NumberOfPiecesAvailable() < e_numberOfPieces) &&
           (!Rules::IsPieceDeployable(
                     m_the1v1Game.GetBoard(),
-                    m_editPiece,
+                    currentEditPiece,
                     thisCoord,
                     m_the1v1Game.GetPlayerOpponent())) ) )
     {
+    	//TODO should this be a message box?
         std::cout << "Cheeky you! Don't try to put a piece where it's not allowed" << std::endl;
     }
     else
@@ -678,9 +692,13 @@ bool MainWindow::BoardDrawingArea_ButtonPressed(GdkEventButton *event)
         }
 
         // we are positive the move is valid
-        m_the1v1Game.PutDownPieceOpponent(m_editPiece, thisCoord);
+        m_the1v1Game.PutDownPieceOpponent(currentEditPiece, thisCoord);
 
-        if (!m_workerThread.ComputeMove(m_the1v1Game, m_editPiece, thisCoord))
+        // update the score on the status bar
+        m_userSquaresLeft -= currentEditPiece.GetNSquares();
+        UpdateScoreStatus();
+
+        if (!m_workerThread.ComputeMove(m_the1v1Game, currentEditPiece, thisCoord))
         {
             std::cout
                 << "Error while telling the thread to start computing."
@@ -690,13 +708,14 @@ bool MainWindow::BoardDrawingArea_ButtonPressed(GdkEventButton *event)
         }
 
         // remove the actual piece being edited from the edit piece drawing area
-        UpdateSelectedPiece(e_noPiece);
+        // and force the edit piece drawing area to be redraw
+        m_editPieceTable.SetPiece(e_noPiece);
 
         // force the pick pieces drawing area to redraw because a piece has just been deployed
         m_pickPiecesDrawingArea.Invalidate();
 
-        // force the board to be redraw
-        InvalidateDrawingArea(m_boardDrawingArea);
+		// force the board to be redraw to update it with the brand new move
+		InvalidateBoardDrawingArea();
     }
 
     return true;
@@ -704,11 +723,13 @@ bool MainWindow::BoardDrawingArea_ButtonPressed(GdkEventButton *event)
 
 bool MainWindow::BoardDrawingArea_MotionNotify(GdkEventMotion *event)
 {
+	//TODO remove
     //std::cout << "moved to (" << event->x << ", " << event->y << ")" << std::endl;
 
 	Coordinate thisCoord;
 	if (WindowToBoardCoord(event->x, event->y, thisCoord))
 	{
+		// the mouse is moving inside the board now
 		if ( (m_lastCoord.m_row != thisCoord.m_row) ||
              (m_lastCoord.m_col != thisCoord.m_col) )
 		{
@@ -716,16 +737,19 @@ bool MainWindow::BoardDrawingArea_MotionNotify(GdkEventMotion *event)
 			m_lastCoord.m_col = thisCoord.m_col;
 
 			// force the board to be redraw
-			InvalidateDrawingArea(m_boardDrawingArea);
+			InvalidateBoardDrawingArea();
 		}
 	}
 	else if ( (m_lastCoord.m_row != COORD_UNITIALISED) ||
               (m_lastCoord.m_col != COORD_UNITIALISED) )
 	{
+		// the mouse is moving outside the board. update the value
+		// of the last coord to unitialised so no "ghost" piece will be
+		// painted on the board
 		m_lastCoord.m_row = m_lastCoord.m_col = COORD_UNITIALISED;
 
 		// force the board to be redraw
-		InvalidateDrawingArea(m_boardDrawingArea);
+		InvalidateBoardDrawingArea();
 	}
 
 	return true;
@@ -739,106 +763,10 @@ bool MainWindow::BoardDrawingArea_LeaveAreaNotify(GdkEventCrossing* event)
         m_lastCoord.m_row = m_lastCoord.m_col = COORD_UNITIALISED;
 
         // force the board to be redraw
-        InvalidateDrawingArea(m_boardDrawingArea);
+        InvalidateBoardDrawingArea();
     }
 
     return true;
-}
-
-bool MainWindow::EditPiecesDrawingArea_ExposeEvent(GdkEventExpose* event)
-{
-	// This is where we draw on the window
-	Glib::RefPtr<Gdk::Window> window = m_editPiecesDrawingArea->get_window();
-	if(window)
-	{
-		Gtk::Allocation allocation = m_editPiecesDrawingArea->get_allocation();
-
-		int32_t width  = allocation.get_width();
-		int32_t height = allocation.get_height();
-		int32_t squareSize = std::min(width, height);
-
-		int32_t littleSquare = squareSize / NSQUARES_EDIT_PIECES_BOARD;
-
-		int32_t squareHeight = littleSquare * NSQUARES_EDIT_PIECES_BOARD;
-		int32_t squareWidth  = littleSquare * NSQUARES_EDIT_PIECES_BOARD;
-
-		// coordinates for the centre of the window
-		int32_t xc = width  / 2;
-		int32_t yc = height / 2;
-
-		// get the pen to draw
-		Cairo::RefPtr<Cairo::Context> cr = window->create_cairo_context();
-
-		// clip to the area indicated by the expose event so that we only redraw
-		// the portion of the window that needs to be redrawn
-		cr->rectangle(event->area.x, event->area.y,
-			event->area.width, event->area.height);
-		cr->clip();
-
-		// print the piece in the edit piece drawing area
-        if (m_editPiece.GetType() != e_noPiece)
-        {
-            cr->set_source_rgb(
-                    PLAYER_OPPONENT_RED,
-                    PLAYER_OPPONENT_GREEN,
-                    PLAYER_OPPONENT_BLUE);
-
-            // draw the piece in the edit pieces drawing area
-            for (uint8_t i = 0; i < m_editPiece.GetNSquares(); i++)
-            {
-                cr->rectangle(
-                        (xc - littleSquare/2) + (littleSquare * m_editPiece.m_coords[i].m_col) + 1,
-                        (yc - littleSquare/2) + (littleSquare * m_editPiece.m_coords[i].m_row) + 1,
-                        littleSquare - 2,
-                        littleSquare - 2);
-
-                cr->fill();
-            }
-        }
-
-        // print the small little board to edit the piece easier
-		// we'll use same colour and width as for the inside of the board
-		cr->set_line_width(BOARD_LINE_WIDTH);
-		cr->set_source_rgb(
-				BOARD_RED,
-				BOARD_GREEN,
-				BOARD_BLUE);
-
-		// draw the border of the board
-		cr->move_to(xc - squareWidth/2, yc - squareHeight/2);
-		cr->line_to(xc + squareWidth/2, yc - squareHeight/2);
-		cr->line_to(xc + squareWidth/2, yc + squareHeight/2);
-		cr->line_to(xc - squareWidth/2, yc + squareHeight/2);
-		cr->line_to(xc - squareWidth/2, yc - squareHeight/2);
-
-
-		// draw the inside lines of the board
-		for (int32_t i = 1; i < NSQUARES_EDIT_PIECES_BOARD; i++)
-		{
-			cr->move_to(xc - squareWidth/2 + littleSquare*i, yc - squareHeight/2);
-			cr->line_to(xc - squareWidth/2 + littleSquare*i, yc + squareHeight/2);
-
-			cr->move_to(xc - squareWidth/2, yc - squareHeight/2 + littleSquare*i);
-			cr->line_to(xc + squareWidth/2, yc - squareHeight/2 + littleSquare*i);
-		}
-
-		// commit the changes to the screen!
-		cr->stroke();
-	}
-
-	return true;
-}
-
-void MainWindow::RotateButton_ButtonPressed()
-{
-	m_editPiece.Rotate();
-	InvalidateDrawingArea(m_editPiecesDrawingArea);
-}
-
-void MainWindow::MirrorButton_ButtonPressed()
-{
-	m_editPiece.Mirror();
-	InvalidateDrawingArea(m_editPiecesDrawingArea);
 }
 
 bool MainWindow::WindowToBoardCoord(
@@ -919,34 +847,11 @@ void MainWindow::SetSquareInBoard(const Coordinate &a_coord, Cairo::RefPtr<Cairo
 		cr->rectangle(
 				(xc - squareWidth/2) +  (littleSquareWidth  * a_coord.m_col) + 1,
 				(yc - squareHeight/2) + (littleSquareHeight * a_coord.m_row) + 1,
-				littleSquareWidth  - 2,
-				littleSquareHeight - 2);
+				littleSquareWidth  - 1,
+				littleSquareHeight - 1);
 
 		cr->fill();
 	}
-}
-
-void MainWindow::UpdateSelectedPiece(ePieceType_t a_newPiece)
-{
-    m_editPiece = Piece(a_newPiece);
-    if (m_editPiece.CanRotateOriginally())
-    {
-        m_rotateButton->set_sensitive(true);
-    }
-    else
-    {
-        m_rotateButton->set_sensitive(false);
-    }
-    if (m_editPiece.CanMirrorOriginally())
-    {
-        m_mirrorButton->set_sensitive(true);
-    }
-    else
-    {
-        m_mirrorButton->set_sensitive(false);
-    }
-
-    InvalidateDrawingArea(m_editPiecesDrawingArea);
 }
 
 void MainWindow::NotifyGameFinished()
@@ -1023,11 +928,16 @@ void MainWindow::NotifyGameFinished()
 
 void MainWindow::NotifyMoveComputed()
 {
+	// update computer's squares left
+	UpdateScoreStatus();
+
     // invalidate the board drawing area
-    InvalidateDrawingArea(m_boardDrawingArea);
+	InvalidateBoardDrawingArea();
+
+	// update the computer's pieces left too
+    m_showComputerPiecesDrawingArea.Invalidate();
 
     // restore the mouse cursor if the user can put down a piece
-    // or if the game is finished
     if (m_the1v1Game.CanPlayerOpponentGo())
     {
         Glib::RefPtr<Gdk::Window> window = m_boardDrawingArea->get_window();
@@ -1038,21 +948,32 @@ void MainWindow::NotifyMoveComputed()
     }
 }
 
-bool MainWindow::InvalidateDrawingArea(Gtk::DrawingArea* a_drawingArea)
+bool MainWindow::InvalidateBoardDrawingArea()
 {
     // force the drawing area to be redraw
-    Glib::RefPtr<Gdk::Window> window = a_drawingArea->get_window();
+    Glib::RefPtr<Gdk::Window> window = m_boardDrawingArea->get_window();
     if(window)
     {
         Gdk::Rectangle rect(
                 0,
                 0,
-                a_drawingArea->get_allocation().get_width(),
-                a_drawingArea->get_allocation().get_height());
+                m_boardDrawingArea->get_allocation().get_width(),
+                m_boardDrawingArea->get_allocation().get_height());
 
         window->invalidate_rect(rect, false);
         return true;
     }
 
     return false;
+}
+
+void MainWindow::UpdateScoreStatus()
+{
+	//TODO should be using snprintf
+    char message[MESSAGE_LENGTH];
+    sprintf(message, "Computer: %d", m_computerSquaresLeft);
+    m_computerLabel.set_text(message);
+
+    sprintf(message, "You: %d", m_userSquaresLeft);
+    m_userLabel.set_text(message);
 }

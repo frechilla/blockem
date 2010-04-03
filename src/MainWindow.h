@@ -36,8 +36,9 @@
 #include <gtkmm.h>
 
 #include "gui_exception.h"
-#include "gui_drawing_area_show_pieces.h"
 #include "gui_about_dialog.h"
+#include "gui_drawing_area_show_pieces.h"
+#include "gui_table_edit_piece.h"
 #include "MainWindowWorkerThread.h"
 #include "Game1v1.h"
 #include "Coordinate.h"
@@ -94,21 +95,12 @@ public:
     /// @brief callback to be called when the mouse leaves the board drawing area
     bool BoardDrawingArea_LeaveAreaNotify(GdkEventCrossing* event);
 
-    /// @brief callback to be called when the edit piece drawing area is redraw on screen
-    bool EditPiecesDrawingArea_ExposeEvent(GdkEventExpose* event);
-
-    /// @brief callback to be called when the rotate button is pressed
-    void RotateButton_ButtonPressed();
-
-    /// @brief callback to be called when the mirror button is pressed
-    void MirrorButton_ButtonPressed();
-
 private:
+    /// @brief used to retrieve the objects from the Glade design
+    Glib::RefPtr<Gnome::Glade::Xml> m_refXml;
+
     /// @brief the 1vs1 game which will be represented in the window
     Game1v1& m_the1v1Game;
-
-    /// @brief the piece being edited in the editPiecesDrawingArea
-    Piece m_editPiece;
 
     /// @brief latest place of the board where the user had the mouse pointer in
     Coordinate m_lastCoord;
@@ -119,14 +111,17 @@ private:
     /// @brief the about dialog class
     AboutDialog m_aboutDialog;
 
-    /// @brief used to retrieve the objects from the Glade design
-    Glib::RefPtr<Gnome::Glade::Xml> m_refXml;
+    /// @brief the drawing area where the pieces can be picked up by the user
+    DrawingAreaShowPieces m_pickPiecesDrawingArea;
+
+    /// @brief the drawing area where the computer's pieces left will be shown
+    DrawingAreaShowPieces m_showComputerPiecesDrawingArea;
+
+    /// @brief the table where the selected piece is edited
+    TableEditPiece m_editPieceTable;
 
     /// @brief the Gtk window object
     Gtk::Window* m_theWindow;
-
-    /// @brief the drawing area where the pieces can be picked up by the user
-    DrawingAreaPickPieces m_pickPiecesDrawingArea;
 
     Gtk::MenuItem* m_newMenuItem;
     Gtk::MenuItem* m_quitMenuItem;
@@ -135,20 +130,32 @@ private:
     /// @brief the vertical box that keeps the board + pieces
     Gtk::VBox* m_vBoxDrawing;
 
-    /// @brief the drawing area where the board is draw
+    /// @brief the table that contains the board + pieces left
+    Gtk::HBox* m_hBoxGameStatus;
+
+    /// @brief the drawing area where the board is drawn
     Gtk::DrawingArea* m_boardDrawingArea;
 
+    /// @brief the table that contains the computer pieces
+    Gtk::HBox* m_hBoxComputerPieces;
+
     /// @brief the horizontal box where the pieces are picked + edited
-    Gtk::HBox* m_piecesHBox;
+    Gtk::HBox* m_hBoxEditPieces;
 
-    /// @brief the drawing area where the pieces are edited
-    Gtk::DrawingArea* m_editPiecesDrawingArea;
+    /// @brief the status bar
+    Gtk::Statusbar* m_statusBar;
 
-    /// @brief the rotate button to edit the pieces in the edit pieces drawing area
-    Gtk::Button* m_rotateButton;
+    /// @brief computer's pieces left
+    Gtk::Label m_computerLabel;
 
-    /// @brief the mirros button to edit the pieces in the edit pieces drawing area
-    Gtk::Button* m_mirrorButton;
+    /// @brief user's pieces left
+    Gtk::Label m_userLabel;
+
+    /// @brief number of the computer's squares left
+    int8_t m_computerSquaresLeft;
+
+    /// @brief number of the user's squares left
+    int8_t m_userSquaresLeft;
 
     /// Signal class for inter-thread communication to
     /// notify the next move has been computed
@@ -165,16 +172,6 @@ private:
     /// Sets a particular square in the board as occupied by a_player
     void SetSquareInBoard(const Coordinate &a_coord, Cairo::RefPtr<Cairo::Context> cr);
 
-    /// @brief updates the selected piece (selected using the corresponding toggle button)
-    /// It does the following actions
-    ///     1) deactivate all the toggle buttons but the one that represents a_newPiece
-    ///     2) update the current edit piece (m_editPiece) accordingly
-    ///     3) invalidate the pieces drawing area
-    /// It can also be used to clean the editPiecesDrawingArea using e_noPiece as a parameter
-    /// since it will deselect all the toggle buttons, set m_editPiece to e_noPiece and
-    /// invalidate the m_editPiecesDrawingArea (which will draw nothing)
-    void UpdateSelectedPiece(ePieceType_t a_newPiece);
-
     /// @brief notifies to the user that the game is finished using a fancy message box
     void NotifyGameFinished();
 
@@ -184,9 +181,16 @@ private:
     /// It can be used with  Glib::Dispatcher as it is a no-argument void function
     void NotifyMoveComputed();
 
-    /// invalidates the specified drawing area
+    /// invalidates the board drawing area
     /// returns true if succeeded
-    static bool InvalidateDrawingArea(Gtk::DrawingArea* a_drawingArea);
+    bool InvalidateBoardDrawingArea();
+
+    /// updates the score shown in the status bar
+    /// takes the status of the game from
+    /// m_computerSquaresLeft and m_userSquaresLeft
+    /// so someone else is responsible for updating these
+    /// variables accordingly
+    void UpdateScoreStatus();
 
     // prevent the default constructors to be used
     MainWindow();
