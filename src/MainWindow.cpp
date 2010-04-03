@@ -29,6 +29,7 @@
 // ============================================================================
 
 #include <iostream>
+#include <iomanip> // setw
 #include "MainWindow.h"
 #include "gui_glade_defs.h"
 
@@ -168,19 +169,22 @@ MainWindow::MainWindow(
         throw new GUIException(std::string("PiecesHBox retrieval failed"));
     }
 
-    m_refXml->get_widget(GUI_STATUSBAR_NAME, m_statusBar);
-    if (m_statusBar == NULL)
-    {
-        throw new GUIException(std::string("Status Bar retrieval failed"));
-    }
-
-
-    // prepare and add the score labels to the status bar
+    // prepare and add the score labels and the progress bar
+    // for the status bar
+    m_progressBar.set_orientation(Gtk::PROGRESS_LEFT_TO_RIGHT);
+    m_progressBar.set_size_request(180, -1);
+    m_progressBar.set_visible();
     m_computerLabel.set_visible();
     m_userLabel.set_visible();
+
     UpdateScoreStatus();
-    m_statusBar->pack_start(m_computerLabel, true, true);
-    m_statusBar->pack_start(m_userLabel, true, true);
+    m_statusBar.pop();
+    m_statusBar.pack_start(m_computerLabel, true, true);
+    m_statusBar.pack_start(m_userLabel, true, true);
+    m_statusBar.pack_start(m_progressBar, false, true);
+    m_statusBar.set_visible();
+
+    m_vBoxDrawing->pack_start(m_statusBar, false, true);
 
 	// put the custom widgets where they are expected to be
 	// pack_start (Widget& child, bool expand, bool fill, guint padding=0)
@@ -969,11 +973,17 @@ bool MainWindow::InvalidateBoardDrawingArea()
 
 void MainWindow::UpdateScoreStatus()
 {
-	//TODO should be using snprintf
-    char message[MESSAGE_LENGTH];
-    sprintf(message, "Computer: %d", m_computerSquaresLeft);
-    m_computerLabel.set_text(message);
+    std::stringstream theMessage;
+    theMessage << "Computer: "
+               << std::setfill(' ') << std::setw(2)
+               << static_cast<int32_t>(m_computerSquaresLeft)
+               << " left";
+    m_computerLabel.set_text(theMessage.str().c_str());
 
-    sprintf(message, "You: %d", m_userSquaresLeft);
-    m_userLabel.set_text(message);
+    theMessage.str("");
+    theMessage << "You: "
+               << std::setfill(' ') << std::setw(2)
+               << static_cast<int32_t>(m_userSquaresLeft)
+               << " left";
+    m_userLabel.set_text(theMessage.str().c_str());
 }

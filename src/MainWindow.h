@@ -143,13 +143,17 @@ private:
     Gtk::HBox* m_hBoxEditPieces;
 
     /// @brief the status bar
-    Gtk::Statusbar* m_statusBar;
+    Gtk::Statusbar m_statusBar;
 
-    /// @brief computer's pieces left
+    /// @brief computer's pieces left. To be shown in the status bar
     Gtk::Label m_computerLabel;
 
-    /// @brief user's pieces left
+    /// @brief user's pieces left. To be shown in the status bar
     Gtk::Label m_userLabel;
+
+    /// @brief progress bar for when the computer is "thinking".
+    ///        To be shown in the status bar
+    Gtk::ProgressBar m_progressBar;
 
     /// @brief number of the computer's squares left
     int8_t m_computerSquaresLeft;
