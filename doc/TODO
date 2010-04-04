@@ -16,3 +16,4 @@ basic things that need to be done:
  + It should be possible to generate doxygen. Add it to the makefiles
  + Installer for the windows platform
  + remove extra command line window in windows
+ + Improve appearance in windows. 
