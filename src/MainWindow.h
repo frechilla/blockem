@@ -142,23 +142,25 @@ private:
     /// @brief the horizontal box where the pieces are picked + edited
     Gtk::HBox* m_hBoxEditPieces;
 
-    /// @brief the status bar
-    Gtk::Statusbar m_statusBar;
-
-    /// @brief computer's pieces left. To be shown in the status bar
-    Gtk::Label m_computerLabel;
-
-    /// @brief user's pieces left. To be shown in the status bar
-    Gtk::Label m_userLabel;
+    /// @brief status bar
+    Gtk::Statusbar* m_statusBar;
 
     /// @brief progress bar for when the computer is "thinking".
     ///        To be shown in the status bar
-    Gtk::ProgressBar m_progressBar;
+    Gtk::ProgressBar* m_progressBar;
 
-    /// @brief number of the computer's squares left
+    /// @brief label to show the user score in the status bar
+    Gtk::Label* m_userScoreLabel;
+
+    /// @brief label to show the computer score in the status bar
+    Gtk::Label* m_computerScoreLabel;
+
+    /// @brief number of computer's squares left.
+    ///        it is used to show the status of the game in the status bar
     int8_t m_computerSquaresLeft;
 
-    /// @brief number of the user's squares left
+    /// @brief number of user's squares left
+    ///        it is used to show the status of the game in the status bar
     int8_t m_userSquaresLeft;
 
     /// Signal class for inter-thread communication to

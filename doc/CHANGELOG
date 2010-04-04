@@ -1,6 +1,6 @@
 now: Version current
     - Computer's pieces left are shown on the right side of the board
-    - Current score is shown in the status bar at all times
+    - Current score is shown on the status bar at all times
     - Correct version shown on the AboutDialog when help->About is pressed
     - Editing piece area shows a circle sorrounding the selected piece
     - More refactoring done on the GUI code

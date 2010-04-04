@@ -106,5 +106,8 @@ const char GUI_BUTTON_ROTATE_NAME[]        = "button_rotate";
 const char GUI_BUTTON_MIRROR_NAME[]        = "button_mirror";
 const char GUI_DRAWINGAREA_EDITING_PIECE[] = "drawingarea_editing_piece";
 const char GUI_STATUSBAR_NAME[]            = "statusbar1";
+const char GUI_PROGRESSBAR_NAME[]          = "progressbar1";
+const char GUI_LABEL_COMPUTERSCORE_NAME[]  = "label_computerscore";
+const char GUI_LABEL_USERSCORE_NAME[]      = "label_userscore";
 
 #endif /* GUI_GLADE_H_ */

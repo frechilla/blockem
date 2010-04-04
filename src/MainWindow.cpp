@@ -169,28 +169,38 @@ MainWindow::MainWindow(
         throw new GUIException(std::string("PiecesHBox retrieval failed"));
     }
 
-    // prepare and add the score labels and the progress bar
-    // for the status bar
-    m_progressBar.set_orientation(Gtk::PROGRESS_LEFT_TO_RIGHT);
-    m_progressBar.set_size_request(180, -1);
-    m_progressBar.set_visible();
-    m_computerLabel.set_visible();
-    m_userLabel.set_visible();
+    m_refXml->get_widget(GUI_STATUSBAR_NAME, m_statusBar);
+    if (m_statusBar == NULL)
+    {
+        throw new GUIException(std::string("status bar retrieval failed"));
+    }
 
+    m_refXml->get_widget(GUI_PROGRESSBAR_NAME, m_progressBar);
+    if (m_progressBar == NULL)
+    {
+        throw new GUIException(std::string("progress bar retrieval failed"));
+    }
+
+    m_refXml->get_widget(GUI_LABEL_USERSCORE_NAME, m_userScoreLabel);
+    if (m_userScoreLabel == NULL)
+    {
+        throw new GUIException(std::string("user score label retrieval failed"));
+    }
+
+    m_refXml->get_widget(GUI_LABEL_COMPUTERSCORE_NAME, m_computerScoreLabel);
+    if (m_computerScoreLabel == NULL)
+    {
+        throw new GUIException(std::string("computer score label retrieval failed"));
+    }
+
+
+    // update the score shown in the status bar
     UpdateScoreStatus();
-    m_statusBar.pop();
-    m_statusBar.pack_start(m_computerLabel, true, true);
-    m_statusBar.pack_start(m_userLabel, true, true);
-    m_statusBar.pack_start(m_progressBar, false, true);
-    m_statusBar.set_visible();
-
-    m_vBoxDrawing->pack_start(m_statusBar, false, true);
 
 	// put the custom widgets where they are expected to be
 	// pack_start (Widget& child, bool expand, bool fill, guint padding=0)
     m_hBoxEditPieces->pack_start(m_pickPiecesDrawingArea, true, true);
     m_hBoxEditPieces->pack_start(m_editPieceTable.Table(), false, false);
-
 
 	m_hBoxComputerPieces->pack_start(
 			m_showComputerPiecesDrawingArea,
@@ -978,12 +988,14 @@ void MainWindow::UpdateScoreStatus()
                << std::setfill(' ') << std::setw(2)
                << static_cast<int32_t>(m_computerSquaresLeft)
                << " left";
-    m_computerLabel.set_text(theMessage.str().c_str());
+
+    m_computerScoreLabel->set_text(theMessage.str().c_str());
 
     theMessage.str("");
     theMessage << "You: "
                << std::setfill(' ') << std::setw(2)
                << static_cast<int32_t>(m_userSquaresLeft)
                << " left";
-    m_userLabel.set_text(theMessage.str().c_str());
+
+    m_userScoreLabel->set_text(theMessage.str().c_str());
 }
