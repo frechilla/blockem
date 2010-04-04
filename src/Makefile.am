@@ -59,6 +59,10 @@ gui_about_dialog.h \
 gui_drawing_area_show_pieces.cpp \
 gui_drawing_area_show_pieces.h   \
 gui_glade_defs.h \
+gui_main_window.cpp \
+gui_main_window.h \
+gui_main_window_worker_thread.cpp \
+gui_main_window_worker_thread.h \
 gui_table_edit_piece.cpp \
 gui_table_edit_piece.h   \
 Heuristic.cpp \
@@ -69,9 +73,5 @@ Player.cpp \
 Player.h \
 Rules.cpp \
 Rules.h \
-main.cpp \
-MainWindow.cpp \
-MainWindow.h \
-MainWindowWorkerThread.cpp \
-MainWindowWorkerThread.h 
+main.cpp
 

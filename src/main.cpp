@@ -42,7 +42,7 @@
 // header file created during the make process which saves the current date
 #include "compiletime.h"
 
-#include "MainWindow.h"
+#include "gui_main_window.h"
 #include "Game1v1.h"
 
 #include "Heuristic.h"

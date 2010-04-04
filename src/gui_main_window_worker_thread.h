@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License along
 // with Blockem. If not, see http://www.gnu.org/licenses/.
 //
-/// @file MainWindowWorkerThread.h
+/// @file gui_main_window_worker_thread.h
 /// @brief
 ///
 /// @author Faustino Frechilla

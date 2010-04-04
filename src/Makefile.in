@@ -55,10 +55,11 @@ PROGRAMS = $(bin_PROGRAMS)
 am_blockem_OBJECTS = Board.$(OBJEXT) Game1v1.$(OBJEXT) \
 	GameTotalAllocation.$(OBJEXT) gui_about_dialog.$(OBJEXT) \
 	gui_drawing_area_show_pieces.$(OBJEXT) \
+	gui_main_window.$(OBJEXT) \
+	gui_main_window_worker_thread.$(OBJEXT) \
 	gui_table_edit_piece.$(OBJEXT) Heuristic.$(OBJEXT) \
 	Piece.$(OBJEXT) Player.$(OBJEXT) Rules.$(OBJEXT) \
-	main.$(OBJEXT) MainWindow.$(OBJEXT) \
-	MainWindowWorkerThread.$(OBJEXT)
+	main.$(OBJEXT)
 blockem_OBJECTS = $(am_blockem_OBJECTS)
 am__DEPENDENCIES_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
@@ -213,6 +214,10 @@ gui_about_dialog.h \
 gui_drawing_area_show_pieces.cpp \
 gui_drawing_area_show_pieces.h   \
 gui_glade_defs.h \
+gui_main_window.cpp \
+gui_main_window.h \
+gui_main_window_worker_thread.cpp \
+gui_main_window_worker_thread.h \
 gui_table_edit_piece.cpp \
 gui_table_edit_piece.h   \
 Heuristic.cpp \
@@ -223,11 +228,7 @@ Player.cpp \
 Player.h \
 Rules.cpp \
 Rules.h \
-main.cpp \
-MainWindow.cpp \
-MainWindow.h \
-MainWindowWorkerThread.cpp \
-MainWindowWorkerThread.h 
+main.cpp
 
 all: all-am
 
@@ -314,13 +315,13 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Game1v1.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GameTotalAllocation.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Heuristic.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/MainWindow.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/MainWindowWorkerThread.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Piece.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Player.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Rules.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_about_dialog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_drawing_area_show_pieces.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_main_window.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_main_window_worker_thread.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_table_edit_piece.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
 

@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License along
 // with Blockem. If not, see http://www.gnu.org/licenses/.
 //
-/// @file MainWindow.h
+/// @file gui_main_window.h
 /// @brief
 ///
 /// @author Faustino Frechilla
@@ -39,7 +39,7 @@
 #include "gui_about_dialog.h"
 #include "gui_drawing_area_show_pieces.h"
 #include "gui_table_edit_piece.h"
-#include "MainWindowWorkerThread.h"
+#include "gui_main_window_worker_thread.h"
 #include "Game1v1.h"
 #include "Coordinate.h"
 #include "Piece.h"

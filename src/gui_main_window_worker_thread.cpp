@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License along
 // with Blockem. If not, see http://www.gnu.org/licenses/.
 //
-/// @file MainWindowWorkerThread.cpp
+/// @file gui_main_window_worker_thread.cpp
 /// @brief
 ///
 /// @author Faustino Frechilla
@@ -29,7 +29,7 @@
 
 //TODO iostream should go away once gthreads are handled correctly
 #include <iostream>
-#include "MainWindowWorkerThread.h"
+#include "gui_main_window_worker_thread.h"
 
 #define PROCESSING_STOP   1
 #define PROCESSING_ACTIVE 0

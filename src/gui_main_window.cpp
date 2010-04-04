@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License along
 // with Blockem. If not, see http://www.gnu.org/licenses/.
 //
-/// @file MainWindow.cpp
+/// @file gui_main_window.cpp
 /// @brief
 ///
 /// @author Faustino Frechilla
@@ -30,7 +30,7 @@
 
 #include <iostream>
 #include <iomanip> // setw
-#include "MainWindow.h"
+#include "gui_main_window.h"
 #include "gui_glade_defs.h"
 
 /// @brief uninitialised coord value
