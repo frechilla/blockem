@@ -193,7 +193,6 @@ MainWindow::MainWindow(
         throw new GUIException(std::string("computer score label retrieval failed"));
     }
 
-
     // update the score shown in the status bar
     UpdateScoreStatus();
 
@@ -206,6 +205,11 @@ MainWindow::MainWindow(
 			m_showComputerPiecesDrawingArea,
 			true,
 			true);
+
+	// if we don't show them nobody will be able to see them
+	// set_visible doesn't work in windows
+	m_pickPiecesDrawingArea.show();
+	m_showComputerPiecesDrawingArea.show();
 
     // connect the interthread communication (GLib::Dispatcher) to invalidate the
     // board drawing area

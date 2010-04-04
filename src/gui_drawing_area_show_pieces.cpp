@@ -110,8 +110,6 @@ DrawingAreaShowPieces::DrawingAreaShowPieces(const Player &a_player, eOrientatio
     this->add_events(Gdk::BUTTON_PRESS_MASK);
 
     //default configuration of this widget
-    set_visible(true);
-
     switch (m_orientation)
     {
     case eOrientation_leftToRight:

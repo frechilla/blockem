@@ -15,3 +15,4 @@ basic things that need to be done:
    a long way to walk
  + It should be possible to generate doxygen. Add it to the makefiles
  + Installer for the windows platform
+ + remove extra command line window in windows
