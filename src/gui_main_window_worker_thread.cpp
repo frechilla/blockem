@@ -203,6 +203,7 @@ void* MainWindowWorkerThread::ThreadRoutine(void *a_ThreadParam)
                  (thisThread->m_localGame.CanPlayerOpponentGo()) )
             {
                 depth = 5;
+                // heuristicMethod = Heuristic::CalculatePiecesPerNKPoint;
             }
 
             if (thisThread->m_localGame.GetPlayerMe().NumberOfPiecesAvailable() == e_numberOfPieces)

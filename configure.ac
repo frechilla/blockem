@@ -48,6 +48,8 @@ fi
 PKG_CHECK_MODULES([GTKMM], [gtkmm-2.4 >= 1.0.0])
 PKG_CHECK_MODULES([GLADEMM], [libglademm-2.4 >= 1.0.0])
 PKG_CHECK_MODULES([GTHREAD], [gthread-2.0 >= 1.0.0])
+# contained in gtkmm
+# PKG_CHECK_MODULES([SIGCPP], [sigc++-2.0 >= 1.0.0])
 
 AC_SUBST(GTKMM_CFLAGS)
 AC_SUBST(GTKMM_LIBS)

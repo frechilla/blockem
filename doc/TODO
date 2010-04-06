@@ -3,8 +3,7 @@ basic things that need to be done:
 
  + Options in menu Settings and Preferences should do something. This should 
    be pretty straight-forward
- + The progress bar shown in the status bar should do something. Now it is
-   shown but it has no action
+ + Code related to the handling of the progress bar should be improved
  + The latest piece put down by the computer should be noted, for example
    flashing the piece or using another colour
  + Lots of calculation time is being wasted now. The decission tree should be

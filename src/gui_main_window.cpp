@@ -24,6 +24,7 @@
 /// Ref       Who                When         What
 ///           Faustino Frechilla 13-Nov-2009  Original development
 ///           Faustino Frechilla 01-Apr-2010  Add drawing board with computer's pieces left
+///           Faustino Frechilla 06-Apr-2010  StopWatch for human and computer
 /// @endhistory
 ///
 // ============================================================================
@@ -76,6 +77,13 @@ static const float GHOST_PIECE_WRONG_BLUE         = 0.0;
 static const float GHOST_PIECE_ALPHA_TRANSPARENCY = 0.2;
 
 static const uint32_t STOPWATCH_UPDATE_PERIOD_MILLIS = 500; // 1000 = 1 second
+
+
+
+// the static members
+float MainWindow::m_computingCurrentProgress = 0.0;
+Glib::Dispatcher MainWindow::m_signal_computingProgressUpdated;
+
 
 MainWindow::MainWindow(
 		Game1v1 &a_theGame,
@@ -192,7 +200,6 @@ MainWindow::MainWindow(
     UpdateScoreStatus();
 
 	// the custom status bar
-    //m_hBoxStatusBar->pack_start(m_progressBar, true, true);
 	m_hBoxStatusBar->pack_start(m_userScoreLabel, true, true);
 	m_hBoxStatusBar->pack_start(m_arrayStatusBarSeparator[0], false, true);
 	m_hBoxStatusBar->pack_start(m_stopWatchLabelUser, true, true);
@@ -201,11 +208,11 @@ MainWindow::MainWindow(
 	m_hBoxStatusBar->pack_start(m_arrayStatusBarSeparator[2], false, true);
 	m_hBoxStatusBar->pack_start(m_stopWatchLabelComputer, true, true);
 
-	m_hBoxStatusBar->show_all();
-	//m_userScoreLabel.show();
-	//m_computerScoreLabel.show();
-	//m_stopWatchLabelUser.show();
-	//m_stopWatchLabelComputer.show();
+    m_progressBar.set_orientation(Gtk::PROGRESS_LEFT_TO_RIGHT);
+    m_progressBar.set_fraction(0.0);
+    m_hBoxStatusBar->pack_start(m_progressBar, true, true);
+
+    m_hBoxStatusBar->show_all();
 
 	// if we don't show them nobody will be able to see them
 	// set_visible doesn't work in windows
@@ -224,6 +231,13 @@ MainWindow::MainWindow(
     m_signal_gameFinished.connect(
             sigc::mem_fun(*this, &MainWindow::NotifyGameFinished));
 
+    // connect the interthread communication to update the progress bar
+    MainWindow::m_computingCurrentProgress =0.0;
+    m_signal_computingProgressUpdated.connect(
+            sigc::mem_fun(*this, &MainWindow::NotifyProgressUpdate));
+
+    m_the1v1Game.SetProgressHandler(&MainWindow::ProgressUpdate);
+
     // connect the worker thread signal
     m_workerThread.signal_computingFinished().connect(
             sigc::mem_fun(*this, &MainWindow::WorkerThread_computingFinished));
@@ -232,6 +246,7 @@ MainWindow::MainWindow(
 	// handle the signal coming from the pickPiecesDrawingArea
 	m_pickPiecesDrawingArea.signal_piecePicked().connect(
 	        sigc::mem_fun(*this, &MainWindow::PickPiecesDrawingArea_PiecePickedEvent));
+
 
 	// connect the rest of the signals to the handlers
 	// if the handler is not part of an object use sigc::ptr_fun
@@ -428,11 +443,15 @@ void MainWindow::MenuItemGameNew_Activate()
         m_computerSquaresLeft = m_userSquaresLeft = NSQUARES_TOTAL;
         UpdateScoreStatus();
 
-        // stopwatch must be restarted
+        // stopwatches must be restarted.
         m_stopWatchLabelUser.Reset();
-        m_stopWatchLabelUser.Continue();
-
         m_stopWatchLabelComputer.Reset();
+
+        // restart the progress bar
+        m_progressBar.set_fraction(0.0);
+
+        // it will be human's go next. Start his/her timer
+        m_stopWatchLabelUser.Continue();
     }
 }
 
@@ -729,6 +748,8 @@ bool MainWindow::BoardDrawingArea_ButtonPressed(GdkEventButton *event)
         m_stopWatchLabelUser.Stop();
         // start the one that counts the computer time
         m_stopWatchLabelComputer.Continue();
+        // show the progress bar
+        m_progressBar.show();
 
         if (!m_workerThread.ComputeMove(m_the1v1Game, currentEditPiece, thisCoord))
         {
@@ -898,6 +919,9 @@ void MainWindow::NotifyGameFinished()
     // stop computer's stopwatch (even if it was already done)
     m_stopWatchLabelComputer.Stop();
 
+    // restart the progress bar
+    m_progressBar.set_fraction(0.0);
+
     int32_t squaresLeftOpponent = 0;
     int32_t squaresLeftMe = 0;
     for (int8_t i = e_minimumPieceIndex ; i < e_numberOfPieces; i++)
@@ -980,12 +1004,20 @@ void MainWindow::NotifyMoveComputed()
         m_stopWatchLabelComputer.Stop();
         // resume the user stopwatch
         m_stopWatchLabelUser.Continue();
+        // restart the progress bar
+        m_progressBar.set_fraction(0.0);
+
         Glib::RefPtr<Gdk::Window> window = m_boardDrawingArea->get_window();
         if (window)
         {
             window->set_cursor();
         }
     }
+}
+
+void MainWindow::NotifyProgressUpdate()
+{
+    m_progressBar.set_fraction(m_computingCurrentProgress);
 }
 
 bool MainWindow::InvalidateBoardDrawingArea()

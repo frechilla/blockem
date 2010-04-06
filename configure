@@ -2764,7 +2764,7 @@ am__tar='${AMTAR} chof - "$$tardir"'; am__untar='${AMTAR} xf -'
 ac_config_headers="$ac_config_headers config.h"
 
 
-$as_echo "#define SVN_REVISION \"46\"" >>confdefs.h
+$as_echo "#define SVN_REVISION \"47:50M\"" >>confdefs.h
 
 
 # Checks for programs.
@@ -4873,6 +4873,8 @@ else
 $as_echo "yes" >&6; }
 	:
 fi
+# contained in gtkmm
+# PKG_CHECK_MODULES([SIGCPP], [sigc++-2.0 >= 1.0.0])
 
 
 

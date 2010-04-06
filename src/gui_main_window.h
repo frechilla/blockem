@@ -96,6 +96,18 @@ public:
     /// @brief callback to be called when the mouse leaves the board drawing area
     bool BoardDrawingArea_LeaveAreaNotify(GdkEventCrossing* event);
 
+    /// @brief to be used as a functor so Game1v1 notifies this class the progress of the computing
+    ///        process for computer's next move
+    /// this function can be called from a different thread because it uses signal dispatcher
+    /// see: http://library.gnome.org/devel/glibmm/stable/thread_2dispatcher_8cc-example.html
+    static void ProgressUpdate(float a_progress)
+    {
+        // set the value before emitting the interthread signal
+        MainWindow::m_computingCurrentProgress = a_progress;
+
+        MainWindow::m_signal_computingProgressUpdated.emit();
+    }
+
 private:
     /// @brief used to retrieve the objects from the Glade design
     Glib::RefPtr<Gnome::Glade::Xml> m_refXml;
@@ -182,6 +194,14 @@ private:
     /// notify the user the game is finished
     Glib::Dispatcher m_signal_gameFinished;
 
+    //TODO this has to be static by now. surely it can be improved
+    /// @brief current computing progress
+    static float m_computingCurrentProgress;
+
+    /// Signal class for inter-thread communication to
+    /// notify a change in computing progress
+    static Glib::Dispatcher m_signal_computingProgressUpdated;
+
     /// @brief translates an absolute window coordinate into the board coord
     /// @return true if the translation was successful (the window coordinate was in the board)
     bool WindowToBoardCoord(int32_t a_windowX, int32_t a_windowY, Coordinate &out_boardCoord);
@@ -197,6 +217,9 @@ private:
     ///     2) restores the mouse cursor
     /// It can be used with  Glib::Dispatcher as it is a no-argument void function
     void NotifyMoveComputed();
+
+    /// updates the progress bar with the value saved in m_computingCurrentProgress;
+    void NotifyProgressUpdate();
 
     /// invalidates the board drawing area
     /// returns true if succeeded

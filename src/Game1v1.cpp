@@ -32,26 +32,27 @@
 
 
 /// it will be used as an empty space in the board
-const char CHAR_EMPTY    = ' ';
+static const char CHAR_EMPTY    = ' ';
 /// it will be used as the character for 'me' in the board
-const char CHAR_ME       = 'X';
+static const char CHAR_ME       = 'X';
 /// it will be used as the character for 'opponent' in the board
-const char CHAR_OPPONENT = 'O';
+static const char CHAR_OPPONENT = 'O';
 
 /// To be used in the MinMax Algorithm as the size of the valid coords arrays
-const int8_t VALID_COORDS_SIZE = 5;
+static const int8_t VALID_COORDS_SIZE = 5;
 
 /// Assume makes an ass out of u and me, but sometimes assumptions must be made
 /// This constant represents how many 5-square pieces will be put in-a-row before even
 /// considering to put a 4,3,2 or 1 square piece on the board
 /// the goal is improvimg the speed of the MinMax algorithm
-const int8_t MIN_5SQUARE_PIECES_AT_START = 5;
+static const int8_t MIN_5SQUARE_PIECES_AT_START = 5;
 
 
 Game1v1::Game1v1() :
 	m_board(BOARD_1VS1_ROWS, BOARD_1VS1_COLUMNS, CHAR_EMPTY),
     m_playerMe(std::string(PLAYER_ME_NAME), CHAR_ME, BOARD_1VS1_ROWS, BOARD_1VS1_COLUMNS),
-    m_playerOpponent(std::string(PLAYER_OPPONENT_NAME), CHAR_OPPONENT, BOARD_1VS1_ROWS, BOARD_1VS1_COLUMNS)
+    m_playerOpponent(std::string(PLAYER_OPPONENT_NAME), CHAR_OPPONENT, BOARD_1VS1_ROWS, BOARD_1VS1_COLUMNS),
+    m_progressFunctor(NULL)
 {
 	// initialise the players' nk according to the current state of the blokus board
     Rules::RecalculateNKInAllBoard(m_board, m_playerMe, m_playerOpponent);
@@ -327,6 +328,10 @@ int32_t Game1v1::MinMax(
     for (int8_t i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
     {
 //#ifdef DEBUG
+        if (m_progressFunctor)
+        {
+            m_progressFunctor(static_cast<float>(e_numberOfPieces - i) / e_numberOfPieces);
+        }
         std::cout <<".";
         std::cout.flush(); // fflush(stdout);
         if (i == 0)

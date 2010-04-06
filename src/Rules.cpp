@@ -326,6 +326,51 @@ int32_t Rules::CalculateValidCoordsInNucleationPoint(
     return nValidCoords;
 }
 
+bool Rules::HasValidCoordInNucleationPoint(
+        const Board      &a_board,
+        const Piece      &a_piece,
+        const Coordinate &a_nkPointCoord,
+        const Player     &a_player)
+{
+    // It is true that every piece fits in a square 5x5 pieces.
+    // But most of the pieces need a smaller square (3x3). The baby piece only needs 1 little square
+    // the increment variable will save the amount of squares to be checked. The size of the square
+    // will be (increment x 2) + 1
+
+    int16_t increment = static_cast<int16_t>(a_piece.GetSquareSideHalfSize());
+
+    if (increment > 0)
+    {
+        for (int16_t i = -increment ; i <= increment ; i++)
+        {
+            for (int16_t j = -increment ; j <= increment ; j++)
+            {
+                Coordinate thisCoord(
+                        a_nkPointCoord.m_row + i,
+                        a_nkPointCoord.m_col + j);
+
+                if (IsPieceDeployableInNKPoint(
+                        a_board, a_piece, thisCoord, a_nkPointCoord, a_player))
+                {
+                    return true;
+                }
+            }
+        }
+    }
+    else
+    {
+        // the baby piece. No need to use IsDeployableInNKPoint because the piece
+        // only has one square. It will fit in a known nucleation point
+#ifdef DEBUG
+        assert(a_player.IsNucleationPoint(a_nkPointCoord));
+        assert(0 < a_size);
+#endif
+        return true;
+    }
+
+    return false;
+}
+
 int32_t Rules::CalculateValidCoordsInStartingPoint(
         const Board      &a_board,
         const Piece      &a_piece,

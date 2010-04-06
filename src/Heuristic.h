@@ -67,6 +67,13 @@ public:
             const Player &a_playerMe,
             const Player &a_playerOpponent);
 
+    /// Calculate the heurisitc value based on the amount of pieces that cna be put down
+    /// per nk point
+    static int32_t CalculatePiecesPerNKPoint(
+            const Board  &a_board,
+            const Player &a_playerMe,
+            const Player &a_playerOpponent);
+
 protected:
     /// @brief calculates the circular weight of a coord in the board
     /// The output in a 14x14 board:
@@ -94,6 +101,13 @@ protected:
             int32_t a_row,
             int32_t a_column,
             const Player &a_player);
+
+    /// @returns the amount of squares (the ones that make up the pieces) that cna be deployed
+    ///          in a specific nk point
+    static int32_t CountSquaresCanBeDeployed(
+            const Board  &a_board,
+            Player &a_player,
+            const Coordinate &thisNkPoint);
 
 private:
     /// @brief constructor

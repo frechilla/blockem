@@ -32,7 +32,7 @@
 
 #include <istream>
 #include <ostream>
-#include <csignal>
+#include <csignal> // atomic_t
 #include "Piece.h"
 #include "Player.h"
 #include "Board.h"
@@ -73,6 +73,10 @@ public:
     /// since it is a static data structure
     typedef CoordinateSet<BOARD_1VS1_ROWS, BOARD_1VS1_COLUMNS> CoordSetGame1v1_t;
 
+    /// function pointer that will be called each time there's a progress update
+    /// float will be a value between 0.0 and 1.0
+    typedef void(*ProgressFunctor_t)(float);
+
 	/// @brief builds the game
 	/// It creates a board and two players,
     ///   * 'me' (computer) which the MinMax algorithm will maximise to win
@@ -96,6 +100,12 @@ public:
 	inline Player& GetPlayerOpponent()
 	{
 		return m_playerOpponent;
+	}
+
+	/// @brief sets the progress functor
+	inline void SetProgressHandler(ProgressFunctor_t a_progressFunctor)
+	{
+	    m_progressFunctor = a_progressFunctor;
 	}
 
 	/// puts down the computer piece on the board and sets it to used in player me (computer)
@@ -198,6 +208,8 @@ private:
 	/// The player that represents the opponent (the guy MinMax will try to beat)
 	Player m_playerOpponent;
 
+	/// functor to notify the progress made by the MinMax algorithm
+	ProgressFunctor_t m_progressFunctor;
 
     /// remove a piece from the board. The user is supposed to check if the piece was there
     /// before calling this function since it just will set to empty the squares

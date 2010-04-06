@@ -5,7 +5,7 @@ TESTS = blockemtest
 
 INCLUDES = -I$(srcdir)/..
 
-AM_CXXFLAGS = 
+AM_CXXFLAGS =
 
 blockemtest_SOURCES = \
 main_test.cpp \

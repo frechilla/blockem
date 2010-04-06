@@ -163,6 +163,16 @@ public:
             Coordinate       out_validCoords[],
             int32_t          a_size);
 
+    /// @brief returns true if there's a way to deploy the piece in this coord, even if the piece has to be moved around
+    ///        it doesn't rotate or mirror the piece
+    ///        it is based on CalculateValidCoordsInNucleationPoint, but it doesn't save the valid coords, it just
+    ///        returns once it finds a valid coord for the piece to be deployed
+    static bool HasValidCoordInNucleationPoint(
+            const Board      &a_board,
+            const Piece      &a_piece,
+            const Coordinate &a_nkPointCoord,
+            const Player     &a_player);
+
     /// see comment in CalculateValidCoordsInNucleationPoint
     /// The result will be saved in the 5th parameter. The user has to ensure the size of the array is big enough (for example
     /// 5, since it is the size of the piece) If the size of the array wasn't big enough this function will overwrite random memory

@@ -34,6 +34,9 @@
 #include "Player.h"
 #include "Rules.h"
 
+/// To be used as the size of the valid coords arrays
+static const int8_t VALID_COORDS_SIZE = 5;
+
 Heuristic::Heuristic()
 {
 }
@@ -173,6 +176,56 @@ int32_t Heuristic::CalculateNKWeighted(
     return rv;
 }
 
+int32_t Heuristic::CalculatePiecesPerNKPoint(
+        const Board  &a_board,
+        const Player &a_playerMe,
+        const Player &a_playerOpponent)
+{
+    int32_t rv = 0;
+
+    int32_t nSquaresCanDeployMe = 0;
+    int32_t nSquaresCanDeployOpponent = 0;
+    int32_t squaresMe = 0;
+    int32_t squaresOpponent = 0;
+
+
+    Coordinate coord;
+    for (coord.m_row = 0; coord.m_row < a_board.GetNRows() ; coord.m_row++)
+    {
+        for (coord.m_col = 0; coord.m_col < a_board.GetNColumns() ; coord.m_col++)
+        {
+            if (a_board.IsCoordEmpty(coord))
+            {
+                if (a_playerOpponent.IsNucleationPoint(coord))
+                {
+                    //TODO const_cast is diiiirty
+                    nSquaresCanDeployOpponent = CountSquaresCanBeDeployed(a_board, const_cast<Player&>(a_playerOpponent), coord);
+                }
+                if (a_playerMe.IsNucleationPoint(coord))
+                {
+                    //TODO const_cast is diiiirty
+                    nSquaresCanDeployMe = CountSquaresCanBeDeployed(a_board, const_cast<Player&>(a_playerMe), coord);
+                }
+            }
+            else if (a_board.IsPlayerInCoord(coord.m_row, coord.m_col, a_playerMe))
+            {
+                squaresMe++;
+            }
+            else // if (a_board.IsPlayerInCoord(rowCount, columnCount, a_playeOpponent)
+            {
+                squaresOpponent++;
+            }
+        }
+    }
+
+    rv += (squaresMe * 4);
+    rv += (nSquaresCanDeployMe);
+    rv -= (squaresOpponent);
+    rv -= (nSquaresCanDeployOpponent * 4);
+
+    return rv;
+}
+
 int32_t Heuristic::CalculateCircularWeight(
 		const Board &a_board, int32_t a_row, int32_t a_column)
 {
@@ -218,3 +271,52 @@ bool Heuristic::IsPointTouchingPlayer(
     return false;
 }
 
+int32_t Heuristic::CountSquaresCanBeDeployed(
+        const Board  &a_board,
+        Player &a_player,
+        const Coordinate &thisNkPoint)
+{
+    bool pieceCanBeDeployed;
+    int32_t nSquares = 0;
+    for (int8_t i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
+    {
+        if (a_player.IsPieceAvailable(static_cast<ePieceType_t>(i)))
+        {
+            pieceCanBeDeployed = false;
+
+            do
+            {
+                do
+                {
+                    pieceCanBeDeployed = Rules::HasValidCoordInNucleationPoint(
+                                                a_board,
+                                                a_player.m_pieces[i],
+                                                thisNkPoint,
+                                                a_player);
+                    if (pieceCanBeDeployed > 0)
+                    {
+                        nSquares += a_player.m_pieces[i].GetNSquares();
+                    }
+
+                } while ( (pieceCanBeDeployed == false) && (a_player.m_pieces[i].Rotate() > 0) );
+
+                if ( (pieceCanBeDeployed == false) &&
+                     (a_player.m_pieces[i].GetType()    == e_4Piece_LittleS) &&
+                     (a_player.m_pieces[i].IsMirrored() == false) )
+                {
+                    // For this piece the maximum number or rotations is 2
+                    // and the piece is not symmetric, the configuration after
+                    // the 3rd rotation is the shame shape as the original, but
+                    // the coords moved. Reset the piece before mirroring to
+                    // avoid unexpected results
+                    a_player.m_pieces[i].Reset();
+                }
+
+            } while ( (pieceCanBeDeployed == false) && (a_player.m_pieces[i].Mirror()) );
+
+            a_player.m_pieces[i].Reset();
+        } // if (me->IsPieceAvailable(i))
+    } // for (int8_t i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
+
+    return nSquares;
+}
