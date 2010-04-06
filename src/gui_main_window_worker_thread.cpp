@@ -57,6 +57,11 @@ MainWindowWorkerThread::MainWindowWorkerThread():
         assert(0);
     }
 
+    // create and initialise the randomizer using now time as the seed
+    GTimeVal timeNow;
+    g_get_current_time(&timeNow);
+    m_randomizer = g_rand_new_with_seed(static_cast<guint32>(timeNow.tv_sec ^ timeNow.tv_usec));
+
     SpawnThread();
 }
 
@@ -64,6 +69,8 @@ MainWindowWorkerThread::~MainWindowWorkerThread()
 {
     g_cond_free(m_cond);
     g_mutex_free(m_mutex);
+
+    g_rand_free(m_randomizer);
 }
 
 void MainWindowWorkerThread::SpawnThread()
@@ -192,19 +199,49 @@ void* MainWindowWorkerThread::ThreadRoutine(void *a_ThreadParam)
 
             int32_t depth = 3;
             Heuristic::calculateMethod_t heuristicMethod = Heuristic::CalculateNKWeighted;
-            if (thisThread->m_localGame.GetPlayerMe().NumberOfPiecesAvailable() < 14)
+            if ( (thisThread->m_localGame.GetPlayerMe().NumberOfPiecesAvailable() < 14) &&
+                 (thisThread->m_localGame.CanPlayerOpponentGo()) )
             {
                 depth = 5;
             }
 
-            resultReturnedValue = thisThread->m_localGame.MinMax(
-                                        heuristicMethod,
-                                        depth,
-                                        resultPiece,
-                                        resultCoord,
-                                        thisThread->m_terminate,
-                                        thisThread->m_localLatestCoord,
-                                        thisThread->m_localLatestPiece);
+            if (thisThread->m_localGame.GetPlayerMe().NumberOfPiecesAvailable() == e_numberOfPieces)
+            {
+                // pass the move made by the opponent to the minmax algorithm at the start half of the times
+                // it will show a bit of randomness at the start to a human user
+                if (g_rand_int_range(thisThread->m_randomizer, 0, 2) == 0)
+                {
+                    resultReturnedValue = thisThread->m_localGame.MinMax(
+                                                heuristicMethod,
+                                                depth,
+                                                resultPiece,
+                                                resultCoord,
+                                                thisThread->m_terminate,
+                                                thisThread->m_localLatestCoord,
+                                                thisThread->m_localLatestPiece);
+                }
+                else
+                {
+                    resultReturnedValue = thisThread->m_localGame.MinMax(
+                                                heuristicMethod,
+                                                depth,
+                                                resultPiece,
+                                                resultCoord,
+                                                thisThread->m_terminate);
+                }
+            }
+            else
+            {
+                // it's not the starting move
+                resultReturnedValue = thisThread->m_localGame.MinMax(
+                                            heuristicMethod,
+                                            depth,
+                                            resultPiece,
+                                            resultCoord,
+                                            thisThread->m_terminate,
+                                            thisThread->m_localLatestCoord,
+                                            thisThread->m_localLatestPiece);
+            }
 
             // notify the result
             thisThread->signal_computingFinished().emit(

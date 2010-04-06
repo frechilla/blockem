@@ -94,6 +94,9 @@ private:
     /// Conditional variable to wake up threads
     GCond* m_cond;
 
+    /// we might use a bit of randomness when computing the next move
+    GRand* m_randomizer;
+
     /// signal to be sent when the computing is finished
     sigc::signal<void, const Piece&, const Coordinate&, int32_t> m_signal_computingFinished;
 

@@ -75,6 +75,7 @@ static const float GHOST_PIECE_WRONG_GREEN        = 0.0;
 static const float GHOST_PIECE_WRONG_BLUE         = 0.0;
 static const float GHOST_PIECE_ALPHA_TRANSPARENCY = 0.2;
 
+static const uint32_t STOPWATCH_UPDATE_PERIOD_MILLIS = 500; // 1000 = 1 second
 
 MainWindow::MainWindow(
 		Game1v1 &a_theGame,
@@ -87,6 +88,8 @@ MainWindow::MainWindow(
 			m_pickPiecesDrawingArea(a_theGame.GetPlayerOpponent(), DrawingAreaShowPieces::eOrientation_leftToRight),
 			m_showComputerPiecesDrawingArea(a_theGame.GetPlayerMe(), DrawingAreaShowPieces::eOrientation_bottomToTop),
 			m_editPieceTable(a_refXml),
+			m_stopWatchLabelUser(STOPWATCH_UPDATE_PERIOD_MILLIS, std::string("Your elapsed time ")),
+			m_stopWatchLabelComputer(STOPWATCH_UPDATE_PERIOD_MILLIS, std::string("Computer's elapsed time ")),
 			m_computerSquaresLeft(NSQUARES_TOTAL),
 			m_userSquaresLeft(NSQUARES_TOTAL)
 {
@@ -169,32 +172,11 @@ MainWindow::MainWindow(
         throw new GUIException(std::string("PiecesHBox retrieval failed"));
     }
 
-    m_refXml->get_widget(GUI_STATUSBAR_NAME, m_statusBar);
-    if (m_statusBar == NULL)
+    m_refXml->get_widget(GUI_HBOX_STATUSBAR_NAME, m_hBoxStatusBar);
+    if (m_hBoxStatusBar == NULL)
     {
-        throw new GUIException(std::string("status bar retrieval failed"));
+        throw new GUIException(std::string("status bar hbox retrieval failed"));
     }
-
-    m_refXml->get_widget(GUI_PROGRESSBAR_NAME, m_progressBar);
-    if (m_progressBar == NULL)
-    {
-        throw new GUIException(std::string("progress bar retrieval failed"));
-    }
-
-    m_refXml->get_widget(GUI_LABEL_USERSCORE_NAME, m_userScoreLabel);
-    if (m_userScoreLabel == NULL)
-    {
-        throw new GUIException(std::string("user score label retrieval failed"));
-    }
-
-    m_refXml->get_widget(GUI_LABEL_COMPUTERSCORE_NAME, m_computerScoreLabel);
-    if (m_computerScoreLabel == NULL)
-    {
-        throw new GUIException(std::string("computer score label retrieval failed"));
-    }
-
-    // update the score shown in the status bar
-    UpdateScoreStatus();
 
 	// put the custom widgets where they are expected to be
 	// pack_start (Widget& child, bool expand, bool fill, guint padding=0)
@@ -206,10 +188,31 @@ MainWindow::MainWindow(
 			true,
 			true);
 
+    // update the score shown in the status bar
+    UpdateScoreStatus();
+
+	// the custom status bar
+    //m_hBoxStatusBar->pack_start(m_progressBar, true, true);
+	m_hBoxStatusBar->pack_start(m_userScoreLabel, true, true);
+	m_hBoxStatusBar->pack_start(m_arrayStatusBarSeparator[0], false, true);
+	m_hBoxStatusBar->pack_start(m_stopWatchLabelUser, true, true);
+	m_hBoxStatusBar->pack_start(m_arrayStatusBarSeparator[1], false, true);
+	m_hBoxStatusBar->pack_start(m_computerScoreLabel, true, true);
+	m_hBoxStatusBar->pack_start(m_arrayStatusBarSeparator[2], false, true);
+	m_hBoxStatusBar->pack_start(m_stopWatchLabelComputer, true, true);
+
+	m_hBoxStatusBar->show_all();
+	//m_userScoreLabel.show();
+	//m_computerScoreLabel.show();
+	//m_stopWatchLabelUser.show();
+	//m_stopWatchLabelComputer.show();
+
 	// if we don't show them nobody will be able to see them
 	// set_visible doesn't work in windows
 	m_pickPiecesDrawingArea.show();
 	m_showComputerPiecesDrawingArea.show();
+
+	m_stopWatchLabelUser.Continue();
 
     // connect the interthread communication (GLib::Dispatcher) to invalidate the
     // board drawing area
@@ -424,6 +427,12 @@ void MainWindow::MenuItemGameNew_Activate()
 
         m_computerSquaresLeft = m_userSquaresLeft = NSQUARES_TOTAL;
         UpdateScoreStatus();
+
+        // stopwatch must be restarted
+        m_stopWatchLabelUser.Reset();
+        m_stopWatchLabelUser.Continue();
+
+        m_stopWatchLabelComputer.Reset();
     }
 }
 
@@ -716,6 +725,11 @@ bool MainWindow::BoardDrawingArea_ButtonPressed(GdkEventButton *event)
         m_userSquaresLeft -= currentEditPiece.GetNSquares();
         UpdateScoreStatus();
 
+        // stop the stopwatch that counts the user time
+        m_stopWatchLabelUser.Stop();
+        // start the one that counts the computer time
+        m_stopWatchLabelComputer.Continue();
+
         if (!m_workerThread.ComputeMove(m_the1v1Game, currentEditPiece, thisCoord))
         {
             std::cout
@@ -881,6 +895,9 @@ void MainWindow::NotifyGameFinished()
         window->set_cursor();
     }
 
+    // stop computer's stopwatch (even if it was already done)
+    m_stopWatchLabelComputer.Stop();
+
     int32_t squaresLeftOpponent = 0;
     int32_t squaresLeftMe = 0;
     for (int8_t i = e_minimumPieceIndex ; i < e_numberOfPieces; i++)
@@ -958,6 +975,11 @@ void MainWindow::NotifyMoveComputed()
     // restore the mouse cursor if the user can put down a piece
     if (m_the1v1Game.CanPlayerOpponentGo())
     {
+        //user's go
+        // stop computer stopwatch
+        m_stopWatchLabelComputer.Stop();
+        // resume the user stopwatch
+        m_stopWatchLabelUser.Continue();
         Glib::RefPtr<Gdk::Window> window = m_boardDrawingArea->get_window();
         if (window)
         {
@@ -993,7 +1015,7 @@ void MainWindow::UpdateScoreStatus()
                << static_cast<int32_t>(m_computerSquaresLeft)
                << " left";
 
-    m_computerScoreLabel->set_text(theMessage.str().c_str());
+    m_computerScoreLabel.set_text(theMessage.str().c_str());
 
     theMessage.str("");
     theMessage << "You: "
@@ -1001,5 +1023,5 @@ void MainWindow::UpdateScoreStatus()
                << static_cast<int32_t>(m_userSquaresLeft)
                << " left";
 
-    m_userScoreLabel->set_text(theMessage.str().c_str());
+    m_userScoreLabel.set_text(theMessage.str().c_str());
 }

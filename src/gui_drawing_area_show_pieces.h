@@ -27,9 +27,11 @@
 ///
 // ============================================================================
 
+#ifndef _GUI_DRAWING_AREA_SHOW_PIECES_H_
+#define _GUI_DRAWING_AREA_SHOW_PIECES_H_
+
 #include <gtkmm.h>
 
-#include "gui_exception.h"
 #include "Player.h"
 #include "Piece.h"
 
@@ -103,3 +105,5 @@ private:
     DrawingAreaShowPieces(const DrawingAreaShowPieces &a_src);
     DrawingAreaShowPieces& operator=(const DrawingAreaShowPieces &a_src);
 };
+
+#endif // _GUI_DRAWING_AREA_SHOW_PIECES_H_

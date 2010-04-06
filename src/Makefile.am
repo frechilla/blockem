@@ -65,6 +65,8 @@ gui_main_window_worker_thread.cpp \
 gui_main_window_worker_thread.h \
 gui_table_edit_piece.cpp \
 gui_table_edit_piece.h   \
+gui_stop_watch_label.cpp \
+gui_stop_watch_label.h \
 Heuristic.cpp \
 Heuristic.h \
 Piece.cpp \

@@ -27,6 +27,9 @@
 ///
 // ============================================================================
 
+#ifndef _GUI_TABLE_EDIT_PIECE_H_
+#define _GUI_TABLE_EDIT_PIECE_H_
+
 #include <libglademm/xml.h>
 #include <gtkmm.h>
 
@@ -110,3 +113,5 @@ private:
 	TableEditPiece(const TableEditPiece &a_src);
 	TableEditPiece& operator=(const TableEditPiece &a_src);
 };
+
+#endif // _GUI_TABLE_EDIT_PIECE_H_

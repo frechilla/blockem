@@ -35,11 +35,12 @@
 #include <libglademm/xml.h>
 #include <gtkmm.h>
 
-#include "gui_exception.h"
 #include "gui_about_dialog.h"
 #include "gui_drawing_area_show_pieces.h"
-#include "gui_table_edit_piece.h"
+#include "gui_exception.h"
 #include "gui_main_window_worker_thread.h"
+#include "gui_stop_watch_label.h"
+#include "gui_table_edit_piece.h"
 #include "Game1v1.h"
 #include "Coordinate.h"
 #include "Piece.h"
@@ -142,18 +143,28 @@ private:
     /// @brief the horizontal box where the pieces are picked + edited
     Gtk::HBox* m_hBoxEditPieces;
 
-    /// @brief status bar
-    Gtk::Statusbar* m_statusBar;
+    /// @brief hbox which serves as status bar
+    Gtk::HBox* m_hBoxStatusBar;
+
+    /// @brief vertical separators to be used in the status bar
+    //TODO that number 3 is magic!!
+    Gtk::VSeparator m_arrayStatusBarSeparator[3];
 
     /// @brief progress bar for when the computer is "thinking".
     ///        To be shown in the status bar
-    Gtk::ProgressBar* m_progressBar;
+    Gtk::ProgressBar m_progressBar;
 
     /// @brief label to show the user score in the status bar
-    Gtk::Label* m_userScoreLabel;
+    Gtk::Label m_userScoreLabel;
 
     /// @brief label to show the computer score in the status bar
-    Gtk::Label* m_computerScoreLabel;
+    Gtk::Label m_computerScoreLabel;
+
+    /// @brief show the time the user takes to think
+    StopWatchLabel m_stopWatchLabelUser;
+
+    /// @brief show the time the computer takes to think
+    StopWatchLabel m_stopWatchLabelComputer;
 
     /// @brief number of computer's squares left.
     ///        it is used to show the status of the game in the status bar

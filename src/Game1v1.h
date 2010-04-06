@@ -149,6 +149,9 @@ public:
     /// @param optional parameter with the coordinate where the
     ///        opponent put down the latest piece
 	/// @param optional parameter with the latest piece put down by the opponent
+	///        if this param is set to Piece(e_noPiece) MinMax won't be able to take into
+	///        account the latest opponent's move to compute the next move. it can also
+	///        be used to add a bit of randomness to the AI behaviour
     int32_t MinMax(
             Heuristic::calculateMethod_t a_heuristicMethod,
             int32_t                      depth,
