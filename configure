@@ -2764,7 +2764,7 @@ am__tar='${AMTAR} chof - "$$tardir"'; am__untar='${AMTAR} xf -'
 ac_config_headers="$ac_config_headers config.h"
 
 
-$as_echo "#define SVN_REVISION \"47:50M\"" >>confdefs.h
+$as_echo "#define SVN_REVISION \"51M\"" >>confdefs.h
 
 
 # Checks for programs.
@@ -5506,6 +5506,20 @@ $as_echo "#define _UINT8_T 1" >>confdefs.h
 
 cat >>confdefs.h <<_ACEOF
 #define uint8_t $ac_cv_c_uint8_t
+_ACEOF
+;;
+  esac
+
+ac_fn_c_find_uintX_t "$LINENO" "32" "ac_cv_c_uint32_t"
+case $ac_cv_c_uint32_t in #(
+  no|yes) ;; #(
+  *)
+
+$as_echo "#define _UINT32_T 1" >>confdefs.h
+
+
+cat >>confdefs.h <<_ACEOF
+#define uint32_t $ac_cv_c_uint32_t
 _ACEOF
 ;;
   esac
