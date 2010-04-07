@@ -794,17 +794,17 @@ bool MainWindow::BoardDrawingArea_ButtonPressed(GdkEventButton *event)
     // show the progress bar
     m_progressBar.show();
 
-#ifdef DEBUG_PRINT
     if (!m_workerThread->ComputeMove(*m_the1v1Game, currentEditPiece, thisCoord))
     {
-
+#ifdef DEBUG_PRINT
         std::cout
             << "Error while telling the thread to start computing."
             << std::endl
             << "The worker thread seems to be busy"
             << std::endl;
-    }
 #endif
+    }
+
 
     // remove the actual piece being edited from the edit piece drawing area
     // and force the edit piece drawing area to be redraw
