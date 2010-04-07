@@ -44,16 +44,20 @@
 #include "Game1v1.h"
 #include "Coordinate.h"
 #include "Piece.h"
+#include "singleton.h"
 
 
 /// @brief class to handle the main window in the GUI
-class MainWindow
+class MainWindow:
+    public Singleton<MainWindow>
 {
 public:
-    MainWindow(
-    		Game1v1 &a_theGame,
-    		Glib::RefPtr<Gnome::Glade::Xml> a_refXml) throw (GUIException);
+    MainWindow();
     virtual ~MainWindow();
+
+    /// Initialise the window. This methid MUST be called before the first use
+    /// of the window
+    void Initialize(Glib::RefPtr<Gnome::Glade::Xml> a_refXml)throw (GUIException) ;
 
     // property to access the Gtk::window object retrieved from the .glade file
     inline Gtk::Window& window()
@@ -106,29 +110,29 @@ private:
     /// @brief used to retrieve the objects from the Glade design
     Glib::RefPtr<Gnome::Glade::Xml> m_refXml;
 
+    /// @brief the Gtk window object
+    Gtk::Window* m_theWindow;
+
     /// @brief the 1vs1 game which will be represented in the window
-    Game1v1& m_the1v1Game;
+    Game1v1* m_the1v1Game;
 
     /// @brief latest place of the board where the user had the mouse pointer in
     Coordinate m_lastCoord;
 
     /// @brief the worker thread used to leave the GUI active while the next moves is calculated
-    MainWindowWorkerThread m_workerThread;
+    MainWindowWorkerThread* m_workerThread;
 
     /// @brief the about dialog class
-    AboutDialog m_aboutDialog;
+    AboutDialog* m_aboutDialog;
 
     /// @brief the drawing area where the pieces can be picked up by the user
-    DrawingAreaShowPieces m_pickPiecesDrawingArea;
+    DrawingAreaShowPieces* m_pickPiecesDrawingArea;
 
     /// @brief the drawing area where the computer's pieces left will be shown
-    DrawingAreaShowPieces m_showComputerPiecesDrawingArea;
+    DrawingAreaShowPieces* m_showComputerPiecesDrawingArea;
 
     /// @brief the table where the selected piece is edited
-    TableEditPiece m_editPieceTable;
-
-    /// @brief the Gtk window object
-    Gtk::Window* m_theWindow;
+    TableEditPiece* m_editPieceTable;
 
     Gtk::MenuItem* m_newMenuItem;
     Gtk::MenuItem* m_quitMenuItem;
@@ -226,7 +230,6 @@ private:
     void UpdateScoreStatus();
 
     // prevent the default constructors to be used
-    MainWindow();
     MainWindow(const MainWindow &a_src);
     MainWindow& operator=(const MainWindow &a_src);
 };

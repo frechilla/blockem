@@ -29,7 +29,10 @@
 ///
 // ============================================================================
 
+#ifdef DEBUG_PRINT
 #include <iostream>
+#endif
+
 #include <iomanip> // setw
 #include "gui_main_window.h"
 #include "gui_glade_defs.h"
@@ -78,40 +81,68 @@ static const float GHOST_PIECE_ALPHA_TRANSPARENCY = 0.2;
 
 static const uint32_t STOPWATCH_UPDATE_PERIOD_MILLIS = 500; // 1000 = 1 second
 
-//TODO this surely can be improved (using singleton??)
-/// static pointer to the window so it can be used from ProgressUpdate,
-/// which is the callback called from Game to notify the progress of the
-/// MinMax algorithm. That callback has to be static so Game doesn't depend
-/// on other libraries
-/// WARNING: with this system, there can't be 2 instances of MainWindow
-/// or the progressbar won't work!!!!!
-static MainWindow* pMainWindow = NULL;
+
 void MainWindow::ProgressUpdate(float a_progress)
 {
-    if (pMainWindow)
-    {
-        pMainWindow->m_computingCurrentProgress = a_progress;
-        pMainWindow->m_signal_computingProgressUpdated.emit();
-    }
+#ifdef DEBUG
+    assert(MainWindow::GetPtr());
+#endif
+    MainWindow::Instance().m_computingCurrentProgress = a_progress;
+    MainWindow::Instance().m_signal_computingProgressUpdated.emit();
 }
 
-MainWindow::MainWindow(
-		Game1v1 &a_theGame,
-		Glib::RefPtr<Gnome::Glade::Xml> a_refXml) throw (GUIException) :
-			m_refXml(a_refXml),
-			m_the1v1Game(a_theGame),
-			m_lastCoord(COORD_UNITIALISED, COORD_UNITIALISED),
-			m_workerThread(),
-			m_aboutDialog(a_refXml),
-			m_pickPiecesDrawingArea(a_theGame.GetPlayerOpponent(), DrawingAreaShowPieces::eOrientation_leftToRight),
-			m_showComputerPiecesDrawingArea(a_theGame.GetPlayerMe(), DrawingAreaShowPieces::eOrientation_bottomToTop),
-			m_editPieceTable(a_refXml),
-			m_stopWatchLabelUser(STOPWATCH_UPDATE_PERIOD_MILLIS, std::string("Your elapsed time ")),
-			m_stopWatchLabelComputer(STOPWATCH_UPDATE_PERIOD_MILLIS, std::string("Computer's elapsed time ")),
-			m_computerSquaresLeft(NSQUARES_TOTAL),
-			m_userSquaresLeft(NSQUARES_TOTAL),
-			m_computingCurrentProgress(0.0)
+MainWindow::MainWindow() :
+    Singleton<MainWindow>(),
+    m_refXml(NULL),
+    m_theWindow(NULL),
+    m_the1v1Game(NULL),
+    m_lastCoord(COORD_UNITIALISED, COORD_UNITIALISED),
+    m_workerThread(NULL),
+    m_aboutDialog(NULL),
+    m_pickPiecesDrawingArea(NULL),
+    m_showComputerPiecesDrawingArea(NULL),
+    m_editPieceTable(NULL),
+    m_stopWatchLabelUser(STOPWATCH_UPDATE_PERIOD_MILLIS, std::string("Your elapsed time ")),
+    m_stopWatchLabelComputer(STOPWATCH_UPDATE_PERIOD_MILLIS, std::string("Computer's elapsed time ")),
+    m_computerSquaresLeft(NSQUARES_TOTAL),
+    m_userSquaresLeft(NSQUARES_TOTAL),
+    m_computingCurrentProgress(0.0)
 {
+}
+
+MainWindow::~MainWindow()
+{
+    delete(m_the1v1Game);
+    delete(m_aboutDialog);
+    delete(m_workerThread);
+
+    delete(m_pickPiecesDrawingArea);
+    delete(m_showComputerPiecesDrawingArea);
+    delete(m_editPieceTable);
+
+    // deleting this object prints out a lot of error messages on the screen
+    // or even dumps a core.
+    // There's a big memory leak running the app with valgrin, but all of it is
+    // caused by gui code, and I don't know why it happens. It also happens if
+    // m_theWindow is deleted, so I chose not to show those ugly wrror lines printed
+    // on the screen
+    //delete(m_theWindow);
+}
+
+void MainWindow::Initialize(Glib::RefPtr<Gnome::Glade::Xml> a_refXml) throw (GUIException)
+{
+    m_refXml = a_refXml;
+    m_the1v1Game = new Game1v1();
+    m_workerThread = new MainWindowWorkerThread();
+    m_aboutDialog = new AboutDialog(a_refXml);
+    m_pickPiecesDrawingArea = new DrawingAreaShowPieces(
+            m_the1v1Game->GetPlayerOpponent(), DrawingAreaShowPieces::eOrientation_leftToRight);
+    m_showComputerPiecesDrawingArea = new DrawingAreaShowPieces(
+            m_the1v1Game->GetPlayerMe(), DrawingAreaShowPieces::eOrientation_bottomToTop);
+    m_editPieceTable = new TableEditPiece(a_refXml);
+
+    m_lastCoord.m_row = m_lastCoord.m_col = COORD_UNITIALISED;
+
     // first of all retrieve the Gtk::window object and set its icon
     m_refXml->get_widget(GUI_MAIN_WINDOW_NAME, m_theWindow);
     if (m_theWindow == NULL)
@@ -130,10 +161,12 @@ MainWindow::MainWindow(
         } catch(...)
         {
             icon.reset();
-           std::cerr
+#ifdef DEBUG_PRINT
+            std::cerr
                << "WARNING: Exception occurred when setting the 16x16 icon into the Main Window from "
                << GUI_PATH_TO_16PICTURE
                << std::endl;
+#endif
         }
 
         if (icon)
@@ -199,11 +232,11 @@ MainWindow::MainWindow(
 
 	// put the custom widgets where they are expected to be
 	// pack_start (Widget& child, bool expand, bool fill, guint padding=0)
-    m_hBoxEditPieces->pack_start(m_pickPiecesDrawingArea, true, true);
-    m_hBoxEditPieces->pack_start(m_editPieceTable.Table(), false, false);
+    m_hBoxEditPieces->pack_start(*m_pickPiecesDrawingArea, true, true);
+    m_hBoxEditPieces->pack_start(m_editPieceTable->Table(), false, false);
 
 	m_hBoxComputerPieces->pack_start(
-			m_showComputerPiecesDrawingArea,
+			*m_showComputerPiecesDrawingArea,
 			true,
 			true);
 
@@ -227,10 +260,13 @@ MainWindow::MainWindow(
 
 	// if we don't show them nobody will be able to see them
 	// set_visible doesn't work in windows
-	m_pickPiecesDrawingArea.show();
-	m_showComputerPiecesDrawingArea.show();
+	m_pickPiecesDrawingArea->show();
+	m_showComputerPiecesDrawingArea->show();
 
 	m_stopWatchLabelUser.Continue();
+
+	// progress handler for the computing process of the MinMax algorithm
+    m_the1v1Game->SetProgressHandler(&MainWindow::ProgressUpdate);
 
     // connect the interthread communication (GLib::Dispatcher) to invalidate the
     // board drawing area
@@ -247,15 +283,13 @@ MainWindow::MainWindow(
     m_signal_computingProgressUpdated.connect(
             sigc::mem_fun(*this, &MainWindow::NotifyProgressUpdate));
 
-    m_the1v1Game.SetProgressHandler(&MainWindow::ProgressUpdate);
-
     // connect the worker thread signal
-    m_workerThread.signal_computingFinished().connect(
+    m_workerThread->signal_computingFinished().connect(
             sigc::mem_fun(*this, &MainWindow::WorkerThread_computingFinished));
             //sigc::ptr_fun(f) );
 
 	// handle the signal coming from the pickPiecesDrawingArea
-	m_pickPiecesDrawingArea.signal_piecePicked().connect(
+	m_pickPiecesDrawingArea->signal_piecePicked().connect(
 	        sigc::mem_fun(*this, &MainWindow::PickPiecesDrawingArea_PiecePickedEvent));
 
 
@@ -282,23 +316,12 @@ MainWindow::MainWindow(
 	m_boardDrawingArea->signal_leave_notify_event().connect(
 	            sigc::mem_fun(*this, &MainWindow::BoardDrawingArea_LeaveAreaNotify));
 
-	//TODO this surely can be improved
-	// see the comment in MainWindow::ProgressUpdate to understand
-	// what is going on here.
-	assert(pMainWindow == NULL); // it will fail if there are 2 instances of MainWindow
-	pMainWindow = this;
 
 	//TODO the colours should be configured in a better way. This will do it now
-	m_showComputerPiecesDrawingArea.SetPlayerRGB(
+	m_showComputerPiecesDrawingArea->SetPlayerRGB(
 			PLAYER_ME_RED, PLAYER_ME_GREEN, PLAYER_ME_BLUE);
-	m_pickPiecesDrawingArea.SetPlayerRGB(
+	m_pickPiecesDrawingArea->SetPlayerRGB(
 			PLAYER_OPPONENT_RED, PLAYER_OPPONENT_GREEN, PLAYER_OPPONENT_BLUE);
-}
-
-MainWindow::~MainWindow()
-{
-    // it calls the destructor of all the gui elements that it contains
-    delete (m_theWindow);
 }
 
 void MainWindow::WorkerThread_computingFinished(
@@ -308,7 +331,7 @@ void MainWindow::WorkerThread_computingFinished(
 {
     if (a_piece.GetType() != e_noPiece)
     {
-        m_the1v1Game.PutDownPieceMe(a_piece, a_coord);
+        m_the1v1Game->PutDownPieceMe(a_piece, a_coord);
 
         // update the amount of computer's squares left
         // this method is run by another thread.
@@ -327,34 +350,36 @@ void MainWindow::WorkerThread_computingFinished(
 
     if (a_piece.GetType() == e_noPiece)
     {
-        if (m_the1v1Game.CanPlayerOpponentGo() == false)
+        if (m_the1v1Game->CanPlayerOpponentGo() == false)
         {
             // the game is over. Computing returned e_noPiece and
             // the opponent can't go
             m_signal_gameFinished.emit();
         }
+#ifdef DEBUG_PRINT
         else
         {
             std::cout << "Computer can't move" << std::endl;
         }
+#endif
     }
 }
 
 void MainWindow::PickPiecesDrawingArea_PiecePickedEvent(ePieceType_t a_piecePicked)
 {
 	// only update the piece if it changes
-    if (a_piecePicked != m_editPieceTable.GetPiece().GetType())
+    if (a_piecePicked != m_editPieceTable->GetPiece().GetType())
     {
         // update the piece picked even if it is e_noPiece
         // when the selected piece is e_noPiece the editPiecesDrawingArea
         // will be cleared out
-    	m_editPieceTable.SetPiece(a_piecePicked);
+    	m_editPieceTable->SetPiece(a_piecePicked);
     }
 }
 
 bool MainWindow::MainWindow_DeleteEvent(GdkEventAny*)
 {
-    if (m_workerThread.IsThreadComputingMove())
+    if (m_workerThread->IsThreadComputingMove())
     {
         Gtk::MessageDialog::MessageDialog exitingMessage(
                 *m_theWindow,
@@ -371,7 +396,7 @@ bool MainWindow::MainWindow_DeleteEvent(GdkEventAny*)
         }
     }
 
-    m_workerThread.Join();
+    m_workerThread->Join();
 
     // continue with delete event
     return false;
@@ -379,7 +404,7 @@ bool MainWindow::MainWindow_DeleteEvent(GdkEventAny*)
 
 void MainWindow::MenuItemGameQuit_Activate()
 {
-    if (m_workerThread.IsThreadComputingMove())
+    if (m_workerThread->IsThreadComputingMove())
     {
         Gtk::MessageDialog::MessageDialog exitingMessage(
                 *m_theWindow,
@@ -396,7 +421,7 @@ void MainWindow::MenuItemGameQuit_Activate()
         }
     }
 
-    m_workerThread.Join();
+    m_workerThread->Join();
 
     // exit the app
     m_theWindow->hide();
@@ -404,7 +429,7 @@ void MainWindow::MenuItemGameQuit_Activate()
 
 void MainWindow::MenuItemGameNew_Activate()
 {
-    if (m_workerThread.IsThreadComputingMove())
+    if (m_workerThread->IsThreadComputingMove())
     {
         Gtk::MessageDialog::MessageDialog infoMessage(
                 *m_theWindow,
@@ -419,14 +444,14 @@ void MainWindow::MenuItemGameNew_Activate()
     }
 
     char theMessage[MESSAGE_LENGTH];
-    if ( (m_the1v1Game.GetPlayerMe().NumberOfPiecesAvailable() == e_numberOfPieces) &&
-         (m_the1v1Game.GetPlayerOpponent().NumberOfPiecesAvailable() == e_numberOfPieces) )
+    if ( (m_the1v1Game->GetPlayerMe().NumberOfPiecesAvailable() == e_numberOfPieces) &&
+         (m_the1v1Game->GetPlayerOpponent().NumberOfPiecesAvailable() == e_numberOfPieces) )
     {
         // the game never started. Do nothing
         return;
     }
-    else if ( (m_the1v1Game.CanPlayerOpponentGo() == false) &&
-              (m_the1v1Game.CanPlayerMeGo() == false) )
+    else if ( (m_the1v1Game->CanPlayerOpponentGo() == false) &&
+              (m_the1v1Game->CanPlayerMeGo() == false) )
     {
         // game is finished
         snprintf(theMessage,
@@ -451,11 +476,11 @@ void MainWindow::MenuItemGameNew_Activate()
     if (cancelCurrentGameMessage.run() == Gtk::RESPONSE_YES)
     {
         // reset the current game, and update the view
-        m_the1v1Game.Reset();
+        m_the1v1Game->Reset();
         InvalidateBoardDrawingArea();
-        m_pickPiecesDrawingArea.Invalidate();
-        m_showComputerPiecesDrawingArea.Invalidate();
-        m_editPieceTable.SetPiece(e_noPiece);
+        m_pickPiecesDrawingArea->Invalidate();
+        m_showComputerPiecesDrawingArea->Invalidate();
+        m_editPieceTable->SetPiece(e_noPiece);
 
         m_computerSquaresLeft = m_userSquaresLeft = NSQUARES_TOTAL;
         UpdateScoreStatus();
@@ -474,15 +499,12 @@ void MainWindow::MenuItemGameNew_Activate()
 
 void MainWindow::MenuItemHelpAbout_Activate()
 {
-    m_aboutDialog.dialog().run();
-    m_aboutDialog.dialog().hide();
+    m_aboutDialog->dialog().run();
+    m_aboutDialog->dialog().hide();
 }
 
 bool MainWindow::BoardDrawingArea_ExposeEvent(GdkEventExpose* event)
 {
-	//TODO remove
-	//std::cout << "in BoardDrawingArea_ExposeEvent" << std::endl;
-
 	// This is where we draw on the window
 	Glib::RefPtr<Gdk::Window> window = m_boardDrawingArea->get_window();
 	if(window)
@@ -493,11 +515,11 @@ bool MainWindow::BoardDrawingArea_ExposeEvent(GdkEventExpose* event)
 		int32_t height = allocation.get_height();
 		int32_t squareSize = std::min(width, height);
 
-		int32_t littleSquareHeight = squareSize / m_the1v1Game.GetBoard().GetNRows();
-		int32_t littleSquareWidth  = squareSize / m_the1v1Game.GetBoard().GetNColumns();
+		int32_t littleSquareHeight = squareSize / m_the1v1Game->GetBoard().GetNRows();
+		int32_t littleSquareWidth  = squareSize / m_the1v1Game->GetBoard().GetNColumns();
 
-		int32_t squareHeight = littleSquareHeight * m_the1v1Game.GetBoard().GetNRows();
-		int32_t squareWidth  = littleSquareWidth  * m_the1v1Game.GetBoard().GetNColumns();
+		int32_t squareHeight = littleSquareHeight * m_the1v1Game->GetBoard().GetNRows();
+		int32_t squareWidth  = littleSquareWidth  * m_the1v1Game->GetBoard().GetNColumns();
 
 		// coordinates for the centre of the window
 		int32_t xc = width  / 2;
@@ -513,7 +535,7 @@ bool MainWindow::BoardDrawingArea_ExposeEvent(GdkEventExpose* event)
 		cr->clip();
 
 		// if there's no pieces on the board now, draw a small circle in the starting point
-        if (m_the1v1Game.GetPlayerOpponent().NumberOfPiecesAvailable() == e_numberOfPieces)
+        if (m_the1v1Game->GetPlayerOpponent().NumberOfPiecesAvailable() == e_numberOfPieces)
         {
             cr->set_source_rgba(
                     PLAYER_OPPONENT_RED,
@@ -533,7 +555,7 @@ bool MainWindow::BoardDrawingArea_ExposeEvent(GdkEventExpose* event)
             cr->fill();
         }
 
-		if (m_the1v1Game.GetPlayerMe().NumberOfPiecesAvailable() == e_numberOfPieces)
+		if (m_the1v1Game->GetPlayerMe().NumberOfPiecesAvailable() == e_numberOfPieces)
 		{
 	        cr->set_source_rgba(
 	                PLAYER_ME_RED,
@@ -559,17 +581,17 @@ bool MainWindow::BoardDrawingArea_ExposeEvent(GdkEventExpose* event)
 				PLAYER_ME_GREEN,
 				PLAYER_ME_BLUE);
 	    for (int32_t rowCount = 0;
-                     rowCount < m_the1v1Game.GetBoard().GetNRows() ;
+                     rowCount < m_the1v1Game->GetBoard().GetNRows() ;
                      rowCount++)
 	    {
 	        for (int32_t columnCount = 0;
-                         columnCount <  m_the1v1Game.GetBoard().GetNColumns() ;
+                         columnCount <  m_the1v1Game->GetBoard().GetNColumns() ;
                          columnCount++)
 	        {
-	            if (m_the1v1Game.GetBoard().IsPlayerInCoord(
+	            if (m_the1v1Game->GetBoard().IsPlayerInCoord(
 	            		rowCount,
 	            		columnCount,
-	            		m_the1v1Game.GetPlayerMe()))
+	            		m_the1v1Game->GetPlayerMe()))
 	            {
 	            	SetSquareInBoard(Coordinate(rowCount, columnCount), cr);
 	            }
@@ -582,17 +604,17 @@ bool MainWindow::BoardDrawingArea_ExposeEvent(GdkEventExpose* event)
 				PLAYER_OPPONENT_GREEN,
 				PLAYER_OPPONENT_BLUE);
 	    for (int32_t rowCount = 0;
-                     rowCount < m_the1v1Game.GetBoard().GetNRows() ;
+                     rowCount < m_the1v1Game->GetBoard().GetNRows() ;
                      rowCount++)
 	    {
 	        for (int32_t columnCount = 0;
-                         columnCount <  m_the1v1Game.GetBoard().GetNColumns() ;
+                         columnCount <  m_the1v1Game->GetBoard().GetNColumns() ;
                          columnCount++)
 	        {
-	            if (m_the1v1Game.GetBoard().IsPlayerInCoord(
+	            if (m_the1v1Game->GetBoard().IsPlayerInCoord(
 	            		rowCount,
 	            		columnCount,
-	            		m_the1v1Game.GetPlayerOpponent()))
+	            		m_the1v1Game->GetPlayerOpponent()))
 	            {
 	            	SetSquareInBoard(Coordinate(rowCount, columnCount), cr);
 	            }
@@ -621,13 +643,13 @@ bool MainWindow::BoardDrawingArea_ExposeEvent(GdkEventExpose* event)
                 BOARD_BLUE);
 
         // draw the inside lines of the board
-        for (int32_t i = 1; i < m_the1v1Game.GetBoard().GetNRows(); i++)
+        for (int32_t i = 1; i < m_the1v1Game->GetBoard().GetNRows(); i++)
         {
             cr->move_to(xc - squareWidth/2 + littleSquareWidth*i, yc - squareHeight/2);
             cr->line_to(xc - squareWidth/2 + littleSquareWidth*i, yc + squareHeight/2);
         }
 
-        for (int32_t i = 1; i < m_the1v1Game.GetBoard().GetNColumns(); i++)
+        for (int32_t i = 1; i < m_the1v1Game->GetBoard().GetNColumns(); i++)
         {
             cr->move_to(xc - squareWidth/2, yc - squareHeight/2 + littleSquareHeight*i);
             cr->line_to(xc + squareWidth/2, yc - squareHeight/2 + littleSquareHeight*i);
@@ -638,15 +660,15 @@ bool MainWindow::BoardDrawingArea_ExposeEvent(GdkEventExpose* event)
 
 	    // print the current selected piece in the place where the mouse pointer is
 	    // using a bit of transparency (if it is to be edited)
-        const Piece &currentEditPiece = m_editPieceTable.GetPiece();
+        const Piece &currentEditPiece = m_editPieceTable->GetPiece();
 	    if ( (currentEditPiece.GetType() != e_noPiece)   &&
              (m_lastCoord.m_row != COORD_UNITIALISED) &&
              (m_lastCoord.m_col != COORD_UNITIALISED) )
 	    {
-	    	if (m_the1v1Game.GetPlayerOpponent().NumberOfPiecesAvailable() == e_numberOfPieces)
+	    	if (m_the1v1Game->GetPlayerOpponent().NumberOfPiecesAvailable() == e_numberOfPieces)
 	    	{
 	    		if (Rules::IsPieceDeployableInStartingPoint(
-		    			m_the1v1Game.GetBoard(),
+		    			m_the1v1Game->GetBoard(),
 		    			currentEditPiece,
 		    			m_lastCoord,
 		    			Coordinate(STARTING_COORD_X_OPPONENT, STARTING_COORD_Y_OPPONENT)))
@@ -667,10 +689,10 @@ bool MainWindow::BoardDrawingArea_ExposeEvent(GdkEventExpose* event)
 	    		}
 	    	}
 	    	else if (Rules::IsPieceDeployable(
-	    			m_the1v1Game.GetBoard(),
+	    			m_the1v1Game->GetBoard(),
 	    			currentEditPiece,
 	    			m_lastCoord,
-	    			m_the1v1Game.GetPlayerOpponent()))
+	    			m_the1v1Game->GetPlayerOpponent()))
 	    	{
 				cr->set_source_rgba(
 						GHOST_PIECE_RIGHT_RED,
@@ -705,10 +727,11 @@ bool MainWindow::BoardDrawingArea_ExposeEvent(GdkEventExpose* event)
 
 bool MainWindow::BoardDrawingArea_ButtonPressed(GdkEventButton *event)
 {
-	//TODO remove
-    //std::cout << "clicked in (" << event->x << ", " << event->y << ")" << std::endl;
+#ifdef DEBUG_PRINT
+    std::cout << "clicked in (" << event->x << ", " << event->y << ")" << std::endl;
+#endif
 
-	const Piece &currentEditPiece = m_editPieceTable.GetPiece();
+	const Piece &currentEditPiece = m_editPieceTable->GetPiece();
 	Coordinate thisCoord;
 	if ( (currentEditPiece.GetType() == e_noPiece) ||
 	     (WindowToBoardCoord(event->x, event->y, thisCoord) == false) )
@@ -716,86 +739,88 @@ bool MainWindow::BoardDrawingArea_ButtonPressed(GdkEventButton *event)
 	    return true;
 	}
 
-	if (m_workerThread.IsThreadComputingMove())
+	if (m_workerThread->IsThreadComputingMove())
 	{
+#ifdef DEBUG_PRINT
 	    std::cout
             << "The worker thread is busy. Please be patient (a polite way to say: 'Fuck off')"
             << std::endl;
-
+#endif
 	    return true;
 	}
 
-	//TODO remove
-	//std::cout << "SQUARE: (" << thisCoord.m_row << ", " << thisCoord.m_col << ")" << std::endl;
+#ifdef DEBUG_PRINT
+	std::cout << "SQUARE: (" << thisCoord.m_row << ", " << thisCoord.m_col << ")" << std::endl;
+#endif
 
-    if( ( (m_the1v1Game.GetPlayerOpponent().NumberOfPiecesAvailable() == e_numberOfPieces) &&
+    if( ( (m_the1v1Game->GetPlayerOpponent().NumberOfPiecesAvailable() == e_numberOfPieces) &&
           (!Rules::IsPieceDeployableInStartingPoint(
-                    m_the1v1Game.GetBoard(),
+                    m_the1v1Game->GetBoard(),
                     currentEditPiece,
                     m_lastCoord,
                     Coordinate(STARTING_COORD_X_OPPONENT, STARTING_COORD_Y_OPPONENT))) ) ||
-        ( (m_the1v1Game.GetPlayerOpponent().NumberOfPiecesAvailable() < e_numberOfPieces) &&
+        ( (m_the1v1Game->GetPlayerOpponent().NumberOfPiecesAvailable() < e_numberOfPieces) &&
           (!Rules::IsPieceDeployable(
-                    m_the1v1Game.GetBoard(),
+                    m_the1v1Game->GetBoard(),
                     currentEditPiece,
                     thisCoord,
-                    m_the1v1Game.GetPlayerOpponent())) ) )
+                    m_the1v1Game->GetPlayerOpponent())) ) )
     {
-    	//TODO should this be a message box?
+#ifdef DEBUG_PRINT
         std::cout << "Cheeky you! Don't try to put a piece where it's not allowed" << std::endl;
+#endif
+        return true;
     }
-    else
+
+    // set the cursor to busy in the board drawing area, so the user
+    // won't get (very) nervous while the computer is processing the next move
+    Glib::RefPtr<Gdk::Window> window = m_boardDrawingArea->get_window();
+    if (window)
     {
-        // set the cursor to busy in the board drawing area, so the user
-        // won't get (very) nervous while the computer is processing the next move
-        Glib::RefPtr<Gdk::Window> window = m_boardDrawingArea->get_window();
-        if (window)
-        {
-            window->set_cursor(Gdk::Cursor(Gdk::WATCH));
-        }
-
-        // we are positive the move is valid
-        m_the1v1Game.PutDownPieceOpponent(currentEditPiece, thisCoord);
-
-        // update the score on the status bar
-        m_userSquaresLeft -= currentEditPiece.GetNSquares();
-        UpdateScoreStatus();
-
-        // stop the stopwatch that counts the user time
-        m_stopWatchLabelUser.Stop();
-        // start the one that counts the computer time
-        m_stopWatchLabelComputer.Continue();
-        // show the progress bar
-        m_progressBar.show();
-
-        if (!m_workerThread.ComputeMove(m_the1v1Game, currentEditPiece, thisCoord))
-        {
-            std::cout
-                << "Error while telling the thread to start computing."
-                << std::endl
-                << "The worker thread seems to be busy"
-                << std::endl;
-        }
-
-        // remove the actual piece being edited from the edit piece drawing area
-        // and force the edit piece drawing area to be redraw
-        m_editPieceTable.SetPiece(e_noPiece);
-
-        // force the pick pieces drawing area to redraw because a piece has just been deployed
-        m_pickPiecesDrawingArea.Invalidate();
-
-		// force the board to be redraw to update it with the brand new move
-		InvalidateBoardDrawingArea();
+        window->set_cursor(Gdk::Cursor(Gdk::WATCH));
     }
+
+    // we are positive the move is valid
+    m_the1v1Game->PutDownPieceOpponent(currentEditPiece, thisCoord);
+
+    // update the score on the status bar
+    m_userSquaresLeft -= currentEditPiece.GetNSquares();
+    UpdateScoreStatus();
+
+    // stop the stopwatch that counts the user time
+    m_stopWatchLabelUser.Stop();
+    // start the one that counts the computer time
+    m_stopWatchLabelComputer.Continue();
+    // show the progress bar
+    m_progressBar.show();
+
+#ifdef DEBUG_PRINT
+    if (!m_workerThread->ComputeMove(*m_the1v1Game, currentEditPiece, thisCoord))
+    {
+
+        std::cout
+            << "Error while telling the thread to start computing."
+            << std::endl
+            << "The worker thread seems to be busy"
+            << std::endl;
+    }
+#endif
+
+    // remove the actual piece being edited from the edit piece drawing area
+    // and force the edit piece drawing area to be redraw
+    m_editPieceTable->SetPiece(e_noPiece);
+
+    // force the pick pieces drawing area to redraw because a piece has just been deployed
+    m_pickPiecesDrawingArea->Invalidate();
+
+    // force the board to be redraw to update it with the brand new move
+    InvalidateBoardDrawingArea();
 
     return true;
 }
 
 bool MainWindow::BoardDrawingArea_MotionNotify(GdkEventMotion *event)
 {
-	//TODO remove
-    //std::cout << "moved to (" << event->x << ", " << event->y << ")" << std::endl;
-
 	Coordinate thisCoord;
 	if (WindowToBoardCoord(event->x, event->y, thisCoord))
 	{
@@ -856,11 +881,11 @@ bool MainWindow::WindowToBoardCoord(
 	int32_t height = allocation.get_height();
 	int32_t squareSize = std::min(width, height);
 
-	int32_t littleSquareHeight = squareSize / m_the1v1Game.GetBoard().GetNRows();
-	int32_t littleSquareWidth  = squareSize / m_the1v1Game.GetBoard().GetNColumns();
+	int32_t littleSquareHeight = squareSize / m_the1v1Game->GetBoard().GetNRows();
+	int32_t littleSquareWidth  = squareSize / m_the1v1Game->GetBoard().GetNColumns();
 
-	int32_t squareHeight = littleSquareHeight * m_the1v1Game.GetBoard().GetNRows();
-	int32_t squareWidth  = littleSquareWidth  * m_the1v1Game.GetBoard().GetNColumns();
+	int32_t squareHeight = littleSquareHeight * m_the1v1Game->GetBoard().GetNRows();
+	int32_t squareWidth  = littleSquareWidth  * m_the1v1Game->GetBoard().GetNColumns();
 
 	int32_t xc = width  / 2;
 	int32_t yc = height / 2;
@@ -869,7 +894,7 @@ bool MainWindow::WindowToBoardCoord(
          ( (a_windowY > (yc - squareHeight/2)) && (a_windowY < (yc + squareHeight/2)) ) )
 	{
 		int32_t row, col;
-		for (row = 0; row < m_the1v1Game.GetBoard().GetNRows(); row++)
+		for (row = 0; row < m_the1v1Game->GetBoard().GetNRows(); row++)
 		{
 			if (a_windowY < ((yc - squareHeight/2) + (littleSquareHeight * row)))
 			{
@@ -877,7 +902,7 @@ bool MainWindow::WindowToBoardCoord(
 			}
 		}
 
-		for (col = 1; col < m_the1v1Game.GetBoard().GetNColumns(); col++)
+		for (col = 1; col < m_the1v1Game->GetBoard().GetNColumns(); col++)
 		{
 			if (a_windowX < ((xc - squareWidth/2) + (littleSquareWidth * col)))
 			{
@@ -905,11 +930,11 @@ void MainWindow::SetSquareInBoard(const Coordinate &a_coord, Cairo::RefPtr<Cairo
 		int32_t height = allocation.get_height();
 		int32_t squareSize = std::min(width, height);
 
-		int32_t littleSquareHeight = squareSize / m_the1v1Game.GetBoard().GetNRows();
-		int32_t littleSquareWidth  = squareSize / m_the1v1Game.GetBoard().GetNColumns();
+		int32_t littleSquareHeight = squareSize / m_the1v1Game->GetBoard().GetNRows();
+		int32_t littleSquareWidth  = squareSize / m_the1v1Game->GetBoard().GetNColumns();
 
-		int32_t squareHeight = littleSquareHeight * m_the1v1Game.GetBoard().GetNRows();
-		int32_t squareWidth  = littleSquareWidth  * m_the1v1Game.GetBoard().GetNColumns();
+		int32_t squareHeight = littleSquareHeight * m_the1v1Game->GetBoard().GetNRows();
+		int32_t squareWidth  = littleSquareWidth  * m_the1v1Game->GetBoard().GetNColumns();
 
 		int32_t xc = width  / 2;
 		int32_t yc = height / 2;
@@ -943,16 +968,16 @@ void MainWindow::NotifyGameFinished()
     int32_t squaresLeftMe = 0;
     for (int8_t i = e_minimumPieceIndex ; i < e_numberOfPieces; i++)
     {
-        if (m_the1v1Game.GetPlayerMe().IsPieceAvailable(static_cast<ePieceType_t>(i)))
+        if (m_the1v1Game->GetPlayerMe().IsPieceAvailable(static_cast<ePieceType_t>(i)))
         {
             squaresLeftMe +=
-                    m_the1v1Game.GetPlayerMe().m_pieces[i].GetNSquares();
+                    m_the1v1Game->GetPlayerMe().m_pieces[i].GetNSquares();
         }
 
-        if (m_the1v1Game.GetPlayerOpponent().IsPieceAvailable(static_cast<ePieceType_t>(i)))
+        if (m_the1v1Game->GetPlayerOpponent().IsPieceAvailable(static_cast<ePieceType_t>(i)))
         {
             squaresLeftOpponent +=
-                    m_the1v1Game.GetPlayerOpponent().m_pieces[i].GetNSquares();
+                    m_the1v1Game->GetPlayerOpponent().m_pieces[i].GetNSquares();
         }
     }
 
@@ -1011,10 +1036,10 @@ void MainWindow::NotifyMoveComputed()
 	InvalidateBoardDrawingArea();
 
 	// update the computer's pieces left too
-    m_showComputerPiecesDrawingArea.Invalidate();
+    m_showComputerPiecesDrawingArea->Invalidate();
 
     // restore the mouse cursor if the user can put down a piece
-    if (m_the1v1Game.CanPlayerOpponentGo())
+    if (m_the1v1Game->CanPlayerOpponentGo())
     {
         //user's go
         // stop computer stopwatch

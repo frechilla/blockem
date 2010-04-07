@@ -124,7 +124,9 @@ int main(int argc, char **argv)
 
     //////////////////
     // GUI
+    Gtk::Main::init_gtkmm_internals();
     Gtk::Main kit(argc, argv);
+
     Glib::RefPtr<Gnome::Glade::Xml> refXml;
 #ifdef GLIBMM_EXCEPTIONS_ENABLED
     try
@@ -172,13 +174,12 @@ int main(int argc, char **argv)
         std::cerr << "g_thread_supported call failed when initialising gthreads" << std::endl;
     }
 
-    //TODO this is the only Game mode supported at the moment
-    Game1v1 theGame;
     try
     {
-        MainWindow mainWindow(theGame, refXml);
+        MainWindow::Instance();
+        MainWindow::Instance().Initialize(refXml);
 
-        kit.run(mainWindow.window());
+        kit.run(MainWindow::Instance().window());
     }
     catch (GUIException ex)
     {

@@ -363,7 +363,6 @@ bool Rules::HasValidCoordInNucleationPoint(
         // only has one square. It will fit in a known nucleation point
 #ifdef DEBUG
         assert(a_player.IsNucleationPoint(a_nkPointCoord));
-        assert(0 < a_size);
 #endif
         return true;
     }
