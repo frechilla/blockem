@@ -29,7 +29,6 @@
 
 #include <stdlib.h>
 #include <math.h>
-#include <iostream>
 #include "Heuristic.h"
 #include "Player.h"
 #include "Rules.h"

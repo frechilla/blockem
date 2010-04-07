@@ -273,8 +273,11 @@ private:
             int32_t                      depth,
             int32_t                      alpha,  //  = -INFINITE (in the 1st call)
             int32_t                      beta,   //  = INFINITE  (in the 1st call)
-            const volatile sig_atomic_t  &stopProcessingFlag,
-            int32_t                      &times);
+            const volatile sig_atomic_t  &stopProcessingFlag
+#ifdef DEBUG_PRINT
+            ,int32_t                      &times
+#endif
+    );
 
     /// @returns true if the player 'a_player' can put down at least 1 piece in a_board
     static bool CanPlayerGo(

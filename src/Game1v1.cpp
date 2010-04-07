@@ -27,9 +27,11 @@
 ///
 // ============================================================================
 
+#ifdef DEBUG_PRINT
 #include <iostream>
-#include "Game1v1.h"
+#endif
 
+#include "Game1v1.h"
 
 /// it will be used as an empty space in the board
 static const char CHAR_EMPTY    = ' ';
@@ -257,8 +259,9 @@ int32_t Game1v1::MinMax(
 				out_resultPiece,
 				out_coord);
 	}
-
+#ifdef DEBUG_PRINT
     int32_t timesCalled = 1;
+#endif
     int32_t alpha = -INFINITE;
     int32_t beta  = INFINITE;
 
@@ -315,9 +318,9 @@ int32_t Game1v1::MinMax(
         return a_heuristicMethod(m_board, m_playerMe, m_playerOpponent);
     }
 
-//#ifdef DEBUG
+#ifdef DEBUG_PRINT
     std::cout << "NK: " << m_playerMe.NumberOfNucleationPoints() << std::endl;
-//#endif
+#endif
 
 
     // number of pieces successfully put down
@@ -327,18 +330,18 @@ int32_t Game1v1::MinMax(
 
     for (int8_t i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
     {
-//#ifdef DEBUG
         if (m_progressFunctor)
         {
             m_progressFunctor(static_cast<float>(e_numberOfPieces - i) / e_numberOfPieces);
         }
+#ifdef DEBUG_PRINT
         std::cout <<".";
         std::cout.flush(); // fflush(stdout);
         if (i == 0)
         {
             std::cout << std::endl;
         }
-//#endif
+#endif
 
         if ( (m_playerMe.m_pieces[i].GetNSquares() < 5) &&
              (m_playerMe.NumberOfPiecesAvailable() > (e_numberOfPieces - MIN_5SQUARE_PIECES_AT_START)) &&
@@ -405,8 +408,11 @@ int32_t Game1v1::MinMax(
                                                         depth - 1,
                                                         -beta,
                                                         -alpha,
-                                                        stopProcessingFlag,
-                                                        timesCalled);
+                                                        stopProcessingFlag
+#ifdef DEBUG_PRINT
+                                                        ,timesCalled
+#endif
+                                                        );
 
                                 if (stopProcessingFlag)
                                 {
@@ -474,7 +480,9 @@ int32_t Game1v1::MinMax(
     out_coord.m_row   = bestCoord.m_row;
     out_coord.m_col   = bestCoord.m_col;
 
+#ifdef DEBUG_PRINT
     std::cout << "Times called " << timesCalled << std::endl;
+#endif
 
     return alpha;
 }
@@ -526,10 +534,15 @@ int32_t Game1v1::MinMaxAlphaBetaCompute(
         int32_t                      depth,
         int32_t                      alpha,
         int32_t                      beta,
-        const volatile sig_atomic_t  &stopProcessingFlag,
-        int32_t                      &times)
+        const volatile sig_atomic_t  &stopProcessingFlag
+#ifdef DEBUG_PRINT
+        ,int32_t                      &times
+#endif
+        )
 {
+#ifdef DEBUG_PRINT
     times++;
+#endif
 
     if ( (depth <= 0) || (a_playerMe.NumberOfPiecesAvailable() == 0) )
     {
@@ -661,8 +674,11 @@ int32_t Game1v1::MinMaxAlphaBetaCompute(
                                                         depth - 1,
                                                         -beta,
                                                         -alpha,
-                                                        stopProcessingFlag,
-                                                        times);
+                                                        stopProcessingFlag
+#ifdef DEBUG_PRINT
+                                                        ,times
+#endif
+                                                        );
 
                                 if (stopProcessingFlag)
                                 {
@@ -743,8 +759,11 @@ int32_t Game1v1::MinMaxAlphaBetaCompute(
                                 depth - 1,
                                 -beta,
                                 -alpha,
-                                stopProcessingFlag,
-                                times);
+                                stopProcessingFlag
+#ifdef DEBUG_PRINT
+                                ,times
+#endif
+                                );
 
         if (stopProcessingFlag)
         {

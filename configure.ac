@@ -83,6 +83,13 @@ AC_ARG_ENABLE(debug,
         CXXFLAGS="${USER_CFLAGS} -Wall -O0 -ggdb -DDEBUG"
     fi])
 
+AC_ARG_ENABLE(debug-printing,
+    AC_HELP_STRING([--enable-debug-printing], [Enable debugging printing to standard out]),
+    [ if test x$enableval = xyes; then
+        debugprinting=yes
+        CXXFLAGS+=" -DDEBUG_PRINT"
+    fi])
+
 AC_OUTPUT([
 Makefile
 src/Makefile

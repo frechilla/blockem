@@ -706,6 +706,7 @@ ac_user_opts='
 enable_option_checking
 enable_dependency_tracking
 enable_debug
+enable_debug_printing
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1348,6 +1349,7 @@ Optional Features:
   --disable-dependency-tracking  speeds up one-time build
   --enable-dependency-tracking   do not reject slow dependency extractors
   --enable-debug          Enable debugging code
+  --enable-debug-printing Enable debugging printing to standard out
 
 Some influential environment variables:
   CXX         C++ compiler command
@@ -2764,7 +2766,7 @@ am__tar='${AMTAR} chof - "$$tardir"'; am__untar='${AMTAR} xf -'
 ac_config_headers="$ac_config_headers config.h"
 
 
-$as_echo "#define SVN_REVISION \"51M\"" >>confdefs.h
+$as_echo "#define SVN_REVISION \"51:52M\"" >>confdefs.h
 
 
 # Checks for programs.
@@ -5535,6 +5537,15 @@ if test "${enable_debug+set}" = set; then :
   enableval=$enable_debug;  if test x$enableval = xyes; then
         debug=yes
         CXXFLAGS="${USER_CFLAGS} -Wall -O0 -ggdb -DDEBUG"
+    fi
+fi
+
+
+# Check whether --enable-debug-printing was given.
+if test "${enable_debug_printing+set}" = set; then :
+  enableval=$enable_debug_printing;  if test x$enableval = xyes; then
+        debugprinting=yes
+        CXXFLAGS+=" -DDEBUG_PRINT"
     fi
 fi
 

@@ -75,5 +75,6 @@ Player.cpp \
 Player.h \
 Rules.cpp \
 Rules.h \
+singleton.h \
 main.cpp
 

@@ -78,12 +78,22 @@ static const float GHOST_PIECE_ALPHA_TRANSPARENCY = 0.2;
 
 static const uint32_t STOPWATCH_UPDATE_PERIOD_MILLIS = 500; // 1000 = 1 second
 
-
-
-// the static members
-float MainWindow::m_computingCurrentProgress = 0.0;
-Glib::Dispatcher MainWindow::m_signal_computingProgressUpdated;
-
+//TODO this surely can be improved (using singleton??)
+/// static pointer to the window so it can be used from ProgressUpdate,
+/// which is the callback called from Game to notify the progress of the
+/// MinMax algorithm. That callback has to be static so Game doesn't depend
+/// on other libraries
+/// WARNING: with this system, there can't be 2 instances of MainWindow
+/// or the progressbar won't work!!!!!
+static MainWindow* pMainWindow = NULL;
+void MainWindow::ProgressUpdate(float a_progress)
+{
+    if (pMainWindow)
+    {
+        pMainWindow->m_computingCurrentProgress = a_progress;
+        pMainWindow->m_signal_computingProgressUpdated.emit();
+    }
+}
 
 MainWindow::MainWindow(
 		Game1v1 &a_theGame,
@@ -99,7 +109,8 @@ MainWindow::MainWindow(
 			m_stopWatchLabelUser(STOPWATCH_UPDATE_PERIOD_MILLIS, std::string("Your elapsed time ")),
 			m_stopWatchLabelComputer(STOPWATCH_UPDATE_PERIOD_MILLIS, std::string("Computer's elapsed time ")),
 			m_computerSquaresLeft(NSQUARES_TOTAL),
-			m_userSquaresLeft(NSQUARES_TOTAL)
+			m_userSquaresLeft(NSQUARES_TOTAL),
+			m_computingCurrentProgress(0.0)
 {
     // first of all retrieve the Gtk::window object and set its icon
     m_refXml->get_widget(GUI_MAIN_WINDOW_NAME, m_theWindow);
@@ -209,7 +220,7 @@ MainWindow::MainWindow(
 	m_hBoxStatusBar->pack_start(m_stopWatchLabelComputer, true, true);
 
     m_progressBar.set_orientation(Gtk::PROGRESS_LEFT_TO_RIGHT);
-    m_progressBar.set_fraction(0.0);
+    m_progressBar.set_fraction(m_computingCurrentProgress);
     m_hBoxStatusBar->pack_start(m_progressBar, true, true);
 
     m_hBoxStatusBar->show_all();
@@ -271,7 +282,13 @@ MainWindow::MainWindow(
 	m_boardDrawingArea->signal_leave_notify_event().connect(
 	            sigc::mem_fun(*this, &MainWindow::BoardDrawingArea_LeaveAreaNotify));
 
-	//TODO the colours should be configured in a beter way. This will do it now
+	//TODO this surely can be improved
+	// see the comment in MainWindow::ProgressUpdate to understand
+	// what is going on here.
+	assert(pMainWindow == NULL); // it will fail if there are 2 instances of MainWindow
+	pMainWindow = this;
+
+	//TODO the colours should be configured in a better way. This will do it now
 	m_showComputerPiecesDrawingArea.SetPlayerRGB(
 			PLAYER_ME_RED, PLAYER_ME_GREEN, PLAYER_ME_BLUE);
 	m_pickPiecesDrawingArea.SetPlayerRGB(
