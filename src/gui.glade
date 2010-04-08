@@ -131,12 +131,7 @@
                 <property name="visible">True</property>
                 <property name="spacing">1</property>
                 <child>
-                  <widget class="GtkDrawingArea" id="drawingarea_board">
-                    <property name="visible">True</property>
-                  </widget>
-                  <packing>
-                    <property name="position">0</property>
-                  </packing>
+                  <placeholder/>
                 </child>
                 <child>
                   <widget class="GtkHBox" id="hbox_computerpieces">
@@ -323,5 +318,8 @@ You should have received a copy of the GNU General Public License along with blo
     <child>
       <placeholder/>
     </child>
+  </widget>
+  <widget class="GtkDrawingArea" id="drawingarea_board">
+    <property name="visible">True</property>
   </widget>
 </glade-interface>

@@ -98,7 +98,6 @@ const char GUI_MENU_ITEM_GAME_QUIT[]       = "imagemenuitem_game_quit";
 const char GUI_MENU_ITEM_HELP_ABOUT[]      = "imagemenuitem_help_about";
 const char GUI_VBOX_DRAWING_NAME[]         = "vbox_drawing";
 const char GUI_HBOX_GAME_STATUS_NAME[]     = "hbox_gamestatus";
-const char GUI_DRAWINGAREA_BOARD_NAME[]    = "drawingarea_board";
 const char GUI_HBOX_COMPUTER_PIECES_NAME[] = "hbox_computerpieces";
 const char GUI_HBOX_PIECES_AREA_NAME[]     = "hbox_editpieces";
 const char GUI_TABLE_EDITING_PIECE_NAME[]  = "table_editing_piece";

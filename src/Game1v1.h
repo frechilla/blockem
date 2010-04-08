@@ -49,21 +49,6 @@ const int32_t BOARD_1VS1_ROWS    = 14;
 /// standard number of columns for a 1vs1 game
 const int32_t BOARD_1VS1_COLUMNS = 14;
 
-/// initial X coordinate for player opponent (user)
-const int32_t STARTING_COORD_X_OPPONENT = 4;
-/// initial Y coordinate for player opponent (user)
-const int32_t STARTING_COORD_Y_OPPONENT = 4;
-
-/// initial X coordinate for player Me (computer)
-const int32_t STARTING_COORD_X_ME = 9;
-/// initial Y coordinate for player Me (computer)
-const int32_t STARTING_COORD_Y_ME = 9;
-
-/// name for the player me. The one that MinMax tries to maximise (and win)
-const char PLAYER_ME_NAME[] = "Computer";
-/// name fot the opponent (the human player. Me is the computer's)
-const char PLAYER_OPPONENT_NAME[] = "TheOpponent";
-
 /// @brief contains the definition of a game 1vs1 of blokus
 /// This class is meant to contain all the rules about blokus 1vs1
 class Game1v1

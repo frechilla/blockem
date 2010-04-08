@@ -94,10 +94,10 @@ private:
     /// it will report e_noPiece if the user clicked where there was no piece shown
     sigc::signal<void, ePieceType_t> m_signalPiecePicked;
 
-    /// @brief callback to be called when the pick piece drawing area is redrawn on screen
+    /// @brief it'll be called when the pick piece drawing area is redrawn on screen
     bool on_expose_event(GdkEventExpose* event);
 
-    /// @brief callback to be called when a button is pressed inside the pick pieces drawing area
+    /// @brief it'll be called when a button is pressed inside the pick pieces drawing area
     bool on_button_press_event(GdkEventButton* event);
 
     // prevent the default constructors from being used

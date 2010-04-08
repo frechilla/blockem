@@ -31,12 +31,18 @@
 #include <ostream>
 #include <iomanip> // setw
 
-Player::Player(std::string a_name, char a_presentationChar, int32_t a_rowsInBoard, int32_t a_columnsInBoard):
-    m_name(a_name),
-    m_presentationChar(a_presentationChar),
-    m_nRowsInBoard(a_rowsInBoard),
-    m_nColumnsInBoard(a_columnsInBoard),
-    m_nkPointsCount(0)
+Player::Player(
+    std::string a_name,
+    char a_presentationChar,
+    int32_t a_rowsInBoard,
+    int32_t a_columnsInBoard,
+    const Coordinate &a_startingCoordinate):
+        m_name(a_name),
+        m_presentationChar(a_presentationChar),
+        m_nRowsInBoard(a_rowsInBoard),
+        m_nColumnsInBoard(a_columnsInBoard),
+        m_nkPointsCount(0),
+        m_startingCoordinate(a_startingCoordinate)
 {
     // load the pieces
     LoadPieces();

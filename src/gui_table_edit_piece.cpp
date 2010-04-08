@@ -103,6 +103,12 @@ void TableEditPiece::SetPieceRGB(float a_red, float a_green, float a_blue)
 
 void TableEditPiece::SetPiece(ePieceType_t a_newPiece)
 {
+    // only update the piece ONLY if it changes
+    if (a_newPiece == m_thePiece.GetType())
+    {
+        return;
+    }
+
 	m_thePiece = Piece(a_newPiece);
 
     if (m_thePiece.CanRotateOriginally())

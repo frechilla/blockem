@@ -56,6 +56,8 @@ GameTotalAllocation.h \
 gui_exception.h \
 gui_about_dialog.cpp \
 gui_about_dialog.h \
+gui_drawing_area_board.h \
+gui_drawing_area_board.cpp \
 gui_drawing_area_show_pieces.cpp \
 gui_drawing_area_show_pieces.h   \
 gui_glade_defs.h \

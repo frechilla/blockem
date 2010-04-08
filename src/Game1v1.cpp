@@ -33,12 +33,27 @@
 
 #include "Game1v1.h"
 
+/// name for the player me. The one that MinMax tries to maximise (and win)
+static const char PLAYER_ME_NAME[] = "Computer";
+/// name fot the opponent (the human player. Me is the computer's)
+static const char PLAYER_OPPONENT_NAME[] = "TheOpponent";
+
 /// it will be used as an empty space in the board
 static const char CHAR_EMPTY    = ' ';
 /// it will be used as the character for 'me' in the board
 static const char CHAR_ME       = 'X';
 /// it will be used as the character for 'opponent' in the board
 static const char CHAR_OPPONENT = 'O';
+
+/// initial X coordinate for player opponent (user)
+static const int32_t STARTING_COORD_X_OPPONENT = 4;
+/// initial Y coordinate for player opponent (user)
+static const int32_t STARTING_COORD_Y_OPPONENT = 4;
+
+/// initial X coordinate for player Me (computer)
+static const int32_t STARTING_COORD_X_ME = 9;
+/// initial Y coordinate for player Me (computer)
+static const int32_t STARTING_COORD_Y_ME = 9;
 
 /// To be used in the MinMax Algorithm as the size of the valid coords arrays
 static const int8_t VALID_COORDS_SIZE = 5;
@@ -52,8 +67,8 @@ static const int8_t MIN_5SQUARE_PIECES_AT_START = 5;
 
 Game1v1::Game1v1() :
 	m_board(BOARD_1VS1_ROWS, BOARD_1VS1_COLUMNS, CHAR_EMPTY),
-    m_playerMe(std::string(PLAYER_ME_NAME), CHAR_ME, BOARD_1VS1_ROWS, BOARD_1VS1_COLUMNS),
-    m_playerOpponent(std::string(PLAYER_OPPONENT_NAME), CHAR_OPPONENT, BOARD_1VS1_ROWS, BOARD_1VS1_COLUMNS),
+    m_playerMe(std::string(PLAYER_ME_NAME), CHAR_ME, BOARD_1VS1_ROWS, BOARD_1VS1_COLUMNS, Coordinate(STARTING_COORD_X_ME, STARTING_COORD_Y_ME)),
+    m_playerOpponent(std::string(PLAYER_OPPONENT_NAME), CHAR_OPPONENT, BOARD_1VS1_ROWS, BOARD_1VS1_COLUMNS, Coordinate(STARTING_COORD_X_OPPONENT, STARTING_COORD_Y_OPPONENT)),
     m_progressFunctor(NULL)
 {
 	// initialise the players' nk according to the current state of the blokus board

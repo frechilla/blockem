@@ -43,7 +43,7 @@ const int32_t VALID_COORDS_SIZE = 5;
 
 GameTotalAllocation::GameTotalAllocation(int32_t a_rows, int32_t a_columns) :
     m_board(a_rows, a_columns, CHAR_EMPTY),
-    m_player(std::string("ThePlayer"), CHAR_PLAYER, a_rows, a_columns)
+    m_player(std::string("ThePlayer"), CHAR_PLAYER, a_rows, a_columns, Coordinate(0, 0))
 {
 }
 
@@ -135,6 +135,9 @@ bool GameTotalAllocation::Solve(const Coordinate &a_startingCoord)
 		lastPieces[i]  = NULL;
 		oldNkPoints[i] = NULL;
 	}
+
+	//update the starting point of the player
+	m_player.SetStartingCoordinate(a_startingCoord);
 
     for (int32_t i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
     {

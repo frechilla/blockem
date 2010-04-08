@@ -46,7 +46,13 @@ public:
     /// @param presenChar is the character that represents the player
 	/// @param a_rowsInBoard
 	/// @param a_columnsInBoard
-    Player(std::string a_name, char a_presentationChar, int32_t a_rowsInBoard, int32_t a_columnsInBoard);
+    /// @param a_startingCoordinate
+    Player(
+            std::string a_name,
+            char a_presentationChar,
+            int32_t a_rowsInBoard,
+            int32_t a_columnsInBoard,
+            const Coordinate &a_startingCoordinate = Coordinate(0,0));
     virtual ~Player();
 
     /// @brief copy constructor. Needed because there's some dynamic memory
@@ -72,6 +78,35 @@ public:
 	{
     	return m_name;
 	}
+
+    /// Returns the starting coordinate of this player
+    inline const Coordinate& GetStartingCoordinate() const
+    {
+        return m_startingCoordinate;
+    }
+
+    inline void SetStartingCoordinate(const Coordinate &a_startingCoordinate)
+    {
+        m_startingCoordinate = a_startingCoordinate;
+    }
+
+    /// Sets the colour which represents this player
+    /// values are uint8_t, that is, from 0 to 255
+    inline void SetColour(uint8_t a_colourRed, uint8_t a_colourGreen, uint8_t a_colourBlue)
+    {
+        m_colourRed   = a_colourRed;
+        m_colourGreen = a_colourGreen;
+        m_colourBlue  = a_colourBlue;
+    }
+
+    /// Gets the colour which represents this player
+    /// values are uint8_t, that is, from 0 to 255
+    inline void GetColour(uint8_t &out_colourRed, uint8_t &out_colourGreen, uint8_t &out_colourBlue) const
+    {
+        out_colourRed   = m_colourRed;
+        out_colourGreen = m_colourGreen;
+        out_colourBlue  = m_colourBlue;
+    }
 
     /// returns the number of pieces available
     inline uint8_t NumberOfPiecesAvailable() const
@@ -255,6 +290,14 @@ private:
     uint8_t** m_nkPoints;
     /// Number of nucleation points saved in the nkPoints array
     int32_t m_nkPointsCount;
+    /// Starting coordinate of this player
+    Coordinate m_startingCoordinate;
+    /// Red channel of the Colour representation of the player
+    uint8_t m_colourRed;
+    /// Green channel of the Colour representation of the player
+    uint8_t m_colourGreen;
+    /// Blue channel of the Colour representation of the player
+    uint8_t m_colourBlue;
 
     /// load all pieces into the m_pieces array
     void LoadPieces();

@@ -37,6 +37,7 @@
 
 #include "gui_about_dialog.h"
 #include "gui_drawing_area_show_pieces.h"
+#include "gui_drawing_area_board.h"
 #include "gui_exception.h"
 #include "gui_main_window_worker_thread.h"
 #include "gui_stop_watch_label.h"
@@ -71,9 +72,6 @@ public:
             const Coordinate &a_coord,
             int32_t           a_returnValue);
 
-    /// @brief callback to be called whenever the user picks a piece in the PickPiecesDrawingArea
-    void PickPiecesDrawingArea_PiecePickedEvent(ePieceType_t a_piecePicked);
-
     /// @brief callback to be called when the window is about to be closed
     ///        using the X on the corner
     bool MainWindow_DeleteEvent(GdkEventAny*);
@@ -88,17 +86,8 @@ public:
     /// @brief callback to be called when the menuitem Help->about is pressed
     void MenuItemHelpAbout_Activate();
 
-    /// @brief callback to be called when the board drawing area is redraw on screen
-    bool BoardDrawingArea_ExposeEvent(GdkEventExpose* event);
-
-    /// @brief callback to be called when a button is pressed inside the board drawing area
-    bool BoardDrawingArea_ButtonPressed(GdkEventButton* event);
-
-    /// @brief callback to be called when the mouse moves inside the board drawing area
-    bool BoardDrawingArea_MotionNotify(GdkEventMotion* event);
-
-    /// @brief callback to be called when the mouse leaves the board drawing area
-    bool BoardDrawingArea_LeaveAreaNotify(GdkEventCrossing* event);
+    /// @brief callback to be called when a button is pressed inside the board
+    void BoardDrawingArea_BoardClicked(const Coordinate &, const Piece &, const Player &);
 
     /// @brief to be used as a functor so Game1v1 notifies this class the progress of the computing
     ///        process for computer's next move
@@ -131,6 +120,9 @@ private:
     /// @brief the drawing area where the computer's pieces left will be shown
     DrawingAreaShowPieces* m_showComputerPiecesDrawingArea;
 
+    /// @the drawing area responsible for showing the state of the board
+    DrawingAreaBoard m_boardDrawingArea;
+
     /// @brief the table where the selected piece is edited
     TableEditPiece* m_editPieceTable;
 
@@ -143,9 +135,6 @@ private:
 
     /// @brief the table that contains the board + pieces left
     Gtk::HBox* m_hBoxGameStatus;
-
-    /// @brief the drawing area where the board is drawn
-    Gtk::DrawingArea* m_boardDrawingArea;
 
     /// @brief the table that contains the computer pieces
     Gtk::HBox* m_hBoxComputerPieces;
@@ -199,13 +188,6 @@ private:
     /// notify a change in computing progress
     Glib::Dispatcher m_signal_computingProgressUpdated;
 
-    /// @brief translates an absolute window coordinate into the board coord
-    /// @return true if the translation was successful (the window coordinate was in the board)
-    bool WindowToBoardCoord(int32_t a_windowX, int32_t a_windowY, Coordinate &out_boardCoord);
-
-    /// Sets a particular square in the board as occupied by a_player
-    void SetSquareInBoard(const Coordinate &a_coord, Cairo::RefPtr<Cairo::Context> cr);
-
     /// @brief notifies to the user that the game is finished using a fancy message box
     void NotifyGameFinished();
 
@@ -217,10 +199,6 @@ private:
 
     /// updates the progress bar with the value saved in m_computingCurrentProgress;
     void NotifyProgressUpdate();
-
-    /// invalidates the board drawing area
-    /// returns true if succeeded
-    bool InvalidateBoardDrawingArea();
 
     /// updates the score shown in the status bar
     /// takes the status of the game from
