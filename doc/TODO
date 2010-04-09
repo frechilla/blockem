@@ -16,3 +16,4 @@ basic things that need to be done:
  + There's no need to compile the test app with all the gui libraries and flags
    Have a look at configure.ac and src/test/Makefile.am to fix it   
  + Fix the test app
+ + Images and icons are not shown correctly in windows
