@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License along
 // with Blockem. If not, see http://www.gnu.org/licenses/.
 //
-/// @file gui_drawing_area_board.h
+/// @file gui_drawing_area_board.cpp
 /// @brief
 ///
 /// @author Faustino Frechilla

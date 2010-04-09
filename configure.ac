@@ -90,6 +90,12 @@ AC_ARG_ENABLE(debug-printing,
         CXXFLAGS+=" -DDEBUG_PRINT"
     fi])
 
+# if in win32 remove the extra terminal window
+# http://live.gnome.org/GTK%2B/Win32/Apps
+if test "$os_win32" = "yes"; then
+    CXXFLAGS+=" -mms-bitfields -mwindows"
+fi
+
 AC_OUTPUT([
 Makefile
 src/Makefile

@@ -65,6 +65,12 @@ public:
     	return m_thePiece;
     }
 
+    /// Access to the piece_changed signal private member
+    inline sigc::signal<void, const Piece&>& signal_pieceChanged()
+    {
+        return m_signalPieceChanged;
+    }
+
     /// @brief sets the piece to be shown to the user for it to be edited
     /// it always resets the piece to the new piece (if it is the same piece as
     /// it is currently being edited the edition will be restarted anyway)
@@ -104,6 +110,10 @@ private:
     float m_green;
     /// @brief Piece's colour: blue channel
     float m_blue;
+
+    /// signal to be sent when the current piece being edited changes
+    /// either because it's a different piece or because it was edited
+    sigc::signal<void, const Piece&> m_signalPieceChanged;
 
     // force the editPiece drawing area to be repainted
     bool InvalidateEditPieceDrawingArea();

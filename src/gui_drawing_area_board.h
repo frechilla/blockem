@@ -56,6 +56,11 @@ public:
         m_currentPlayer = a_player;
     }
 
+    void inline SetCurrentPiece(const Piece &a_piece)
+    {
+        m_currentPiece = a_piece;
+    }
+
     /// Access to the m_signalBoardClicked signal private member, which is sent
     /// when a the user clicked on the board and there is a current player and piece selected
     inline sigc::signal<void, const Coordinate &, const Piece &, const Player &>& signal_boardPicked()

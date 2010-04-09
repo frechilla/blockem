@@ -103,7 +103,7 @@ private:
     Gtk::Window* m_theWindow;
 
     /// @brief the 1vs1 game which will be represented in the window
-    Game1v1* m_the1v1Game;
+    Game1v1 m_the1v1Game;
 
     /// @brief latest place of the board where the user had the mouse pointer in
     Coordinate m_lastCoord;
@@ -115,10 +115,10 @@ private:
     AboutDialog* m_aboutDialog;
 
     /// @brief the drawing area where the pieces can be picked up by the user
-    DrawingAreaShowPieces* m_pickPiecesDrawingArea;
+    DrawingAreaShowPieces m_pickPiecesDrawingArea;
 
     /// @brief the drawing area where the computer's pieces left will be shown
-    DrawingAreaShowPieces* m_showComputerPiecesDrawingArea;
+    DrawingAreaShowPieces m_showComputerPiecesDrawingArea;
 
     /// @the drawing area responsible for showing the state of the board
     DrawingAreaBoard m_boardDrawingArea;

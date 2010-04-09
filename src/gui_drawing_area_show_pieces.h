@@ -64,9 +64,6 @@ public:
 	DrawingAreaShowPieces(const Player &a_player, eOrientation_t a_orientation);
     ~DrawingAreaShowPieces();
 
-    /// @brief sets the colour which will be used to draw the pieces
-    void SetPlayerRGB(float a_red, float a_green, float a_blue);
-
     /// Access to the piece_picked signal private member
     inline sigc::signal<void, ePieceType_t>& signal_piecePicked()
     {
@@ -82,13 +79,6 @@ private:
 
     /// @brief orientation to be used to draw the drawing area
     eOrientation_t m_orientation;
-
-    /// @brief Pieces' colour: red channel
-    float m_red;
-    /// @brief Pieces' colour: green channel
-    float m_green;
-    /// @brief Pieces' colour: blue channel
-    float m_blue;
 
     /// signal to be sent when a piece has been picked
     /// it will report e_noPiece if the user clicked where there was no piece shown

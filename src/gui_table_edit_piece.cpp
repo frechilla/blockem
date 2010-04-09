@@ -128,6 +128,10 @@ void TableEditPiece::SetPiece(ePieceType_t a_newPiece)
         m_mirrorButton->set_sensitive(false);
     }
 
+    // notify to whoever is listening to the signal that the piece changed
+    m_signalPieceChanged.emit(m_thePiece);
+
+    // update the view
     InvalidateEditPieceDrawingArea();
 }
 
@@ -202,12 +206,20 @@ bool TableEditPiece::EditPieceDrawingArea_ExposeEvent(GdkEventExpose* event)
 void TableEditPiece::RotateButton_ButtonPressed()
 {
 	m_thePiece.Rotate();
+
+	// notify to whoever is listening to the signal that the piece changed
+    m_signalPieceChanged.emit(m_thePiece);
+    // update the view
 	InvalidateEditPieceDrawingArea();
 }
 
 void TableEditPiece::MirrorButton_ButtonPressed()
 {
 	m_thePiece.Mirror();
+
+    // notify to whoever is listening to the signal that the piece changed
+    m_signalPieceChanged.emit(m_thePiece);
+    // update the view
 	InvalidateEditPieceDrawingArea();
 }
 

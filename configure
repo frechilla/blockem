@@ -2766,7 +2766,7 @@ am__tar='${AMTAR} chof - "$$tardir"'; am__untar='${AMTAR} xf -'
 ac_config_headers="$ac_config_headers config.h"
 
 
-$as_echo "#define SVN_REVISION \"51:52M\"" >>confdefs.h
+$as_echo "#define SVN_REVISION \"51:56M\"" >>confdefs.h
 
 
 # Checks for programs.
@@ -5549,6 +5549,12 @@ if test "${enable_debug_printing+set}" = set; then :
     fi
 fi
 
+
+# if in win32 remove the extra terminal window
+# http://live.gnome.org/GTK%2B/Win32/Apps
+if test "$os_win32" = "yes"; then
+    CXXFLAGS+=" -mms-bitfields -mwindows"
+fi
 
 ac_config_files="$ac_config_files Makefile src/Makefile src/tests/Makefile doc/Makefile"
 

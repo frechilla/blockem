@@ -32,11 +32,6 @@
 #include "gui_drawing_area_show_pieces.h"
 
 
-// default colours to draw the pieces
-static const float DEFAULT_PLAYER_RED   = 0.5;
-static const float DEFAULT_PLAYER_GREEN = 0.5;
-static const float DEFAULT_PLAYER_BLUE  = 0.5;
-
 // minimum size requested. The user won't be able to set the size of the window
 // if it sets the size of this widget to something smaller than this value
 // ican be applied to height or width depending on the way the widget will be used
@@ -101,10 +96,7 @@ static const ePieceType_t pickPlayerPiecesArray
 DrawingAreaShowPieces::DrawingAreaShowPieces(const Player &a_player, eOrientation_t a_orientation):
 	Gtk::DrawingArea(),
     m_thePlayer(a_player),
-    m_orientation(a_orientation),
-    m_red(DEFAULT_PLAYER_RED),
-    m_green(DEFAULT_PLAYER_GREEN),
-    m_blue(DEFAULT_PLAYER_BLUE)
+    m_orientation(a_orientation)
 {
 	// the drawing area will handle the button_press event
     this->add_events(Gdk::BUTTON_PRESS_MASK);
@@ -126,13 +118,6 @@ DrawingAreaShowPieces::DrawingAreaShowPieces(const Player &a_player, eOrientatio
 
 DrawingAreaShowPieces::~DrawingAreaShowPieces()
 {
-}
-
-void DrawingAreaShowPieces::SetPlayerRGB(float a_red, float a_green, float a_blue)
-{
-    m_red   = a_red;
-    m_green = a_green;
-    m_blue  = a_blue;
 }
 
 bool DrawingAreaShowPieces::on_expose_event(GdkEventExpose* event)
@@ -201,10 +186,14 @@ bool DrawingAreaShowPieces::on_expose_event(GdkEventExpose* event)
 	cr->clip();
 
 	// colour of the pieces
+    uint8_t red   = 0;
+    uint8_t green = 0;
+    uint8_t blue  = 0;
+    m_thePlayer.GetColour(red, green, blue);
 	cr->set_source_rgb(
-			m_red,
-			m_green,
-			m_blue);
+	        static_cast<float>(red)  /255,
+            static_cast<float>(green)/255,
+            static_cast<float>(blue) /255);
 
 	int32_t hzIndex = (xc - rectWidth/2) + (littleSquare/2);
 	int32_t vtIndex = (yc - rectHeight/2) + (littleSquare/2);
