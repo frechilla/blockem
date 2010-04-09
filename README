@@ -31,8 +31,8 @@ Building and installing
 
 Blockem has been developed using OS independent C++ and GTKmm (the C++ version
 of GTK+) to build the GUI. It *should* compile in every platform where GTKmm
-has been ported, but it has only been tested in linux so far. You'll need the
-following libraries to be able to compile this package:
+has been ported, but it has only been tested in linux and windows so far. 
+You'll need the following libraries to be able to compile this package:
  * gtkmm-2.4
  * glademm-2.4
  
@@ -55,6 +55,9 @@ $ blockem
 The images should be loaded correctly. If it doesn't happen, do not worry (and
 be happy), everything else will work as expected, but the app will be a bit
 less pretty.
+
+As I said the package has been ported to windows too. To compile it in that 
+platform have a look at the document HOWTO_WINDOWS in the doc/ directory
 
 
 Developers

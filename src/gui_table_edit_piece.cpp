@@ -145,7 +145,7 @@ bool TableEditPiece::EditPieceDrawingArea_ExposeEvent(GdkEventExpose* event)
 
 		int32_t width  = allocation.get_width();
 		int32_t height = allocation.get_height();
-		int32_t squareSize = std::min(width, height);
+		int32_t squareSize = std::min(width - 2, height - 2);
 
 		int32_t littleSquare = squareSize / NSQUARES_EDIT_PIECES_BOARD;
 		squareSize = littleSquare * NSQUARES_EDIT_PIECES_BOARD;

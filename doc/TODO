@@ -3,16 +3,17 @@ basic things that need to be done:
 
  + Options in menu Settings and Preferences should do something. This should 
    be pretty straight-forward
- + Code related to the handling of the progress bar should be improved
  + The latest piece put down by the computer should be noted, for example
    flashing the piece or using another colour
  + Lots of calculation time is being wasted now. The decission tree should be
    calculated and kept in memory, and even updated while the human player is
    thinking (normally the uman player takes longer than the computer to "think"
    the next move)
- + GUI code is improvable. Some work has been done on it, bus there's still
-   a long way to walk
+ + There are some TODOs in the GUI code is improvable. They'll have to be
+   solved little by little
  + It should be possible to generate doxygen. Add it to the makefiles
  + Installer for the windows platform
- + remove extra command line window in windows
- + Improve appearance in windows. 
+ + Improve appearance in windows
+ + There's no need to compile the test app with all the gui libraries and flags
+   Have a look at configure.ac and src/test/Makefile.am to fix it   
+ + Fix the test app
