@@ -1,4 +1,4 @@
-now: Version 0.1.4
+09/04/2010: Version 0.1.4
     - Added stopwatch to measure how long computer and human take to move
     - Computer player doesn't process the next move so hard if it already 
       managed to block completely the human user (it was a bit tedious to wait
