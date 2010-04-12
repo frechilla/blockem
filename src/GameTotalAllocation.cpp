@@ -175,14 +175,10 @@ bool GameTotalAllocation::Solve(const Coordinate &a_startingCoord)
 
             } while (m_player.m_pieces[i].Rotate() > 0);
 
-            if ( (m_player.m_pieces[i].GetType()    == e_4Piece_LittleS) &&
-                 (m_player.m_pieces[i].IsMirrored() == false) )
+            if (m_player.m_pieces[i].IsMirrored() == false)
             {
-                // For this piece the maximum number or rotations is 2
-                // and the piece is not symmetric, the configuration after
-                // the 3rd rotation is the shame shape as the original, but
-                // the coords moved. Reset the piece before mirroring to
-            	// avoid unexpected results
+                // Reset the piece to rotate it the correct amount of times
+                // after mirroring
                 m_player.m_pieces[i].Reset();
             }
 
@@ -308,14 +304,10 @@ bool GameTotalAllocation::AllocateAllPieces(
 
 				} while (m_player.m_pieces[i].Rotate() > 0);
 
-	            if ( (m_player.m_pieces[i].GetType()    == e_4Piece_LittleS) &&
-	                 (m_player.m_pieces[i].IsMirrored() == false) )
+	            if (m_player.m_pieces[i].IsMirrored() == false)
 	            {
-	                // For this piece the maximum number or rotations is 2
-	                // and the piece is not symmetric, the configuration after
-	                // the 3rd rotation is the shame shape as the original, but
-	                // the coords moved. Reset the piece before mirroring to
-	            	// avoid unexpected results
+	                // Reset the piece to rotate it the correct amount of times
+	                // after mirroring
 	                m_player.m_pieces[i].Reset();
 	            }
 

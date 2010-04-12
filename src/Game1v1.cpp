@@ -235,14 +235,10 @@ bool Game1v1::CanPlayerGo(
 
             } while (thisPiece.Rotate() > 0);
 
-            if ( (thisPiece.GetType()    == e_4Piece_LittleS) &&
-                 (thisPiece.IsMirrored() == false) )
+            if (thisPiece.IsMirrored() == false)
             {
-                // For this piece the maximum number or rotations is 2
-                // and the piece is not symmetric, the configuration after
-                // the 3rd rotation is the shame shape as the original, but
-                // the coords moved. Reset the piece before mirroring to
-                // avoid unexpected results
+                // Reset the piece to rotate it the correct amount of times
+                // after mirroring
                 thisPiece.Reset();
             }
 
@@ -471,16 +467,12 @@ int32_t Game1v1::MinMax(
 
                 } while (m_playerMe.m_pieces[i].Rotate() > 0);
 
-	            if ( (m_playerMe.m_pieces[i].GetType()    == e_4Piece_LittleS) &&
-	                 (m_playerMe.m_pieces[i].IsMirrored() == false) )
-	            {
-	                // For this piece the maximum number or rotations is 2
-	                // and the piece is not symmetric, the configuration after
-	                // the 3rd rotation is the shame shape as the original, but
-	                // the coords moved. Reset the piece before mirroring to
-	            	// avoid unexpected results
-	            	m_playerMe.m_pieces[i].Reset();
-	            }
+                if (m_playerMe.m_pieces[i].IsMirrored() == false)
+                {
+                    // Reset the piece to rotate it the correct amount of times
+                    // after mirroring
+                    m_playerMe.m_pieces[i].Reset();
+                }
 
             } while (m_playerMe.m_pieces[i].Mirror());
 
@@ -737,16 +729,12 @@ int32_t Game1v1::MinMaxAlphaBetaCompute(
 
 				} while (a_playerMe.m_pieces[i].Rotate() > 0);
 
-	            if ( (a_playerMe.m_pieces[i].GetType()    == e_4Piece_LittleS) &&
-	                 (a_playerMe.m_pieces[i].IsMirrored() == false) )
-	            {
-	                // For this piece the maximum number or rotations is 2
-	                // and the piece is not symmetric, the configuration after
-	                // the 3rd rotation is the shame shape as the original, but
-	                // the coords moved. Reset the piece before mirroring to
-	            	// avoid unexpected results
-	            	a_playerMe.m_pieces[i].Reset();
-	            }
+	            if (a_playerMe.m_pieces[i].IsMirrored() == false)
+                {
+                    // Reset the piece to rotate it the correct amount of times
+                    // after mirroring
+                    a_playerMe.m_pieces[i].Reset();
+                }
 
 			} while (a_playerMe.m_pieces[i].Mirror());
 
