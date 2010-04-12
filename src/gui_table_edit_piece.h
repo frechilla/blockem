@@ -47,8 +47,11 @@ public:
     /// @brief callback to be called when the edit piece drawing area is redraw on screen
     bool EditPieceDrawingArea_ExposeEvent(GdkEventExpose* event);
 
-    /// @brief callback to be called when the rotate button is pressed
-    void RotateButton_ButtonPressed();
+    /// @brief callback to be called when the rotate right button is pressed
+    void RotateRightButton_ButtonPressed();
+
+    /// @brief callback to be called when the rotate left button is pressed
+    void RotateLeftButton_ButtonPressed();
 
     /// @brief callback to be called when the mirror button is pressed
     void MirrorButton_ButtonPressed();
@@ -92,8 +95,14 @@ private:
     /// @brief the drawing area where the piece is edited
     Gtk::DrawingArea* m_editPieceDrawingArea;
 
-    /// @brief the rotate button to edit the piece
-    Gtk::Button* m_rotateButton;
+    /// @brief rotate label
+    Gtk::Label* m_rotateLabel;
+
+    /// @brief the rotate right button to edit the piece
+    Gtk::Button* m_rotateRightButton;
+
+    /// @brief the rotate left button to edit the piece
+    Gtk::Button* m_rotateLeftButton;
 
     /// @brief the mirros button to edit the piece
     Gtk::Button* m_mirrorButton;

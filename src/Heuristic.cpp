@@ -285,7 +285,9 @@ int32_t Heuristic::CountSquaresCanBeDeployed(
 
             do
             {
-                do
+                int16_t nOrigRotations = a_player.m_pieces[i].GetNOriginalRotations();
+                while( (nOrigRotations > a_player.m_pieces[i].GetNRotationsRight()) &&
+                       (pieceCanBeDeployed == false) )
                 {
                     pieceCanBeDeployed = Rules::HasValidCoordInNucleationPoint(
                                                 a_board,
@@ -297,13 +299,24 @@ int32_t Heuristic::CountSquaresCanBeDeployed(
                         nSquares += a_player.m_pieces[i].GetNSquares();
                     }
 
-                } while ( (pieceCanBeDeployed == false) && (a_player.m_pieces[i].Rotate() > 0) );
+                    a_player.m_pieces[i].RotateRight();
+                }
 
-                if ( (pieceCanBeDeployed == false) &&
+                // reset the amount of rotations done before mirroring
+                a_player.m_pieces[i].ResetNRotationsRight();
+
+                if ( (a_player.m_pieces[i].GetType() == e_4Piece_LittleS) &&
+                     (pieceCanBeDeployed == false) &&
                      (a_player.m_pieces[i].IsMirrored() == false) )
                 {
-                    // Reset the piece to rotate it the correct amount of times
-                    // after mirroring
+                    // For this piece the maximum number or rotations is 2
+                    // and the piece is not symmetric, the configuration after
+                    // the 3rd rotation is the shame shape as the original, but
+                    // the coords moved. Reset the piece before mirroring to
+                    // avoid unexpected results
+                    //
+                    // it also happens with 2piece and 4longPiece, but those pieces
+                    // don't have mirror, so there's no need for this extra check
                     a_player.m_pieces[i].Reset();
                 }
 

@@ -201,11 +201,13 @@ bool Game1v1::CanPlayerGo(
             continue;
         }
 
+        // copy the piece so the original is not modified
         Piece thisPiece(a_player.m_pieces[i].GetType());
 
         do
         {
-            do
+            int16_t nOrigRotations = thisPiece.GetNOriginalRotations();
+            while(nOrigRotations > thisPiece.GetNRotationsRight())
             {
                 bool nkExists;
                 Coordinate thisNkPoint;
@@ -233,12 +235,23 @@ bool Game1v1::CanPlayerGo(
 
                 } // while(nkExists)
 
-            } while (thisPiece.Rotate() > 0);
+                thisPiece.RotateRight();
+            }
 
-            if (thisPiece.IsMirrored() == false)
+            // reset the amount of rotations done before mirroring
+            thisPiece.ResetNRotationsRight();
+
+            if ( (thisPiece.GetType() == e_4Piece_LittleS) &&
+                 (thisPiece.IsMirrored() == false) )
             {
-                // Reset the piece to rotate it the correct amount of times
-                // after mirroring
+                // For this piece the maximum number or rotations is 2
+                // and the piece is not symmetric, the configuration after
+                // the 3rd rotation is the shame shape as the original, but
+                // the coords moved. Reset the piece before mirroring to
+                // avoid unexpected results
+                //
+                // it also happens with 2piece and 4longPiece, but those pieces
+                // don't have mirror, so there's no need for this extra check
                 thisPiece.Reset();
             }
 
@@ -368,7 +381,8 @@ int32_t Game1v1::MinMax(
             m_playerMe.UnsetPiece(static_cast<ePieceType_t>(i));
             do
             {
-                do
+                int16_t nOrigRotations = m_playerMe.m_pieces[i].GetNOriginalRotations();
+                while(nOrigRotations > m_playerMe.m_pieces[i].GetNRotationsRight())
                 {
                     bool nkExists;
                     Coordinate thisNkPoint;
@@ -465,12 +479,23 @@ int32_t Game1v1::MinMax(
 
                     testedCoords.clear();
 
-                } while (m_playerMe.m_pieces[i].Rotate() > 0);
+                    m_playerMe.m_pieces[i].RotateRight();
+                }// while (nOrigRotations > m_playerMe.m_pieces[i].GetNRotationsRight())
 
-                if (m_playerMe.m_pieces[i].IsMirrored() == false)
+                // reset the amount of rotations done before mirroring
+                m_playerMe.m_pieces[i].ResetNRotationsRight();
+
+                if ( (m_playerMe.m_pieces[i].GetType() == e_4Piece_LittleS) &&
+                     (m_playerMe.m_pieces[i].IsMirrored() == false) )
                 {
-                    // Reset the piece to rotate it the correct amount of times
-                    // after mirroring
+                    // For this piece the maximum number or rotations is 2
+                    // and the piece is not symmetric, the configuration after
+                    // the 3rd rotation is the shame shape as the original, but
+                    // the coords moved. Reset the piece before mirroring to
+                    // avoid unexpected results
+                    //
+                    // it also happens with 2piece and 4longPiece, but those pieces
+                    // don't have mirror, so there's no need for this extra check
                     m_playerMe.m_pieces[i].Reset();
                 }
 
@@ -511,8 +536,8 @@ int32_t Game1v1::ComputeFirstPiece(
         // this is the 1st move. The opponent put down a 5-square piece
         // creating more than 5 nk points. We'll be cheeky and copy the move
         out_resultPiece = a_lastOpponentPiece;
-        out_resultPiece.Rotate();
-        out_resultPiece.Rotate();
+        out_resultPiece.RotateRight();
+        out_resultPiece.RotateRight();
 
         out_coord.m_row = a_board.GetNRows()    - a_lastOpponentPieceCoord.m_row - 1;
         out_coord.m_col = a_board.GetNColumns() - a_lastOpponentPieceCoord.m_col - 1;
@@ -597,7 +622,8 @@ int32_t Game1v1::MinMaxAlphaBetaCompute(
 			a_playerMe.UnsetPiece(static_cast<ePieceType_t>(i));
 			do
 			{
-				do
+	            int16_t nOrigRotations = a_playerMe.m_pieces[i].GetNOriginalRotations();
+	            while(nOrigRotations > a_playerMe.m_pieces[i].GetNRotationsRight())
 				{
 					bool nkExists;
 					Coordinate thisNkPoint;
@@ -726,15 +752,26 @@ int32_t Game1v1::MinMaxAlphaBetaCompute(
 				    } // while(nkExists)
 
 					testedCoords.clear();
+					a_playerMe.m_pieces[i].RotateRight();
 
-				} while (a_playerMe.m_pieces[i].Rotate() > 0);
+				} // while(nOrigRotations > a_playerMe.m_pieces[i].GetNRotationsRight())
 
-	            if (a_playerMe.m_pieces[i].IsMirrored() == false)
-                {
-                    // Reset the piece to rotate it the correct amount of times
-                    // after mirroring
-                    a_playerMe.m_pieces[i].Reset();
-                }
+	            // reset the amount of rotations done before mirroring
+				a_playerMe.m_pieces[i].ResetNRotationsRight();
+
+	            if ( (a_playerMe.m_pieces[i].GetType() == e_4Piece_LittleS) &&
+	                 (a_playerMe.m_pieces[i].IsMirrored() == false) )
+	            {
+	                // For this piece the maximum number or rotations is 2
+	                // and the piece is not symmetric, the configuration after
+	                // the 3rd rotation is the shame shape as the original, but
+	                // the coords moved. Reset the piece before mirroring to
+	                // avoid unexpected results
+	                //
+	                // it also happens with 2piece and 4longPiece, but those pieces
+	                // don't have mirror, so there's no need for this extra check
+	                a_playerMe.m_pieces[i].Reset();
+	            }
 
 			} while (a_playerMe.m_pieces[i].Mirror());
 

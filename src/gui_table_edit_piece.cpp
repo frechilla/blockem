@@ -63,11 +63,23 @@ TableEditPiece::TableEditPiece(
 		throw new GUIException(std::string("Edit pieces drawing area retrieval failed"));
 	}
 
-	m_refXml->get_widget(GUI_BUTTON_ROTATE_NAME, m_rotateButton);
-	if (m_rotateButton == NULL)
+    m_refXml->get_widget(GUI_BUTTON_ROTATE_LEFT_NAME, m_rotateLeftButton);
+    if (m_rotateLeftButton == NULL)
+    {
+        throw new GUIException(std::string("rotate left button retrieval failed"));
+    }
+
+	m_refXml->get_widget(GUI_BUTTON_ROTATE_RIGHT_NAME, m_rotateRightButton);
+	if (m_rotateRightButton == NULL)
 	{
-		throw new GUIException(std::string("rotate button retrieval failed"));
+		throw new GUIException(std::string("rotate right button retrieval failed"));
 	}
+
+    m_refXml->get_widget(GUI_LABEL_ROTATE_NAME, m_rotateLabel);
+    if (m_rotateLabel == NULL)
+    {
+        throw new GUIException(std::string("rotate label retrieval failed"));
+    }
 
 	m_refXml->get_widget(GUI_BUTTON_MIRROR_NAME, m_mirrorButton);
 	if (m_mirrorButton == NULL)
@@ -79,14 +91,18 @@ TableEditPiece::TableEditPiece(
 	m_editPieceDrawingArea->signal_expose_event().connect(
 			sigc::mem_fun(*this, &TableEditPiece::EditPieceDrawingArea_ExposeEvent));
 
-	m_rotateButton->signal_clicked().connect(
-			sigc::mem_fun(*this, &TableEditPiece::RotateButton_ButtonPressed));
+	m_rotateRightButton->signal_clicked().connect(
+			sigc::mem_fun(*this, &TableEditPiece::RotateRightButton_ButtonPressed));
+	m_rotateLeftButton->signal_clicked().connect(
+	            sigc::mem_fun(*this, &TableEditPiece::RotateLeftButton_ButtonPressed));
 	m_mirrorButton->signal_clicked().connect(
 			sigc::mem_fun(*this, &TableEditPiece::MirrorButton_ButtonPressed));
 
 	// set the rotate and mirror button to not sensitive, since at the beginning
 	// there's no piece loaded in the edit piece drawing area
-	m_rotateButton->set_sensitive(false);
+	m_rotateRightButton->set_sensitive(false);
+	m_rotateLeftButton->set_sensitive(false);
+	m_rotateLabel->set_sensitive(false); // nicer visual effect
 	m_mirrorButton->set_sensitive(false);
 }
 
@@ -111,14 +127,19 @@ void TableEditPiece::SetPiece(ePieceType_t a_newPiece)
 
 	m_thePiece = Piece(a_newPiece);
 
-    if (m_thePiece.CanRotateOriginally())
+    if (m_thePiece.GetNOriginalRotations() > 1)
     {
-        m_rotateButton->set_sensitive(true);
+        m_rotateRightButton->set_sensitive(true);
+        m_rotateLeftButton->set_sensitive(true);
+        m_rotateLabel->set_sensitive(true);
     }
     else
     {
-        m_rotateButton->set_sensitive(false);
+        m_rotateRightButton->set_sensitive(false);
+        m_rotateLeftButton->set_sensitive(false);
+        m_rotateLabel->set_sensitive(false);
     }
+
     if (m_thePiece.CanMirrorOriginally())
     {
         m_mirrorButton->set_sensitive(true);
@@ -128,7 +149,7 @@ void TableEditPiece::SetPiece(ePieceType_t a_newPiece)
         m_mirrorButton->set_sensitive(false);
     }
 
-    // notify to whoever is listening to the signal that the piece changed
+    // notify to whoever is listening to the signal that the editing piece changed
     m_signalPieceChanged.emit(m_thePiece);
 
     // update the view
@@ -203,14 +224,24 @@ bool TableEditPiece::EditPieceDrawingArea_ExposeEvent(GdkEventExpose* event)
 	return true;
 }
 
-void TableEditPiece::RotateButton_ButtonPressed()
+void TableEditPiece::RotateRightButton_ButtonPressed()
 {
-	m_thePiece.Rotate();
+	m_thePiece.RotateRight();
 
 	// notify to whoever is listening to the signal that the piece changed
     m_signalPieceChanged.emit(m_thePiece);
     // update the view
 	InvalidateEditPieceDrawingArea();
+}
+
+void TableEditPiece::RotateLeftButton_ButtonPressed()
+{
+    m_thePiece.RotateLeft();
+
+    // notify to whoever is listening to the signal that the piece changed
+    m_signalPieceChanged.emit(m_thePiece);
+    // update the view
+    InvalidateEditPieceDrawingArea();
 }
 
 void TableEditPiece::MirrorButton_ButtonPressed()

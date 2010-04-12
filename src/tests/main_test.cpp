@@ -118,10 +118,14 @@ void simpleTest()
     {
         do
         {
-            do
+            int16_t nOrigRotations = me.m_pieces[i].GetNOriginalRotations();
+            while(nOrigRotations > me.m_pieces[i].GetNRotationsRight())
             {
+                me.m_pieces[i].RotateRight();
                 possibleConfigurations++;
-            } while (me.m_pieces[i].Rotate() > 0);
+            }
+            // reset the amount of rotations to right before mirroring the piece
+            me.m_pieces[i].ResetNRotationsRight();
         } while (me.m_pieces[i].Mirror());
     }
 
@@ -132,7 +136,7 @@ void simpleTest()
     me.PrintNucleationPoints(std::cout);
     opponent.PrintNucleationPoints(std::cout);
 
-    opponent.m_pieces[e_5Piece_CuntPiece].Rotate();
+    opponent.m_pieces[e_5Piece_CuntPiece].RotateRight();
     game.PutDownPieceOpponent(opponent.m_pieces[e_5Piece_CuntPiece], Coordinate(7, 6));
 
     game.GetBoard().PrintBoard(std::cout);

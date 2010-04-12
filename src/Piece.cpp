@@ -123,7 +123,7 @@ void Piece::SetPiece(Coordinate a_coords[PIECE_MAX_SQUARES], uint8_t a_nSquares,
     m_squareSideHalfSize = a_squareSideHalfSize;
 
     m_nMirrors = 0;
-    m_nRotations = 0;
+    m_nRotationsRight = 0;
 
     uint8_t i;
     for (i = 0; i < a_nSquares ; i++)
@@ -159,10 +159,10 @@ void Piece::Reset()
     }
 
     m_nMirrors   = 0;
-    m_nRotations = 0;
+    m_nRotationsRight = 0;
 }
 
-int8_t Piece::Rotate()
+void Piece::RotateRight()
 {
 #ifdef DEBUF
     assert(m_initialised);
@@ -170,8 +170,9 @@ int8_t Piece::Rotate()
 
     if (m_origRotations <= 1)
     {
-    	// the piece can't be rotated. Do nothing and return there is no rotations left
-    	return 0;
+    	// the piece can't be rotated. Do nothing and return
+        m_nRotationsRight++;
+    	return;
     }
 
     for (uint8_t i = 0; i < m_nSquares; i++)
@@ -207,14 +208,58 @@ int8_t Piece::Rotate()
         }
     }
 
-    m_nRotations++;
-    if (m_origRotations == m_nRotations)
+    m_nRotationsRight++;
+    return;
+}
+
+void Piece::RotateLeft()
+{
+#ifdef DEBUF
+    assert(m_initialised);
+#endif
+
+    if (m_origRotations <= 1)
     {
-        m_nRotations = 0;
-        return 0;
+        // the piece can't be rotated. Do nothing and return
+        m_nRotationsRight--;
+        return;
     }
 
-    return (m_origRotations - m_nRotations);
+    for (uint8_t i = 0; i < m_nSquares; i++)
+    {
+        int8_t aux;
+        if ((m_coords[i].m_row >= 0) && (m_coords[i].m_col >= 0))
+        {
+            // X will be negative. Y positive
+            aux = m_coords[i].m_row;
+            m_coords[i].m_row = -m_coords[i].m_col;
+            m_coords[i].m_col = aux;
+        }
+        else if ((m_coords[i].m_row >= 0) && (m_coords[i].m_col < 0))
+        {
+            // both will be positive
+            aux = m_coords[i].m_row;
+            m_coords[i].m_row = -m_coords[i].m_col;
+            m_coords[i].m_col = aux;
+        }
+        else if ((m_coords[i].m_row < 0) && (m_coords[i].m_col < 0))
+        {
+            // X will be positive. Y negative
+            aux = m_coords[i].m_row;
+            m_coords[i].m_row = -m_coords[i].m_col;
+            m_coords[i].m_col = aux;
+        }
+        else // ((m_coords[i].m_row < 0) && (m_coords[i].m_col >= 0))
+        {
+            // both will be negative
+            aux = m_coords[i].m_row;
+            m_coords[i].m_row = -m_coords[i].m_col;
+            m_coords[i].m_col = aux;
+        }
+    }
+
+    m_nRotationsRight--;
+    return;
 }
 
 bool Piece::Mirror()

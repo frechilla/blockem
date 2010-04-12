@@ -267,21 +267,9 @@ You should have received a copy of the GNU General Public License along with blo
     <property name="width_request">180</property>
     <property name="visible">True</property>
     <property name="n_rows">2</property>
-    <property name="n_columns">2</property>
+    <property name="n_columns">4</property>
     <property name="column_spacing">2</property>
     <property name="row_spacing">2</property>
-    <child>
-      <widget class="GtkButton" id="button_rotate">
-        <property name="label" translatable="yes">Rotate -&gt;</property>
-        <property name="visible">True</property>
-        <property name="can_focus">True</property>
-        <property name="receives_default">True</property>
-      </widget>
-      <packing>
-        <property name="x_options"></property>
-        <property name="y_options"></property>
-      </packing>
-    </child>
     <child>
       <widget class="GtkDrawingArea" id="drawingarea_editing_piece">
         <property name="width_request">115</property>
@@ -289,6 +277,7 @@ You should have received a copy of the GNU General Public License along with blo
         <property name="visible">True</property>
       </widget>
       <packing>
+        <property name="right_attach">3</property>
         <property name="top_attach">1</property>
         <property name="bottom_attach">2</property>
       </packing>
@@ -307,8 +296,8 @@ You should have received a copy of the GNU General Public License along with blo
         <property name="receives_default">True</property>
       </widget>
       <packing>
-        <property name="left_attach">1</property>
-        <property name="right_attach">2</property>
+        <property name="left_attach">3</property>
+        <property name="right_attach">4</property>
         <property name="top_attach">1</property>
         <property name="bottom_attach">2</property>
         <property name="x_options"></property>
@@ -316,10 +305,45 @@ You should have received a copy of the GNU General Public License along with blo
       </packing>
     </child>
     <child>
+      <widget class="GtkButton" id="button_rotate_left">
+        <property name="label" translatable="yes"> &lt; </property>
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="receives_default">True</property>
+      </widget>
+      <packing>
+        <property name="x_options"></property>
+        <property name="y_options"></property>
+      </packing>
+    </child>
+    <child>
+      <widget class="GtkButton" id="button_rotate_right">
+        <property name="label" translatable="yes"> &gt; </property>
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="receives_default">True</property>
+      </widget>
+      <packing>
+        <property name="left_attach">2</property>
+        <property name="right_attach">3</property>
+        <property name="x_options"></property>
+        <property name="y_options"></property>
+      </packing>
+    </child>
+    <child>
       <placeholder/>
     </child>
-  </widget>
-  <widget class="GtkDrawingArea" id="drawingarea_board">
-    <property name="visible">True</property>
+    <child>
+      <widget class="GtkLabel" id="label_rotate">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">Rotate</property>
+      </widget>
+      <packing>
+        <property name="left_attach">1</property>
+        <property name="right_attach">2</property>
+        <property name="x_options"></property>
+        <property name="y_options"></property>
+      </packing>
+    </child>
   </widget>
 </glade-interface>

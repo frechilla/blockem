@@ -90,8 +90,11 @@ public:
     void Reset();
 
     /// rotates this piece 90 degrees to the right. It will save the result in the current object
-    /// @return the number of rotations left for the piece to come back to the original position
-    int8_t Rotate();
+    /// @return times the piece has been rotated to the right
+    void RotateRight();
+
+    /// rotates this piece 90 degrees tot he left. It will save the result in the current object
+    void RotateLeft();
 
     /// calculates the mirror of the current piece and save the result in this same object
     /// makes the mirror the image in the Y axis
@@ -99,14 +102,13 @@ public:
     ///         false if the actual configuration is the same as the original
     bool Mirror();
 
-    /// @returns true if the piece can originally been rotated
-    /// that is, if the original piece can rotate
-    inline bool CanRotateOriginally() const
+    /// @returns the number of possible different rotations the piece has originally
+    inline int8_t GetNOriginalRotations() const
     {
 #ifdef DEBUF
         assert(m_initialised);
 #endif
-        return (m_origRotations > 1);
+        return m_origRotations;
     }
 
     /// @returns true if the piece can originally been mirrored
@@ -125,6 +127,18 @@ public:
         assert(m_initialised);
 #endif
         return ( m_origMirror && (m_nMirrors & 0x01) );
+    }
+
+    /// @return times piece has been rotated to the right. If the piece is rotated to the left this
+    ///         property is decremented
+    inline int16_t GetNRotationsRight() const
+    {
+        return m_nRotationsRight;
+    }
+
+    inline void ResetNRotationsRight()
+    {
+        m_nRotationsRight = 0;
     }
 
     /// returns the type of piece
@@ -160,10 +174,10 @@ private:
     bool m_origMirror;
     /// number of possible different rotations
     int8_t  m_origRotations;
-    /// save the number of times the function Mirror was called
+    /// save the number of times the function Mirror has been called
     int8_t m_nMirrors;
-    /// save the number of times the function rotate was called
-    int8_t m_nRotations;
+    /// save the number of times the piece has been rotated to he right
+    int16_t m_nRotationsRight;
     ///  half of the size of the side of the square where the piece fits (see comment for SetPiece)
     uint8_t m_squareSideHalfSize;
 
