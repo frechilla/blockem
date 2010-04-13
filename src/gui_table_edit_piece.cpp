@@ -44,6 +44,8 @@ static const int32_t NSQUARES_EDIT_PIECES_BOARD = 5;
 
 TableEditPiece::TableEditPiece(
 		Glib::RefPtr<Gnome::Glade::Xml> a_refXml) throw (GUIException):
+	        m_arrowLeft(Gtk::ARROW_LEFT, Gtk::SHADOW_OUT),
+	        m_arrowRight(Gtk::ARROW_RIGHT, Gtk::SHADOW_OUT),
 			m_refXml(a_refXml),
 			m_thePiece(e_noPiece),
 		    m_red(DEFAULT_PLAYER_RED),
@@ -81,11 +83,24 @@ TableEditPiece::TableEditPiece(
         throw new GUIException(std::string("rotate label retrieval failed"));
     }
 
+    m_refXml->get_widget(GUI_LABEL_MIRROR_NAME, m_mirrorLabel);
+    if (m_mirrorLabel == NULL)
+    {
+        throw new GUIException(std::string("mirror label retrieval failed"));
+    }
+
 	m_refXml->get_widget(GUI_BUTTON_MIRROR_NAME, m_mirrorButton);
 	if (m_mirrorButton == NULL)
 	{
 		throw new GUIException(std::string("mirror button retrieval failed"));
 	}
+
+	// insert the arrows into the rotate buttons
+	m_rotateLeftButton->add(m_arrowLeft);
+	m_arrowLeft.set_visible();
+
+	m_rotateRightButton->add(m_arrowRight);
+	m_arrowRight.set_visible();
 
 	// connect the signals to the handlers
 	m_editPieceDrawingArea->signal_expose_event().connect(
@@ -103,6 +118,7 @@ TableEditPiece::TableEditPiece(
 	m_rotateRightButton->set_sensitive(false);
 	m_rotateLeftButton->set_sensitive(false);
 	m_rotateLabel->set_sensitive(false); // nicer visual effect
+	m_mirrorLabel->set_sensitive(false); // nicer visual effect
 	m_mirrorButton->set_sensitive(false);
 }
 
@@ -143,10 +159,12 @@ void TableEditPiece::SetPiece(ePieceType_t a_newPiece)
     if (m_thePiece.CanMirrorOriginally())
     {
         m_mirrorButton->set_sensitive(true);
+        m_mirrorLabel->set_sensitive(true);
     }
     else
     {
         m_mirrorButton->set_sensitive(false);
+        m_mirrorLabel->set_sensitive(false);
     }
 
     // notify to whoever is listening to the signal that the editing piece changed
@@ -166,7 +184,7 @@ bool TableEditPiece::EditPieceDrawingArea_ExposeEvent(GdkEventExpose* event)
 
 		int32_t width  = allocation.get_width();
 		int32_t height = allocation.get_height();
-		int32_t squareSize = std::min(width - 2, height - 2);
+		int32_t squareSize = std::min(width - 3, height - 3);
 
 		int32_t littleSquare = squareSize / NSQUARES_EDIT_PIECES_BOARD;
 		squareSize = littleSquare * NSQUARES_EDIT_PIECES_BOARD;
@@ -193,7 +211,7 @@ bool TableEditPiece::EditPieceDrawingArea_ExposeEvent(GdkEventExpose* event)
 
         cr->arc(xc + 1,
                 yc + 1,
-                (squareSize/2) + 2,
+                (squareSize/2) + 1,
                 0.0,
                 2 * M_PI);
 

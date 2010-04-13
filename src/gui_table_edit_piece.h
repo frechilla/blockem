@@ -98,6 +98,9 @@ private:
     /// @brief rotate label
     Gtk::Label* m_rotateLabel;
 
+    /// @brief mirror label
+    Gtk::Label* m_mirrorLabel;
+
     /// @brief the rotate right button to edit the piece
     Gtk::Button* m_rotateRightButton;
 
@@ -106,6 +109,12 @@ private:
 
     /// @brief the mirros button to edit the piece
     Gtk::Button* m_mirrorButton;
+
+    /// @brief an arrow pointing to the left
+    Gtk::Arrow m_arrowLeft;
+
+    /// @brief an arrow pointing to the right
+    Gtk::Arrow m_arrowRight;
 
     /// @brief used to retrieve the objects from the Glade design
     Glib::RefPtr<Gnome::Glade::Xml> m_refXml;
