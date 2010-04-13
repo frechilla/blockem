@@ -35,6 +35,7 @@
 #include "assert.h"
 #include "Coordinate.h"
 
+/// maximum number of squares a piece can have
 const uint8_t PIECE_MAX_SQUARES = 5;
 
 /// @brief available blokus pieces

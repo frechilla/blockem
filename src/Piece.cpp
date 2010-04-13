@@ -30,6 +30,9 @@
 #include "Piece.h"
 #include "stdio.h"
 
+// a piece has to fit in a square (2*2) + 1
+static const uint8_t PIECE_MAX_SQUARESIDEHALFSIZE = 2;
+
 const std::string Piece::PieceDescription[e_numberOfPieces] =
 {
 	"1Piece_BabyPiece",
@@ -112,9 +115,9 @@ Piece::~Piece()
 
 void Piece::SetPiece(Coordinate a_coords[PIECE_MAX_SQUARES], uint8_t a_nSquares, bool a_mirror, int8_t a_nRotations, uint8_t a_squareSideHalfSize)
 {
-#ifdef DEBUF
-    assert(nSquares <= PIECE_MAX_SQUARES);
-    assert(squareSideHalfSize <= PIECE_MAX_SQUARESIDEHALFSIZE);
+#ifdef DEBUG
+    assert(a_nSquares <= PIECE_MAX_SQUARES);
+    assert(a_squareSideHalfSize <= PIECE_MAX_SQUARESIDEHALFSIZE);
 #endif
 
     m_nSquares           = a_nSquares;
@@ -142,7 +145,7 @@ void Piece::SetPiece(Coordinate a_coords[PIECE_MAX_SQUARES], uint8_t a_nSquares,
 
 void Piece::Reset()
 {
-#ifdef DEBUF
+#ifdef DEBUG
     assert(m_initialised);
 #endif
 
@@ -164,7 +167,7 @@ void Piece::Reset()
 
 void Piece::RotateRight()
 {
-#ifdef DEBUF
+#ifdef DEBUG
     assert(m_initialised);
 #endif
 
@@ -214,7 +217,7 @@ void Piece::RotateRight()
 
 void Piece::RotateLeft()
 {
-#ifdef DEBUF
+#ifdef DEBUG
     assert(m_initialised);
 #endif
 
@@ -264,13 +267,13 @@ void Piece::RotateLeft()
 
 bool Piece::Mirror()
 {
-#ifdef DEBUF
+#ifdef DEBUG
     assert(m_initialised);
 #endif
 
     if (!m_origMirror)
     {
-    	// if it can't be mirrored do nothing
+    	// if it can't be mirrored. Do nothing
     	return false;
     }
 
@@ -551,8 +554,8 @@ void Piece::LoadPiece_5BoringPiece(Piece &thisPiece)
 	coords[0].Set(0, 0);
 	coords[1].Set(0, 2);
 	coords[2].Set(-1, 1);
-	coords[3].Set(0, 1);
-	coords[4].Set(0, -1);
+	coords[3].Set(0, -1);
+	coords[4].Set(0, 1);
 
     thisPiece.SetPiece(coords, 5, true,  4, 2);
 }
