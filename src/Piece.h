@@ -104,7 +104,7 @@ public:
     bool Mirror();
 
     /// @returns the number of possible different rotations the piece has originally
-    inline int8_t GetNOriginalRotations() const
+    inline int8_t GetNRotations() const
     {
 #ifdef DEBUF
         assert(m_initialised);
@@ -112,8 +112,8 @@ public:
         return m_origRotations;
     }
 
-    /// @returns true if the piece can originally been mirrored
-    inline bool CanMirrorOriginally() const
+    /// @returns true if the piece can be mirrored
+    inline bool CanMirror() const
     {
 #ifdef DEBUF
         assert(m_initialised);
@@ -128,18 +128,6 @@ public:
         assert(m_initialised);
 #endif
         return ( m_origMirror && (m_nMirrors & 0x01) );
-    }
-
-    /// @return times piece has been rotated to the right. If the piece is rotated to the left this
-    ///         property is decremented
-    inline int16_t GetNRotationsRight() const
-    {
-        return m_nRotationsRight;
-    }
-
-    inline void ResetNRotationsRight()
-    {
-        m_nRotationsRight = 0;
     }
 
     /// returns the type of piece
@@ -177,8 +165,6 @@ private:
     int8_t  m_origRotations;
     /// save the number of times the function Mirror has been called
     int8_t m_nMirrors;
-    /// save the number of times the piece has been rotated to he right
-    int16_t m_nRotationsRight;
     ///  half of the size of the side of the square where the piece fits (see comment for SetPiece)
     uint8_t m_squareSideHalfSize;
 

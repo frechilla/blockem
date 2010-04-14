@@ -145,8 +145,8 @@ bool GameTotalAllocation::Solve(const Coordinate &a_startingCoord)
 
         do
         {
-            int16_t nOrigRotations = m_player.m_pieces[i].GetNOriginalRotations();
-            while(nOrigRotations > m_player.m_pieces[i].GetNRotationsRight())
+            int8_t nOrigRotations = 0;
+            while(nOrigRotations < m_player.m_pieces[i].GetNRotations())
             {
             	int32_t nValidCoords = Rules::CalculateValidCoordsInStartingPoint(
                 		                          m_board,
@@ -174,11 +174,12 @@ bool GameTotalAllocation::Solve(const Coordinate &a_startingCoord)
                     RemovePiece(m_player.m_pieces[i], validCoords[k]);
                 }
 
+                nOrigRotations++;
                 m_player.m_pieces[i].RotateRight();
             }
 
             // reset the amount of rotations done before mirroring
-            m_player.m_pieces[i].ResetNRotationsRight();
+            nOrigRotations = 0;
 
             if ( (m_player.m_pieces[i].GetType() == e_4Piece_LittleS) &&
                  (m_player.m_pieces[i].IsMirrored() == false) )
@@ -236,8 +237,8 @@ bool GameTotalAllocation::AllocateAllPieces(
 			m_player.UnsetPiece(static_cast<ePieceType_t>(i));
 			do
 			{
-	            int16_t nOrigRotations = m_player.m_pieces[i].GetNOriginalRotations();
-	            while(nOrigRotations > m_player.m_pieces[i].GetNRotationsRight())
+	            int8_t nOrigRotations = 0;
+	            while(nOrigRotations < m_player.m_pieces[i].GetNRotations())
 				{
 				    STLCoordinateSet_t::iterator nkIterator = nkPointSet.begin();
 				    while(nkIterator != nkPointSet.end())
@@ -314,12 +315,12 @@ bool GameTotalAllocation::AllocateAllPieces(
 				    }
 
 					testedCoords.clear();
-
+					nOrigRotations++;
 					m_player.m_pieces[i].RotateRight();
 	            }
 
 	            // reset the amount of rotations done before mirroring
-	            m_player.m_pieces[i].ResetNRotationsRight();
+	            nOrigRotations = 0;
 
 	            if ( (m_player.m_pieces[i].GetType() == e_4Piece_LittleS) &&
 	                 (m_player.m_pieces[i].IsMirrored() == false) )

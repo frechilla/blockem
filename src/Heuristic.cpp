@@ -285,8 +285,8 @@ int32_t Heuristic::CountSquaresCanBeDeployed(
 
             do
             {
-                int16_t nOrigRotations = a_player.m_pieces[i].GetNOriginalRotations();
-                while( (nOrigRotations > a_player.m_pieces[i].GetNRotationsRight()) &&
+                int8_t nOrigRotations = 0;
+                while( (nOrigRotations < a_player.m_pieces[i].GetNRotations()) &&
                        (pieceCanBeDeployed == false) )
                 {
                     pieceCanBeDeployed = Rules::HasValidCoordInNucleationPoint(
@@ -299,11 +299,12 @@ int32_t Heuristic::CountSquaresCanBeDeployed(
                         nSquares += a_player.m_pieces[i].GetNSquares();
                     }
 
+                    nOrigRotations++;
                     a_player.m_pieces[i].RotateRight();
                 }
 
                 // reset the amount of rotations done before mirroring
-                a_player.m_pieces[i].ResetNRotationsRight();
+                nOrigRotations = 0;
 
                 if ( (a_player.m_pieces[i].GetType() == e_4Piece_LittleS) &&
                      (pieceCanBeDeployed == false) &&

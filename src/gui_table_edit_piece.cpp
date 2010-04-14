@@ -143,7 +143,7 @@ void TableEditPiece::SetPiece(ePieceType_t a_newPiece)
 
 	m_thePiece = Piece(a_newPiece);
 
-    if (m_thePiece.GetNOriginalRotations() > 1)
+    if (m_thePiece.GetNRotations() > 1)
     {
         m_rotateRightButton->set_sensitive(true);
         m_rotateLeftButton->set_sensitive(true);
@@ -156,7 +156,7 @@ void TableEditPiece::SetPiece(ePieceType_t a_newPiece)
         m_rotateLabel->set_sensitive(false);
     }
 
-    if (m_thePiece.CanMirrorOriginally())
+    if (m_thePiece.CanMirror())
     {
         m_mirrorButton->set_sensitive(true);
         m_mirrorLabel->set_sensitive(true);

@@ -126,7 +126,6 @@ void Piece::SetPiece(Coordinate a_coords[PIECE_MAX_SQUARES], uint8_t a_nSquares,
     m_squareSideHalfSize = a_squareSideHalfSize;
 
     m_nMirrors = 0;
-    m_nRotationsRight = 0;
 
     uint8_t i;
     for (i = 0; i < a_nSquares ; i++)
@@ -162,7 +161,6 @@ void Piece::Reset()
     }
 
     m_nMirrors   = 0;
-    m_nRotationsRight = 0;
 }
 
 void Piece::RotateRight()
@@ -174,7 +172,6 @@ void Piece::RotateRight()
     if (m_origRotations <= 1)
     {
     	// the piece can't be rotated. Do nothing and return
-        m_nRotationsRight++;
     	return;
     }
 
@@ -211,7 +208,6 @@ void Piece::RotateRight()
         }
     }
 
-    m_nRotationsRight++;
     return;
 }
 
@@ -224,7 +220,6 @@ void Piece::RotateLeft()
     if (m_origRotations <= 1)
     {
         // the piece can't be rotated. Do nothing and return
-        m_nRotationsRight--;
         return;
     }
 
@@ -261,7 +256,6 @@ void Piece::RotateLeft()
         }
     }
 
-    m_nRotationsRight--;
     return;
 }
 

@@ -206,8 +206,8 @@ bool Game1v1::CanPlayerGo(
 
         do
         {
-            int16_t nOrigRotations = thisPiece.GetNOriginalRotations();
-            while(nOrigRotations > thisPiece.GetNRotationsRight())
+            int8_t nRotations = 0;
+            while(nRotations < thisPiece.GetNRotations())
             {
                 bool nkExists;
                 Coordinate thisNkPoint;
@@ -235,11 +235,12 @@ bool Game1v1::CanPlayerGo(
 
                 } // while(nkExists)
 
+                nRotations++;
                 thisPiece.RotateRight();
             }
 
             // reset the amount of rotations done before mirroring
-            thisPiece.ResetNRotationsRight();
+            nRotations = 0;
 
             if ( (thisPiece.GetType() == e_4Piece_LittleS) &&
                  (thisPiece.IsMirrored() == false) )
@@ -381,8 +382,8 @@ int32_t Game1v1::MinMax(
             m_playerMe.UnsetPiece(static_cast<ePieceType_t>(i));
             do
             {
-                int16_t nOrigRotations = m_playerMe.m_pieces[i].GetNOriginalRotations();
-                while(nOrigRotations > m_playerMe.m_pieces[i].GetNRotationsRight())
+                int8_t nRotations = 0;
+                while(nRotations < m_playerMe.m_pieces[i].GetNRotations())
                 {
                     bool nkExists;
                     Coordinate thisNkPoint;
@@ -479,11 +480,13 @@ int32_t Game1v1::MinMax(
 
                     testedCoords.clear();
 
+                    nRotations++;
                     m_playerMe.m_pieces[i].RotateRight();
+
                 }// while (nOrigRotations > m_playerMe.m_pieces[i].GetNRotationsRight())
 
                 // reset the amount of rotations done before mirroring
-                m_playerMe.m_pieces[i].ResetNRotationsRight();
+                nRotations = 0;
 
                 if ( (m_playerMe.m_pieces[i].GetType() == e_4Piece_LittleS) &&
                      (m_playerMe.m_pieces[i].IsMirrored() == false) )
@@ -622,8 +625,8 @@ int32_t Game1v1::MinMaxAlphaBetaCompute(
 			a_playerMe.UnsetPiece(static_cast<ePieceType_t>(i));
 			do
 			{
-	            int16_t nOrigRotations = a_playerMe.m_pieces[i].GetNOriginalRotations();
-	            while(nOrigRotations > a_playerMe.m_pieces[i].GetNRotationsRight())
+                int8_t nRotations = 0;
+                while(nRotations < a_playerMe.m_pieces[i].GetNRotations())
 				{
 					bool nkExists;
 					Coordinate thisNkPoint;
@@ -752,12 +755,13 @@ int32_t Game1v1::MinMaxAlphaBetaCompute(
 				    } // while(nkExists)
 
 					testedCoords.clear();
+					nRotations++;
 					a_playerMe.m_pieces[i].RotateRight();
 
 				} // while(nOrigRotations > a_playerMe.m_pieces[i].GetNRotationsRight())
 
 	            // reset the amount of rotations done before mirroring
-				a_playerMe.m_pieces[i].ResetNRotationsRight();
+                nRotations = 0;
 
 	            if ( (a_playerMe.m_pieces[i].GetType() == e_4Piece_LittleS) &&
 	                 (a_playerMe.m_pieces[i].IsMirrored() == false) )

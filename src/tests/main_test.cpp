@@ -36,14 +36,6 @@ void simpleTest();
 
 int main(int argc, char** argv)
 {
-    // simple test with a well-known configuration
-    std::cout << "simple test with a well-known configuration... ";
-    std::cout.flush();
-
-    simpleTest();
-
-    std::cout << "  [Passed]" << std::endl << std::endl;
-
     // Game1v1 test
     std::cout << "Game1v1 test started... ";
     std::cout.flush();
@@ -107,45 +99,3 @@ int main(int argc, char** argv)
     return 0;
 }
 
-void simpleTest()
-{
-    Game1v1 game;
-    Player me(std::string("me"), 'X', game.GetBoard().GetNRows(), game.GetBoard().GetNColumns());
-    Player opponent(std::string("you"), 'O', game.GetBoard().GetNRows(), game.GetBoard().GetNColumns());
-
-    int32_t possibleConfigurations = 0;
-    for (int32_t i = e_minimumPieceIndex; i < e_numberOfPieces ; i++)
-    {
-        do
-        {
-            int16_t nOrigRotations = me.m_pieces[i].GetNOriginalRotations();
-            while(nOrigRotations > me.m_pieces[i].GetNRotationsRight())
-            {
-                me.m_pieces[i].RotateRight();
-                possibleConfigurations++;
-            }
-            // reset the amount of rotations to right before mirroring the piece
-            me.m_pieces[i].ResetNRotationsRight();
-        } while (me.m_pieces[i].Mirror());
-    }
-
-    assert(possibleConfigurations == 91);
-
-#if 0
-    // this test needs a human being looking at the screen to check if it went right
-    me.PrintNucleationPoints(std::cout);
-    opponent.PrintNucleationPoints(std::cout);
-
-    opponent.m_pieces[e_5Piece_CuntPiece].RotateRight();
-    game.PutDownPieceOpponent(opponent.m_pieces[e_5Piece_CuntPiece], Coordinate(7, 6));
-
-    game.GetBoard().PrintBoard(std::cout);
-    me.PrintNucleationPoints(std::cout);
-    opponent.PrintNucleationPoints(std::cout);
-
-    game.RemovePieceOpponent(opponent.m_pieces[e_5Piece_CuntPiece], Coordinate(7, 6));
-    game.GetBoard().PrintBoard(std::cout);
-    me.PrintNucleationPoints(std::cout);
-    opponent.PrintNucleationPoints(std::cout);
-#endif
-}
