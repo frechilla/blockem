@@ -265,19 +265,18 @@ bool Piece::MirrorYAxis()
     assert(m_initialised);
 #endif
 
+    for (uint8_t i = 0; i < m_nSquares; i++)
+    {
+        m_coords[i].m_col = -m_coords[i].m_col;
+    }
+
     if (!m_origMirror)
     {
-    	// if it can't be mirrored. Do nothing
+    	// if it can't be mirrored. Don't increment m_nMirrors
     	return false;
     }
 
-	for (uint8_t i = 0; i < m_nSquares; i++)
-	{
-		m_coords[i].m_col = -m_coords[i].m_col;
-	}
-
 	m_nMirrors++;
-
     return IsMirrored();
 }
 
@@ -287,19 +286,18 @@ bool Piece::MirrorXAxis()
     assert(m_initialised);
 #endif
 
-    if (!m_origMirror)
-    {
-        // if it can't be mirrored. Do nothing
-        return false;
-    }
-
     for (uint8_t i = 0; i < m_nSquares; i++)
     {
         m_coords[i].m_row = -m_coords[i].m_row;
     }
 
-    m_nMirrors++;
+    if (!m_origMirror)
+    {
+        // if it can't be mirrored. Don't increment m_nMirrors
+        return false;
+    }
 
+    m_nMirrors++;
     return IsMirrored();
 }
 

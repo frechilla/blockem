@@ -152,6 +152,26 @@ void TableEditPiece::SetPiece(ePieceType_t a_newPiece)
 
 	m_thePiece = Piece(a_newPiece);
 
+	if (m_thePiece.GetType() == e_noPiece)
+	{
+        m_rotateLabel->set_sensitive(false); // nicer visual effect
+        m_mirrorLabel->set_sensitive(false); // nicer visual effect
+        m_rotateRightButton->set_sensitive(false);
+        m_rotateLeftButton->set_sensitive(false);
+        m_mirrorButtonYAxis->set_sensitive(false);
+        m_mirrorButtonXAxis->set_sensitive(false);
+	}
+	else
+	{
+        m_rotateLabel->set_sensitive(true); // nicer visual effect
+        m_mirrorLabel->set_sensitive(true); // nicer visual effect
+        m_rotateRightButton->set_sensitive(true);
+        m_rotateLeftButton->set_sensitive(true);
+        m_mirrorButtonYAxis->set_sensitive(true);
+        m_mirrorButtonXAxis->set_sensitive(true);
+	}
+
+/*
     if (m_thePiece.GetNRotations() > 1)
     {
         m_rotateRightButton->set_sensitive(true);
@@ -177,6 +197,7 @@ void TableEditPiece::SetPiece(ePieceType_t a_newPiece)
         m_mirrorButtonXAxis->set_sensitive(false);
         m_mirrorLabel->set_sensitive(false);
     }
+    */
 
     // notify to whoever is listening to the signal that the editing piece changed
     m_signalPieceChanged.emit(m_thePiece);
