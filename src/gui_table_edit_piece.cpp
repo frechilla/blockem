@@ -89,11 +89,17 @@ TableEditPiece::TableEditPiece(
         throw new GUIException(std::string("mirror label retrieval failed"));
     }
 
-	m_refXml->get_widget(GUI_BUTTON_MIRROR_NAME, m_mirrorButton);
-	if (m_mirrorButton == NULL)
+	m_refXml->get_widget(GUI_BUTTON_MIRROR_YAXIS_NAME, m_mirrorButtonYAxis);
+	if (m_mirrorButtonYAxis == NULL)
 	{
-		throw new GUIException(std::string("mirror button retrieval failed"));
+		throw new GUIException(std::string("mirror YAxis button retrieval failed"));
 	}
+
+    m_refXml->get_widget(GUI_BUTTON_MIRROR_XAXIS_NAME, m_mirrorButtonXAxis);
+    if (m_mirrorButtonXAxis == NULL)
+    {
+        throw new GUIException(std::string("mirror XAxis button retrieval failed"));
+    }
 
 	// insert the arrows into the rotate buttons
 	m_rotateLeftButton->add(m_arrowLeft);
@@ -110,8 +116,10 @@ TableEditPiece::TableEditPiece(
 			sigc::mem_fun(*this, &TableEditPiece::RotateRightButton_ButtonPressed));
 	m_rotateLeftButton->signal_clicked().connect(
 	            sigc::mem_fun(*this, &TableEditPiece::RotateLeftButton_ButtonPressed));
-	m_mirrorButton->signal_clicked().connect(
-			sigc::mem_fun(*this, &TableEditPiece::MirrorButton_ButtonPressed));
+	m_mirrorButtonYAxis->signal_clicked().connect(
+			sigc::mem_fun(*this, &TableEditPiece::MirrorYAxisButton_ButtonPressed));
+	m_mirrorButtonXAxis->signal_clicked().connect(
+            sigc::mem_fun(*this, &TableEditPiece::MirrorXAxisButton_ButtonPressed));
 
 	// set the rotate and mirror button to not sensitive, since at the beginning
 	// there's no piece loaded in the edit piece drawing area
@@ -119,7 +127,8 @@ TableEditPiece::TableEditPiece(
 	m_rotateLeftButton->set_sensitive(false);
 	m_rotateLabel->set_sensitive(false); // nicer visual effect
 	m_mirrorLabel->set_sensitive(false); // nicer visual effect
-	m_mirrorButton->set_sensitive(false);
+	m_mirrorButtonYAxis->set_sensitive(false);
+	m_mirrorButtonXAxis->set_sensitive(false);
 }
 
 TableEditPiece::~TableEditPiece()
@@ -158,12 +167,14 @@ void TableEditPiece::SetPiece(ePieceType_t a_newPiece)
 
     if (m_thePiece.CanMirror())
     {
-        m_mirrorButton->set_sensitive(true);
+        m_mirrorButtonYAxis->set_sensitive(true);
+        m_mirrorButtonXAxis->set_sensitive(true);
         m_mirrorLabel->set_sensitive(true);
     }
     else
     {
-        m_mirrorButton->set_sensitive(false);
+        m_mirrorButtonYAxis->set_sensitive(false);
+        m_mirrorButtonXAxis->set_sensitive(false);
         m_mirrorLabel->set_sensitive(false);
     }
 
@@ -262,14 +273,24 @@ void TableEditPiece::RotateLeftButton_ButtonPressed()
     InvalidateEditPieceDrawingArea();
 }
 
-void TableEditPiece::MirrorButton_ButtonPressed()
+void TableEditPiece::MirrorYAxisButton_ButtonPressed()
 {
-	m_thePiece.Mirror();
+	m_thePiece.MirrorYAxis();
 
     // notify to whoever is listening to the signal that the piece changed
     m_signalPieceChanged.emit(m_thePiece);
     // update the view
 	InvalidateEditPieceDrawingArea();
+}
+
+void TableEditPiece::MirrorXAxisButton_ButtonPressed()
+{
+    m_thePiece.MirrorXAxis();
+
+    // notify to whoever is listening to the signal that the piece changed
+    m_signalPieceChanged.emit(m_thePiece);
+    // update the view
+    InvalidateEditPieceDrawingArea();
 }
 
 bool TableEditPiece::InvalidateEditPieceDrawingArea()

@@ -50,7 +50,7 @@ PROGRAMS = $(noinst_PROGRAMS)
 am_blockemtest_OBJECTS = main_test.$(OBJEXT) Game1v1Test.$(OBJEXT)
 blockemtest_OBJECTS = $(am_blockemtest_OBJECTS)
 blockemtest_DEPENDENCIES = ../Board.o ../Game1v1.o \
-	../GameTotalAllocation.o ../Heuristic.o ../Piece.o ../Player.o \
+	../GameTotalAllocation.o ../heuristic.o ../Piece.o ../Player.o \
 	../Rules.o
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
@@ -190,7 +190,7 @@ Game1v1Test.h
 
 # this should be changed at some point. we should be crating a library with the base blockem classes
 # and then add that library to blockemtest_LIBADD
-blockemtest_LDADD = ../Board.o ../Game1v1.o ../GameTotalAllocation.o ../Heuristic.o ../Piece.o ../Player.o ../Rules.o
+blockemtest_LDADD = ../Board.o ../Game1v1.o ../GameTotalAllocation.o ../heuristic.o ../Piece.o ../Player.o ../Rules.o
 all: all-am
 
 .SUFFIXES:

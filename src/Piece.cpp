@@ -259,7 +259,7 @@ void Piece::RotateLeft()
     return;
 }
 
-bool Piece::Mirror()
+bool Piece::MirrorYAxis()
 {
 #ifdef DEBUG
     assert(m_initialised);
@@ -277,6 +277,28 @@ bool Piece::Mirror()
 	}
 
 	m_nMirrors++;
+
+    return IsMirrored();
+}
+
+bool Piece::MirrorXAxis()
+{
+#ifdef DEBUG
+    assert(m_initialised);
+#endif
+
+    if (!m_origMirror)
+    {
+        // if it can't be mirrored. Do nothing
+        return false;
+    }
+
+    for (uint8_t i = 0; i < m_nSquares; i++)
+    {
+        m_coords[i].m_row = -m_coords[i].m_row;
+    }
+
+    m_nMirrors++;
 
     return IsMirrored();
 }

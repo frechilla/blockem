@@ -53,8 +53,11 @@ public:
     /// @brief callback to be called when the rotate left button is pressed
     void RotateLeftButton_ButtonPressed();
 
-    /// @brief callback to be called when the mirror button is pressed
-    void MirrorButton_ButtonPressed();
+    /// @brief callback to be called when the mirror over the Y axis button is pressed
+    void MirrorYAxisButton_ButtonPressed();
+
+    /// @brief callback to be called when the mirror over the X axis button is pressed
+    void MirrorXAxisButton_ButtonPressed();
 
     /// @brief accesor to the table represented by this class
     inline Gtk::Table& Table()
@@ -107,8 +110,11 @@ private:
     /// @brief the rotate left button to edit the piece
     Gtk::Button* m_rotateLeftButton;
 
-    /// @brief the mirros button to edit the piece
-    Gtk::Button* m_mirrorButton;
+    /// @brief the mirror over Y axis button to edit the piece
+    Gtk::Button* m_mirrorButtonYAxis;
+
+    /// @brief the mirror over X axis button to edit the piece
+    Gtk::Button* m_mirrorButtonXAxis;
 
     /// @brief an arrow pointing to the left
     Gtk::Arrow m_arrowLeft;

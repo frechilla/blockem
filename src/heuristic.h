@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License along
 // with Blockem. If not, see http://www.gnu.org/licenses/.
 //
-/// @file  Heuristic.h
+/// @file  heuristic.h
 /// @brief
 ///
 /// @author Faustino Frechilla

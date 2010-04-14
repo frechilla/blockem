@@ -59,7 +59,7 @@ am_blockem_OBJECTS = Board.$(OBJEXT) Game1v1.$(OBJEXT) \
 	gui_main_window.$(OBJEXT) \
 	gui_main_window_worker_thread.$(OBJEXT) \
 	gui_table_edit_piece.$(OBJEXT) gui_stop_watch_label.$(OBJEXT) \
-	Heuristic.$(OBJEXT) Piece.$(OBJEXT) Player.$(OBJEXT) \
+	heuristic.$(OBJEXT) Piece.$(OBJEXT) Player.$(OBJEXT) \
 	Rules.$(OBJEXT) main.$(OBJEXT)
 blockem_OBJECTS = $(am_blockem_OBJECTS)
 am__DEPENDENCIES_1 =
@@ -225,8 +225,8 @@ gui_table_edit_piece.cpp \
 gui_table_edit_piece.h   \
 gui_stop_watch_label.cpp \
 gui_stop_watch_label.h \
-Heuristic.cpp \
-Heuristic.h \
+heuristic.cpp \
+heuristic.h \
 Piece.cpp \
 Piece.h \
 Player.cpp \
@@ -320,7 +320,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Board.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Game1v1.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GameTotalAllocation.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Heuristic.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Piece.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Player.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Rules.Po@am__quote@
@@ -331,6 +330,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_main_window_worker_thread.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_stop_watch_label.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_table_edit_piece.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/heuristic.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
 
 .cpp.o:

@@ -1,7 +1,9 @@
-now: Version
+now: Version 0.1.5
     - Minmax has been fixed. It was faulty because pieces weren't being 
       rotated once they were mirrored during the AI calculations.
-    - Rotation to the left is available in the editing pieces area
+    - Editing piece drawing area contains 4 buttons, so the user can rotate
+      to the left and right and mirror over the X and Y axis.
+    - Game1v1 test code fixed
 
 09/04/2010: Version 0.1.4
     - Added stopwatch to measure how long computer and human take to move

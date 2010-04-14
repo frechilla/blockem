@@ -105,7 +105,8 @@ const char GUI_LABEL_ROTATE_NAME[]         = "label_rotate";
 const char GUI_LABEL_MIRROR_NAME[]         = "label_mirror";
 const char GUI_BUTTON_ROTATE_LEFT_NAME[]   = "button_rotate_left";
 const char GUI_BUTTON_ROTATE_RIGHT_NAME[]  = "button_rotate_right";
-const char GUI_BUTTON_MIRROR_NAME[]        = "button_mirror";
+const char GUI_BUTTON_MIRROR_XAXIS_NAME[]  = "button_mirror_xaxis";
+const char GUI_BUTTON_MIRROR_YAXIS_NAME[]  = "button_mirror_yaxis";
 const char GUI_DRAWINGAREA_EDITING_PIECE[] = "drawingarea_editing_piece";
 const char GUI_HBOX_STATUSBAR_NAME[]       = "hbox_statusbar";
 

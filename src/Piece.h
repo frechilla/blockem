@@ -101,7 +101,13 @@ public:
     /// makes the mirror the image in the Y axis
     /// @return true if the actual configuration of the piece corresponds to the mirror of the original
     ///         false if the actual configuration is the same as the original
-    bool Mirror();
+    bool MirrorYAxis();
+
+    /// calculates the mirror of the current piece and save the result in this same object
+    /// makes the mirror the image in the X axis
+    /// @return true if the actual configuration of the piece corresponds to the mirror of the original
+    ///         false if the actual configuration is the same as the original
+    bool MirrorXAxis();
 
     /// @returns the number of possible different rotations the piece has originally
     inline int8_t GetNRotations() const

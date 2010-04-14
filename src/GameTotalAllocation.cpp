@@ -195,7 +195,7 @@ bool GameTotalAllocation::Solve(const Coordinate &a_startingCoord)
                 m_player.m_pieces[i].Reset();
             }
 
-        } while (m_player.m_pieces[i].Mirror());
+        } while (m_player.m_pieces[i].MirrorYAxis());
 
         // leave the piece as it was
         m_player.m_pieces[i].Reset();
@@ -336,7 +336,7 @@ bool GameTotalAllocation::AllocateAllPieces(
 	                m_player.m_pieces[i].Reset();
 	            }
 
-			} while (m_player.m_pieces[i].Mirror());
+			} while (m_player.m_pieces[i].MirrorYAxis());
 
 			m_player.SetPiece(static_cast<ePieceType_t>(i));
 			m_player.m_pieces[i].Reset();

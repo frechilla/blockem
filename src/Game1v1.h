@@ -36,7 +36,7 @@
 #include "Piece.h"
 #include "Player.h"
 #include "Board.h"
-#include "Heuristic.h"
+#include "heuristic.h"
 #include "Rules.h"
 #include "Coordinate.h"
 #include "CoordinateSet.h"

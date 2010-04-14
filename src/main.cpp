@@ -45,7 +45,6 @@
 #include "gui_main_window.h"
 #include "Game1v1.h"
 
-#include "Heuristic.h"
 
 // the following code is needed to load the gui into the application.
 // (See big comment in gui.h)

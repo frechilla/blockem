@@ -256,7 +256,7 @@ bool Game1v1::CanPlayerGo(
                 thisPiece.Reset();
             }
 
-        } while (thisPiece.Mirror());
+        } while (thisPiece.MirrorYAxis());
 
     } // for (int i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
 
@@ -502,7 +502,7 @@ int32_t Game1v1::MinMax(
                     m_playerMe.m_pieces[i].Reset();
                 }
 
-            } while (m_playerMe.m_pieces[i].Mirror());
+            } while (m_playerMe.m_pieces[i].MirrorYAxis());
 
             m_playerMe.SetPiece(static_cast<ePieceType_t>(i));
             m_playerMe.m_pieces[i].Reset();
@@ -777,7 +777,7 @@ int32_t Game1v1::MinMaxAlphaBetaCompute(
 	                a_playerMe.m_pieces[i].Reset();
 	            }
 
-			} while (a_playerMe.m_pieces[i].Mirror());
+			} while (a_playerMe.m_pieces[i].MirrorYAxis());
 
 			a_playerMe.SetPiece(static_cast<ePieceType_t>(i));
 			a_playerMe.m_pieces[i].Reset();

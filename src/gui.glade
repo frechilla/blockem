@@ -164,7 +164,7 @@
             </child>
             <child>
               <widget class="GtkHBox" id="hbox_editpieces">
-                <property name="height_request">180</property>
+                <property name="height_request">200</property>
                 <property name="visible">True</property>
                 <property name="spacing">10</property>
                 <child>
@@ -283,11 +283,32 @@ You should have received a copy of the GNU General Public License along with blo
       </packing>
     </child>
     <child>
-      <widget class="GtkButton" id="button_mirror">
-        <property name="label" translatable="yes">&lt;-&gt;</property>
+      <widget class="GtkButton" id="button_mirror_yaxis">
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="receives_default">True</property>
+        <child>
+          <widget class="GtkHBox" id="hbox_button_mirror_y">
+            <property name="visible">True</property>
+            <child>
+              <widget class="GtkArrow" id="arrow_y_left">
+                <property name="visible">True</property>
+                <property name="arrow_type">left</property>
+              </widget>
+              <packing>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkArrow" id="arrow_y_right">
+                <property name="visible">True</property>
+              </widget>
+              <packing>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </widget>
+        </child>
       </widget>
       <packing>
         <property name="left_attach">3</property>
@@ -295,7 +316,7 @@ You should have received a copy of the GNU General Public License along with blo
         <property name="top_attach">3</property>
         <property name="bottom_attach">4</property>
         <property name="x_options"></property>
-        <property name="y_options"></property>
+        <property name="y_options">GTK_FILL</property>
       </packing>
     </child>
     <child>
@@ -338,7 +359,7 @@ You should have received a copy of the GNU General Public License along with blo
       <packing>
         <property name="left_attach">1</property>
         <property name="right_attach">2</property>
-        <property name="x_options"></property>
+        <property name="x_options">GTK_FILL</property>
         <property name="y_options"></property>
       </packing>
     </child>
@@ -359,11 +380,47 @@ r</property>
         <property name="top_attach">2</property>
         <property name="bottom_attach">3</property>
         <property name="x_options"></property>
-        <property name="y_options"></property>
+        <property name="y_options">GTK_FILL</property>
       </packing>
     </child>
     <child>
-      <placeholder/>
+      <widget class="GtkButton" id="button_mirror_xaxis">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="receives_default">True</property>
+        <child>
+          <widget class="GtkVBox" id="hbox_button_mirror_x">
+            <property name="visible">True</property>
+            <property name="orientation">vertical</property>
+            <child>
+              <widget class="GtkArrow" id="arrow_x_up">
+                <property name="visible">True</property>
+                <property name="arrow_type">up</property>
+              </widget>
+              <packing>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkArrow" id="arrowx_down">
+                <property name="visible">True</property>
+                <property name="arrow_type">down</property>
+              </widget>
+              <packing>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </widget>
+        </child>
+      </widget>
+      <packing>
+        <property name="left_attach">3</property>
+        <property name="right_attach">4</property>
+        <property name="top_attach">1</property>
+        <property name="bottom_attach">2</property>
+        <property name="x_options"></property>
+        <property name="y_options">GTK_FILL</property>
+      </packing>
     </child>
     <child>
       <placeholder/>

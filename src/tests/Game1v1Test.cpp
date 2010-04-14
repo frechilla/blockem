@@ -62,7 +62,7 @@ void Game1v1Test::TestPieces()
             }
             // reset the amount of rotations to right before mirroring the piece
             nRotations = 0;
-        } while (m_1v1Game.GetPlayerMe().m_pieces[i].Mirror());
+        } while (m_1v1Game.GetPlayerMe().m_pieces[i].MirrorYAxis());
 
         m_1v1Game.GetPlayerMe().m_pieces[i].Reset();
     }
@@ -119,7 +119,7 @@ void Game1v1Test::TestPiece_1BabyPiece()
     nRotations++;
     thisPiece.RotateRight();
     assert(thisPiece.GetNRotations() == nRotations);
-    assert(thisPiece.Mirror() == false);
+    assert(thisPiece.MirrorYAxis() == false);
 
     thisPiece.Reset();
 }
@@ -175,7 +175,7 @@ void Game1v1Test::TestPiece_2TwoPiece()
     thisPiece.RotateRight();
     nRotations++;
     assert(thisPiece.GetNRotations() == nRotations);
-    assert(thisPiece.Mirror() == false);
+    assert(thisPiece.MirrorYAxis() == false);
 
     thisPiece.Reset();
 }
@@ -236,7 +236,7 @@ void Game1v1Test::TestPiece_3LongPiece()
     thisPiece.RotateRight();
     nRotations++;
     assert(thisPiece.GetNRotations() == nRotations);
-    assert(thisPiece.Mirror() == false);
+    assert(thisPiece.MirrorYAxis() == false);
 
     thisPiece.Reset();
 }
@@ -356,7 +356,7 @@ void Game1v1Test::TestPiece_3Triangle()
     thisPiece.RotateRight();
     nRotations++;
     assert(thisPiece.GetNRotations() == nRotations);
-    assert(thisPiece.Mirror() == false);
+    assert(thisPiece.MirrorYAxis() == false);
 
     thisPiece.Reset();
 }
@@ -419,7 +419,7 @@ void Game1v1Test::TestPiece_4LongPiece()
 
     thisPiece.RotateRight();nRotations++;
     assert(thisPiece.GetNRotations() == nRotations);
-    assert(thisPiece.Mirror() == false);
+    assert(thisPiece.MirrorYAxis() == false);
 
     thisPiece.Reset();
 }
@@ -493,7 +493,7 @@ void Game1v1Test::TestPiece_4LittleS()
     assert(thisPiece.GetNRotations() == nRotations);
     thisPiece.Reset(); // the piece is not symmetrical. It must be reset before mirroring
                        // to ensure is has the same shape once it has been mirrored
-    assert(thisPiece.Mirror() == true);
+    assert(thisPiece.MirrorYAxis() == true);
     nRotations = 0;
 
     // X X
@@ -559,7 +559,7 @@ void Game1v1Test::TestPiece_4LittleS()
 
     thisPiece.RotateRight();nRotations++;
     assert(thisPiece.GetNRotations() == nRotations);
-    assert(thisPiece.Mirror() == false);
+    assert(thisPiece.MirrorYAxis() == false);
 
     thisPiece.Reset();
 }
@@ -693,7 +693,7 @@ void Game1v1Test::TestPiece_4LittleT()
 
     thisPiece.RotateRight();nRotations++;
     assert(thisPiece.GetNRotations() == nRotations);
-    assert(thisPiece.Mirror() == false);
+    assert(thisPiece.MirrorYAxis() == false);
 
     thisPiece.Reset();
 }
@@ -821,7 +821,7 @@ void Game1v1Test::TestPiece_4littleL()
     assert(thisPiece.GetNRotations() == nRotations);
     nRotations = 0;                    // nRotations is 0 again to rotate the piece
                                       // as many times as it was originally configured to
-    assert(thisPiece.Mirror());
+    assert(thisPiece.MirrorYAxis());
 
     // X X X
     // X
@@ -940,7 +940,7 @@ void Game1v1Test::TestPiece_4littleL()
 
     thisPiece.RotateRight();nRotations++;
     assert(thisPiece.GetNRotations() == nRotations);
-    assert(thisPiece.Mirror() == false);
+    assert(thisPiece.MirrorYAxis() == false);
 
     thisPiece.Reset();
 }
@@ -975,7 +975,7 @@ void Game1v1Test::TestPiece_4FullSquare()
 
     thisPiece.RotateRight();nRotations++;
     assert(thisPiece.GetNRotations() == nRotations);
-    assert(thisPiece.Mirror() == false);
+    assert(thisPiece.MirrorYAxis() == false);
 
     thisPiece.Reset();
 }
@@ -1053,7 +1053,7 @@ void Game1v1Test::TestPiece_5BigS()
     assert(thisPiece.GetNRotations() == nRotations);
     nRotations = 0;                    // nRotations is 0 again to rotate the piece
                                       // as many times as it was originally configured to
-    assert(thisPiece.Mirror() == true);
+    assert(thisPiece.MirrorYAxis() == true);
 
     // X X
     //   X
@@ -1122,7 +1122,7 @@ void Game1v1Test::TestPiece_5BigS()
 
     thisPiece.RotateRight();nRotations++;
     assert(thisPiece.GetNRotations() == nRotations);
-    assert(thisPiece.Mirror() == false);
+    assert(thisPiece.MirrorYAxis() == false);
 
     thisPiece.Reset();
 }
@@ -1277,7 +1277,7 @@ void Game1v1Test::TestPiece_5SafPiece()
     assert(thisPiece.GetNRotations() == nRotations);
     nRotations = 0;                   // nRotations is 0 again to rotate the piece
                                       // as many times as it was originally configured to
-    assert(thisPiece.Mirror() == true);
+    assert(thisPiece.MirrorYAxis() == true);
 
     //   X
     // X X
@@ -1422,7 +1422,7 @@ void Game1v1Test::TestPiece_5SafPiece()
 
     thisPiece.RotateRight();nRotations++;
     assert(thisPiece.GetNRotations() == nRotations);
-    assert(thisPiece.Mirror() == false);
+    assert(thisPiece.MirrorYAxis() == false);
 
     thisPiece.Reset();
 }
@@ -1574,7 +1574,7 @@ void Game1v1Test::TestPiece_5WPiece()
 
     thisPiece.RotateRight();nRotations++;
     assert(thisPiece.GetNRotations() == nRotations);
-    assert(thisPiece.Mirror() == false);
+    assert(thisPiece.MirrorYAxis() == false);
 
     thisPiece.Reset();
 }
@@ -1777,7 +1777,7 @@ void Game1v1Test::TestPiece_5BigPenis()
 
     thisPiece.RotateRight();nRotations++;
     assert(thisPiece.GetNRotations() == nRotations);
-    assert(thisPiece.Mirror() == false);
+    assert(thisPiece.MirrorYAxis() == false);
 
     thisPiece.Reset();
 }
@@ -1823,7 +1823,7 @@ void Game1v1Test::TestPiece_5Cross()
 
     thisPiece.RotateRight();nRotations++;
     assert(thisPiece.GetNRotations() == nRotations);
-    assert(thisPiece.Mirror() == false);
+    assert(thisPiece.MirrorYAxis() == false);
 
     thisPiece.Reset();
 }
@@ -1959,7 +1959,7 @@ void Game1v1Test::TestPiece_5HalfSquare()
 
     thisPiece.RotateRight();nRotations++;
     assert(thisPiece.GetNRotations() == nRotations);
-    assert(thisPiece.Mirror() == false);
+    assert(thisPiece.MirrorYAxis() == false);
 
     thisPiece.Reset();
 }
@@ -2098,7 +2098,7 @@ void Game1v1Test::TestPiece_5BigL()
     assert(thisPiece.GetNRotations() == nRotations);
     nRotations = 0;                   // nRotations is 0 again to rotate the piece
                                       // as many times as it was originally configured to
-    assert(thisPiece.Mirror() == true);
+    assert(thisPiece.MirrorYAxis() == true);
 
     //   X
     //   X
@@ -2227,7 +2227,7 @@ void Game1v1Test::TestPiece_5BigL()
 
     thisPiece.RotateRight();nRotations++;
     assert(thisPiece.GetNRotations() == nRotations);
-    assert(thisPiece.Mirror() == false);
+    assert(thisPiece.MirrorYAxis() == false);
 
     thisPiece.Reset();
 }
@@ -2371,7 +2371,7 @@ void Game1v1Test::TestPiece_5MrT()
 
     thisPiece.RotateRight();nRotations++;
     assert(thisPiece.GetNRotations() == nRotations);
-    assert(thisPiece.Mirror() == false);
+    assert(thisPiece.MirrorYAxis() == false);
 
     thisPiece.Reset();
 }
@@ -2507,7 +2507,7 @@ void Game1v1Test::TestPiece_5SquareAppen()
     assert(thisPiece.GetNRotations() == nRotations);
     nRotations = 0;                    // nRotations is 0 again to rotate the piece
                                       // as many times as it was originally configured to
-    assert(thisPiece.Mirror() == true);
+    assert(thisPiece.MirrorYAxis() == true);
 
 
 	// X X
@@ -2635,7 +2635,7 @@ void Game1v1Test::TestPiece_5SquareAppen()
 
     thisPiece.RotateRight();nRotations++;
     assert(thisPiece.GetNRotations() == nRotations);
-    assert(thisPiece.Mirror() == false);
+    assert(thisPiece.MirrorYAxis() == false);
 
     thisPiece.Reset();
 }
@@ -2782,7 +2782,7 @@ void Game1v1Test::TestPiece_5BoringPiece()
     assert(thisPiece.GetNRotations() == nRotations);
     nRotations = 0;                    // nRotations is 0 again to rotate the piece
                                       // as many times as it was originally configured to
-    assert(thisPiece.Mirror() == true);
+    assert(thisPiece.MirrorYAxis() == true);
 
 
     //   X
@@ -2920,7 +2920,7 @@ void Game1v1Test::TestPiece_5BoringPiece()
 
     thisPiece.RotateRight();nRotations++;
     assert(thisPiece.GetNRotations() == nRotations);
-    assert(thisPiece.Mirror() == false);
+    assert(thisPiece.MirrorYAxis() == false);
 
     thisPiece.Reset();
 }
@@ -3066,7 +3066,7 @@ void Game1v1Test::TestPiece_5TheUltimate()
     assert(thisPiece.GetNRotations() == nRotations);
     nRotations = 0;                   // nRotations is 0 again to rotate the piece
                                       // as many times as it was originally configured to
-    assert(thisPiece.Mirror() == true);
+    assert(thisPiece.MirrorYAxis() == true);
 
     // X
     // X X
@@ -3203,7 +3203,7 @@ void Game1v1Test::TestPiece_5TheUltimate()
 
     thisPiece.RotateRight();nRotations++;
     assert(thisPiece.GetNRotations() == nRotations);
-    assert(thisPiece.Mirror() == false);
+    assert(thisPiece.MirrorYAxis() == false);
 
     thisPiece.Reset();
 }

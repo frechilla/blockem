@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License along
 // with Blockem. If not, see http://www.gnu.org/licenses/.
 //
-/// @file  Heuristic.cpp
+/// @file  heuristic.cpp
 /// @brief
 ///
 /// @author Faustino Frechilla
@@ -29,7 +29,7 @@
 
 #include <stdlib.h>
 #include <math.h>
-#include "Heuristic.h"
+#include "heuristic.h"
 #include "Player.h"
 #include "Rules.h"
 
@@ -321,7 +321,7 @@ int32_t Heuristic::CountSquaresCanBeDeployed(
                     a_player.m_pieces[i].Reset();
                 }
 
-            } while ( (pieceCanBeDeployed == false) && (a_player.m_pieces[i].Mirror()) );
+            } while ( (pieceCanBeDeployed == false) && (a_player.m_pieces[i].MirrorYAxis()) );
 
             a_player.m_pieces[i].Reset();
         } // if (me->IsPieceAvailable(i))
