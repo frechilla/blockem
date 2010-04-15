@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License along
 // with Blockem. If not, see http://www.gnu.org/licenses/.
 //
-/// @file  CoordinateSet.h
+/// @file  coordinate_set.h
 /// @brief
 ///
 /// @author Faustino Frechilla
@@ -31,7 +31,7 @@
 #define COORDINATESET_H_
 
 #include <set> // for the STL based coordinate set
-#include "Coordinate.h"
+#include "coordinate.h"
 
 /// @brief A coordinate set based on the STL containers
 typedef std::set<Coordinate, Coordinate::comparator> STLCoordinateSet_t;

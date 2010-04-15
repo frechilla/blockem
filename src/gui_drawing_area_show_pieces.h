@@ -32,8 +32,8 @@
 
 #include <gtkmm.h>
 
-#include "Player.h"
-#include "Piece.h"
+#include "player.h"
+#include "piece.h"
 
 class DrawingAreaShowPieces :
 	public Gtk::DrawingArea

@@ -52,15 +52,15 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_blockem_OBJECTS = Board.$(OBJEXT) Game1v1.$(OBJEXT) \
-	GameTotalAllocation.$(OBJEXT) gui_about_dialog.$(OBJEXT) \
+am_blockem_OBJECTS = board.$(OBJEXT) game1v1.$(OBJEXT) \
+	game_total_allocation.$(OBJEXT) gui_about_dialog.$(OBJEXT) \
 	gui_drawing_area_board.$(OBJEXT) \
 	gui_drawing_area_show_pieces.$(OBJEXT) \
 	gui_main_window.$(OBJEXT) \
 	gui_main_window_worker_thread.$(OBJEXT) \
 	gui_table_edit_piece.$(OBJEXT) gui_stop_watch_label.$(OBJEXT) \
-	heuristic.$(OBJEXT) Piece.$(OBJEXT) Player.$(OBJEXT) \
-	Rules.$(OBJEXT) main.$(OBJEXT)
+	heuristic.$(OBJEXT) piece.$(OBJEXT) player.$(OBJEXT) \
+	rules.$(OBJEXT) main.$(OBJEXT)
 blockem_OBJECTS = $(am_blockem_OBJECTS)
 am__DEPENDENCIES_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
@@ -201,14 +201,14 @@ gui.glade    \
 blockem.rc
 
 blockem_SOURCES = \
-Board.cpp \
-Board.h \
-Coordinate.h \
-CoordinateSet.h \
-Game1v1.cpp \
-Game1v1.h \
-GameTotalAllocation.cpp \
-GameTotalAllocation.h \
+board.cpp \
+board.h \
+boordinate.h \
+boordinate_set.h \
+game1v1.cpp \
+game1v1.h \
+game_total_allocation.cpp \
+game_total_allocation.h \
 gui_exception.h \
 gui_about_dialog.cpp \
 gui_about_dialog.h \
@@ -227,12 +227,12 @@ gui_stop_watch_label.cpp \
 gui_stop_watch_label.h \
 heuristic.cpp \
 heuristic.h \
-Piece.cpp \
-Piece.h \
-Player.cpp \
-Player.h \
-Rules.cpp \
-Rules.h \
+piece.cpp \
+piece.h \
+player.cpp \
+player.h \
+rules.cpp \
+rules.h \
 singleton.h \
 main.cpp
 
@@ -317,12 +317,9 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Board.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Game1v1.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GameTotalAllocation.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Piece.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Player.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Rules.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/board.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/game1v1.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/game_total_allocation.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_about_dialog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_drawing_area_board.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_drawing_area_show_pieces.Po@am__quote@
@@ -332,6 +329,9 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_table_edit_piece.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/heuristic.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/piece.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/player.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rules.Po@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<

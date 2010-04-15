@@ -30,8 +30,8 @@
 #ifndef GAME1V1TEST_H_
 #define GAME1V1TEST_H_
 
-#include "Game1v1.h"
-#include "Coordinate.h"
+#include "game1v1.h"
+#include "coordinate.h"
 
 /// @brief regression testing for the Game1v1
 class Game1v1Test

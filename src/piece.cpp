@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License along
 // with Blockem. If not, see http://www.gnu.org/licenses/.
 //
-/// @file  Piece.cpp
+/// @file  piece.cpp
 /// @brief
 ///
 /// @author Faustino Frechilla
@@ -27,7 +27,7 @@
 ///
 // ============================================================================
 
-#include "Piece.h"
+#include "piece.h"
 #include "stdio.h"
 
 // a piece has to fit in a square (2*2) + 1

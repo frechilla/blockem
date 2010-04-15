@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License along
 // with Blockem. If not, see http://www.gnu.org/licenses/.
 //
-/// @file  Rules.h
+/// @file  rules.h
 /// @brief
 ///
 /// @author Faustino Frechilla
@@ -30,10 +30,10 @@
 #ifndef RULES_H_
 #define RULES_H_
 
-#include "Board.h"
-#include "Piece.h"
-#include "Player.h"
-#include "Coordinate.h"
+#include "board.h"
+#include "piece.h"
+#include "player.h"
+#include "coordinate.h"
 
 /// @brief this class contains all the methods that define any blokus game
 class Rules

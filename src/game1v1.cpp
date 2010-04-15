@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License along
 // with Blockem. If not, see http://www.gnu.org/licenses/.
 //
-/// @file  Game1v1.cpp
+/// @file  game1v1.cpp
 /// @brief
 ///
 /// @author Faustino Frechilla
@@ -31,7 +31,7 @@
 #include <iostream>
 #endif
 
-#include "Game1v1.h"
+#include "game1v1.h"
 
 /// name for the player me. The one that MinMax tries to maximise (and win)
 static const char PLAYER_ME_NAME[] = "Computer";

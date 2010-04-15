@@ -29,7 +29,7 @@
 
 #include <iostream>
 #include "gui_drawing_area_board.h"
-#include "Rules.h"
+#include "rules.h"
 
 /// @brief uninitialised coord value not to print pieces in random places
 static const int32_t COORD_UNITIALISED = 0xffffffff;

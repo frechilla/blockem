@@ -30,8 +30,8 @@
 #ifndef HEURISTIC_H_
 #define HEURISTIC_H_
 
-#include "Board.h"
-#include "Player.h"
+#include "board.h"
+#include "player.h"
 
 /// @brief class used as a container of methods to calculate the heuristic.
 /// All those methods have to have the following prototype:

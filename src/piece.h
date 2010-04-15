@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License along
 // with Blockem. If not, see http://www.gnu.org/licenses/.
 //
-/// @file  Piece.h
+/// @file  piece.h
 /// @brief
 ///
 /// @author Faustino Frechilla
@@ -33,7 +33,7 @@
 #include <string>
 #include <stdint.h> // for types
 #include "assert.h"
-#include "Coordinate.h"
+#include "coordinate.h"
 
 /// maximum number of squares a piece can have
 const uint8_t PIECE_MAX_SQUARES = 5;

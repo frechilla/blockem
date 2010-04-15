@@ -27,7 +27,7 @@
 ///
 // ============================================================================
 
-#include "Game1v1Test.h"
+#include "game1v1_test.h"
 #include <iostream>
 
 Game1v1Test::Game1v1Test() :

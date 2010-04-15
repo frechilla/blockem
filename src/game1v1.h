@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License along
 // with Blockem. If not, see http://www.gnu.org/licenses/.
 //
-/// @file  Game1v1.h
+/// @file  game1v1.h
 /// @brief
 ///
 /// @author Faustino Frechilla
@@ -33,13 +33,13 @@
 #include <istream>
 #include <ostream>
 #include <csignal> // atomic_t
-#include "Piece.h"
-#include "Player.h"
-#include "Board.h"
+#include "piece.h"
+#include "player.h"
+#include "board.h"
 #include "heuristic.h"
-#include "Rules.h"
-#include "Coordinate.h"
-#include "CoordinateSet.h"
+#include "rules.h"
+#include "coordinate.h"
+#include "coordinate_set.h"
 
 /// our own version of INFINITE
 const int32_t INFINITE = 2147483647;

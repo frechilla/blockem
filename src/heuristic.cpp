@@ -30,8 +30,8 @@
 #include <stdlib.h>
 #include <math.h>
 #include "heuristic.h"
-#include "Player.h"
-#include "Rules.h"
+#include "player.h"
+#include "rules.h"
 
 /// To be used as the size of the valid coords arrays
 static const int8_t VALID_COORDS_SIZE = 5;

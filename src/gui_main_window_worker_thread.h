@@ -33,7 +33,7 @@
 #include <glib.h>             // glib-2.0/glib.h
 #include <sigc++/trackable.h> // sigc++-2.0/sigc++
 #include <sigc++/signal.h>    // sigc++-2.0/sigc++
-#include "Game1v1.h"
+#include "game1v1.h"
 
 /// @brief Thread which will be used by the MainWindow to do heavy computing
 /// heavy computing must be done in a separate thread because the GUI is not updated

@@ -34,7 +34,7 @@
 #include <gtkmm.h>
 
 #include "gui_exception.h"
-#include "Piece.h"
+#include "piece.h"
 
 class TableEditPiece
 {

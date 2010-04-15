@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License along
 // with Blockem. If not, see http://www.gnu.org/licenses/.
 //
-/// @file  Player.cpp
+/// @file  player.cpp
 /// @brief
 ///
 /// @author Faustino Frechilla
@@ -27,7 +27,7 @@
 ///
 // ============================================================================
 
-#include "Player.h"
+#include "player.h"
 #include <ostream>
 #include <iomanip> // setw
 

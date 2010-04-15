@@ -29,8 +29,8 @@
 
 #include <iostream>
 #include <stdlib.h>
-#include "GameTotalAllocation.h"
-#include "Rules.h"
+#include "game_total_allocation.h"
+#include "rules.h"
 
 /// it will be used as an empty space in the board
 const char CHAR_EMPTY    = ' ';

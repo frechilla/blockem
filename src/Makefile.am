@@ -45,14 +45,14 @@ gui.glade    \
 blockem.rc
 
 blockem_SOURCES = \
-Board.cpp \
-Board.h \
-Coordinate.h \
-CoordinateSet.h \
-Game1v1.cpp \
-Game1v1.h \
-GameTotalAllocation.cpp \
-GameTotalAllocation.h \
+board.cpp \
+board.h \
+boordinate.h \
+boordinate_set.h \
+game1v1.cpp \
+game1v1.h \
+game_total_allocation.cpp \
+game_total_allocation.h \
 gui_exception.h \
 gui_about_dialog.cpp \
 gui_about_dialog.h \
@@ -71,12 +71,12 @@ gui_stop_watch_label.cpp \
 gui_stop_watch_label.h \
 heuristic.cpp \
 heuristic.h \
-Piece.cpp \
-Piece.h \
-Player.cpp \
-Player.h \
-Rules.cpp \
-Rules.h \
+piece.cpp \
+piece.h \
+player.cpp \
+player.h \
+rules.cpp \
+rules.h \
 singleton.h \
 main.cpp
 

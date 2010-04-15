@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License along
 // with Blockem. If not, see http://www.gnu.org/licenses/.
 //
-/// @file  Board.cpp
+/// @file  board.cpp
 /// @brief
 ///
 /// @author Faustino Frechilla
@@ -27,7 +27,7 @@
 ///
 // ============================================================================
 
-#include "Board.h"
+#include "board.h"
 #include <iostream>
 #include <iomanip> // setw
 

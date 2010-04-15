@@ -31,9 +31,9 @@
 #define _GUI_DRAWING_AREA_BOARD_H_
 
 #include <gtkmm.h>
-#include "Board.h"
-#include "Player.h"
-#include "Coordinate.h"
+#include "board.h"
+#include "player.h"
+#include "coordinate.h"
 
 class DrawingAreaBoard :
     public Gtk::DrawingArea

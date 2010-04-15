@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License along
 // with Blockem. If not, see http://www.gnu.org/licenses/.
 //
-/// @file  Rules.cpp
+/// @file  rules.cpp
 /// @brief
 ///
 /// @author Faustino Frechilla
@@ -27,7 +27,7 @@
 ///
 // ============================================================================
 
-#include "Rules.h"
+#include "rules.h"
 
 Rules::Rules()
 {

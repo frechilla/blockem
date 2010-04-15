@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License along
 // with Blockem. If not, see http://www.gnu.org/licenses/.
 //
-/// @file  Board.h
+/// @file  board.h
 /// @brief
 ///
 /// @author Faustino Frechilla
@@ -33,8 +33,8 @@
 #include <stdio.h>
 #include <ostream>
 #include "assert.h"
-#include "Piece.h"
-#include "Player.h"
+#include "piece.h"
+#include "player.h"
 
 class Board
 {

@@ -42,9 +42,9 @@
 #include "gui_main_window_worker_thread.h"
 #include "gui_stop_watch_label.h"
 #include "gui_table_edit_piece.h"
-#include "Game1v1.h"
-#include "Coordinate.h"
-#include "Piece.h"
+#include "game1v1.h"
+#include "coordinate.h"
+#include "piece.h"
 #include "singleton.h"
 
 

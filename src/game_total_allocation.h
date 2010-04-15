@@ -30,9 +30,9 @@
 #ifndef GAMETOTALALLOCATION_H_
 #define GAMETOTALALLOCATION_H_
 
-#include "Player.h"
-#include "Board.h"
-#include "Coordinate.h"
+#include "player.h"
+#include "board.h"
+#include "coordinate.h"
 
 /// @brief A Game in which 1 player tries to allocate all the pieces in the board
 ///        No opponent. Just one player, one board and the pieces

@@ -28,8 +28,8 @@
 // ============================================================================
 
 #include <iostream>
-#include "Game1v1Test.h"
-#include "GameTotalAllocation.h"
+#include "game1v1_test.h"
+#include "game_total_allocation.h"
 
 /// @brief a simple test with a well-known configuration
 void simpleTest();

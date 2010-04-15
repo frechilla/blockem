@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License along
 // with Blockem. If not, see http://www.gnu.org/licenses/.
 //
-/// @file  Player.h
+/// @file  player.h
 /// @brief
 ///
 /// @author Faustino Frechilla
@@ -32,9 +32,9 @@
 
 #include <string>
 #include "assert.h"
-#include "Piece.h"
-#include "Coordinate.h"
-#include "CoordinateSet.h"
+#include "piece.h"
+#include "coordinate.h"
+#include "coordinate_set.h"
 
 class Player
 {

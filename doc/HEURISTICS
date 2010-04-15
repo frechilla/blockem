@@ -1,0 +1,218 @@
+CUSTOMISE BLOCKEM ARTIFICIAL INTELLIGENCE
+
+To understand the Artifical intelligence (AI) used in Blockem, a few terms must
+be understood first:
+* Game tree (from wikipedia) is a directed graph whose nodes are positions in a 
+  game and whose edges are moves. The complete game tree for a game is the game 
+  tree starting at the initial position and containing all possible moves from 
+  each position.
+* Minimax (from wikipedia) is a decision rule used in game theory (...) for 
+  minimising the possible loss while maximising the potential gain
+* Alpha-beta prunning (from wikipedia) It is a search with adversary algorithm
+  used commonly for machine playing of two-player games (Tic-tac-toe, Chess, 
+  Go, etc.). It seeks to reduce the number of nodes that are evaluated in the 
+  search tree by the minimax algorithm
+
+As you could have guessed, Blockem AI is based on the MiniMAx algorithm with 
+alpha-beta prunning, to reduce the number of nodes in the search tree ensuring 
+the same result as it would be got with Minimax.
+The big deal about the Minimax-alphabeta algorithm is the evaluation function, 
+which gives a numeric value to a specific configuration of the game. In blockem
+the configuration of the game is defined by the board, the moving player and the
+opponent, so the C++ interface of the evaluation function was decided to be:
+
+int32_t EvalFunction(
+             const Board  &a_board,
+             const Player &a_playerMe,
+             const Player &a_playerOpponent);
+
+Inside a class called Heuristic (in heuristic.h) there's a typedef which 
+defines exactly this interface:
+class Heuristic
+{
+    /* ... */
+    typedef int32_t (*EvalFunction_t)(const Board &, const Player &, const Player &);
+    /* ... */
+}
+
+So modyfing the way blockem calculates the next computer move is pretty easy:
+
+ 1) Implement a function that suits the 'EvalFunction' Interface. A very 
+    obvious one (though too simple) might be based on the number of squares
+    each player managed to   allocate on the board:
+ 
+    int32_t SimpleEvalFunction(
+            const Board  &a_board,
+            const Player &a_playerMe,
+            const Player &a_playerOpponent)
+    {
+        int32_t squaresMe = 0;
+        int32_t squaresOpponent = 0;
+        int32_t rv = 0;
+   
+        for (uint8_t rowCount = 0; rowCount < a_board.GetNRows() ; rowCount++)
+        {
+            for (uint8_t columnCount = 0; 
+                 columnCount <  a_board.GetNColumns(); 
+                 columnCount++)
+            {
+                if (a_board.IsPlayerInCoord(rowCount, columnCount, a_playerMe))
+                {
+                    squaresMe++;
+                }
+                else if (a_board.IsPlayerInCoord(rowCount, columnCount, a_playerOpponent))
+                {
+                    squaresOpponent++;
+                }
+            }
+        }
+   
+        rv += squaresMe*4;
+        rv -= squaresOpponent*4;
+   
+        return rv;
+    }
+
+    There are a few functions defined in rules.h that might help you out to 
+    write a powerful evaluation function (things like IsThisANucleationPoint, 
+    and so on...)
+ 
+ 2) Create a function pointer, and assign it to your brand new evaluation 
+    function:
+
+    #include "heuristic.h"
+    /* ... */
+    Heuristic::EvalFunction_t pEvalFunction = NULL;
+    pEvalFunction = SimpleEvalFunction;
+   
+ 3) Now you can test your new heuristic and try to beat yourself playing blokus
+    graphically:
+    Use that function pointer in the call to Game1v1::MinMax which Blockem uses
+    to calculate the next move. The Game1v1 Minmax framework will call your 
+    customised function to evaluate each tested configuration. To do so, open 
+    up the file gui_main_window_worker_thread.cpp and scroll down to the 
+    function MainWindowWorkerThread::ThreadRoutine
+   
+    /* ... */
+    int32_t depth = 3;
+    Heuristic::EvalFunction_t heuristicMethod = Heuristic::CalculateNKWeighted;
+    if ( (thisThread->m_localGame.GetPlayerMe().NumberOfPiecesAvailable() < 14)
+         &&
+         (thisThread->m_localGame.CanPlayerOpponentGo()) )
+    {
+        depth = 5;
+        // heuristicMethod = Heuristic::CalculatePiecesPerNKPoint;
+    }
+    /* ... */
+
+
+UNDERSTANDING DEPTH OF THE SEARCH TREE
+
+The depth of the search tree is set by default to 3, unless the player has less
+than 14 pieces left. The depth of the search tree defines how many pieces are 
+"virtually" put down by the minmax algorithm to test how good a specific move. 
+Depth 3 means minmax will put down a piece of the player whose move is being 
+calculated, then it will put down a piece of the opponent (normally the human
+user) and finally another piece of the player whole move is being calculated. 
+Once this is done the evaluation function is calculated and the value returned 
+is used to "tag" this particular move. That set of 3 moves which maximises the 
+minmax algorithm at the end of the whole process is picked as winner, and the 
+move returned by the MinMax algorithm will be the corresponding first move of 
+the set.
+
+Minimum depth possible is 1, where no futurising is done. Evaluation function 
+is calculated after puting down a piece by the user whose move is being 
+calculated. On the contrary, depth 5 means 3 pieces of the "computer" player 
+and 2 of the "human" one will be place on the board before the evaluation 
+method is run.
+   
+Depth can also be set to an even number, though it is discouraged because 
+better results have been observed using an odd number. This is due to the fact 
+that an odd number maximises the current user, instead of trying to minimise 
+the opponent.
+   
+Obviously, the deeper you calculate the search tree, the better. But if the
+search tree is too big, for instance because there are too many pieces left,
+computing a new depth for the search tree is very expensive in time, which can 
+be bad for the user experience.
+
+Let's use an example to explain it: At the beginning of the game each player 
+has 21 pieces left. Since placing this 1st piece on the board has different 
+rules than the rest of the pieces, let's assume both players put down the 
+simplest of the pieces, the baby piece (1 square). It has 4 nucleation 
+points (corners).
+   
+If we set MinMax to calculate with depth = 1 it will call the evaluation 
+function once per allowed movement in each nucleation point, that might be, 
+roughly, 90 different configurations (20 pieces + rotated pieces + mirror 
+pieces + rotated and mirrored pieces...) multiplied by 4 nucleation points 
+equals 360 times. In reality it's even worse, because some pieces can be put 
+down more than once with the same configuration in the same nucleation point 
+(for instance, think of how many different ways you can place a the cross piece
+next to a baby piece)
+   
+Let's assume there will be always around 360 different possibilities (as I said
+it is even worse, there are several ways to deploy a piece in a nucleation 
+point, and normally there are more than only 4 corners). Anyway, assuming this
+beautiful world of "only 360", the next depth in the search tree will be 
+360 * 360 = 129,600 (360 new configuration per each old possibility), and the 
+following one (depth 3), will be 360*360*360 = 46,656,000!!!
+
+The reality is that things are not that bad really, because the alpha beta 
+prunning takes care of lots of different useless branches of the search tree 
+before they are calculated, but this example shows why you must use the depth 
+parameter with a lot of care.
+   
+   
+STEPS DONE (AND SOME YET TO BE DONE) TO IMPROVE THE HEURISTICS
+   
+As it is described in the wikipedia about the alpha-beta prunning, "Further 
+improvement can be achieved without sacrificing accuracy, by using ordering 
+heuristics to search parts of the tree that are likely to force alpha-beta 
+cutoffs early, For example, in chess, moves that take pieces may be examined 
+before moves that do not".
+   
+To improve speed in the Blockem implementation of the alpha-beta prunning, 
+bigger pieces are always checked before smaller ones (they are more likely to 
+be better as an important part of the evaluation function must be the amount 
+of squaresd eployed on the board). They are checked in inverse order as they 
+are defined in ePieceType_t enum in Piece.h, so pieces in that enum are sorted
+from worse to better (from less likely to do a good move to more likely):
+   
+    typedef enum
+    {
+        // if this enum is modified, ensure all the constants are updated 
+        // accordingly
+        e_minimumPieceIndex = 0,
+       
+        e_1Piece_BabyPiece   = e_minimumPieceIndex,
+        e_2Piece_TwoPiece    = 1,
+        e_3Piece_LongPiece   = 2,
+        /* ... */
+        e_5Piece_TheUltimate = 20,
+       
+        e_numberOfPieces = 21,
+        e_noPiece = 22,   
+    } ePieceType_t;
+
+   
+Another design step was made to trim out possibly useless branches of the 
+search tree. It sacrifices a bit of accuracy assuming no 4,3,2 or 1 square 
+pieces are put down before the 6th move. Obviously Assume makes an ass out of 
+u and me, but sometimes assumptions must be made. A constant has been defined 
+in game1v1.cpp (MIN_5SQUARE_PIECES_AT_START) which describes how many 5-square 
+pieces will be put in-a-row before even considering to put a 4,3,2 or 1 square 
+piece on the board.
+
+  Computing speed has been also improved using tools as gprof to understand 
+where the biggest amount of computing was being spent. It doesn't mean it's 
+perfect though. Pieces are at the moment described as arrays of coordinates, 
+while describing them as pure bits in a uint32_t o(or uint64_t) would improve 
+calculation speed (at least that is what I think). Also the calculation 
+algorithm is not multithreaded, though building up a search tree looks like a 
+good (and relatively easy) thing to be multithreaded.
+ 
+  And that pretty much describes what I've done so far regarding the heuristics
+in blockem. If you think this may be of your interest, code away and have fun! 
+(and if you improve it, please share it with me!)
+

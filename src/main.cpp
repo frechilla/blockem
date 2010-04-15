@@ -43,7 +43,7 @@
 #include "compiletime.h"
 
 #include "gui_main_window.h"
-#include "Game1v1.h"
+#include "game1v1.h"
 
 
 // the following code is needed to load the gui into the application.

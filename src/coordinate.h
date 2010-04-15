@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License along
 // with Blockem. If not, see http://www.gnu.org/licenses/.
 //
-/// @file  Coordinate.h
+/// @file  coordinate.h
 /// @brief
 ///
 /// @author Faustino Frechilla
