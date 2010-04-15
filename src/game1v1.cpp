@@ -55,9 +55,6 @@ static const int32_t STARTING_COORD_X_ME = 9;
 /// initial Y coordinate for player Me (computer)
 static const int32_t STARTING_COORD_Y_ME = 9;
 
-/// To be used in the MinMax Algorithm as the size of the valid coords arrays
-static const int8_t VALID_COORDS_SIZE = 5;
-
 /// Assume makes an ass out of u and me, but sometimes assumptions must be made
 /// This constant represents how many 5-square pieces will be put in-a-row before even
 /// considering to put a 4,3,2 or 1 square piece on the board
@@ -175,96 +172,8 @@ void Game1v1::PutDownPiece(
     Rules::RecalculateNKAroundPiece(a_theBoard, a_piece, a_coord, a_playerMe);
 }
 
-bool Game1v1::CanPlayerMeGo() const
-{
-    return Game1v1::CanPlayerGo(m_board, m_playerMe);
-}
-
-bool Game1v1::CanPlayerOpponentGo() const
-{
-    return Game1v1::CanPlayerGo(m_board, m_playerOpponent);
-}
-
-bool Game1v1::CanPlayerGo(
-        const Board  &a_board,
-        const Player &a_player)
-{
-    if (a_player.NumberOfPiecesAvailable() == 0)
-    {
-        return false;
-    }
-
-    for (int8_t i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
-    {
-        if (a_player.IsPieceAvailable(static_cast<ePieceType_t>(i)) == false)
-        {
-            continue;
-        }
-
-        // copy the piece so the original is not modified
-        Piece thisPiece(a_player.m_pieces[i].GetType());
-
-        do
-        {
-            int8_t nRotations = 0;
-            while(nRotations < thisPiece.GetNRotations())
-            {
-                bool nkExists;
-                Coordinate thisNkPoint;
-                Player::SpiralIterator nkIterator;
-
-                nkExists = a_player.GetFirstNucleationPointSpiral(nkIterator, thisNkPoint);
-                while(nkExists)
-                {
-                    // retrieve the valid coords of this piece in the current nk point
-                    Coordinate validCoords[VALID_COORDS_SIZE];
-                    int32_t nValidCoords = Rules::CalculateValidCoordsInNucleationPoint(
-                                                a_board,
-                                                thisPiece,
-                                                thisNkPoint,
-                                                a_player,
-                                                validCoords,
-                                                VALID_COORDS_SIZE);
-
-                    if (nValidCoords > 0)
-                    {
-                        return true;
-                    }
-
-                    nkExists = a_player.GetNextNucleationPointSpiral(nkIterator, thisNkPoint);
-
-                } // while(nkExists)
-
-                nRotations++;
-                thisPiece.RotateRight();
-            }
-
-            // reset the amount of rotations done before mirroring
-            nRotations = 0;
-
-            if ( (thisPiece.GetType() == e_4Piece_LittleS) &&
-                 (thisPiece.IsMirrored() == false) )
-            {
-                // For this piece the maximum number or rotations is 2
-                // and the piece is not symmetric, the configuration after
-                // the 3rd rotation is the shame shape as the original, but
-                // the coords moved. Reset the piece before mirroring to
-                // avoid unexpected results
-                //
-                // it also happens with 2piece and 4longPiece, but those pieces
-                // don't have mirror, so there's no need for this extra check
-                thisPiece.Reset();
-            }
-
-        } while (thisPiece.MirrorYAxis());
-
-    } // for (int i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
-
-    return false;
-}
-
 int32_t Game1v1::MinMax(
-        Heuristic::calculateMethod_t a_heuristicMethod,
+        Heuristic::EvalFunction_t    a_heuristicMethod,
         int32_t                      depth,
         Piece                        &out_resultPiece,
         Coordinate                   &out_coord,
@@ -564,7 +473,7 @@ int32_t Game1v1::MinMaxAlphaBetaCompute(
         Player                       &a_playerOpponent,
         CoordSetGame1v1_t*           a_oldNkPointsOpponent[e_numberOfPieces],
         Piece*                       a_lastPiecesOpponent[e_numberOfPieces],
-        Heuristic::calculateMethod_t a_heuristicMethod,
+        Heuristic::EvalFunction_t    a_heuristicMethod,
         int32_t                      originalDepth,
         int32_t                      depth,
         int32_t                      alpha,

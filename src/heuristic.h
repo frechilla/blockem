@@ -49,7 +49,7 @@ class Heuristic
 {
 public:
     /// pointer to the heuristic calculator function
-    typedef int32_t (*calculateMethod_t)(const Board &, const Player &, const Player &);
+    typedef int32_t (*EvalFunction_t)(const Board &, const Player &, const Player &);
 
     virtual ~Heuristic();
 

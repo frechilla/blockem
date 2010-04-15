@@ -198,9 +198,10 @@ void* MainWindowWorkerThread::ThreadRoutine(void *a_ThreadParam)
             resultCoord.m_row = resultCoord.m_col = 0;
 
             int32_t depth = 3;
-            Heuristic::calculateMethod_t heuristicMethod = Heuristic::CalculateNKWeighted;
+            Heuristic::EvalFunction_t heuristicMethod = Heuristic::CalculateNKWeighted;
             if ( (thisThread->m_localGame.GetPlayerMe().NumberOfPiecesAvailable() < 14) &&
-                 (thisThread->m_localGame.CanPlayerOpponentGo()) )
+                 (Rules::CanPlayerGo(thisThread->m_localGame.GetBoard(),
+                                     thisThread->m_localGame.GetPlayerOpponent()) ) )
             {
                 depth = 5;
                 // heuristicMethod = Heuristic::CalculatePiecesPerNKPoint;
@@ -257,8 +258,9 @@ void* MainWindowWorkerThread::ThreadRoutine(void *a_ThreadParam)
                 thisThread->m_localGame.PutDownPieceMe(resultPiece, resultCoord);
             }
 
-        } while ( (thisThread->m_localGame.CanPlayerOpponentGo() == false) &&
-                  (resultPiece.GetType() != e_noPiece) );
+        } while ( (resultPiece.GetType() != e_noPiece) &&
+                  (Rules::CanPlayerGo(thisThread->m_localGame.GetBoard(),
+                                      thisThread->m_localGame.GetPlayerOpponent()) == false) );
 
         // the move has been calculated. Update the variable accordingly
         g_mutex_lock(thisThread->m_mutex);

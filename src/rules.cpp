@@ -29,6 +29,7 @@
 
 #include "rules.h"
 
+
 Rules::Rules()
 {
 }
@@ -509,6 +510,81 @@ void Rules::RecalculateNKAroundPiece(
     }
 }
 
+bool Rules::CanPlayerGo(const Board &a_board, const Player &a_player)
+{
+    if (a_player.NumberOfPiecesAvailable() == 0)
+    {
+        return false;
+    }
+
+    for (int8_t i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
+    {
+        if (a_player.IsPieceAvailable(static_cast<ePieceType_t>(i)) == false)
+        {
+            continue;
+        }
+
+        // copy the piece so the original is not modified
+        Piece thisPiece(a_player.m_pieces[i].GetType());
+
+        do
+        {
+            int8_t nRotations = 0;
+            while(nRotations < thisPiece.GetNRotations())
+            {
+                bool nkExists;
+                Coordinate thisNkPoint;
+                Player::SpiralIterator nkIterator;
+
+                nkExists = a_player.GetFirstNucleationPointSpiral(nkIterator, thisNkPoint);
+                while(nkExists)
+                {
+                    // retrieve the valid coords of this piece in the current nk point
+                    Coordinate validCoords[VALID_COORDS_SIZE];
+                    int32_t nValidCoords = Rules::CalculateValidCoordsInNucleationPoint(
+                                                a_board,
+                                                thisPiece,
+                                                thisNkPoint,
+                                                a_player,
+                                                validCoords,
+                                                VALID_COORDS_SIZE);
+
+                    if (nValidCoords > 0)
+                    {
+                        return true;
+                    }
+
+                    nkExists = a_player.GetNextNucleationPointSpiral(nkIterator, thisNkPoint);
+
+                } // while(nkExists)
+
+                nRotations++;
+                thisPiece.RotateRight();
+            }
+
+            // reset the amount of rotations done before mirroring
+            nRotations = 0;
+
+            if ( (thisPiece.GetType() == e_4Piece_LittleS) &&
+                 (thisPiece.IsMirrored() == false) )
+            {
+                // For this piece the maximum number or rotations is 2
+                // and the piece is not symmetric, the configuration after
+                // the 3rd rotation is the shame shape as the original, but
+                // the coords moved. Reset the piece before mirroring to
+                // avoid unexpected results
+                //
+                // it also happens with 2piece and 4longPiece, but those pieces
+                // don't have mirror, so there's no need for this extra check
+                thisPiece.Reset();
+            }
+
+        } while (thisPiece.MirrorYAxis());
+
+    } // for (int i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
+
+    return false;
+}
 
 //TODO this might help to know which nk points corresponds to the latest piece
 /*

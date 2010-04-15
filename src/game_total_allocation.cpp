@@ -37,9 +37,6 @@ const char CHAR_EMPTY    = ' ';
 /// it will be used as the character for the player in the board
 const char CHAR_PLAYER   = 'X';
 
-/// To be used in the Solve + AllocateAllPieces functions as the size of the valid coords arrays
-const int32_t VALID_COORDS_SIZE = 5;
-
 
 GameTotalAllocation::GameTotalAllocation(int32_t a_rows, int32_t a_columns) :
     m_board(a_rows, a_columns, CHAR_EMPTY),

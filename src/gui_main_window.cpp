@@ -346,7 +346,7 @@ void MainWindow::WorkerThread_computingFinished(
 
     if (a_piece.GetType() == e_noPiece)
     {
-        if (m_the1v1Game.CanPlayerOpponentGo() == false)
+        if (Rules::CanPlayerGo(m_the1v1Game.GetBoard(), m_the1v1Game.GetPlayerOpponent()) == false)
         {
             // the game is over. Computing returned e_noPiece and
             // the opponent can't go
@@ -431,11 +431,13 @@ void MainWindow::MenuItemGameNew_Activate()
     if ( (m_the1v1Game.GetPlayerMe().NumberOfPiecesAvailable() == e_numberOfPieces) &&
          (m_the1v1Game.GetPlayerOpponent().NumberOfPiecesAvailable() == e_numberOfPieces) )
     {
-        // the game never started. Do nothing
-        return;
+        // the game never started. Restart the user timer
+        snprintf(theMessage,
+                MESSAGE_LENGTH,
+                "This will restart your elapsed time stopwatch. Are you sure?");
     }
-    else if ( (m_the1v1Game.CanPlayerOpponentGo() == false) &&
-              (m_the1v1Game.CanPlayerMeGo() == false) )
+    else if ( (Rules::CanPlayerGo(m_the1v1Game.GetBoard(), m_the1v1Game.GetPlayerOpponent()) == false) &&
+              (Rules::CanPlayerGo(m_the1v1Game.GetBoard(), m_the1v1Game.GetPlayerMe()) == false) )
     {
         // game is finished
         snprintf(theMessage,
@@ -660,7 +662,7 @@ void MainWindow::NotifyMoveComputed()
     m_showComputerPiecesDrawingArea.Invalidate();
 
     // there's a few things that have to be done if the user can put down a piece
-    if (m_the1v1Game.CanPlayerOpponentGo())
+    if (Rules::CanPlayerGo(m_the1v1Game.GetBoard(), m_the1v1Game.GetPlayerOpponent()))
     {
         //user's go
         // stop computer stopwatch

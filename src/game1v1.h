@@ -148,19 +148,13 @@ public:
 	///        account the latest opponent's move to compute the next move. it can also
 	///        be used to add a bit of randomness to the AI behaviour
     int32_t MinMax(
-            Heuristic::calculateMethod_t a_heuristicMethod,
+            Heuristic::EvalFunction_t    a_heuristicMethod,
             int32_t                      depth,
             Piece                        &out_resultPiece,
             Coordinate                   &out_coord,
             const volatile sig_atomic_t  &stopProcessingFlag,
             const Coordinate             &a_lastOpponentPieceCoord = Coordinate(),
             const Piece                  &a_lastOpponentPiece = Piece(e_noPiece));
-
-    /// @returns true if the player 'me' (the computer) can put down a piece
-    bool CanPlayerMeGo() const;
-
-    /// @returns true if the player 'opponent' (the user) can put down a piece
-    bool CanPlayerOpponentGo() const;
 
     /// @brief Blanks out the board and reset the players so they have all the pieces available
     /// it can be used to restart the game (to start in a new blank game)
@@ -253,7 +247,7 @@ private:
             Player                       &a_playerOpponent,
             CoordSetGame1v1_t*           a_oldNkPointsOpponent[e_numberOfPieces],
             Piece*                       a_lastPiecesOpponent[e_numberOfPieces],
-            Heuristic::calculateMethod_t a_heuristicMethod,
+            Heuristic::EvalFunction_t    a_heuristicMethod,
             int32_t                      originalDepth,
             int32_t                      depth,
             int32_t                      alpha,  //  = -INFINITE (in the 1st call)
@@ -263,11 +257,6 @@ private:
             ,int32_t                      &times
 #endif
     );
-
-    /// @returns true if the player 'a_player' can put down at least 1 piece in a_board
-    static bool CanPlayerGo(
-            const Board  &a_board,
-            const Player &a_player);
 };
 
 #endif /* GAME1V1_H_ */

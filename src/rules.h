@@ -35,6 +35,9 @@
 #include "player.h"
 #include "coordinate.h"
 
+/// Size of the valid coords arrays
+const int8_t VALID_COORDS_SIZE = 5;
+
 /// @brief this class contains all the methods that define any blokus game
 class Rules
 {
@@ -212,6 +215,9 @@ public:
             const Piece      &a_piece,
             const Coordinate &a_coord,
             Player           &a_player);
+
+    /// @returns true if the 'a_player' can put down at least one piece on the board
+    static bool CanPlayerGo(const Board &a_board, const Player &a_player);
 };
 
 #endif /* RULES_H_ */
