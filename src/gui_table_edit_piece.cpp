@@ -103,10 +103,10 @@ TableEditPiece::TableEditPiece(
 
 	// insert the arrows into the rotate buttons
 	m_rotateLeftButton->add(m_arrowLeft);
-	m_arrowLeft.set_visible();
+	m_arrowLeft.show();
 
 	m_rotateRightButton->add(m_arrowRight);
-	m_arrowRight.set_visible();
+	m_arrowRight.show();
 
 	// connect the signals to the handlers
 	m_editPieceDrawingArea->signal_expose_event().connect(
