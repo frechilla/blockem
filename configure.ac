@@ -11,7 +11,7 @@ define([svnversion], esyscmd([sh -c "svnversion|tr -d '\n'"]))
 
 AC_INIT([blockem], [MAJOR_VERSION.MINOR_VERSION.MICRO_VERSION], [frechilla -at- gmail -dot- com])
 AM_INIT_AUTOMAKE(blockem, [MAJOR_VERSION.MINOR_VERSION.MICRO_VERSION])
-AC_CONFIG_SRCDIR([src/Player.cpp])
+AC_CONFIG_SRCDIR([src/game1v1.cpp])
 AC_CONFIG_HEADERS([config.h])
 AC_DEFINE(SVN_REVISION, "svnversion", [SVN Revision])
 

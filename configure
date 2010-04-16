@@ -554,7 +554,7 @@ PACKAGE_STRING='blockem 0.1.5'
 PACKAGE_BUGREPORT='frechilla -at- gmail -dot- com'
 PACKAGE_URL=''
 
-ac_unique_file="src/Player.cpp"
+ac_unique_file="src/game1v1.cpp"
 # Factoring default headers for most tests.
 ac_includes_default="\
 #include <stdio.h>
@@ -2766,7 +2766,7 @@ am__tar='${AMTAR} chof - "$$tardir"'; am__untar='${AMTAR} xf -'
 ac_config_headers="$ac_config_headers config.h"
 
 
-$as_echo "#define SVN_REVISION \"78\"" >>confdefs.h
+$as_echo "#define SVN_REVISION \"78:79M\"" >>confdefs.h
 
 
 # Checks for programs.
