@@ -2766,7 +2766,7 @@ am__tar='${AMTAR} chof - "$$tardir"'; am__untar='${AMTAR} xf -'
 ac_config_headers="$ac_config_headers config.h"
 
 
-$as_echo "#define SVN_REVISION \"80\"" >>confdefs.h
+$as_echo "#define SVN_REVISION \"83\"" >>confdefs.h
 
 
 # Checks for programs.
@@ -5530,7 +5530,7 @@ _ACEOF
 # Checks for library functions.
 
 USER_CFLAGS=
-CXXFLAGS="-Wall -O2 -g3 -DNDEBUG"
+CXXFLAGS="-Wall -O3 -g3 -DNDEBUG"
 
 # Check whether --enable-debug was given.
 if test "${enable_debug+set}" = set; then :
