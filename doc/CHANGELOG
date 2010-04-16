@@ -1,4 +1,4 @@
-now: Version 0.1.5
+16/04/2010: Version 0.1.5
     - Minmax has been fixed. It was faulty because pieces weren't being 
       rotated once they were mirrored during the AI calculations.
     - Editing piece drawing area contains 4 buttons, so the user can rotate
