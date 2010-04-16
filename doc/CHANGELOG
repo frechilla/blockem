@@ -4,6 +4,8 @@ now: Version 0.1.5
     - Editing piece drawing area contains 4 buttons, so the user can rotate
       to the left and right and mirror over the X and Y axis.
     - Game1v1 test code fixed
+    - Game->New menu restarts the user's stopwatch even if there's no pieces
+      on the board
 
 09/04/2010: Version 0.1.4
     - Added stopwatch to measure how long computer and human take to move
