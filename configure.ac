@@ -74,7 +74,7 @@ AC_TYPE_UINT32_T
 # Checks for library functions.
 
 USER_CFLAGS=
-CXXFLAGS="-Wall -O2 -g3 -DNDEBUG"
+CXXFLAGS="-Wall -O3 -g3 -DNDEBUG"
 
 AC_ARG_ENABLE(debug,
     AC_HELP_STRING([--enable-debug], [Enable debugging code]),
