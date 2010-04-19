@@ -50,10 +50,24 @@ public:
 
     /// @brief force the drawing area to be reprinted
     bool Invalidate();
+    
+    /// @brief force the drawing area to be reprinted because a_piece was put down in a_coord
+    /// this function sets up a visual effect over this latest piece deployed on the board
+    /// to show the human user what was the latest piece deployed
+    bool Invalidate(const Piece &a_piece, const Coordinate &a_coord);
 
-    void inline SetCurrentPlayer(const Player* a_player)
+    /// sets the player who will put down next piece
+    /// If there is a player currently set, a call to this function
+    /// will override the value. You can use UnsetCurrentPlayer to
+    /// to set the current player to nobody
+    void inline SetCurrentPlayer(const Player &a_player)
     {
-        m_currentPlayer = a_player;
+        m_currentPlayer = &a_player;
+    }
+    
+    void inline UnsetCurrentPlayer()
+    {
+        m_currentPlayer = NULL;
     }
 
     void inline SetCurrentPiece(const Piece &a_piece)
@@ -86,6 +100,13 @@ private:
 
     /// current place in the board where the user moved the mouse pointer (inside the board)
     Coordinate m_currentCoord;
+    
+    /// This is a copy of the latest piece deployed on the board so a visual effect
+    /// to notify the user what was the latest piece deployed can be added
+    Piece m_latestPieceDeployed;
+    
+    /// Indicates where the latest piece was deployed
+    Coordinate m_latestPieceDeployedCoord;
 
     /// signal to be sent when a the user clicked on the board and there is a current player and piece
     /// selected

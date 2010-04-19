@@ -165,14 +165,6 @@ private:
     /// @brief show the time the computer takes to think
     StopWatchLabel m_stopWatchLabelComputer;
 
-    /// @brief number of computer's squares left.
-    ///        it is used to show the status of the game in the status bar
-    int8_t m_computerSquaresLeft;
-
-    /// @brief number of user's squares left
-    ///        it is used to show the status of the game in the status bar
-    int8_t m_userSquaresLeft;
-
     /// Signal class for inter-thread communication to
     /// notify the next move has been computed
     Glib::Dispatcher m_signal_moveComputed;
@@ -181,12 +173,12 @@ private:
     /// notify the user the game is finished
     Glib::Dispatcher m_signal_gameFinished;
 
-    /// @brief current computing progress
-    float m_computingCurrentProgress;
-
     /// Signal class for inter-thread communication to
     /// notify a change in computing progress
     Glib::Dispatcher m_signal_computingProgressUpdated;
+    
+    /// @brief current computing progress
+    static float m_computingCurrentProgress;
 
     /// @brief notifies to the user that the game is finished using a fancy message box
     void NotifyGameFinished();

@@ -123,7 +123,29 @@ int main(int argc, char **argv)
 
     //////////////////
     // GUI
+    
     Gtk::Main::init_gtkmm_internals();
+    
+    // Initialise gthreads even before gtk_init
+    if(!g_thread_supported())
+    {
+        g_thread_init(NULL);
+        // This call is needed only if extra threads (not the main thread)
+        // updates directly the GUI widgets using gdk_threads_enter
+        // and gdk_threads_leave
+        // It's not really needed since there's only 1 extra thread
+        // (apart from the main one) and it doesn't update the GUI
+        // straight away. It uses signals for that matter (see comment
+        // in MainWindow::WorkerThread_computingFinished)
+        //gdk_threads_init();
+    }
+    else
+    {
+        std::cerr << "error: gthread_supported call failed when initialising gthreads" << std::endl;
+        std::cerr << "error: App can't start without gthreads support" << std::endl;
+        return -1;
+    }
+    
     Gtk::Main kit(argc, argv);
 
     Glib::RefPtr<Gnome::Glade::Xml> refXml;
@@ -157,27 +179,16 @@ int main(int argc, char **argv)
     }
 #endif // GLIBMM_EXCEPTIONS_ENABLED
 
-    // Initialise gthreads
-    if(!g_thread_supported())
-    {
-        g_thread_init(NULL);
-        //TODO this call freezes up the app at start-up in windows
-        // It's not really needed since there's only 1 extra thread
-        // (apart from the main one) and it doesn't update the GUI
-        // straight away. It uses signals for that matter (see comment
-        // in MainWindow::WorkerThread_computingFinished)
-        //gdk_threads_init();
-    }
-    else
-    {
-        std::cerr << "g_thread_supported call failed when initialising gthreads" << std::endl;
-    }
-
     try
     {
         MainWindow::Instance();
         MainWindow::Instance().Initialize(refXml);
 
+        // if gdk_threads_enter and gdk_threads_leave were to be used
+        // the Gtk::Main::run loop should be surrounded by 
+        // gdk_threads_enter and gdk_threads_leave
+        // http://tadeboro.blogspot.com/2009/06/multi-threaded-gtk-applications.html
+        
         kit.run(MainWindow::Instance().window());
     }
     catch (GUIException ex)

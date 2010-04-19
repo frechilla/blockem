@@ -23,6 +23,7 @@
 /// @history
 /// Ref       Who                When         What
 ///           Faustino Frechilla 30-Mar-2009  Original development
+///           Faustino Frechilla 19-Apr-2010  Bitwise representations
 /// @endhistory
 ///
 // ============================================================================
@@ -32,6 +33,7 @@
 
 #include <string>
 #include <stdint.h> // for types
+#include <list>
 #include "assert.h"
 #include "coordinate.h"
 
@@ -155,6 +157,14 @@ public:
     {
         return m_squareSideHalfSize;
     }
+    
+    /// returns the list of bitwise representations of the piece
+    /// have a look at the documentation for BuildUpBitwiseRepresentation to learn
+    /// more about this way of representing pieces
+    inline const std::list<uint64_t>& GetBitwiseList() const
+    {
+        return m_bitwiseRepresentationList;
+    }
 
 private:
     /// saves the type of piece
@@ -173,6 +183,9 @@ private:
     int8_t m_nMirrors;
     ///  half of the size of the side of the square where the piece fits (see comment for SetPiece)
     uint8_t m_squareSideHalfSize;
+    /// bitwise representation of al the possible configurations of the piece
+    /// have a look at BuildUpBitwiseRepresentation to learn more
+    std::list<uint64_t> m_bitwiseRepresentationList;
 
     /// @brief set original configuration of the piece.
     /// @param array with the coordinates which make up the piece
@@ -192,6 +205,8 @@ private:
         assert( ((a_piece >= e_minimumPieceIndex) && (a_piece < e_numberOfPieces)) && (a_piece != e_noPiece) );
 #endif
 		(m_loadFunctionMap[a_piece])(*this);
+        // build up the bitwise representation too
+        BuildUpBitwiseRepresentation();
     }
 
     // static functions to load the description of each piece in the object passed as parameter
@@ -220,6 +235,39 @@ private:
     // mapping the type of pieces to the corresponding Load function
     typedef void (*LoadPieceFunction_t) (Piece &);
     static LoadPieceFunction_t m_loadFunctionMap[e_numberOfPieces];
+    
+    /// build up the bitwise representation of all the configurations of the piece
+    /// this methid must be called once the m_origCoords array and the rest of 
+    /// attributes of the object has been set
+    /// it rotates and mirrors the piece as many times as possible and then
+    /// calls Reset to restore the original status of it. DO NOT CALL TO THIS
+    /// FUNCTION ONCE THE PIECE COULD HAVE BEEN EDITED BY AN EXTERNAL USER
+    /// BECAUSE IT RESETS THE PIECE
+    ///
+    /// the bitwise represenation of a piece constist of a "string" of 49 bits
+    /// that hold the piece configuration.
+    /// Those 49 bits represent 7 rows of 7 bits where the bit in the coordinate
+    /// (4, 4) is the center of that piece (given that cords are valid from 1 to 7)
+    /// for example, the saf piece would be:
+    /// 0 0 0 0 0 0 0
+    /// 0 0 0 0 0 0 0
+    /// 0 0 0 1 0 0 0
+    /// 0 0 0 1 1 0 0
+    /// 0 0 1 1 0 0 0
+    /// 0 0 0 0 0 0 0
+    /// 0 0 0 0 0 0 0
+    ///
+    /// which is: 000000000000000 0000000 0000000 0001000 0001100 0011000 0000000 0000000
+    /// (0x0000000081860000)
+    ///
+    /// every piece could fit in a square 5x5 but a square 7x7 has been chosen to be able to move
+    /// a piece up/down/right/left easily using the same representation (the uint64_t)
+    /// Using this representation moving a piece to the right is a matter of (>>1) and to the 
+    /// left (<< 1). Moving up and down is (<<7) and (>>7) respectively
+    ///
+    /// Thses binary representations are saved into the list m_bitwiseRepresentations, which holds
+    /// a maximum of 8 (4 rotations X 2 mirrors) confgurations
+    void BuildUpBitwiseRepresentation();
 };
 
 #endif /* __PIECE_H__ */

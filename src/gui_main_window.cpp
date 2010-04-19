@@ -48,9 +48,6 @@ static const char MESSAGE_ASK_BEFORE_CLOSE[] =
 /// length of the custom messages to be shown to the user
 static const int32_t MESSAGE_LENGTH = 100;
 
-/// number of squares the game starts with
-static const int8_t NSQUARES_TOTAL = 89;
-
 // drawing area options
 static const float BOARD_BORDER_RED        = 0.8;
 static const float BOARD_BORDER_GREEN      = 0.0;
@@ -81,13 +78,21 @@ static const float GHOST_PIECE_ALPHA_TRANSPARENCY = 0.2;
 
 static const uint32_t STOPWATCH_UPDATE_PERIOD_MILLIS = 500; // 1000 = 1 second
 
+// static easy to use mutex for shared data across threads
+// http://tadeboro.blogspot.com/2009/06/multi-threaded-gtk-applications.html
+static float s_computingCurrentProgress = 0.0;
+G_LOCK_DEFINE_STATIC(s_computingCurrentProgress);
 
 void MainWindow::ProgressUpdate(float a_progress)
 {
 #ifdef DEBUG
     assert(MainWindow::GetPtr());
 #endif
-    MainWindow::Instance().m_computingCurrentProgress = a_progress;
+
+    G_LOCK(s_computingCurrentProgress);
+    s_computingCurrentProgress = a_progress;
+    G_UNLOCK(s_computingCurrentProgress);
+    
     MainWindow::Instance().m_signal_computingProgressUpdated.emit();
 }
 
@@ -103,11 +108,8 @@ MainWindow::MainWindow() :
     m_showComputerPiecesDrawingArea(m_the1v1Game.GetPlayerMe(), DrawingAreaShowPieces::eOrientation_bottomToTop),
     m_boardDrawingArea(m_the1v1Game.GetBoard()),
     m_editPieceTable(NULL),
-    m_stopWatchLabelUser(STOPWATCH_UPDATE_PERIOD_MILLIS, std::string("Your elapsed time ")),
-    m_stopWatchLabelComputer(STOPWATCH_UPDATE_PERIOD_MILLIS, std::string("Computer's elapsed time ")),
-    m_computerSquaresLeft(NSQUARES_TOTAL),
-    m_userSquaresLeft(NSQUARES_TOTAL),
-    m_computingCurrentProgress(0.0)
+    m_stopWatchLabelUser(STOPWATCH_UPDATE_PERIOD_MILLIS, m_the1v1Game.GetPlayerOpponent().GetName() + std::string("'s elapsed time ")),
+    m_stopWatchLabelComputer(STOPWATCH_UPDATE_PERIOD_MILLIS, m_the1v1Game.GetPlayerMe().GetName() + std::string("'s elapsed time "))
 {
 }
 
@@ -247,7 +249,7 @@ void MainWindow::Initialize(Glib::RefPtr<Gnome::Glade::Xml> a_refXml) throw (GUI
 	m_hBoxStatusBar->pack_start(m_arrayStatusBarSeparator[2], false, true);
 	m_hBoxStatusBar->pack_start(m_stopWatchLabelComputer, true, true);
     m_progressBar.set_orientation(Gtk::PROGRESS_LEFT_TO_RIGHT);
-    m_progressBar.set_fraction(m_computingCurrentProgress);
+    m_progressBar.set_fraction(0.0);
     m_hBoxStatusBar->pack_start(m_progressBar, true, true);
     m_hBoxStatusBar->show_all();
 
@@ -265,7 +267,6 @@ void MainWindow::Initialize(Glib::RefPtr<Gnome::Glade::Xml> a_refXml) throw (GUI
             sigc::mem_fun(*this, &MainWindow::NotifyGameFinished));
 
     // connect the interthread communication to update the progress bar
-    MainWindow::m_computingCurrentProgress = 0.0;
     m_signal_computingProgressUpdated.connect(
             sigc::mem_fun(*this, &MainWindow::NotifyProgressUpdate));
 
@@ -301,21 +302,16 @@ void MainWindow::Initialize(Glib::RefPtr<Gnome::Glade::Xml> a_refXml) throw (GUI
 	        sigc::mem_fun(*this, &MainWindow::MenuItemHelpAbout_Activate));
 
 
-	//TODO the colours should be handled by some kind of dialog. This will do it now
+    //TODO the colours should be handled by some kind of dialog. This will do it now
 	m_the1v1Game.GetPlayerMe().SetColour(PLAYER_ME_RED*255, PLAYER_ME_GREEN*255, PLAYER_ME_BLUE*255);
 	m_the1v1Game.GetPlayerOpponent().SetColour(PLAYER_OPPONENT_RED*255, PLAYER_OPPONENT_GREEN*255, PLAYER_OPPONENT_BLUE*255);
 
-    //TODO at some point this list should be configurable
     // initialise the list of players of the board drawing area
     m_boardDrawingArea.AddPlayerToList(&(m_the1v1Game.GetPlayerMe()));
     m_boardDrawingArea.AddPlayerToList(&(m_the1v1Game.GetPlayerOpponent()));
 
-    //TODO at some point this pointer should be handled better
-    //     I mean, handled, because now it's not handled at all
-    m_boardDrawingArea.SetCurrentPlayer(&(m_the1v1Game.GetPlayerOpponent()));
-
-
-    // it'll be user's turn. Start counting
+    // human's go. Set the player in the board drawing area and start counting
+    m_boardDrawingArea.SetCurrentPlayer(m_the1v1Game.GetPlayerOpponent());
     m_stopWatchLabelUser.Continue();
 }
 
@@ -324,16 +320,20 @@ void MainWindow::WorkerThread_computingFinished(
         const Coordinate &a_coord,
         int32_t           a_returnValue)
 {
+    // WARNING: this method is run by another thread.
+    // once the m_signal_moveComputed signal is emited the
+    // main thread will update the GUI widgets
+    
     if (a_piece.GetType() != e_noPiece)
     {
-        m_the1v1Game.PutDownPieceMe(a_piece, a_coord);
-
-        // update the amount of computer's squares left
-        // this method is run by another thread.
-        // once the m_signal_moveComputed signal is emited the
-        // real widget will be updated
-        //TODO this is not thread safe!!! this code is executed by the worker thread
-        m_computerSquaresLeft -= a_piece.GetNSquares();
+        //TODO THIS IS NOT THREAD SAFE
+        // have a look at
+        // http://tadeboro.blogspot.com/2009/06/multi-threaded-gtk-applications.html
+        m_the1v1Game.PutDownPiece(
+            a_piece, 
+            a_coord,
+            m_the1v1Game.GetPlayerMe(),
+            m_the1v1Game.GetPlayerOpponent());
     }
 
     // this signal is being issued from the MainWindowWorkerThread
@@ -380,6 +380,7 @@ bool MainWindow::MainWindow_DeleteEvent(GdkEventAny*)
         }
     }
 
+    // kill the worker thread
     m_workerThread->Join();
 
     // continue with delete event
@@ -468,7 +469,6 @@ void MainWindow::MenuItemGameNew_Activate()
         m_showComputerPiecesDrawingArea.Invalidate();
         m_editPieceTable->SetPiece(e_noPiece);
 
-        m_computerSquaresLeft = m_userSquaresLeft = NSQUARES_TOTAL;
         UpdateScoreStatus();
 
         // stopwatches must be restarted.
@@ -505,7 +505,6 @@ void MainWindow::BoardDrawingArea_BoardClicked(const Coordinate &a_coord, const 
 	    return;
 	}
 
-
     if( ( (a_player.NumberOfPiecesAvailable() == e_numberOfPieces) &&
           (!Rules::IsPieceDeployableInStartingPoint(
                     m_the1v1Game.GetBoard(),
@@ -535,10 +534,13 @@ void MainWindow::BoardDrawingArea_BoardClicked(const Coordinate &a_coord, const 
 
     //TODO this has to be changed. We should only use the arguments of the signal handler!!!!
     // we are positive the move is valid
-    m_the1v1Game.PutDownPieceOpponent(a_piece, a_coord);
+    m_the1v1Game.PutDownPiece(
+        a_piece, 
+        a_coord, 
+        m_the1v1Game.GetPlayerOpponent(), 
+        m_the1v1Game.GetPlayerMe());
 
     // update the score on the status bar
-    m_userSquaresLeft -= a_piece.GetNSquares();
     UpdateScoreStatus();
 
     // stop the stopwatch that counts the user time
@@ -547,6 +549,19 @@ void MainWindow::BoardDrawingArea_BoardClicked(const Coordinate &a_coord, const 
     m_stopWatchLabelComputer.Continue();
     // show the progress bar
     m_progressBar.show();
+
+    // remove the actual piece being edited from the edit piece drawing area
+    // and force the edit piece drawing area to be redraw
+    m_editPieceTable->SetPiece(e_noPiece);
+
+    // force the pick pieces drawing area to redraw because a piece has just been deployed
+    m_pickPiecesDrawingArea.Invalidate();    
+    
+    // change the current player and force the board to be redraw to update it with the brand new move
+    //TODO If the other user is a human being currentPlayer should be updated accordingly
+    //m_boardDrawingArea.SetCurrentPlayer(m_the1v1Game.GetPlayerMe());
+    m_boardDrawingArea.UnsetCurrentPlayer();
+    m_boardDrawingArea.Invalidate();
 
     if (!m_workerThread->ComputeMove(m_the1v1Game, a_piece, a_coord))
     {
@@ -557,18 +572,31 @@ void MainWindow::BoardDrawingArea_BoardClicked(const Coordinate &a_coord, const 
             << "The worker thread seems to be busy"
             << std::endl;
 #endif
+        char theMessage[MESSAGE_LENGTH];
+        snprintf(theMessage,
+                MESSAGE_LENGTH,
+                "<b>Fatal Error</b> telling the computing to start computing (seems to be busy).\n Application will try to exit now!");
+                
+        Gtk::MessageDialog::MessageDialog fatalErrorMessage(
+            *m_theWindow,
+            theMessage,
+            true,
+            Gtk::MESSAGE_INFO,
+            Gtk::BUTTONS_OK,
+            true);
+
+        if (fatalErrorMessage.run())
+        {
+            ; // the dialog only has 1 button
+        }
+    
+        // kill the worker thread
+        m_workerThread->Join();
+        
+        // exit the app
+        m_theWindow->hide();
     }
-
-    // remove the actual piece being edited from the edit piece drawing area
-    // and force the edit piece drawing area to be redraw
-    m_editPieceTable->SetPiece(e_noPiece);
-
-    // force the pick pieces drawing area to redraw because a piece has just been deployed
-    m_pickPiecesDrawingArea.Invalidate();
-
-    // force the board to be redraw to update it with the brand new move
-    m_boardDrawingArea.Invalidate();
-
+    
     return;
 }
 
@@ -646,7 +674,7 @@ void MainWindow::NotifyGameFinished()
 
     if (gameOverMessage.run())
     {
-        ; // the dialog only have 1 button
+        ; // the dialog only has 1 button
     }
 }
 
@@ -672,6 +700,9 @@ void MainWindow::NotifyMoveComputed()
         // restart the progress bar
         m_progressBar.set_fraction(0.0);
 
+        // human player will be putting down pieces on the board
+        m_boardDrawingArea.SetCurrentPlayer(m_the1v1Game.GetPlayerOpponent());
+        
         // restore the mouse cursor
         Glib::RefPtr<Gdk::Window> window = m_boardDrawingArea.get_window();
         if (window)
@@ -683,23 +714,49 @@ void MainWindow::NotifyMoveComputed()
 
 void MainWindow::NotifyProgressUpdate()
 {
-    m_progressBar.set_fraction(m_computingCurrentProgress);
+    float progress;
+    G_LOCK(s_computingCurrentProgress);
+    progress = s_computingCurrentProgress;
+    G_UNLOCK(s_computingCurrentProgress);
+    
+    m_progressBar.set_fraction(progress);
 }
 
 void MainWindow::UpdateScoreStatus()
 {
+    // calculate the number of squares left
+    int32_t squaresLeftUser = 0;
+    int32_t squaresLeftComputer = 0;
+    for (int8_t i = e_minimumPieceIndex ; i < e_numberOfPieces; i++)
+    {
+        if (m_the1v1Game.GetPlayerMe().IsPieceAvailable(static_cast<ePieceType_t>(i)))
+        {
+            squaresLeftComputer +=
+                    m_the1v1Game.GetPlayerMe().m_pieces[i].GetNSquares();
+        }
+
+        if (m_the1v1Game.GetPlayerOpponent().IsPieceAvailable(static_cast<ePieceType_t>(i)))
+        {
+            squaresLeftUser +=
+                    m_the1v1Game.GetPlayerOpponent().m_pieces[i].GetNSquares();
+        }
+    }
+    
+    // update the GUI widgets
     std::stringstream theMessage;
-    theMessage << "Computer: "
+    theMessage << m_the1v1Game.GetPlayerMe().GetName()
+               << ": "
                << std::setfill(' ') << std::setw(2)
-               << static_cast<int32_t>(m_computerSquaresLeft)
+               << static_cast<int32_t>(squaresLeftComputer)
                << " left";
 
     m_computerScoreLabel.set_text(theMessage.str().c_str());
 
     theMessage.str("");
-    theMessage << "You: "
+    theMessage << m_the1v1Game.GetPlayerOpponent().GetName()
+               << ": "
                << std::setfill(' ') << std::setw(2)
-               << static_cast<int32_t>(m_userSquaresLeft)
+               << static_cast<int32_t>(squaresLeftUser)
                << " left";
 
     m_userScoreLabel.set_text(theMessage.str().c_str());

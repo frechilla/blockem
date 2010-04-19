@@ -216,6 +216,8 @@ void* MainWindowWorkerThread::ThreadRoutine(void *a_ThreadParam)
                     resultReturnedValue = thisThread->m_localGame.MinMax(
                                                 heuristicMethod,
                                                 depth,
+                                                thisThread->m_localGame.GetPlayerMe(),
+                                                thisThread->m_localGame.GetPlayerOpponent(),
                                                 resultPiece,
                                                 resultCoord,
                                                 thisThread->m_terminate,
@@ -227,6 +229,8 @@ void* MainWindowWorkerThread::ThreadRoutine(void *a_ThreadParam)
                     resultReturnedValue = thisThread->m_localGame.MinMax(
                                                 heuristicMethod,
                                                 depth,
+                                                thisThread->m_localGame.GetPlayerMe(),
+                                                thisThread->m_localGame.GetPlayerOpponent(),
                                                 resultPiece,
                                                 resultCoord,
                                                 thisThread->m_terminate);
@@ -238,11 +242,19 @@ void* MainWindowWorkerThread::ThreadRoutine(void *a_ThreadParam)
                 resultReturnedValue = thisThread->m_localGame.MinMax(
                                             heuristicMethod,
                                             depth,
+                                            thisThread->m_localGame.GetPlayerMe(),
+                                            thisThread->m_localGame.GetPlayerOpponent(),
                                             resultPiece,
                                             resultCoord,
                                             thisThread->m_terminate,
                                             thisThread->m_localLatestCoord,
                                             thisThread->m_localLatestPiece);
+            }
+            
+            if (thisThread->m_terminate == PROCESSING_STOP)
+            {
+                resultPiece = e_noPiece;
+                resultCoord = Coordinate(0, 0);
             }
 
             // notify the result
@@ -252,10 +264,14 @@ void* MainWindowWorkerThread::ThreadRoutine(void *a_ThreadParam)
                     resultReturnedValue);
 
             // update the local game as well in case the computer has
-            // put more than 1 move in a row
+            // to put more than 1 move in a row
             if (resultPiece.GetType() != e_noPiece)
             {
-                thisThread->m_localGame.PutDownPieceMe(resultPiece, resultCoord);
+                thisThread->m_localGame.PutDownPiece(
+                        resultPiece, 
+                        resultCoord,
+                        thisThread->m_localGame.GetPlayerMe(),
+                        thisThread->m_localGame.GetPlayerOpponent());
             }
 
         } while ( (resultPiece.GetType() != e_noPiece) &&

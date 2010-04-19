@@ -1,3 +1,8 @@
+now: Version next
+    - App kills itself when unexpected state occurs if cumputing thread is 
+      busy
+    - Progress bar is totally thread safe now
+
 16/04/2010: Version 0.1.5
     - Minmax has been fixed. It was faulty because pieces weren't being 
       rotated once they were mirrored during the AI calculations.

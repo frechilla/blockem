@@ -45,7 +45,7 @@ if test "$os_win32" = "yes"; then
 fi
 
 # Checks for libraries.
-PKG_CHECK_MODULES([GTKMM], [gtkmm-2.4 >= 1.0.0])
+PKG_CHECK_MODULES([GTKMM], [gtkmm-2.4 >= 2.12])
 PKG_CHECK_MODULES([GLADEMM], [libglademm-2.4 >= 1.0.0])
 PKG_CHECK_MODULES([GTHREAD], [gthread-2.0 >= 1.0.0])
 # contained in gtkmm
@@ -70,6 +70,7 @@ AC_TYPE_INT8_T
 AC_TYPE_UINT16_T
 AC_TYPE_UINT8_T
 AC_TYPE_UINT32_T
+AC_TYPE_UINT64_T
 
 # Checks for library functions.
 

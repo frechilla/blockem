@@ -113,7 +113,11 @@ Piece::~Piece()
 {
 }
 
-void Piece::SetPiece(Coordinate a_coords[PIECE_MAX_SQUARES], uint8_t a_nSquares, bool a_mirror, int8_t a_nRotations, uint8_t a_squareSideHalfSize)
+void Piece::SetPiece(
+    Coordinate a_coords[PIECE_MAX_SQUARES], 
+    uint8_t a_nSquares, bool a_mirror, 
+    int8_t a_nRotations, 
+    uint8_t a_squareSideHalfSize)
 {
 #ifdef DEBUG
     assert(a_nSquares <= PIECE_MAX_SQUARES);
@@ -588,4 +592,45 @@ void Piece::LoadPiece_5TheUltimate(Piece &thisPiece)
 	coords[4].Set(1, 0);
 
     thisPiece.SetPiece(coords, 5, true,  4, 2);
+}
+
+void Piece::BuildUpBitwiseRepresentation()
+{
+    do
+    {
+        int16_t nRotations = 0;
+        while(nRotations < GetNRotations())
+        {
+            uint64_t bitwisePiece = 0x0000000000000000;
+            
+            for (int8_t i = 0; i < GetNSquares(); i++)
+            {
+                // this piece of magic converts a piece into a string of bits
+                bitwisePiece |= 1 << ( ((3 - m_coords[i].m_row) * 7) + (3 - m_coords[i].m_col) );
+            }
+            
+            m_bitwiseRepresentationList.push_back(bitwisePiece);
+        
+            RotateRight();
+            nRotations++;
+        }
+        
+        if ( (GetType() == e_4Piece_LittleS) &&
+             (IsMirrored() == false) )
+        {
+            // For this piece the maximum number or rotations is 2
+            // and the piece is not symmetric, the configuration after
+            // the 3rd rotation is the shame shape as the original, but
+            // the coords moved. Reset the piece before mirroring to
+            // avoid unexpected results
+            //
+            // it also happens with 2piece and 4longPiece, but those pieces
+            // don't have mirror, so there's no need for this extra check
+            Reset();
+        }
+        
+    } while (MirrorYAxis());
+
+    // leave the piece as it was before doig the bitwise representation
+    Reset();
 }

@@ -63,9 +63,7 @@ public:
     typedef void(*ProgressFunctor_t)(float);
 
 	/// @brief builds the game
-	/// It creates a board and two players,
-    ///   * 'me' (computer) which the MinMax algorithm will maximise to win
-    ///   * the 'opponent' (user), which the MinMax algorithm will try to beat
+	/// It creates a board where the game will be played
     Game1v1();
 	virtual ~Game1v1();
 
@@ -74,18 +72,16 @@ public:
 	{
 	    return m_board;
 	}
-
-    /// @returns the player 'me' (the one that the MinMax algorithm will try to make win)
-	inline Player& GetPlayerMe()
-	{
-		return m_playerMe;
-	}
-
-	/// @returns the player 'opponent' (the one that the MinMax algorithm will try to beat)
-	inline Player& GetPlayerOpponent()
-	{
-		return m_playerOpponent;
-	}
+    
+    inline Player& GetPlayerMe()
+    {
+        return m_player1;
+    }
+    
+    inline Player& GetPlayerOpponent()
+    {
+        return m_player2;
+    }
 
 	/// @brief sets the progress functor
 	inline void SetProgressHandler(ProgressFunctor_t a_progressFunctor)
@@ -93,46 +89,43 @@ public:
 	    m_progressFunctor = a_progressFunctor;
 	}
 
-	/// puts down the computer piece on the board and sets it to used in player me (computer)
-	inline void PutDownPieceMe(
+    /// put down a piece on the board. The user is supposed to check if there is space for it before calling
+    /// @param the piece
+    /// @param the ABSOLUTE coord
+    /// @param the player that owns the piece to be put down. It will be updated to represent the new configuration
+    /// @param the opponent of the player that owns the piece. It will be updated to represent the new configuration
+	inline void PutDownPiece(
 			const Piece      &a_piece,
-			const Coordinate &a_coord)
+			const Coordinate &a_coord,
+            Player           &a_playerMe,
+            Player           &a_playerOpponent)
 	{
-	    Game1v1::PutDownPiece(m_board, a_piece, a_coord, m_playerMe, m_playerOpponent);
-	    m_playerMe.UnsetPiece(a_piece.GetType());
+	    Game1v1::PutDownPiece(m_board, a_piece, a_coord, a_playerMe, a_playerOpponent);
+	    a_playerMe.UnsetPiece(a_piece.GetType());
 	}
 
-	/// remove piece from the board and sets it to unused in player me (computer)
-	inline void RemovePieceMe(
+    /// remove a piece from the board. The user is supposed to check if the piece was there
+    /// before calling this function since it just will set to empty the squares
+    /// @param the piece
+    /// @param the ABSOLUTE coord
+    /// @param the player that owns the piece to be removed. It will be updated to represent the new configuration
+	/// @param the opponent of the player that owns the piece. It will be updated to represent the new configuration
+	inline void RemovePiece(
 			const Piece      &a_piece,
-			const Coordinate &a_coord)
+			const Coordinate &a_coord,
+            Player           &a_playerMe,
+            Player           &a_playerOpponent)
 	{
-	    Game1v1::RemovePiece(m_board, a_piece, a_coord, m_playerMe, m_playerOpponent);
-	    m_playerMe.SetPiece(a_piece.GetType());
-	}
-
-	/// puts down the computer piece on the board and sets it to used in player opponent (user)
-	inline void PutDownPieceOpponent(
-			const Piece      &a_piece,
-			const Coordinate &a_coord)
-	{
-	    Game1v1::PutDownPiece(m_board, a_piece, a_coord, m_playerOpponent, m_playerMe);
-	    m_playerOpponent.UnsetPiece(a_piece.GetType());
-	}
-
-	/// remove piece from the board and sets it to unused in player opponent (user)
-	inline void RemovePieceOpponent(
-			const Piece      &a_piece,
-			const Coordinate &a_coord)
-	{
-	    Game1v1::RemovePiece(m_board, a_piece, a_coord, m_playerOpponent, m_playerMe);
-	    m_playerOpponent.SetPiece(a_piece.GetType());
+	    Game1v1::RemovePiece(m_board, a_piece, a_coord, a_playerMe, a_playerOpponent);
+	    a_playerMe.SetPiece(a_piece.GetType());
 	}
 
     /// @brief calculates the next piece to be put down by player 'me' using the heuristic passed as parameter
     /// It uses the minimax algorithm with the alpha beta pruning
 	/// @param the heuristic method for the min max algorithm
 	/// @param maximum depth for the search tree
+    /// @param a reference to the player whose move will be calculated by MinMAx algorithm
+    /// @param a reference to the the opponent of the player whose move is going to be calculated by the function
 	/// @param a reference to a piece where the result will be stored
 	/// @param a reference to a Coordinate where the result will be stored
     /// @param parameter with a reference to a variable that could be set
@@ -150,6 +143,8 @@ public:
     int32_t MinMax(
             Heuristic::EvalFunction_t    a_heuristicMethod,
             int32_t                      depth,
+            Player                       &a_playerMe,
+            Player                       &a_playerOpponent,
             Piece                        &out_resultPiece,
             Coordinate                   &out_coord,
             const volatile sig_atomic_t  &stopProcessingFlag,
@@ -181,11 +176,11 @@ private:
     /// The blokus board where the game will be played
 	Board m_board;
 
-	/// The player that represents me (the guy MinMax will try to make win)
-	Player m_playerMe;
+	/// one of the players that take part in the game. It's called 1, but it's not more (or less) important
+	Player m_player1;
 
-	/// The player that represents the opponent (the guy MinMax will try to beat)
-	Player m_playerOpponent;
+	/// one of the players that take part in the game. It's called 2, but it's not more (or less) important
+	Player m_player2;
 
 	/// functor to notify the progress made by the MinMax algorithm
 	ProgressFunctor_t m_progressFunctor;

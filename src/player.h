@@ -78,6 +78,12 @@ public:
 	{
     	return m_name;
 	}
+    
+    /// modifies the name of the player
+    inline void SetName(std::string& a_newName)
+    {
+        m_name = a_newName;
+    }
 
     /// Returns the starting coordinate of this player
     inline const Coordinate& GetStartingCoordinate() const

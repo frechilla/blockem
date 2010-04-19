@@ -2766,7 +2766,7 @@ am__tar='${AMTAR} chof - "$$tardir"'; am__untar='${AMTAR} xf -'
 ac_config_headers="$ac_config_headers config.h"
 
 
-$as_echo "#define SVN_REVISION \"85\"" >>confdefs.h
+$as_echo "#define SVN_REVISION \"91M\"" >>confdefs.h
 
 
 # Checks for programs.
@@ -4615,12 +4615,12 @@ if test -n "$PKG_CONFIG"; then
         pkg_cv_GTKMM_CFLAGS="$GTKMM_CFLAGS"
     else
         if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtkmm-2.4 >= 1.0.0\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "gtkmm-2.4 >= 1.0.0") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtkmm-2.4 >= 2.12\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "gtkmm-2.4 >= 2.12") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_GTKMM_CFLAGS=`$PKG_CONFIG --cflags "gtkmm-2.4 >= 1.0.0" 2>/dev/null`
+  pkg_cv_GTKMM_CFLAGS=`$PKG_CONFIG --cflags "gtkmm-2.4 >= 2.12" 2>/dev/null`
 else
   pkg_failed=yes
 fi
@@ -4633,12 +4633,12 @@ if test -n "$PKG_CONFIG"; then
         pkg_cv_GTKMM_LIBS="$GTKMM_LIBS"
     else
         if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtkmm-2.4 >= 1.0.0\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "gtkmm-2.4 >= 1.0.0") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtkmm-2.4 >= 2.12\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "gtkmm-2.4 >= 2.12") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_GTKMM_LIBS=`$PKG_CONFIG --libs "gtkmm-2.4 >= 1.0.0" 2>/dev/null`
+  pkg_cv_GTKMM_LIBS=`$PKG_CONFIG --libs "gtkmm-2.4 >= 2.12" 2>/dev/null`
 else
   pkg_failed=yes
 fi
@@ -4657,14 +4657,14 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        GTKMM_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "gtkmm-2.4 >= 1.0.0"`
+	        GTKMM_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "gtkmm-2.4 >= 2.12"`
         else
-	        GTKMM_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "gtkmm-2.4 >= 1.0.0"`
+	        GTKMM_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "gtkmm-2.4 >= 2.12"`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$GTKMM_PKG_ERRORS" >&5
 
-	as_fn_error "Package requirements (gtkmm-2.4 >= 1.0.0) were not met:
+	as_fn_error "Package requirements (gtkmm-2.4 >= 2.12) were not met:
 
 $GTKMM_PKG_ERRORS
 
@@ -5522,6 +5522,20 @@ $as_echo "#define _UINT32_T 1" >>confdefs.h
 
 cat >>confdefs.h <<_ACEOF
 #define uint32_t $ac_cv_c_uint32_t
+_ACEOF
+;;
+  esac
+
+ac_fn_c_find_uintX_t "$LINENO" "64" "ac_cv_c_uint64_t"
+case $ac_cv_c_uint64_t in #(
+  no|yes) ;; #(
+  *)
+
+$as_echo "#define _UINT64_T 1" >>confdefs.h
+
+
+cat >>confdefs.h <<_ACEOF
+#define uint64_t $ac_cv_c_uint64_t
 _ACEOF
 ;;
   esac

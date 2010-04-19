@@ -58,8 +58,11 @@ DrawingAreaBoard::DrawingAreaBoard(const Board &a_board) :
     m_theBoard(a_board),
     m_currentPlayer(NULL),
     m_currentPiece(e_noPiece),
-    m_currentCoord(COORD_UNITIALISED, COORD_UNITIALISED)
+    m_currentCoord(COORD_UNITIALISED, COORD_UNITIALISED),
+    m_latestPieceDeployed(e_noPiece),
+    m_latestPieceDeployedCoord(COORD_UNITIALISED, COORD_UNITIALISED)
 {
+    // these events are going to be handled by the drawing area (apart from the usual expose event)
     this->add_events(Gdk::BUTTON_PRESS_MASK);
     this->add_events(Gdk::POINTER_MOTION_MASK);
     this->add_events(Gdk::LEAVE_NOTIFY_MASK);
@@ -127,9 +130,9 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
         {
             // if this player put down no pieces yet, draw a small circle in the starting point
             cr->set_source_rgba(
-                    static_cast<float>(red)/255,
-                    static_cast<float>(green)/255,
-                    static_cast<float>(blue)/255,
+                    static_cast<float>(red)  / 255,
+                    static_cast<float>(green)/ 255,
+                    static_cast<float>(blue) / 255,
                     STARTING_COORD_ALPHA_TRANSPARENCY);
 
             cr->arc(xc - squareWidth/2  +
@@ -146,9 +149,9 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
         {
             // this player already put some pieces on the board. Draw them all!
             cr->set_source_rgb(
-                    static_cast<float>(red)/255,
-                    static_cast<float>(green)/255,
-                    static_cast<float>(blue)/255);
+                    static_cast<float>(red)  / 255,
+                    static_cast<float>(green)/ 255,
+                    static_cast<float>(blue) / 255);
 
             for (int32_t rowCount = 0;
                          rowCount < m_theBoard.GetNRows() ;
@@ -239,9 +242,9 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
                     m_currentPlayer->GetStartingCoordinate()))
             {
                 cr->set_source_rgba(
-                        static_cast<float>(red)/255,
-                        static_cast<float>(green)/255,
-                        static_cast<float>(blue)/255,
+                        static_cast<float>(red)  / 255,
+                        static_cast<float>(green)/ 255,
+                        static_cast<float>(blue) / 255,
                         GHOST_PIECE_ALPHA_TRANSPARENCY);
             }
             else
@@ -260,9 +263,9 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
                 *m_currentPlayer))
         {
             cr->set_source_rgba(
-                    static_cast<float>(red)/255,
-                    static_cast<float>(green)/255,
-                    static_cast<float>(blue)/255,
+                    static_cast<float>(red)  / 255,
+                    static_cast<float>(green)/ 255,
+                    static_cast<float>(blue) / 255,
                     GHOST_PIECE_ALPHA_TRANSPARENCY);
         }
         else
@@ -290,7 +293,14 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
             cr->fill();
         }
     }
-
+    
+    // add a beautiful effect to the latest piece deployed on the board
+    if (m_latestPieceDeployed.GetType() != e_noPiece)
+    {
+        // The second object is drawn as if nothing else were below
+        cr->set_operator(Cairo::OPERATOR_SOURCE);
+    }
+    
     return true;
 }
 
@@ -473,4 +483,12 @@ bool DrawingAreaBoard::Invalidate()
     }
 
     return false;
+}
+
+bool DrawingAreaBoard::Invalidate(const Piece &a_piece, const Coordinate &a_coord)
+{
+    m_latestPieceDeployed = a_piece;
+    m_latestPieceDeployedCoord = a_coord;
+    
+    return Invalidate();
 }

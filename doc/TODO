@@ -7,10 +7,10 @@ basic things that need to be done:
    flashing the piece or using another colour
  + Lots of calculation time is being wasted now. The decission tree should be
    calculated and kept in memory, and even updated while the human player is
-   thinking (normally the uman player takes longer than the computer to "think"
+   thinking (normally the human player takes longer than the computer to "think"
    the next move)
- + There are some TODOs in the GUI code is improvable. They'll have to be
-   solved little by little
+ + There are some TODOs in the GUI code. They'll have to be solved little by 
+   little
  + Remove dependecy from glade. Use GtkBuilder instead
  + It should be possible to generate doxygen. Add it to the makefiles
  + Installer for the windows platform

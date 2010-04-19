@@ -47,12 +47,20 @@ private:
 
     void PutDownPiece(Piece &a_piece)
     {
-        m_1v1Game.PutDownPieceMe(a_piece, Coordinate(7, 7));
+        m_1v1Game.PutDownPiece(
+            a_piece, 
+            Coordinate(7, 7), 
+            m_1v1Game.GetPlayerMe(), 
+            m_1v1Game.GetPlayerOpponent());
     }
 
     void RemovePiece(Piece &a_piece)
     {
-        m_1v1Game.RemovePieceMe(a_piece, Coordinate(7, 7));
+        m_1v1Game.RemovePiece(
+            a_piece, 
+            Coordinate(7, 7), 
+            m_1v1Game.GetPlayerMe(), 
+            m_1v1Game.GetPlayerOpponent());
     }
 
     void TestPiece_1BabyPiece();
