@@ -52,6 +52,10 @@ static const float GHOST_PIECE_WRONG_GREEN        = 0.0;
 static const float GHOST_PIECE_WRONG_BLUE         = 0.0;
 static const float GHOST_PIECE_ALPHA_TRANSPARENCY = 0.2;
 
+// 1000 = 1 second
+static const uint32_t LAST_PIECE_EFFECT_MILLIS = 300;
+// minimum transparency for the latest piece deployed effect
+static const float    LAST_PIECE_EFFECT_MIN_ALPHA = 0.4;
 
 DrawingAreaBoard::DrawingAreaBoard(const Board &a_board) :
     Gtk::DrawingArea(),
@@ -59,6 +63,7 @@ DrawingAreaBoard::DrawingAreaBoard(const Board &a_board) :
     m_currentPlayer(NULL),
     m_currentPiece(e_noPiece),
     m_currentCoord(COORD_UNITIALISED, COORD_UNITIALISED),
+    m_latestPieceDeployedEffectOn(false),
     m_latestPieceDeployed(e_noPiece),
     m_latestPieceDeployedCoord(COORD_UNITIALISED, COORD_UNITIALISED)
 {
@@ -277,7 +282,7 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
                     GHOST_PIECE_ALPHA_TRANSPARENCY);
         }
 
-        // draw the piece in the edit pieces drawing area
+        // draw the piece
         for (uint8_t i = 0; i < m_currentPiece.GetNSquares(); i++)
         {
             Coordinate coord(
@@ -293,14 +298,48 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
             cr->fill();
         }
     }
-    
+
     // add a beautiful effect to the latest piece deployed on the board
-    if (m_latestPieceDeployed.GetType() != e_noPiece)
+    if ( (m_latestPieceDeployedPlayer != NULL) &&
+         (m_latestPieceDeployed.GetType() != e_noPiece) )
     {
+        //TODO have a look at cairo_save and cairo_restore to draw transparency
+        // http://www.cairographics.org/manual/cairo-context.html
+        //
+        // or maybe have a look at the operator CAIRO_OPERATOR_CLEAR instead of SOURCE
+        // http://cairographics.org/operators/
+
         // The second object is drawn as if nothing else were below
         cr->set_operator(Cairo::OPERATOR_SOURCE);
+
+        uint8_t red   = 0;
+        uint8_t green = 0;
+        uint8_t blue  = 0;
+        m_latestPieceDeployedPlayer->GetColour(red, green, blue);
+
+        cr->set_source_rgba(
+                    static_cast<float>(red)  / 255,
+                    static_cast<float>(green)/ 255,
+                    static_cast<float>(blue) / 255,
+                    m_latestPieceDeployedTransparency);
+
+        // draw the piece
+        for (uint8_t i = 0; i < m_latestPieceDeployed.GetNSquares(); i++)
+        {
+            Coordinate coord(
+                    m_latestPieceDeployedCoord.m_row + m_latestPieceDeployed.m_coords[i].m_row,
+                    m_latestPieceDeployedCoord.m_col + m_latestPieceDeployed.m_coords[i].m_col);
+
+            cr->rectangle(
+                    (xc - squareWidth /2) + (littleSquare * coord.m_col) + 1,
+                    (yc - squareHeight/2) + (littleSquare * coord.m_row) + 1,
+                    littleSquare - 1,
+                    littleSquare - 1);
+
+            cr->fill();
+        }
     }
-    
+
     return true;
 }
 
@@ -485,10 +524,77 @@ bool DrawingAreaBoard::Invalidate()
     return false;
 }
 
-bool DrawingAreaBoard::Invalidate(const Piece &a_piece, const Coordinate &a_coord)
+bool DrawingAreaBoard::Invalidate(const Piece &a_piece, const Coordinate &a_coord, const Player& a_player)
 {
     m_latestPieceDeployed = a_piece;
     m_latestPieceDeployedCoord = a_coord;
-    
+    m_latestPieceDeployedPlayer = &a_player;
+
+    if (m_latestPieceDeployedEffectOn == false)
+    {
+        m_latestPieceDeployedEffectOn = true;
+        g_timeout_add(LAST_PIECE_EFFECT_MILLIS, timerCallback, static_cast<void*>(this));
+    }
+
     return Invalidate();
+}
+
+gboolean DrawingAreaBoard::timerCallback(void* param)
+{
+    DrawingAreaBoard* pThis = static_cast<DrawingAreaBoard*> (param);
+    static Piece sLatestPieceDeployedProcessed(e_noPiece);
+    static Coordinate sLatestPieceDeployedCoord(COORD_UNITIALISED, COORD_UNITIALISED);
+    static bool alphaGrowing = true; // transparency grows or drops
+
+    if (pThis->m_latestPieceDeployedEffectOn == false)
+    {
+        // stop the timeout returning FALSE
+        return FALSE;
+    }
+
+    // no need to check if the player is the same.
+    // 2 pieces can't be deployed in the same coordinate of the board
+    if ( (sLatestPieceDeployedProcessed.GetType() !=
+          pThis->m_latestPieceDeployed.GetType()) ||
+         (sLatestPieceDeployedCoord.m_row !=
+          pThis->m_latestPieceDeployedCoord.m_row)         ||
+         (sLatestPieceDeployedCoord.m_col !=
+          pThis->m_latestPieceDeployedCoord.m_col)         )
+    {
+        // piece changed
+        // at the very beginning of the animation transparency is the minimum
+        pThis->m_latestPieceDeployedTransparency = LAST_PIECE_EFFECT_MIN_ALPHA;
+
+        sLatestPieceDeployedProcessed = pThis->m_latestPieceDeployed;
+        sLatestPieceDeployedCoord     = pThis->m_latestPieceDeployedCoord;
+        alphaGrowing = true;
+    }
+    else
+    {
+        // latest piece deployed didn't change. Just change the alpha transparency
+        // before invalidating the board
+        if ( (pThis->m_latestPieceDeployedTransparency < 1.0) &&
+             (alphaGrowing) )
+        {
+            pThis->m_latestPieceDeployedTransparency += 0.1;
+
+            if (pThis->m_latestPieceDeployedTransparency >= 1.0)
+            {
+                alphaGrowing = false;
+            }
+        }
+        else
+        {
+            pThis->m_latestPieceDeployedTransparency -= 0.1;
+
+            if (pThis->m_latestPieceDeployedTransparency <= LAST_PIECE_EFFECT_MIN_ALPHA)
+            {
+                alphaGrowing = true;
+            }
+        }
+    }
+
+    pThis->Invalidate();
+
+    return TRUE;
 }

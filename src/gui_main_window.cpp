@@ -33,6 +33,7 @@
 #include <iostream>
 #endif
 
+#include <queue>   // queue computer's moves
 #include <iomanip> // setw
 #include "gui_main_window.h"
 #include "gui_glade_defs.h"
@@ -83,6 +84,14 @@ static const uint32_t STOPWATCH_UPDATE_PERIOD_MILLIS = 500; // 1000 = 1 second
 static float s_computingCurrentProgress = 0.0;
 G_LOCK_DEFINE_STATIC(s_computingCurrentProgress);
 
+
+// this queue is used to communicate the worker thread with the main thread
+// in a thread-safe manner. It's a bit dirty but it will do it for now
+std::queue< std::pair<Piece, Coordinate> > s_computerMoveQueue = std::queue< std::pair<Piece, Coordinate> >();
+
+G_LOCK_DEFINE_STATIC(s_computerMoveQueue);
+
+
 void MainWindow::ProgressUpdate(float a_progress)
 {
 #ifdef DEBUG
@@ -90,9 +99,9 @@ void MainWindow::ProgressUpdate(float a_progress)
 #endif
 
     G_LOCK(s_computingCurrentProgress);
-    s_computingCurrentProgress = a_progress;
+        s_computingCurrentProgress = a_progress;
     G_UNLOCK(s_computingCurrentProgress);
-    
+
     MainWindow::Instance().m_signal_computingProgressUpdated.emit();
 }
 
@@ -323,18 +332,14 @@ void MainWindow::WorkerThread_computingFinished(
     // WARNING: this method is run by another thread.
     // once the m_signal_moveComputed signal is emited the
     // main thread will update the GUI widgets
-    
-    if (a_piece.GetType() != e_noPiece)
-    {
-        //TODO THIS IS NOT THREAD SAFE
-        // have a look at
-        // http://tadeboro.blogspot.com/2009/06/multi-threaded-gtk-applications.html
-        m_the1v1Game.PutDownPiece(
-            a_piece, 
-            a_coord,
-            m_the1v1Game.GetPlayerMe(),
-            m_the1v1Game.GetPlayerOpponent());
-    }
+
+    G_LOCK(s_computerMoveQueue);
+        //TODO moves should be queued. A move can be lost if the main thread
+        // is too slow to draw the computer thread calculations
+
+    s_computerMoveQueue.push(std::pair<Piece, Coordinate>(a_piece, a_coord));
+
+    G_UNLOCK(s_computerMoveQueue);
 
     // this signal is being issued from the MainWindowWorkerThread
     // GTK is not thread safe, so every GUI function should be called from the same thread
@@ -464,6 +469,7 @@ void MainWindow::MenuItemGameNew_Activate()
     {
         // reset the current game, and update the view
         m_the1v1Game.Reset();
+        m_boardDrawingArea.CancelLatestPieceDeployedEffect();
         m_boardDrawingArea.Invalidate();
         m_pickPiecesDrawingArea.Invalidate();
         m_showComputerPiecesDrawingArea.Invalidate();
@@ -477,6 +483,9 @@ void MainWindow::MenuItemGameNew_Activate()
 
         // restart the progress bar
         m_progressBar.set_fraction(0.0);
+
+        // human user will put down the next piece
+        m_boardDrawingArea.SetCurrentPlayer(m_the1v1Game.GetPlayerOpponent());
 
         // it will be human's go next. Start his/her timer
         m_stopWatchLabelUser.Continue();
@@ -535,9 +544,9 @@ void MainWindow::BoardDrawingArea_BoardClicked(const Coordinate &a_coord, const 
     //TODO this has to be changed. We should only use the arguments of the signal handler!!!!
     // we are positive the move is valid
     m_the1v1Game.PutDownPiece(
-        a_piece, 
-        a_coord, 
-        m_the1v1Game.GetPlayerOpponent(), 
+        a_piece,
+        a_coord,
+        m_the1v1Game.GetPlayerOpponent(),
         m_the1v1Game.GetPlayerMe());
 
     // update the score on the status bar
@@ -555,12 +564,15 @@ void MainWindow::BoardDrawingArea_BoardClicked(const Coordinate &a_coord, const 
     m_editPieceTable->SetPiece(e_noPiece);
 
     // force the pick pieces drawing area to redraw because a piece has just been deployed
-    m_pickPiecesDrawingArea.Invalidate();    
-    
+    m_pickPiecesDrawingArea.Invalidate();
+
     // change the current player and force the board to be redraw to update it with the brand new move
     //TODO If the other user is a human being currentPlayer should be updated accordingly
     //m_boardDrawingArea.SetCurrentPlayer(m_the1v1Game.GetPlayerMe());
     m_boardDrawingArea.UnsetCurrentPlayer();
+    //TODO if the other player is a human being the latest piece deployed effect shouldn't be cancelled
+    // should only be updated
+    m_boardDrawingArea.CancelLatestPieceDeployedEffect();
     m_boardDrawingArea.Invalidate();
 
     if (!m_workerThread->ComputeMove(m_the1v1Game, a_piece, a_coord))
@@ -576,7 +588,7 @@ void MainWindow::BoardDrawingArea_BoardClicked(const Coordinate &a_coord, const 
         snprintf(theMessage,
                 MESSAGE_LENGTH,
                 "<b>Fatal Error</b> telling the computing to start computing (seems to be busy).\n Application will try to exit now!");
-                
+
         Gtk::MessageDialog::MessageDialog fatalErrorMessage(
             *m_theWindow,
             theMessage,
@@ -589,14 +601,14 @@ void MainWindow::BoardDrawingArea_BoardClicked(const Coordinate &a_coord, const 
         {
             ; // the dialog only has 1 button
         }
-    
+
         // kill the worker thread
         m_workerThread->Join();
-        
+
         // exit the app
         m_theWindow->hide();
     }
-    
+
     return;
 }
 
@@ -680,11 +692,40 @@ void MainWindow::NotifyGameFinished()
 
 void MainWindow::NotifyMoveComputed()
 {
-	// update computer's squares left
-	UpdateScoreStatus();
+    // after the lock protected loop these variables will contain
+    // the latest piece and latest coord deployed
+    Piece latestPiece(e_noPiece);
+    Coordinate latestCoord(COORD_UNITIALISED, COORD_UNITIALISED);
+
+    G_LOCK(s_computerMoveQueue);
+        // save the latest moves on the board
+        while (!s_computerMoveQueue.empty())
+        {
+            latestPiece = s_computerMoveQueue.front().first;
+            latestCoord = s_computerMoveQueue.front().second;
+
+            if (latestPiece.GetType() != e_noPiece)
+            {
+                m_the1v1Game.PutDownPiece(
+                        latestPiece,
+                        latestCoord,
+                        m_the1v1Game.GetPlayerMe(),
+                        m_the1v1Game.GetPlayerOpponent());
+            }
+
+            s_computerMoveQueue.pop();
+        }
+    G_UNLOCK(s_computerMoveQueue);
 
     // invalidate the board drawing area to show the new move
-	m_boardDrawingArea.Invalidate();
+    // activating the latest piece deployed effect
+    m_boardDrawingArea.Invalidate(
+            latestPiece,
+            latestCoord,
+            m_the1v1Game.GetPlayerMe());
+
+	// update computer's squares left
+	UpdateScoreStatus();
 
 	// update the computer's pieces left too
     m_showComputerPiecesDrawingArea.Invalidate();
@@ -702,7 +743,7 @@ void MainWindow::NotifyMoveComputed()
 
         // human player will be putting down pieces on the board
         m_boardDrawingArea.SetCurrentPlayer(m_the1v1Game.GetPlayerOpponent());
-        
+
         // restore the mouse cursor
         Glib::RefPtr<Gdk::Window> window = m_boardDrawingArea.get_window();
         if (window)
@@ -716,9 +757,9 @@ void MainWindow::NotifyProgressUpdate()
 {
     float progress;
     G_LOCK(s_computingCurrentProgress);
-    progress = s_computingCurrentProgress;
+        progress = s_computingCurrentProgress;
     G_UNLOCK(s_computingCurrentProgress);
-    
+
     m_progressBar.set_fraction(progress);
 }
 
@@ -741,7 +782,7 @@ void MainWindow::UpdateScoreStatus()
                     m_the1v1Game.GetPlayerOpponent().m_pieces[i].GetNSquares();
         }
     }
-    
+
     // update the GUI widgets
     std::stringstream theMessage;
     theMessage << m_the1v1Game.GetPlayerMe().GetName()
