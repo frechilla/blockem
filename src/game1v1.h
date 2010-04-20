@@ -72,12 +72,12 @@ public:
 	{
 	    return m_board;
 	}
-    
+
     inline Player& GetPlayerMe()
     {
         return m_player1;
     }
-    
+
     inline Player& GetPlayerOpponent()
     {
         return m_player2;
@@ -140,6 +140,7 @@ public:
 	///        if this param is set to Piece(e_noPiece) MinMax won't be able to take into
 	///        account the latest opponent's move to compute the next move. it can also
 	///        be used to add a bit of randomness to the AI behaviour
+	/// @returns value calculated by the evaluation function for the selected configuration
     int32_t MinMax(
             Heuristic::EvalFunction_t    a_heuristicMethod,
             int32_t                      depth,

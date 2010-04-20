@@ -84,11 +84,9 @@ static const uint32_t STOPWATCH_UPDATE_PERIOD_MILLIS = 500; // 1000 = 1 second
 static float s_computingCurrentProgress = 0.0;
 G_LOCK_DEFINE_STATIC(s_computingCurrentProgress);
 
-
 // this queue is used to communicate the worker thread with the main thread
 // in a thread-safe manner. It's a bit dirty but it will do it for now
-std::queue< std::pair<Piece, Coordinate> > s_computerMoveQueue = std::queue< std::pair<Piece, Coordinate> >();
-
+static std::queue< std::pair<Piece, Coordinate> > s_computerMoveQueue = std::queue< std::pair<Piece, Coordinate> >();
 G_LOCK_DEFINE_STATIC(s_computerMoveQueue);
 
 

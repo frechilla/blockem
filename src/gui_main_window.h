@@ -176,9 +176,6 @@ private:
     /// Signal class for inter-thread communication to
     /// notify a change in computing progress
     Glib::Dispatcher m_signal_computingProgressUpdated;
-    
-    /// @brief current computing progress
-    static float m_computingCurrentProgress;
 
     /// @brief notifies to the user that the game is finished using a fancy message box
     void NotifyGameFinished();
