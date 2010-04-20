@@ -3,8 +3,6 @@ basic things that need to be done:
 
  + Options in menu Settings and Preferences should do something. This should 
    be pretty straight-forward
- + The latest piece put down by the computer should be noted, for example
-   flashing the piece or using another colour
  + Lots of calculation time is being wasted now. The decission tree should be
    calculated and kept in memory, and even updated while the human player is
    thinking (normally the human player takes longer than the computer to "think"
