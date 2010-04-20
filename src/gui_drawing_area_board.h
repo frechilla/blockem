@@ -50,7 +50,7 @@ public:
 
     /// @brief force the drawing area to be reprinted
     bool Invalidate();
-    
+
     /// @brief force the drawing area to be reprinted because a_piece was put down in a_coord
     /// this function sets up a visual effect over this latest piece deployed on the board
     /// to show the human user what was the latest piece deployed
@@ -58,11 +58,8 @@ public:
 
     /// @brief cancel visual effect over latest piece deployed started by
     /// DrawingAreaBoard::Invalidate(const Piece &a_piece, const Coordinate &a_coord, const Player &a_player)
-    inline void CancelLatestPieceDeployedEffect()
-    {
-        m_latestPieceDeployedEffectOn = false;
-    }
-    
+    void CancelLatestPieceDeployedEffect();
+
     /// sets the player who will put down next piece
     /// If there is a player currently set, a call to this function
     /// will override the value. You can use UnsetCurrentPlayer to
@@ -71,7 +68,7 @@ public:
     {
         m_currentPlayer = &a_player;
     }
-    
+
     void inline UnsetCurrentPlayer()
     {
         m_currentPlayer = NULL;
@@ -107,21 +104,21 @@ private:
 
     /// current place in the board where the user moved the mouse pointer (inside the board)
     Coordinate m_currentCoord;
-    
+
     /// Is the effect over the latest piece deployed on?
     bool m_latestPieceDeployedEffectOn;
-    
+
     /// This is a copy of the latest piece deployed on the board so a visual effect
     /// to notify the user what was the latest piece deployed can be added
     Piece m_latestPieceDeployed;
-    
+
     /// Indicates where the latest piece was deployed
     Coordinate m_latestPieceDeployedCoord;
-    
+
     /// player who deployed the latest piece on the board. it will be used for the latest
     /// piece visual effect
     const Player* m_latestPieceDeployedPlayer;
-    
+
     /// current alpha transparency of the latest deployed piece
     /// this is modified in timerCallback to add a bit of an effect
     /// to the latest piece deployed
@@ -146,7 +143,7 @@ private:
     /// @brief translates an absolute drawingarea coordinate into the board coord
     /// @return true if the translation was successful (the window coordinate was in the board)
     bool DrawingAreaToBoardCoord(int32_t a_windowX, int32_t a_windowY, Coordinate &out_boardCoord);
-    
+
     /// @brief callback to be called by the g timer
     static gboolean timerCallback(void* param);
 

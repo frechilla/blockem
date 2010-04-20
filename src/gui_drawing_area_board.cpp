@@ -56,6 +56,9 @@ static const float GHOST_PIECE_ALPHA_TRANSPARENCY = 0.2;
 static const uint32_t LAST_PIECE_EFFECT_MILLIS = 300;
 // minimum transparency for the latest piece deployed effect
 static const float    LAST_PIECE_EFFECT_MIN_ALPHA = 0.4;
+// initial level of transparency for the last piece deployed effect
+static const float    LAST_PIECE_EFFECT_INITIAL_ALPHA = 1.0;
+
 
 DrawingAreaBoard::DrawingAreaBoard(const Board &a_board) :
     Gtk::DrawingArea(),
@@ -65,7 +68,9 @@ DrawingAreaBoard::DrawingAreaBoard(const Board &a_board) :
     m_currentCoord(COORD_UNITIALISED, COORD_UNITIALISED),
     m_latestPieceDeployedEffectOn(false),
     m_latestPieceDeployed(e_noPiece),
-    m_latestPieceDeployedCoord(COORD_UNITIALISED, COORD_UNITIALISED)
+    m_latestPieceDeployedCoord(COORD_UNITIALISED, COORD_UNITIALISED),
+    m_latestPieceDeployedPlayer(NULL),
+    m_latestPieceDeployedTransparency(LAST_PIECE_EFFECT_INITIAL_ALPHA)
 {
     // these events are going to be handled by the drawing area (apart from the usual expose event)
     this->add_events(Gdk::BUTTON_PRESS_MASK);
@@ -115,6 +120,7 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
 
     // get the pen to draw
     Cairo::RefPtr<Cairo::Context> cr = window->create_cairo_context();
+    cr->save();
 
     // clip to the area indicated by the expose event so that we only redraw
     // the portion of the window that needs to be redrawn
@@ -299,8 +305,11 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
         }
     }
 
+    cr->restore();
+
     // add a beautiful effect to the latest piece deployed on the board
-    if ( (m_latestPieceDeployedPlayer != NULL) &&
+    if ( (m_latestPieceDeployedEffectOn == true) &&
+         (m_latestPieceDeployedPlayer != NULL)   &&
          (m_latestPieceDeployed.GetType() != e_noPiece) )
     {
         //TODO have a look at cairo_save and cairo_restore to draw transparency
@@ -472,39 +481,6 @@ bool DrawingAreaBoard::DrawingAreaToBoardCoord(
     return false;
 }
 
-/*
-void DrawingAreaBoard::SetSquareInBoard(const Coordinate &a_coord, Cairo::RefPtr<Cairo::Context> cr)
-{
-    Glib::RefPtr<Gdk::Window> window = this->get_window();
-    if (window)
-    {
-        Gtk::Allocation allocation = this->get_allocation();
-
-        int32_t width  = allocation.get_width();
-        int32_t height = allocation.get_height();
-        int32_t squareSize = std::min(width, height);
-
-        int32_t littleSquare = std::min(
-                    squareSize / m_theBoard.GetNRows(),
-                    squareSize / m_theBoard.GetNColumns());
-
-        int32_t squareHeight = littleSquare * m_theBoard.GetNRows();
-        int32_t squareWidth  = littleSquare * m_theBoard.GetNColumns();
-
-        int32_t xc = width  / 2;
-        int32_t yc = height / 2;
-
-        cr->rectangle(
-                (xc - squareWidth/2) +  (littleSquare * a_coord.m_col) + 1,
-                (yc - squareHeight/2) + (littleSquare * a_coord.m_row) + 1,
-                littleSquare - 1,
-                littleSquare - 1);
-
-        cr->fill();
-    }
-}
-*/
-
 bool DrawingAreaBoard::Invalidate()
 {
     // force the drawing area to be redraw
@@ -539,12 +515,19 @@ bool DrawingAreaBoard::Invalidate(const Piece &a_piece, const Coordinate &a_coor
     return Invalidate();
 }
 
+void DrawingAreaBoard::CancelLatestPieceDeployedEffect()
+{
+    m_latestPieceDeployedTransparency = LAST_PIECE_EFFECT_INITIAL_ALPHA;
+    m_latestPieceDeployedEffectOn = false;
+}
+
 gboolean DrawingAreaBoard::timerCallback(void* param)
 {
-    DrawingAreaBoard* pThis = static_cast<DrawingAreaBoard*> (param);
     static Piece sLatestPieceDeployedProcessed(e_noPiece);
     static Coordinate sLatestPieceDeployedCoord(COORD_UNITIALISED, COORD_UNITIALISED);
     static bool alphaGrowing = true; // transparency grows or drops
+
+    DrawingAreaBoard* pThis = static_cast<DrawingAreaBoard*> (param);
 
     if (pThis->m_latestPieceDeployedEffectOn == false)
     {
@@ -554,45 +537,45 @@ gboolean DrawingAreaBoard::timerCallback(void* param)
 
     // no need to check if the player is the same.
     // 2 pieces can't be deployed in the same coordinate of the board
-    if ( (sLatestPieceDeployedProcessed.GetType() !=
-          pThis->m_latestPieceDeployed.GetType()) ||
+    if ( (sLatestPieceDeployedProcessed.GetType()  !=
+              pThis->m_latestPieceDeployed.GetType())  ||
          (sLatestPieceDeployedCoord.m_row !=
-          pThis->m_latestPieceDeployedCoord.m_row)         ||
+              pThis->m_latestPieceDeployedCoord.m_row) ||
          (sLatestPieceDeployedCoord.m_col !=
-          pThis->m_latestPieceDeployedCoord.m_col)         )
+              pThis->m_latestPieceDeployedCoord.m_col) )
     {
         // piece changed
         // at the very beginning of the animation transparency is the minimum
-        pThis->m_latestPieceDeployedTransparency = LAST_PIECE_EFFECT_MIN_ALPHA;
+        pThis->m_latestPieceDeployedTransparency = LAST_PIECE_EFFECT_INITIAL_ALPHA;
 
         sLatestPieceDeployedProcessed = pThis->m_latestPieceDeployed;
         sLatestPieceDeployedCoord     = pThis->m_latestPieceDeployedCoord;
-        alphaGrowing = true;
+        alphaGrowing = false;
+    }
+
+
+    // latest piece deployed didn't change. Just change the alpha transparency
+    // before invalidating the board
+    if ( (pThis->m_latestPieceDeployedTransparency < 1.0) &&
+         (alphaGrowing == true) )
+    {
+        pThis->m_latestPieceDeployedTransparency += 0.1;
+
+        if (pThis->m_latestPieceDeployedTransparency >= 1.0)
+        {
+            alphaGrowing = false;
+        }
     }
     else
     {
-        // latest piece deployed didn't change. Just change the alpha transparency
-        // before invalidating the board
-        if ( (pThis->m_latestPieceDeployedTransparency < 1.0) &&
-             (alphaGrowing) )
-        {
-            pThis->m_latestPieceDeployedTransparency += 0.1;
+        pThis->m_latestPieceDeployedTransparency -= 0.1;
 
-            if (pThis->m_latestPieceDeployedTransparency >= 1.0)
-            {
-                alphaGrowing = false;
-            }
-        }
-        else
+        if (pThis->m_latestPieceDeployedTransparency <= LAST_PIECE_EFFECT_MIN_ALPHA)
         {
-            pThis->m_latestPieceDeployedTransparency -= 0.1;
-
-            if (pThis->m_latestPieceDeployedTransparency <= LAST_PIECE_EFFECT_MIN_ALPHA)
-            {
-                alphaGrowing = true;
-            }
+            alphaGrowing = true;
         }
     }
+
 
     pThis->Invalidate();
 
