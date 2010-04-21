@@ -5,6 +5,8 @@ now: Version next
       if cumputing thread is busy
     - Progress bar and moves calculated by worker thread are totally 
       thread-safe now
+    - Command line options are properly handled. Blockem can load a game,
+      process the next move and print it out in console with no GUI
 
 16/04/2010: Version 0.1.5
     - Minmax has been fixed. It was faulty because pieces weren't being 

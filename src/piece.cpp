@@ -114,9 +114,9 @@ Piece::~Piece()
 }
 
 void Piece::SetPiece(
-    Coordinate a_coords[PIECE_MAX_SQUARES], 
-    uint8_t a_nSquares, bool a_mirror, 
-    int8_t a_nRotations, 
+    Coordinate a_coords[PIECE_MAX_SQUARES],
+    uint8_t a_nSquares, bool a_mirror,
+    int8_t a_nRotations,
     uint8_t a_squareSideHalfSize)
 {
 #ifdef DEBUG
@@ -601,20 +601,20 @@ void Piece::BuildUpBitwiseRepresentation()
         int16_t nRotations = 0;
         while(nRotations < GetNRotations())
         {
-            uint64_t bitwisePiece = 0x0000000000000000;
-            
+            uint64_t bitwisePiece = 0x0000000000000000ull;
+
             for (int8_t i = 0; i < GetNSquares(); i++)
             {
                 // this piece of magic converts a piece into a string of bits
-                bitwisePiece |= 1 << ( ((3 - m_coords[i].m_row) * 7) + (3 - m_coords[i].m_col) );
+                bitwisePiece |= static_cast<uint64_t>(1) << ( ((3 - m_coords[i].m_row) * 7) + (3 - m_coords[i].m_col) );
             }
-            
+
             m_bitwiseRepresentationList.push_back(bitwisePiece);
-        
+
             RotateRight();
             nRotations++;
         }
-        
+
         if ( (GetType() == e_4Piece_LittleS) &&
              (IsMirrored() == false) )
         {
@@ -628,7 +628,7 @@ void Piece::BuildUpBitwiseRepresentation()
             // don't have mirror, so there's no need for this extra check
             Reset();
         }
-        
+
     } while (MirrorYAxis());
 
     // leave the piece as it was before doig the bitwise representation

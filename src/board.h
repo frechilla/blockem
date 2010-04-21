@@ -31,6 +31,7 @@
 #define BOARD_H_
 
 #include <stdio.h>
+#include <stdint.h> // types
 #include <ostream>
 #include "assert.h"
 #include "piece.h"
@@ -124,6 +125,41 @@ public:
     /// set a square of the board to a particular value
     /// should be used as little as possible. Better to use SetPlayerInCoord
     void SetSquare(char a_char, int32_t a_row, int32_t a_col);
+
+    /// Calculate a 7x7 bitwise representation of the board with center
+    /// wherever the parameter a_coord says. It has 1 where the board is taken/busy
+    /// and 0 wherever is empty
+    /// This 7x7 representation can be used with the bitwise representations
+    /// of pieces (have a look at Piece:BuildUpBitwiseRepresentation)
+    /// Basically takes a picture of the current state of the board and saves
+    /// it in an uint64_t (which is returned)
+    /// The bitwise representation of the board is surrounded by 3 rows and 3 cols
+    /// which will be always set to 1 (non available) in order to easily (and quickly)
+    /// check whether a piece is inside or outside the board. For example, if the board is 14x14
+    /// a 7x7 bitwise representation of the coordinate 0,0 is (note that the coordinate 0,0 is
+    /// written by an 'x'. 1 means taken and 0 empty)
+    /// 1 1 1 1 1 1 1
+    /// 1 1 1 1 1 1 1
+    /// 1 1 1 1 1 1 1
+    /// 1 1 1 x 0 0 0
+    /// 1 1 1 0 0 0 0
+    /// 1 1 1 0 0 0 0
+    /// 1 1 1 0 0 0 0
+    ///
+    /// which would be: 1111111 1111111 1111111 111x000 1110000 1110000 1110000 = fffffffffe1c3870 (if x is 0)
+    uint64_t BitwiseBoardCalculate(const Coordinate &a_coord);
+
+    /// Move right the 7x7 bitwise represenation of the board saved in a_bitwiseBoard.
+    /// a_coord contains the old coord i.e. before moving to the right
+    uint64_t BitwiseBoardMoveRight(uint64_t a_bitwiseBoard, const Coordinate &a_coord);
+
+    /// Move left the 7x7 bitwise represenation of the board saved in a_bitwiseBoard.
+    /// a_coord contains the old coord i.e. before moving to the left
+    uint64_t BitwiseBoardMoveLeft(uint64_t a_bitwiseBoard, const Coordinate &a_coord);
+
+    /// Move down the 7x7 bitwise represenation of the board saved in a_bitwiseBoard.
+    /// a_coord contains the old coord i.e. before moving downwards
+    uint64_t BitwiseBoardMoveDown(uint64_t a_bitwiseBoard, const Coordinate &a_coord);
 
 private:
     /// the actual board

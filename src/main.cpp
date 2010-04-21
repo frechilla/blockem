@@ -33,7 +33,7 @@
 #include <string.h> // strcmp
 #include <iostream>
 #include <fstream>
-#include <glib.h>
+#include <glib.h>   // glib-Commandline-option-parser
 #include <libglademm/xml.h>
 #include <gtkmm.h>
 #include "config.h" // autotools header file
@@ -73,59 +73,164 @@ extern int        _binary_gui_glade_size[];
 
 #endif // ifdef WIN32
 
-/// @brief parse the command line arguments
-/// @return 0 if the command line arguments were correct but the execution is finished
-///         >0 if the command line arguments were correct and the execution has to continue
-///         <0 if the command line arguments were not correct, so the execution is finished
-int parseCommandLine(int argc, char** argv)
+// parsing command line arguments
+// http://library.gnome.org/devel/glib/unstable/glib-Commandline-option-parser.html
+// there was also the option of popt (http://directory.fsf.org/project/popt) but it would have added
+// an extra dependency
+static gboolean s_version = 0;
+static gint s_depth = 0;
+static gchar *s_blockemfilePath = NULL;
+
+static GOptionEntry s_cmdEntries[] =
 {
-    //TODO this should be done using some library when it gets more complicated.
-    // have a look at boost::program_options::options_description
+    { "version",   0, 0, G_OPTION_ARG_NONE,   &s_version, "Prints the current version of the software and exists", NULL },
+    { "compute", 'c', 0, G_OPTION_ARG_STRING, &s_blockemfilePath, "Loads game saved in FILE, calculates next move and prints out the result in console", "FILE"},
+    { "depth"  , 'd', 0, G_OPTION_ARG_INT,    &s_depth, "sets the maximum depth of search tree to N when using \"--compute\"", "N"},
+//    {G_OPTION_REMAINING, 0, G_OPTION_ARG_FILENAME_ARRAY, &s_fileArray, "Blockem game file to load. The app will calculate next move and print out the result in console. GUI won't be started", "[FILE]"},
+//    { "max-size", 'm', 0, G_OPTION_ARG_INT, &max_size, "Test up to 2^M items", "M" },
+//    { "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose, "Be verbose", NULL },
+//    { "beep", 'b', 0, G_OPTION_ARG_NONE, &beep, "Beep when done", NULL },
+//    { "rand", 0, 0, G_OPTION_ARG_NONE, &rand, "Randomize the data", NULL },
+    { NULL }
+};
 
-    if (argc > 2)
-    {
-        std::cout << argv[0] << ": unrecognized options. Try: " << argv[0] << " --help" << std::endl;
-        return -1;
-    }
-    else if (argc == 2)
-    {
-        if ((strcmp(argv[1], "--version") == 0) || (strcmp(argv[1], "-v") == 0))
-        {
-            std::cout << "Blockem, version " << VERSION << " (r" << SVN_REVISION << ")" << std::endl;
-            std::cout << "  Compiled " << COMPILETIME << std::endl << std::endl;
-            std::cout << "Copyright (C) Faustino Frechilla" << std::endl;
-            std::cout << "Blockem is open source software, see http://sourceforge.net/projects/blockem" << std::endl;
-
-            return 0;
-        }
-        else if((strcmp(argv[1], "--help") == 0) || (strcmp(argv[1], "-h") == 0))
-        {
-            std::cout << "usage: " << argv[0] << " [OPTION]" << std::endl << std::endl;
-            std::cout << "  -v, --version     prints the current version of the software and exists" << std::endl;
-            std::cout << "  -h, --help        prints this help text and exists" << std::endl;
-
-            return 0;
-        }
-
-        return -1;
-    }
-
-    return 1;
-}
 
 int main(int argc, char **argv)
 {
-    int rv = parseCommandLine(argc, argv);
-    if (rv <= 0)
+    GError *error = NULL;
+    GOptionContext *cmdContext;
+
+    cmdContext = g_option_context_new ("- A GNU clone of 1vs1 blokus");
+    // to add i18n:
+    //   g_option_context_add_main_entries (cmdContext, s_cmdEntries, GETTEXT_PACKAGE);
+    g_option_context_add_main_entries (cmdContext, s_cmdEntries, NULL);
+    // http://library.gnome.org/devel/glib/unstable/glib-Commandline-option-parser.html#g-option-context-add-group
+    g_option_context_add_group (cmdContext, gtk_get_option_group (TRUE));
+    if (!g_option_context_parse (cmdContext, &argc, &argv, &error))
     {
-        return rv;
+        std::cout << argv[0] << ": Error parsing command line: " << error->message << std::endl;
+        std::cout << argv[0] << ": Try '" << argv[0] <<  " --help'" << std::endl;
+        return 1;
     }
+
+    if (s_version)
+    {
+        std::cout << "Blockem, version " << VERSION << " (r" << SVN_REVISION << ")" << std::endl;
+        std::cout << "  Compiled " << COMPILETIME << std::endl << std::endl;
+        std::cout << "Copyright (C) 2009-2010 Faustino Frechilla" << std::endl;
+        std::cout << "Blockem is open source software, see http://blockem.sourceforge.net/"
+                  << std::endl << std::endl;
+
+        return 0;
+    }
+
+    if (s_blockemfilePath != NULL)
+    {
+        if (!g_file_test(s_blockemfilePath, G_FILE_TEST_IS_REGULAR))
+        {
+            std::cerr << "Error: " << s_blockemfilePath << " doesn't exist. Exiting..." << std::endl;
+            return 2;
+        }
+
+        if (s_depth <= 0)
+        {
+            std::cerr << "Error: depth must be set to a positive value. Exiting..." << std::endl;
+            return 3;
+        }
+
+        std::cout << "Loading game from " << s_blockemfilePath << " and calculating next move..." << std::endl
+                  << "    (search tree depth set to: " << s_depth << ")" << std::endl << std::endl;
+
+
+        if ( (s_depth & 0x01) == 0)
+        {
+            std::cerr << "Warning: For better results you might want to set the depth to an odd number" << std::endl;
+        }
+
+        Heuristic::EvalFunction_t heuristicNKWeighted = Heuristic::CalculateNKWeighted;
+        //Heuristic::EvalFunction_t heuristicSimple     = Heuristic::CalculateSimple;
+
+        Heuristic::EvalFunction_t heuristic = heuristicNKWeighted;
+        //Heuristic::EvalFunction_t heuristic = heuristicSimple;
+
+        std::ifstream cin;
+
+        cin.open(s_blockemfilePath);
+        if(!cin)
+        {
+            std::cerr << "Error: file could not be opened" << std::endl;
+            return 4;
+        }
+
+        Game1v1 theGame;
+        if (theGame.LoadGame(cin) == false)
+        {
+            std::cerr << "Error while loading the game from " << s_blockemfilePath << std::endl;
+            cin.close();
+
+            return 4;
+        }
+
+        cin.close();
+
+        theGame.SaveGame(std::cout);
+
+        //test(&theGame, theGame.GetMe(), theGame.GetOpponent());
+        //exit(0);
+
+        //std::cout << std::endl << std::endl;
+        //theGame.GetMe().PrintNucleationPoints(std::cout);
+
+        //std::cout << std::endl << std::endl;
+        //theGame.GetOpponent().PrintNucleationPoints(std::cout);
+
+
+        Piece resultPiece(e_noPiece);
+        Coordinate resultCoord;
+
+        volatile sig_atomic_t dummyAtomic = 0;
+        int32_t minimaxWinner =
+            theGame.MinMax(
+                    heuristic,
+                    s_depth,
+                    theGame.GetPlayerMe(),
+                    theGame.GetPlayerOpponent(),
+                    resultPiece,
+                    resultCoord,
+                    dummyAtomic);
+
+        std::cout << "Winning evaluation function value: " << minimaxWinner << std::endl;
+
+        if (resultPiece.GetType() == e_noPiece)
+        {
+            std::cout << std::endl;
+            std::cout << "\t===================================================" << std::endl;
+            std::cout << "\t=== END OF THE GAME. NO PIECE COULD BE PUT DOWN ===" << std::endl;
+            std::cout << "\t===================================================" << std::endl;
+        }
+        else
+        {
+            theGame.PutDownPiece(
+                    resultPiece,
+                    resultCoord,
+                    theGame.GetPlayerMe(),
+                    theGame.GetPlayerOpponent());
+        }
+
+        theGame.SaveGame(std::cout);
+
+        //theGame.GetMe().PrintNucleationPoints(std::cout);
+        //theGame.GetOpponent().PrintNucleationPoints(std::cout);
+
+        return 0;
+    } // if (s_blockemfilePath != NULL)
+
 
     //////////////////
     // GUI
-    
+
     Gtk::Main::init_gtkmm_internals();
-    
+
     // Initialise gthreads even before gtk_init
     if(!g_thread_supported())
     {
@@ -145,7 +250,7 @@ int main(int argc, char **argv)
         std::cerr << "error: App can't start without gthreads support" << std::endl;
         return -1;
     }
-    
+
     Gtk::Main kit(argc, argv);
 
     Glib::RefPtr<Gnome::Glade::Xml> refXml;
@@ -185,10 +290,10 @@ int main(int argc, char **argv)
         MainWindow::Instance().Initialize(refXml);
 
         // if gdk_threads_enter and gdk_threads_leave were to be used
-        // the Gtk::Main::run loop should be surrounded by 
+        // the Gtk::Main::run loop should be surrounded by
         // gdk_threads_enter and gdk_threads_leave
         // http://tadeboro.blogspot.com/2009/06/multi-threaded-gtk-applications.html
-        
+
         kit.run(MainWindow::Instance().window());
     }
     catch (GUIException ex)
@@ -197,91 +302,10 @@ int main(int argc, char **argv)
         exit(-1);
     }
 
-    return 0;
-
     // GUI
     //////////////////
 
-
-#if 0
-    if (argc < 3)
-    {
-        std::cerr << "usage: " << argv[0] << " [depth] [file]" << std::endl;
-        exit(-1);
-    }
-
-    int32_t depth = atoi(argv[1]);
-    if ( (depth & 0x01) == 0)
-    {
-        std::cerr << "Warning: Are you sure you don't want the depth to be an odd number?" << std::endl;
-    }
-
-    Heuristic::calculateMethod_t heuristicNKWeighted = Heuristic::CalculateNKWeighted;
-    Heuristic::calculateMethod_t heuristicSimple     = Heuristic::CalculateSimple;
-
-    Heuristic::calculateMethod_t heuristic = heuristicNKWeighted;
-    //Heuristic::calculateMethod_t heuristic = heuristicSimple;
-
-    std::string filename(argv[2]);
-    std::ifstream cin;
-
-    cin.open(filename.c_str());
-    if(!cin)
-    {
-        std::cerr << "Error: file could not be opened" << std::endl;
-
-        exit (-2);
-    }
-
-    Game1v1 theGame;
-    if (theGame.LoadGame(cin) == false)
-    {
-        std::cerr << "Error while loading the game from " << filename.c_str() << std::endl;
-
-        cin.close();
-
-        exit(-3);
-    }
-
-    cin.close();
-
-    theGame.SaveGame(std::cout);
-
-    //test(&theGame, theGame.GetMe(), theGame.GetOpponent());
-    //exit(0);
-
-    //std::cout << std::endl << std::endl;
-    //theGame.GetMe().PrintNucleationPoints(std::cout);
-
-    //std::cout << std::endl << std::endl;
-    //theGame.GetOpponent().PrintNucleationPoints(std::cout);
-
-
-    Piece resultPiece(e_noPiece);
-    Coordinate resultCoord;
-
-    std::cout << theGame.MinMax(heuristic, depth, resultPiece, resultCoord) << std::endl;
-
-    if (resultPiece.GetType() == e_noPiece)
-    {
-        std::cout << std::endl;
-        std::cout << "\t===================================================" << std::endl;
-        std::cout << "\t=== END OF THE GAME. NO PIECE COULD BE PUT DOWN ===" << std::endl;
-        std::cout << "\t===================================================" << std::endl;
-    }
-    else
-    {
-        theGame.PutDownPieceMe(resultPiece, resultCoord);
-    }
-
-    theGame.SaveGame(std::cout);
-
-    //theGame.GetMe().PrintNucleationPoints(std::cout);
-    //theGame.GetOpponent().PrintNucleationPoints(std::cout);
-
-
     return 0;
-#endif
 }
 
 

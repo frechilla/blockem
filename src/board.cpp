@@ -127,6 +127,145 @@ void Board::CopyFromObject(const Board &a_src)
     }
 }
 
+uint64_t Board::BitwiseBoardCalculate(const Coordinate &a_coord)
+{
+#ifdef DEBUG
+    assert(a_coord.m_row >= 0);
+    assert(a_coord.m_col >= 0);
+    assert(a_coord.m_row < GetNRows());
+    assert(a_coord.m_col < GetNColumns());
+#endif
+
+    uint64_t rValue = static_cast<uint64_t>(0xffffffffffffffffull);
+    for (int32_t i = (a_coord.m_row - 3); i <= (a_coord.m_row + 3); i++)
+    {
+        if ( (i < 0) || (i >= GetNRows()) )
+        {
+            // the whole row is out of the board
+            rValue <<= 7;
+            rValue |= static_cast<uint64_t>(0x7f);
+        }
+        else
+        {
+            for (int32_t j = (a_coord.m_col - 3); j <= (a_coord.m_col + 3); j++)
+            {
+                rValue <<= 1;
+                if ( (j < 0) || (j >= GetNColumns()) || (IsCoordEmpty(i, j) == false) )
+                {
+                    // out of the board or not empty
+                    rValue |= static_cast<uint64_t>(0x01);
+                }
+            }
+        }
+    }
+
+    return rValue;
+}
+
+uint64_t Board::BitwiseBoardMoveRight(uint64_t a_bitwiseBoard, const Coordinate &a_coord)
+{
+#ifdef DEBUG
+    assert(a_coord.m_row >= 0);
+    assert(a_coord.m_col >= 0);
+    assert(a_coord.m_row < GetNRows());
+    assert(a_coord.m_col < GetNColumns());
+#endif
+
+    // 1111111 1111111 1111111 111x000 1110000 1110000 1110000
+    // will be:
+    // 111111y 111111y 111111y 11x000y 110000y 110000y 110000y
+
+    // a_coord contains the current coordinate (before moving to the right)
+    // we'll have to calculate a_coord.m_col + 4
+
+    // .... 1111110 1111110 1111110 1111110 1111110 1111110 1111110
+    static const uint64_t BLANK_OUT_MOVE_RIGHT = static_cast<uint64_t>(0xfffffbf7efdfbf7eull);
+
+    a_bitwiseBoard <<= 1;
+    a_bitwiseBoard &= BLANK_OUT_MOVE_RIGHT;
+    for (int32_t i = (a_coord.m_row - 3); i <= (a_coord.m_row + 3); i++)
+    {
+        if ( (i < 0) || (i >= GetNRows())        ||
+             ((a_coord.m_col + 4) <= GetNColumns()) ||
+             (IsCoordEmpty(i, a_coord.m_col + 4) == false) )
+        {
+            a_bitwiseBoard |= static_cast<uint64_t>(1) << ( (3 - (i - a_coord.m_row)) * 7);
+        }
+    }
+
+    return a_bitwiseBoard;
+}
+
+uint64_t Board::BitwiseBoardMoveLeft(uint64_t a_bitwiseBoard, const Coordinate &a_coord)
+{
+#ifdef DEBUG
+    assert(a_coord.m_row >= 0);
+    assert(a_coord.m_col >= 0);
+    assert(a_coord.m_row < GetNRows());
+    assert(a_coord.m_col < GetNColumns());
+#endif
+
+    // 1111111 1111111 1111111 111x000 1110000 1110000 1110000
+    // will be:
+    // y111111 y111111 y111111 y111x00 y111000 y111000 y111000
+
+    // a_coord contains the current coordinate (before moving to the left)
+    // we'll have to calculate a_coord.m_col - 4
+
+    // .... 0111111 0111111 0111111 0111111 0111111 0111111 0111111
+    static const uint64_t BLANK_OUT_MOVE_LEFT = static_cast<uint64_t>(0xfff7fdfbf7efdfbfull);
+
+    a_bitwiseBoard >>= 1;
+    a_bitwiseBoard &= BLANK_OUT_MOVE_LEFT;
+    for (int32_t i = (a_coord.m_row - 3); i <= (a_coord.m_row + 3); i++)
+    {
+        if ( (i < 0) || (i >= GetNRows()) ||
+             ((a_coord.m_col - 4) > 0)    ||
+             (IsCoordEmpty(i, a_coord.m_col - 4) == false) )
+        {
+            a_bitwiseBoard |= static_cast<uint64_t>(1) << (((3 - (i - a_coord.m_row)) * 7) + 6);
+        }
+    }
+
+    return a_bitwiseBoard;
+}
+
+uint64_t Board::BitwiseBoardMoveDown(uint64_t a_bitwiseBoard, const Coordinate &a_coord)
+{
+#ifdef DEBUG
+    assert(a_coord.m_row >= 0);
+    assert(a_coord.m_col >= 0);
+    assert(a_coord.m_row < GetNRows());
+    assert(a_coord.m_col < GetNCols());
+#endif
+
+    // 1111111 1111111 1111111 111x000 1110000 1110000 1110000
+    // will be:
+    // 1111111 1111111 111x000 1110000 1110000 1110000 yyyyyyy
+
+    // a_coord contains the current coordinate (before moving downwards)
+    // we'll have to calculate a_coord.m_row + 4
+    if ((a_coord.m_row + 4) >= GetNRows()) // || ((a_coord.m_row + 4) < 0) )
+    {
+        // row out of the board
+        a_bitwiseBoard <<= 7;
+        a_bitwiseBoard |= static_cast<uint64_t>(0x7f);
+    }
+    else
+    {
+        for (int32_t i = (a_coord.m_col - 3); i <= (a_coord.m_col + 3); i++)
+        {
+            a_bitwiseBoard <<= 1;
+            if ( (i < 0) || (i >= GetNColumns()) || (IsCoordEmpty(a_coord.m_row + 4, i) == false) )
+            {
+                a_bitwiseBoard |= static_cast<uint64_t>(0x01);
+            }
+        }
+    }
+
+    return a_bitwiseBoard;
+}
+
 void Board::SetSquare(char a_char, int32_t a_row, int32_t a_col)
 {
 #ifdef DEBUG
