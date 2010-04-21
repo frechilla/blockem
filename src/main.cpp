@@ -148,10 +148,12 @@ int main(int argc, char **argv)
         }
 
         Heuristic::EvalFunction_t heuristicNKWeighted = Heuristic::CalculateNKWeighted;
-        //Heuristic::EvalFunction_t heuristicSimple     = Heuristic::CalculateSimple;
+        //Heuristic::EvalFunction_t heuristicSimple = Heuristic::CalculateSimple;
+        //Heuristic::EvalFunction_t heuristicPiecePerNKPoint = Heuristic::CalculatePiecesPerNKPoint;
 
         Heuristic::EvalFunction_t heuristic = heuristicNKWeighted;
         //Heuristic::EvalFunction_t heuristic = heuristicSimple;
+        //Heuristic::EvalFunction_t heuristic = heuristicPiecePerNKPoint;
 
         std::ifstream cin;
 
