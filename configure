@@ -2766,7 +2766,7 @@ am__tar='${AMTAR} chof - "$$tardir"'; am__untar='${AMTAR} xf -'
 ac_config_headers="$ac_config_headers config.h"
 
 
-$as_echo "#define SVN_REVISION \"92M\"" >>confdefs.h
+$as_echo "#define SVN_REVISION \"100\"" >>confdefs.h
 
 
 # Checks for programs.
