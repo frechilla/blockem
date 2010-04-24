@@ -111,12 +111,12 @@ MainWindow::MainWindow() :
     m_lastCoord(COORD_UNITIALISED, COORD_UNITIALISED),
     m_workerThread(NULL),
     m_aboutDialog(NULL),
-    m_pickPiecesDrawingArea(m_the1v1Game.GetPlayerOpponent(), DrawingAreaShowPieces::eOrientation_leftToRight),
-    m_showComputerPiecesDrawingArea(m_the1v1Game.GetPlayerMe(), DrawingAreaShowPieces::eOrientation_bottomToTop),
+    m_pickPiecesDrawingArea(m_the1v1Game.GetPlayer1(), DrawingAreaShowPieces::eOrientation_leftToRight),
+    m_showComputerPiecesDrawingArea(m_the1v1Game.GetPlayer2(), DrawingAreaShowPieces::eOrientation_bottomToTop),
     m_boardDrawingArea(m_the1v1Game.GetBoard()),
     m_editPieceTable(NULL),
-    m_stopWatchLabelUser(STOPWATCH_UPDATE_PERIOD_MILLIS, m_the1v1Game.GetPlayerOpponent().GetName() + std::string("'s elapsed time ")),
-    m_stopWatchLabelComputer(STOPWATCH_UPDATE_PERIOD_MILLIS, m_the1v1Game.GetPlayerMe().GetName() + std::string("'s elapsed time "))
+    m_stopWatchLabelUser(STOPWATCH_UPDATE_PERIOD_MILLIS, m_the1v1Game.GetPlayer1().GetName() + std::string("'s elapsed time ")),
+    m_stopWatchLabelComputer(STOPWATCH_UPDATE_PERIOD_MILLIS, m_the1v1Game.GetPlayer2().GetName() + std::string("'s elapsed time "))
 {
 }
 
@@ -310,15 +310,29 @@ void MainWindow::Initialize(Glib::RefPtr<Gnome::Glade::Xml> a_refXml) throw (GUI
 
 
     //TODO the colours should be handled by some kind of dialog. This will do it now
-	m_the1v1Game.GetPlayerMe().SetColour(PLAYER_ME_RED*255, PLAYER_ME_GREEN*255, PLAYER_ME_BLUE*255);
-	m_the1v1Game.GetPlayerOpponent().SetColour(PLAYER_OPPONENT_RED*255, PLAYER_OPPONENT_GREEN*255, PLAYER_OPPONENT_BLUE*255);
+	m_the1v1Game.SetPlayerColour(
+	        Game1v1::e_Game1v1Player2,
+	        PLAYER_ME_RED*255,
+	        PLAYER_ME_GREEN*255,
+	        PLAYER_ME_BLUE*255);
+
+	m_the1v1Game.SetPlayerColour(
+	            Game1v1::e_Game1v1Player1,
+	            PLAYER_OPPONENT_RED*255,
+	            PLAYER_OPPONENT_GREEN*255,
+	            PLAYER_OPPONENT_BLUE*255);
+
+	m_editPieceTable->SetPieceRGB(
+	        PLAYER_OPPONENT_RED,
+	        PLAYER_OPPONENT_GREEN,
+	        PLAYER_OPPONENT_BLUE);
 
     // initialise the list of players of the board drawing area
-    m_boardDrawingArea.AddPlayerToList(&(m_the1v1Game.GetPlayerMe()));
-    m_boardDrawingArea.AddPlayerToList(&(m_the1v1Game.GetPlayerOpponent()));
+    m_boardDrawingArea.AddPlayerToList(&(m_the1v1Game.GetPlayer1()));
+    m_boardDrawingArea.AddPlayerToList(&(m_the1v1Game.GetPlayer2()));
 
     // human's go. Set the player in the board drawing area and start counting
-    m_boardDrawingArea.SetCurrentPlayer(m_the1v1Game.GetPlayerOpponent());
+    m_boardDrawingArea.SetCurrentPlayer(m_the1v1Game.GetPlayer1());
     m_stopWatchLabelUser.Continue();
 }
 
@@ -349,7 +363,7 @@ void MainWindow::WorkerThread_computingFinished(
 
     if (a_piece.GetType() == e_noPiece)
     {
-        if (Rules::CanPlayerGo(m_the1v1Game.GetBoard(), m_the1v1Game.GetPlayerOpponent()) == false)
+        if (Rules::CanPlayerGo(m_the1v1Game.GetBoard(), m_the1v1Game.GetPlayer1()) == false)
         {
             // the game is over. Computing returned e_noPiece and
             // the opponent can't go
@@ -432,16 +446,16 @@ void MainWindow::MenuItemGameNew_Activate()
     }
 
     char theMessage[MESSAGE_LENGTH];
-    if ( (m_the1v1Game.GetPlayerMe().NumberOfPiecesAvailable() == e_numberOfPieces) &&
-         (m_the1v1Game.GetPlayerOpponent().NumberOfPiecesAvailable() == e_numberOfPieces) )
+    if ( (m_the1v1Game.GetPlayer1().NumberOfPiecesAvailable() == e_numberOfPieces) &&
+         (m_the1v1Game.GetPlayer2().NumberOfPiecesAvailable() == e_numberOfPieces) )
     {
         // the game never started. Restart the user timer
         snprintf(theMessage,
                 MESSAGE_LENGTH,
                 "This will restart your elapsed time stopwatch. Are you sure?");
     }
-    else if ( (Rules::CanPlayerGo(m_the1v1Game.GetBoard(), m_the1v1Game.GetPlayerOpponent()) == false) &&
-              (Rules::CanPlayerGo(m_the1v1Game.GetBoard(), m_the1v1Game.GetPlayerMe()) == false) )
+    else if ( (Rules::CanPlayerGo(m_the1v1Game.GetBoard(), m_the1v1Game.GetPlayer1()) == false) &&
+              (Rules::CanPlayerGo(m_the1v1Game.GetBoard(), m_the1v1Game.GetPlayer2()) == false) )
     {
         // game is finished
         snprintf(theMessage,
@@ -483,7 +497,7 @@ void MainWindow::MenuItemGameNew_Activate()
         m_progressBar.set_fraction(0.0);
 
         // human user will put down the next piece
-        m_boardDrawingArea.SetCurrentPlayer(m_the1v1Game.GetPlayerOpponent());
+        m_boardDrawingArea.SetCurrentPlayer(m_the1v1Game.GetPlayer1());
 
         // it will be human's go next. Start his/her timer
         m_stopWatchLabelUser.Continue();
@@ -544,8 +558,7 @@ void MainWindow::BoardDrawingArea_BoardClicked(const Coordinate &a_coord, const 
     m_the1v1Game.PutDownPiece(
         a_piece,
         a_coord,
-        m_the1v1Game.GetPlayerOpponent(),
-        m_the1v1Game.GetPlayerMe());
+        Game1v1::e_Game1v1Player1);
 
     // update the score on the status bar
     UpdateScoreStatus();
@@ -625,46 +638,46 @@ void MainWindow::NotifyGameFinished()
     // restart the progress bar
     m_progressBar.set_fraction(0.0);
 
-    int32_t squaresLeftOpponent = 0;
-    int32_t squaresLeftMe = 0;
+    int32_t squaresLeftHuman = 0;
+    int32_t squaresLeftComputer = 0;
     for (int8_t i = e_minimumPieceIndex ; i < e_numberOfPieces; i++)
     {
-        if (m_the1v1Game.GetPlayerMe().IsPieceAvailable(static_cast<ePieceType_t>(i)))
+        if (m_the1v1Game.GetPlayer1().IsPieceAvailable(static_cast<ePieceType_t>(i)))
         {
-            squaresLeftMe +=
-                    m_the1v1Game.GetPlayerMe().m_pieces[i].GetNSquares();
+            squaresLeftHuman +=
+                    m_the1v1Game.GetPlayer1().m_pieces[i].GetNSquares();
         }
 
-        if (m_the1v1Game.GetPlayerOpponent().IsPieceAvailable(static_cast<ePieceType_t>(i)))
+        if (m_the1v1Game.GetPlayer2().IsPieceAvailable(static_cast<ePieceType_t>(i)))
         {
-            squaresLeftOpponent +=
-                    m_the1v1Game.GetPlayerOpponent().m_pieces[i].GetNSquares();
+            squaresLeftComputer +=
+                    m_the1v1Game.GetPlayer2().m_pieces[i].GetNSquares();
         }
     }
 
     char theMessage[MESSAGE_LENGTH];
-    if (squaresLeftOpponent > squaresLeftMe)
+    if (squaresLeftHuman > squaresLeftComputer)
     {
         snprintf(theMessage,
                 MESSAGE_LENGTH,
                 "<b>Computer</b> has beaten you!\n\tYou have <b>%d</b> squares left and the computer <b>%d</b>",
-                squaresLeftOpponent,
-                squaresLeftMe);
+                squaresLeftHuman,
+                squaresLeftComputer);
     }
-    else if (squaresLeftMe > squaresLeftOpponent)
+    else if (squaresLeftComputer > squaresLeftHuman)
     {
         snprintf(theMessage,
                 MESSAGE_LENGTH,
                 "<b>YOU</b> have beaten the computer!\n\tYou have <b>%d</b> squares left and the computer <b>%d</b>",
-                squaresLeftOpponent,
-                squaresLeftMe);
+                squaresLeftHuman,
+                squaresLeftComputer);
     }
-    else // squaresLeftMe > squaresLeftOpponent
+    else // squaresLeftComputer == squaresLeftHuman
     {
         snprintf(theMessage,
                 MESSAGE_LENGTH,
                 "That was a <b>DRAW</b>!\n\tBoth the computer and you have <b>%d</b> squares left",
-                squaresLeftOpponent);
+                squaresLeftHuman);
     }
 
     //MessageDialog (
@@ -707,8 +720,7 @@ void MainWindow::NotifyMoveComputed()
                 m_the1v1Game.PutDownPiece(
                         latestPiece,
                         latestCoord,
-                        m_the1v1Game.GetPlayerMe(),
-                        m_the1v1Game.GetPlayerOpponent());
+                        Game1v1::e_Game1v1Player2);
             }
 
             s_computerMoveQueue.pop();
@@ -720,7 +732,7 @@ void MainWindow::NotifyMoveComputed()
     m_boardDrawingArea.Invalidate(
             latestPiece,
             latestCoord,
-            m_the1v1Game.GetPlayerMe());
+            m_the1v1Game.GetPlayer2());
 
 	// update computer's squares left
 	UpdateScoreStatus();
@@ -729,7 +741,7 @@ void MainWindow::NotifyMoveComputed()
     m_showComputerPiecesDrawingArea.Invalidate();
 
     // there's a few things that have to be done if the user can put down a piece
-    if (Rules::CanPlayerGo(m_the1v1Game.GetBoard(), m_the1v1Game.GetPlayerOpponent()))
+    if (Rules::CanPlayerGo(m_the1v1Game.GetBoard(), m_the1v1Game.GetPlayer1()))
     {
         //user's go
         // stop computer stopwatch
@@ -740,7 +752,7 @@ void MainWindow::NotifyMoveComputed()
         m_progressBar.set_fraction(0.0);
 
         // human player will be putting down pieces on the board
-        m_boardDrawingArea.SetCurrentPlayer(m_the1v1Game.GetPlayerOpponent());
+        m_boardDrawingArea.SetCurrentPlayer(m_the1v1Game.GetPlayer1());
 
         // restore the mouse cursor
         Glib::RefPtr<Gdk::Window> window = m_boardDrawingArea.get_window();
@@ -768,22 +780,22 @@ void MainWindow::UpdateScoreStatus()
     int32_t squaresLeftComputer = 0;
     for (int8_t i = e_minimumPieceIndex ; i < e_numberOfPieces; i++)
     {
-        if (m_the1v1Game.GetPlayerMe().IsPieceAvailable(static_cast<ePieceType_t>(i)))
+        if (m_the1v1Game.GetPlayer2().IsPieceAvailable(static_cast<ePieceType_t>(i)))
         {
             squaresLeftComputer +=
-                    m_the1v1Game.GetPlayerMe().m_pieces[i].GetNSquares();
+                    m_the1v1Game.GetPlayer2().m_pieces[i].GetNSquares();
         }
 
-        if (m_the1v1Game.GetPlayerOpponent().IsPieceAvailable(static_cast<ePieceType_t>(i)))
+        if (m_the1v1Game.GetPlayer1().IsPieceAvailable(static_cast<ePieceType_t>(i)))
         {
             squaresLeftUser +=
-                    m_the1v1Game.GetPlayerOpponent().m_pieces[i].GetNSquares();
+                    m_the1v1Game.GetPlayer1().m_pieces[i].GetNSquares();
         }
     }
 
     // update the GUI widgets
     std::stringstream theMessage;
-    theMessage << m_the1v1Game.GetPlayerMe().GetName()
+    theMessage << m_the1v1Game.GetPlayer2().GetName()
                << ": "
                << std::setfill(' ') << std::setw(2)
                << static_cast<int32_t>(squaresLeftComputer)
@@ -792,7 +804,7 @@ void MainWindow::UpdateScoreStatus()
     m_computerScoreLabel.set_text(theMessage.str().c_str());
 
     theMessage.str("");
-    theMessage << m_the1v1Game.GetPlayerOpponent().GetName()
+    theMessage << m_the1v1Game.GetPlayer1().GetName()
                << ": "
                << std::setfill(' ') << std::setw(2)
                << static_cast<int32_t>(squaresLeftUser)

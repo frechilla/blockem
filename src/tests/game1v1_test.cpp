@@ -31,7 +31,7 @@
 #include <iostream>
 
 Game1v1Test::Game1v1Test() :
-    m_1v1Game()
+    Game1v1()
 {
 }
 
@@ -54,17 +54,17 @@ void Game1v1Test::TestPieces()
         do
         {
             int16_t nRotations = 0;
-            while(nRotations < m_1v1Game.GetPlayerMe().m_pieces[i].GetNRotations())
+            while(nRotations < GetPlayer1().m_pieces[i].GetNRotations())
             {
-                m_1v1Game.GetPlayerMe().m_pieces[i].RotateRight();
+                m_player1.m_pieces[i].RotateRight();
                 possibleConfigurations++;
                 nRotations++;
             }
             // reset the amount of rotations to right before mirroring the piece
             nRotations = 0;
-        } while (m_1v1Game.GetPlayerMe().m_pieces[i].MirrorYAxis());
+        } while (m_player1.m_pieces[i].MirrorYAxis());
 
-        m_1v1Game.GetPlayerMe().m_pieces[i].Reset();
+        m_player1.m_pieces[i].Reset();
     }
 
     // this is a magic number, but you've got to trust me it is right
@@ -96,24 +96,24 @@ void Game1v1Test::TestPieces()
 void Game1v1Test::TestPiece_1BabyPiece()
 {
     // X
-    Piece &thisPiece = m_1v1Game.GetPlayerMe().m_pieces[e_1Piece_BabyPiece];
+    Piece &thisPiece = m_player1.m_pieces[e_1Piece_BabyPiece];
     int8_t nRotations = 0;
 
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 4);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 4);
+    assert(GetPlayer1().IsNucleationPoint(6, 6));
+    assert(GetPlayer1().IsNucleationPoint(6, 8));
+    assert(GetPlayer1().IsNucleationPoint(8, 6));
+    assert(GetPlayer1().IsNucleationPoint(8, 8));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 8));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(6, 6));
+    assert(!GetPlayer1().IsNucleationPoint(6, 8));
+    assert(!GetPlayer1().IsNucleationPoint(8, 6));
+    assert(!GetPlayer1().IsNucleationPoint(8, 8));
 
 
     nRotations++;
@@ -127,26 +127,26 @@ void Game1v1Test::TestPiece_1BabyPiece()
 void Game1v1Test::TestPiece_2TwoPiece()
 {
     // X X
-    Piece &thisPiece = m_1v1Game.GetPlayerMe().m_pieces[e_2Piece_TwoPiece];
+    Piece &thisPiece = m_player1.m_pieces[e_2Piece_TwoPiece];
     int8_t nRotations = 0;
 
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 4);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 4);
+    assert(GetPlayer1().IsNucleationPoint(6, 6));
+    assert(GetPlayer1().IsNucleationPoint(6, 9));
+    assert(GetPlayer1().IsNucleationPoint(8, 6));
+    assert(GetPlayer1().IsNucleationPoint(8, 9));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(6, 6));
+    assert(!GetPlayer1().IsNucleationPoint(6, 9));
+    assert(!GetPlayer1().IsNucleationPoint(8, 6));
+    assert(!GetPlayer1().IsNucleationPoint(8, 9));
 
     thisPiece.RotateRight();
     nRotations++;
@@ -155,22 +155,22 @@ void Game1v1Test::TestPiece_2TwoPiece()
     // X
     // X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 4);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 7));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 4);
+    assert(GetPlayer1().IsNucleationPoint(6, 6));
+    assert(GetPlayer1().IsNucleationPoint(6, 8));
+    assert(GetPlayer1().IsNucleationPoint(9, 6));
+    assert(GetPlayer1().IsNucleationPoint(9, 8));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 9));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(8, 7));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(6, 6));
+    assert(!GetPlayer1().IsNucleationPoint(6, 8));
+    assert(!GetPlayer1().IsNucleationPoint(9, 6));
+    assert(!GetPlayer1().IsNucleationPoint(9, 9));
 
     thisPiece.RotateRight();
     nRotations++;
@@ -183,28 +183,28 @@ void Game1v1Test::TestPiece_2TwoPiece()
 void Game1v1Test::TestPiece_3LongPiece()
 {
     // X X X
-    Piece &thisPiece = m_1v1Game.GetPlayerMe().m_pieces[e_3Piece_LongPiece];
+    Piece &thisPiece = m_player1.m_pieces[e_3Piece_LongPiece];
     int8_t nRotations = 0;
 
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 4);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 4);
+    assert(GetPlayer1().IsNucleationPoint(6, 5));
+    assert(GetPlayer1().IsNucleationPoint(6, 9));
+    assert(GetPlayer1().IsNucleationPoint(8, 5));
+    assert(GetPlayer1().IsNucleationPoint(8, 9));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(6, 5));
+    assert(!GetPlayer1().IsNucleationPoint(6, 9));
+    assert(!GetPlayer1().IsNucleationPoint(8, 5));
+    assert(!GetPlayer1().IsNucleationPoint(8, 9));
 
     thisPiece.RotateRight();
     nRotations++;
@@ -214,24 +214,24 @@ void Game1v1Test::TestPiece_3LongPiece()
     // X
     // X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 4);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+    assert(!GetBoard().IsCoordEmpty(6, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 7));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 4);
+    assert(GetPlayer1().IsNucleationPoint(5, 6));
+    assert(GetPlayer1().IsNucleationPoint(5, 8));
+    assert(GetPlayer1().IsNucleationPoint(9, 6));
+    assert(GetPlayer1().IsNucleationPoint(9, 8));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+    assert(GetBoard().IsCoordEmpty(6, 7));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(8, 7));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 6));
+    assert(!GetPlayer1().IsNucleationPoint(5, 8));
+    assert(!GetPlayer1().IsNucleationPoint(9, 6));
+    assert(!GetPlayer1().IsNucleationPoint(9, 8));
 
     thisPiece.RotateRight();
     nRotations++;
@@ -242,32 +242,32 @@ void Game1v1Test::TestPiece_3LongPiece()
 }
 void Game1v1Test::TestPiece_3Triangle()
 {
-    Piece &thisPiece = m_1v1Game.GetPlayerMe().m_pieces[e_3Piece_Triangle];
+    Piece &thisPiece = m_player1.m_pieces[e_3Piece_Triangle];
     int8_t nRotations = 0;
 
     // X X
     //   X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 5);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(!GetBoard().IsCoordEmpty(8, 7));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 5);
+    assert(GetPlayer1().IsNucleationPoint(6, 5));
+    assert(GetPlayer1().IsNucleationPoint(6, 8));
+    assert(GetPlayer1().IsNucleationPoint(8, 5));
+    assert(GetPlayer1().IsNucleationPoint(9, 6));
+    assert(GetPlayer1().IsNucleationPoint(9, 8));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetBoard().IsCoordEmpty(8, 7));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(6, 5));
+    assert(!GetPlayer1().IsNucleationPoint(6, 8));
+    assert(!GetPlayer1().IsNucleationPoint(8, 5));
+    assert(!GetPlayer1().IsNucleationPoint(9, 6));
+    assert(!GetPlayer1().IsNucleationPoint(9, 8));
 
     thisPiece.RotateRight();
     nRotations++;
@@ -276,26 +276,26 @@ void Game1v1Test::TestPiece_3Triangle()
     //   X
     // X X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 5);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(!GetBoard().IsCoordEmpty(6, 7));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 5);
+    assert(GetPlayer1().IsNucleationPoint(5, 6));
+    assert(GetPlayer1().IsNucleationPoint(5, 8));
+    assert(GetPlayer1().IsNucleationPoint(6, 5));
+    assert(GetPlayer1().IsNucleationPoint(8, 5));
+    assert(GetPlayer1().IsNucleationPoint(8, 8));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 8));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetBoard().IsCoordEmpty(6, 7));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 6));
+    assert(!GetPlayer1().IsNucleationPoint(5, 8));
+    assert(!GetPlayer1().IsNucleationPoint(6, 5));
+    assert(!GetPlayer1().IsNucleationPoint(8, 5));
+    assert(!GetPlayer1().IsNucleationPoint(8, 8));
 
     thisPiece.RotateRight();
     nRotations++;
@@ -304,26 +304,26 @@ void Game1v1Test::TestPiece_3Triangle()
     // X
     // X X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 5);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(6, 7));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 5);
+    assert(GetPlayer1().IsNucleationPoint(5, 6));
+    assert(GetPlayer1().IsNucleationPoint(5, 8));
+    assert(GetPlayer1().IsNucleationPoint(6, 9));
+    assert(GetPlayer1().IsNucleationPoint(8, 6));
+    assert(GetPlayer1().IsNucleationPoint(8, 9));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(6, 7));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 6));
+    assert(!GetPlayer1().IsNucleationPoint(5, 8));
+    assert(!GetPlayer1().IsNucleationPoint(6, 9));
+    assert(!GetPlayer1().IsNucleationPoint(8, 6));
+    assert(!GetPlayer1().IsNucleationPoint(8, 9));
 
     thisPiece.RotateRight();
     nRotations++;
@@ -332,26 +332,26 @@ void Game1v1Test::TestPiece_3Triangle()
     // X X
     // X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 5);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(!GetBoard().IsCoordEmpty(8, 7));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 5);
+    assert(GetPlayer1().IsNucleationPoint(6, 6));
+    assert(GetPlayer1().IsNucleationPoint(6, 9));
+    assert(GetPlayer1().IsNucleationPoint(8, 9));
+    assert(GetPlayer1().IsNucleationPoint(9, 6));
+    assert(GetPlayer1().IsNucleationPoint(9, 8));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetBoard().IsCoordEmpty(8, 7));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(6, 6));
+    assert(!GetPlayer1().IsNucleationPoint(6, 9));
+    assert(!GetPlayer1().IsNucleationPoint(8, 9));
+    assert(!GetPlayer1().IsNucleationPoint(9, 6));
+    assert(!GetPlayer1().IsNucleationPoint(9, 8));
 
     thisPiece.RotateRight();
     nRotations++;
@@ -363,30 +363,30 @@ void Game1v1Test::TestPiece_3Triangle()
 void Game1v1Test::TestPiece_4LongPiece()
 {
     // X X X X
-    Piece &thisPiece = m_1v1Game.GetPlayerMe().m_pieces[e_4Piece_LongPiece];
+    Piece &thisPiece = m_player1.m_pieces[e_4Piece_LongPiece];
     int8_t nRotations = 0;
 
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 9));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 4);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 10));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 10));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 9));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 4);
+    assert(GetPlayer1().IsNucleationPoint(6, 5));
+    assert(GetPlayer1().IsNucleationPoint(6, 10));
+    assert(GetPlayer1().IsNucleationPoint(8, 5));
+    assert(GetPlayer1().IsNucleationPoint(8, 10));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 9));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 10));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 10));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetBoard().IsCoordEmpty(7, 9));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(6, 5));
+    assert(!GetPlayer1().IsNucleationPoint(6, 10));
+    assert(!GetPlayer1().IsNucleationPoint(8, 5));
+    assert(!GetPlayer1().IsNucleationPoint(8, 10));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 1);
@@ -396,26 +396,26 @@ void Game1v1Test::TestPiece_4LongPiece()
     // X
     // X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(9, 7));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 4);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(10, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(10, 8));
+    assert(!GetBoard().IsCoordEmpty(6, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 7));
+    assert(!GetBoard().IsCoordEmpty(9, 7));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 4);
+    assert(GetPlayer1().IsNucleationPoint(5, 6));
+    assert(GetPlayer1().IsNucleationPoint(5, 8));
+    assert(GetPlayer1().IsNucleationPoint(10, 6));
+    assert(GetPlayer1().IsNucleationPoint(10, 8));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(9, 7));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(10, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(10, 8));
+    assert(GetBoard().IsCoordEmpty(6, 7));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(8, 7));
+    assert(GetBoard().IsCoordEmpty(9, 7));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 6));
+    assert(!GetPlayer1().IsNucleationPoint(5, 8));
+    assert(!GetPlayer1().IsNucleationPoint(10, 6));
+    assert(!GetPlayer1().IsNucleationPoint(10, 8));
 
     thisPiece.RotateRight();nRotations++;
     assert(thisPiece.GetNRotations() == nRotations);
@@ -425,36 +425,36 @@ void Game1v1Test::TestPiece_4LongPiece()
 }
 void Game1v1Test::TestPiece_4LittleS()
 {
-    Piece &thisPiece = m_1v1Game.GetPlayerMe().m_pieces[e_4Piece_LittleS];
+    Piece &thisPiece = m_player1.m_pieces[e_4Piece_LittleS];
     int8_t nRotations = 0;
 
     //   X X
     // X X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 6);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 5));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(!GetBoard().IsCoordEmpty(8, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 6);
+    assert(GetPlayer1().IsNucleationPoint(6, 6));
+    assert(GetPlayer1().IsNucleationPoint(6, 9));
+    assert(GetPlayer1().IsNucleationPoint(7, 5));
+    assert(GetPlayer1().IsNucleationPoint(8, 9));
+    assert(GetPlayer1().IsNucleationPoint(9, 8));
+    assert(GetPlayer1().IsNucleationPoint(9, 5));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 5));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetBoard().IsCoordEmpty(8, 7));
+    assert(GetBoard().IsCoordEmpty(8, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(6, 6));
+    assert(!GetPlayer1().IsNucleationPoint(6, 9));
+    assert(!GetPlayer1().IsNucleationPoint(7, 5));
+    assert(!GetPlayer1().IsNucleationPoint(8, 9));
+    assert(!GetPlayer1().IsNucleationPoint(9, 8));
+    assert(!GetPlayer1().IsNucleationPoint(9, 5));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 1);
@@ -463,30 +463,30 @@ void Game1v1Test::TestPiece_4LittleS()
     // X X
     //   X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 6);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 7));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(!GetBoard().IsCoordEmpty(6, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 6);
+    assert(GetPlayer1().IsNucleationPoint(5, 5));
+    assert(GetPlayer1().IsNucleationPoint(5, 7));
+    assert(GetPlayer1().IsNucleationPoint(6, 8));
+    assert(GetPlayer1().IsNucleationPoint(8, 5));
+    assert(GetPlayer1().IsNucleationPoint(9, 6));
+    assert(GetPlayer1().IsNucleationPoint(9, 8));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 7));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(8, 7));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetBoard().IsCoordEmpty(6, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 5));
+    assert(!GetPlayer1().IsNucleationPoint(5, 7));
+    assert(!GetPlayer1().IsNucleationPoint(6, 8));
+    assert(!GetPlayer1().IsNucleationPoint(8, 5));
+    assert(!GetPlayer1().IsNucleationPoint(9, 6));
+    assert(!GetPlayer1().IsNucleationPoint(9, 8));
 
     thisPiece.RotateRight();
     nRotations++;
@@ -499,30 +499,30 @@ void Game1v1Test::TestPiece_4LittleS()
     // X X
     //   X X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 6);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 9));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(!GetBoard().IsCoordEmpty(8, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 6);
+    assert(GetPlayer1().IsNucleationPoint(6, 5));
+    assert(GetPlayer1().IsNucleationPoint(6, 8));
+    assert(GetPlayer1().IsNucleationPoint(7, 9));
+    assert(GetPlayer1().IsNucleationPoint(8, 5));
+    assert(GetPlayer1().IsNucleationPoint(9, 6));
+    assert(GetPlayer1().IsNucleationPoint(9, 9));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 9));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetBoard().IsCoordEmpty(8, 7));
+    assert(GetBoard().IsCoordEmpty(8, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(6, 5));
+    assert(!GetPlayer1().IsNucleationPoint(6, 8));
+    assert(!GetPlayer1().IsNucleationPoint(7, 9));
+    assert(!GetPlayer1().IsNucleationPoint(8, 5));
+    assert(!GetPlayer1().IsNucleationPoint(9, 6));
+    assert(!GetPlayer1().IsNucleationPoint(9, 9));
 
     thisPiece.RotateRight();
     nRotations++;
@@ -532,30 +532,30 @@ void Game1v1Test::TestPiece_4LittleS()
     // X X
     // X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 6);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(6, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(!GetBoard().IsCoordEmpty(8, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 6);
+    assert(GetPlayer1().IsNucleationPoint(5, 6));
+    assert(GetPlayer1().IsNucleationPoint(5, 8));
+    assert(GetPlayer1().IsNucleationPoint(6, 5));
+    assert(GetPlayer1().IsNucleationPoint(8, 8));
+    assert(GetPlayer1().IsNucleationPoint(9, 5));
+    assert(GetPlayer1().IsNucleationPoint(9, 7));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 7));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(6, 7));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetBoard().IsCoordEmpty(8, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 6));
+    assert(!GetPlayer1().IsNucleationPoint(5, 8));
+    assert(!GetPlayer1().IsNucleationPoint(6, 5));
+    assert(!GetPlayer1().IsNucleationPoint(8, 8));
+    assert(!GetPlayer1().IsNucleationPoint(9, 5));
+    assert(!GetPlayer1().IsNucleationPoint(9, 7));
 
     thisPiece.RotateRight();nRotations++;
     assert(thisPiece.GetNRotations() == nRotations);
@@ -567,34 +567,34 @@ void Game1v1Test::TestPiece_4LittleT()
 {
     //   X
     // X X X
-    Piece &thisPiece = m_1v1Game.GetPlayerMe().m_pieces[e_4Piece_LittleT];
+    Piece &thisPiece = m_player1.m_pieces[e_4Piece_LittleT];
     int8_t nRotations = 0;
 
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 6);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(!GetBoard().IsCoordEmpty(6, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 6);
+    assert(GetPlayer1().IsNucleationPoint(5, 6));
+    assert(GetPlayer1().IsNucleationPoint(5, 8));
+    assert(GetPlayer1().IsNucleationPoint(6, 5));
+    assert(GetPlayer1().IsNucleationPoint(6, 9));
+    assert(GetPlayer1().IsNucleationPoint(8, 5));
+    assert(GetPlayer1().IsNucleationPoint(8, 9));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetBoard().IsCoordEmpty(6, 7));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 6));
+    assert(!GetPlayer1().IsNucleationPoint(5, 8));
+    assert(!GetPlayer1().IsNucleationPoint(6, 5));
+    assert(!GetPlayer1().IsNucleationPoint(6, 9));
+    assert(!GetPlayer1().IsNucleationPoint(8, 5));
+    assert(!GetPlayer1().IsNucleationPoint(8, 9));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 1);
@@ -603,30 +603,30 @@ void Game1v1Test::TestPiece_4LittleT()
     // X X
     // X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 6);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 7));
+    assert(!GetBoard().IsCoordEmpty(6, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 6);
+    assert(GetPlayer1().IsNucleationPoint(5, 6));
+    assert(GetPlayer1().IsNucleationPoint(5, 8));
+    assert(GetPlayer1().IsNucleationPoint(6, 9));
+    assert(GetPlayer1().IsNucleationPoint(8, 9));
+    assert(GetPlayer1().IsNucleationPoint(9, 6));
+    assert(GetPlayer1().IsNucleationPoint(9, 8));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(8, 7));
+    assert(GetBoard().IsCoordEmpty(6, 7));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 6));
+    assert(!GetPlayer1().IsNucleationPoint(5, 8));
+    assert(!GetPlayer1().IsNucleationPoint(6, 9));
+    assert(!GetPlayer1().IsNucleationPoint(8, 9));
+    assert(!GetPlayer1().IsNucleationPoint(9, 6));
+    assert(!GetPlayer1().IsNucleationPoint(9, 8));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 2);
@@ -634,30 +634,30 @@ void Game1v1Test::TestPiece_4LittleT()
     // X X X
     //   X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 6);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(!GetBoard().IsCoordEmpty(8, 7));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 6);
+    assert(GetPlayer1().IsNucleationPoint(6, 5));
+    assert(GetPlayer1().IsNucleationPoint(6, 9));
+    assert(GetPlayer1().IsNucleationPoint(8, 5));
+    assert(GetPlayer1().IsNucleationPoint(8, 9));
+    assert(GetPlayer1().IsNucleationPoint(9, 6));
+    assert(GetPlayer1().IsNucleationPoint(9, 8));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetBoard().IsCoordEmpty(8, 7));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(6, 5));
+    assert(!GetPlayer1().IsNucleationPoint(6, 9));
+    assert(!GetPlayer1().IsNucleationPoint(8, 5));
+    assert(!GetPlayer1().IsNucleationPoint(8, 9));
+    assert(!GetPlayer1().IsNucleationPoint(9, 6));
+    assert(!GetPlayer1().IsNucleationPoint(9, 8));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 3);
@@ -666,30 +666,30 @@ void Game1v1Test::TestPiece_4LittleT()
     // X X
     //   X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 6);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(!GetBoard().IsCoordEmpty(6, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 7));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 6);
+    assert(GetPlayer1().IsNucleationPoint(5, 6));
+    assert(GetPlayer1().IsNucleationPoint(5, 8));
+    assert(GetPlayer1().IsNucleationPoint(6, 5));
+    assert(GetPlayer1().IsNucleationPoint(8, 5));
+    assert(GetPlayer1().IsNucleationPoint(9, 6));
+    assert(GetPlayer1().IsNucleationPoint(9, 8));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetBoard().IsCoordEmpty(6, 7));
+    assert(GetBoard().IsCoordEmpty(8, 7));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 6));
+    assert(!GetPlayer1().IsNucleationPoint(5, 8));
+    assert(!GetPlayer1().IsNucleationPoint(6, 5));
+    assert(!GetPlayer1().IsNucleationPoint(8, 5));
+    assert(!GetPlayer1().IsNucleationPoint(9, 6));
+    assert(!GetPlayer1().IsNucleationPoint(9, 8));
 
     thisPiece.RotateRight();nRotations++;
     assert(thisPiece.GetNRotations() == nRotations);
@@ -701,32 +701,32 @@ void Game1v1Test::TestPiece_4littleL()
 {
     // X X X
     //     X
-    Piece &thisPiece = m_1v1Game.GetPlayerMe().m_pieces[e_4Piece_LittleL];
+    Piece &thisPiece = m_player1.m_pieces[e_4Piece_LittleL];
     int8_t nRotations = 0;
 
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 5);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 7));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 9));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(!GetBoard().IsCoordEmpty(8, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 5);
+    assert(GetPlayer1().IsNucleationPoint(6, 5));
+    assert(GetPlayer1().IsNucleationPoint(6, 9));
+    assert(GetPlayer1().IsNucleationPoint(8, 5));
+    assert(GetPlayer1().IsNucleationPoint(9, 7));
+    assert(GetPlayer1().IsNucleationPoint(9, 9));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 7));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 9));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetBoard().IsCoordEmpty(8, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(6, 5));
+    assert(!GetPlayer1().IsNucleationPoint(6, 9));
+    assert(!GetPlayer1().IsNucleationPoint(8, 5));
+    assert(!GetPlayer1().IsNucleationPoint(9, 7));
+    assert(!GetPlayer1().IsNucleationPoint(9, 9));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 1);
@@ -735,28 +735,28 @@ void Game1v1Test::TestPiece_4littleL()
     //   X
     // X X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 5);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(6, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 5);
+    assert(GetPlayer1().IsNucleationPoint(5, 6));
+    assert(GetPlayer1().IsNucleationPoint(5, 8));
+    assert(GetPlayer1().IsNucleationPoint(7, 5));
+    assert(GetPlayer1().IsNucleationPoint(9, 5));
+    assert(GetPlayer1().IsNucleationPoint(9, 8));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(6, 7));
+    assert(GetBoard().IsCoordEmpty(8, 7));
+    assert(GetBoard().IsCoordEmpty(8, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 6));
+    assert(!GetPlayer1().IsNucleationPoint(5, 8));
+    assert(!GetPlayer1().IsNucleationPoint(7, 5));
+    assert(!GetPlayer1().IsNucleationPoint(9, 5));
+    assert(!GetPlayer1().IsNucleationPoint(9, 8));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 2);
@@ -764,28 +764,28 @@ void Game1v1Test::TestPiece_4littleL()
     // X
     // X X X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 5);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 7));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(6, 6));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 5);
+    assert(GetPlayer1().IsNucleationPoint(5, 5));
+    assert(GetPlayer1().IsNucleationPoint(5, 7));
+    assert(GetPlayer1().IsNucleationPoint(6, 9));
+    assert(GetPlayer1().IsNucleationPoint(8, 5));
+    assert(GetPlayer1().IsNucleationPoint(8, 9));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 7));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(6, 6));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 5));
+    assert(!GetPlayer1().IsNucleationPoint(5, 7));
+    assert(!GetPlayer1().IsNucleationPoint(6, 9));
+    assert(!GetPlayer1().IsNucleationPoint(8, 5));
+    assert(!GetPlayer1().IsNucleationPoint(8, 9));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 3);
@@ -794,28 +794,28 @@ void Game1v1Test::TestPiece_4littleL()
     // X
     // X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 5);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(6, 7));
+    assert(!GetBoard().IsCoordEmpty(6, 8));
+    assert(!GetBoard().IsCoordEmpty(8, 7));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 5);
+    assert(GetPlayer1().IsNucleationPoint(5, 6));
+    assert(GetPlayer1().IsNucleationPoint(5, 9));
+    assert(GetPlayer1().IsNucleationPoint(7, 9));
+    assert(GetPlayer1().IsNucleationPoint(9, 6));
+    assert(GetPlayer1().IsNucleationPoint(9, 8));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(6, 7));
+    assert(GetBoard().IsCoordEmpty(6, 8));
+    assert(GetBoard().IsCoordEmpty(8, 7));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 6));
+    assert(!GetPlayer1().IsNucleationPoint(5, 9));
+    assert(!GetPlayer1().IsNucleationPoint(7, 9));
+    assert(!GetPlayer1().IsNucleationPoint(9, 6));
+    assert(!GetPlayer1().IsNucleationPoint(9, 8));
 
     thisPiece.RotateRight();nRotations++;
     assert(thisPiece.GetNRotations() == nRotations);
@@ -826,28 +826,28 @@ void Game1v1Test::TestPiece_4littleL()
     // X X X
     // X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 5);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 6));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 5);
+    assert(GetPlayer1().IsNucleationPoint(6, 5));
+    assert(GetPlayer1().IsNucleationPoint(6, 9));
+    assert(GetPlayer1().IsNucleationPoint(8, 9));
+    assert(GetPlayer1().IsNucleationPoint(9, 5));
+    assert(GetPlayer1().IsNucleationPoint(9, 7));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 7));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(8, 6));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(6, 5));
+    assert(!GetPlayer1().IsNucleationPoint(6, 9));
+    assert(!GetPlayer1().IsNucleationPoint(8, 9));
+    assert(!GetPlayer1().IsNucleationPoint(9, 5));
+    assert(!GetPlayer1().IsNucleationPoint(9, 7));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 1);
@@ -856,28 +856,28 @@ void Game1v1Test::TestPiece_4littleL()
 	//   X
 	//   X
 	PutDownPiece(thisPiece);
-	assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-	assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-	assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 6));
-	assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-	assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 5);
-	assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 5));
-	assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-	assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 5));
-	assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-	assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+	assert(!GetBoard().IsCoordEmpty(7, 7));
+	assert(!GetBoard().IsCoordEmpty(6, 7));
+	assert(!GetBoard().IsCoordEmpty(6, 6));
+	assert(!GetBoard().IsCoordEmpty(8, 7));
+	assert(GetPlayer1().NumberOfNucleationPoints() == 5);
+	assert(GetPlayer1().IsNucleationPoint(5, 5));
+	assert(GetPlayer1().IsNucleationPoint(5, 8));
+	assert(GetPlayer1().IsNucleationPoint(7, 5));
+	assert(GetPlayer1().IsNucleationPoint(9, 6));
+	assert(GetPlayer1().IsNucleationPoint(9, 8));
 
 	RemovePiece(thisPiece);
-	assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-	assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-	assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 6));
-	assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-	assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-	assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 5));
-	assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-	assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 5));
-	assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-	assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+	assert(GetBoard().IsCoordEmpty(7, 7));
+	assert(GetBoard().IsCoordEmpty(6, 7));
+	assert(GetBoard().IsCoordEmpty(6, 6));
+	assert(GetBoard().IsCoordEmpty(8, 7));
+	assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+	assert(!GetPlayer1().IsNucleationPoint(5, 5));
+	assert(!GetPlayer1().IsNucleationPoint(5, 8));
+	assert(!GetPlayer1().IsNucleationPoint(7, 5));
+	assert(!GetPlayer1().IsNucleationPoint(9, 6));
+	assert(!GetPlayer1().IsNucleationPoint(9, 8));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 2);
@@ -885,28 +885,28 @@ void Game1v1Test::TestPiece_4littleL()
     //     X
     // X X X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 5);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 7));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(!GetBoard().IsCoordEmpty(6, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 5);
+    assert(GetPlayer1().IsNucleationPoint(5, 7));
+    assert(GetPlayer1().IsNucleationPoint(5, 9));
+    assert(GetPlayer1().IsNucleationPoint(6, 5));
+    assert(GetPlayer1().IsNucleationPoint(8, 5));
+    assert(GetPlayer1().IsNucleationPoint(8, 9));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 7));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetBoard().IsCoordEmpty(6, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 7));
+    assert(!GetPlayer1().IsNucleationPoint(5, 9));
+    assert(!GetPlayer1().IsNucleationPoint(6, 5));
+    assert(!GetPlayer1().IsNucleationPoint(8, 5));
+    assert(!GetPlayer1().IsNucleationPoint(8, 9));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 3);
@@ -915,28 +915,28 @@ void Game1v1Test::TestPiece_4littleL()
     // X
     // X X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 5);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 9));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(6, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 5);
+    assert(GetPlayer1().IsNucleationPoint(5, 6));
+    assert(GetPlayer1().IsNucleationPoint(5, 8));
+    assert(GetPlayer1().IsNucleationPoint(7, 9));
+    assert(GetPlayer1().IsNucleationPoint(9, 6));
+    assert(GetPlayer1().IsNucleationPoint(9, 9));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 9));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(6, 7));
+    assert(GetBoard().IsCoordEmpty(8, 7));
+    assert(GetBoard().IsCoordEmpty(8, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 6));
+    assert(!GetPlayer1().IsNucleationPoint(5, 8));
+    assert(!GetPlayer1().IsNucleationPoint(7, 9));
+    assert(!GetPlayer1().IsNucleationPoint(9, 6));
+    assert(!GetPlayer1().IsNucleationPoint(9, 9));
 
     thisPiece.RotateRight();nRotations++;
     assert(thisPiece.GetNRotations() == nRotations);
@@ -948,30 +948,30 @@ void Game1v1Test::TestPiece_4FullSquare()
 {
     // X X
     // X X
-    Piece &thisPiece = m_1v1Game.GetPlayerMe().m_pieces[e_4Piece_FullSquare];
+    Piece &thisPiece = m_player1.m_pieces[e_4Piece_FullSquare];
     int8_t nRotations = 0;
 
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 4);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 9));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(!GetBoard().IsCoordEmpty(8, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 4);
+    assert(GetPlayer1().IsNucleationPoint(6, 6));
+    assert(GetPlayer1().IsNucleationPoint(6, 9));
+    assert(GetPlayer1().IsNucleationPoint(9, 6));
+    assert(GetPlayer1().IsNucleationPoint(9, 9));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 9));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetBoard().IsCoordEmpty(8, 7));
+    assert(GetBoard().IsCoordEmpty(8, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(6, 6));
+    assert(!GetPlayer1().IsNucleationPoint(6, 9));
+    assert(!GetPlayer1().IsNucleationPoint(9, 6));
+    assert(!GetPlayer1().IsNucleationPoint(9, 9));
 
     thisPiece.RotateRight();nRotations++;
     assert(thisPiece.GetNRotations() == nRotations);
@@ -984,36 +984,36 @@ void Game1v1Test::TestPiece_5BigS()
     //   X X
     //   X
     // X X
-    Piece &thisPiece = m_1v1Game.GetPlayerMe().m_pieces[e_5Piece_BigS];
+    Piece &thisPiece = m_player1.m_pieces[e_5Piece_BigS];
     int8_t nRotations = 0;
 
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 6);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(6, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 7));
+    assert(!GetBoard().IsCoordEmpty(6, 8));
+    assert(!GetBoard().IsCoordEmpty(8, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 6);
+    assert(GetPlayer1().IsNucleationPoint(5, 6));
+    assert(GetPlayer1().IsNucleationPoint(5, 9));
+    assert(GetPlayer1().IsNucleationPoint(7, 5));
+    assert(GetPlayer1().IsNucleationPoint(7, 9));
+    assert(GetPlayer1().IsNucleationPoint(9, 5));
+    assert(GetPlayer1().IsNucleationPoint(9, 8));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(6, 7));
+    assert(GetBoard().IsCoordEmpty(8, 7));
+    assert(GetBoard().IsCoordEmpty(6, 8));
+    assert(GetBoard().IsCoordEmpty(8, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 6));
+    assert(!GetPlayer1().IsNucleationPoint(5, 9));
+    assert(!GetPlayer1().IsNucleationPoint(7, 5));
+    assert(!GetPlayer1().IsNucleationPoint(7, 9));
+    assert(!GetPlayer1().IsNucleationPoint(9, 5));
+    assert(!GetPlayer1().IsNucleationPoint(9, 8));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 1);
@@ -1022,32 +1022,32 @@ void Game1v1Test::TestPiece_5BigS()
     // X X X
     //     X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 6);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 7));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 7));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 9));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(!GetBoard().IsCoordEmpty(6, 6));
+    assert(!GetBoard().IsCoordEmpty(8, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 6);
+    assert(GetPlayer1().IsNucleationPoint(5, 5));
+    assert(GetPlayer1().IsNucleationPoint(5, 7));
+    assert(GetPlayer1().IsNucleationPoint(6, 9));
+    assert(GetPlayer1().IsNucleationPoint(8, 5));
+    assert(GetPlayer1().IsNucleationPoint(9, 7));
+    assert(GetPlayer1().IsNucleationPoint(9, 9));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 7));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 7));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 9));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetBoard().IsCoordEmpty(6, 6));
+    assert(GetBoard().IsCoordEmpty(8, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 5));
+    assert(!GetPlayer1().IsNucleationPoint(5, 7));
+    assert(!GetPlayer1().IsNucleationPoint(6, 9));
+    assert(!GetPlayer1().IsNucleationPoint(8, 5));
+    assert(!GetPlayer1().IsNucleationPoint(9, 7));
+    assert(!GetPlayer1().IsNucleationPoint(9, 9));
 
     thisPiece.RotateRight();nRotations++;
     assert(thisPiece.GetNRotations() == nRotations);
@@ -1059,32 +1059,32 @@ void Game1v1Test::TestPiece_5BigS()
     //   X
     //   X X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 6);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 9));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(6, 6));
+    assert(!GetBoard().IsCoordEmpty(8, 8));
+    assert(!GetBoard().IsCoordEmpty(6, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 7));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 6);
+    assert(GetPlayer1().IsNucleationPoint(5, 5));
+    assert(GetPlayer1().IsNucleationPoint(5, 8));
+    assert(GetPlayer1().IsNucleationPoint(7, 9));
+    assert(GetPlayer1().IsNucleationPoint(7, 5));
+    assert(GetPlayer1().IsNucleationPoint(7, 9));
+    assert(GetPlayer1().IsNucleationPoint(9, 9));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 9));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(6, 6));
+    assert(GetBoard().IsCoordEmpty(8, 8));
+    assert(GetBoard().IsCoordEmpty(6, 7));
+    assert(GetBoard().IsCoordEmpty(8, 7));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 5));
+    assert(!GetPlayer1().IsNucleationPoint(5, 8));
+    assert(!GetPlayer1().IsNucleationPoint(7, 9));
+    assert(!GetPlayer1().IsNucleationPoint(7, 5));
+    assert(!GetPlayer1().IsNucleationPoint(7, 9));
+    assert(!GetPlayer1().IsNucleationPoint(9, 9));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 1);
@@ -1093,32 +1093,32 @@ void Game1v1Test::TestPiece_5BigS()
     // X X X
     // X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 6);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 7));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(!GetBoard().IsCoordEmpty(8, 6));
+    assert(!GetBoard().IsCoordEmpty(6, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 6);
+    assert(GetPlayer1().IsNucleationPoint(5, 7));
+    assert(GetPlayer1().IsNucleationPoint(5, 9));
+    assert(GetPlayer1().IsNucleationPoint(6, 5));
+    assert(GetPlayer1().IsNucleationPoint(8, 9));
+    assert(GetPlayer1().IsNucleationPoint(9, 5));
+    assert(GetPlayer1().IsNucleationPoint(9, 7));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 7));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 7));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetBoard().IsCoordEmpty(8, 6));
+    assert(GetBoard().IsCoordEmpty(6, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 7));
+    assert(!GetPlayer1().IsNucleationPoint(5, 9));
+    assert(!GetPlayer1().IsNucleationPoint(6, 5));
+    assert(!GetPlayer1().IsNucleationPoint(8, 9));
+    assert(!GetPlayer1().IsNucleationPoint(9, 5));
+    assert(!GetPlayer1().IsNucleationPoint(9, 7));
 
     thisPiece.RotateRight();nRotations++;
     assert(thisPiece.GetNRotations() == nRotations);
@@ -1131,38 +1131,38 @@ void Game1v1Test::TestPiece_5SafPiece()
     //   X
     //   X X
     // X X
-    Piece &thisPiece = m_1v1Game.GetPlayerMe().m_pieces[e_5Piece_SafPiece];
+    Piece &thisPiece = m_player1.m_pieces[e_5Piece_SafPiece];
     int8_t nRotations = 0;
 
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 7);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 6));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(!GetBoard().IsCoordEmpty(8, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 7);
+    assert(GetPlayer1().IsNucleationPoint(5, 6));
+    assert(GetPlayer1().IsNucleationPoint(5, 8));
+    assert(GetPlayer1().IsNucleationPoint(6, 9));
+    assert(GetPlayer1().IsNucleationPoint(7, 5));
+    assert(GetPlayer1().IsNucleationPoint(8, 9));
+    assert(GetPlayer1().IsNucleationPoint(9, 5));
+    assert(GetPlayer1().IsNucleationPoint(9, 8));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(8, 6));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetBoard().IsCoordEmpty(8, 7));
+    assert(GetBoard().IsCoordEmpty(8, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 6));
+    assert(!GetPlayer1().IsNucleationPoint(5, 8));
+    assert(!GetPlayer1().IsNucleationPoint(6, 9));
+    assert(!GetPlayer1().IsNucleationPoint(7, 5));
+    assert(!GetPlayer1().IsNucleationPoint(8, 9));
+    assert(!GetPlayer1().IsNucleationPoint(9, 5));
+    assert(!GetPlayer1().IsNucleationPoint(9, 8));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 1);
@@ -1171,34 +1171,34 @@ void Game1v1Test::TestPiece_5SafPiece()
     // X X X
     //   X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 7);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 7));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(!GetBoard().IsCoordEmpty(6, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 7);
+    assert(GetPlayer1().IsNucleationPoint(5, 5));
+    assert(GetPlayer1().IsNucleationPoint(5, 7));
+    assert(GetPlayer1().IsNucleationPoint(6, 9));
+    assert(GetPlayer1().IsNucleationPoint(8, 5));
+    assert(GetPlayer1().IsNucleationPoint(8, 9));
+    assert(GetPlayer1().IsNucleationPoint(9, 6));
+    assert(GetPlayer1().IsNucleationPoint(9, 8));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 7));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(8, 7));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetBoard().IsCoordEmpty(6, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 5));
+    assert(!GetPlayer1().IsNucleationPoint(5, 7));
+    assert(!GetPlayer1().IsNucleationPoint(6, 9));
+    assert(!GetPlayer1().IsNucleationPoint(8, 5));
+    assert(!GetPlayer1().IsNucleationPoint(8, 9));
+    assert(!GetPlayer1().IsNucleationPoint(9, 6));
+    assert(!GetPlayer1().IsNucleationPoint(9, 8));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 2);
@@ -1207,34 +1207,34 @@ void Game1v1Test::TestPiece_5SafPiece()
     // X X
     //   X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 7);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(!GetBoard().IsCoordEmpty(8, 7));
+    assert(!GetBoard().IsCoordEmpty(6, 7));
+    assert(!GetBoard().IsCoordEmpty(6, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 7);
+    assert(GetPlayer1().IsNucleationPoint(5, 6));
+    assert(GetPlayer1().IsNucleationPoint(5, 9));
+    assert(GetPlayer1().IsNucleationPoint(6, 5));
+    assert(GetPlayer1().IsNucleationPoint(7, 9));
+    assert(GetPlayer1().IsNucleationPoint(8, 5));
+    assert(GetPlayer1().IsNucleationPoint(9, 6));
+    assert(GetPlayer1().IsNucleationPoint(9, 8));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetBoard().IsCoordEmpty(8, 7));
+    assert(GetBoard().IsCoordEmpty(6, 7));
+    assert(GetBoard().IsCoordEmpty(6, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 6));
+    assert(!GetPlayer1().IsNucleationPoint(5, 9));
+    assert(!GetPlayer1().IsNucleationPoint(6, 5));
+    assert(!GetPlayer1().IsNucleationPoint(7, 9));
+    assert(!GetPlayer1().IsNucleationPoint(8, 5));
+    assert(!GetPlayer1().IsNucleationPoint(9, 6));
+    assert(!GetPlayer1().IsNucleationPoint(9, 8));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 3);
@@ -1243,34 +1243,34 @@ void Game1v1Test::TestPiece_5SafPiece()
     // X X X
     //     X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 7);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 7));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 9));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(!GetBoard().IsCoordEmpty(6, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 7);
+    assert(GetPlayer1().IsNucleationPoint(5, 6));
+    assert(GetPlayer1().IsNucleationPoint(5, 8));
+    assert(GetPlayer1().IsNucleationPoint(6, 5));
+    assert(GetPlayer1().IsNucleationPoint(6, 9));
+    assert(GetPlayer1().IsNucleationPoint(8, 5));
+    assert(GetPlayer1().IsNucleationPoint(9, 7));
+    assert(GetPlayer1().IsNucleationPoint(9, 9));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 7));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 9));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetBoard().IsCoordEmpty(6, 7));
+    assert(GetBoard().IsCoordEmpty(8, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 6));
+    assert(!GetPlayer1().IsNucleationPoint(5, 8));
+    assert(!GetPlayer1().IsNucleationPoint(6, 5));
+    assert(!GetPlayer1().IsNucleationPoint(6, 9));
+    assert(!GetPlayer1().IsNucleationPoint(8, 5));
+    assert(!GetPlayer1().IsNucleationPoint(9, 7));
+    assert(!GetPlayer1().IsNucleationPoint(9, 9));
 
     thisPiece.RotateRight();
     nRotations++;
@@ -1283,34 +1283,34 @@ void Game1v1Test::TestPiece_5SafPiece()
     // X X
     //   X X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 7);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 9));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(!GetBoard().IsCoordEmpty(6, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 7);
+    assert(GetPlayer1().IsNucleationPoint(5, 6));
+    assert(GetPlayer1().IsNucleationPoint(5, 8));
+    assert(GetPlayer1().IsNucleationPoint(6, 5));
+    assert(GetPlayer1().IsNucleationPoint(7, 9));
+    assert(GetPlayer1().IsNucleationPoint(8, 5));
+    assert(GetPlayer1().IsNucleationPoint(9, 6));
+    assert(GetPlayer1().IsNucleationPoint(9, 9));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 9));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetBoard().IsCoordEmpty(6, 7));
+    assert(GetBoard().IsCoordEmpty(8, 7));
+    assert(GetBoard().IsCoordEmpty(8, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 6));
+    assert(!GetPlayer1().IsNucleationPoint(5, 8));
+    assert(!GetPlayer1().IsNucleationPoint(6, 5));
+    assert(!GetPlayer1().IsNucleationPoint(7, 9));
+    assert(!GetPlayer1().IsNucleationPoint(8, 5));
+    assert(!GetPlayer1().IsNucleationPoint(9, 6));
+    assert(!GetPlayer1().IsNucleationPoint(9, 9));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 1);
@@ -1319,34 +1319,34 @@ void Game1v1Test::TestPiece_5SafPiece()
     // X X X
     // X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 7);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(!GetBoard().IsCoordEmpty(6, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 7);
+    assert(GetPlayer1().IsNucleationPoint(5, 6));
+    assert(GetPlayer1().IsNucleationPoint(5, 8));
+    assert(GetPlayer1().IsNucleationPoint(6, 5));
+    assert(GetPlayer1().IsNucleationPoint(6, 9));
+    assert(GetPlayer1().IsNucleationPoint(8, 9));
+    assert(GetPlayer1().IsNucleationPoint(9, 5));
+    assert(GetPlayer1().IsNucleationPoint(9, 7));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 7));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetBoard().IsCoordEmpty(6, 7));
+    assert(GetBoard().IsCoordEmpty(8, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 6));
+    assert(!GetPlayer1().IsNucleationPoint(5, 8));
+    assert(!GetPlayer1().IsNucleationPoint(6, 5));
+    assert(!GetPlayer1().IsNucleationPoint(6, 9));
+    assert(!GetPlayer1().IsNucleationPoint(8, 9));
+    assert(!GetPlayer1().IsNucleationPoint(9, 5));
+    assert(!GetPlayer1().IsNucleationPoint(9, 7));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 2);
@@ -1355,34 +1355,34 @@ void Game1v1Test::TestPiece_5SafPiece()
     //   X X
     //   X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 7);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(!GetBoard().IsCoordEmpty(6, 6));
+    assert(!GetBoard().IsCoordEmpty(6, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 7));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 7);
+    assert(GetPlayer1().IsNucleationPoint(5, 5));
+    assert(GetPlayer1().IsNucleationPoint(5, 8));
+    assert(GetPlayer1().IsNucleationPoint(6, 9));
+    assert(GetPlayer1().IsNucleationPoint(7, 5));
+    assert(GetPlayer1().IsNucleationPoint(8, 9));
+    assert(GetPlayer1().IsNucleationPoint(9, 6));
+    assert(GetPlayer1().IsNucleationPoint(9, 8));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetBoard().IsCoordEmpty(6, 6));
+    assert(GetBoard().IsCoordEmpty(6, 7));
+    assert(GetBoard().IsCoordEmpty(8, 7));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 5));
+    assert(!GetPlayer1().IsNucleationPoint(5, 8));
+    assert(!GetPlayer1().IsNucleationPoint(6, 9));
+    assert(!GetPlayer1().IsNucleationPoint(7, 5));
+    assert(!GetPlayer1().IsNucleationPoint(8, 9));
+    assert(!GetPlayer1().IsNucleationPoint(9, 6));
+    assert(!GetPlayer1().IsNucleationPoint(9, 8));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 3);
@@ -1391,34 +1391,34 @@ void Game1v1Test::TestPiece_5SafPiece()
     // X X X
     //   X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 7);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 7));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(!GetBoard().IsCoordEmpty(8, 7));
+    assert(!GetBoard().IsCoordEmpty(6, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 7);
+    assert(GetPlayer1().IsNucleationPoint(5, 7));
+    assert(GetPlayer1().IsNucleationPoint(5, 9));
+    assert(GetPlayer1().IsNucleationPoint(6, 5));
+    assert(GetPlayer1().IsNucleationPoint(8, 5));
+    assert(GetPlayer1().IsNucleationPoint(8, 9));
+    assert(GetPlayer1().IsNucleationPoint(9, 6));
+    assert(GetPlayer1().IsNucleationPoint(9, 8));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 7));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetBoard().IsCoordEmpty(8, 7));
+    assert(GetBoard().IsCoordEmpty(6, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 7));
+    assert(!GetPlayer1().IsNucleationPoint(5, 9));
+    assert(!GetPlayer1().IsNucleationPoint(6, 5));
+    assert(!GetPlayer1().IsNucleationPoint(8, 5));
+    assert(!GetPlayer1().IsNucleationPoint(8, 9));
+    assert(!GetPlayer1().IsNucleationPoint(9, 6));
+    assert(!GetPlayer1().IsNucleationPoint(9, 8));
 
     thisPiece.RotateRight();nRotations++;
     assert(thisPiece.GetNRotations() == nRotations);
@@ -1431,38 +1431,38 @@ void Game1v1Test::TestPiece_5WPiece()
     // X X
     //   X X
     //     X
-    Piece &thisPiece = m_1v1Game.GetPlayerMe().m_pieces[e_5Piece_WPiece];
+    Piece &thisPiece = m_player1.m_pieces[e_5Piece_WPiece];
     int8_t nRotations = 0;
 
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 7);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 7));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 9));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(6, 6));
+    assert(!GetBoard().IsCoordEmpty(6, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(!GetBoard().IsCoordEmpty(8, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 7);
+    assert(GetPlayer1().IsNucleationPoint(5, 5));
+    assert(GetPlayer1().IsNucleationPoint(5, 8));
+    assert(GetPlayer1().IsNucleationPoint(6, 9));
+    assert(GetPlayer1().IsNucleationPoint(7, 5));
+    assert(GetPlayer1().IsNucleationPoint(8, 6));
+    assert(GetPlayer1().IsNucleationPoint(9, 7));
+    assert(GetPlayer1().IsNucleationPoint(9, 9));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 7));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 9));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(6, 6));
+    assert(GetBoard().IsCoordEmpty(6, 7));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetBoard().IsCoordEmpty(8, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 5));
+    assert(!GetPlayer1().IsNucleationPoint(5, 8));
+    assert(!GetPlayer1().IsNucleationPoint(6, 9));
+    assert(!GetPlayer1().IsNucleationPoint(7, 5));
+    assert(!GetPlayer1().IsNucleationPoint(8, 6));
+    assert(!GetPlayer1().IsNucleationPoint(9, 7));
+    assert(!GetPlayer1().IsNucleationPoint(9, 9));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 1);
@@ -1471,34 +1471,34 @@ void Game1v1Test::TestPiece_5WPiece()
     //   X X
     // X X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 7);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 7));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 6));
+    assert(!GetBoard().IsCoordEmpty(6, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 7);
+    assert(GetPlayer1().IsNucleationPoint(5, 7));
+    assert(GetPlayer1().IsNucleationPoint(5, 9));
+    assert(GetPlayer1().IsNucleationPoint(6, 6));
+    assert(GetPlayer1().IsNucleationPoint(7, 5));
+    assert(GetPlayer1().IsNucleationPoint(8, 9));
+    assert(GetPlayer1().IsNucleationPoint(9, 5));
+    assert(GetPlayer1().IsNucleationPoint(9, 8));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 7));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(8, 6));
+    assert(GetBoard().IsCoordEmpty(6, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 7));
+    assert(!GetPlayer1().IsNucleationPoint(5, 9));
+    assert(!GetPlayer1().IsNucleationPoint(6, 6));
+    assert(!GetPlayer1().IsNucleationPoint(7, 5));
+    assert(!GetPlayer1().IsNucleationPoint(8, 9));
+    assert(!GetPlayer1().IsNucleationPoint(9, 5));
+    assert(!GetPlayer1().IsNucleationPoint(9, 8));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 2);
@@ -1507,34 +1507,34 @@ void Game1v1Test::TestPiece_5WPiece()
     // X X
     //   X X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 7);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 7));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 9));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(!GetBoard().IsCoordEmpty(6, 6));
+    assert(!GetBoard().IsCoordEmpty(8, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 7);
+    assert(GetPlayer1().IsNucleationPoint(5, 5));
+    assert(GetPlayer1().IsNucleationPoint(5, 7));
+    assert(GetPlayer1().IsNucleationPoint(6, 8));
+    assert(GetPlayer1().IsNucleationPoint(7, 9));
+    assert(GetPlayer1().IsNucleationPoint(8, 5));
+    assert(GetPlayer1().IsNucleationPoint(9, 6));
+    assert(GetPlayer1().IsNucleationPoint(9, 9));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 7));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 9));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetBoard().IsCoordEmpty(6, 6));
+    assert(GetBoard().IsCoordEmpty(8, 7));
+    assert(GetBoard().IsCoordEmpty(8, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 5));
+    assert(!GetPlayer1().IsNucleationPoint(5, 7));
+    assert(!GetPlayer1().IsNucleationPoint(6, 8));
+    assert(!GetPlayer1().IsNucleationPoint(7, 9));
+    assert(!GetPlayer1().IsNucleationPoint(8, 5));
+    assert(!GetPlayer1().IsNucleationPoint(9, 6));
+    assert(!GetPlayer1().IsNucleationPoint(9, 9));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 3);
@@ -1543,34 +1543,34 @@ void Game1v1Test::TestPiece_5WPiece()
     // X X
     // X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 7);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(6, 7));
+    assert(!GetBoard().IsCoordEmpty(6, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(!GetBoard().IsCoordEmpty(8, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 7);
+    assert(GetPlayer1().IsNucleationPoint(5, 6));
+    assert(GetPlayer1().IsNucleationPoint(5, 9));
+    assert(GetPlayer1().IsNucleationPoint(6, 5));
+    assert(GetPlayer1().IsNucleationPoint(7, 9));
+    assert(GetPlayer1().IsNucleationPoint(8, 8));
+    assert(GetPlayer1().IsNucleationPoint(9, 5));
+    assert(GetPlayer1().IsNucleationPoint(9, 7));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 7));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(6, 7));
+    assert(GetBoard().IsCoordEmpty(6, 8));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetBoard().IsCoordEmpty(8, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 6));
+    assert(!GetPlayer1().IsNucleationPoint(5, 9));
+    assert(!GetPlayer1().IsNucleationPoint(6, 5));
+    assert(!GetPlayer1().IsNucleationPoint(7, 9));
+    assert(!GetPlayer1().IsNucleationPoint(8, 8));
+    assert(!GetPlayer1().IsNucleationPoint(9, 5));
+    assert(!GetPlayer1().IsNucleationPoint(9, 7));
 
     thisPiece.RotateRight();nRotations++;
     assert(thisPiece.GetNRotations() == nRotations);
@@ -1584,34 +1584,34 @@ void Game1v1Test::TestPiece_5CuntPiece()
 {
     // X X X
     // X   X
-    Piece &thisPiece = m_1v1Game.GetPlayerMe().m_pieces[e_5Piece_CuntPiece];
+    Piece &thisPiece = m_player1.m_pieces[e_5Piece_CuntPiece];
     int8_t nRotations = 0;
 
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 5);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 7));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(!GetBoard().IsCoordEmpty(8, 6));
+    assert(!GetBoard().IsCoordEmpty(8, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 5);
+    assert(GetPlayer1().IsNucleationPoint(9, 5));
+    assert(GetPlayer1().IsNucleationPoint(9, 7));
+    assert(GetPlayer1().IsNucleationPoint(9, 9));
+    assert(GetPlayer1().IsNucleationPoint(6, 5));
+    assert(GetPlayer1().IsNucleationPoint(6, 9));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 7));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetBoard().IsCoordEmpty(6, 6));
+    assert(GetBoard().IsCoordEmpty(8, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(9, 5));
+    assert(!GetPlayer1().IsNucleationPoint(9, 7));
+    assert(!GetPlayer1().IsNucleationPoint(9, 9));
+    assert(!GetPlayer1().IsNucleationPoint(6, 5));
+    assert(!GetPlayer1().IsNucleationPoint(6, 9));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 1);
@@ -1620,30 +1620,30 @@ void Game1v1Test::TestPiece_5CuntPiece()
     //   X
     // X X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 5);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(6, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 7));
+    assert(!GetBoard().IsCoordEmpty(6, 6));
+    assert(!GetBoard().IsCoordEmpty(8, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 5);
+    assert(GetPlayer1().IsNucleationPoint(5, 5));
+    assert(GetPlayer1().IsNucleationPoint(5, 8));
+    assert(GetPlayer1().IsNucleationPoint(7, 5));
+    assert(GetPlayer1().IsNucleationPoint(9, 5));
+    assert(GetPlayer1().IsNucleationPoint(9, 8));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(6, 7));
+    assert(GetBoard().IsCoordEmpty(8, 7));
+    assert(GetBoard().IsCoordEmpty(6, 6));
+    assert(GetBoard().IsCoordEmpty(8, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 5));
+    assert(!GetPlayer1().IsNucleationPoint(5, 8));
+    assert(!GetPlayer1().IsNucleationPoint(7, 5));
+    assert(!GetPlayer1().IsNucleationPoint(9, 5));
+    assert(!GetPlayer1().IsNucleationPoint(9, 8));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 2);
@@ -1651,30 +1651,30 @@ void Game1v1Test::TestPiece_5CuntPiece()
     // X   X
     // X X X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 5);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 7));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(!GetBoard().IsCoordEmpty(6, 6));
+    assert(!GetBoard().IsCoordEmpty(6, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 5);
+    assert(GetPlayer1().IsNucleationPoint(5, 5));
+    assert(GetPlayer1().IsNucleationPoint(5, 7));
+    assert(GetPlayer1().IsNucleationPoint(5, 9));
+    assert(GetPlayer1().IsNucleationPoint(8, 5));
+    assert(GetPlayer1().IsNucleationPoint(8, 9));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 7));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetBoard().IsCoordEmpty(6, 6));
+    assert(GetBoard().IsCoordEmpty(8, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 5));
+    assert(!GetPlayer1().IsNucleationPoint(5, 7));
+    assert(!GetPlayer1().IsNucleationPoint(5, 9));
+    assert(!GetPlayer1().IsNucleationPoint(8, 5));
+    assert(!GetPlayer1().IsNucleationPoint(8, 9));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 3);
@@ -1683,30 +1683,30 @@ void Game1v1Test::TestPiece_5CuntPiece()
     // X
     // X X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 5);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 9));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(6, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 7));
+    assert(!GetBoard().IsCoordEmpty(6, 8));
+    assert(!GetBoard().IsCoordEmpty(8, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 5);
+    assert(GetPlayer1().IsNucleationPoint(5, 6));
+    assert(GetPlayer1().IsNucleationPoint(5, 9));
+    assert(GetPlayer1().IsNucleationPoint(7, 9));
+    assert(GetPlayer1().IsNucleationPoint(9, 6));
+    assert(GetPlayer1().IsNucleationPoint(9, 9));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 9));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(6, 7));
+    assert(GetBoard().IsCoordEmpty(8, 7));
+    assert(GetBoard().IsCoordEmpty(6, 6));
+    assert(GetBoard().IsCoordEmpty(8, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 6));
+    assert(!GetPlayer1().IsNucleationPoint(5, 9));
+    assert(!GetPlayer1().IsNucleationPoint(7, 9));
+    assert(!GetPlayer1().IsNucleationPoint(9, 6));
+    assert(!GetPlayer1().IsNucleationPoint(9, 9));
 
     thisPiece.RotateRight();nRotations++;
     assert(thisPiece.GetNRotations() == nRotations);
@@ -1720,60 +1720,60 @@ void Game1v1Test::TestPiece_5BigPenis()
     // X
     // X
     // X
-    Piece &thisPiece = m_1v1Game.GetPlayerMe().m_pieces[e_5Piece_BigPenis];
+    Piece &thisPiece = m_player1.m_pieces[e_5Piece_BigPenis];
     int8_t nRotations = 0;
 
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(5, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(9, 7));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 4);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(4, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(4, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(10, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(10, 8));
+    assert(!GetBoard().IsCoordEmpty(5, 7));
+    assert(!GetBoard().IsCoordEmpty(6, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 7));
+    assert(!GetBoard().IsCoordEmpty(9, 7));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 4);
+    assert(GetPlayer1().IsNucleationPoint(4, 6));
+    assert(GetPlayer1().IsNucleationPoint(4, 8));
+    assert(GetPlayer1().IsNucleationPoint(10, 6));
+    assert(GetPlayer1().IsNucleationPoint(10, 8));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(5, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(9, 7));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(4, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(4, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(10, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(10, 8));
+    assert(GetBoard().IsCoordEmpty(5, 7));
+    assert(GetBoard().IsCoordEmpty(6, 7));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(8, 7));
+    assert(GetBoard().IsCoordEmpty(9, 7));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(4, 6));
+    assert(!GetPlayer1().IsNucleationPoint(4, 8));
+    assert(!GetPlayer1().IsNucleationPoint(10, 6));
+    assert(!GetPlayer1().IsNucleationPoint(10, 8));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 1);
 
     // X X X X X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 5));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 9));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 4);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 4));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 10));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 4));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 10));
+    assert(!GetBoard().IsCoordEmpty(7, 5));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 9));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 4);
+    assert(GetPlayer1().IsNucleationPoint(6, 4));
+    assert(GetPlayer1().IsNucleationPoint(6, 10));
+    assert(GetPlayer1().IsNucleationPoint(8, 4));
+    assert(GetPlayer1().IsNucleationPoint(8, 10));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 5));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 9));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 4));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 10));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 4));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 10));
+    assert(GetBoard().IsCoordEmpty(7, 5));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetBoard().IsCoordEmpty(7, 9));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(6, 4));
+    assert(!GetPlayer1().IsNucleationPoint(6, 10));
+    assert(!GetPlayer1().IsNucleationPoint(8, 4));
+    assert(!GetPlayer1().IsNucleationPoint(8, 10));
 
     thisPiece.RotateRight();nRotations++;
     assert(thisPiece.GetNRotations() == nRotations);
@@ -1786,40 +1786,40 @@ void Game1v1Test::TestPiece_5Cross()
     //   X
     // X X X
     //   X
-    Piece &thisPiece = m_1v1Game.GetPlayerMe().m_pieces[e_5Piece_Cross];
+    Piece &thisPiece = m_player1.m_pieces[e_5Piece_Cross];
     int8_t nRotations = 0;
 
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 8);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(6, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(!GetBoard().IsCoordEmpty(8, 7));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 8);
+    assert(GetPlayer1().IsNucleationPoint(5, 6));
+    assert(GetPlayer1().IsNucleationPoint(5, 8));
+    assert(GetPlayer1().IsNucleationPoint(6, 5));
+    assert(GetPlayer1().IsNucleationPoint(6, 9));
+    assert(GetPlayer1().IsNucleationPoint(8, 5));
+    assert(GetPlayer1().IsNucleationPoint(8, 9));
+    assert(GetPlayer1().IsNucleationPoint(9, 6));
+    assert(GetPlayer1().IsNucleationPoint(9, 8));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(6, 7));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetBoard().IsCoordEmpty(8, 7));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 6));
+    assert(!GetPlayer1().IsNucleationPoint(5, 8));
+    assert(!GetPlayer1().IsNucleationPoint(6, 5));
+    assert(!GetPlayer1().IsNucleationPoint(6, 9));
+    assert(!GetPlayer1().IsNucleationPoint(8, 5));
+    assert(!GetPlayer1().IsNucleationPoint(8, 9));
+    assert(!GetPlayer1().IsNucleationPoint(9, 6));
+    assert(!GetPlayer1().IsNucleationPoint(9, 8));
 
     thisPiece.RotateRight();nRotations++;
     assert(thisPiece.GetNRotations() == nRotations);
@@ -1832,34 +1832,34 @@ void Game1v1Test::TestPiece_5HalfSquare()
     // X
     // X
     // X X X
-    Piece &thisPiece = m_1v1Game.GetPlayerMe().m_pieces[e_5Piece_HalfSquare];
+    Piece &thisPiece = m_player1.m_pieces[e_5Piece_HalfSquare];
     int8_t nRotations = 0;
 
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(5, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 9));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 5);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(4, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(4, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 10));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 10));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 6));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(6, 7));
+    assert(!GetBoard().IsCoordEmpty(5, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 9));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 5);
+    assert(GetPlayer1().IsNucleationPoint(4, 6));
+    assert(GetPlayer1().IsNucleationPoint(4, 8));
+    assert(GetPlayer1().IsNucleationPoint(6, 10));
+    assert(GetPlayer1().IsNucleationPoint(8, 10));
+    assert(GetPlayer1().IsNucleationPoint(8, 6));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(5, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 9));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(4, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(4, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 10));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 10));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 6));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(6, 7));
+    assert(GetBoard().IsCoordEmpty(5, 7));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetBoard().IsCoordEmpty(7, 9));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(4, 6));
+    assert(!GetPlayer1().IsNucleationPoint(4, 8));
+    assert(!GetPlayer1().IsNucleationPoint(6, 10));
+    assert(!GetPlayer1().IsNucleationPoint(8, 10));
+    assert(!GetPlayer1().IsNucleationPoint(8, 6));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 1);
@@ -1868,30 +1868,30 @@ void Game1v1Test::TestPiece_5HalfSquare()
     // X
     // X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(9, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 9));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 5);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(10, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(10, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 10));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 10));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 6));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 7));
+    assert(!GetBoard().IsCoordEmpty(9, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 9));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 5);
+    assert(GetPlayer1().IsNucleationPoint(10, 6));
+    assert(GetPlayer1().IsNucleationPoint(10, 8));
+    assert(GetPlayer1().IsNucleationPoint(6, 10));
+    assert(GetPlayer1().IsNucleationPoint(8, 10));
+    assert(GetPlayer1().IsNucleationPoint(6, 6));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(9, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 9));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(10, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(10, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 10));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 10));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 6));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(8, 7));
+    assert(GetBoard().IsCoordEmpty(9, 7));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetBoard().IsCoordEmpty(7, 9));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(10, 6));
+    assert(!GetPlayer1().IsNucleationPoint(10, 8));
+    assert(!GetPlayer1().IsNucleationPoint(6, 10));
+    assert(!GetPlayer1().IsNucleationPoint(8, 10));
+    assert(!GetPlayer1().IsNucleationPoint(6, 6));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 2);
@@ -1900,30 +1900,30 @@ void Game1v1Test::TestPiece_5HalfSquare()
     //     X
     //     X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 5));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(9, 7));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 5);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 4));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 4));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(10, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(10, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(!GetBoard().IsCoordEmpty(7, 5));
+    assert(!GetBoard().IsCoordEmpty(8, 7));
+    assert(!GetBoard().IsCoordEmpty(9, 7));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 5);
+    assert(GetPlayer1().IsNucleationPoint(6, 4));
+    assert(GetPlayer1().IsNucleationPoint(8, 4));
+    assert(GetPlayer1().IsNucleationPoint(10, 6));
+    assert(GetPlayer1().IsNucleationPoint(10, 8));
+    assert(GetPlayer1().IsNucleationPoint(6, 8));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 5));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(9, 7));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 4));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 4));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(10, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(10, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 8));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetBoard().IsCoordEmpty(7, 5));
+    assert(GetBoard().IsCoordEmpty(8, 7));
+    assert(GetBoard().IsCoordEmpty(9, 7));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(6, 4));
+    assert(!GetPlayer1().IsNucleationPoint(8, 4));
+    assert(!GetPlayer1().IsNucleationPoint(10, 6));
+    assert(!GetPlayer1().IsNucleationPoint(10, 8));
+    assert(!GetPlayer1().IsNucleationPoint(6, 8));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 3);
@@ -1932,30 +1932,30 @@ void Game1v1Test::TestPiece_5HalfSquare()
     //     X
     // X X X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 5));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(5, 7));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 5);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 4));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 4));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(4, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(4, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(!GetBoard().IsCoordEmpty(7, 5));
+    assert(!GetBoard().IsCoordEmpty(6, 7));
+    assert(!GetBoard().IsCoordEmpty(5, 7));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 5);
+    assert(GetPlayer1().IsNucleationPoint(6, 4));
+    assert(GetPlayer1().IsNucleationPoint(8, 4));
+    assert(GetPlayer1().IsNucleationPoint(4, 6));
+    assert(GetPlayer1().IsNucleationPoint(4, 8));
+    assert(GetPlayer1().IsNucleationPoint(8, 8));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 5));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(5, 7));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 4));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 4));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(4, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(4, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 8));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetBoard().IsCoordEmpty(7, 5));
+    assert(GetBoard().IsCoordEmpty(6, 7));
+    assert(GetBoard().IsCoordEmpty(5, 7));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(6, 4));
+    assert(!GetPlayer1().IsNucleationPoint(8, 4));
+    assert(!GetPlayer1().IsNucleationPoint(4, 6));
+    assert(!GetPlayer1().IsNucleationPoint(4, 8));
+    assert(!GetPlayer1().IsNucleationPoint(8, 8));
 
     thisPiece.RotateRight();nRotations++;
     assert(thisPiece.GetNRotations() == nRotations);
@@ -1969,34 +1969,34 @@ void Game1v1Test::TestPiece_5BigL()
     // X
     // X
     // X X
-    Piece &thisPiece = m_1v1Game.GetPlayerMe().m_pieces[e_5Piece_BigL];
+    Piece &thisPiece = m_player1.m_pieces[e_5Piece_BigL];
     int8_t nRotations = 0;
 
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(5, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 5);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(4, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(4, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 9));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(6, 7));
+    assert(!GetBoard().IsCoordEmpty(5, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 5);
+    assert(GetPlayer1().IsNucleationPoint(4, 6));
+    assert(GetPlayer1().IsNucleationPoint(4, 8));
+    assert(GetPlayer1().IsNucleationPoint(7, 9));
+    assert(GetPlayer1().IsNucleationPoint(9, 6));
+    assert(GetPlayer1().IsNucleationPoint(9, 9));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(5, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(4, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(4, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 9));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(6, 7));
+    assert(GetBoard().IsCoordEmpty(5, 7));
+    assert(GetBoard().IsCoordEmpty(8, 7));
+    assert(GetBoard().IsCoordEmpty(8, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(4, 6));
+    assert(!GetPlayer1().IsNucleationPoint(4, 8));
+    assert(!GetPlayer1().IsNucleationPoint(7, 9));
+    assert(!GetPlayer1().IsNucleationPoint(9, 6));
+    assert(!GetPlayer1().IsNucleationPoint(9, 9));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 1);
@@ -2004,30 +2004,30 @@ void Game1v1Test::TestPiece_5BigL()
     // X X X X
     // X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 9));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 5);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 10));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 10));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 6));
+    assert(!GetBoard().IsCoordEmpty(7, 9));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 5);
+    assert(GetPlayer1().IsNucleationPoint(6, 5));
+    assert(GetPlayer1().IsNucleationPoint(6, 10));
+    assert(GetPlayer1().IsNucleationPoint(8, 10));
+    assert(GetPlayer1().IsNucleationPoint(9, 5));
+    assert(GetPlayer1().IsNucleationPoint(9, 7));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 9));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 10));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 10));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 7));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(8, 6));
+    assert(GetBoard().IsCoordEmpty(7, 9));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(6, 5));
+    assert(!GetPlayer1().IsNucleationPoint(6, 10));
+    assert(!GetPlayer1().IsNucleationPoint(8, 10));
+    assert(!GetPlayer1().IsNucleationPoint(9, 5));
+    assert(!GetPlayer1().IsNucleationPoint(9, 7));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 2);
@@ -2037,30 +2037,30 @@ void Game1v1Test::TestPiece_5BigL()
 	//   X
     //   X
 	PutDownPiece(thisPiece);
-	assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-	assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-	assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 6));
-	assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-	assert(!m_1v1Game.GetBoard().IsCoordEmpty(9, 7));
-	assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 5);
-	assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 5));
-	assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-	assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 5));
-	assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(10, 6));
-	assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(10, 8));
+	assert(!GetBoard().IsCoordEmpty(7, 7));
+	assert(!GetBoard().IsCoordEmpty(6, 7));
+	assert(!GetBoard().IsCoordEmpty(6, 6));
+	assert(!GetBoard().IsCoordEmpty(8, 7));
+	assert(!GetBoard().IsCoordEmpty(9, 7));
+	assert(GetPlayer1().NumberOfNucleationPoints() == 5);
+	assert(GetPlayer1().IsNucleationPoint(5, 5));
+	assert(GetPlayer1().IsNucleationPoint(5, 8));
+	assert(GetPlayer1().IsNucleationPoint(7, 5));
+	assert(GetPlayer1().IsNucleationPoint(10, 6));
+	assert(GetPlayer1().IsNucleationPoint(10, 8));
 
 	RemovePiece(thisPiece);
-	assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-	assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-	assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 6));
-	assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-	assert(m_1v1Game.GetBoard().IsCoordEmpty(9, 7));
-	assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-	assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 5));
-	assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-	assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 5));
-	assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(10, 6));
-	assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(10, 8));
+	assert(GetBoard().IsCoordEmpty(7, 7));
+	assert(GetBoard().IsCoordEmpty(6, 7));
+	assert(GetBoard().IsCoordEmpty(6, 6));
+	assert(GetBoard().IsCoordEmpty(8, 7));
+	assert(GetBoard().IsCoordEmpty(9, 7));
+	assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+	assert(!GetPlayer1().IsNucleationPoint(5, 5));
+	assert(!GetPlayer1().IsNucleationPoint(5, 8));
+	assert(!GetPlayer1().IsNucleationPoint(7, 5));
+	assert(!GetPlayer1().IsNucleationPoint(10, 6));
+	assert(!GetPlayer1().IsNucleationPoint(10, 8));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 3);
@@ -2068,30 +2068,30 @@ void Game1v1Test::TestPiece_5BigL()
     //       X
     // X X X X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 5));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 5);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 7));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 4));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 4));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 5));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(!GetBoard().IsCoordEmpty(6, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 5);
+    assert(GetPlayer1().IsNucleationPoint(5, 7));
+    assert(GetPlayer1().IsNucleationPoint(5, 9));
+    assert(GetPlayer1().IsNucleationPoint(6, 4));
+    assert(GetPlayer1().IsNucleationPoint(8, 4));
+    assert(GetPlayer1().IsNucleationPoint(8, 9));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 5));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 7));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 4));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 4));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(7, 5));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetBoard().IsCoordEmpty(6, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 7));
+    assert(!GetPlayer1().IsNucleationPoint(5, 9));
+    assert(!GetPlayer1().IsNucleationPoint(6, 4));
+    assert(!GetPlayer1().IsNucleationPoint(8, 4));
+    assert(!GetPlayer1().IsNucleationPoint(8, 9));
 
     thisPiece.RotateRight();
     nRotations++;
@@ -2105,30 +2105,30 @@ void Game1v1Test::TestPiece_5BigL()
     //   X
     // X X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(5, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 5);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(4, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(4, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(6, 7));
+    assert(!GetBoard().IsCoordEmpty(5, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 5);
+    assert(GetPlayer1().IsNucleationPoint(4, 6));
+    assert(GetPlayer1().IsNucleationPoint(4, 8));
+    assert(GetPlayer1().IsNucleationPoint(7, 5));
+    assert(GetPlayer1().IsNucleationPoint(9, 5));
+    assert(GetPlayer1().IsNucleationPoint(9, 8));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(5, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(4, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(4, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(6, 7));
+    assert(GetBoard().IsCoordEmpty(5, 7));
+    assert(GetBoard().IsCoordEmpty(8, 7));
+    assert(GetBoard().IsCoordEmpty(8, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(4, 6));
+    assert(!GetPlayer1().IsNucleationPoint(4, 8));
+    assert(!GetPlayer1().IsNucleationPoint(7, 5));
+    assert(!GetPlayer1().IsNucleationPoint(9, 5));
+    assert(!GetPlayer1().IsNucleationPoint(9, 8));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 1);
@@ -2136,30 +2136,30 @@ void Game1v1Test::TestPiece_5BigL()
     // X
     // X X X X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 9));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 5);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 7));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 10));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 10));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(6, 6));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 9));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 5);
+    assert(GetPlayer1().IsNucleationPoint(5, 5));
+    assert(GetPlayer1().IsNucleationPoint(5, 7));
+    assert(GetPlayer1().IsNucleationPoint(6, 10));
+    assert(GetPlayer1().IsNucleationPoint(8, 5));
+    assert(GetPlayer1().IsNucleationPoint(8, 10));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 9));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 7));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 10));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 10));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(6, 6));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetBoard().IsCoordEmpty(7, 9));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 5));
+    assert(!GetPlayer1().IsNucleationPoint(5, 7));
+    assert(!GetPlayer1().IsNucleationPoint(6, 10));
+    assert(!GetPlayer1().IsNucleationPoint(8, 5));
+    assert(!GetPlayer1().IsNucleationPoint(8, 10));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 2);
@@ -2169,30 +2169,30 @@ void Game1v1Test::TestPiece_5BigL()
     // X
     // X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(9, 7));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 5);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(10, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(10, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(6, 7));
+    assert(!GetBoard().IsCoordEmpty(6, 8));
+    assert(!GetBoard().IsCoordEmpty(8, 7));
+    assert(!GetBoard().IsCoordEmpty(9, 7));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 5);
+    assert(GetPlayer1().IsNucleationPoint(5, 6));
+    assert(GetPlayer1().IsNucleationPoint(5, 9));
+    assert(GetPlayer1().IsNucleationPoint(7, 9));
+    assert(GetPlayer1().IsNucleationPoint(10, 6));
+    assert(GetPlayer1().IsNucleationPoint(10, 8));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(9, 7));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(10, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(10, 8));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(6, 7));
+    assert(GetBoard().IsCoordEmpty(6, 8));
+    assert(GetBoard().IsCoordEmpty(8, 7));
+    assert(GetBoard().IsCoordEmpty(9, 7));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 6));
+    assert(!GetPlayer1().IsNucleationPoint(5, 9));
+    assert(!GetPlayer1().IsNucleationPoint(7, 9));
+    assert(!GetPlayer1().IsNucleationPoint(10, 6));
+    assert(!GetPlayer1().IsNucleationPoint(10, 8));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 3);
@@ -2200,30 +2200,30 @@ void Game1v1Test::TestPiece_5BigL()
     // X X X X
     //       X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 5));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 5);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 4));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 4));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 7));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 9));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(!GetBoard().IsCoordEmpty(7, 5));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(!GetBoard().IsCoordEmpty(8, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 5);
+    assert(GetPlayer1().IsNucleationPoint(6, 4));
+    assert(GetPlayer1().IsNucleationPoint(6, 9));
+    assert(GetPlayer1().IsNucleationPoint(8, 4));
+    assert(GetPlayer1().IsNucleationPoint(9, 7));
+    assert(GetPlayer1().IsNucleationPoint(9, 9));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 5));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 4));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 4));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 7));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 9));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetBoard().IsCoordEmpty(7, 5));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetBoard().IsCoordEmpty(8, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(6, 4));
+    assert(!GetPlayer1().IsNucleationPoint(6, 9));
+    assert(!GetPlayer1().IsNucleationPoint(8, 4));
+    assert(!GetPlayer1().IsNucleationPoint(9, 7));
+    assert(!GetPlayer1().IsNucleationPoint(9, 9));
 
     thisPiece.RotateRight();nRotations++;
     assert(thisPiece.GetNRotations() == nRotations);
@@ -2236,36 +2236,36 @@ void Game1v1Test::TestPiece_5MrT()
     //     X
     // X X X
     //     X
-    Piece &thisPiece = m_1v1Game.GetPlayerMe().m_pieces[e_5Piece_MrT];
+    Piece &thisPiece = m_player1.m_pieces[e_5Piece_MrT];
     int8_t nRotations = 0;
 
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 6);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 7));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 7));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 9));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(!GetBoard().IsCoordEmpty(6, 8));
+    assert(!GetBoard().IsCoordEmpty(8, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 6);
+    assert(GetPlayer1().IsNucleationPoint(5, 7));
+    assert(GetPlayer1().IsNucleationPoint(5, 9));
+    assert(GetPlayer1().IsNucleationPoint(6, 5));
+    assert(GetPlayer1().IsNucleationPoint(8, 5));
+    assert(GetPlayer1().IsNucleationPoint(9, 7));
+    assert(GetPlayer1().IsNucleationPoint(9, 9));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 7));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 7));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 9));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetBoard().IsCoordEmpty(6, 8));
+    assert(GetBoard().IsCoordEmpty(8, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 7));
+    assert(!GetPlayer1().IsNucleationPoint(5, 9));
+    assert(!GetPlayer1().IsNucleationPoint(6, 5));
+    assert(!GetPlayer1().IsNucleationPoint(8, 5));
+    assert(!GetPlayer1().IsNucleationPoint(9, 7));
+    assert(!GetPlayer1().IsNucleationPoint(9, 9));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 1);
@@ -2274,32 +2274,32 @@ void Game1v1Test::TestPiece_5MrT()
     //   X
     // X X X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 6);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 9));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(6, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 6));
+    assert(!GetBoard().IsCoordEmpty(8, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 6);
+    assert(GetPlayer1().IsNucleationPoint(5, 6));
+    assert(GetPlayer1().IsNucleationPoint(5, 8));
+    assert(GetPlayer1().IsNucleationPoint(7, 5));
+    assert(GetPlayer1().IsNucleationPoint(7, 9));
+    assert(GetPlayer1().IsNucleationPoint(9, 5));
+    assert(GetPlayer1().IsNucleationPoint(9, 9));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 9));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(6, 7));
+    assert(GetBoard().IsCoordEmpty(8, 6));
+    assert(GetBoard().IsCoordEmpty(8, 7));
+    assert(GetBoard().IsCoordEmpty(8, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 6));
+    assert(!GetPlayer1().IsNucleationPoint(5, 8));
+    assert(!GetPlayer1().IsNucleationPoint(7, 5));
+    assert(!GetPlayer1().IsNucleationPoint(7, 9));
+    assert(!GetPlayer1().IsNucleationPoint(9, 5));
+    assert(!GetPlayer1().IsNucleationPoint(9, 9));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 2);
@@ -2308,32 +2308,32 @@ void Game1v1Test::TestPiece_5MrT()
     // X X X
     // X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 6);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 7));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(!GetBoard().IsCoordEmpty(6, 6));
+    assert(!GetBoard().IsCoordEmpty(8, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 6);
+    assert(GetPlayer1().IsNucleationPoint(5, 5));
+    assert(GetPlayer1().IsNucleationPoint(5, 7));
+    assert(GetPlayer1().IsNucleationPoint(6, 9));
+    assert(GetPlayer1().IsNucleationPoint(8, 9));
+    assert(GetPlayer1().IsNucleationPoint(9, 5));
+    assert(GetPlayer1().IsNucleationPoint(9, 7));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 7));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 7));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetBoard().IsCoordEmpty(6, 6));
+    assert(GetBoard().IsCoordEmpty(8, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 5));
+    assert(!GetPlayer1().IsNucleationPoint(5, 7));
+    assert(!GetPlayer1().IsNucleationPoint(6, 9));
+    assert(!GetPlayer1().IsNucleationPoint(8, 9));
+    assert(!GetPlayer1().IsNucleationPoint(9, 5));
+    assert(!GetPlayer1().IsNucleationPoint(9, 7));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 3);
@@ -2342,32 +2342,32 @@ void Game1v1Test::TestPiece_5MrT()
     //   X
     //   X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 6);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 9));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 7));
+    assert(!GetBoard().IsCoordEmpty(6, 7));
+    assert(!GetBoard().IsCoordEmpty(6, 8));
+    assert(!GetBoard().IsCoordEmpty(6, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 6);
+    assert(GetPlayer1().IsNucleationPoint(9, 8));
+    assert(GetPlayer1().IsNucleationPoint(9, 6));
+    assert(GetPlayer1().IsNucleationPoint(7, 5));
+    assert(GetPlayer1().IsNucleationPoint(7, 9));
+    assert(GetPlayer1().IsNucleationPoint(5, 5));
+    assert(GetPlayer1().IsNucleationPoint(5, 9));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 9));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(8, 7));
+    assert(GetBoard().IsCoordEmpty(6, 7));
+    assert(GetBoard().IsCoordEmpty(6, 8));
+    assert(GetBoard().IsCoordEmpty(6, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(9, 8));
+    assert(!GetPlayer1().IsNucleationPoint(9, 6));
+    assert(!GetPlayer1().IsNucleationPoint(7, 5));
+    assert(!GetPlayer1().IsNucleationPoint(7, 9));
+    assert(!GetPlayer1().IsNucleationPoint(5, 5));
+    assert(!GetPlayer1().IsNucleationPoint(5, 9));
 
     thisPiece.RotateRight();nRotations++;
     assert(thisPiece.GetNRotations() == nRotations);
@@ -2380,34 +2380,34 @@ void Game1v1Test::TestPiece_5SquareAppen()
     // X X
     // X X
     // X
-    Piece &thisPiece = m_1v1Game.GetPlayerMe().m_pieces[e_5Piece_SquarePlus];
+    Piece &thisPiece = m_player1.m_pieces[e_5Piece_SquarePlus];
     int8_t nRotations = 0;
 
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 5);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(6, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 7));
+    assert(!GetBoard().IsCoordEmpty(6, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 5);
+    assert(GetPlayer1().IsNucleationPoint(5, 6));
+    assert(GetPlayer1().IsNucleationPoint(5, 9));
+    assert(GetPlayer1().IsNucleationPoint(8, 9));
+    assert(GetPlayer1().IsNucleationPoint(9, 6));
+    assert(GetPlayer1().IsNucleationPoint(9, 8));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(6, 7));
+    assert(GetBoard().IsCoordEmpty(8, 7));
+    assert(GetBoard().IsCoordEmpty(6, 8));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 6));
+    assert(!GetPlayer1().IsNucleationPoint(5, 9));
+    assert(!GetPlayer1().IsNucleationPoint(8, 9));
+    assert(!GetPlayer1().IsNucleationPoint(9, 6));
+    assert(!GetPlayer1().IsNucleationPoint(9, 8));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 1);
@@ -2415,30 +2415,30 @@ void Game1v1Test::TestPiece_5SquareAppen()
     // X X X
     //   X X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 5);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 9));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(!GetBoard().IsCoordEmpty(8, 8));
+    assert(!GetBoard().IsCoordEmpty(8, 7));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 5);
+    assert(GetPlayer1().IsNucleationPoint(6, 5));
+    assert(GetPlayer1().IsNucleationPoint(6, 9));
+    assert(GetPlayer1().IsNucleationPoint(8, 5));
+    assert(GetPlayer1().IsNucleationPoint(9, 6));
+    assert(GetPlayer1().IsNucleationPoint(9, 9));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 9));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetBoard().IsCoordEmpty(8, 8));
+    assert(GetBoard().IsCoordEmpty(8, 7));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(6, 5));
+    assert(!GetPlayer1().IsNucleationPoint(6, 9));
+    assert(!GetPlayer1().IsNucleationPoint(8, 5));
+    assert(!GetPlayer1().IsNucleationPoint(9, 6));
+    assert(!GetPlayer1().IsNucleationPoint(9, 9));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 2);
@@ -2447,30 +2447,30 @@ void Game1v1Test::TestPiece_5SquareAppen()
     // X X
     // X X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 5);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(6, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 6));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 5);
+    assert(GetPlayer1().IsNucleationPoint(5, 6));
+    assert(GetPlayer1().IsNucleationPoint(5, 8));
+    assert(GetPlayer1().IsNucleationPoint(6, 5));
+    assert(GetPlayer1().IsNucleationPoint(9, 5));
+    assert(GetPlayer1().IsNucleationPoint(9, 8));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(6, 7));
+    assert(GetBoard().IsCoordEmpty(8, 7));
+    assert(GetBoard().IsCoordEmpty(8, 6));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 6));
+    assert(!GetPlayer1().IsNucleationPoint(5, 8));
+    assert(!GetPlayer1().IsNucleationPoint(6, 5));
+    assert(!GetPlayer1().IsNucleationPoint(9, 5));
+    assert(!GetPlayer1().IsNucleationPoint(9, 8));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 3);
@@ -2478,30 +2478,30 @@ void Game1v1Test::TestPiece_5SquareAppen()
     // X X
     // X X X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 5);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(6, 6));
+    assert(!GetBoard().IsCoordEmpty(6, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 5);
+    assert(GetPlayer1().IsNucleationPoint(5, 5));
+    assert(GetPlayer1().IsNucleationPoint(5, 8));
+    assert(GetPlayer1().IsNucleationPoint(6, 9));
+    assert(GetPlayer1().IsNucleationPoint(8, 5));
+    assert(GetPlayer1().IsNucleationPoint(8, 9));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(6, 6));
+    assert(GetBoard().IsCoordEmpty(6, 7));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 5));
+    assert(!GetPlayer1().IsNucleationPoint(5, 8));
+    assert(!GetPlayer1().IsNucleationPoint(6, 9));
+    assert(!GetPlayer1().IsNucleationPoint(8, 5));
+    assert(!GetPlayer1().IsNucleationPoint(8, 9));
 
     thisPiece.RotateRight();nRotations++;
     assert(thisPiece.GetNRotations() == nRotations);
@@ -2514,30 +2514,30 @@ void Game1v1Test::TestPiece_5SquareAppen()
 	// X X
 	//   X
 	PutDownPiece(thisPiece);
-	assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-	assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-	assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-	assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 6));
-	assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-	assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 5);
-	assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 5));
-	assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-	assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-	assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-	assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+	assert(!GetBoard().IsCoordEmpty(7, 7));
+	assert(!GetBoard().IsCoordEmpty(7, 6));
+	assert(!GetBoard().IsCoordEmpty(6, 7));
+	assert(!GetBoard().IsCoordEmpty(6, 6));
+	assert(!GetBoard().IsCoordEmpty(8, 7));
+	assert(GetPlayer1().NumberOfNucleationPoints() == 5);
+	assert(GetPlayer1().IsNucleationPoint(5, 5));
+	assert(GetPlayer1().IsNucleationPoint(5, 8));
+	assert(GetPlayer1().IsNucleationPoint(8, 5));
+	assert(GetPlayer1().IsNucleationPoint(9, 6));
+	assert(GetPlayer1().IsNucleationPoint(9, 8));
 
 	RemovePiece(thisPiece);
-	assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-	assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-	assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-	assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 6));
-	assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-	assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-	assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 5));
-	assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-	assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-	assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-	assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+	assert(GetBoard().IsCoordEmpty(7, 7));
+	assert(GetBoard().IsCoordEmpty(7, 6));
+	assert(GetBoard().IsCoordEmpty(6, 7));
+	assert(GetBoard().IsCoordEmpty(6, 6));
+	assert(GetBoard().IsCoordEmpty(8, 7));
+	assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+	assert(!GetPlayer1().IsNucleationPoint(5, 5));
+	assert(!GetPlayer1().IsNucleationPoint(5, 8));
+	assert(!GetPlayer1().IsNucleationPoint(8, 5));
+	assert(!GetPlayer1().IsNucleationPoint(9, 6));
+	assert(!GetPlayer1().IsNucleationPoint(9, 8));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 1);
@@ -2545,30 +2545,30 @@ void Game1v1Test::TestPiece_5SquareAppen()
     //   X X
     // X X X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 5);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(!GetBoard().IsCoordEmpty(6, 7));
+    assert(!GetBoard().IsCoordEmpty(6, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 5);
+    assert(GetPlayer1().IsNucleationPoint(5, 6));
+    assert(GetPlayer1().IsNucleationPoint(5, 9));
+    assert(GetPlayer1().IsNucleationPoint(6, 5));
+    assert(GetPlayer1().IsNucleationPoint(8, 5));
+    assert(GetPlayer1().IsNucleationPoint(8, 9));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetBoard().IsCoordEmpty(6, 7));
+    assert(GetBoard().IsCoordEmpty(6, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 6));
+    assert(!GetPlayer1().IsNucleationPoint(5, 9));
+    assert(!GetPlayer1().IsNucleationPoint(6, 5));
+    assert(!GetPlayer1().IsNucleationPoint(8, 5));
+    assert(!GetPlayer1().IsNucleationPoint(8, 9));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 2);
@@ -2577,30 +2577,30 @@ void Game1v1Test::TestPiece_5SquareAppen()
     // X X
     // X X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 5);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 9));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(!GetBoard().IsCoordEmpty(6, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 5);
+    assert(GetPlayer1().IsNucleationPoint(5, 6));
+    assert(GetPlayer1().IsNucleationPoint(5, 8));
+    assert(GetPlayer1().IsNucleationPoint(6, 9));
+    assert(GetPlayer1().IsNucleationPoint(9, 6));
+    assert(GetPlayer1().IsNucleationPoint(9, 9));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 9));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetBoard().IsCoordEmpty(6, 7));
+    assert(GetBoard().IsCoordEmpty(8, 7));
+    assert(GetBoard().IsCoordEmpty(8, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 6));
+    assert(!GetPlayer1().IsNucleationPoint(5, 8));
+    assert(!GetPlayer1().IsNucleationPoint(6, 9));
+    assert(!GetPlayer1().IsNucleationPoint(9, 6));
+    assert(!GetPlayer1().IsNucleationPoint(9, 9));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 3);
@@ -2608,30 +2608,30 @@ void Game1v1Test::TestPiece_5SquareAppen()
     // X X X
     // X X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 5);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 6));
+    assert(!GetBoard().IsCoordEmpty(8, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 5);
+    assert(GetPlayer1().IsNucleationPoint(6, 5));
+    assert(GetPlayer1().IsNucleationPoint(6, 9));
+    assert(GetPlayer1().IsNucleationPoint(8, 9));
+    assert(GetPlayer1().IsNucleationPoint(9, 5));
+    assert(GetPlayer1().IsNucleationPoint(9, 8));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(8, 6));
+    assert(GetBoard().IsCoordEmpty(8, 7));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(6, 5));
+    assert(!GetPlayer1().IsNucleationPoint(6, 9));
+    assert(!GetPlayer1().IsNucleationPoint(8, 9));
+    assert(!GetPlayer1().IsNucleationPoint(9, 5));
+    assert(!GetPlayer1().IsNucleationPoint(9, 8));
 
     thisPiece.RotateRight();nRotations++;
     assert(thisPiece.GetNRotations() == nRotations);
@@ -2644,36 +2644,36 @@ void Game1v1Test::TestPiece_5BoringPiece()
 {
     //     X
     // X X X X
-    Piece &thisPiece = m_1v1Game.GetPlayerMe().m_pieces[e_5Piece_BoringPiece];
+    Piece &thisPiece = m_player1.m_pieces[e_5Piece_BoringPiece];
     int8_t nRotations = 0;
 
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 9));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 6);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 7));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 10));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 10));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 9));
+    assert(!GetBoard().IsCoordEmpty(6, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 6);
+    assert(GetPlayer1().IsNucleationPoint(5, 7));
+    assert(GetPlayer1().IsNucleationPoint(5, 9));
+    assert(GetPlayer1().IsNucleationPoint(6, 5));
+    assert(GetPlayer1().IsNucleationPoint(6, 10));
+    assert(GetPlayer1().IsNucleationPoint(8, 5));
+    assert(GetPlayer1().IsNucleationPoint(8, 10));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 9));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 7));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 10));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 10));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetBoard().IsCoordEmpty(7, 9));
+    assert(GetBoard().IsCoordEmpty(6, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 7));
+    assert(!GetPlayer1().IsNucleationPoint(5, 9));
+    assert(!GetPlayer1().IsNucleationPoint(6, 5));
+    assert(!GetPlayer1().IsNucleationPoint(6, 10));
+    assert(!GetPlayer1().IsNucleationPoint(8, 5));
+    assert(!GetPlayer1().IsNucleationPoint(8, 10));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 1);
@@ -2683,32 +2683,32 @@ void Game1v1Test::TestPiece_5BoringPiece()
     // X X
     // X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(9, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 6);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(10, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(10, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(6, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 7));
+    assert(!GetBoard().IsCoordEmpty(9, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 6);
+    assert(GetPlayer1().IsNucleationPoint(5, 6));
+    assert(GetPlayer1().IsNucleationPoint(5, 8));
+    assert(GetPlayer1().IsNucleationPoint(7, 9));
+    assert(GetPlayer1().IsNucleationPoint(9, 9));
+    assert(GetPlayer1().IsNucleationPoint(10, 6));
+    assert(GetPlayer1().IsNucleationPoint(10, 8));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(9, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(10, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(10, 8));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(6, 7));
+    assert(GetBoard().IsCoordEmpty(8, 7));
+    assert(GetBoard().IsCoordEmpty(9, 7));
+    assert(GetBoard().IsCoordEmpty(8, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 6));
+    assert(!GetPlayer1().IsNucleationPoint(5, 8));
+    assert(!GetPlayer1().IsNucleationPoint(7, 9));
+    assert(!GetPlayer1().IsNucleationPoint(9, 9));
+    assert(!GetPlayer1().IsNucleationPoint(10, 6));
+    assert(!GetPlayer1().IsNucleationPoint(10, 8));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 2);
@@ -2716,32 +2716,32 @@ void Game1v1Test::TestPiece_5BoringPiece()
     // X X X X
     //   X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 5));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 6);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 4));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 4));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(!GetBoard().IsCoordEmpty(7, 5));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(!GetBoard().IsCoordEmpty(8, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 6);
+    assert(GetPlayer1().IsNucleationPoint(6, 4));
+    assert(GetPlayer1().IsNucleationPoint(6, 9));
+    assert(GetPlayer1().IsNucleationPoint(8, 4));
+    assert(GetPlayer1().IsNucleationPoint(8, 9));
+    assert(GetPlayer1().IsNucleationPoint(9, 5));
+    assert(GetPlayer1().IsNucleationPoint(9, 7));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 5));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 4));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 4));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 7));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetBoard().IsCoordEmpty(7, 5));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetBoard().IsCoordEmpty(8, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(6, 4));
+    assert(!GetPlayer1().IsNucleationPoint(6, 9));
+    assert(!GetPlayer1().IsNucleationPoint(8, 4));
+    assert(!GetPlayer1().IsNucleationPoint(8, 9));
+    assert(!GetPlayer1().IsNucleationPoint(9, 5));
+    assert(!GetPlayer1().IsNucleationPoint(9, 7));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 3);
@@ -2751,32 +2751,32 @@ void Game1v1Test::TestPiece_5BoringPiece()
     //   X
     //   X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(5, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 6);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(4, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(4, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(6, 7));
+    assert(!GetBoard().IsCoordEmpty(5, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 7));
+    assert(!GetBoard().IsCoordEmpty(6, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 6);
+    assert(GetPlayer1().IsNucleationPoint(9, 6));
+    assert(GetPlayer1().IsNucleationPoint(9, 8));
+    assert(GetPlayer1().IsNucleationPoint(7, 5));
+    assert(GetPlayer1().IsNucleationPoint(5, 5));
+    assert(GetPlayer1().IsNucleationPoint(4, 6));
+    assert(GetPlayer1().IsNucleationPoint(4, 8));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(5, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(4, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(4, 8));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(6, 7));
+    assert(GetBoard().IsCoordEmpty(5, 7));
+    assert(GetBoard().IsCoordEmpty(8, 7));
+    assert(GetBoard().IsCoordEmpty(6, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(9, 6));
+    assert(!GetPlayer1().IsNucleationPoint(9, 8));
+    assert(!GetPlayer1().IsNucleationPoint(7, 5));
+    assert(!GetPlayer1().IsNucleationPoint(5, 5));
+    assert(!GetPlayer1().IsNucleationPoint(4, 6));
+    assert(!GetPlayer1().IsNucleationPoint(4, 8));
 
     thisPiece.RotateRight();nRotations++;
     assert(thisPiece.GetNRotations() == nRotations);
@@ -2788,32 +2788,32 @@ void Game1v1Test::TestPiece_5BoringPiece()
     //   X
     // X X X X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 5));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 6);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 7));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 4));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 4));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(!GetBoard().IsCoordEmpty(7, 5));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(!GetBoard().IsCoordEmpty(6, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 6);
+    assert(GetPlayer1().IsNucleationPoint(5, 5));
+    assert(GetPlayer1().IsNucleationPoint(5, 7));
+    assert(GetPlayer1().IsNucleationPoint(6, 4));
+    assert(GetPlayer1().IsNucleationPoint(6, 9));
+    assert(GetPlayer1().IsNucleationPoint(8, 4));
+    assert(GetPlayer1().IsNucleationPoint(8, 9));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 5));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 7));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 4));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 4));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetBoard().IsCoordEmpty(7, 5));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetBoard().IsCoordEmpty(6, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 5));
+    assert(!GetPlayer1().IsNucleationPoint(5, 7));
+    assert(!GetPlayer1().IsNucleationPoint(6, 4));
+    assert(!GetPlayer1().IsNucleationPoint(6, 9));
+    assert(!GetPlayer1().IsNucleationPoint(8, 4));
+    assert(!GetPlayer1().IsNucleationPoint(8, 9));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 1);
@@ -2823,32 +2823,32 @@ void Game1v1Test::TestPiece_5BoringPiece()
 	// X
     // X
 	PutDownPiece(thisPiece);
-	assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-	assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-	assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-	assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 8));
-	assert(!m_1v1Game.GetBoard().IsCoordEmpty(5, 7));
-	assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 6);
-	assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(4, 6));
-	assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(4, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 9));
-	assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 9));
-	assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-	assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+	assert(!GetBoard().IsCoordEmpty(7, 7));
+	assert(!GetBoard().IsCoordEmpty(8, 7));
+	assert(!GetBoard().IsCoordEmpty(6, 7));
+	assert(!GetBoard().IsCoordEmpty(6, 8));
+	assert(!GetBoard().IsCoordEmpty(5, 7));
+	assert(GetPlayer1().NumberOfNucleationPoints() == 6);
+	assert(GetPlayer1().IsNucleationPoint(4, 6));
+	assert(GetPlayer1().IsNucleationPoint(4, 8));
+    assert(GetPlayer1().IsNucleationPoint(5, 9));
+	assert(GetPlayer1().IsNucleationPoint(7, 9));
+	assert(GetPlayer1().IsNucleationPoint(9, 6));
+	assert(GetPlayer1().IsNucleationPoint(9, 8));
 
 	RemovePiece(thisPiece);
-	assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-	assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-	assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-	assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 8));
-	assert(m_1v1Game.GetBoard().IsCoordEmpty(5, 7));
-	assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-	assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(4, 6));
-	assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(4, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 9));
-	assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 9));
-	assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-	assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+	assert(GetBoard().IsCoordEmpty(7, 7));
+	assert(GetBoard().IsCoordEmpty(8, 7));
+	assert(GetBoard().IsCoordEmpty(6, 7));
+	assert(GetBoard().IsCoordEmpty(6, 8));
+	assert(GetBoard().IsCoordEmpty(5, 7));
+	assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+	assert(!GetPlayer1().IsNucleationPoint(4, 6));
+	assert(!GetPlayer1().IsNucleationPoint(4, 8));
+    assert(!GetPlayer1().IsNucleationPoint(5, 9));
+	assert(!GetPlayer1().IsNucleationPoint(7, 9));
+	assert(!GetPlayer1().IsNucleationPoint(9, 6));
+	assert(!GetPlayer1().IsNucleationPoint(9, 8));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 2);
@@ -2856,32 +2856,32 @@ void Game1v1Test::TestPiece_5BoringPiece()
     // X X X X
     //     X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 9));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 6);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 10));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 10));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 7));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 9));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 9));
+    assert(!GetBoard().IsCoordEmpty(8, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 6);
+    assert(GetPlayer1().IsNucleationPoint(6, 5));
+    assert(GetPlayer1().IsNucleationPoint(6, 10));
+    assert(GetPlayer1().IsNucleationPoint(8, 5));
+    assert(GetPlayer1().IsNucleationPoint(8, 10));
+    assert(GetPlayer1().IsNucleationPoint(9, 7));
+    assert(GetPlayer1().IsNucleationPoint(9, 9));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 9));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 10));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 10));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 7));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 9));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetBoard().IsCoordEmpty(7, 9));
+    assert(GetBoard().IsCoordEmpty(8, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(6, 5));
+    assert(!GetPlayer1().IsNucleationPoint(6, 10));
+    assert(!GetPlayer1().IsNucleationPoint(8, 5));
+    assert(!GetPlayer1().IsNucleationPoint(8, 10));
+    assert(!GetPlayer1().IsNucleationPoint(9, 7));
+    assert(!GetPlayer1().IsNucleationPoint(9, 9));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 3);
@@ -2891,32 +2891,32 @@ void Game1v1Test::TestPiece_5BoringPiece()
     // X X
     //   X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(9, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 6);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(10, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(10, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(6, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 7));
+    assert(!GetBoard().IsCoordEmpty(9, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 6);
+    assert(GetPlayer1().IsNucleationPoint(5, 6));
+    assert(GetPlayer1().IsNucleationPoint(5, 8));
+    assert(GetPlayer1().IsNucleationPoint(7, 5));
+    assert(GetPlayer1().IsNucleationPoint(9, 5));
+    assert(GetPlayer1().IsNucleationPoint(10, 6));
+    assert(GetPlayer1().IsNucleationPoint(10, 8));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(9, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(10, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(10, 8));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(6, 7));
+    assert(GetBoard().IsCoordEmpty(8, 7));
+    assert(GetBoard().IsCoordEmpty(9, 7));
+    assert(GetBoard().IsCoordEmpty(8, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 6));
+    assert(!GetPlayer1().IsNucleationPoint(5, 8));
+    assert(!GetPlayer1().IsNucleationPoint(7, 5));
+    assert(!GetPlayer1().IsNucleationPoint(9, 5));
+    assert(!GetPlayer1().IsNucleationPoint(10, 6));
+    assert(!GetPlayer1().IsNucleationPoint(10, 8));
 
     thisPiece.RotateRight();nRotations++;
     assert(thisPiece.GetNRotations() == nRotations);
@@ -2930,36 +2930,36 @@ void Game1v1Test::TestPiece_5TheUltimate()
     // X X
     // X
     // X
-    Piece &thisPiece = m_1v1Game.GetPlayerMe().m_pieces[e_5Piece_TheUltimate];
+    Piece &thisPiece = m_player1.m_pieces[e_5Piece_TheUltimate];
     int8_t nRotations = 0;
 
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(9, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 6);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 7));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(10, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(10, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(9, 7));
+    assert(!GetBoard().IsCoordEmpty(6, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(!GetBoard().IsCoordEmpty(8, 7));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 6);
+    assert(GetPlayer1().IsNucleationPoint(5, 7));
+    assert(GetPlayer1().IsNucleationPoint(5, 9));
+    assert(GetPlayer1().IsNucleationPoint(6, 6));
+    assert(GetPlayer1().IsNucleationPoint(8, 9));
+    assert(GetPlayer1().IsNucleationPoint(10, 6));
+    assert(GetPlayer1().IsNucleationPoint(10, 8));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(9, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 7));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(10, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(10, 8));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(9, 7));
+    assert(GetBoard().IsCoordEmpty(6, 8));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetBoard().IsCoordEmpty(8, 7));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 7));
+    assert(!GetPlayer1().IsNucleationPoint(5, 9));
+    assert(!GetPlayer1().IsNucleationPoint(6, 6));
+    assert(!GetPlayer1().IsNucleationPoint(8, 9));
+    assert(!GetPlayer1().IsNucleationPoint(10, 6));
+    assert(!GetPlayer1().IsNucleationPoint(10, 8));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 1);
@@ -2967,32 +2967,32 @@ void Game1v1Test::TestPiece_5TheUltimate()
     // X X X
     //     X X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 5));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 6);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 4));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 4));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 9));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(!GetBoard().IsCoordEmpty(7, 5));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 6);
+    assert(GetPlayer1().IsNucleationPoint(6, 4));
+    assert(GetPlayer1().IsNucleationPoint(6, 8));
+    assert(GetPlayer1().IsNucleationPoint(7, 9));
+    assert(GetPlayer1().IsNucleationPoint(8, 4));
+    assert(GetPlayer1().IsNucleationPoint(9, 6));
+    assert(GetPlayer1().IsNucleationPoint(9, 9));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 5));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 4));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 9));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(8, 7));
+    assert(GetBoard().IsCoordEmpty(8, 8));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetBoard().IsCoordEmpty(7, 5));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(6, 6));
+    assert(!GetPlayer1().IsNucleationPoint(6, 8));
+    assert(!GetPlayer1().IsNucleationPoint(7, 9));
+    assert(!GetPlayer1().IsNucleationPoint(8, 4));
+    assert(!GetPlayer1().IsNucleationPoint(9, 6));
+    assert(!GetPlayer1().IsNucleationPoint(9, 9));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 2);
@@ -3002,32 +3002,32 @@ void Game1v1Test::TestPiece_5TheUltimate()
     // X X
     // X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(5, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 6);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(4, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(4, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 7));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 5));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(6, 7));
+    assert(!GetBoard().IsCoordEmpty(5, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(!GetBoard().IsCoordEmpty(8, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 6);
+    assert(GetPlayer1().IsNucleationPoint(4, 6));
+    assert(GetPlayer1().IsNucleationPoint(4, 8));
+    assert(GetPlayer1().IsNucleationPoint(6, 5));
+    assert(GetPlayer1().IsNucleationPoint(8, 8));
+    assert(GetPlayer1().IsNucleationPoint(9, 7));
+    assert(GetPlayer1().IsNucleationPoint(9, 5));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(5, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(4, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(4, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 7));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 5));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(6, 7));
+    assert(GetBoard().IsCoordEmpty(5, 7));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetBoard().IsCoordEmpty(8, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(4, 6));
+    assert(!GetPlayer1().IsNucleationPoint(4, 8));
+    assert(!GetPlayer1().IsNucleationPoint(6, 5));
+    assert(!GetPlayer1().IsNucleationPoint(8, 8));
+    assert(!GetPlayer1().IsNucleationPoint(9, 7));
+    assert(!GetPlayer1().IsNucleationPoint(9, 5));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 3);
@@ -3035,32 +3035,32 @@ void Game1v1Test::TestPiece_5TheUltimate()
     // X X
     //   X X X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 9));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 6);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 10));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 10));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 9));
+    assert(!GetBoard().IsCoordEmpty(6, 7));
+    assert(!GetBoard().IsCoordEmpty(6, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 6);
+    assert(GetPlayer1().IsNucleationPoint(5, 5));
+    assert(GetPlayer1().IsNucleationPoint(5, 8));
+    assert(GetPlayer1().IsNucleationPoint(6, 10));
+    assert(GetPlayer1().IsNucleationPoint(7, 5));
+    assert(GetPlayer1().IsNucleationPoint(8, 6));
+    assert(GetPlayer1().IsNucleationPoint(8, 10));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 9));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 10));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 10));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetBoard().IsCoordEmpty(7, 9));
+    assert(GetBoard().IsCoordEmpty(6, 7));
+    assert(GetBoard().IsCoordEmpty(6, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 5));
+    assert(!GetPlayer1().IsNucleationPoint(5, 8));
+    assert(!GetPlayer1().IsNucleationPoint(6, 10));
+    assert(!GetPlayer1().IsNucleationPoint(7, 5));
+    assert(!GetPlayer1().IsNucleationPoint(8, 6));
+    assert(!GetPlayer1().IsNucleationPoint(8, 10));
 
     thisPiece.RotateRight();nRotations++;
     assert(thisPiece.GetNRotations() == nRotations);
@@ -3073,32 +3073,32 @@ void Game1v1Test::TestPiece_5TheUltimate()
     //   X
     //   X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(9, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 6);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 7));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(10, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(10, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 7));
+    assert(!GetBoard().IsCoordEmpty(9, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(!GetBoard().IsCoordEmpty(6, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 6);
+    assert(GetPlayer1().IsNucleationPoint(5, 5));
+    assert(GetPlayer1().IsNucleationPoint(5, 7));
+    assert(GetPlayer1().IsNucleationPoint(6, 8));
+    assert(GetPlayer1().IsNucleationPoint(8, 5));
+    assert(GetPlayer1().IsNucleationPoint(10, 6));
+    assert(GetPlayer1().IsNucleationPoint(10, 8));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(9, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 7));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(10, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(10, 8));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(8, 7));
+    assert(GetBoard().IsCoordEmpty(9, 7));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetBoard().IsCoordEmpty(6, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 5));
+    assert(!GetPlayer1().IsNucleationPoint(5, 7));
+    assert(!GetPlayer1().IsNucleationPoint(6, 8));
+    assert(!GetPlayer1().IsNucleationPoint(8, 5));
+    assert(!GetPlayer1().IsNucleationPoint(10, 6));
+    assert(!GetPlayer1().IsNucleationPoint(10, 8));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 1);
@@ -3106,32 +3106,32 @@ void Game1v1Test::TestPiece_5TheUltimate()
     //     X X
     // X X X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 6);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 4));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 4));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 6));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(6, 7));
+    assert(!GetBoard().IsCoordEmpty(6, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 6);
+    assert(GetPlayer1().IsNucleationPoint(5, 6));
+    assert(GetPlayer1().IsNucleationPoint(5, 9));
+    assert(GetPlayer1().IsNucleationPoint(6, 4));
+    assert(GetPlayer1().IsNucleationPoint(7, 9));
+    assert(GetPlayer1().IsNucleationPoint(8, 4));
+    assert(GetPlayer1().IsNucleationPoint(8, 8));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 6));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(5, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 4));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 4));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 8));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(7, 6));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(6, 7));
+    assert(GetBoard().IsCoordEmpty(6, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(5, 6));
+    assert(!GetPlayer1().IsNucleationPoint(5, 9));
+    assert(!GetPlayer1().IsNucleationPoint(6, 4));
+    assert(!GetPlayer1().IsNucleationPoint(7, 9));
+    assert(!GetPlayer1().IsNucleationPoint(8, 4));
+    assert(!GetPlayer1().IsNucleationPoint(8, 8));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 2);
@@ -3141,32 +3141,32 @@ void Game1v1Test::TestPiece_5TheUltimate()
     // X X
     //   X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(5, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 6);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(4, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(4, 8));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 7));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 9));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(6, 7));
+    assert(!GetBoard().IsCoordEmpty(5, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(!GetBoard().IsCoordEmpty(8, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 6);
+    assert(GetPlayer1().IsNucleationPoint(4, 6));
+    assert(GetPlayer1().IsNucleationPoint(4, 8));
+    assert(GetPlayer1().IsNucleationPoint(6, 9));
+    assert(GetPlayer1().IsNucleationPoint(8, 6));
+    assert(GetPlayer1().IsNucleationPoint(9, 7));
+    assert(GetPlayer1().IsNucleationPoint(9, 9));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(6, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(5, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 8));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(4, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(4, 8));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 9));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 7));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 9));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(6, 7));
+    assert(GetBoard().IsCoordEmpty(5, 7));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetBoard().IsCoordEmpty(8, 8));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(4, 6));
+    assert(!GetPlayer1().IsNucleationPoint(4, 8));
+    assert(!GetPlayer1().IsNucleationPoint(6, 9));
+    assert(!GetPlayer1().IsNucleationPoint(8, 6));
+    assert(!GetPlayer1().IsNucleationPoint(9, 7));
+    assert(!GetPlayer1().IsNucleationPoint(9, 9));
 
     thisPiece.RotateRight();nRotations++;
     assert(nRotations == 3);
@@ -3174,32 +3174,32 @@ void Game1v1Test::TestPiece_5TheUltimate()
     //   X X X
     // X X
     PutDownPiece(thisPiece);
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(7, 9));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(!m_1v1Game.GetBoard().IsCoordEmpty(8, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 6);
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 6));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 10));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 10));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 5));
-    assert(m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 7));
+    assert(!GetBoard().IsCoordEmpty(7, 8));
+    assert(!GetBoard().IsCoordEmpty(7, 9));
+    assert(!GetBoard().IsCoordEmpty(8, 7));
+    assert(!GetBoard().IsCoordEmpty(8, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 6);
+    assert(GetPlayer1().IsNucleationPoint(6, 6));
+    assert(GetPlayer1().IsNucleationPoint(6, 10));
+    assert(GetPlayer1().IsNucleationPoint(7, 5));
+    assert(GetPlayer1().IsNucleationPoint(8, 10));
+    assert(GetPlayer1().IsNucleationPoint(9, 5));
+    assert(GetPlayer1().IsNucleationPoint(9, 8));
 
     RemovePiece(thisPiece);
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 8));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(7, 9));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 7));
-    assert(m_1v1Game.GetBoard().IsCoordEmpty(8, 6));
-    assert(m_1v1Game.GetPlayerMe().NumberOfNucleationPoints() == 0);
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 6));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(6, 10));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(7, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(8, 10));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 5));
-    assert(!m_1v1Game.GetPlayerMe().IsNucleationPoint(9, 8));
+    assert(GetBoard().IsCoordEmpty(7, 7));
+    assert(GetBoard().IsCoordEmpty(7, 8));
+    assert(GetBoard().IsCoordEmpty(7, 9));
+    assert(GetBoard().IsCoordEmpty(8, 7));
+    assert(GetBoard().IsCoordEmpty(8, 6));
+    assert(GetPlayer1().NumberOfNucleationPoints() == 0);
+    assert(!GetPlayer1().IsNucleationPoint(6, 6));
+    assert(!GetPlayer1().IsNucleationPoint(6, 10));
+    assert(!GetPlayer1().IsNucleationPoint(7, 5));
+    assert(!GetPlayer1().IsNucleationPoint(8, 10));
+    assert(!GetPlayer1().IsNucleationPoint(9, 5));
+    assert(!GetPlayer1().IsNucleationPoint(9, 8));
 
     thisPiece.RotateRight();nRotations++;
     assert(thisPiece.GetNRotations() == nRotations);

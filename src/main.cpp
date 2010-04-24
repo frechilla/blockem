@@ -195,8 +195,7 @@ int main(int argc, char **argv)
             theGame.MinMax(
                     heuristic,
                     s_depth,
-                    theGame.GetPlayerMe(),
-                    theGame.GetPlayerOpponent(),
+                    Game1v1::e_Game1v1Player2,
                     resultPiece,
                     resultCoord,
                     dummyAtomic);
@@ -215,8 +214,7 @@ int main(int argc, char **argv)
             theGame.PutDownPiece(
                     resultPiece,
                     resultCoord,
-                    theGame.GetPlayerMe(),
-                    theGame.GetPlayerOpponent());
+                    Game1v1::e_Game1v1Player2);
         }
 
         theGame.SaveGame(std::cout);

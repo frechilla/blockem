@@ -34,7 +34,8 @@
 #include "coordinate.h"
 
 /// @brief regression testing for the Game1v1
-class Game1v1Test
+class Game1v1Test :
+    public Game1v1
 {
 public:
     Game1v1Test();
@@ -43,24 +44,21 @@ public:
     void TestPieces();
 
 private:
-    Game1v1 m_1v1Game;
 
     void PutDownPiece(Piece &a_piece)
     {
-        m_1v1Game.PutDownPiece(
-            a_piece, 
-            Coordinate(7, 7), 
-            m_1v1Game.GetPlayerMe(), 
-            m_1v1Game.GetPlayerOpponent());
+        Game1v1::PutDownPiece(
+            a_piece,
+            Coordinate(7, 7),
+            Game1v1::e_Game1v1Player1);
     }
 
     void RemovePiece(Piece &a_piece)
     {
-        m_1v1Game.RemovePiece(
-            a_piece, 
-            Coordinate(7, 7), 
-            m_1v1Game.GetPlayerMe(), 
-            m_1v1Game.GetPlayerOpponent());
+        Game1v1::RemovePiece(
+            a_piece,
+            Coordinate(7, 7),
+            Game1v1::e_Game1v1Player1);
     }
 
     void TestPiece_1BabyPiece();

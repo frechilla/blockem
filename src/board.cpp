@@ -236,7 +236,7 @@ uint64_t Board::BitwiseBoardMoveDown(uint64_t a_bitwiseBoard, const Coordinate &
     assert(a_coord.m_row >= 0);
     assert(a_coord.m_col >= 0);
     assert(a_coord.m_row < GetNRows());
-    assert(a_coord.m_col < GetNCols());
+    assert(a_coord.m_col < GetNColumns());
 #endif
 
     // 1111111 1111111 1111111 111x000 1110000 1110000 1110000

@@ -54,6 +54,15 @@ const int32_t BOARD_1VS1_COLUMNS = 14;
 class Game1v1
 {
 public:
+
+    /// This enum represents a player of a 1v1 game
+    typedef enum
+    {
+        e_Game1v1Player1 = 0,
+        e_Game1v1Player2,
+
+    } eGame1v1Player_t;
+
     /// This coordinate set needs to know the size of the boards,
     /// since it is a static data structure
     typedef CoordinateSet<BOARD_1VS1_ROWS, BOARD_1VS1_COLUMNS> CoordSetGame1v1_t;
@@ -73,12 +82,12 @@ public:
 	    return m_board;
 	}
 
-    inline Player& GetPlayerMe()
+    inline const Player& GetPlayer1()
     {
         return m_player1;
     }
 
-    inline Player& GetPlayerOpponent()
+    inline const Player& GetPlayer2()
     {
         return m_player2;
     }
@@ -89,43 +98,58 @@ public:
 	    m_progressFunctor = a_progressFunctor;
 	}
 
+	/// @brief sets the player colour
+	inline void SetPlayerColour(
+	        eGame1v1Player_t a_player,
+	        uint8_t a_red,
+	        uint8_t a_green,
+	        uint8_t a_blue)
+	{
+	    switch (a_player)
+	    {
+	    case e_Game1v1Player1:
+	    {
+	        m_player1.SetColour(a_red, a_green, a_blue);
+	        break;
+	    }
+
+	    case e_Game1v1Player2:
+	    {
+	        m_player2.SetColour(a_red, a_green, a_blue);
+	        break;
+	    }
+
+#ifdef DEBUG
+	    default:
+	        assert(0);
+#endif
+	    } // switch (a_player)
+	}
+
     /// put down a piece on the board. The user is supposed to check if there is space for it before calling
     /// @param the piece
     /// @param the ABSOLUTE coord
-    /// @param the player that owns the piece to be put down. It will be updated to represent the new configuration
-    /// @param the opponent of the player that owns the piece. It will be updated to represent the new configuration
-	inline void PutDownPiece(
+    /// @param the player that owns the piece to be put down
+	void PutDownPiece(
 			const Piece      &a_piece,
 			const Coordinate &a_coord,
-            Player           &a_playerMe,
-            Player           &a_playerOpponent)
-	{
-	    Game1v1::PutDownPiece(m_board, a_piece, a_coord, a_playerMe, a_playerOpponent);
-	    a_playerMe.UnsetPiece(a_piece.GetType());
-	}
+			eGame1v1Player_t a_player);
 
     /// remove a piece from the board. The user is supposed to check if the piece was there
-    /// before calling this function since it just will set to empty the squares
+    /// before calling this function since it will just set to empty the squares
     /// @param the piece
     /// @param the ABSOLUTE coord
-    /// @param the player that owns the piece to be removed. It will be updated to represent the new configuration
-	/// @param the opponent of the player that owns the piece. It will be updated to represent the new configuration
-	inline void RemovePiece(
+    /// @param the player that owns the piece to be removed
+	void RemovePiece(
 			const Piece      &a_piece,
 			const Coordinate &a_coord,
-            Player           &a_playerMe,
-            Player           &a_playerOpponent)
-	{
-	    Game1v1::RemovePiece(m_board, a_piece, a_coord, a_playerMe, a_playerOpponent);
-	    a_playerMe.SetPiece(a_piece.GetType());
-	}
+			eGame1v1Player_t a_player);
 
     /// @brief calculates the next piece to be put down by player 'me' using the heuristic passed as parameter
     /// It uses the minimax algorithm with the alpha beta pruning
 	/// @param the heuristic method for the min max algorithm
 	/// @param maximum depth for the search tree
-    /// @param a reference to the player whose move will be calculated by MinMAx algorithm
-    /// @param a reference to the the opponent of the player whose move is going to be calculated by the function
+    /// @param Pplayer whose move will be calculated by MinMAx algorithm
 	/// @param a reference to a piece where the result will be stored
 	/// @param a reference to a Coordinate where the result will be stored
     /// @param parameter with a reference to a variable that could be set
@@ -144,8 +168,7 @@ public:
     int32_t MinMax(
             Heuristic::EvalFunction_t    a_heuristicMethod,
             int32_t                      depth,
-            Player                       &a_playerMe,
-            Player                       &a_playerOpponent,
+            eGame1v1Player_t             a_player,
             Piece                        &out_resultPiece,
             Coordinate                   &out_coord,
             const volatile sig_atomic_t  &stopProcessingFlag,
@@ -173,7 +196,7 @@ public:
     /// @returns true if the game was saved succesfully. False otherwise
     bool SaveGame(std::ostream& a_outStream);
 
-private:
+protected:
     /// The blokus board where the game will be played
 	Board m_board;
 

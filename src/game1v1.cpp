@@ -34,9 +34,9 @@
 #include "game1v1.h"
 
 /// name for the player me. The one that MinMax tries to maximise (and win)
-static const char PLAYER_1_NAME[] = "Computer";
+static const char PLAYER_1_NAME[] = "Human";
 /// name fot the opponent (the human player. Me is the computer's)
-static const char PLAYER_2_NAME[] = "Human";
+static const char PLAYER_2_NAME[] = "Computer";
 
 /// it will be used as an empty space in the board
 static const char CHAR_EMPTY    = ' ';
@@ -45,15 +45,11 @@ static const char CHAR_ME       = 'X';
 /// it will be used as the character for 'opponent' in the board
 static const char CHAR_OPPONENT = 'O';
 
-/// initial X coordinate for player opponent (user)
-static const int32_t STARTING_COORD_X_OPPONENT = 4;
-/// initial Y coordinate for player opponent (user)
-static const int32_t STARTING_COORD_Y_OPPONENT = 4;
+/// initial coordinate for player 2
+static const Coordinate STARTING_COORD_PLAYER2 = Coordinate(9, 9);
 
-/// initial X coordinate for player Me (computer)
-static const int32_t STARTING_COORD_X_ME = 9;
-/// initial Y coordinate for player Me (computer)
-static const int32_t STARTING_COORD_Y_ME = 9;
+/// initial coordinate for player 1
+static const Coordinate STARTING_COORD_PLAYER1 = Coordinate(4, 4);
 
 /// Assume makes an ass out of u and me, but sometimes assumptions must be made
 /// This constant represents how many 5-square pieces will be put in-a-row before even
@@ -64,8 +60,8 @@ static const int8_t MIN_5SQUARE_PIECES_AT_START = 5;
 
 Game1v1::Game1v1() :
 	m_board(BOARD_1VS1_ROWS, BOARD_1VS1_COLUMNS, CHAR_EMPTY),
-    m_player1(std::string(PLAYER_1_NAME), CHAR_ME, BOARD_1VS1_ROWS, BOARD_1VS1_COLUMNS, Coordinate(STARTING_COORD_X_ME, STARTING_COORD_Y_ME)),
-    m_player2(std::string(PLAYER_2_NAME), CHAR_OPPONENT, BOARD_1VS1_ROWS, BOARD_1VS1_COLUMNS, Coordinate(STARTING_COORD_X_OPPONENT, STARTING_COORD_Y_OPPONENT)),
+    m_player1(std::string(PLAYER_1_NAME), CHAR_ME, BOARD_1VS1_ROWS, BOARD_1VS1_COLUMNS, STARTING_COORD_PLAYER1),
+    m_player2(std::string(PLAYER_2_NAME), CHAR_OPPONENT, BOARD_1VS1_ROWS, BOARD_1VS1_COLUMNS, STARTING_COORD_PLAYER2),
     m_progressFunctor(NULL)
 {
 	// initialise the players' nk according to the current state of the blokus board
@@ -74,6 +70,34 @@ Game1v1::Game1v1() :
 
 Game1v1::~Game1v1()
 {
+}
+
+void Game1v1::RemovePiece(
+            const Piece      &a_piece,
+            const Coordinate &a_coord,
+            eGame1v1Player_t a_player)
+{
+    switch (a_player)
+    {
+    case e_Game1v1Player1:
+    {
+        Game1v1::RemovePiece(m_board, a_piece, a_coord, m_player1, m_player2);
+        m_player1.SetPiece(a_piece.GetType());
+        break;
+    }
+
+    case e_Game1v1Player2:
+    {
+        Game1v1::RemovePiece(m_board, a_piece, a_coord, m_player2, m_player1);
+        m_player2.SetPiece(a_piece.GetType());
+        break;
+    }
+
+#ifdef DEBUG
+    default:
+        assert(0);
+#endif
+    } // switch (a_player)
 }
 
 void Game1v1::RemovePiece(
@@ -128,6 +152,34 @@ void Game1v1::RemovePiece(
 }
 
 void Game1v1::PutDownPiece(
+            const Piece      &a_piece,
+            const Coordinate &a_coord,
+            eGame1v1Player_t a_player)
+{
+    switch (a_player)
+    {
+    case e_Game1v1Player1:
+    {
+        Game1v1::PutDownPiece(m_board, a_piece, a_coord, m_player1, m_player2);
+        m_player1.UnsetPiece(a_piece.GetType());
+        break;
+    }
+
+    case e_Game1v1Player2:
+    {
+        Game1v1::PutDownPiece(m_board, a_piece, a_coord, m_player2, m_player1);
+        m_player2.UnsetPiece(a_piece.GetType());
+        break;
+    }
+
+#ifdef DEBUG
+    default:
+        assert(0);
+#endif
+    } // switch (a_player)
+}
+
+void Game1v1::PutDownPiece(
         Board            &a_theBoard,
         const Piece      &a_piece,
         const Coordinate &a_coord,
@@ -175,21 +227,45 @@ void Game1v1::PutDownPiece(
 int32_t Game1v1::MinMax(
         Heuristic::EvalFunction_t    a_heuristicMethod,
         int32_t                      depth,
-        Player                       &a_playerMe,
-        Player                       &a_playerOpponent,
+        eGame1v1Player_t             a_player,
         Piece                        &out_resultPiece,
         Coordinate                   &out_coord,
         const volatile sig_atomic_t  &stopProcessingFlag,
         const Coordinate             &a_lastOpponentPieceCoord,
         const Piece                  &a_lastOpponentPiece)
 {
+    Player* playerMe       = NULL;
+    Player* playerOpponent = NULL;
+
+    switch (a_player)
+    {
+    case e_Game1v1Player1:
+    {
+        playerMe       = &m_player1;
+        playerOpponent = &m_player2;
+        break;
+    }
+
+    case e_Game1v1Player2:
+    {
+        playerMe       = &m_player2;
+        playerOpponent = &m_player1;
+        break;
+    }
+
+#ifdef DEBUG
+    default:
+        assert(0);
+#endif
+    } // switch (a_player)
+
 	// putting down the 1st piece is a special case
-	if (a_playerMe.NumberOfPiecesAvailable() == e_numberOfPieces)
+	if (playerMe->NumberOfPiecesAvailable() == e_numberOfPieces)
 	{
 		return ComputeFirstPiece(
 				m_board,
-				a_playerMe,
-				a_playerOpponent,
+				*playerMe,
+				*playerOpponent,
 				a_lastOpponentPieceCoord,
 				a_lastOpponentPiece,
 				out_resultPiece,
@@ -212,7 +288,7 @@ int32_t Game1v1::MinMax(
     // this set will save the current nucleation points. It will be used in future calls not to
     // check configurations more than once
     CoordSetGame1v1_t nkPointSetMe;
-    a_playerMe.GetAllNucleationPoints(nkPointSetMe);
+    playerMe->GetAllNucleationPoints(nkPointSetMe);
 
     // declare the array of last pieces and old NK points for me and opponent
     // and clear them out
@@ -245,17 +321,17 @@ int32_t Game1v1::MinMax(
 
     // no pieces available. Return the current value of the heuristic and 'bestPiece' (which
     // at this time doesn't represent any piece yet
-    if (a_playerMe.NumberOfPiecesAvailable() == 0)
+    if (playerMe->NumberOfPiecesAvailable() == 0)
     {
         // bestPiece doesn't represent any piece yet
         out_resultPiece = bestPiece;
 
         // calculate the heuristic of the board to return it, even though the function calculated fuck-all
-        return a_heuristicMethod(m_board, a_playerMe, a_playerOpponent);
+        return a_heuristicMethod(m_board, *playerMe, *playerOpponent);
     }
 
 #ifdef DEBUG_PRINT
-    std::cout << "NK: " << a_playerMe.NumberOfNucleationPoints() << std::endl;
+    std::cout << "NK: " << playerMe->NumberOfNucleationPoints() << std::endl;
 #endif
 
 
@@ -279,8 +355,8 @@ int32_t Game1v1::MinMax(
         }
 #endif
 
-        if ( (a_playerMe.m_pieces[i].GetNSquares() < 5) &&
-             (a_playerMe.NumberOfPiecesAvailable() > (e_numberOfPieces - MIN_5SQUARE_PIECES_AT_START)) &&
+        if ( (playerMe->m_pieces[i].GetNSquares() < 5) &&
+             (playerMe->NumberOfPiecesAvailable() > (e_numberOfPieces - MIN_5SQUARE_PIECES_AT_START)) &&
              (nBranchesSearchTree > 0))
         {
             // if at least one 5-square piece has been put down before this non 5-square piece
@@ -288,28 +364,28 @@ int32_t Game1v1::MinMax(
             continue;
         }
 
-        if (a_playerMe.IsPieceAvailable(static_cast<ePieceType_t>(i)))
+        if (playerMe->IsPieceAvailable(static_cast<ePieceType_t>(i)))
         {
-            a_playerMe.UnsetPiece(static_cast<ePieceType_t>(i));
+            playerMe->UnsetPiece(static_cast<ePieceType_t>(i));
             do
             {
                 int8_t nRotations = 0;
-                while(nRotations < a_playerMe.m_pieces[i].GetNRotations())
+                while(nRotations < playerMe->m_pieces[i].GetNRotations())
                 {
                     bool nkExists;
                     Coordinate thisNkPoint;
                     Player::SpiralIterator nkIterator;
 
-                    nkExists = a_playerMe.GetFirstNucleationPointSpiral(nkIterator, thisNkPoint);
+                    nkExists = playerMe->GetFirstNucleationPointSpiral(nkIterator, thisNkPoint);
                     while(nkExists)
                     {
                         // retrieve the valid coords of this piece in the current nk point
                         Coordinate validCoords[VALID_COORDS_SIZE];
                         int32_t nValidCoords = Rules::CalculateValidCoordsInNucleationPoint(
                                                     m_board,
-                                                    a_playerMe.m_pieces[i],
+                                                    playerMe->m_pieces[i],
                                                     thisNkPoint,
-                                                    a_playerMe,
+                                                    *playerMe,
                                                     validCoords,
                                                     VALID_COORDS_SIZE);
 
@@ -321,23 +397,23 @@ int32_t Game1v1::MinMax(
 
                                 Game1v1::PutDownPiece(
                                         m_board,
-                                        a_playerMe.m_pieces[i],
+                                        playerMe->m_pieces[i],
                                         validCoords[k],
-                                        a_playerMe,
-                                        a_playerOpponent);
+                                        *playerMe,
+                                        *playerOpponent);
 
                                 // save a pointer to this piece in the place (index) reserved for it
-                                lastPiecesMe[0] = &a_playerMe.m_pieces[i];
+                                lastPiecesMe[0] = &(playerMe->m_pieces[i]);
 
                                 // number of branches searched at this level of the tree
                                 nBranchesSearchTree++;
 
                                 int32_t maxValue = -Game1v1::MinMaxAlphaBetaCompute(
                                                         m_board,
-                                                        a_playerOpponent,
+                                                        *playerOpponent,
                                                         oldNkPointsOpponent,
                                                         lastPiecesOpponent,
-                                                        a_playerMe,
+                                                        *playerMe,
                                                         oldNkPointsMe,
                                                         lastPiecesMe,
                                                         a_heuristicMethod,
@@ -350,10 +426,10 @@ int32_t Game1v1::MinMax(
                                                         ,timesCalled
 #endif
                                                         );
-                                                        
+
                                 if (maxValue > alpha)
                                 {
-                                    bestPiece = a_playerMe.m_pieces[i];
+                                    bestPiece = playerMe->m_pieces[i];
                                     bestCoord.m_row = validCoords[k].m_row;
                                     bestCoord.m_col = validCoords[k].m_col;
 
@@ -362,10 +438,10 @@ int32_t Game1v1::MinMax(
 
                                 Game1v1::RemovePiece(
                                         m_board,
-                                        a_playerMe.m_pieces[i],
+                                        playerMe->m_pieces[i],
                                         validCoords[k],
-                                        a_playerMe,
-                                        a_playerOpponent);
+                                        *playerMe,
+                                        *playerOpponent);
 
                                 if (stopProcessingFlag)
                                 {
@@ -384,22 +460,22 @@ int32_t Game1v1::MinMax(
                             } // if (it == testedCoords.end())
                         } // for (uint8_t k = 0 ; k < nValidCoords ; k++)
 
-                        nkExists = a_playerMe.GetNextNucleationPointSpiral(nkIterator, thisNkPoint);
+                        nkExists = playerMe->GetNextNucleationPointSpiral(nkIterator, thisNkPoint);
 
                     } // while(nkExists)
 
                     testedCoords.clear();
 
                     nRotations++;
-                    a_playerMe.m_pieces[i].RotateRight();
+                    playerMe->m_pieces[i].RotateRight();
 
                 }// while (nOrigRotations > a_playerMe.m_pieces[i].GetNRotationsRight())
 
                 // reset the amount of rotations done before mirroring
                 nRotations = 0;
 
-                if ( (a_playerMe.m_pieces[i].GetType() == e_4Piece_LittleS) &&
-                     (a_playerMe.m_pieces[i].IsMirrored() == false) )
+                if ( (playerMe->m_pieces[i].GetType() == e_4Piece_LittleS) &&
+                     (playerMe->m_pieces[i].IsMirrored() == false) )
                 {
                     // For this piece the maximum number or rotations is 2
                     // and the piece is not symmetric, the configuration after
@@ -409,13 +485,13 @@ int32_t Game1v1::MinMax(
                     //
                     // it also happens with 2piece and 4longPiece, but those pieces
                     // don't have mirror, so there's no need for this extra check
-                    a_playerMe.m_pieces[i].Reset();
+                    playerMe->m_pieces[i].Reset();
                 }
 
-            } while (a_playerMe.m_pieces[i].MirrorYAxis());
+            } while (playerMe->m_pieces[i].MirrorYAxis());
 
-            a_playerMe.SetPiece(static_cast<ePieceType_t>(i));
-            a_playerMe.m_pieces[i].Reset();
+            playerMe->SetPiece(static_cast<ePieceType_t>(i));
+            playerMe->m_pieces[i].Reset();
 
         } // if (me->IsPieceAvailable(i))
     } // for (int i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
@@ -625,7 +701,7 @@ int32_t Game1v1::MinMaxAlphaBetaCompute(
                                                         ,times
 #endif
                                                         );
-                                                        
+
                                 if (maxValue > alpha)
                                 {
                                     alpha = maxValue;
@@ -637,7 +713,7 @@ int32_t Game1v1::MinMaxAlphaBetaCompute(
                                         validCoords[k],
                                         a_playerMe,
                                         a_playerOpponent);
-                                        
+
                                 if (stopProcessingFlag)
                                 {
                                     // something happened and we were told to stop
@@ -648,7 +724,7 @@ int32_t Game1v1::MinMaxAlphaBetaCompute(
                                     //   undescribed values "
                                     return 0;
                                 }
-                                
+
                                 if (beta <= alpha)
                                 {
                                     // this branch can be safely be pruned

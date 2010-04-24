@@ -199,15 +199,15 @@ void* MainWindowWorkerThread::ThreadRoutine(void *a_ThreadParam)
 
             int32_t depth = 3;
             Heuristic::EvalFunction_t heuristicMethod = Heuristic::CalculateNKWeighted;
-            if ( (thisThread->m_localGame.GetPlayerMe().NumberOfPiecesAvailable() < 14) &&
+            if ( (thisThread->m_localGame.GetPlayer2().NumberOfPiecesAvailable() < 14) &&
                  (Rules::CanPlayerGo(thisThread->m_localGame.GetBoard(),
-                                     thisThread->m_localGame.GetPlayerOpponent()) ) )
+                                     thisThread->m_localGame.GetPlayer1()) ) )
             {
                 depth = 5;
                 // heuristicMethod = Heuristic::CalculatePiecesPerNKPoint;
             }
 
-            if (thisThread->m_localGame.GetPlayerMe().NumberOfPiecesAvailable() == e_numberOfPieces)
+            if (thisThread->m_localGame.GetPlayer2().NumberOfPiecesAvailable() == e_numberOfPieces)
             {
                 // pass the move made by the opponent to the minmax algorithm at the start half of the times
                 // it will show a bit of randomness at the start to a human user
@@ -216,8 +216,7 @@ void* MainWindowWorkerThread::ThreadRoutine(void *a_ThreadParam)
                     resultReturnedValue = thisThread->m_localGame.MinMax(
                                                 heuristicMethod,
                                                 depth,
-                                                thisThread->m_localGame.GetPlayerMe(),
-                                                thisThread->m_localGame.GetPlayerOpponent(),
+                                                Game1v1::e_Game1v1Player2,
                                                 resultPiece,
                                                 resultCoord,
                                                 thisThread->m_terminate,
@@ -229,8 +228,7 @@ void* MainWindowWorkerThread::ThreadRoutine(void *a_ThreadParam)
                     resultReturnedValue = thisThread->m_localGame.MinMax(
                                                 heuristicMethod,
                                                 depth,
-                                                thisThread->m_localGame.GetPlayerMe(),
-                                                thisThread->m_localGame.GetPlayerOpponent(),
+                                                Game1v1::e_Game1v1Player2,
                                                 resultPiece,
                                                 resultCoord,
                                                 thisThread->m_terminate);
@@ -242,15 +240,14 @@ void* MainWindowWorkerThread::ThreadRoutine(void *a_ThreadParam)
                 resultReturnedValue = thisThread->m_localGame.MinMax(
                                             heuristicMethod,
                                             depth,
-                                            thisThread->m_localGame.GetPlayerMe(),
-                                            thisThread->m_localGame.GetPlayerOpponent(),
+                                            Game1v1::e_Game1v1Player2,
                                             resultPiece,
                                             resultCoord,
                                             thisThread->m_terminate,
                                             thisThread->m_localLatestCoord,
                                             thisThread->m_localLatestPiece);
             }
-            
+
             if (thisThread->m_terminate == PROCESSING_STOP)
             {
                 resultPiece = e_noPiece;
@@ -268,15 +265,14 @@ void* MainWindowWorkerThread::ThreadRoutine(void *a_ThreadParam)
             if (resultPiece.GetType() != e_noPiece)
             {
                 thisThread->m_localGame.PutDownPiece(
-                        resultPiece, 
+                        resultPiece,
                         resultCoord,
-                        thisThread->m_localGame.GetPlayerMe(),
-                        thisThread->m_localGame.GetPlayerOpponent());
+                        Game1v1::e_Game1v1Player2);
             }
 
         } while ( (resultPiece.GetType() != e_noPiece) &&
                   (Rules::CanPlayerGo(thisThread->m_localGame.GetBoard(),
-                                      thisThread->m_localGame.GetPlayerOpponent()) == false) );
+                                      thisThread->m_localGame.GetPlayer1()) == false) );
 
         // the move has been calculated. Update the variable accordingly
         g_mutex_lock(thisThread->m_mutex);

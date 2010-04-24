@@ -32,9 +32,9 @@
 
 //TODO this should go away at some stage
 // default colours to draw the pieces
-static const float DEFAULT_PLAYER_RED   = 0.3;
-static const float DEFAULT_PLAYER_GREEN = 0.8;
-static const float DEFAULT_PLAYER_BLUE  = 0.3;
+static const float DEFAULT_PLAYER_RED   = 0.5;
+static const float DEFAULT_PLAYER_GREEN = 0.5;
+static const float DEFAULT_PLAYER_BLUE  = 0.5;
 
 /// @brief line width of the circle which surrounds the edit piece
 static const float EDIT_CIRCLE_LINE_WIDTH = 1.0;
@@ -276,6 +276,12 @@ bool TableEditPiece::EditPieceDrawingArea_ExposeEvent(GdkEventExpose* event)
 
 void TableEditPiece::RotateRightButton_ButtonPressed()
 {
+    // if the piece has only 1 possible configuration do not modify it
+    if ( (m_thePiece.GetNRotations() <= 1) && (m_thePiece.CanMirror() == false) )
+    {
+        return;
+    }
+
 	m_thePiece.RotateRight();
 
 	// notify to whoever is listening to the signal that the piece changed
@@ -286,6 +292,12 @@ void TableEditPiece::RotateRightButton_ButtonPressed()
 
 void TableEditPiece::RotateLeftButton_ButtonPressed()
 {
+    // if the piece has only 1 possible configuration do not modify it
+    if ( (m_thePiece.GetNRotations() <= 1) && (m_thePiece.CanMirror() == false) )
+    {
+        return;
+    }
+
     m_thePiece.RotateLeft();
 
     // notify to whoever is listening to the signal that the piece changed
@@ -296,16 +308,28 @@ void TableEditPiece::RotateLeftButton_ButtonPressed()
 
 void TableEditPiece::MirrorYAxisButton_ButtonPressed()
 {
-	m_thePiece.MirrorYAxis();
+    // if the piece has only 1 possible configuration do not modify it
+    if ( (m_thePiece.GetNRotations() <= 1) && (m_thePiece.CanMirror() == false) )
+    {
+        return;
+    }
+
+    m_thePiece.MirrorYAxis();
 
     // notify to whoever is listening to the signal that the piece changed
     m_signalPieceChanged.emit(m_thePiece);
     // update the view
-	InvalidateEditPieceDrawingArea();
+    InvalidateEditPieceDrawingArea();
 }
 
 void TableEditPiece::MirrorXAxisButton_ButtonPressed()
 {
+    // if the piece has only 1 possible configuration do not modify it
+    if ( (m_thePiece.GetNRotations() <= 1) && (m_thePiece.CanMirror() == false) )
+    {
+        return;
+    }
+
     m_thePiece.MirrorXAxis();
 
     // notify to whoever is listening to the signal that the piece changed
