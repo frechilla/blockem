@@ -1,4 +1,4 @@
-now: Version next
+24/04/2010: Version 0.1.6
     - Computer's latest piece deployed glows so human user can easily notice
       what was the latest move
     - App kills itself instead of hunging up when unexpected state occurs 
