@@ -108,12 +108,6 @@ private:
     /// @brief the mirror over X axis button to edit the piece
     Gtk::Button* m_mirrorButtonXAxis;
 
-    /// @brief an arrow pointing to the left
-    Gtk::Arrow m_arrowLeft;
-
-    /// @brief an arrow pointing to the right
-    Gtk::Arrow m_arrowRight;
-
     /// @brief used to retrieve the objects from the Glade design using GtkBuilder
     Glib::RefPtr<Gtk::Builder> m_gtkBuilder;
 

@@ -46,8 +46,6 @@ static const int32_t NSQUARES_EDIT_PIECES_BOARD = 5;
 TableEditPiece::TableEditPiece(
     BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder) throw (GUIException):
         Gtk::Table(cobject), //Calls the base class constructor
-        m_arrowLeft(Gtk::ARROW_LEFT, Gtk::SHADOW_OUT),
-        m_arrowRight(Gtk::ARROW_RIGHT, Gtk::SHADOW_OUT),
         m_gtkBuilder(a_gtkBuilder),
         m_thePiece(e_noPiece),
         m_red(DEFAULT_PLAYER_RED),
@@ -96,13 +94,6 @@ TableEditPiece::TableEditPiece(
     {
         throw new GUIException(std::string("mirror XAxis button retrieval failed"));
     }
-
-	// insert the arrows into the rotate buttons
-	m_rotateLeftButton->add(m_arrowLeft);
-	m_arrowLeft.show();
-
-	m_rotateRightButton->add(m_arrowRight);
-	m_arrowRight.show();
 
 	// connect the signals to the handlers
 	m_editPieceDrawingArea->signal_expose_event().connect(

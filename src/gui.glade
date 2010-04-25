@@ -325,7 +325,10 @@ You should have received a copy of the GNU General Public License along with blo
         <property name="can_focus">True</property>
         <property name="receives_default">True</property>
         <child>
-          <placeholder/>
+          <object class="GtkArrow" id="arrow_rotate_left">
+            <property name="visible">True</property>
+            <property name="arrow_type">left</property>
+          </object>
         </child>
       </object>
       <packing>
@@ -339,7 +342,9 @@ You should have received a copy of the GNU General Public License along with blo
         <property name="can_focus">True</property>
         <property name="receives_default">True</property>
         <child>
-          <placeholder/>
+          <object class="GtkArrow" id="arrow_rotate_right">
+            <property name="visible">True</property>
+          </object>
         </child>
       </object>
       <packing>
