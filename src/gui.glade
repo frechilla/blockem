@@ -1,147 +1,147 @@
 <?xml version="1.0"?>
-<glade-interface>
-  <!-- interface-requires gtk+ 2.16 -->
+<interface>
+  <requires lib="gtk+" version="2.16"/>
   <!-- interface-naming-policy project-wide -->
-  <widget class="GtkWindow" id="window_main">
+  <object class="GtkWindow" id="window_main">
     <property name="title" translatable="yes">Block'em</property>
     <property name="window_position">center</property>
     <property name="default_width">800</property>
     <property name="default_height">600</property>
     <child>
-      <widget class="GtkVBox" id="vbox_main">
+      <object class="GtkVBox" id="vbox_main">
         <property name="visible">True</property>
         <property name="orientation">vertical</property>
         <child>
-          <widget class="GtkMenuBar" id="menubar">
+          <object class="GtkMenuBar" id="menubar">
             <property name="visible">True</property>
             <child>
-              <widget class="GtkMenuItem" id="menuitem_game">
+              <object class="GtkMenuItem" id="menuitem_game">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">_Game</property>
                 <property name="use_underline">True</property>
-                <child>
-                  <widget class="GtkMenu" id="menu1">
+                <child type="submenu">
+                  <object class="GtkMenu" id="menu1">
                     <property name="visible">True</property>
                     <child>
-                      <widget class="GtkImageMenuItem" id="imagemenuitem_game_new">
+                      <object class="GtkImageMenuItem" id="imagemenuitem_game_new">
                         <property name="label">gtk-new</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
-                      </widget>
+                      </object>
                     </child>
                     <child>
-                      <widget class="GtkImageMenuItem" id="imagemenuitem_game_open">
+                      <object class="GtkImageMenuItem" id="imagemenuitem_game_open">
                         <property name="label">gtk-open</property>
                         <property name="visible">True</property>
                         <property name="sensitive">False</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
-                      </widget>
+                      </object>
                     </child>
                     <child>
-                      <widget class="GtkImageMenuItem" id="imagemenuitem_game_save">
+                      <object class="GtkImageMenuItem" id="imagemenuitem_game_save">
                         <property name="label">gtk-save</property>
                         <property name="visible">True</property>
                         <property name="sensitive">False</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
-                      </widget>
+                      </object>
                     </child>
                     <child>
-                      <widget class="GtkImageMenuItem" id="imagemenuitem_game_saveas">
+                      <object class="GtkImageMenuItem" id="imagemenuitem_game_saveas">
                         <property name="label">gtk-save-as</property>
                         <property name="visible">True</property>
                         <property name="sensitive">False</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
-                      </widget>
+                      </object>
                     </child>
                     <child>
-                      <widget class="GtkSeparatorMenuItem" id="separatormenuitem1">
+                      <object class="GtkSeparatorMenuItem" id="separatormenuitem1">
                         <property name="visible">True</property>
-                      </widget>
+                      </object>
                     </child>
                     <child>
-                      <widget class="GtkImageMenuItem" id="imagemenuitem_game_quit">
+                      <object class="GtkImageMenuItem" id="imagemenuitem_game_quit">
                         <property name="label">gtk-quit</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
-                      </widget>
+                      </object>
                     </child>
-                  </widget>
+                  </object>
                 </child>
-              </widget>
+              </object>
             </child>
             <child>
-              <widget class="GtkMenuItem" id="menuitem_settings">
+              <object class="GtkMenuItem" id="menuitem_settings">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">_Settings</property>
                 <property name="use_underline">True</property>
-                <child>
-                  <widget class="GtkMenu" id="menu2">
+                <child type="submenu">
+                  <object class="GtkMenu" id="menu2">
                     <property name="visible">True</property>
                     <child>
-                      <widget class="GtkImageMenuItem" id="imagemenuitem_settings_preferences">
+                      <object class="GtkImageMenuItem" id="imagemenuitem_settings_preferences">
                         <property name="label">gtk-preferences</property>
                         <property name="visible">True</property>
                         <property name="sensitive">False</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
-                      </widget>
+                      </object>
                     </child>
-                  </widget>
+                  </object>
                 </child>
-              </widget>
+              </object>
             </child>
             <child>
-              <widget class="GtkMenuItem" id="menuitem_help">
+              <object class="GtkMenuItem" id="menuitem_help">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">_Help</property>
                 <property name="use_underline">True</property>
-                <child>
-                  <widget class="GtkMenu" id="menu3">
+                <child type="submenu">
+                  <object class="GtkMenu" id="menu3">
                     <property name="visible">True</property>
                     <child>
-                      <widget class="GtkImageMenuItem" id="imagemenuitem_help_about">
+                      <object class="GtkImageMenuItem" id="imagemenuitem_help_about">
                         <property name="label">gtk-about</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
-                      </widget>
+                      </object>
                     </child>
-                  </widget>
+                  </object>
                 </child>
-              </widget>
+              </object>
             </child>
-          </widget>
+          </object>
           <packing>
             <property name="expand">False</property>
             <property name="position">0</property>
           </packing>
         </child>
         <child>
-          <widget class="GtkVBox" id="vbox_drawing">
+          <object class="GtkVBox" id="vbox_drawing">
             <property name="visible">True</property>
             <property name="orientation">vertical</property>
             <property name="spacing">5</property>
             <child>
-              <widget class="GtkHBox" id="hbox_gamestatus">
+              <object class="GtkHBox" id="hbox_gamestatus">
                 <property name="visible">True</property>
                 <property name="spacing">1</property>
                 <child>
                   <placeholder/>
                 </child>
                 <child>
-                  <widget class="GtkHBox" id="hbox_computerpieces">
+                  <object class="GtkHBox" id="hbox_computerpieces">
                     <property name="width_request">100</property>
                     <property name="visible">True</property>
                     <child>
-                      <widget class="GtkVSeparator" id="vseparator_computerpieces">
+                      <object class="GtkVSeparator" id="vseparator_computerpieces">
                         <property name="visible">True</property>
                         <property name="orientation">vertical</property>
-                      </widget>
+                      </object>
                       <packing>
                         <property name="expand">False</property>
                         <property name="padding">5</property>
@@ -151,19 +151,19 @@
                     <child>
                       <placeholder/>
                     </child>
-                  </widget>
+                  </object>
                   <packing>
                     <property name="expand">False</property>
                     <property name="position">1</property>
                   </packing>
                 </child>
-              </widget>
+              </object>
               <packing>
                 <property name="position">0</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkHBox" id="hbox_editpieces">
+              <object class="GtkHBox" id="hbox_editpieces">
                 <property name="height_request">200</property>
                 <property name="visible">True</property>
                 <property name="spacing">10</property>
@@ -173,21 +173,21 @@
                 <child>
                   <placeholder/>
                 </child>
-              </widget>
+              </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="position">1</property>
               </packing>
             </child>
-          </widget>
+          </object>
           <packing>
             <property name="position">1</property>
           </packing>
         </child>
         <child>
-          <widget class="GtkHSeparator" id="hseparator1">
+          <object class="GtkHSeparator" id="hseparator1">
             <property name="visible">True</property>
-          </widget>
+          </object>
           <packing>
             <property name="expand">False</property>
             <property name="padding">1</property>
@@ -195,7 +195,7 @@
           </packing>
         </child>
         <child>
-          <widget class="GtkHBox" id="hbox_statusbar">
+          <object class="GtkHBox" id="hbox_statusbar">
             <property name="visible">True</property>
             <property name="spacing">10</property>
             <child>
@@ -213,16 +213,16 @@
             <child>
               <placeholder/>
             </child>
-          </widget>
+          </object>
           <packing>
             <property name="expand">False</property>
             <property name="position">3</property>
           </packing>
         </child>
-      </widget>
+      </object>
     </child>
-  </widget>
-  <widget class="GtkAboutDialog" id="aboutdialog">
+  </object>
+  <object class="GtkAboutDialog" id="aboutdialog">
     <property name="border_width">5</property>
     <property name="title" translatable="yes">About Block'em</property>
     <property name="resizable">False</property>
@@ -242,7 +242,7 @@ You should have received a copy of the GNU General Public License along with blo
     <property name="authors">Faustino Frechilla</property>
     <property name="wrap_license">True</property>
     <child internal-child="vbox">
-      <widget class="GtkVBox" id="dialog-vbox1">
+      <object class="GtkVBox" id="dialog-vbox1">
         <property name="visible">True</property>
         <property name="orientation">vertical</property>
         <property name="spacing">2</property>
@@ -250,20 +250,20 @@ You should have received a copy of the GNU General Public License along with blo
           <placeholder/>
         </child>
         <child internal-child="action_area">
-          <widget class="GtkHButtonBox" id="dialog-action_area1">
+          <object class="GtkHButtonBox" id="dialog-action_area1">
             <property name="visible">True</property>
             <property name="layout_style">end</property>
-          </widget>
+          </object>
           <packing>
             <property name="expand">False</property>
             <property name="pack_type">end</property>
             <property name="position">0</property>
           </packing>
         </child>
-      </widget>
+      </object>
     </child>
-  </widget>
-  <widget class="GtkTable" id="table_editing_piece">
+  </object>
+  <object class="GtkTable" id="table_editing_piece">
     <property name="width_request">180</property>
     <property name="visible">True</property>
     <property name="n_rows">4</property>
@@ -271,11 +271,11 @@ You should have received a copy of the GNU General Public License along with blo
     <property name="column_spacing">1</property>
     <property name="row_spacing">1</property>
     <child>
-      <widget class="GtkDrawingArea" id="drawingarea_editing_piece">
+      <object class="GtkDrawingArea" id="drawingarea_editing_piece">
         <property name="width_request">115</property>
         <property name="height_request">115</property>
         <property name="visible">True</property>
-      </widget>
+      </object>
       <packing>
         <property name="right_attach">3</property>
         <property name="top_attach">1</property>
@@ -283,33 +283,33 @@ You should have received a copy of the GNU General Public License along with blo
       </packing>
     </child>
     <child>
-      <widget class="GtkButton" id="button_mirror_yaxis">
+      <object class="GtkButton" id="button_mirror_yaxis">
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="receives_default">True</property>
         <child>
-          <widget class="GtkHBox" id="hbox_button_mirror_y">
+          <object class="GtkHBox" id="hbox_button_mirror_y">
             <property name="visible">True</property>
             <child>
-              <widget class="GtkArrow" id="arrow_y_left">
+              <object class="GtkArrow" id="arrow_y_left">
                 <property name="visible">True</property>
                 <property name="arrow_type">left</property>
-              </widget>
+              </object>
               <packing>
                 <property name="position">0</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkArrow" id="arrow_y_right">
+              <object class="GtkArrow" id="arrow_y_right">
                 <property name="visible">True</property>
-              </widget>
+              </object>
               <packing>
                 <property name="position">1</property>
               </packing>
             </child>
-          </widget>
+          </object>
         </child>
-      </widget>
+      </object>
       <packing>
         <property name="left_attach">3</property>
         <property name="right_attach">4</property>
@@ -320,28 +320,28 @@ You should have received a copy of the GNU General Public License along with blo
       </packing>
     </child>
     <child>
-      <widget class="GtkButton" id="button_rotate_left">
+      <object class="GtkButton" id="button_rotate_left">
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="receives_default">True</property>
         <child>
           <placeholder/>
         </child>
-      </widget>
+      </object>
       <packing>
         <property name="x_options">GTK_FILL</property>
         <property name="y_options"></property>
       </packing>
     </child>
     <child>
-      <widget class="GtkButton" id="button_rotate_right">
+      <object class="GtkButton" id="button_rotate_right">
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="receives_default">True</property>
         <child>
           <placeholder/>
         </child>
-      </widget>
+      </object>
       <packing>
         <property name="left_attach">2</property>
         <property name="right_attach">3</property>
@@ -350,12 +350,12 @@ You should have received a copy of the GNU General Public License along with blo
       </packing>
     </child>
     <child>
-      <widget class="GtkLabel" id="label_rotate">
+      <object class="GtkLabel" id="label_rotate">
         <property name="visible">True</property>
         <property name="label" translatable="yes">Rotate</property>
         <property name="justify">center</property>
         <property name="width_chars">8</property>
-      </widget>
+      </object>
       <packing>
         <property name="left_attach">1</property>
         <property name="right_attach">2</property>
@@ -364,7 +364,7 @@ You should have received a copy of the GNU General Public License along with blo
       </packing>
     </child>
     <child>
-      <widget class="GtkLabel" id="label_mirror">
+      <object class="GtkLabel" id="label_mirror">
         <property name="visible">True</property>
         <property name="label" translatable="yes">M
 i
@@ -373,7 +373,7 @@ r
 o
 r</property>
         <property name="justify">center</property>
-      </widget>
+      </object>
       <packing>
         <property name="left_attach">3</property>
         <property name="right_attach">4</property>
@@ -384,35 +384,35 @@ r</property>
       </packing>
     </child>
     <child>
-      <widget class="GtkButton" id="button_mirror_xaxis">
+      <object class="GtkButton" id="button_mirror_xaxis">
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="receives_default">True</property>
         <child>
-          <widget class="GtkVBox" id="hbox_button_mirror_x">
+          <object class="GtkVBox" id="hbox_button_mirror_x">
             <property name="visible">True</property>
             <property name="orientation">vertical</property>
             <child>
-              <widget class="GtkArrow" id="arrow_x_up">
+              <object class="GtkArrow" id="arrow_x_up">
                 <property name="visible">True</property>
                 <property name="arrow_type">up</property>
-              </widget>
+              </object>
               <packing>
                 <property name="position">0</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkArrow" id="arrowx_down">
+              <object class="GtkArrow" id="arrowx_down">
                 <property name="visible">True</property>
                 <property name="arrow_type">down</property>
-              </widget>
+              </object>
               <packing>
                 <property name="position">1</property>
               </packing>
             </child>
-          </widget>
+          </object>
         </child>
-      </widget>
+      </object>
       <packing>
         <property name="left_attach">3</property>
         <property name="right_attach">4</property>
@@ -425,5 +425,5 @@ r</property>
     <child>
       <placeholder/>
     </child>
-  </widget>
-</glade-interface>
+  </object>
+</interface>

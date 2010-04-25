@@ -26,6 +26,7 @@
 /// @history
 /// Ref       Who                When         What
 ///           Faustino Frechilla 25-Nov-2009  Original development
+///           Faustino Frechilla 25-Apr-2010  libglade dependency removed. Code migrated to GtkBuilder
 /// @endhistory
 ///
 // ============================================================================
@@ -70,9 +71,18 @@
 //                  "",
 //                  "");
 //
+// NOTE: If you have decided to use GtkBuilder instead of libglade use this instead:
+//      Glib::RefPtr<Gtk::Builder> gtkBuilder = Gtk::Builder::create();
+//      gtkBuilder->add_from_string(
+//                reinterpret_cast<const char *>(__BIN_GUI_GLADE_START__),
+//                reinterpret_cast<long int>(__BIN_GUI_GLADE_SIZE__))
+//
+//
 // compile line is:
 //     g++ main.cpp tutgui.o -o main `pkg-config gtkmm-2.4 libglademm-2.4 --cflags --libs`
-
+//
+// If not using libglade:
+//     g++ main.cpp tutgui.o -o main `pkg-config gtkmm-2.4 --cflags --libs`
 
 #ifndef GUI_GLADE_H_
 #define GUI_GLADE_H_

@@ -23,6 +23,7 @@
 /// @history
 /// Ref       Who                When         What
 ///           Faustino Frechilla 12-Nov-2009  Original development
+///           Faustino Frechilla 25-Apr-2010  libglade dependency removed. Code migrated to GtkBuilder
 /// @endhistory
 ///
 // ============================================================================
@@ -32,7 +33,6 @@
 
 #include <string>
 #include <exception>
-#include <libglademm/xml.h>
 #include <gtkmm.h>
 
 #include "gui_about_dialog.h"
@@ -58,7 +58,7 @@ public:
 
     /// Initialise the window. This methid MUST be called before the first use
     /// of the window
-    void Initialize(Glib::RefPtr<Gnome::Glade::Xml> a_refXml)throw (GUIException) ;
+    void Initialize(Glib::RefPtr<Gtk::Builder> a_gtkBuilder) throw (GUIException);
 
     // property to access the Gtk::window object retrieved from the .glade file
     inline Gtk::Window& window()
@@ -97,7 +97,7 @@ public:
 
 private:
     /// @brief used to retrieve the objects from the Glade design
-    Glib::RefPtr<Gnome::Glade::Xml> m_refXml;
+    Glib::RefPtr<Gtk::Builder> m_gtkBuilder;
 
     /// @brief the Gtk window object
     Gtk::Window* m_theWindow;
@@ -109,7 +109,7 @@ private:
     Coordinate m_lastCoord;
 
     /// @brief the worker thread used to leave the GUI active while the next moves is calculated
-    MainWindowWorkerThread* m_workerThread;
+    MainWindowWorkerThread m_workerThread;
 
     /// @brief the about dialog class
     AboutDialog* m_aboutDialog;

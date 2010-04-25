@@ -23,6 +23,7 @@
 /// @history
 /// Ref       Who                When         What
 ///           Faustino Frechilla 30-Mar-2010  Original development
+///           Faustino Frechilla 25-Apr-2010  libglade dependency removed. Code migrated to GtkBuilder
 /// @endhistory
 ///
 // ============================================================================
@@ -30,18 +31,18 @@
 #ifndef _GUI_TABLE_EDIT_PIECE_H_
 #define _GUI_TABLE_EDIT_PIECE_H_
 
-#include <libglademm/xml.h>
 #include <gtkmm.h>
-
 #include "gui_exception.h"
 #include "piece.h"
 
-class TableEditPiece
+class TableEditPiece :
+    public Gtk::Table
 {
 public:
-	/// Instantiates the class. It needs a Gnome::Glade::Xml object to retrieve the
+	/// Instantiates the class. It needs a Gtk::Builder object to retrieve the
 	/// glade info
-	TableEditPiece(Glib::RefPtr<Gnome::Glade::Xml> a_refXml) throw (GUIException);
+    // to be used with m_gtkBuilder->get_widget_derived(GUI_ABOUT_DIALOG_NAME, m_aboutDialog)
+	TableEditPiece(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder) throw (GUIException);
 	~TableEditPiece();
 
     /// @brief callback to be called when the edit piece drawing area is redraw on screen
@@ -58,12 +59,6 @@ public:
 
     /// @brief callback to be called when the mirror over the X axis button is pressed
     void MirrorXAxisButton_ButtonPressed();
-
-    /// @brief accesor to the table represented by this class
-    inline Gtk::Table& Table()
-    {
-        return *m_theTable;
-    }
 
     /// @brief return the piece being edited at the moment in the widget
     inline const Piece& GetPiece()
@@ -92,9 +87,6 @@ public:
     void SetPieceRGB(float a_red, float a_green, float a_blue);
 
 private:
-    /// @brief the table represented by this class
-    Gtk::Table* m_theTable;
-
     /// @brief the drawing area where the piece is edited
     Gtk::DrawingArea* m_editPieceDrawingArea;
 
@@ -122,8 +114,8 @@ private:
     /// @brief an arrow pointing to the right
     Gtk::Arrow m_arrowRight;
 
-    /// @brief used to retrieve the objects from the Glade design
-    Glib::RefPtr<Gnome::Glade::Xml> m_refXml;
+    /// @brief used to retrieve the objects from the Glade design using GtkBuilder
+    Glib::RefPtr<Gtk::Builder> m_gtkBuilder;
 
     /// @brief instance of a piece which is being edited by the user
     Piece m_thePiece;

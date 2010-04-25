@@ -19,9 +19,8 @@ AC_DEFINE(SVN_REVISION, "svnversion", [SVN Revision])
 AC_PROG_CXX
 AC_PROG_CC
 
-AC_CHECK_TOOL([OBJCOPY], [objcopy], [])
 # AM_CONDITIONAL(HAVE_OBJCOPY_WEAKEN, ["$OBJCOPY" -W malloc /bin/ls /dev/null])
-
+AC_CHECK_TOOL([OBJCOPY], [objcopy], [])
 AC_CHECK_TOOL([LD], [ld], [])
 
 # OS dependant checking. http://www.airs.com/ian/configure/configure_5.html
@@ -46,7 +45,6 @@ fi
 
 # Checks for libraries.
 PKG_CHECK_MODULES([GTKMM], [gtkmm-2.4 >= 2.12])
-PKG_CHECK_MODULES([GLADEMM], [libglademm-2.4 >= 1.0.0])
 PKG_CHECK_MODULES([GTHREAD], [gthread-2.0 >= 1.0.0])
 # contained in gtkmm
 # PKG_CHECK_MODULES([SIGCPP], [sigc++-2.0 >= 1.0.0])
@@ -77,6 +75,11 @@ AC_TYPE_UINT64_T
 USER_CFLAGS=
 CXXFLAGS="-Wall -O3 -g3 -DNDEBUG"
 
+# if in win32 debug symbols won't be added to executable to decrease its size
+if test "$os_win32" = "yes"; then
+    CXXFLAGS="-Wall -O3 -g0 -DNDEBUG"
+fi
+
 AC_ARG_ENABLE(debug,
     AC_HELP_STRING([--enable-debug], [Enable debugging code]),
     [ if test x$enableval = xyes; then
@@ -91,7 +94,7 @@ AC_ARG_ENABLE(debug-printing,
         CXXFLAGS+=" -DDEBUG_PRINT"
     fi])
 
-# if in win32 remove the extra terminal window
+# if in win32 add these flags to remove the extra terminal window and avoid strange errors
 # http://live.gnome.org/GTK%2B/Win32/Apps
 if test "$os_win32" = "yes"; then
     CXXFLAGS+=" -mms-bitfields -mwindows"

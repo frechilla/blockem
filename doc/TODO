@@ -9,7 +9,6 @@ basic things that need to be done:
    the next move)
  + There are some TODOs in the GUI code. They'll have to be solved little by 
    little
- + Remove dependecy from glade. Use GtkBuilder instead
  + It should be possible to generate doxygen. Add it to the makefiles
  + Installer for the windows platform
  + There's no need to compile the test app with all the gui libraries and flags

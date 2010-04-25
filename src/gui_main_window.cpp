@@ -25,6 +25,7 @@
 ///           Faustino Frechilla 13-Nov-2009  Original development
 ///           Faustino Frechilla 01-Apr-2010  Add drawing board with computer's pieces left
 ///           Faustino Frechilla 06-Apr-2010  StopWatch for human and computer
+///           Faustino Frechilla 25-Apr-2010  libglade dependency removed. Code migrated to GtkBuilder
 /// @endhistory
 ///
 // ============================================================================
@@ -105,11 +106,11 @@ void MainWindow::ProgressUpdate(float a_progress)
 
 MainWindow::MainWindow() :
     Singleton<MainWindow>(),
-    m_refXml(NULL),
+    m_gtkBuilder(NULL),
     m_theWindow(NULL),
     m_the1v1Game(),
     m_lastCoord(COORD_UNITIALISED, COORD_UNITIALISED),
-    m_workerThread(NULL),
+    m_workerThread(),
     m_aboutDialog(NULL),
     m_pickPiecesDrawingArea(m_the1v1Game.GetPlayer1(), DrawingAreaShowPieces::eOrientation_leftToRight),
     m_showComputerPiecesDrawingArea(m_the1v1Game.GetPlayer2(), DrawingAreaShowPieces::eOrientation_bottomToTop),
@@ -122,9 +123,12 @@ MainWindow::MainWindow() :
 
 MainWindow::~MainWindow()
 {
+    // http://library.gnome.org/devel/gtkmm/stable/classGtk_1_1Builder.html#ab8c6679c1296d6c4d8590ef907de4d5a
+    // Note that you are responsible for deleting top-level widgets (windows and dialogs) instantiated
+    // by the Builder object. Other widgets are instantiated as managed so they will be deleted
+    // automatically if you add them to a container widget
     delete(m_aboutDialog);
-    delete(m_workerThread);
-    delete(m_editPieceTable);
+    //delete(m_editPieceTable);
 
     // deleting this object prints out a lot of error messages on the screen
     // or even dumps a core.
@@ -135,18 +139,31 @@ MainWindow::~MainWindow()
     //delete(m_theWindow);
 }
 
-void MainWindow::Initialize(Glib::RefPtr<Gnome::Glade::Xml> a_refXml) throw (GUIException)
+void MainWindow::Initialize(Glib::RefPtr<Gtk::Builder> a_gtkBuilder) throw (GUIException)
 {
-    m_refXml         = a_refXml;
-    m_workerThread   = new MainWindowWorkerThread();
-    m_aboutDialog    = new AboutDialog(a_refXml);
-    m_editPieceTable = new TableEditPiece(a_refXml);
+    m_gtkBuilder = a_gtkBuilder;
 
     // first of all retrieve the Gtk::window object and set its icon
-    m_refXml->get_widget(GUI_MAIN_WINDOW_NAME, m_theWindow);
+    m_gtkBuilder->get_widget(GUI_MAIN_WINDOW_NAME, m_theWindow);
     if (m_theWindow == NULL)
     {
         throw new GUIException(std::string("couldn't retrieve the MainWindow from the .glade file"));
+    }
+
+    // retrieve the about dialog. It must be retrieved calling get_widget_derived
+    // otherwise app will core
+    m_gtkBuilder->get_widget_derived(GUI_ABOUT_DIALOG_NAME, m_aboutDialog);
+    if (m_aboutDialog == NULL)
+    {
+        throw new GUIException(std::string("AboutDialog retrieval failed"));
+    }
+
+    // retrieve the editing piece table. It must be retrieved calling get_widget_derived
+    // otherwise app will core
+    m_gtkBuilder->get_widget_derived(GUI_TABLE_EDITING_PIECE_NAME, m_editPieceTable);
+    if (m_editPieceTable == NULL)
+    {
+        throw new GUIException(std::string("Edit pieces table retrieval failed"));
     }
 
     // icon of the window
@@ -175,49 +192,49 @@ void MainWindow::Initialize(Glib::RefPtr<Gnome::Glade::Xml> a_refXml) throw (GUI
     }
 
     // retrieve the objects from the GUI design
-    m_refXml->get_widget(GUI_MENU_ITEM_GAME_NEW, m_newMenuItem);
+    m_gtkBuilder->get_widget(GUI_MENU_ITEM_GAME_NEW, m_newMenuItem);
     if (m_newMenuItem == NULL)
     {
         throw new GUIException(std::string("new menu item retrieval failed"));
     }
 
-    m_refXml->get_widget(GUI_MENU_ITEM_GAME_QUIT, m_quitMenuItem);
+    m_gtkBuilder->get_widget(GUI_MENU_ITEM_GAME_QUIT, m_quitMenuItem);
     if (m_quitMenuItem == NULL)
     {
         throw new GUIException(std::string("quit menu item retrieval failed"));
     }
 
-    m_refXml->get_widget(GUI_MENU_ITEM_HELP_ABOUT, m_helpAboutMenuItem);
+    m_gtkBuilder->get_widget(GUI_MENU_ITEM_HELP_ABOUT, m_helpAboutMenuItem);
     if (m_helpAboutMenuItem == NULL)
     {
         throw new GUIException(std::string("help->about menu item retrieval failed"));
     }
 
-    m_refXml->get_widget(GUI_VBOX_DRAWING_NAME, m_vBoxDrawing);
+    m_gtkBuilder->get_widget(GUI_VBOX_DRAWING_NAME, m_vBoxDrawing);
 	if (m_vBoxDrawing == NULL)
 	{
 		throw new GUIException(std::string("Drawing area vbox retrieval failed"));
 	}
 
-    m_refXml->get_widget(GUI_HBOX_GAME_STATUS_NAME, m_hBoxGameStatus);
+    m_gtkBuilder->get_widget(GUI_HBOX_GAME_STATUS_NAME, m_hBoxGameStatus);
     if (m_hBoxGameStatus == NULL)
     {
     	throw new GUIException(std::string("Game status hbox retrieval failed"));
     }
 
-    m_refXml->get_widget(GUI_HBOX_COMPUTER_PIECES_NAME, m_hBoxComputerPieces);
+    m_gtkBuilder->get_widget(GUI_HBOX_COMPUTER_PIECES_NAME, m_hBoxComputerPieces);
     if (m_hBoxComputerPieces == NULL)
     {
     	throw new GUIException(std::string("Computer pieces hbox retrieval failed"));
     }
 
-    m_refXml->get_widget(GUI_HBOX_PIECES_AREA_NAME, m_hBoxEditPieces);
+    m_gtkBuilder->get_widget(GUI_HBOX_PIECES_AREA_NAME, m_hBoxEditPieces);
     if (m_hBoxEditPieces == NULL)
     {
         throw new GUIException(std::string("PiecesHBox retrieval failed"));
     }
 
-    m_refXml->get_widget(GUI_HBOX_STATUSBAR_NAME, m_hBoxStatusBar);
+    m_gtkBuilder->get_widget(GUI_HBOX_STATUSBAR_NAME, m_hBoxStatusBar);
     if (m_hBoxStatusBar == NULL)
     {
         throw new GUIException(std::string("status bar hbox retrieval failed"));
@@ -232,7 +249,7 @@ void MainWindow::Initialize(Glib::RefPtr<Gnome::Glade::Xml> a_refXml) throw (GUI
 
     // pick pieces drawing area, edit pieces table and show opponent's pieces
     m_hBoxEditPieces->pack_start(m_pickPiecesDrawingArea, true, true);
-    m_hBoxEditPieces->pack_start(m_editPieceTable->Table(), false, false);
+    m_hBoxEditPieces->pack_start(*m_editPieceTable, false, false);
 
 	m_hBoxComputerPieces->pack_start(
 			m_showComputerPiecesDrawingArea,
@@ -278,7 +295,7 @@ void MainWindow::Initialize(Glib::RefPtr<Gnome::Glade::Xml> a_refXml) throw (GUI
             sigc::mem_fun(*this, &MainWindow::NotifyProgressUpdate));
 
     // connect the worker thread signal
-    m_workerThread->signal_computingFinished().connect(
+    m_workerThread.signal_computingFinished().connect(
             sigc::mem_fun(*this, &MainWindow::WorkerThread_computingFinished));
             //sigc::ptr_fun(f) );
 
@@ -380,7 +397,7 @@ void MainWindow::WorkerThread_computingFinished(
 
 bool MainWindow::MainWindow_DeleteEvent(GdkEventAny*)
 {
-    if (m_workerThread->IsThreadComputingMove())
+    if (m_workerThread.IsThreadComputingMove())
     {
         Gtk::MessageDialog::MessageDialog exitingMessage(
                 *m_theWindow,
@@ -398,7 +415,7 @@ bool MainWindow::MainWindow_DeleteEvent(GdkEventAny*)
     }
 
     // kill the worker thread
-    m_workerThread->Join();
+    m_workerThread.Join();
 
     // continue with delete event
     return false;
@@ -406,7 +423,7 @@ bool MainWindow::MainWindow_DeleteEvent(GdkEventAny*)
 
 void MainWindow::MenuItemGameQuit_Activate()
 {
-    if (m_workerThread->IsThreadComputingMove())
+    if (m_workerThread.IsThreadComputingMove())
     {
         Gtk::MessageDialog::MessageDialog exitingMessage(
                 *m_theWindow,
@@ -423,7 +440,7 @@ void MainWindow::MenuItemGameQuit_Activate()
         }
     }
 
-    m_workerThread->Join();
+    m_workerThread.Join();
 
     // exit the app
     m_theWindow->hide();
@@ -431,7 +448,7 @@ void MainWindow::MenuItemGameQuit_Activate()
 
 void MainWindow::MenuItemGameNew_Activate()
 {
-    if (m_workerThread->IsThreadComputingMove())
+    if (m_workerThread.IsThreadComputingMove())
     {
         Gtk::MessageDialog::MessageDialog infoMessage(
                 *m_theWindow,
@@ -506,8 +523,8 @@ void MainWindow::MenuItemGameNew_Activate()
 
 void MainWindow::MenuItemHelpAbout_Activate()
 {
-    m_aboutDialog->dialog().run();
-    m_aboutDialog->dialog().hide();
+    m_aboutDialog->run();
+    m_aboutDialog->hide();
 }
 
 void MainWindow::BoardDrawingArea_BoardClicked(const Coordinate &a_coord, const Piece &a_piece, const Player &a_player)
@@ -516,7 +533,7 @@ void MainWindow::BoardDrawingArea_BoardClicked(const Coordinate &a_coord, const 
     std::cout << a_player.GetName() <<  " clicked in (" << a_coord.m_row << ", " << a_coord.m_col << ")" << std::endl;
 #endif
 
-	if (m_workerThread->IsThreadComputingMove())
+	if (m_workerThread.IsThreadComputingMove())
 	{
 #ifdef DEBUG_PRINT
 	    std::cout
@@ -586,7 +603,7 @@ void MainWindow::BoardDrawingArea_BoardClicked(const Coordinate &a_coord, const 
     m_boardDrawingArea.CancelLatestPieceDeployedEffect();
     m_boardDrawingArea.Invalidate();
 
-    if (!m_workerThread->ComputeMove(m_the1v1Game, a_piece, a_coord))
+    if (!m_workerThread.ComputeMove(m_the1v1Game, a_piece, a_coord))
     {
 #ifdef DEBUG_PRINT
         std::cout
@@ -614,7 +631,7 @@ void MainWindow::BoardDrawingArea_BoardClicked(const Coordinate &a_coord, const 
         }
 
         // kill the worker thread
-        m_workerThread->Join();
+        m_workerThread.Join();
 
         // exit the app
         m_theWindow->hide();

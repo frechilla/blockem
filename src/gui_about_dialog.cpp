@@ -23,6 +23,7 @@
 /// @history
 /// Ref       Who                When         What
 ///           Faustino Frechilla 26-Nov-2009  Original development
+///           Faustino Frechilla 25-Apr-2010  libglade dependency removed. Code migrated to GtkBuilder
 /// @endhistory
 ///
 // ============================================================================
@@ -32,20 +33,14 @@
 #include "gui_about_dialog.h"
 #include "gui_glade_defs.h"
 
-AboutDialog::AboutDialog(Glib::RefPtr<Gnome::Glade::Xml> a_refXml) throw (GUIException):
-    m_refXml(a_refXml)
+AboutDialog::AboutDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder) :
+    Gtk::AboutDialog(cobject), //Calls the base class constructor
+    m_gtkBuilder(a_gtkBuilder)
 {
     Glib::RefPtr< Gdk::Pixbuf > picture;
 
-    // retrieve the about dialog from and set it up
-    m_refXml->get_widget(GUI_ABOUT_DIALOG_NAME, m_theAboutDialog);
-    if (m_theAboutDialog == NULL)
-    {
-       throw new GUIException(std::string("AboutDialog retrieval failed"));
-    }
-
     // set the current version on the about dialog
-    m_theAboutDialog->set_version(PACKAGE_VERSION);
+    this->set_version(PACKAGE_VERSION);
 
     // try to set the big logo in the AboutDialog
     if (g_file_test(GUI_PATH_TO_LOGO, G_FILE_TEST_IS_REGULAR))
@@ -65,7 +60,7 @@ AboutDialog::AboutDialog(Glib::RefPtr<Gnome::Glade::Xml> a_refXml) throw (GUIExc
 
         if (picture)
         {
-           m_theAboutDialog->set_logo(picture);
+            this->set_logo(picture);
         }
     }
 
@@ -87,12 +82,11 @@ AboutDialog::AboutDialog(Glib::RefPtr<Gnome::Glade::Xml> a_refXml) throw (GUIExc
 
         if (picture)
         {
-           m_theAboutDialog->set_icon(picture);
+            this->set_icon(picture);
         }
     }
 }
 
 AboutDialog::~AboutDialog()
 {
-    delete(m_theAboutDialog);
 }

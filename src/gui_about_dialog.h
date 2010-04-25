@@ -23,6 +23,7 @@
 /// @history
 /// Ref       Who                When         What
 ///           Faustino Frechilla 26-Nov-2009  Original development
+///           Faustino Frechilla 25-Apr-2010  libglade dependency removed. Code migrated to GtkBuilder
 /// @endhistory
 ///
 // ============================================================================
@@ -30,29 +31,19 @@
 #ifndef ABOUTDIALOG_H_
 #define ABOUTDIALOG_H_
 
-#include <libglademm/xml.h>
 #include <gtkmm.h>
 
-#include "gui_exception.h"
-
-class AboutDialog
+class AboutDialog :
+    public Gtk::AboutDialog
 {
 public:
-    AboutDialog(Glib::RefPtr<Gnome::Glade::Xml> a_refXml)
-        throw (GUIException);
+    // to be used with m_gtkBuilder->get_widget_derived(GUI_ABOUT_DIALOG_NAME, m_aboutDialog);
+    AboutDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder);
     virtual ~AboutDialog();
 
-    inline Gtk::AboutDialog& dialog()
-    {
-        return *m_theAboutDialog;
-    }
-
 private:
-    /// @brief the about dialog
-    Gtk::AboutDialog* m_theAboutDialog;
-
     /// @brief used to retrieve the objects from the Glade design
-    Glib::RefPtr<Gnome::Glade::Xml> m_refXml;
+    Glib::RefPtr<Gtk::Builder> m_gtkBuilder;
 
     // prevent the default constructors to be used
     AboutDialog();

@@ -23,6 +23,7 @@
 /// @history
 /// Ref       Who                When         What
 ///           Faustino Frechilla 30-Mar-2010  Original development
+///           Faustino Frechilla 25-Apr-2010  libglade dependency removed. Code migrated to GtkBuilder
 /// @endhistory
 ///
 // ============================================================================
@@ -43,59 +44,54 @@ static const float EDIT_CIRCLE_LINE_WIDTH = 1.0;
 static const int32_t NSQUARES_EDIT_PIECES_BOARD = 5;
 
 TableEditPiece::TableEditPiece(
-		Glib::RefPtr<Gnome::Glade::Xml> a_refXml) throw (GUIException):
-	        m_arrowLeft(Gtk::ARROW_LEFT, Gtk::SHADOW_OUT),
-	        m_arrowRight(Gtk::ARROW_RIGHT, Gtk::SHADOW_OUT),
-			m_refXml(a_refXml),
-			m_thePiece(e_noPiece),
-		    m_red(DEFAULT_PLAYER_RED),
-		    m_green(DEFAULT_PLAYER_GREEN),
-		    m_blue(DEFAULT_PLAYER_BLUE)
+    BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder) throw (GUIException):
+        Gtk::Table(cobject), //Calls the base class constructor
+        m_arrowLeft(Gtk::ARROW_LEFT, Gtk::SHADOW_OUT),
+        m_arrowRight(Gtk::ARROW_RIGHT, Gtk::SHADOW_OUT),
+        m_gtkBuilder(a_gtkBuilder),
+        m_thePiece(e_noPiece),
+        m_red(DEFAULT_PLAYER_RED),
+        m_green(DEFAULT_PLAYER_GREEN),
+        m_blue(DEFAULT_PLAYER_BLUE)
 {
 	// retrieve the objects from the GUI design
-	m_refXml->get_widget(GUI_TABLE_EDITING_PIECE_NAME, m_theTable);
-	if (m_theTable == NULL)
-	{
-		throw new GUIException(std::string("Edit pieces table retrieval failed"));
-	}
-
-	m_refXml->get_widget(GUI_DRAWINGAREA_EDITING_PIECE, m_editPieceDrawingArea);
+	m_gtkBuilder->get_widget(GUI_DRAWINGAREA_EDITING_PIECE, m_editPieceDrawingArea);
 	if (m_editPieceDrawingArea == NULL)
 	{
 		throw new GUIException(std::string("Edit pieces drawing area retrieval failed"));
 	}
 
-    m_refXml->get_widget(GUI_BUTTON_ROTATE_LEFT_NAME, m_rotateLeftButton);
+	m_gtkBuilder->get_widget(GUI_BUTTON_ROTATE_LEFT_NAME, m_rotateLeftButton);
     if (m_rotateLeftButton == NULL)
     {
         throw new GUIException(std::string("rotate left button retrieval failed"));
     }
 
-	m_refXml->get_widget(GUI_BUTTON_ROTATE_RIGHT_NAME, m_rotateRightButton);
+    m_gtkBuilder->get_widget(GUI_BUTTON_ROTATE_RIGHT_NAME, m_rotateRightButton);
 	if (m_rotateRightButton == NULL)
 	{
 		throw new GUIException(std::string("rotate right button retrieval failed"));
 	}
 
-    m_refXml->get_widget(GUI_LABEL_ROTATE_NAME, m_rotateLabel);
+	m_gtkBuilder->get_widget(GUI_LABEL_ROTATE_NAME, m_rotateLabel);
     if (m_rotateLabel == NULL)
     {
         throw new GUIException(std::string("rotate label retrieval failed"));
     }
 
-    m_refXml->get_widget(GUI_LABEL_MIRROR_NAME, m_mirrorLabel);
+    m_gtkBuilder->get_widget(GUI_LABEL_MIRROR_NAME, m_mirrorLabel);
     if (m_mirrorLabel == NULL)
     {
         throw new GUIException(std::string("mirror label retrieval failed"));
     }
 
-	m_refXml->get_widget(GUI_BUTTON_MIRROR_YAXIS_NAME, m_mirrorButtonYAxis);
+    m_gtkBuilder->get_widget(GUI_BUTTON_MIRROR_YAXIS_NAME, m_mirrorButtonYAxis);
 	if (m_mirrorButtonYAxis == NULL)
 	{
 		throw new GUIException(std::string("mirror YAxis button retrieval failed"));
 	}
 
-    m_refXml->get_widget(GUI_BUTTON_MIRROR_XAXIS_NAME, m_mirrorButtonXAxis);
+	m_gtkBuilder->get_widget(GUI_BUTTON_MIRROR_XAXIS_NAME, m_mirrorButtonXAxis);
     if (m_mirrorButtonXAxis == NULL)
     {
         throw new GUIException(std::string("mirror XAxis button retrieval failed"));

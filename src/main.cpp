@@ -34,7 +34,6 @@
 #include <iostream>
 #include <fstream>
 #include <glib.h>   // glib-Commandline-option-parser
-#include <libglademm/xml.h>
 #include <gtkmm.h>
 #include "config.h" // autotools header file
 #include "assert.h"
@@ -251,43 +250,44 @@ int main(int argc, char **argv)
         return -1;
     }
 
+    // this should eb called before starting manipulating GUI stuff
     Gtk::Main kit(argc, argv);
 
-    Glib::RefPtr<Gnome::Glade::Xml> refXml;
+    // create a new gtk builder. add_from_string will load the definitions
+    Glib::RefPtr<Gtk::Builder> gtkBuilder = Gtk::Builder::create();
+
 #ifdef GLIBMM_EXCEPTIONS_ENABLED
     try
     {
-        refXml = Gnome::Glade::Xml::create_from_buffer(
+#endif // GLIBMM_EXCEPTIONS_ENABLED
+
+        if (!gtkBuilder->add_from_string(
                 reinterpret_cast<const char *>(__BIN_GUI_GLADE_START__),
-                reinterpret_cast<long int>(__BIN_GUI_GLADE_SIZE__),
-                "",
-                "");
+                reinterpret_cast<long int>(__BIN_GUI_GLADE_SIZE__)))
+        {
+            std::cerr << "Couldn't load Gtkbuilder definitions. Exiting..." << std::endl;
+            return 1;
+        }
+
+#ifdef GLIBMM_EXCEPTIONS_ENABLED
     }
-    catch(const Gnome::Glade::XmlError& ex)
+    catch(const Glib::MarkupError& ex)
     {
         std::cerr << ex.what() << std::endl;
         return 1;
     }
-#else
-    std::auto_ptr<Gnome::Glade::XmlError> error;
-    refXml = Gnome::Glade::Xml::create_from_buffer(
-            reinterpret_cast<const char *>(__BIN_GUI_GLADE_START__),
-            reinterpret_cast<long int>(__BIN_GUI_GLADE_SIZE__),
-            "",
-            "",
-            error);
-
-    if(error.get())
+    catch(const Gtk::BuilderError& ex)
     {
-        std::cerr << error->what() << std::endl;
-        return 1;
+        std::cerr << ex.what() << std::endl;
+        return -1;
     }
 #endif // GLIBMM_EXCEPTIONS_ENABLED
+
 
     try
     {
         MainWindow::Instance();
-        MainWindow::Instance().Initialize(refXml);
+        MainWindow::Instance().Initialize(gtkBuilder);
 
         // if gdk_threads_enter and gdk_threads_leave were to be used
         // the Gtk::Main::run loop should be surrounded by
