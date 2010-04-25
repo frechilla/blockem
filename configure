@@ -2760,7 +2760,7 @@ am__tar='${AMTAR} chof - "$$tardir"'; am__untar='${AMTAR} xf -'
 ac_config_headers="$ac_config_headers config.h"
 
 
-$as_echo "#define SVN_REVISION \"104:110M\"" >>confdefs.h
+$as_echo "#define SVN_REVISION \"111M\"" >>confdefs.h
 
 
 # Checks for programs.
@@ -4482,6 +4482,7 @@ fi
 fi
 
 # Checks for libraries.
+# .glade file requiers Gtk+ >= 2.16 to work
 
 
 if test "x$ac_cv_env_PKG_CONFIG_set" != "xset"; then
@@ -4608,12 +4609,12 @@ if test -n "$PKG_CONFIG"; then
         pkg_cv_GTKMM_CFLAGS="$GTKMM_CFLAGS"
     else
         if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtkmm-2.4 >= 2.12\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "gtkmm-2.4 >= 2.12") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtkmm-2.4 >= 2.16\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "gtkmm-2.4 >= 2.16") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_GTKMM_CFLAGS=`$PKG_CONFIG --cflags "gtkmm-2.4 >= 2.12" 2>/dev/null`
+  pkg_cv_GTKMM_CFLAGS=`$PKG_CONFIG --cflags "gtkmm-2.4 >= 2.16" 2>/dev/null`
 else
   pkg_failed=yes
 fi
@@ -4626,12 +4627,12 @@ if test -n "$PKG_CONFIG"; then
         pkg_cv_GTKMM_LIBS="$GTKMM_LIBS"
     else
         if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtkmm-2.4 >= 2.12\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "gtkmm-2.4 >= 2.12") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtkmm-2.4 >= 2.16\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "gtkmm-2.4 >= 2.16") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_GTKMM_LIBS=`$PKG_CONFIG --libs "gtkmm-2.4 >= 2.12" 2>/dev/null`
+  pkg_cv_GTKMM_LIBS=`$PKG_CONFIG --libs "gtkmm-2.4 >= 2.16" 2>/dev/null`
 else
   pkg_failed=yes
 fi
@@ -4650,14 +4651,14 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        GTKMM_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "gtkmm-2.4 >= 2.12"`
+	        GTKMM_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "gtkmm-2.4 >= 2.16"`
         else
-	        GTKMM_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "gtkmm-2.4 >= 2.12"`
+	        GTKMM_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "gtkmm-2.4 >= 2.16"`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$GTKMM_PKG_ERRORS" >&5
 
-	as_fn_error "Package requirements (gtkmm-2.4 >= 2.12) were not met:
+	as_fn_error "Package requirements (gtkmm-2.4 >= 2.16) were not met:
 
 $GTKMM_PKG_ERRORS
 

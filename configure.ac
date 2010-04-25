@@ -44,7 +44,8 @@ if test "$os_win32" = "yes"; then
 fi
 
 # Checks for libraries.
-PKG_CHECK_MODULES([GTKMM], [gtkmm-2.4 >= 2.12])
+# .glade file requiers Gtk+ >= 2.16 to work
+PKG_CHECK_MODULES([GTKMM], [gtkmm-2.4 >= 2.16])
 PKG_CHECK_MODULES([GTHREAD], [gthread-2.0 >= 1.0.0])
 # contained in gtkmm
 # PKG_CHECK_MODULES([SIGCPP], [sigc++-2.0 >= 1.0.0])
