@@ -2,6 +2,9 @@
     - Player handling through through Game1v1 interface simplified
     - Piece edition improved for those pieces with only one possible
       confuration
+    - libglade dependency removed. Gtkbuilder is used instead
+    - Executable in windows has reduced its size around 50%. Released zipped
+      binary for windows has been also reduced around 30%
 
 24/04/2010: Version 0.1.6
     - Computer's latest piece deployed glows so human user can easily notice
