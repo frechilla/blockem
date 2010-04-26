@@ -55,11 +55,13 @@ public:
     ///        it will be copied in the thread to compute the move
     /// @param latest piece put down by the opponent
     /// @param coordinate where the latest piece was put down
+    /// @param whose player's move is supposed the MinMax to calculate
     /// @returns true if the thread was idle. false if it was already computing
     bool ComputeMove(
-            const Game1v1 &a_game,
-            const Piece      &a_latestPiece,
-            const Coordinate &a_latestCoordinate);
+            const Game1v1            &a_game,
+            const Piece              &a_latestPiece,
+            const Coordinate         &a_latestCoordinate,
+            Game1v1::eGame1v1Player_t a_whoMoves);
 
     /// suspends execution of the calling thread until the target thread terminates
     /// @return true if success. False otherwise
@@ -69,7 +71,7 @@ public:
     static void* ThreadRoutine(void *a_ThreadParam);
 
     /// Access to the signal private member
-    sigc::signal<void, const Piece&, const Coordinate&, int32_t>& signal_computingFinished()
+    sigc::signal<void, const Piece&, const Coordinate&, Game1v1::eGame1v1Player_t, int32_t>& signal_computingFinished()
     {
         return m_signal_computingFinished;
     }
@@ -81,6 +83,8 @@ private:
     Piece m_localLatestPiece;
     /// The coordinate where the latest piece was put down
     Coordinate m_localLatestCoord;
+    /// Whose move will be calculated next time MinMax is called
+    Game1v1::eGame1v1Player_t m_playerToMove;
     /// set to true when the thread has to calculate some move
     /// it'll be set to false once the move's been already calculated
     bool m_computeNextMove;
@@ -98,7 +102,7 @@ private:
     GRand* m_randomizer;
 
     /// signal to be sent when the computing is finished
-    sigc::signal<void, const Piece&, const Coordinate&, int32_t> m_signal_computingFinished;
+    sigc::signal<void, const Piece&, const Coordinate&, Game1v1::eGame1v1Player_t, int32_t> m_signal_computingFinished;
 
     void SpawnThread();
 

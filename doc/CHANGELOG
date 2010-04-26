@@ -5,6 +5,8 @@
     - libglade dependency removed. Gtkbuilder is used instead
     - Executable in windows has reduced its size around 50%. Released zipped
       binary for windows has been also reduced around 30%
+    - Fixed possible deadlock that might have occurred when the game was about
+      to finish
 
 24/04/2010: Version 0.1.6
     - Computer's latest piece deployed glows so human user can easily notice

@@ -40,8 +40,8 @@
 
 // header file created during the make process which saves the current date
 #include "compiletime.h"
-
 #include "gui_main_window.h"
+#include "gui_glade_defs.h"
 #include "game1v1.h"
 
 
@@ -284,22 +284,32 @@ int main(int argc, char **argv)
 #endif // GLIBMM_EXCEPTIONS_ENABLED
 
 
+    MainWindow *pMainWindow = NULL;
     try
     {
-        MainWindow::Instance();
-        MainWindow::Instance().Initialize(gtkBuilder);
+        // first of all retrieve the Gtk::window object
+        gtkBuilder->get_widget_derived(GUI_MAIN_WINDOW_NAME, pMainWindow);
+        if (pMainWindow == NULL)
+        {
+            throw new GUIException(std::string("couldn't retrieve the MainWindow from the .glade file"));
+        }
 
         // if gdk_threads_enter and gdk_threads_leave were to be used
         // the Gtk::Main::run loop should be surrounded by
         // gdk_threads_enter and gdk_threads_leave
         // http://tadeboro.blogspot.com/2009/06/multi-threaded-gtk-applications.html
 
-        kit.run(MainWindow::Instance().window());
+        kit.run(*pMainWindow);
     }
     catch (GUIException ex)
     {
         std::cerr << ex.what() << std::endl;
         exit(-1);
+    }
+
+    if (pMainWindow)
+    {
+        delete (pMainWindow);
     }
 
     // GUI

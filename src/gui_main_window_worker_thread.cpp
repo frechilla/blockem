@@ -37,6 +37,7 @@
 MainWindowWorkerThread::MainWindowWorkerThread():
         m_localGame(),
         m_localLatestPiece(e_noPiece),
+        m_playerToMove(Game1v1::e_Game1v1Player1), // by default. It will be always set before calculating next move anyway
         m_computeNextMove(false),
         m_terminate(PROCESSING_ACTIVE),
         m_thread(NULL),
@@ -127,9 +128,10 @@ bool MainWindowWorkerThread::IsThreadComputingMove()
 }
 
 bool MainWindowWorkerThread::ComputeMove(
-        const Game1v1    &a_game,
-        const Piece      &a_latestPiece,
-        const Coordinate &a_latestCoordinate)
+        const Game1v1            &a_game,
+        const Piece              &a_latestPiece,
+        const Coordinate         &a_latestCoordinate,
+        Game1v1::eGame1v1Player_t a_whoMoves)
 {
     bool rv = false;
 
@@ -141,6 +143,7 @@ bool MainWindowWorkerThread::ComputeMove(
         m_localGame        = a_game;
         m_localLatestPiece = a_latestPiece;
         m_localLatestCoord = a_latestCoordinate;
+        m_playerToMove     = a_whoMoves;
 
         // set the thread to calculate a move
         m_computeNextMove = true;
@@ -216,7 +219,7 @@ void* MainWindowWorkerThread::ThreadRoutine(void *a_ThreadParam)
                     resultReturnedValue = thisThread->m_localGame.MinMax(
                                                 heuristicMethod,
                                                 depth,
-                                                Game1v1::e_Game1v1Player2,
+                                                thisThread->m_playerToMove,
                                                 resultPiece,
                                                 resultCoord,
                                                 thisThread->m_terminate,
@@ -228,7 +231,7 @@ void* MainWindowWorkerThread::ThreadRoutine(void *a_ThreadParam)
                     resultReturnedValue = thisThread->m_localGame.MinMax(
                                                 heuristicMethod,
                                                 depth,
-                                                Game1v1::e_Game1v1Player2,
+                                                thisThread->m_playerToMove,
                                                 resultPiece,
                                                 resultCoord,
                                                 thisThread->m_terminate);
@@ -240,7 +243,7 @@ void* MainWindowWorkerThread::ThreadRoutine(void *a_ThreadParam)
                 resultReturnedValue = thisThread->m_localGame.MinMax(
                                             heuristicMethod,
                                             depth,
-                                            Game1v1::e_Game1v1Player2,
+                                            thisThread->m_playerToMove,
                                             resultPiece,
                                             resultCoord,
                                             thisThread->m_terminate,
@@ -258,6 +261,7 @@ void* MainWindowWorkerThread::ThreadRoutine(void *a_ThreadParam)
             thisThread->signal_computingFinished().emit(
                     resultPiece,
                     resultCoord,
+                    thisThread->m_playerToMove,
                     resultReturnedValue);
 
             // update the local game as well in case the computer has
@@ -267,7 +271,7 @@ void* MainWindowWorkerThread::ThreadRoutine(void *a_ThreadParam)
                 thisThread->m_localGame.PutDownPiece(
                         resultPiece,
                         resultCoord,
-                        Game1v1::e_Game1v1Player2);
+                        thisThread->m_playerToMove);
             }
 
         } while ( (resultPiece.GetType() != e_noPiece) &&

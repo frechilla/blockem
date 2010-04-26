@@ -85,9 +85,22 @@ static const uint32_t STOPWATCH_UPDATE_PERIOD_MILLIS = 500; // 1000 = 1 second
 static float s_computingCurrentProgress = 0.0;
 G_LOCK_DEFINE_STATIC(s_computingCurrentProgress);
 
+// this is a pointer to the MainWindow itself so it can be used from the static method
+// MainWindow::ProgressUpdate. It is dirty, but it works (and it is enough for now)
+// WARNING: it won't work if MainWindow is instantiated twice
+static MainWindow *g_pMainWindow = NULL;
+
+// move calculated by the worker thread
+typedef struct
+{
+    Piece               piece;
+    Coordinate          coord;
+    Game1v1::eGame1v1Player_t playerToMove;
+} sCalculatedMove_t;
+
 // this queue is used to communicate the worker thread with the main thread
 // in a thread-safe manner. It's a bit dirty but it will do it for now
-static std::queue< std::pair<Piece, Coordinate> > s_computerMoveQueue = std::queue< std::pair<Piece, Coordinate> >();
+static std::queue< sCalculatedMove_t > s_computerMoveQueue = std::queue< sCalculatedMove_t >();
 G_LOCK_DEFINE_STATIC(s_computerMoveQueue);
 
 
@@ -101,13 +114,15 @@ void MainWindow::ProgressUpdate(float a_progress)
         s_computingCurrentProgress = a_progress;
     G_UNLOCK(s_computingCurrentProgress);
 
-    MainWindow::Instance().m_signal_computingProgressUpdated.emit();
+    if (g_pMainWindow)
+    {
+        g_pMainWindow->m_signal_computingProgressUpdated.emit();
+    }
 }
 
-MainWindow::MainWindow() :
-    Singleton<MainWindow>(),
-    m_gtkBuilder(NULL),
-    m_theWindow(NULL),
+MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder)  throw (GUIException):
+    Gtk::Window(cobject), //Calls the base class constructor
+    m_gtkBuilder(a_gtkBuilder),
     m_the1v1Game(),
     m_lastCoord(COORD_UNITIALISED, COORD_UNITIALISED),
     m_workerThread(),
@@ -119,52 +134,13 @@ MainWindow::MainWindow() :
     m_stopWatchLabelUser(STOPWATCH_UPDATE_PERIOD_MILLIS, m_the1v1Game.GetPlayer1().GetName() + std::string("'s elapsed time ")),
     m_stopWatchLabelComputer(STOPWATCH_UPDATE_PERIOD_MILLIS, m_the1v1Game.GetPlayer2().GetName() + std::string("'s elapsed time "))
 {
-}
-
-MainWindow::~MainWindow()
-{
-    // http://library.gnome.org/devel/gtkmm/stable/classGtk_1_1Builder.html#ab8c6679c1296d6c4d8590ef907de4d5a
-    // Note that you are responsible for deleting top-level widgets (windows and dialogs) instantiated
-    // by the Builder object. Other widgets are instantiated as managed so they will be deleted
-    // automatically if you add them to a container widget
-    delete(m_aboutDialog);
-    //delete(m_editPieceTable);
-
-    // deleting this object prints out a lot of error messages on the screen
-    // or even dumps a core.
-    // There's a big memory leak running the app with valgrin, but all of it is
-    // caused by gui code, and I don't know why it happens. It also happens if
-    // m_theWindow is deleted, so I chose not to show those ugly wrror lines printed
-    // on the screen
-    //delete(m_theWindow);
-}
-
-void MainWindow::Initialize(Glib::RefPtr<Gtk::Builder> a_gtkBuilder) throw (GUIException)
-{
-    m_gtkBuilder = a_gtkBuilder;
-
-    // first of all retrieve the Gtk::window object and set its icon
-    m_gtkBuilder->get_widget(GUI_MAIN_WINDOW_NAME, m_theWindow);
-    if (m_theWindow == NULL)
-    {
-        throw new GUIException(std::string("couldn't retrieve the MainWindow from the .glade file"));
-    }
-
-    // retrieve the about dialog. It must be retrieved calling get_widget_derived
-    // otherwise app will core
-    m_gtkBuilder->get_widget_derived(GUI_ABOUT_DIALOG_NAME, m_aboutDialog);
-    if (m_aboutDialog == NULL)
-    {
-        throw new GUIException(std::string("AboutDialog retrieval failed"));
-    }
-
-    // retrieve the editing piece table. It must be retrieved calling get_widget_derived
-    // otherwise app will core
-    m_gtkBuilder->get_widget_derived(GUI_TABLE_EDITING_PIECE_NAME, m_editPieceTable);
-    if (m_editPieceTable == NULL)
-    {
-        throw new GUIException(std::string("Edit pieces table retrieval failed"));
-    }
+    //TODO this is dirty (though it works) the way MainWindow::ProgressUpdate
+    // access the MainWindow Instance should be fixed in some way
+    // assert there's no more than 1 instance of MainWindow
+#ifdef DEBUG
+    assert(g_pMainWindow == NULL);
+#endif
+    g_pMainWindow = this;
 
     // icon of the window
     Glib::RefPtr< Gdk::Pixbuf > icon;
@@ -187,11 +163,27 @@ void MainWindow::Initialize(Glib::RefPtr<Gtk::Builder> a_gtkBuilder) throw (GUIE
 
         if (icon)
         {
-            m_theWindow->set_icon(icon);
+            this->set_icon(icon);
         }
     }
 
-    // retrieve the objects from the GUI design
+    // retrieve the about dialog. It must be retrieved calling get_widget_derived
+    // otherwise app will core
+    m_gtkBuilder->get_widget_derived(GUI_ABOUT_DIALOG_NAME, m_aboutDialog);
+    if (m_aboutDialog == NULL)
+    {
+        throw new GUIException(std::string("AboutDialog retrieval failed"));
+    }
+
+    // retrieve the editing piece table. It must be retrieved calling get_widget_derived
+    // otherwise app will core
+    m_gtkBuilder->get_widget_derived(GUI_TABLE_EDITING_PIECE_NAME, m_editPieceTable);
+    if (m_editPieceTable == NULL)
+    {
+        throw new GUIException(std::string("Edit pieces table retrieval failed"));
+    }
+
+    // retrieve the rest of objects from the GUI design
     m_gtkBuilder->get_widget(GUI_MENU_ITEM_GAME_NEW, m_newMenuItem);
     if (m_newMenuItem == NULL)
     {
@@ -211,21 +203,21 @@ void MainWindow::Initialize(Glib::RefPtr<Gtk::Builder> a_gtkBuilder) throw (GUIE
     }
 
     m_gtkBuilder->get_widget(GUI_VBOX_DRAWING_NAME, m_vBoxDrawing);
-	if (m_vBoxDrawing == NULL)
-	{
-		throw new GUIException(std::string("Drawing area vbox retrieval failed"));
-	}
+    if (m_vBoxDrawing == NULL)
+    {
+        throw new GUIException(std::string("Drawing area vbox retrieval failed"));
+    }
 
     m_gtkBuilder->get_widget(GUI_HBOX_GAME_STATUS_NAME, m_hBoxGameStatus);
     if (m_hBoxGameStatus == NULL)
     {
-    	throw new GUIException(std::string("Game status hbox retrieval failed"));
+        throw new GUIException(std::string("Game status hbox retrieval failed"));
     }
 
     m_gtkBuilder->get_widget(GUI_HBOX_COMPUTER_PIECES_NAME, m_hBoxComputerPieces);
     if (m_hBoxComputerPieces == NULL)
     {
-    	throw new GUIException(std::string("Computer pieces hbox retrieval failed"));
+        throw new GUIException(std::string("Computer pieces hbox retrieval failed"));
     }
 
     m_gtkBuilder->get_widget(GUI_HBOX_PIECES_AREA_NAME, m_hBoxEditPieces);
@@ -240,6 +232,7 @@ void MainWindow::Initialize(Glib::RefPtr<Gtk::Builder> a_gtkBuilder) throw (GUIE
         throw new GUIException(std::string("status bar hbox retrieval failed"));
     }
 
+
     // place the custom widgets where they are expected to be
     // pack_start (Widget& child, bool expand, bool fill, guint padding=0)
     // first the board drawing area to the game status hbox and display it
@@ -251,10 +244,10 @@ void MainWindow::Initialize(Glib::RefPtr<Gtk::Builder> a_gtkBuilder) throw (GUIE
     m_hBoxEditPieces->pack_start(m_pickPiecesDrawingArea, true, true);
     m_hBoxEditPieces->pack_start(*m_editPieceTable, false, false);
 
-	m_hBoxComputerPieces->pack_start(
-			m_showComputerPiecesDrawingArea,
-			true,
-			true);
+    m_hBoxComputerPieces->pack_start(
+            m_showComputerPiecesDrawingArea,
+            true,
+            true);
 
     // if we don't show them, nobody will be able to see them
     // set_visible doesn't work in windows. use show!
@@ -264,31 +257,26 @@ void MainWindow::Initialize(Glib::RefPtr<Gtk::Builder> a_gtkBuilder) throw (GUIE
     // update the score shown in the status bar
     UpdateScoreStatus();
 
-	// the custom status bar
-	m_hBoxStatusBar->pack_start(m_userScoreLabel, true, true);
-	m_hBoxStatusBar->pack_start(m_arrayStatusBarSeparator[0], false, true);
-	m_hBoxStatusBar->pack_start(m_stopWatchLabelUser, true, true);
-	m_hBoxStatusBar->pack_start(m_arrayStatusBarSeparator[1], false, true);
-	m_hBoxStatusBar->pack_start(m_computerScoreLabel, true, true);
-	m_hBoxStatusBar->pack_start(m_arrayStatusBarSeparator[2], false, true);
-	m_hBoxStatusBar->pack_start(m_stopWatchLabelComputer, true, true);
+    // the custom status bar
+    m_hBoxStatusBar->pack_start(m_userScoreLabel, true, true);
+    m_hBoxStatusBar->pack_start(m_arrayStatusBarSeparator[0], false, true);
+    m_hBoxStatusBar->pack_start(m_stopWatchLabelUser, true, true);
+    m_hBoxStatusBar->pack_start(m_arrayStatusBarSeparator[1], false, true);
+    m_hBoxStatusBar->pack_start(m_computerScoreLabel, true, true);
+    m_hBoxStatusBar->pack_start(m_arrayStatusBarSeparator[2], false, true);
+    m_hBoxStatusBar->pack_start(m_stopWatchLabelComputer, true, true);
     m_progressBar.set_orientation(Gtk::PROGRESS_LEFT_TO_RIGHT);
     m_progressBar.set_fraction(0.0);
     m_hBoxStatusBar->pack_start(m_progressBar, true, true);
     m_hBoxStatusBar->show_all();
 
-	// progress handler for the computing process of the MinMax algorithm
+    // progress handler for the computing process of the MinMax algorithm
     m_the1v1Game.SetProgressHandler(&MainWindow::ProgressUpdate);
 
     // connect the interthread communication (GLib::Dispatcher) to invalidate the
     // board drawing area
     m_signal_moveComputed.connect(
             sigc::mem_fun(*this, &MainWindow::NotifyMoveComputed));
-
-    // connect the interthread communication (GLib::Dispatcher) to notify the
-    // user that the game is finished
-    m_signal_gameFinished.connect(
-            sigc::mem_fun(*this, &MainWindow::NotifyGameFinished));
 
     // connect the interthread communication to update the progress bar
     m_signal_computingProgressUpdated.connect(
@@ -299,50 +287,50 @@ void MainWindow::Initialize(Glib::RefPtr<Gtk::Builder> a_gtkBuilder) throw (GUIE
             sigc::mem_fun(*this, &MainWindow::WorkerThread_computingFinished));
             //sigc::ptr_fun(f) );
 
-	// connect the signal coming from the pickPiecesDrawingArea to update TableEditPiece
-	m_pickPiecesDrawingArea.signal_piecePicked().connect(
-	        sigc::mem_fun(*m_editPieceTable, &TableEditPiece::SetPiece));
+    // connect the signal coming from the pickPiecesDrawingArea to update TableEditPiece
+    m_pickPiecesDrawingArea.signal_piecePicked().connect(
+            sigc::mem_fun(*m_editPieceTable, &TableEditPiece::SetPiece));
 
     // connect the signal coming from the editing piece table to process the change in the
     // currently editing piece
     m_editPieceTable->signal_pieceChanged().connect(
             sigc::mem_fun(m_boardDrawingArea, &DrawingAreaBoard::SetCurrentPiece));
 
-	// connect the signal coming fromt he board drawing area to process when the user clicks
-	// on the board
-	m_boardDrawingArea.signal_boardPicked().connect(
-	        sigc::mem_fun(*this, &MainWindow::BoardDrawingArea_BoardClicked));
+    // connect the signal coming fromt he board drawing area to process when the user clicks
+    // on the board
+    m_boardDrawingArea.signal_boardPicked().connect(
+            sigc::mem_fun(*this, &MainWindow::BoardDrawingArea_BoardClicked));
 
 
-	// connect the rest of the signals to the handlers
-	// if the handler is not part of an object use sigc::ptr_fun
-	m_theWindow->signal_delete_event().connect(
-	        sigc::mem_fun(*this, &MainWindow::MainWindow_DeleteEvent));
-	m_newMenuItem->signal_activate().connect(
+    // connect the rest of the signals to the handlers
+    // if the handler is not part of an object use sigc::ptr_fun
+    this->signal_delete_event().connect(
+            sigc::mem_fun(*this, &MainWindow::MainWindow_DeleteEvent));
+    m_newMenuItem->signal_activate().connect(
             sigc::mem_fun(*this, &MainWindow::MenuItemGameNew_Activate));
-	m_quitMenuItem->signal_activate().connect(
-	        sigc::mem_fun(*this, &MainWindow::MenuItemGameQuit_Activate));
-	m_helpAboutMenuItem->signal_activate().connect(
-	        sigc::mem_fun(*this, &MainWindow::MenuItemHelpAbout_Activate));
+    m_quitMenuItem->signal_activate().connect(
+            sigc::mem_fun(*this, &MainWindow::MenuItemGameQuit_Activate));
+    m_helpAboutMenuItem->signal_activate().connect(
+            sigc::mem_fun(*this, &MainWindow::MenuItemHelpAbout_Activate));
 
 
     //TODO the colours should be handled by some kind of dialog. This will do it now
-	m_the1v1Game.SetPlayerColour(
-	        Game1v1::e_Game1v1Player2,
-	        PLAYER_ME_RED*255,
-	        PLAYER_ME_GREEN*255,
-	        PLAYER_ME_BLUE*255);
+    m_the1v1Game.SetPlayerColour(
+            Game1v1::e_Game1v1Player2,
+            PLAYER_ME_RED*255,
+            PLAYER_ME_GREEN*255,
+            PLAYER_ME_BLUE*255);
 
-	m_the1v1Game.SetPlayerColour(
-	            Game1v1::e_Game1v1Player1,
-	            PLAYER_OPPONENT_RED*255,
-	            PLAYER_OPPONENT_GREEN*255,
-	            PLAYER_OPPONENT_BLUE*255);
+    m_the1v1Game.SetPlayerColour(
+                Game1v1::e_Game1v1Player1,
+                PLAYER_OPPONENT_RED*255,
+                PLAYER_OPPONENT_GREEN*255,
+                PLAYER_OPPONENT_BLUE*255);
 
-	m_editPieceTable->SetPieceRGB(
-	        PLAYER_OPPONENT_RED,
-	        PLAYER_OPPONENT_GREEN,
-	        PLAYER_OPPONENT_BLUE);
+    m_editPieceTable->SetPieceRGB(
+            PLAYER_OPPONENT_RED,
+            PLAYER_OPPONENT_GREEN,
+            PLAYER_OPPONENT_BLUE);
 
     // initialise the list of players of the board drawing area
     m_boardDrawingArea.AddPlayerToList(&(m_the1v1Game.GetPlayer1()));
@@ -353,22 +341,42 @@ void MainWindow::Initialize(Glib::RefPtr<Gtk::Builder> a_gtkBuilder) throw (GUIE
     m_stopWatchLabelUser.Continue();
 }
 
+MainWindow::~MainWindow()
+{
+    //TODO this is dirty too. See comment at the beginning of the constructor
+    g_pMainWindow = NULL;
+
+    // http://library.gnome.org/devel/gtkmm/stable/classGtk_1_1Builder.html#ab8c6679c1296d6c4d8590ef907de4d5a
+    // Note that you are responsible for deleting top-level widgets (windows and dialogs) instantiated
+    // by the Builder object. Other widgets are instantiated as managed so they will be deleted
+    // automatically if you add them to a container widget
+    delete(m_aboutDialog);
+    //delete(m_editPieceTable);
+}
+
 void MainWindow::WorkerThread_computingFinished(
-        const Piece      &a_piece,
-        const Coordinate &a_coord,
-        int32_t           a_returnValue)
+        const Piece              &a_piece,
+        const Coordinate         &a_coord,
+        Game1v1::eGame1v1Player_t a_playerToMove,
+        int32_t                   a_returnValue)
 {
     // WARNING: this method is run by another thread.
     // once the m_signal_moveComputed signal is emited the
     // main thread will update the GUI widgets
 
     G_LOCK(s_computerMoveQueue);
-        //TODO moves should be queued. A move can be lost if the main thread
-        // is too slow to draw the computer thread calculations
 
-    s_computerMoveQueue.push(std::pair<Piece, Coordinate>(a_piece, a_coord));
+    sCalculatedMove_t data;
+    data.piece = a_piece;
+    data.coord = a_coord;
+    data.playerToMove = a_playerToMove;
+    s_computerMoveQueue.push(data);
 
     G_UNLOCK(s_computerMoveQueue);
+
+#ifdef DEBUG_PRINT
+    std::cout << "Computer can't move" << std::endl;
+#endif
 
     // this signal is being issued from the MainWindowWorkerThread
     // GTK is not thread safe, so every GUI function should be called from the same thread
@@ -377,22 +385,6 @@ void MainWindow::WorkerThread_computingFinished(
     // have a look at:
     //     http://library.gnome.org/devel/glibmm/stable/thread_2dispatcher_8cc-example.html
     m_signal_moveComputed.emit();
-
-    if (a_piece.GetType() == e_noPiece)
-    {
-        if (Rules::CanPlayerGo(m_the1v1Game.GetBoard(), m_the1v1Game.GetPlayer1()) == false)
-        {
-            // the game is over. Computing returned e_noPiece and
-            // the opponent can't go
-            m_signal_gameFinished.emit();
-        }
-#ifdef DEBUG_PRINT
-        else
-        {
-            std::cout << "Computer can't move" << std::endl;
-        }
-#endif
-    }
 }
 
 bool MainWindow::MainWindow_DeleteEvent(GdkEventAny*)
@@ -400,7 +392,7 @@ bool MainWindow::MainWindow_DeleteEvent(GdkEventAny*)
     if (m_workerThread.IsThreadComputingMove())
     {
         Gtk::MessageDialog::MessageDialog exitingMessage(
-                *m_theWindow,
+                *this,
                 MESSAGE_ASK_BEFORE_CLOSE,
                 true,
                 Gtk::MESSAGE_QUESTION,
@@ -426,7 +418,7 @@ void MainWindow::MenuItemGameQuit_Activate()
     if (m_workerThread.IsThreadComputingMove())
     {
         Gtk::MessageDialog::MessageDialog exitingMessage(
-                *m_theWindow,
+                *this,
                 MESSAGE_ASK_BEFORE_CLOSE,
                 true,
                 Gtk::MESSAGE_QUESTION,
@@ -443,7 +435,7 @@ void MainWindow::MenuItemGameQuit_Activate()
     m_workerThread.Join();
 
     // exit the app
-    m_theWindow->hide();
+    this->hide();
 }
 
 void MainWindow::MenuItemGameNew_Activate()
@@ -451,7 +443,7 @@ void MainWindow::MenuItemGameNew_Activate()
     if (m_workerThread.IsThreadComputingMove())
     {
         Gtk::MessageDialog::MessageDialog infoMessage(
-                *m_theWindow,
+                *this,
                 "There's a movement being calculated now. Please, wait until the process is finished to start a new game",
                 true,
                 Gtk::MESSAGE_QUESTION,
@@ -487,7 +479,7 @@ void MainWindow::MenuItemGameNew_Activate()
     }
 
     Gtk::MessageDialog::MessageDialog cancelCurrentGameMessage(
-            *m_theWindow,
+            *this,
             theMessage,
             true,
             Gtk::MESSAGE_QUESTION,
@@ -603,7 +595,7 @@ void MainWindow::BoardDrawingArea_BoardClicked(const Coordinate &a_coord, const 
     m_boardDrawingArea.CancelLatestPieceDeployedEffect();
     m_boardDrawingArea.Invalidate();
 
-    if (!m_workerThread.ComputeMove(m_the1v1Game, a_piece, a_coord))
+    if (!m_workerThread.ComputeMove(m_the1v1Game, a_piece, a_coord, Game1v1::e_Game1v1Player2))
     {
 #ifdef DEBUG_PRINT
         std::cout
@@ -618,7 +610,7 @@ void MainWindow::BoardDrawingArea_BoardClicked(const Coordinate &a_coord, const 
                 "<b>Fatal Error</b> telling the computing to start computing (seems to be busy).\n Application will try to exit now!");
 
         Gtk::MessageDialog::MessageDialog fatalErrorMessage(
-            *m_theWindow,
+            *this,
             theMessage,
             true,
             Gtk::MESSAGE_INFO,
@@ -634,13 +626,13 @@ void MainWindow::BoardDrawingArea_BoardClicked(const Coordinate &a_coord, const 
         m_workerThread.Join();
 
         // exit the app
-        m_theWindow->hide();
+        this->hide();
     }
 
     return;
 }
 
-void MainWindow::NotifyGameFinished()
+void MainWindow::GameFinished()
 {
     // reset the cursor (even if it's been already done)
     Glib::RefPtr<Gdk::Window> window = m_boardDrawingArea.get_window();
@@ -705,7 +697,7 @@ void MainWindow::NotifyGameFinished()
     //        ButtonsType buttons=BUTTONS_OK,
     //        bool modal=false)
     Gtk::MessageDialog::MessageDialog gameOverMessage(
-            *m_theWindow,
+            *this,
             theMessage,
             true,
             Gtk::MESSAGE_INFO,
@@ -724,26 +716,29 @@ void MainWindow::NotifyMoveComputed()
     // the latest piece and latest coord deployed
     Piece latestPiece(e_noPiece);
     Coordinate latestCoord(COORD_UNITIALISED, COORD_UNITIALISED);
+    Game1v1::eGame1v1Player_t latestPlayerToMove;
 
     G_LOCK(s_computerMoveQueue);
         // save the latest moves on the board
         while (!s_computerMoveQueue.empty())
         {
-            latestPiece = s_computerMoveQueue.front().first;
-            latestCoord = s_computerMoveQueue.front().second;
+            latestPiece        = s_computerMoveQueue.front().piece;
+            latestCoord        = s_computerMoveQueue.front().coord;
+            latestPlayerToMove = s_computerMoveQueue.front().playerToMove;
 
             if (latestPiece.GetType() != e_noPiece)
             {
                 m_the1v1Game.PutDownPiece(
                         latestPiece,
                         latestCoord,
-                        Game1v1::e_Game1v1Player2);
+                        latestPlayerToMove);
             }
 
             s_computerMoveQueue.pop();
         }
     G_UNLOCK(s_computerMoveQueue);
 
+    //TODO this should use latestPlayerToMove
     // invalidate the board drawing area to show the new move
     // activating the latest piece deployed effect
     m_boardDrawingArea.Invalidate(
@@ -777,6 +772,12 @@ void MainWindow::NotifyMoveComputed()
         {
             window->set_cursor();
         }
+    }
+    else if (latestPiece.GetType() == e_noPiece)
+    {
+        // neither player1 nor player2 can move. Game is over
+        // (piece calculated by computer is noPiece which means, no move)
+        GameFinished();
     }
 }
 

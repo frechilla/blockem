@@ -45,32 +45,25 @@
 #include "game1v1.h"
 #include "coordinate.h"
 #include "piece.h"
-#include "singleton.h"
 
 
 /// @brief class to handle the main window in the GUI
-class MainWindow:
-    public Singleton<MainWindow>
+class MainWindow :
+    public Gtk::Window
 {
 public:
-    MainWindow();
+    /// Instantiates the class. It needs a Gtk::Builder object to retrieve the
+    /// glade info
+    // to be used with m_gtkBuilder->get_widget_derived(GUI_ABOUT_DIALOG_NAME, m_aboutDialog)
+    MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder) throw (GUIException);
     virtual ~MainWindow();
-
-    /// Initialise the window. This methid MUST be called before the first use
-    /// of the window
-    void Initialize(Glib::RefPtr<Gtk::Builder> a_gtkBuilder) throw (GUIException);
-
-    // property to access the Gtk::window object retrieved from the .glade file
-    inline Gtk::Window& window()
-    {
-        return *m_theWindow;
-    }
 
     /// @brief callback to be called whenever the worker thread finishes computing a move
     void WorkerThread_computingFinished(
-            const Piece      &a_piece,
-            const Coordinate &a_coord,
-            int32_t           a_returnValue);
+            const Piece              &a_piece,
+            const Coordinate         &a_coord,
+            Game1v1::eGame1v1Player_t a_playerToMove,
+            int32_t                   a_returnValue);
 
     /// @brief callback to be called when the window is about to be closed
     ///        using the X on the corner
@@ -98,9 +91,6 @@ public:
 private:
     /// @brief used to retrieve the objects from the Glade design
     Glib::RefPtr<Gtk::Builder> m_gtkBuilder;
-
-    /// @brief the Gtk window object
-    Gtk::Window* m_theWindow;
 
     /// @brief the 1vs1 game which will be represented in the window
     Game1v1 m_the1v1Game;
@@ -170,15 +160,11 @@ private:
     Glib::Dispatcher m_signal_moveComputed;
 
     /// Signal class for inter-thread communication to
-    /// notify the user the game is finished
-    Glib::Dispatcher m_signal_gameFinished;
-
-    /// Signal class for inter-thread communication to
     /// notify a change in computing progress
     Glib::Dispatcher m_signal_computingProgressUpdated;
 
     /// @brief notifies to the user that the game is finished using a fancy message box
-    void NotifyGameFinished();
+    void GameFinished();
 
     /// Do all the stuff that needs to be done when a move has been computed
     ///     1) Invalidates the board drawing area.
@@ -197,6 +183,7 @@ private:
     void UpdateScoreStatus();
 
     // prevent the default constructors to be used
+    MainWindow();
     MainWindow(const MainWindow &a_src);
     MainWindow& operator=(const MainWindow &a_src);
 };
