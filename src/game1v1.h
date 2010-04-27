@@ -82,15 +82,15 @@ public:
 	    return m_board;
 	}
 
-    inline const Player& GetPlayer1()
-    {
-        return m_player1;
-    }
+    /// @returns a const reference to the player passed as parameter
+    const Player& GetPlayer(eGame1v1Player_t a_playerType)const;
 
-    inline const Player& GetPlayer2()
-    {
-        return m_player2;
-    }
+    /// @returns a const reference to the opponent of the player passed as parameter
+    const Player& GetOpponent(eGame1v1Player_t a_playerType) const;
+
+    /// @returns the type of te player passed as a parameter.
+    /// if that player doesn't belong to the Game type returned will be undefined
+    eGame1v1Player_t GetPlayerType(const Player &a_player) const;
 
 	/// @brief sets the progress functor
 	inline void SetProgressHandler(ProgressFunctor_t a_progressFunctor)
@@ -99,32 +99,11 @@ public:
 	}
 
 	/// @brief sets the player colour
-	inline void SetPlayerColour(
+	void SetPlayerColour(
 	        eGame1v1Player_t a_player,
 	        uint8_t a_red,
 	        uint8_t a_green,
-	        uint8_t a_blue)
-	{
-	    switch (a_player)
-	    {
-	    case e_Game1v1Player1:
-	    {
-	        m_player1.SetColour(a_red, a_green, a_blue);
-	        break;
-	    }
-
-	    case e_Game1v1Player2:
-	    {
-	        m_player2.SetColour(a_red, a_green, a_blue);
-	        break;
-	    }
-
-#ifdef DEBUG
-	    default:
-	        assert(0);
-#endif
-	    } // switch (a_player)
-	}
+	        uint8_t a_blue);
 
     /// put down a piece on the board. The user is supposed to check if there is space for it before calling
     /// @param the piece

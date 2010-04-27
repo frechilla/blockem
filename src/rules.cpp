@@ -512,11 +512,72 @@ void Rules::RecalculateNKAroundPiece(
 
 bool Rules::CanPlayerGo(const Board &a_board, const Player &a_player)
 {
+    Coordinate validCoords[VALID_COORDS_SIZE];
+
     if (a_player.NumberOfPiecesAvailable() == 0)
     {
         return false;
     }
 
+    // check starting point first
+    if (a_player.NumberOfPiecesAvailable() == e_numberOfPieces)
+    {
+        for (int8_t i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
+        {
+            if (a_player.IsPieceAvailable(static_cast<ePieceType_t>(i)) == false)
+            {
+                continue;
+            }
+
+            // copy the piece so the original is not modified
+            Piece thisPiece(a_player.m_pieces[i].GetType());
+
+            do
+            {
+                int8_t nRotations = 0;
+                while(nRotations < thisPiece.GetNRotations())
+                {
+
+                    int32_t nValidCoords = CalculateValidCoordsInStartingPoint(
+                                            a_board,
+                                            thisPiece,
+                                            a_player.GetStartingCoordinate(),
+                                            a_player,
+                                            validCoords,
+                                            VALID_COORDS_SIZE);
+
+                    if (nValidCoords)
+                    {
+                        return true;
+                    }
+
+                    nRotations++;
+                    thisPiece.RotateRight();
+                }
+
+                // reset the amount of rotations done before mirroring
+                nRotations = 0;
+
+                if ( (thisPiece.GetType() == e_4Piece_LittleS) &&
+                     (thisPiece.IsMirrored() == false) )
+                {
+                    // For this piece the maximum number or rotations is 2
+                    // and the piece is not symmetric, the configuration after
+                    // the 3rd rotation is the shame shape as the original, but
+                    // the coords moved. Reset the piece before mirroring to
+                    // avoid unexpected results
+                    //
+                    // it also happens with 2piece and 4longPiece, but those pieces
+                    // don't have mirror, so there's no need for this extra check
+                    thisPiece.Reset();
+                }
+
+            } while (thisPiece.MirrorYAxis());
+
+        } // for (int i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
+    }
+
+    // check nk points
     for (int8_t i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
     {
         if (a_player.IsPieceAvailable(static_cast<ePieceType_t>(i)) == false)
@@ -540,7 +601,6 @@ bool Rules::CanPlayerGo(const Board &a_board, const Player &a_player)
                 while(nkExists)
                 {
                     // retrieve the valid coords of this piece in the current nk point
-                    Coordinate validCoords[VALID_COORDS_SIZE];
                     int32_t nValidCoords = Rules::CalculateValidCoordsInNucleationPoint(
                                                 a_board,
                                                 thisPiece,

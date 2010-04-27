@@ -128,10 +128,10 @@ bool MainWindowWorkerThread::IsThreadComputingMove()
 }
 
 bool MainWindowWorkerThread::ComputeMove(
-        const Game1v1            &a_game,
-        const Piece              &a_latestPiece,
-        const Coordinate         &a_latestCoordinate,
-        Game1v1::eGame1v1Player_t a_whoMoves)
+            const Game1v1            &a_game,
+            Game1v1::eGame1v1Player_t a_whoMoves,
+            const Coordinate         &a_latestCoordinate,
+            const Piece              &a_latestPiece)
 {
     bool rv = false;
 
@@ -193,6 +193,10 @@ void* MainWindowWorkerThread::ThreadRoutine(void *a_ThreadParam)
 
         // get out of the mutex
         g_mutex_unlock(thisThread->m_mutex);
+        
+        // calculate whose move is going to be calculated
+        const Player &currentPlayer = thisThread->m_localGame.GetPlayer(thisThread->m_playerToMove);
+        const Player &opponent      = thisThread->m_localGame.GetOpponent(thisThread->m_playerToMove);
 
         // we've been told to calculate the move
         do
@@ -202,15 +206,14 @@ void* MainWindowWorkerThread::ThreadRoutine(void *a_ThreadParam)
 
             int32_t depth = 3;
             Heuristic::EvalFunction_t heuristicMethod = Heuristic::CalculateNKWeighted;
-            if ( (thisThread->m_localGame.GetPlayer2().NumberOfPiecesAvailable() < 14) &&
-                 (Rules::CanPlayerGo(thisThread->m_localGame.GetBoard(),
-                                     thisThread->m_localGame.GetPlayer1()) ) )
+            if ( (currentPlayer.NumberOfPiecesAvailable() < 14) &&
+                 (Rules::CanPlayerGo(thisThread->m_localGame.GetBoard(), opponent) ) )
             {
                 depth = 5;
                 // heuristicMethod = Heuristic::CalculatePiecesPerNKPoint;
             }
 
-            if (thisThread->m_localGame.GetPlayer2().NumberOfPiecesAvailable() == e_numberOfPieces)
+            if (currentPlayer.NumberOfPiecesAvailable() == e_numberOfPieces)
             {
                 // pass the move made by the opponent to the minmax algorithm at the start half of the times
                 // it will show a bit of randomness at the start to a human user
@@ -276,7 +279,7 @@ void* MainWindowWorkerThread::ThreadRoutine(void *a_ThreadParam)
 
         } while ( (resultPiece.GetType() != e_noPiece) &&
                   (Rules::CanPlayerGo(thisThread->m_localGame.GetBoard(),
-                                      thisThread->m_localGame.GetPlayer1()) == false) );
+                                      opponent) == false) );
 
         // the move has been calculated. Update the variable accordingly
         g_mutex_lock(thisThread->m_mutex);

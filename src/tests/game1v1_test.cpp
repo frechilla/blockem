@@ -54,7 +54,7 @@ void Game1v1Test::TestPieces()
         do
         {
             int16_t nRotations = 0;
-            while(nRotations < GetPlayer1().m_pieces[i].GetNRotations())
+            while(nRotations < GetPlayer(e_Game1v1Player1).m_pieces[i].GetNRotations())
             {
                 m_player1.m_pieces[i].RotateRight();
                 possibleConfigurations++;

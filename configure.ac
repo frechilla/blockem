@@ -46,14 +46,13 @@ fi
 # Checks for libraries.
 # .glade file requiers Gtk+ >= 2.16 to work
 PKG_CHECK_MODULES([GTKMM], [gtkmm-2.4 >= 2.16])
-PKG_CHECK_MODULES([GTHREAD], [gthread-2.0 >= 1.0.0])
+# GTHREAD 2.16 hasn't been really checked. Just a guess
+PKG_CHECK_MODULES([GTHREAD], [gthread-2.0 >= 2.16])
 # contained in gtkmm
 # PKG_CHECK_MODULES([SIGCPP], [sigc++-2.0 >= 1.0.0])
 
 AC_SUBST(GTKMM_CFLAGS)
 AC_SUBST(GTKMM_LIBS)
-AC_SUBST(GLADEMM_CFLAGS)
-AC_SUBST(GLADEMM_LIBS)
 AC_SUBST(GTHREAD_CFLAGS)
 AC_SUBST(GTHREAD_LIBS)
 

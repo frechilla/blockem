@@ -72,6 +72,97 @@ Game1v1::~Game1v1()
 {
 }
 
+const Player& Game1v1::GetPlayer(eGame1v1Player_t a_playerType) const
+{
+    switch (a_playerType)
+    {
+    case Game1v1::e_Game1v1Player1:
+    {
+        return m_player1;
+    }
+    case Game1v1::e_Game1v1Player2:
+    {
+        return m_player2;
+    }
+#ifdef DEBUG
+    default:
+    {
+        assert(0);
+    }
+#endif
+    } // switch (a_playerType)
+}
+
+const Player& Game1v1::GetOpponent(eGame1v1Player_t a_playerType) const
+{
+    switch (a_playerType)
+    {
+    case Game1v1::e_Game1v1Player1:
+    {
+        return m_player2;
+    }
+    case Game1v1::e_Game1v1Player2:
+    {
+        return m_player1;
+    }
+#ifdef DEBUG
+    default:
+    {
+        assert(0);
+    }
+#endif
+    } // switch (a_playerType)
+}
+
+Game1v1::eGame1v1Player_t Game1v1::GetPlayerType(const Player &a_player) const
+{
+    eGame1v1Player_t rValue = Game1v1::e_Game1v1Player1;
+
+    if (a_player.PresentationChar() == m_player1.PresentationChar())
+    {
+        rValue = Game1v1::e_Game1v1Player1;
+    }
+    else if (a_player.PresentationChar() == m_player2.PresentationChar())
+    {
+        rValue = Game1v1::e_Game1v1Player2;
+    }
+#ifdef DEBUG
+    else
+    {
+        assert(0);
+    }
+#endif
+
+    return rValue;
+}
+
+void Game1v1::SetPlayerColour(
+        eGame1v1Player_t a_player,
+        uint8_t a_red,
+        uint8_t a_green,
+        uint8_t a_blue)
+{
+    switch (a_player)
+    {
+    case e_Game1v1Player1:
+    {
+        m_player1.SetColour(a_red, a_green, a_blue);
+        break;
+    }
+
+    case e_Game1v1Player2:
+    {
+        m_player2.SetColour(a_red, a_green, a_blue);
+        break;
+    }
+
+#ifdef DEBUG
+    default:
+        assert(0);
+#endif
+    } // switch (a_player)
+}
+
 void Game1v1::RemovePiece(
             const Piece      &a_piece,
             const Coordinate &a_coord,
@@ -534,9 +625,25 @@ int32_t Game1v1::ComputeFirstPiece(
     else
     {
         // we shouldn't copy the 1st user's move, because it was shit
-        // temporary solution. Put the cross in 9,8 (acceptable first move)
+        // temporary solution. Put the cross in 9,8 (acceptable first move),
+        // or 5,6
         out_resultPiece = Piece(e_5Piece_Cross);
-        out_coord = Coordinate(9, 8);
+
+        Coordinate startingCoord = a_playerMe.GetStartingCoordinate();
+        if ((a_board.GetNColumns() / 2) > startingCoord.m_col)
+        {
+            out_coord.m_col = startingCoord.m_col + 1;
+        }
+        else if ((a_board.GetNColumns() / 2) < startingCoord.m_col)
+        {
+            out_coord.m_col = startingCoord.m_col - 1;
+        }
+        else
+        {
+            out_coord.m_col = startingCoord.m_col;
+        }
+
+        out_coord.m_row = startingCoord.m_row;
     }
 
 	return 0;

@@ -108,7 +108,7 @@ private:
     DrawingAreaShowPieces m_pickPiecesDrawingArea;
 
     /// @brief the drawing area where the computer's pieces left will be shown
-    DrawingAreaShowPieces m_showComputerPiecesDrawingArea;
+    DrawingAreaShowPieces m_showOpponentPiecesDrawingArea;
 
     /// @the drawing area responsible for showing the state of the board
     DrawingAreaBoard m_boardDrawingArea;
@@ -144,16 +144,16 @@ private:
     Gtk::ProgressBar m_progressBar;
 
     /// @brief label to show the user score in the status bar
-    Gtk::Label m_userScoreLabel;
+    Gtk::Label m_player1ScoreLabel;
 
     /// @brief label to show the computer score in the status bar
-    Gtk::Label m_computerScoreLabel;
+    Gtk::Label m_player2ScoreLabel;
 
-    /// @brief show the time the user takes to think
-    StopWatchLabel m_stopWatchLabelUser;
+    /// @brief show the time the player1 takes to think
+    StopWatchLabel m_stopWatchLabelPlayer1;
 
-    /// @brief show the time the computer takes to think
-    StopWatchLabel m_stopWatchLabelComputer;
+    /// @brief show the time the player2 takes to think
+    StopWatchLabel m_stopWatchLabelPlayer2;
 
     /// Signal class for inter-thread communication to
     /// notify the next move has been computed
@@ -163,12 +163,23 @@ private:
     /// notify a change in computing progress
     Glib::Dispatcher m_signal_computingProgressUpdated;
 
+    /// Launches a new game
+    void LaunchNewGame();
+    
+    /// @brief requests the worker thread to compute a move
+    /// It finishes the app if there's an error communicating with this thread
+    void RequestThreadToComputeNextMove(
+            Game1v1::eGame1v1Player_t a_whoMoves,
+            const Coordinate         &a_coordinate = Coordinate(),
+            const Piece              &a_piece      = Piece(e_noPiece));
+    
     /// @brief notifies to the user that the game is finished using a fancy message box
     void GameFinished();
 
     /// Do all the stuff that needs to be done when a move has been computed
-    ///     1) Invalidates the board drawing area.
-    ///     2) restores the mouse cursor
+    /// It is also called when a human user puts down a piece, so it is responsible for
+    /// changing turns between players and allowing next player to move if it is a human
+    /// being or launching the worker thread if it is the computer's move
     /// It can be used with  Glib::Dispatcher as it is a no-argument void function
     void NotifyMoveComputed();
 

@@ -53,15 +53,15 @@ public:
     /// If the thread is already calculating a move it won't do anything
     /// @param the game to be sued for the calculation.
     ///        it will be copied in the thread to compute the move
-    /// @param latest piece put down by the opponent
-    /// @param coordinate where the latest piece was put down
     /// @param whose player's move is supposed the MinMax to calculate
+    /// @param coordinate where the latest piece was put down
+    /// @param latest piece put down by the opponent
     /// @returns true if the thread was idle. false if it was already computing
     bool ComputeMove(
             const Game1v1            &a_game,
-            const Piece              &a_latestPiece,
-            const Coordinate         &a_latestCoordinate,
-            Game1v1::eGame1v1Player_t a_whoMoves);
+            Game1v1::eGame1v1Player_t a_whoMoves,
+            const Coordinate         &a_latestCoordinate = Coordinate(),
+            const Piece              &a_latestPiece      = Piece(e_noPiece));
 
     /// suspends execution of the calling thread until the target thread terminates
     /// @return true if success. False otherwise

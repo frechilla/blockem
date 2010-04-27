@@ -73,10 +73,13 @@ void StopWatchLabel::Continue()
 
 void StopWatchLabel::Stop()
 {
-    m_timerRunning = false;
-    g_timer_stop(m_timer);
+    if (m_timerRunning)
+    {
+        m_timerRunning = false;
+        g_timer_stop(m_timer);
 
-    UpdateWidget(true);
+        UpdateWidget(true);
+    }
 }
 
 void StopWatchLabel::UpdateWidget(bool a_stopped)

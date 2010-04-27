@@ -70,12 +70,16 @@ public:
         return m_signalPiecePicked;
     }
 
-    // force the drawing area to be reprinted
+    /// force the drawing area to be reprinted
     bool Invalidate();
+
+    /// updates the player whose pieces are represented by this drawing area
+    /// and forces it to be reprinted
+    bool Invalidate(const Player &a_newPlayer);
 
 private:
     /// @brief player whose pieces will be shown in this drawing area
-    const Player &m_thePlayer;
+    const Player *m_thePlayer;
 
     /// @brief orientation to be used to draw the drawing area
     eOrientation_t m_orientation;

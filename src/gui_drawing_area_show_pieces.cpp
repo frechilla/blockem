@@ -95,7 +95,7 @@ static const ePieceType_t pickPlayerPiecesArray
 
 DrawingAreaShowPieces::DrawingAreaShowPieces(const Player &a_player, eOrientation_t a_orientation):
 	Gtk::DrawingArea(),
-    m_thePlayer(a_player),
+    m_thePlayer(&a_player),
     m_orientation(a_orientation)
 {
 	// the drawing area will handle the button_press event
@@ -189,7 +189,7 @@ bool DrawingAreaShowPieces::on_expose_event(GdkEventExpose* event)
     uint8_t red   = 0;
     uint8_t green = 0;
     uint8_t blue  = 0;
-    m_thePlayer.GetColour(red, green, blue);
+    m_thePlayer->GetColour(red, green, blue);
 	cr->set_source_rgb(
 	        static_cast<float>(red)  /255,
             static_cast<float>(green)/255,
@@ -209,7 +209,7 @@ bool DrawingAreaShowPieces::on_expose_event(GdkEventExpose* event)
 			{
 				ePieceType_t pieceType = pickPlayerPiecesArray[row][col];
 				if ( (pieceType != e_noPiece) &&
-					 (m_thePlayer.IsPieceAvailable(pieceType)) )
+					 (m_thePlayer->IsPieceAvailable(pieceType)) )
 				{
 					cr->rectangle(
 							(hzIndex - littleSquare/2) + 1,
@@ -237,7 +237,7 @@ bool DrawingAreaShowPieces::on_expose_event(GdkEventExpose* event)
 			{
 				ePieceType_t pieceType = pickPlayerPiecesArray[row][col];
 				if ( (pieceType != e_noPiece) &&
-					 (m_thePlayer.IsPieceAvailable(pieceType)) )
+					 (m_thePlayer->IsPieceAvailable(pieceType)) )
 				{
 					cr->rectangle(
 							(hzIndex - littleSquare/2) + 1,
@@ -265,7 +265,7 @@ bool DrawingAreaShowPieces::on_expose_event(GdkEventExpose* event)
 			{
 				ePieceType_t pieceType = pickPlayerPiecesArray[row][col];
 				if ( (pieceType != e_noPiece) &&
-					 (m_thePlayer.IsPieceAvailable(pieceType)) )
+					 (m_thePlayer->IsPieceAvailable(pieceType)) )
 				{
 					cr->rectangle(
 							(vtIndex - littleSquare/2) + 1,
@@ -293,7 +293,7 @@ bool DrawingAreaShowPieces::on_expose_event(GdkEventExpose* event)
 			{
 				ePieceType_t pieceType = pickPlayerPiecesArray[row][col];
 				if ( (pieceType != e_noPiece) &&
-					 (m_thePlayer.IsPieceAvailable(pieceType)) )
+					 (m_thePlayer->IsPieceAvailable(pieceType)) )
 				{
 					cr->rectangle(
 							(vtIndex - littleSquare/2) + 1,
@@ -442,7 +442,7 @@ bool DrawingAreaShowPieces::on_button_press_event(GdkEventButton *event)
 
         ePieceType_t pieceType = pickPlayerPiecesArray[row-1][col-1];
         if ( (pieceType != e_noPiece) &&
-             (m_thePlayer.IsPieceAvailable(pieceType)) )
+             (m_thePlayer->IsPieceAvailable(pieceType)) )
         {
             // the user clicked where some piece was being shown
             // notify it to whoever listens
@@ -457,6 +457,12 @@ bool DrawingAreaShowPieces::on_button_press_event(GdkEventButton *event)
     m_signalPiecePicked.emit(e_noPiece);
 
     return true;
+}
+
+bool DrawingAreaShowPieces::Invalidate(const Player &a_newPlayer)
+{
+    m_thePlayer = &a_newPlayer;
+    return Invalidate();
 }
 
 bool DrawingAreaShowPieces::Invalidate()

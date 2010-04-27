@@ -506,7 +506,12 @@ bool DrawingAreaBoard::Invalidate(const Piece &a_piece, const Coordinate &a_coor
     m_latestPieceDeployedCoord = a_coord;
     m_latestPieceDeployedPlayer = &a_player;
 
-    if (m_latestPieceDeployedEffectOn == false)
+    if (a_piece.GetType() == e_noPiece)
+    {
+        // if latest piece is noPiece nothing will glow on the board. Stop unnecesary timers
+        m_latestPieceDeployedEffectOn = false;
+    }
+    else if (m_latestPieceDeployedEffectOn == false)
     {
         m_latestPieceDeployedEffectOn = true;
         g_timeout_add(LAST_PIECE_EFFECT_MILLIS, timerCallback, static_cast<void*>(this));

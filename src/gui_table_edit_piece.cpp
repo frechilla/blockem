@@ -127,6 +127,9 @@ void TableEditPiece::SetPieceRGB(float a_red, float a_green, float a_blue)
 	m_red   = a_red;
 	m_green = a_green;
 	m_blue  = a_blue;
+
+	// update the view
+	InvalidateEditPieceDrawingArea();
 }
 
 void TableEditPiece::SetPiece(ePieceType_t a_newPiece)
@@ -157,34 +160,6 @@ void TableEditPiece::SetPiece(ePieceType_t a_newPiece)
         m_mirrorButtonYAxis->set_sensitive(true);
         m_mirrorButtonXAxis->set_sensitive(true);
 	}
-
-/*
-    if (m_thePiece.GetNRotations() > 1)
-    {
-        m_rotateRightButton->set_sensitive(true);
-        m_rotateLeftButton->set_sensitive(true);
-        m_rotateLabel->set_sensitive(true);
-    }
-    else
-    {
-        m_rotateRightButton->set_sensitive(false);
-        m_rotateLeftButton->set_sensitive(false);
-        m_rotateLabel->set_sensitive(false);
-    }
-
-    if (m_thePiece.CanMirror())
-    {
-        m_mirrorButtonYAxis->set_sensitive(true);
-        m_mirrorButtonXAxis->set_sensitive(true);
-        m_mirrorLabel->set_sensitive(true);
-    }
-    else
-    {
-        m_mirrorButtonYAxis->set_sensitive(false);
-        m_mirrorButtonXAxis->set_sensitive(false);
-        m_mirrorLabel->set_sensitive(false);
-    }
-    */
 
     // notify to whoever is listening to the signal that the editing piece changed
     m_signalPieceChanged.emit(m_thePiece);
