@@ -38,9 +38,10 @@
 #include <queue>   // queue computer's moves
 #include <iomanip> // setw
 #include "gui_main_window.h"
+#include "gui_game1v1_config.h"
 #include "gui_glade_defs.h"
 
-/// @brief uninitialised coord value
+/// uninitialised coord value
 static const int32_t COORD_UNITIALISED = 0xffffffff;
 
 /// message to be shown to the user when he/she requested the
@@ -51,41 +52,11 @@ static const char MESSAGE_ASK_BEFORE_CLOSE[] =
 /// length of the custom messages to be shown to the user
 static const int32_t MESSAGE_LENGTH = 100;
 
-// drawing area options
-static const float BOARD_BORDER_RED        = 0.8;
-static const float BOARD_BORDER_GREEN      = 0.0;
-static const float BOARD_BORDER_BLUE       = 0.0;
-static const float BOARD_BORDER_LINE_WIDTH = 5.0;
-
-static const float BOARD_RED        = BOARD_BORDER_RED;
-static const float BOARD_GREEN      = BOARD_BORDER_GREEN;
-static const float BOARD_BLUE       = BOARD_BORDER_BLUE;
-static const float BOARD_LINE_WIDTH = 1.0;
-
-static const float PLAYER_ME_RED   = 0.0;
-static const float PLAYER_ME_GREEN = 0.0;
-static const float PLAYER_ME_BLUE  = 0.9;
-
-static const float PLAYER_OPPONENT_RED   = 0.3;
-static const float PLAYER_OPPONENT_GREEN = 0.8;
-static const float PLAYER_OPPONENT_BLUE  = 0.3;
-
-static const float GHOST_PIECE_RIGHT_RED   = PLAYER_OPPONENT_RED;
-static const float GHOST_PIECE_RIGHT_GREEN = PLAYER_OPPONENT_GREEN;
-static const float GHOST_PIECE_RIGHT_BLUE  = PLAYER_OPPONENT_BLUE;
-
-static const float GHOST_PIECE_WRONG_RED          = 0.9;
-static const float GHOST_PIECE_WRONG_GREEN        = 0.0;
-static const float GHOST_PIECE_WRONG_BLUE         = 0.0;
-static const float GHOST_PIECE_ALPHA_TRANSPARENCY = 0.2;
-
+/// how often stopwatches are updated
 static const uint32_t STOPWATCH_UPDATE_PERIOD_MILLIS = 500; // 1000 = 1 second
 
-//TODO remove this testing shit whenever code is ready
-#define PLAYER1_IS_COMPUTER false
-#define PLAYER2_IS_COMPUTER true
 
-// move calculated by the worker thread
+// contains the info that stores a move (piece + where + who)
 typedef struct
 {
     Piece               piece;
@@ -326,19 +297,12 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     m_helpAboutMenuItem->signal_activate().connect(
             sigc::mem_fun(*this, &MainWindow::MenuItemHelpAbout_Activate));
 
-
-    //TODO the colours should be handled by some kind of dialog. This will do it now
-    m_the1v1Game.SetPlayerColour(
-            Game1v1::e_Game1v1Player2,
-            PLAYER_ME_RED*255,
-            PLAYER_ME_GREEN*255,
-            PLAYER_ME_BLUE*255);
-
-    m_the1v1Game.SetPlayerColour(
-                Game1v1::e_Game1v1Player1,
-                PLAYER_OPPONENT_RED*255,
-                PLAYER_OPPONENT_GREEN*255,
-                PLAYER_OPPONENT_BLUE*255);
+    // retrieve the default colour from the config class to apply it to the players
+    uint8_t red, green, blue;
+    Game1v1Config::Instance().GetPlayer1Colour(red, green, blue);
+    m_the1v1Game.SetPlayerColour(Game1v1::e_Game1v1Player1, red, green, blue);
+    Game1v1Config::Instance().GetPlayer2Colour(red, green, blue);
+    m_the1v1Game.SetPlayerColour(Game1v1::e_Game1v1Player2, red, green, blue);
 
     // initialise the list of players of the board drawing area
     m_boardDrawingArea.AddPlayerToList(&(m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1)));
@@ -509,8 +473,7 @@ void MainWindow::LaunchNewGame()
     // Start player1's timer
     m_stopWatchLabelPlayer1.Continue();
 
-    //TODO this check using the #define is temporary
-    if (PLAYER1_IS_COMPUTER)
+    if (Game1v1Config::Instance().IsPlayer1Computer())
     {
         // next player is the computer. Disallow editing the board while
         // computer is processing next move
@@ -769,8 +732,10 @@ void MainWindow::NotifyMoveComputed()
         m_showOpponentPiecesDrawingArea.Invalidate(latestPlayer);
 
         // --it checks if the next player to put down a piece is a computer--
-        if ( ( (latestPlayerToMove == Game1v1::e_Game1v1Player2) && PLAYER1_IS_COMPUTER ) ||
-             ( (latestPlayerToMove == Game1v1::e_Game1v1Player1) && PLAYER2_IS_COMPUTER ) )
+        if ( ( (latestPlayerToMove == Game1v1::e_Game1v1Player2) &&
+                    Game1v1Config::Instance().IsPlayer1Computer() ) ||
+             ( (latestPlayerToMove == Game1v1::e_Game1v1Player1) &&
+                    Game1v1Config::Instance().IsPlayer2Computer() ) )
         {
             // next player is the computer. Disallow editing the board while
             // computer is processing next move

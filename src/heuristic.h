@@ -51,6 +51,18 @@ public:
     /// pointer to the heuristic calculator function
     typedef int32_t (*EvalFunction_t)(const Board &, const Player &, const Player &);
 
+    /// types of heuristic. If you add a heuristic here you MUST add a proper description
+    /// to Game1v1Config in the constructor using a Game1v1Config::sHeuristicConfig_t
+    typedef enum
+    {
+        e_heuristicStartCount = 0, // this element must be always 0 and must be at the start
+
+        e_heuristicNKWeighted = e_heuristicStartCount,
+        e_heuristicSimple,
+
+        e_heuristicCount, // stores the amount of heuristics. Must be always at the end
+    } eHeuristicType_t;
+
     virtual ~Heuristic();
 
     /// Calculate the heuristic value taking into account only the amount

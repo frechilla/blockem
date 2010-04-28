@@ -56,7 +56,7 @@ am_blockem_OBJECTS = board.$(OBJEXT) game1v1.$(OBJEXT) \
 	game_total_allocation.$(OBJEXT) gui_about_dialog.$(OBJEXT) \
 	gui_drawing_area_board.$(OBJEXT) \
 	gui_drawing_area_show_pieces.$(OBJEXT) \
-	gui_main_window.$(OBJEXT) \
+	gui_game1v1_config.$(OBJEXT) gui_main_window.$(OBJEXT) \
 	gui_main_window_worker_thread.$(OBJEXT) \
 	gui_table_edit_piece.$(OBJEXT) gui_stop_watch_label.$(OBJEXT) \
 	heuristic.$(OBJEXT) piece.$(OBJEXT) player.$(OBJEXT) \
@@ -214,6 +214,8 @@ gui_drawing_area_board.h \
 gui_drawing_area_board.cpp \
 gui_drawing_area_show_pieces.cpp \
 gui_drawing_area_show_pieces.h   \
+gui_game1v1_config.cpp \
+gui_game1v1_config.h \
 gui_glade_defs.h \
 gui_main_window.cpp \
 gui_main_window.h \
@@ -247,9 +249,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign src/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu src/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --foreign src/Makefile
+	  $(AUTOMAKE) --gnu src/Makefile
 .PRECIOUS: Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
@@ -321,6 +323,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_about_dialog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_drawing_area_board.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_drawing_area_show_pieces.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_game1v1_config.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_main_window.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_main_window_worker_thread.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_stop_watch_label.Po@am__quote@
