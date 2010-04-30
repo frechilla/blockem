@@ -83,6 +83,13 @@
                   <object class="GtkMenu" id="menu2">
                     <property name="visible">True</property>
                     <child>
+                      <object class="GtkCheckMenuItem" id="checkmenuitem_settings_nkpoints">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">View nucleation points</property>
+                        <property name="use_underline">True</property>
+                      </object>
+                    </child>
+                    <child>
                       <object class="GtkImageMenuItem" id="imagemenuitem_settings_preferences">
                         <property name="label">gtk-preferences</property>
                         <property name="visible">True</property>

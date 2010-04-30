@@ -105,6 +105,7 @@ const char GUI_MAIN_WINDOW_NAME[]          = "window_main";
 const char GUI_ABOUT_DIALOG_NAME[]         = "aboutdialog";
 const char GUI_MENU_ITEM_GAME_NEW[]        = "imagemenuitem_game_new";
 const char GUI_MENU_ITEM_GAME_QUIT[]       = "imagemenuitem_game_quit";
+const char GUI_MENU_ITEM_SETTINGS_NKPOINTS[] = "checkmenuitem_settings_nkpoints";
 const char GUI_MENU_ITEM_HELP_ABOUT[]      = "imagemenuitem_help_about";
 const char GUI_VBOX_DRAWING_NAME[]         = "vbox_drawing";
 const char GUI_HBOX_GAME_STATUS_NAME[]     = "hbox_gamestatus";

@@ -23,6 +23,8 @@
 /// @history
 /// Ref       Who                When         What
 ///           Faustino Frechilla 24 Nov 2009  Original development
+///           Faustino Frechilla 15-Mar-2010  pthreads moved to gthreads
+///           Faustino Frechilla 30-Apr-2010  CancelComputing logic added
 /// @endhistory
 ///
 // ============================================================================
@@ -31,15 +33,23 @@
 #include <iostream>
 #include "gui_main_window_worker_thread.h"
 
-#define PROCESSING_STOP   1
+// flags to set the sig_atomic_t variable to stop the Minimax computing
+// every non-zero value will force the minimax algorithm to return
+// m_threadStatus is set to PROCESSING_DIE when the thread is told to kill itself
+#define PROCESSING_DIE    3
+// m_threadStatus is set to PROCESSING_STOP when the thread is told to cancel 
+// current computing process and get back to wait for more jobs
+#define PROCESSING_STOP   2
+// worker thread waiting for new jobs. m_threadStatus should be set to PROCESSING_ACTIVE
+#define PROCESSING_WAITING 1
+// normal operation. No cancelation nor death requested
 #define PROCESSING_ACTIVE 0
 
 MainWindowWorkerThread::MainWindowWorkerThread():
         m_localGame(),
         m_localLatestPiece(e_noPiece),
         m_playerToMove(Game1v1::e_Game1v1Player1), // by default. It will be always set before calculating next move anyway
-        m_computeNextMove(false),
-        m_terminate(PROCESSING_ACTIVE),
+        m_threadStatus(PROCESSING_WAITING),
         m_thread(NULL),
         m_mutex(NULL),
         m_cond(NULL)
@@ -48,14 +58,18 @@ MainWindowWorkerThread::MainWindowWorkerThread():
     if (m_mutex == NULL)
     {
         std::cerr << "Mutex in worker thread couldn't be initialised" << std::endl;
+#ifdef DEBUG
         assert(0);
+#endif
     }
 
     m_cond = g_cond_new();
     if (m_cond == NULL)
     {
         std::cerr << "Conditional variable in worker thread couldn't be initialised" << std::endl;
+#ifdef DEBUG
         assert(0);
+#endif
     }
 
     // create and initialise the randomizer using now time as the seed
@@ -95,25 +109,48 @@ void MainWindowWorkerThread::SpawnThread()
         std::cerr << "Worker Thread creation failed. System won't work as expected" << std::endl;
         std::cerr << "    " << err->message << std::endl;
         g_error_free(err) ;
+#ifdef DEBUG
         assert(0);
+#endif
     }
 }
 
-bool MainWindowWorkerThread::Join()
+void MainWindowWorkerThread::Join()
 {
     g_mutex_lock(m_mutex);
 
-    m_terminate = PROCESSING_STOP;
+    // request the thread to kill itself
+    // current thread (the one that calls to this function) will be waiting for the worker thread
+    // to die in the g_thread_join function
+    m_threadStatus = PROCESSING_DIE;
 
-    // wake up the worker thread to exit the ThreadRoutine
+    // wake up the worker thread to exit the ThreadRoutine in case it stuck there
     g_cond_broadcast(m_cond);
 
     g_mutex_unlock(m_mutex);
 
     void* dataReturned;
     dataReturned = g_thread_join(m_thread);
+}
 
-    return true;
+void MainWindowWorkerThread::CancelComputing()
+{
+    g_mutex_lock(m_mutex);
+
+    if (m_threadStatus == PROCESSING_ACTIVE)
+    {
+        // worker thread is busy
+        // request the thread to stop
+        m_threadStatus = PROCESSING_STOP;
+        
+        // wait for the worker thread to cancel computing before keep going
+        while (m_threadStatus == PROCESSING_STOP)
+        {
+            g_cond_wait(m_cond, m_mutex);
+        }
+    }
+
+    g_mutex_unlock(m_mutex);
 }
 
 bool MainWindowWorkerThread::IsThreadComputingMove()
@@ -121,7 +158,7 @@ bool MainWindowWorkerThread::IsThreadComputingMove()
     bool rv;
 
     g_mutex_lock(m_mutex);
-    rv = m_computeNextMove;
+    rv = (m_threadStatus == PROCESSING_ACTIVE);
     g_mutex_unlock(m_mutex);
 
     return rv;
@@ -136,7 +173,7 @@ bool MainWindowWorkerThread::ComputeMove(
     bool rv = false;
 
     g_mutex_lock(m_mutex);
-    if (m_computeNextMove == false)
+    if (m_threadStatus == PROCESSING_WAITING)
     {
         // copy the 1v1Game, latest piece (and coord) put down by the opponent
         // before computing the calculation
@@ -145,16 +182,14 @@ bool MainWindowWorkerThread::ComputeMove(
         m_localLatestCoord = a_latestCoordinate;
         m_playerToMove     = a_whoMoves;
 
-        // set the thread to calculate a move
-        m_computeNextMove = true;
-        // the function will return true
-        rv = true;
-    }
-
-    if (rv == true)
-    {
+        // set the thread to calculate a move (computing flag to active)
+        m_threadStatus = PROCESSING_ACTIVE;
+        
         // wake up the worker thread to start computing the next move
         g_cond_broadcast(m_cond);
+        
+        // the function will return true
+        rv = true;
     }
 
     g_mutex_unlock(m_mutex);
@@ -174,19 +209,30 @@ void* MainWindowWorkerThread::ThreadRoutine(void *a_ThreadParam)
     // the returned value by the computing process
     int32_t resultReturnedValue;
 
-    while (thisThread->m_terminate == PROCESSING_ACTIVE)
+    while (thisThread->m_threadStatus != PROCESSING_DIE)
     {
         g_mutex_lock(thisThread->m_mutex);
 
-        while ( (thisThread->m_terminate == PROCESSING_ACTIVE) &&
-                (thisThread->m_computeNextMove == false) )
+        while (thisThread->m_threadStatus == PROCESSING_WAITING)
         {
             g_cond_wait(thisThread->m_cond, thisThread->m_mutex);
         }
 
-        if ( (thisThread->m_computeNextMove == false) ||
-             (thisThread->m_terminate == PROCESSING_STOP) )
+        if (thisThread->m_threadStatus != PROCESSING_ACTIVE)
         {
+            if (thisThread->m_threadStatus == PROCESSING_STOP)
+            {
+                // someone's told us to stop. Get back to wait state
+                // because there wasn't even time to start processing
+                thisThread->m_threadStatus = PROCESSING_WAITING;
+            }
+            
+            // there might be threads waiting for this thread to notify
+            // them we acknowledge their message
+            g_cond_broadcast(thisThread->m_cond);
+            
+            // there's nothing to compute
+            // Go back to the beginning to check if we must diw
             g_mutex_unlock(thisThread->m_mutex);
             continue;
         }
@@ -225,7 +271,7 @@ void* MainWindowWorkerThread::ThreadRoutine(void *a_ThreadParam)
                                                 thisThread->m_playerToMove,
                                                 resultPiece,
                                                 resultCoord,
-                                                thisThread->m_terminate,
+                                                thisThread->m_threadStatus,
                                                 thisThread->m_localLatestCoord,
                                                 thisThread->m_localLatestPiece);
                 }
@@ -237,7 +283,7 @@ void* MainWindowWorkerThread::ThreadRoutine(void *a_ThreadParam)
                                                 thisThread->m_playerToMove,
                                                 resultPiece,
                                                 resultCoord,
-                                                thisThread->m_terminate);
+                                                thisThread->m_threadStatus);
                 }
             }
             else
@@ -249,15 +295,18 @@ void* MainWindowWorkerThread::ThreadRoutine(void *a_ThreadParam)
                                             thisThread->m_playerToMove,
                                             resultPiece,
                                             resultCoord,
-                                            thisThread->m_terminate,
+                                            thisThread->m_threadStatus,
                                             thisThread->m_localLatestCoord,
                                             thisThread->m_localLatestPiece);
             }
 
-            if (thisThread->m_terminate == PROCESSING_STOP)
+            if (thisThread->m_threadStatus != PROCESSING_ACTIVE)
             {
                 resultPiece = e_noPiece;
                 resultCoord = Coordinate(0, 0);
+                
+                // no need to notify the cancelled result to any listener
+                break;
             }
 
             // notify the result
@@ -283,7 +332,19 @@ void* MainWindowWorkerThread::ThreadRoutine(void *a_ThreadParam)
 
         // the move has been calculated. Update the variable accordingly
         g_mutex_lock(thisThread->m_mutex);
-        thisThread->m_computeNextMove = false;
+        if (thisThread->m_threadStatus != PROCESSING_DIE)
+        {
+            if (thisThread->m_threadStatus == PROCESSING_STOP)
+            {
+                // we've been told to cancel previous processing. They might be
+                // waiting for us to do so. send a signal to them to wake them up
+                g_cond_broadcast(thisThread->m_cond);
+            }
+            
+            // processing was finished (both if it was computed or canceled)
+            // get back to waiting state unless the thread has been told to die
+            thisThread->m_threadStatus = PROCESSING_WAITING;
+        }
         g_mutex_unlock(thisThread->m_mutex);
     }
 

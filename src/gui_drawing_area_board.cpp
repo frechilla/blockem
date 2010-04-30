@@ -66,11 +66,12 @@ DrawingAreaBoard::DrawingAreaBoard(const Board &a_board) :
     m_currentPlayer(NULL),
     m_currentPiece(e_noPiece),
     m_currentCoord(COORD_UNITIALISED, COORD_UNITIALISED),
-    m_latestPieceDeployedEffectOn(false),
+    m_latestPieceDeployedEffectOn(false), // no glowing piece effect at the beginning
     m_latestPieceDeployed(e_noPiece),
     m_latestPieceDeployedCoord(COORD_UNITIALISED, COORD_UNITIALISED),
     m_latestPieceDeployedPlayer(NULL),
-    m_latestPieceDeployedTransparency(LAST_PIECE_EFFECT_INITIAL_ALPHA)
+    m_latestPieceDeployedTransparency(LAST_PIECE_EFFECT_INITIAL_ALPHA),
+    m_showNKPoints(false) // nlk points won't be shown by default
 {
     // these events are going to be handled by the drawing area (apart from the usual expose event)
     this->add_events(Gdk::BUTTON_PRESS_MASK);
@@ -90,6 +91,41 @@ void DrawingAreaBoard::AddPlayerToList(const Player* a_player)
 void DrawingAreaBoard::ResetPlayerList()
 {
     m_playerList.clear();
+}
+
+void DrawingAreaBoard::SetCurrentPlayer(const Player &a_player)
+{
+    m_currentPlayer = &a_player;
+}
+
+void DrawingAreaBoard::UnsetCurrentPlayer()
+{
+    m_currentPlayer = NULL;
+}
+
+void DrawingAreaBoard::SetCurrentPiece(const Piece &a_piece)
+{
+    m_currentPiece = a_piece;
+}
+
+void DrawingAreaBoard::ShowNucleationPoints()
+{
+    if (m_showNKPoints == false)
+    {
+        // Invalidating is expensive. Do it only if it is needed
+        m_showNKPoints = true;
+        Invalidate();
+    }
+}
+
+void DrawingAreaBoard::HideNucleationPoints()
+{
+    if (m_showNKPoints == true)
+    {
+        // Invalidating is expensive. Do it only if it is needed
+        m_showNKPoints = false;
+        Invalidate();
+    }
 }
 
 bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
@@ -185,6 +221,28 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
 
                         cr->fill();
                     }
+                }
+            }
+
+            // draw a small little circle where nk points are
+            if (m_showNKPoints)
+            {
+                STLCoordinateSet_t nkPointSet;
+                thisPlayer->GetAllNucleationPoints(nkPointSet);
+                STLCoordinateSet_t::const_iterator nkIterator = nkPointSet.begin();
+                while(nkIterator != nkPointSet.end())
+                {
+                    const Coordinate &thisCoord = *nkIterator;
+                    cr->arc(xc - squareWidth/2  +
+                                (littleSquare * thisCoord.m_col) + littleSquare/2,
+                            yc - squareHeight/2 +
+                                (littleSquare * thisCoord.m_row) + littleSquare/2,
+                            (littleSquare / 2) - (littleSquare / 3),
+                            0.0,
+                            2 * M_PI);
+                    cr->fill();
+
+                    nkIterator++;
                 }
             }
         }
@@ -580,7 +638,6 @@ gboolean DrawingAreaBoard::timerCallback(void* param)
             alphaGrowing = true;
         }
     }
-
 
     pThis->Invalidate();
 

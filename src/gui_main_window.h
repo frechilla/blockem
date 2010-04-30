@@ -79,6 +79,9 @@ public:
     /// @brief callback to be called when the menuitem Help->about is pressed
     void MenuItemHelpAbout_Activate();
 
+    /// @brief  callback to be called when the menuitem Settings->view nk points is toggled
+    void MenuItemSettingsViewNKPoints_Toggled();
+
     /// @brief callback to be called when a button is pressed inside the board
     void BoardDrawingArea_BoardClicked(const Coordinate &, const Piece &, const Player &);
 
@@ -119,6 +122,7 @@ private:
     Gtk::MenuItem* m_newMenuItem;
     Gtk::MenuItem* m_quitMenuItem;
     Gtk::MenuItem* m_helpAboutMenuItem;
+    Gtk::CheckMenuItem* m_settingsNKPointsMenuItem;
 
     /// @brief the vertical box that keeps the board + pieces
     Gtk::VBox* m_vBoxDrawing;
@@ -163,16 +167,17 @@ private:
     /// notify a change in computing progress
     Glib::Dispatcher m_signal_computingProgressUpdated;
 
-    /// Launches a new game
+    /// Launches a new game. It cancels whatever the worker thread is computing now
+    /// and resets the game to the starting configuration
     void LaunchNewGame();
-    
+
     /// @brief requests the worker thread to compute a move
     /// It finishes the app if there's an error communicating with this thread
     void RequestThreadToComputeNextMove(
             Game1v1::eGame1v1Player_t a_whoMoves,
             const Coordinate         &a_coordinate = Coordinate(),
             const Piece              &a_piece      = Piece(e_noPiece));
-    
+
     /// @brief notifies to the user that the game is finished using a fancy message box
     void GameFinished();
 

@@ -64,20 +64,23 @@ public:
     /// If there is a player currently set, a call to this function
     /// will override the value. You can use UnsetCurrentPlayer to
     /// to set the current player to nobody
-    void inline SetCurrentPlayer(const Player &a_player)
-    {
-        m_currentPlayer = &a_player;
-    }
+    void SetCurrentPlayer(const Player &a_player);
 
-    void inline UnsetCurrentPlayer()
-    {
-        m_currentPlayer = NULL;
-    }
+    /// sets the current player who is supposed to put down the next piece
+    /// to nobody. No ghost piece will be draw when the mouse pointer is moved
+    /// over the board
+    void UnsetCurrentPlayer();
 
-    void inline SetCurrentPiece(const Piece &a_piece)
-    {
-        m_currentPiece = a_piece;
-    }
+    /// sets the current piece used by current player
+    void SetCurrentPiece(const Piece &a_piece);
+
+    /// nk points of every player will be shown on the board as a small circle
+    /// it invalidates the drawing area to show the new configuration
+    void ShowNucleationPoints();
+
+    /// nk points won't be shown
+    /// it invalidates the drawing area to show the new configuration
+    void HideNucleationPoints();
 
     /// Access to the m_signalBoardClicked signal private member, which is sent
     /// when a the user clicked on the board and there is a current player and piece selected
@@ -123,6 +126,9 @@ private:
     /// this is modified in timerCallback to add a bit of an effect
     /// to the latest piece deployed
     float m_latestPieceDeployedTransparency;
+
+    /// are nucleation points shown on the board?
+    bool m_showNKPoints;
 
     /// signal to be sent when a the user clicked on the board and there is a current player and piece
     /// selected

@@ -1,12 +1,22 @@
 : Version 0.2.0
-    - Player handling through through Game1v1 interface simplified
+    - An option has been added to show the nucleation points on the board
+    - App can be set up to play human vs human games
+    - When playing 1vs1 games against the computer, player1 (the one who goes
+      first) can be selected to be the computer (previous version forced the
+      human player to go always first)
+    - Starting coordinate can be edited when a new game is launched
     - Piece edition improved for those pieces with only one possible
       confuration
+    - Application is able to cancel a computing operation for a new game
+      to start. In previous versions cancelling the current computing operation
+      was only enabled when the human user wanted to close the application, new
+      games had to wait 'till the worker thread had finished its calculations
     - libglade dependency removed. Gtkbuilder is used instead
     - Executable in windows has reduced its size around 50%. Released zipped
       binary for windows has been also reduced around 30%
     - Fixed possible deadlock that might have occurred when the game was about
       to finish
+    - Player handling through Game1v1 interface simplified
 
 24/04/2010: Version 0.1.6
     - Computer's latest piece deployed glows so human user can easily notice

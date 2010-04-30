@@ -146,6 +146,20 @@ void Player::CopyFromObject(const Player &a_src)
     }
 }
 
+void Player::SetColour(uint8_t a_colourRed, uint8_t a_colourGreen, uint8_t a_colourBlue)
+{
+    m_colourRed   = a_colourRed;
+    m_colourGreen = a_colourGreen;
+    m_colourBlue  = a_colourBlue;
+}
+
+void Player::GetColour(uint8_t &out_colourRed, uint8_t &out_colourGreen, uint8_t &out_colourBlue) const
+{
+    out_colourRed   = m_colourRed;
+    out_colourGreen = m_colourGreen;
+    out_colourBlue  = m_colourBlue;
+}
+
 void Player::Reset()
 {
 	// reset all the pieces owned by the player

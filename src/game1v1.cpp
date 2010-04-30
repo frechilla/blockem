@@ -72,6 +72,11 @@ Game1v1::~Game1v1()
 {
 }
 
+void Game1v1::SetProgressHandler(ProgressFunctor_t a_progressFunctor)
+{
+    m_progressFunctor = a_progressFunctor;
+}
+
 const Player& Game1v1::GetPlayer(eGame1v1Player_t a_playerType) const
 {
     switch (a_playerType)

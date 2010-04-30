@@ -67,6 +67,14 @@ public:
     /// that is, no nucleation points saved and all the pieces present and reset too
     void Reset();
 
+    /// Sets the colour which represents this player
+    /// values are uint8_t, that is, from 0 to 255
+    void SetColour(uint8_t a_colourRed, uint8_t a_colourGreen, uint8_t a_colourBlue);
+
+    /// Gets the colour which represents this player
+    /// values are uint8_t, that is, from 0 to 255
+    void GetColour(uint8_t &out_colourRed, uint8_t &out_colourGreen, uint8_t &out_colourBlue) const;
+
     /// Returns the character that represents the player
     inline char PresentationChar() const
     {
@@ -78,7 +86,7 @@ public:
 	{
     	return m_name;
 	}
-    
+
     /// modifies the name of the player
     inline void SetName(std::string& a_newName)
     {
@@ -94,24 +102,6 @@ public:
     inline void SetStartingCoordinate(const Coordinate &a_startingCoordinate)
     {
         m_startingCoordinate = a_startingCoordinate;
-    }
-
-    /// Sets the colour which represents this player
-    /// values are uint8_t, that is, from 0 to 255
-    inline void SetColour(uint8_t a_colourRed, uint8_t a_colourGreen, uint8_t a_colourBlue)
-    {
-        m_colourRed   = a_colourRed;
-        m_colourGreen = a_colourGreen;
-        m_colourBlue  = a_colourBlue;
-    }
-
-    /// Gets the colour which represents this player
-    /// values are uint8_t, that is, from 0 to 255
-    inline void GetColour(uint8_t &out_colourRed, uint8_t &out_colourGreen, uint8_t &out_colourBlue) const
-    {
-        out_colourRed   = m_colourRed;
-        out_colourGreen = m_colourGreen;
-        out_colourBlue  = m_colourBlue;
     }
 
     /// returns the number of pieces available

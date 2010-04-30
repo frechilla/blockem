@@ -180,6 +180,12 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
         throw new GUIException(std::string("quit menu item retrieval failed"));
     }
 
+    m_gtkBuilder->get_widget(GUI_MENU_ITEM_SETTINGS_NKPOINTS, m_settingsNKPointsMenuItem);
+    if (m_settingsNKPointsMenuItem == NULL)
+    {
+        throw new GUIException(std::string("view nk points menu item retrieval failed"));
+    }
+
     m_gtkBuilder->get_widget(GUI_MENU_ITEM_HELP_ABOUT, m_helpAboutMenuItem);
     if (m_helpAboutMenuItem == NULL)
     {
@@ -296,6 +302,8 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
             sigc::mem_fun(*this, &MainWindow::MenuItemGameQuit_Activate));
     m_helpAboutMenuItem->signal_activate().connect(
             sigc::mem_fun(*this, &MainWindow::MenuItemHelpAbout_Activate));
+    m_settingsNKPointsMenuItem->signal_toggled().connect(
+            sigc::mem_fun(*this, &MainWindow::MenuItemSettingsViewNKPoints_Toggled));
 
     // retrieve the default colour from the config class to apply it to the players
     uint8_t red, green, blue;
@@ -379,47 +387,27 @@ void MainWindow::MenuItemGameQuit_Activate()
 
 void MainWindow::MenuItemGameNew_Activate()
 {
-    if (m_workerThread.IsThreadComputingMove())
-    {
-        Gtk::MessageDialog::MessageDialog infoMessage(
-                *this,
-                "There's a movement being calculated now. Please, wait until the process is finished to start a new game",
-                true,
-                Gtk::MESSAGE_QUESTION,
-                Gtk::BUTTONS_OK,
-                true);
-
-        infoMessage.run();
-        return;
-    }
-
-    char theMessage[MESSAGE_LENGTH];
+    std::stringstream theMessage;
     if ( (m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1).NumberOfPiecesAvailable() == e_numberOfPieces) &&
          (m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2).NumberOfPiecesAvailable() == e_numberOfPieces) )
     {
         // the game never started. Restart the user timer
-        snprintf(theMessage,
-                MESSAGE_LENGTH,
-                "This will restart your elapsed time stopwatch. Are you sure?");
+        theMessage << "This will restart your elapsed time stopwatch. Are you sure?";
     }
     else if ( (Rules::CanPlayerGo(m_the1v1Game.GetBoard(), m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1)) == false) &&
               (Rules::CanPlayerGo(m_the1v1Game.GetBoard(), m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2)) == false) )
     {
         // game is finished
-        snprintf(theMessage,
-                MESSAGE_LENGTH,
-                "If a new game starts the board will be wiped out. Are you sure?");
+        theMessage << "If a new game starts the board will be wiped out. Are you sure?";
     }
     else
     {
-        snprintf(theMessage,
-                MESSAGE_LENGTH,
-                "Are you sure you want to cancel the current Game?");
+        theMessage << "Are you sure you want to cancel the current Game?";
     }
 
     Gtk::MessageDialog::MessageDialog cancelCurrentGameMessage(
             *this,
-            theMessage,
+            theMessage.str().c_str(),
             true,
             Gtk::MESSAGE_QUESTION,
             Gtk::BUTTONS_YES_NO,
@@ -431,6 +419,18 @@ void MainWindow::MenuItemGameNew_Activate()
     }
 }
 
+void MainWindow::MenuItemSettingsViewNKPoints_Toggled()
+{
+    if (m_settingsNKPointsMenuItem->property_active())
+    {
+        m_boardDrawingArea.ShowNucleationPoints();
+    }
+    else
+    {
+        m_boardDrawingArea.HideNucleationPoints();
+    }
+}
+
 void MainWindow::MenuItemHelpAbout_Activate()
 {
     m_aboutDialog->run();
@@ -439,6 +439,22 @@ void MainWindow::MenuItemHelpAbout_Activate()
 
 void MainWindow::LaunchNewGame()
 {
+    if (m_workerThread.IsThreadComputingMove())
+    {
+        // stop worker thread. Current calculation won't be needed in the new game
+        // this call blocks the current thread until the worker thread is ready to
+        // calculate next move
+        m_workerThread.CancelComputing();
+    }
+
+    // clear old moves from the move queue. They belong to the old game
+    G_LOCK(s_computerMoveQueue);
+        while (!s_computerMoveQueue.empty())
+        {
+            s_computerMoveQueue.pop();
+        }
+    G_UNLOCK(s_computerMoveQueue);
+
     // reset the current game
     m_the1v1Game.Reset();
     // update the board view
@@ -462,6 +478,13 @@ void MainWindow::LaunchNewGame()
     m_editPieceTable->SetPiece(e_noPiece);
 
     UpdateScoreStatus();
+
+    // reset the cursor (even if it's been already done)
+    Glib::RefPtr<Gdk::Window> window = m_boardDrawingArea.get_window();
+    if (window)
+    {
+        window->set_cursor();
+    }
 
     // stopwatches must be restarted.
     m_stopWatchLabelPlayer1.Reset();
@@ -510,14 +533,14 @@ void MainWindow::RequestThreadToComputeNextMove(
             << "The worker thread seems to be busy"
             << std::endl;
 #endif
-        char theMessage[MESSAGE_LENGTH];
-        snprintf(theMessage,
-                MESSAGE_LENGTH,
-                "<b>Fatal Error</b> telling the computing to start computing (seems to be busy).\n Application will try to exit now!");
+        std::stringstream theMessage;
+        theMessage << "<b>Fatal Error</b> telling the computing to start computing (seems to be busy)."
+                   << std::endl
+                   << "Application will try to exit now!";
 
         Gtk::MessageDialog::MessageDialog fatalErrorMessage(
             *this,
-            theMessage,
+            theMessage.str().c_str(),
             true,
             Gtk::MESSAGE_INFO,
             Gtk::BUTTONS_OK,
@@ -659,7 +682,7 @@ void MainWindow::NotifyMoveComputed()
 
             s_computerMoveQueue.pop();
 
-        }while (!s_computerMoveQueue.empty());
+        } while (!s_computerMoveQueue.empty());
 
     G_UNLOCK(s_computerMoveQueue);
 
@@ -822,27 +845,34 @@ void MainWindow::GameFinished()
         }
     }
 
-    char theMessage[MESSAGE_LENGTH];
+    std::stringstream theMessage;
     if (squaresLeftPlayer1 == squaresLeftPlayer2)
     {
-        snprintf(theMessage,
-                MESSAGE_LENGTH,
-                "That was a <b>DRAW</b>!\n\tBoth %s and %s have <b>%d</b> squares left",
-                player1.GetName().c_str(),
-                player2.GetName().c_str(),
-                squaresLeftPlayer1);
+        theMessage << "That was a <b>DRAW</b>!"
+                   << std::endl
+                   << "    Both "
+                   << player1.GetName()
+                   << " and "
+                   << player2.GetName()
+                   << " have <b>"
+                   << squaresLeftPlayer1
+                   << "</b> squares left";
     }
     else //(squaresLeftPlayer1 != squaresLeftPlayer2)
     {
-        snprintf(theMessage,
-                MESSAGE_LENGTH,
-                "<b>%s</b> won!\n\t%s has <b>%d</b> squares left and %s <b>%d</b>",
-                (squaresLeftPlayer1 < squaresLeftPlayer2) ?
-                    player1.GetName().c_str() : player2.GetName().c_str(),
-                player1.GetName().c_str(),
-                squaresLeftPlayer1,
-                player2.GetName().c_str(),
-                squaresLeftPlayer2);
+        theMessage << "<b>"
+                   << ((squaresLeftPlayer1 < squaresLeftPlayer2) ? player1.GetName() : player2.GetName())
+                   << "</b> won!"
+                   << std::endl
+                   << "    "
+                   << player1.GetName()
+                   << " has <b>"
+                   << squaresLeftPlayer1
+                   << "</b> squares left and "
+                   << player2.GetName()
+                   << " <b>"
+                   << squaresLeftPlayer2
+                   << "</b>";
     }
 
     //MessageDialog (
@@ -854,7 +884,7 @@ void MainWindow::GameFinished()
     //        bool modal=false)
     Gtk::MessageDialog::MessageDialog gameOverMessage(
             *this,
-            theMessage,
+            theMessage.str().c_str(),
             true,
             Gtk::MESSAGE_INFO,
             Gtk::BUTTONS_OK,

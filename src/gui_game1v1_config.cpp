@@ -80,8 +80,8 @@ Heuristic::eHeuristicType_t Game1v1Config::GetHeuristicType() const
 void Game1v1Config::SetHeuristicType(Heuristic::eHeuristicType_t a_heuristic)
 {
 #ifdef DEBUG
-    assert(a_heuristic >= e_heuristicStartCount);
-    assert(a_heuristic <  e_heuristicCount);
+    assert(a_heuristic >= Heuristic::e_heuristicStartCount);
+    assert(a_heuristic <  Heuristic::e_heuristicCount);
 #endif
 
     m_currentHeuristic = a_heuristic;
@@ -90,8 +90,8 @@ void Game1v1Config::SetHeuristicType(Heuristic::eHeuristicType_t a_heuristic)
 const Game1v1Config::sHeuristicConfig_t& Game1v1Config::GetHeuristicData(Heuristic::eHeuristicType_t a_heuristic) const
 {
 #ifdef DEBUG
-    assert(a_heuristic >= e_heuristicStartCount);
-    assert(a_heuristic <  e_heuristicCount);
+    assert(a_heuristic >= Heuristic::e_heuristicStartCount);
+    assert(a_heuristic <  Heuristic::e_heuristicCount);
 #endif
 
     return m_heuristicData[a_heuristic];

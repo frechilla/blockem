@@ -80,11 +80,13 @@ public:
             const Player &a_playerOpponent);
 
     /// Calculate the heurisitc value based on the amount of pieces that cna be put down
-    /// per nk point
+    /// per nk point. It uses bitwise representation of pieces and board to improve
+    /// calculation times
     static int32_t CalculatePiecesPerNKPoint(
             const Board  &a_board,
             const Player &a_playerMe,
             const Player &a_playerOpponent);
+
 
 protected:
     /// @brief calculates the circular weight of a coord in the board
@@ -114,12 +116,17 @@ protected:
             int32_t a_column,
             const Player &a_player);
 
-    /// @returns the amount of squares (the ones that make up the pieces) that cna be deployed
+    /// @returns the amount of squares (the ones that make up the pieces) that can be deployed
     ///          in a specific nk point
-    static int32_t CountSquaresCanBeDeployed(
+    /// @param the board
+    /// @param the player whose pieces will be checked
+    /// @param bitwise representation of the board (which places are available)
+    /// @param bitwise represntation of 'a_player' pieces on the board
+    static int32_t CountSquaresCanBeDeployedBitwise(
             const Board  &a_board,
-            Player &a_player,
-            const Coordinate &thisNkPoint);
+            const Player &a_player,
+            uint64_t      a_bitwiseBoard,
+            uint64_t      a_bitwisePlayerBoard);
 
 private:
     /// @brief constructor

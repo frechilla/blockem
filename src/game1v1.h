@@ -82,8 +82,11 @@ public:
 	    return m_board;
 	}
 
+	/// @brief sets the progress functor
+	void SetProgressHandler(ProgressFunctor_t a_progressFunctor);
+    
     /// @returns a const reference to the player passed as parameter
-    const Player& GetPlayer(eGame1v1Player_t a_playerType)const;
+    const Player& GetPlayer(eGame1v1Player_t a_playerType) const;
 
     /// @returns a const reference to the opponent of the player passed as parameter
     const Player& GetOpponent(eGame1v1Player_t a_playerType) const;
@@ -91,12 +94,6 @@ public:
     /// @returns the type of te player passed as a parameter.
     /// if that player doesn't belong to the Game type returned will be undefined
     eGame1v1Player_t GetPlayerType(const Player &a_player) const;
-
-	/// @brief sets the progress functor
-	inline void SetProgressHandler(ProgressFunctor_t a_progressFunctor)
-	{
-	    m_progressFunctor = a_progressFunctor;
-	}
 
 	/// @brief sets the player colour
 	void SetPlayerColour(

@@ -185,33 +185,85 @@ int32_t Heuristic::CalculatePiecesPerNKPoint(
     int32_t squaresMe = 0;
     int32_t squaresOpponent = 0;
 
+    // current coordiante being studied
+    Coordinate thisCoord(0, 0);
+    uint64_t bitwiseBoard;   // place in the board is empty or not
+    uint64_t bitwiseBoardMe; // place in the board is occupied by player me
+    a_board.BitwiseBoardCalculate(thisCoord, a_playerMe, bitwiseBoard, bitwiseBoardMe);
 
-    Coordinate coord;
-    for (coord.m_row = 0; coord.m_row < a_board.GetNRows() ; coord.m_row++)
+    // the following loop goes trough the board doing a S-like movement.
+    // it goes from left to right, then down, then right to left, then down,
+    // then left to right...
+    // checking how many pieces can be put down per position on the board
+    while (true)
     {
-        for (coord.m_col = 0; coord.m_col < a_board.GetNColumns() ; coord.m_col++)
+        for (thisCoord.m_col = 0;
+             thisCoord.m_col < (a_board.GetNColumns() - 1);
+             thisCoord.m_col += 1)
         {
-            if (a_board.IsCoordEmpty(coord))
-            {
-                if (a_playerOpponent.IsNucleationPoint(coord))
-                {
-                    //TODO const_cast is diiiirty
-                    nSquaresCanDeployOpponent = CountSquaresCanBeDeployed(a_board, const_cast<Player&>(a_playerOpponent), coord);
-                }
-                if (a_playerMe.IsNucleationPoint(coord))
-                {
-                    //TODO const_cast is diiiirty
-                    nSquaresCanDeployMe = CountSquaresCanBeDeployed(a_board, const_cast<Player&>(a_playerMe), coord);
-                }
-            }
-            else if (a_board.IsPlayerInCoord(coord.m_row, coord.m_col, a_playerMe))
-            {
-                squaresMe++;
-            }
-            else // if (a_board.IsPlayerInCoord(rowCount, columnCount, a_playeOpponent)
-            {
-                squaresOpponent++;
-            }
+            nSquaresCanDeployMe += CountSquaresCanBeDeployedBitwise(
+                                        a_board,
+                                        a_playerMe,
+                                        bitwiseBoard,
+                                        bitwiseBoardMe);
+
+            a_board.BitwiseBoardMoveRight(thisCoord, a_playerMe, bitwiseBoard, bitwiseBoardMe);
+        }
+        // latest configuration wasn't checked
+        nSquaresCanDeployMe += CountSquaresCanBeDeployedBitwise(
+                                    a_board,
+                                    a_playerMe,
+                                    bitwiseBoard,
+                                    bitwiseBoardMe);
+
+        thisCoord.m_row++;
+        if (thisCoord.m_row >= a_board.GetNRows())
+        {
+            break; // got to the latest row of the board
+        }
+
+        // next row
+        a_board.BitwiseBoardMoveDown(thisCoord, a_playerMe, bitwiseBoard, bitwiseBoardMe);
+
+        // check moving to the left
+        for (thisCoord.m_col = (a_board.GetNColumns() - 1);
+             thisCoord.m_col > 0;
+             thisCoord.m_col -= 1)
+        {
+            nSquaresCanDeployMe += CountSquaresCanBeDeployedBitwise(
+                                        a_board,
+                                        a_playerMe,
+                                        bitwiseBoard,
+                                        bitwiseBoardMe);
+
+            a_board.BitwiseBoardMoveLeft(thisCoord, a_playerMe, bitwiseBoard, bitwiseBoardMe);
+        }
+        // latest configuration wasn't checked
+        nSquaresCanDeployMe += CountSquaresCanBeDeployedBitwise(
+                                    a_board,
+                                    a_playerMe,
+                                    bitwiseBoard,
+                                    bitwiseBoardMe);
+
+        thisCoord.m_row++;
+        if (thisCoord.m_row >= a_board.GetNRows())
+        {
+            break; // got to the latest row of the board
+        }
+
+        // next row
+        a_board.BitwiseBoardMoveDown(thisCoord, a_playerMe, bitwiseBoard, bitwiseBoardMe);
+    }
+
+    for (int8_t i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
+    {
+        if (!a_playerMe.IsPieceAvailable(static_cast<ePieceType_t>(i)))
+        {
+            squaresMe += a_playerMe.m_pieces[i].GetNSquares();
+        }
+        if (!a_playerOpponent.IsPieceAvailable(static_cast<ePieceType_t>(i)))
+        {
+            squaresOpponent += a_playerOpponent.m_pieces[i].GetNSquares();
         }
     }
 
@@ -226,6 +278,40 @@ int32_t Heuristic::CalculatePiecesPerNKPoint(
 int32_t Heuristic::CalculateCircularWeight(
 		const Board &a_board, int32_t a_row, int32_t a_column)
 {
+#ifdef DEBUG
+    // this function has been modified to use a static
+    // 14x14 array for performance reasons. if the size of the
+    // board is not 14 it won't work properly. Use the code
+    // between #if 0 ... #endif at the end of this very same function
+    // if board is not expected to be 14x14
+    assert(a_board.GetNRows() == 14);
+    assert(a_board.GetNColumns() == 14);
+#endif
+    // values precalculated for a 14x14 board
+    static const int8_t s_circularWeightValues[14][14] =
+    {
+        { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+        { 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1 },
+        { 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1 },
+        { 1, 2, 2, 3, 3, 3, 3, 3, 3, 3, 2, 2, 1, 1 },
+        { 1, 2, 2, 3, 3, 3, 3, 3, 3, 3, 2, 2, 1, 1 },
+        { 1, 2, 2, 3, 3, 4, 4, 4, 3, 3, 2, 2, 1, 1 },
+        { 1, 2, 2, 3, 3, 4, 4, 4, 3, 3, 2, 2, 1, 1 },
+        { 1, 2, 2, 3, 3, 4, 4, 4, 3, 3, 2, 2, 1, 1 },
+        { 1, 2, 2, 3, 3, 3, 3, 3, 3, 3, 2, 2, 1, 1 },
+        { 1, 2, 2, 3, 3, 3, 3, 3, 3, 3, 2, 2, 1, 1 },
+        { 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1 },
+        { 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1 },
+        { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+        { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }
+    };
+
+    return static_cast<int32_t>(s_circularWeightValues[a_row][a_column]);
+
+#if 0
+    //WARNING this is the code for any board size. It has been replaced
+    // by specific code for 14x14 boards since it is the only board
+    // available, but it might be needed in the future
     int32_t tmpValue =
         std::max(
                 abs(a_row + 1    - (a_board.GetNRows() / 2)),
@@ -234,6 +320,7 @@ int32_t Heuristic::CalculateCircularWeight(
     int32_t weightedValue = ( ( (a_board.GetNRows() / 2) - tmpValue ) / 2) + 1;
 
     return weightedValue;
+#endif
 }
 
 bool Heuristic::IsPointTouchingPlayer(
@@ -268,62 +355,52 @@ bool Heuristic::IsPointTouchingPlayer(
     return false;
 }
 
-int32_t Heuristic::CountSquaresCanBeDeployed(
+int32_t Heuristic::CountSquaresCanBeDeployedBitwise(
         const Board  &a_board,
-        Player &a_player,
-        const Coordinate &thisNkPoint)
+        const Player &a_player,
+        uint64_t      a_bitwiseBoard,
+        uint64_t      a_bitwisePlayerBoard)
 {
-    bool pieceCanBeDeployed;
-    int32_t nSquares = 0;
+    int32_t rValue = 0;
+
     for (int8_t i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
     {
-        if (a_player.IsPieceAvailable(static_cast<ePieceType_t>(i)))
+        if (!a_player.IsPieceAvailable(static_cast<ePieceType_t>(i)))
         {
-            pieceCanBeDeployed = false;
+            continue;
+        }
 
-            do
+        const std::list<uint64_t> &pieceConfigurations = a_player.m_pieces[i].GetBitwiseList();
+        std::list<uint64_t>::const_iterator it = pieceConfigurations.begin();
+        while (it != pieceConfigurations.end())
+        {
+            uint64_t bPiece = (*it);
+            // does the piece fit in the board?
+            if ( (bPiece ^ (bPiece & a_bitwiseBoard)) == bPiece )
             {
-                int8_t nOrigRotations = 0;
-                while( (nOrigRotations < a_player.m_pieces[i].GetNRotations()) &&
-                       (pieceCanBeDeployed == false) )
+                // there's space for this piece in the board. Check if this
+                // place is valid
+
+                // does the piece touch the side of another a_player's piece?
+                if ( (((bPiece << 7) ^ ((bPiece << 7) & a_bitwisePlayerBoard)) == (bPiece << 7)) && // move down
+                     (((bPiece >> 7) ^ ((bPiece >> 7) & a_bitwisePlayerBoard)) == (bPiece >> 7)) && // move up
+                     (((bPiece << 1) ^ ((bPiece << 1) & a_bitwisePlayerBoard)) == (bPiece << 1)) && // move right
+                     (((bPiece >> 1) ^ ((bPiece >> 1) & a_bitwisePlayerBoard)) == (bPiece >> 1)) )  // move left
                 {
-                    pieceCanBeDeployed = Rules::HasValidCoordInNucleationPoint(
-                                                a_board,
-                                                a_player.m_pieces[i],
-                                                thisNkPoint,
-                                                a_player);
-                    if (pieceCanBeDeployed > 0)
+                    // does it touch a corner (aka nk point)?
+                    if ( (((bPiece << 8) ^ ((bPiece << 8) & a_bitwisePlayerBoard)) == (bPiece << 8)) || // down-right corner
+                         (((bPiece << 6) ^ ((bPiece << 6) & a_bitwisePlayerBoard)) == (bPiece << 6)) || // down-left corner
+                         (((bPiece >> 8) ^ ((bPiece >> 8) & a_bitwisePlayerBoard)) == (bPiece >> 8)) || // up-right corner
+                         (((bPiece >> 6) ^ ((bPiece >> 6) & a_bitwisePlayerBoard)) == (bPiece >> 6)) )  // up-left corner
                     {
-                        nSquares += a_player.m_pieces[i].GetNSquares();
+                        rValue += a_player.m_pieces[i].GetNSquares();
+                        break; // exit the ineer most while. This piece can be put down here
                     }
-
-                    nOrigRotations++;
-                    a_player.m_pieces[i].RotateRight();
                 }
+            }
+            it++;
+        }
+    }
 
-                // reset the amount of rotations done before mirroring
-                nOrigRotations = 0;
-
-                if ( (a_player.m_pieces[i].GetType() == e_4Piece_LittleS) &&
-                     (pieceCanBeDeployed == false) &&
-                     (a_player.m_pieces[i].IsMirrored() == false) )
-                {
-                    // For this piece the maximum number or rotations is 2
-                    // and the piece is not symmetric, the configuration after
-                    // the 3rd rotation is the shame shape as the original, but
-                    // the coords moved. Reset the piece before mirroring to
-                    // avoid unexpected results
-                    //
-                    // it also happens with 2piece and 4longPiece, but those pieces
-                    // don't have mirror, so there's no need for this extra check
-                    a_player.m_pieces[i].Reset();
-                }
-
-            } while ( (pieceCanBeDeployed == false) && (a_player.m_pieces[i].MirrorYAxis()) );
-
-            a_player.m_pieces[i].Reset();
-        } // if (me->IsPieceAvailable(i))
-    } // for (int8_t i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
-
-    return nSquares;
+    return rValue;
 }

@@ -63,9 +63,13 @@ public:
             const Coordinate         &a_latestCoordinate = Coordinate(),
             const Piece              &a_latestPiece      = Piece(e_noPiece));
 
+    /// Cancels the move being computed by the worker thread and force it to get ready
+    /// for new jobs. The caller is blocked until the worker thread is ready and waiting
+    /// for another move to be computed
+    void CancelComputing();
+            
     /// suspends execution of the calling thread until the target thread terminates
-    /// @return true if success. False otherwise
-    bool Join();
+    void Join();
 
     /// The routine that will be called by the posix thread
     static void* ThreadRoutine(void *a_ThreadParam);
@@ -85,11 +89,8 @@ private:
     Coordinate m_localLatestCoord;
     /// Whose move will be calculated next time MinMax is called
     Game1v1::eGame1v1Player_t m_playerToMove;
-    /// set to true when the thread has to calculate some move
-    /// it'll be set to false once the move's been already calculated
-    bool m_computeNextMove;
     /// set to true whenever we want the thread to terminate by itself
-    volatile sig_atomic_t m_terminate;
+    volatile sig_atomic_t m_threadStatus;
 
     /// the actual thread
     GThread* m_thread;

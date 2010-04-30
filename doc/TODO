@@ -5,8 +5,8 @@ basic things that need to be done:
    be pretty straight-forward
  + Lots of calculation time is being wasted now. The decission tree should be
    calculated and kept in memory, and even updated while the human player is
-   thinking (normally the human player takes longer than the computer to "think"
-   the next move)
+   thinking (normally the human player takes longer than the computer to 
+   "think" the next move)
  + There are some TODOs in the GUI code. They'll have to be solved little by 
    little
  + It should be possible to generate doxygen. Add it to the makefiles
@@ -17,3 +17,13 @@ basic things that need to be done:
  + keep history of the moves and offer the user the possibility to go back
    and resume an old game
  + Add the possibility of having a game between computers
+ + Add option to play a game which aim is allocating all the pieces on the 
+   board, with no opponent
+ + Game1v1 should be set up to be played between different (or same) heuristic
+   algorithms, that is, computer vs computer
+ + Improve evaluation function through bitwise representations of boards and 
+   pieces
+ + shared nk points should be drawn with a different colour. At the moment
+   they are drawn with player2's colour because it's added last to the board
+   drawing area's list of players
+   
