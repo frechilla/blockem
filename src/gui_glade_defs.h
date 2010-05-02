@@ -103,6 +103,7 @@ const char GUI_PATH_TO_128PICTURE[] = "pixmaps/blockemlogo128.png";
 // have a look at the name of the glade interfaces
 const char GUI_MAIN_WINDOW_NAME[]          = "window_main";
 const char GUI_ABOUT_DIALOG_NAME[]         = "aboutdialog";
+const char GUI_CONFIG_DIALOG_NAME[]        = "configdialog";
 const char GUI_MENU_ITEM_GAME_NEW[]        = "imagemenuitem_game_new";
 const char GUI_MENU_ITEM_GAME_QUIT[]       = "imagemenuitem_game_quit";
 const char GUI_MENU_ITEM_SETTINGS_NKPOINTS[] = "checkmenuitem_settings_nkpoints";
@@ -120,5 +121,7 @@ const char GUI_BUTTON_MIRROR_XAXIS_NAME[]  = "button_mirror_xaxis";
 const char GUI_BUTTON_MIRROR_YAXIS_NAME[]  = "button_mirror_yaxis";
 const char GUI_DRAWINGAREA_EDITING_PIECE[] = "drawingarea_editing_piece";
 const char GUI_HBOX_STATUSBAR_NAME[]       = "hbox_statusbar";
+const char GUI_CONFIG_TABLE_PLAYER1[]      = "config_table_player1";
+const char GUI_CONFIG_TABLE_PLAYER2[]      = "config_table_player2";
 
 #endif /* GUI_GLADE_H_ */

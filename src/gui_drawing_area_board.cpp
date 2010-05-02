@@ -35,8 +35,6 @@
 static const int32_t COORD_UNITIALISED = 0xffffffff;
 
 //TODO this should be set using getters and setters
-static const float STARTING_COORD_ALPHA_TRANSPARENCY = 0.4;
-
 static const float BOARD_BORDER_RED        = 0.8;
 static const float BOARD_BORDER_GREEN      = 0.0;
 static const float BOARD_BORDER_BLUE       = 0.0;
@@ -47,10 +45,13 @@ static const float BOARD_GREEN      = BOARD_BORDER_GREEN;
 static const float BOARD_BLUE       = BOARD_BORDER_BLUE;
 static const float BOARD_LINE_WIDTH = 1.0;
 
-static const float GHOST_PIECE_WRONG_RED          = 0.9;
-static const float GHOST_PIECE_WRONG_GREEN        = 0.0;
-static const float GHOST_PIECE_WRONG_BLUE         = 0.0;
-static const float GHOST_PIECE_ALPHA_TRANSPARENCY = 0.2;
+static const float COLOUR_BLACK_CHANNEL_RED   = 0.0;
+static const float COLOUR_BLACK_CHANNEL_GREEN = 0.0;
+static const float COLOUR_BLACK_CHANNEL_BLUE  = 0.0;
+
+static const float STARTING_COORD_ALPHA    = 0.6;
+static const float GHOST_PIECE_ALPHA_RIGHT = 0.8;
+static const float GHOST_PIECE_ALPHA_WRONG = 0.2;
 
 // 1000 = 1 second
 static const uint32_t LAST_PIECE_EFFECT_MILLIS = 300;
@@ -156,13 +157,17 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
 
     // get the pen to draw
     Cairo::RefPtr<Cairo::Context> cr = window->create_cairo_context();
-    cr->save();
+    //cr->save();
 
     // clip to the area indicated by the expose event so that we only redraw
     // the portion of the window that needs to be redrawn
     cr->rectangle(event->area.x, event->area.y,
         event->area.width, event->area.height);
     cr->clip();
+
+    // set with all the nk points of the players. if a nk point is shared
+    // between players it'll draw with another colour
+    STLCoordinateSet_t globalNKPointSet;
 
     std::list<const Player*>::const_iterator it = m_playerList.begin();
     while (it != m_playerList.end())
@@ -180,7 +185,7 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
                     static_cast<float>(red)  / 255,
                     static_cast<float>(green)/ 255,
                     static_cast<float>(blue) / 255,
-                    STARTING_COORD_ALPHA_TRANSPARENCY);
+                    STARTING_COORD_ALPHA);
 
             cr->arc(xc - squareWidth/2  +
                         (littleSquare * thisPlayer->GetStartingCoordinate().m_row) + littleSquare/2,
@@ -224,70 +229,68 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
                 }
             }
 
-            // draw a small little circle where nk points are
+            // draw a small little circle where nk points are (with a bit of transparency)
             if (m_showNKPoints)
             {
+                cr->set_source_rgba(
+                        static_cast<float>(red)  / 255,
+                        static_cast<float>(green)/ 255,
+                        static_cast<float>(blue) / 255,
+                        STARTING_COORD_ALPHA);
+
                 STLCoordinateSet_t nkPointSet;
                 thisPlayer->GetAllNucleationPoints(nkPointSet);
                 STLCoordinateSet_t::const_iterator nkIterator = nkPointSet.begin();
                 while(nkIterator != nkPointSet.end())
                 {
                     const Coordinate &thisCoord = *nkIterator;
-                    cr->arc(xc - squareWidth/2  +
-                                (littleSquare * thisCoord.m_col) + littleSquare/2,
-                            yc - squareHeight/2 +
-                                (littleSquare * thisCoord.m_row) + littleSquare/2,
-                            (littleSquare / 2) - (littleSquare / 3),
-                            0.0,
-                            2 * M_PI);
-                    cr->fill();
+                    STLCoordinateSet_t::iterator globalIterator = globalNKPointSet.find(thisCoord);
+                    if (globalIterator == globalNKPointSet.end())
+                    {
+                        // this nk point is not shared. Draw it with the default colour
+                        globalNKPointSet.insert(thisCoord);
+
+                        cr->arc(xc - squareWidth/2  +
+                                    (littleSquare * thisCoord.m_col) + littleSquare/2,
+                                yc - squareHeight/2 +
+                                    (littleSquare * thisCoord.m_row) + littleSquare/2,
+                                (littleSquare / 2) - (littleSquare / 3),
+                                0.0,
+                                2 * M_PI);
+                        cr->fill();
+                    }
+                    else
+                    {
+                        // shared nk point. Draw it black
+                        cr->save();
+
+                        cr->set_operator(Cairo::OPERATOR_CLEAR);
+                        cr->set_source_rgba(
+                                COLOUR_BLACK_CHANNEL_RED,
+                                COLOUR_BLACK_CHANNEL_GREEN,
+                                COLOUR_BLACK_CHANNEL_BLUE,
+                                STARTING_COORD_ALPHA);
+
+                        cr->arc(xc - squareWidth/2  +
+                                    (littleSquare * thisCoord.m_col) + littleSquare/2,
+                                yc - squareHeight/2 +
+                                    (littleSquare * thisCoord.m_row) + littleSquare/2,
+                                (littleSquare / 2) - (littleSquare / 3),
+                                0.0,
+                                2 * M_PI);
+                        cr->fill();
+
+                        cr->restore();
+                    }
 
                     nkIterator++;
-                }
-            }
-        }
+                } // while(nkIterator != nkPointSet.end())
+            } // if (m_showNKPoints)
+        } // else if ( thisPlayer->NumberOfPiecesAvailable() == e_numberOfPieces)
 
         // next player...
         it++;
     }
-
-
-    // line width and colour for the border of the board
-    cr->set_line_width(BOARD_BORDER_LINE_WIDTH);
-    cr->set_source_rgb(
-            BOARD_BORDER_RED,
-            BOARD_BORDER_GREEN,
-            BOARD_BORDER_BLUE);
-
-    // draw the border of the board
-    cr->move_to(xc - squareWidth/2, yc - squareHeight/2);
-    cr->line_to(xc + squareWidth/2, yc - squareHeight/2);
-    cr->line_to(xc + squareWidth/2, yc + squareHeight/2);
-    cr->line_to(xc - squareWidth/2, yc + squareHeight/2);
-    cr->line_to(xc - squareWidth/2, yc - squareHeight/2);
-
-    // line for the insides of the board
-    cr->set_line_width(BOARD_LINE_WIDTH);
-    cr->set_source_rgb(
-            BOARD_RED,
-            BOARD_GREEN,
-            BOARD_BLUE);
-
-    // draw the inside lines of the board
-    for (int32_t i = 1; i < m_theBoard.GetNRows(); i++)
-    {
-        cr->move_to(xc - squareWidth/2 + littleSquare*i, yc - squareHeight/2);
-        cr->line_to(xc - squareWidth/2 + littleSquare*i, yc + squareHeight/2);
-    }
-
-    for (int32_t i = 1; i < m_theBoard.GetNColumns(); i++)
-    {
-        cr->move_to(xc - squareWidth/2, yc - squareHeight/2 + littleSquare*i);
-        cr->line_to(xc + squareWidth/2, yc - squareHeight/2 + littleSquare*i);
-    }
-
-    // commit the changes to the screen!
-    cr->stroke();
 
     // print the current selected piece in the place where the mouse pointer is
     // if there's a currently selected piece and a current player
@@ -314,15 +317,15 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
                         static_cast<float>(red)  / 255,
                         static_cast<float>(green)/ 255,
                         static_cast<float>(blue) / 255,
-                        GHOST_PIECE_ALPHA_TRANSPARENCY);
+                        GHOST_PIECE_ALPHA_RIGHT);
             }
             else
             {
                 cr->set_source_rgba(
-                        GHOST_PIECE_WRONG_RED,
-                        GHOST_PIECE_WRONG_GREEN,
-                        GHOST_PIECE_WRONG_BLUE,
-                        GHOST_PIECE_ALPHA_TRANSPARENCY);
+                        static_cast<float>(red)  / 255,
+                        static_cast<float>(green)/ 255,
+                        static_cast<float>(blue) / 255,
+                        GHOST_PIECE_ALPHA_WRONG);
             }
         }
         else if (Rules::IsPieceDeployable(
@@ -335,15 +338,15 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
                     static_cast<float>(red)  / 255,
                     static_cast<float>(green)/ 255,
                     static_cast<float>(blue) / 255,
-                    GHOST_PIECE_ALPHA_TRANSPARENCY);
+                    GHOST_PIECE_ALPHA_RIGHT);
         }
         else
         {
             cr->set_source_rgba(
-                    GHOST_PIECE_WRONG_RED,
-                    GHOST_PIECE_WRONG_GREEN,
-                    GHOST_PIECE_WRONG_BLUE,
-                    GHOST_PIECE_ALPHA_TRANSPARENCY);
+                    static_cast<float>(red)  / 255,
+                    static_cast<float>(green)/ 255,
+                    static_cast<float>(blue) / 255,
+                    GHOST_PIECE_ALPHA_WRONG);
         }
 
         // draw the piece
@@ -363,7 +366,7 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
         }
     }
 
-    cr->restore();
+    //cr->restore();
 
     // add a beautiful effect to the latest piece deployed on the board
     if ( (m_latestPieceDeployedEffectOn == true) &&
@@ -406,6 +409,43 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
             cr->fill();
         }
     }
+
+    // line width and colour for the border of the board
+    cr->set_line_width(BOARD_BORDER_LINE_WIDTH);
+    cr->set_source_rgb(
+            BOARD_BORDER_RED,
+            BOARD_BORDER_GREEN,
+            BOARD_BORDER_BLUE);
+
+    // draw the border of the board
+    cr->move_to(xc - squareWidth/2, yc - squareHeight/2);
+    cr->line_to(xc + squareWidth/2, yc - squareHeight/2);
+    cr->line_to(xc + squareWidth/2, yc + squareHeight/2);
+    cr->line_to(xc - squareWidth/2, yc + squareHeight/2);
+    cr->line_to(xc - squareWidth/2, yc - squareHeight/2);
+
+    // line for the insides of the board
+    cr->set_line_width(BOARD_LINE_WIDTH);
+    cr->set_source_rgb(
+            BOARD_RED,
+            BOARD_GREEN,
+            BOARD_BLUE);
+
+    // draw the inside lines of the board
+    for (int32_t i = 1; i < m_theBoard.GetNRows(); i++)
+    {
+        cr->move_to(xc - squareWidth/2 + littleSquare*i, yc - squareHeight/2);
+        cr->line_to(xc - squareWidth/2 + littleSquare*i, yc + squareHeight/2);
+    }
+
+    for (int32_t i = 1; i < m_theBoard.GetNColumns(); i++)
+    {
+        cr->move_to(xc - squareWidth/2, yc - squareHeight/2 + littleSquare*i);
+        cr->line_to(xc + squareWidth/2, yc - squareHeight/2 + littleSquare*i);
+    }
+
+    // commit the changes to the screen!
+    cr->stroke();
 
     return true;
 }

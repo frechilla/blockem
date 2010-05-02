@@ -36,6 +36,7 @@
 #include <gtkmm.h>
 
 #include "gui_about_dialog.h"
+#include "gui_config_dialog.h"
 #include "gui_drawing_area_show_pieces.h"
 #include "gui_drawing_area_board.h"
 #include "gui_exception.h"
@@ -106,6 +107,9 @@ private:
 
     /// @brief the about dialog class
     AboutDialog* m_aboutDialog;
+
+    /// @brief the config dialog class
+    ConfigDialog* m_configDialog;
 
     /// @brief the drawing area where the pieces can be picked up by the user
     DrawingAreaShowPieces m_pickPiecesDrawingArea;

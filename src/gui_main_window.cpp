@@ -151,6 +151,14 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
         }
     }
 
+    // retrieve the config dialog. It must be retrieved calling get_widget_derived
+    // otherwise app will core
+    m_gtkBuilder->get_widget_derived(GUI_CONFIG_DIALOG_NAME, m_configDialog);
+    if (m_configDialog == NULL)
+    {
+        throw new GUIException(std::string("ConfigDialog retrieval failed"));
+    }
+
     // retrieve the about dialog. It must be retrieved calling get_widget_derived
     // otherwise app will core
     m_gtkBuilder->get_widget_derived(GUI_ABOUT_DIALOG_NAME, m_aboutDialog);
@@ -326,11 +334,15 @@ MainWindow::~MainWindow()
     // it might cause a lot of trouble if there are more than 1 instance of MainWindow
     g_pMainWindow = NULL;
 
+    // delete the worker thread
+    m_workerThread.Join();
+
     // http://library.gnome.org/devel/gtkmm/stable/classGtk_1_1Builder.html#ab8c6679c1296d6c4d8590ef907de4d5a
     // Note that you are responsible for deleting top-level widgets (windows and dialogs) instantiated
     // by the Builder object. Other widgets are instantiated as managed so they will be deleted
     // automatically if you add them to a container widget
     delete(m_aboutDialog);
+    delete(m_configDialog);
     //delete(m_editPieceTable);
 }
 
@@ -353,8 +365,8 @@ bool MainWindow::MainWindow_DeleteEvent(GdkEventAny*)
         }
     }
 
-    // kill the worker thread
-    m_workerThread.Join();
+    // cancel the worker thread
+    m_workerThread.CancelComputing();
 
     // continue with delete event
     return false;
@@ -379,7 +391,7 @@ void MainWindow::MenuItemGameQuit_Activate()
         }
     }
 
-    m_workerThread.Join();
+    m_workerThread.CancelComputing();
 
     // exit the app
     this->hide();
@@ -387,6 +399,7 @@ void MainWindow::MenuItemGameQuit_Activate()
 
 void MainWindow::MenuItemGameNew_Activate()
 {
+    /*
     std::stringstream theMessage;
     if ( (m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1).NumberOfPiecesAvailable() == e_numberOfPieces) &&
          (m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2).NumberOfPiecesAvailable() == e_numberOfPieces) )
@@ -417,6 +430,48 @@ void MainWindow::MenuItemGameNew_Activate()
     {
         LaunchNewGame();
     }
+    */
+
+    Gtk::ResponseType result = static_cast<Gtk::ResponseType>(m_configDialog->run());
+    switch(result)
+    {
+    case Gtk::RESPONSE_OK:
+    {
+        if (m_configDialog->IsPlayer1TypeComputer())
+        {
+            Game1v1Config::Instance().SetPlayer1Type(Game1v1Config::e_playerComputer);
+        }
+        else
+        {
+            Game1v1Config::Instance().SetPlayer1Type(Game1v1Config::e_playerHuman);
+        }
+
+        if (m_configDialog->IsPlayer2TypeComputer())
+        {
+            Game1v1Config::Instance().SetPlayer2Type(Game1v1Config::e_playerComputer);
+        }
+        else
+        {
+            Game1v1Config::Instance().SetPlayer2Type(Game1v1Config::e_playerHuman);
+        }
+
+        LaunchNewGame();
+        break;
+    }
+    case Gtk::RESPONSE_CANCEL:
+    case Gtk::RESPONSE_DELETE_EVENT:
+        //TODO restore config dialog
+        //std::cout << "cancel" << std::endl;
+        break;
+    default:
+        // unexpected
+#ifdef DEBUG
+        assert(0);
+#endif
+        break;
+    } // switch(result)
+
+    m_configDialog->hide();
 }
 
 void MainWindow::MenuItemSettingsViewNKPoints_Toggled()
@@ -552,7 +607,7 @@ void MainWindow::RequestThreadToComputeNextMove(
         }
 
         // kill the worker thread
-        m_workerThread.Join();
+        m_workerThread.CancelComputing();
 
         // exit the app
         this->hide();
