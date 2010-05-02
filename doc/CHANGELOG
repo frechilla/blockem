@@ -1,8 +1,9 @@
 : Version 0.2.0
-    - An option has been added to show the nucleation points on the board
+    - An option has been added to show the nucleation points on the board.
+      Shared nucleation points are drawn in black colour.
     - App can be set up to play human vs human games
     - When playing 1vs1 games against the computer, player1 (the one who goes
-      first) can be selected to be the computer (previous version forced the
+      first) can be selected to be the computer (previous versions forced the
       human player to go always first)
     - Starting coordinate can be edited when a new game is launched
     - Piece edition improved for those pieces with only one possible

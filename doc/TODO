@@ -20,10 +20,9 @@ basic things that need to be done:
  + Add option to play a game which aim is allocating all the pieces on the 
    board, with no opponent
  + Game1v1 should be set up to be played between different (or same) heuristic
-   algorithms, that is, computer vs computer
+   algorithms, that is, computer vs computer. When a game is configured like
+   this it gives a fatal error due to an error communicating with the worker
+   thread
  + Improve evaluation function through bitwise representations of boards and 
    pieces
- + shared nk points should be drawn with a different colour. At the moment
-   they are drawn with player2's colour because it's added last to the board
-   drawing area's list of players
    
