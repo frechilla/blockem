@@ -33,23 +33,17 @@
 
 #include "game1v1.h"
 
-/// name for the player me. The one that MinMax tries to maximise (and win)
-static const char PLAYER_1_NAME[] = "Human";
-/// name fot the opponent (the human player. Me is the computer's)
-static const char PLAYER_2_NAME[] = "Computer";
+/// player1's name
+static const char PLAYER_1_NAME[] = "Player1";
+/// player2's name
+static const char PLAYER_2_NAME[] = "Player2";
 
 /// it will be used as an empty space in the board
-static const char CHAR_EMPTY    = ' ';
+static const char CHAR_EMPTY   = ' ';
 /// it will be used as the character for 'me' in the board
-static const char CHAR_ME       = 'X';
+static const char CHAR_PLAYER1 = 'X';
 /// it will be used as the character for 'opponent' in the board
-static const char CHAR_OPPONENT = 'O';
-
-/// initial coordinate for player 2
-static const Coordinate STARTING_COORD_PLAYER2 = Coordinate(9, 9);
-
-/// initial coordinate for player 1
-static const Coordinate STARTING_COORD_PLAYER1 = Coordinate(4, 4);
+static const char CHAR_PLAYER2 = 'O';
 
 /// Assume makes an ass out of u and me, but sometimes assumptions must be made
 /// This constant represents how many 5-square pieces will be put in-a-row before even
@@ -58,10 +52,12 @@ static const Coordinate STARTING_COORD_PLAYER1 = Coordinate(4, 4);
 static const int8_t MIN_5SQUARE_PIECES_AT_START = 5;
 
 
-Game1v1::Game1v1() :
+Game1v1::Game1v1(
+    const Coordinate &a_player1StartingCoord,
+    const Coordinate &a_player2StartingCoord) :
 	m_board(BOARD_1VS1_ROWS, BOARD_1VS1_COLUMNS, CHAR_EMPTY),
-    m_player1(std::string(PLAYER_1_NAME), CHAR_ME, BOARD_1VS1_ROWS, BOARD_1VS1_COLUMNS, STARTING_COORD_PLAYER1),
-    m_player2(std::string(PLAYER_2_NAME), CHAR_OPPONENT, BOARD_1VS1_ROWS, BOARD_1VS1_COLUMNS, STARTING_COORD_PLAYER2),
+    m_player1(std::string(PLAYER_1_NAME), CHAR_PLAYER1, BOARD_1VS1_ROWS, BOARD_1VS1_COLUMNS, a_player1StartingCoord),
+    m_player2(std::string(PLAYER_2_NAME), CHAR_PLAYER2, BOARD_1VS1_ROWS, BOARD_1VS1_COLUMNS, a_player2StartingCoord),
     m_progressFunctor(NULL)
 {
 	// initialise the players' nk according to the current state of the blokus board
@@ -927,11 +923,13 @@ int32_t Game1v1::MinMaxAlphaBetaCompute(
     return alpha;
 }
 
-void Game1v1::Reset()
+void Game1v1::Reset(
+    const Coordinate &a_player1StartingCoord,
+    const Coordinate &a_player2StartingCoord)
 {
     m_board.Reset();
-    m_player1.Reset();
-    m_player2.Reset();
+    m_player1.Reset(a_player1StartingCoord);
+    m_player2.Reset(a_player2StartingCoord);
 }
 
 bool Game1v1::LoadGame(std::istream& a_inStream)

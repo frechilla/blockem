@@ -49,6 +49,13 @@ const int32_t BOARD_1VS1_ROWS    = 14;
 /// standard number of columns for a 1vs1 game
 const int32_t BOARD_1VS1_COLUMNS = 14;
 
+/// initial coordinate for player 2
+static const Coordinate DEFAULT_STARTING_COORD_PLAYER2 = Coordinate(9, 9);
+
+/// initial coordinate for player 1
+static const Coordinate DEFAULT_STARTING_COORD_PLAYER1 = Coordinate(4, 4);
+
+
 /// @brief contains the definition of a game 1vs1 of blokus
 /// This class is meant to contain all the rules about blokus 1vs1
 class Game1v1
@@ -73,7 +80,11 @@ public:
 
 	/// @brief builds the game
 	/// It creates a board where the game will be played
-    Game1v1();
+    /// @param player1 starting coordinate 
+    /// @param player2 starting coordinate 
+    Game1v1(
+        const Coordinate &a_player1StartingCoord = DEFAULT_STARTING_COORD_PLAYER1,
+        const Coordinate &a_player2StartingCoord = DEFAULT_STARTING_COORD_PLAYER2);
 	virtual ~Game1v1();
 
 	/// @returns the board of the game
@@ -91,8 +102,8 @@ public:
     /// @returns a const reference to the opponent of the player passed as parameter
     const Player& GetOpponent(eGame1v1Player_t a_playerType) const;
 
-    /// @returns the type of te player passed as a parameter.
-    /// if that player doesn't belong to the Game type returned will be undefined
+    /// @return the type of the player passed as a parameter.
+    /// if that player doesn't belong to the Game, player type returned will be undefined
     eGame1v1Player_t GetPlayerType(const Player &a_player) const;
 
 	/// @brief sets the player colour
@@ -153,7 +164,11 @@ public:
 
     /// @brief Blanks out the board and reset the players so they have all the pieces available
     /// it can be used to restart the game (to start in a new blank game)
-    void Reset();
+    /// @param player1 starting coordinate for the new game
+    /// @param player2 starting coordinate for the new game
+    void Reset(
+        const Coordinate &a_player1StartingCoord = DEFAULT_STARTING_COORD_PLAYER1,
+        const Coordinate &a_player2StartingCoord = DEFAULT_STARTING_COORD_PLAYER2);
 
     /// @brief load a game from an in_stream
     /// the in_stream has to contain the output of a game as it is done by Blokus1v1Game::SaveGame

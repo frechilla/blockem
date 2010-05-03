@@ -123,5 +123,9 @@ const char GUI_DRAWINGAREA_EDITING_PIECE[] = "drawingarea_editing_piece";
 const char GUI_HBOX_STATUSBAR_NAME[]       = "hbox_statusbar";
 const char GUI_CONFIG_TABLE_PLAYER1[]      = "config_table_player1";
 const char GUI_CONFIG_TABLE_PLAYER2[]      = "config_table_player2";
+const char GUI_CONFIG_SPINBUTTON_STARTROW1[] = "spinbutton_startingrow1";
+const char GUI_CONFIG_SPINBUTTON_STARTCOL1[] = "spinbutton_startingcol1";
+const char GUI_CONFIG_SPINBUTTON_STARTROW2[] = "spinbutton_startingrow2";
+const char GUI_CONFIG_SPINBUTTON_STARTCOL2[] = "spinbutton_startingcol2";
 
 #endif /* GUI_GLADE_H_ */

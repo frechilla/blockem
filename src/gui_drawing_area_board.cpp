@@ -31,9 +31,6 @@
 #include "gui_drawing_area_board.h"
 #include "rules.h"
 
-/// @brief uninitialised coord value not to print pieces in random places
-static const int32_t COORD_UNITIALISED = 0xffffffff;
-
 //TODO this should be set using getters and setters
 static const float BOARD_BORDER_RED        = 0.8;
 static const float BOARD_BORDER_GREEN      = 0.0;
@@ -66,10 +63,10 @@ DrawingAreaBoard::DrawingAreaBoard(const Board &a_board) :
     m_theBoard(a_board),
     m_currentPlayer(NULL),
     m_currentPiece(e_noPiece),
-    m_currentCoord(COORD_UNITIALISED, COORD_UNITIALISED),
+    m_currentCoord(COORD_UNINITIALISED, COORD_UNINITIALISED),
     m_latestPieceDeployedEffectOn(false), // no glowing piece effect at the beginning
     m_latestPieceDeployed(e_noPiece),
-    m_latestPieceDeployedCoord(COORD_UNITIALISED, COORD_UNITIALISED),
+    m_latestPieceDeployedCoord(COORD_UNINITIALISED, COORD_UNINITIALISED),
     m_latestPieceDeployedPlayer(NULL),
     m_latestPieceDeployedTransparency(LAST_PIECE_EFFECT_INITIAL_ALPHA),
     m_showNKPoints(false) // nlk points won't be shown by default
@@ -295,10 +292,10 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
     // print the current selected piece in the place where the mouse pointer is
     // if there's a currently selected piece and a current player
     // we are so good we'll be using a bit of transparency!
-    if ( (m_currentPlayer != NULL)                &&
-         (m_currentPiece.GetType() != e_noPiece)  &&
-         (m_currentCoord.m_row != COORD_UNITIALISED) &&
-         (m_currentCoord.m_col != COORD_UNITIALISED) )
+    if ( (m_currentPlayer != NULL)                     &&
+         (m_currentPiece.GetType() != e_noPiece)       &&
+         (m_currentCoord.m_row != COORD_UNINITIALISED) &&
+         (m_currentCoord.m_col != COORD_UNINITIALISED) )
     {
         uint8_t red   = 0;
         uint8_t green = 0;
@@ -492,13 +489,13 @@ bool DrawingAreaBoard::on_motion_notify_event(GdkEventMotion* event)
             Invalidate();
         }
     }
-    else if ( (m_currentCoord.m_row != COORD_UNITIALISED) ||
-              (m_currentCoord.m_col != COORD_UNITIALISED) )
+    else if ( (m_currentCoord.m_row != COORD_UNINITIALISED) ||
+              (m_currentCoord.m_col != COORD_UNINITIALISED) )
     {
         // the mouse is moving outside the board. update the value
         // of the last coord to unitialised so no "ghost" piece will be
         // painted on the board
-        m_currentCoord.m_row = m_currentCoord.m_col = COORD_UNITIALISED;
+        m_currentCoord.m_row = m_currentCoord.m_col = COORD_UNINITIALISED;
 
         // force the board to be redraw since there might be a ghost piece
         // drawn on the board
@@ -510,10 +507,10 @@ bool DrawingAreaBoard::on_motion_notify_event(GdkEventMotion* event)
 
 bool DrawingAreaBoard::on_leave_notify_event(GdkEventCrossing* event)
 {
-    if ( (m_currentCoord.m_row != COORD_UNITIALISED) ||
-         (m_currentCoord.m_col != COORD_UNITIALISED) )
+    if ( (m_currentCoord.m_row != COORD_UNINITIALISED) ||
+         (m_currentCoord.m_col != COORD_UNINITIALISED) )
     {
-        m_currentCoord.m_row = m_currentCoord.m_col = COORD_UNITIALISED;
+        m_currentCoord.m_row = m_currentCoord.m_col = COORD_UNINITIALISED;
 
         // force the board to be redraw. The mouse pointer went out
         // of the drawing area
@@ -627,7 +624,7 @@ void DrawingAreaBoard::CancelLatestPieceDeployedEffect()
 gboolean DrawingAreaBoard::timerCallback(void* param)
 {
     static Piece sLatestPieceDeployedProcessed(e_noPiece);
-    static Coordinate sLatestPieceDeployedCoord(COORD_UNITIALISED, COORD_UNITIALISED);
+    static Coordinate sLatestPieceDeployedCoord(COORD_UNINITIALISED, COORD_UNINITIALISED);
     static bool alphaGrowing = true; // transparency grows or drops
 
     DrawingAreaBoard* pThis = static_cast<DrawingAreaBoard*> (param);

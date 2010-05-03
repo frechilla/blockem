@@ -30,6 +30,8 @@
 #ifndef GUIEXCEPTION_H_
 #define GUIEXCEPTION_H_
 
+#include <stdexcept>
+
 /// @brief default exception handling the GUI
 class GUIException : public std::runtime_error
 {

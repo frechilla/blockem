@@ -103,7 +103,10 @@ private:
     Coordinate m_lastCoord;
 
     /// @brief the worker thread used to leave the GUI active while the next moves is calculated
-    MainWindowWorkerThread m_workerThread;
+    MainWindowWorkerThread m_workerThread;    
+
+    /// @brief randomizer 'cos we might use a bit of randomness when computing the next move
+    GRand* m_randomizer;
 
     /// @brief the about dialog class
     AboutDialog* m_aboutDialog;
@@ -177,8 +180,15 @@ private:
 
     /// @brief requests the worker thread to compute a move
     /// It finishes the app if there's an error communicating with this thread
+    /// @param player whose move will be calculated by the worker thread
+    /// @param Caller will block until worker thread finishes current job and starts to compute
+    ///        the job notified by this call. If it set to true it can only fail if worker thread
+    ///        is requested to die
+    /// @param previous move coordinate
+    /// @param previous move piece
     void RequestThreadToComputeNextMove(
             Game1v1::eGame1v1Player_t a_whoMoves,
+            bool                      a_blockCall = false,
             const Coordinate         &a_coordinate = Coordinate(),
             const Piece              &a_piece      = Piece(e_noPiece));
 

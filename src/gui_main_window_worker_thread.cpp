@@ -25,30 +25,51 @@
 ///           Faustino Frechilla 24 Nov 2009  Original development
 ///           Faustino Frechilla 15-Mar-2010  pthreads moved to gthreads
 ///           Faustino Frechilla 30-Apr-2010  CancelComputing logic added
+///           Faustino Frechilla 02-May-2010  blockin call to ComputeMove
 /// @endhistory
 ///
 // ============================================================================
 
-//TODO iostream should go away once gthreads are handled correctly
-#include <iostream>
 #include "gui_main_window_worker_thread.h"
 
 // flags to set the sig_atomic_t variable to stop the Minimax computing
 // every non-zero value will force the minimax algorithm to return
+//
+// This is a state machine that shows the values that the sig_atomic_t m_threadStatus
+// can hold. Values held by m_threadStatus are shown inside the boxes, transitions
+// indicates which method is called to change the state:
+//
+//                        Join +---------+ Join
+//                 +----------*|   DIE   |*---------+
+//                 |           +---------+          |
+//                 |                * Join          |
+//            +---------+           |           +--------+
+//            | WAITING |*----------+-----------|  STOP  |
+//            +---------+ Thread    |           +--------+
+//      Thread *   |      Routine   |               * Cancel
+//     Routine |   |           +---------+          |
+//             |   +----------*| ACTIVE  |----------+
+//             |   ComputeMove +---------+
+//             |                    |
+//             +--------------------+
+//
 // m_threadStatus is set to PROCESSING_DIE when the thread is told to kill itself
-#define PROCESSING_DIE    3
-// m_threadStatus is set to PROCESSING_STOP when the thread is told to cancel 
+#define PROCESSING_DIE     3
+// m_threadStatus is set to PROCESSING_STOP when the thread is told to cancel
 // current computing process and get back to wait for more jobs
-#define PROCESSING_STOP   2
+#define PROCESSING_STOP    2
 // worker thread waiting for new jobs. m_threadStatus should be set to PROCESSING_ACTIVE
 #define PROCESSING_WAITING 1
 // normal operation. No cancelation nor death requested
-#define PROCESSING_ACTIVE 0
+#define PROCESSING_ACTIVE  0
 
-MainWindowWorkerThread::MainWindowWorkerThread():
+MainWindowWorkerThread::MainWindowWorkerThread() throw (GUIException):
         m_localGame(),
         m_localLatestPiece(e_noPiece),
+        m_localLatestCoord(),
         m_playerToMove(Game1v1::e_Game1v1Player1), // by default. It will be always set before calculating next move anyway
+        m_heuristic(NULL),                         // by default. It will be always set before calculating next move anyway
+        m_searchTreeDepth(3),                      // by default. It will be always set before calculating next move anyway
         m_threadStatus(PROCESSING_WAITING),
         m_thread(NULL),
         m_mutex(NULL),
@@ -57,7 +78,7 @@ MainWindowWorkerThread::MainWindowWorkerThread():
     m_mutex = g_mutex_new();
     if (m_mutex == NULL)
     {
-        std::cerr << "Mutex in worker thread couldn't be initialised" << std::endl;
+        throw new GUIException(std::string("Mutex in worker thread couldn't be initialised"));
 #ifdef DEBUG
         assert(0);
 #endif
@@ -66,16 +87,11 @@ MainWindowWorkerThread::MainWindowWorkerThread():
     m_cond = g_cond_new();
     if (m_cond == NULL)
     {
-        std::cerr << "Conditional variable in worker thread couldn't be initialised" << std::endl;
+        throw new GUIException(std::string("Conditional variable in worker thread couldn't be initialised"));
 #ifdef DEBUG
         assert(0);
 #endif
     }
-
-    // create and initialise the randomizer using now time as the seed
-    GTimeVal timeNow;
-    g_get_current_time(&timeNow);
-    m_randomizer = g_rand_new_with_seed(static_cast<guint32>(timeNow.tv_sec ^ timeNow.tv_usec));
 
     SpawnThread();
 }
@@ -84,11 +100,9 @@ MainWindowWorkerThread::~MainWindowWorkerThread()
 {
     g_cond_free(m_cond);
     g_mutex_free(m_mutex);
-
-    g_rand_free(m_randomizer);
 }
 
-void MainWindowWorkerThread::SpawnThread()
+void MainWindowWorkerThread::SpawnThread() throw (GUIException)
 {
     // configure the option JOINABLE to the thread creation
     bool joinable = true;
@@ -106,8 +120,8 @@ void MainWindowWorkerThread::SpawnThread()
 
     if (m_thread == NULL)
     {
-        std::cerr << "Worker Thread creation failed. System won't work as expected" << std::endl;
-        std::cerr << "    " << err->message << std::endl;
+        throw new GUIException(
+            std::string("Worker Thread creation failed. ") + std::string(err->message));
         g_error_free(err) ;
 #ifdef DEBUG
         assert(0);
@@ -142,7 +156,7 @@ void MainWindowWorkerThread::CancelComputing()
         // worker thread is busy
         // request the thread to stop
         m_threadStatus = PROCESSING_STOP;
-        
+
         // wait for the worker thread to cancel computing before keep going
         while (m_threadStatus == PROCESSING_STOP)
         {
@@ -167,12 +181,25 @@ bool MainWindowWorkerThread::IsThreadComputingMove()
 bool MainWindowWorkerThread::ComputeMove(
             const Game1v1            &a_game,
             Game1v1::eGame1v1Player_t a_whoMoves,
+            Heuristic::EvalFunction_t a_heuristic,
+            int32_t                   a_searchTreeDepth,
+            bool                      a_blockCaller,
             const Coordinate         &a_latestCoordinate,
             const Piece              &a_latestPiece)
 {
     bool rv = false;
 
     g_mutex_lock(m_mutex);
+
+    // block current thread if a_blockCaller is set to true until worker thread
+    // is ready to calculate next move or worker thread is requested to die
+    while ( a_blockCaller &&
+           (m_threadStatus != PROCESSING_WAITING) &&
+           (m_threadStatus != PROCESSING_DIE) )
+    {
+        g_cond_wait(m_cond, m_mutex);
+    }
+
     if (m_threadStatus == PROCESSING_WAITING)
     {
         // copy the 1v1Game, latest piece (and coord) put down by the opponent
@@ -181,13 +208,15 @@ bool MainWindowWorkerThread::ComputeMove(
         m_localLatestPiece = a_latestPiece;
         m_localLatestCoord = a_latestCoordinate;
         m_playerToMove     = a_whoMoves;
+        m_heuristic        = a_heuristic;
+        m_searchTreeDepth  = a_searchTreeDepth;
 
         // set the thread to calculate a move (computing flag to active)
         m_threadStatus = PROCESSING_ACTIVE;
-        
+
         // wake up the worker thread to start computing the next move
         g_cond_broadcast(m_cond);
-        
+
         // the function will return true
         rv = true;
     }
@@ -213,98 +242,64 @@ void* MainWindowWorkerThread::ThreadRoutine(void *a_ThreadParam)
     {
         g_mutex_lock(thisThread->m_mutex);
 
+        // the move has been calculated. Update the variable accordingly
+        if (thisThread->m_threadStatus != PROCESSING_DIE)
+        {
+            // previous processing was finished (either it was computed or cancelled)
+            // get back to waiting state unless the thread has been told to die
+            thisThread->m_threadStatus = PROCESSING_WAITING;
+        }
+
         while (thisThread->m_threadStatus == PROCESSING_WAITING)
         {
+            // Previous processing is finished, either because it's been calculated
+            // or it has been cancelled. Either way someone might be waiting
+            // for us to notify thread is going to be ready. Send a signal to them to wake them up
+            g_cond_broadcast(thisThread->m_cond);
+
+            // wait for new jobs to arrive
             g_cond_wait(thisThread->m_cond, thisThread->m_mutex);
         }
 
         if (thisThread->m_threadStatus != PROCESSING_ACTIVE)
         {
-            if (thisThread->m_threadStatus == PROCESSING_STOP)
-            {
-                // someone's told us to stop. Get back to wait state
-                // because there wasn't even time to start processing
-                thisThread->m_threadStatus = PROCESSING_WAITING;
-            }
-            
-            // there might be threads waiting for this thread to notify
-            // them we acknowledge their message
-            g_cond_broadcast(thisThread->m_cond);
-            
             // there's nothing to compute
-            // Go back to the beginning to check if we must diw
+            // Go back to the beginning to check if we must die
             g_mutex_unlock(thisThread->m_mutex);
             continue;
         }
 
-        // get out of the mutex
+        // get out of the mutex. m_threadStatus is PROCESSING_ACTIVE
+        // data which saves the next movement to be calculated is protected
+        // (it is only written in ComputeMove, and it cannot be written while
+        // m_threadStatus is set to PROCESSING_ACTIVE)
         g_mutex_unlock(thisThread->m_mutex);
-        
+
         // calculate whose move is going to be calculated
-        const Player &currentPlayer = thisThread->m_localGame.GetPlayer(thisThread->m_playerToMove);
+        //const Player &currentPlayer = thisThread->m_localGame.GetPlayer(thisThread->m_playerToMove);
         const Player &opponent      = thisThread->m_localGame.GetOpponent(thisThread->m_playerToMove);
 
         // we've been told to calculate the move
         do
         {
             resultPiece = Piece(e_noPiece);
-            resultCoord.m_row = resultCoord.m_col = 0;
+            resultCoord = Coordinate();
 
-            int32_t depth = 3;
-            Heuristic::EvalFunction_t heuristicMethod = Heuristic::CalculateNKWeighted;
-            if ( (currentPlayer.NumberOfPiecesAvailable() < 14) &&
-                 (Rules::CanPlayerGo(thisThread->m_localGame.GetBoard(), opponent) ) )
-            {
-                depth = 5;
-                // heuristicMethod = Heuristic::CalculatePiecesPerNKPoint;
-            }
-
-            if (currentPlayer.NumberOfPiecesAvailable() == e_numberOfPieces)
-            {
-                // pass the move made by the opponent to the minmax algorithm at the start half of the times
-                // it will show a bit of randomness at the start to a human user
-                if (g_rand_int_range(thisThread->m_randomizer, 0, 2) == 0)
-                {
-                    resultReturnedValue = thisThread->m_localGame.MinMax(
-                                                heuristicMethod,
-                                                depth,
-                                                thisThread->m_playerToMove,
-                                                resultPiece,
-                                                resultCoord,
-                                                thisThread->m_threadStatus,
-                                                thisThread->m_localLatestCoord,
-                                                thisThread->m_localLatestPiece);
-                }
-                else
-                {
-                    resultReturnedValue = thisThread->m_localGame.MinMax(
-                                                heuristicMethod,
-                                                depth,
-                                                thisThread->m_playerToMove,
-                                                resultPiece,
-                                                resultCoord,
-                                                thisThread->m_threadStatus);
-                }
-            }
-            else
-            {
-                // it's not the starting move
-                resultReturnedValue = thisThread->m_localGame.MinMax(
-                                            heuristicMethod,
-                                            depth,
-                                            thisThread->m_playerToMove,
-                                            resultPiece,
-                                            resultCoord,
-                                            thisThread->m_threadStatus,
-                                            thisThread->m_localLatestCoord,
-                                            thisThread->m_localLatestPiece);
-            }
+            resultReturnedValue = thisThread->m_localGame.MinMax(
+                                        thisThread->m_heuristic,
+                                        thisThread->m_searchTreeDepth,
+                                        thisThread->m_playerToMove,
+                                        resultPiece,
+                                        resultCoord,
+                                        thisThread->m_threadStatus,
+                                        thisThread->m_localLatestCoord,
+                                        thisThread->m_localLatestPiece);
 
             if (thisThread->m_threadStatus != PROCESSING_ACTIVE)
             {
                 resultPiece = e_noPiece;
-                resultCoord = Coordinate(0, 0);
-                
+                resultCoord = Coordinate();
+
                 // no need to notify the cancelled result to any listener
                 break;
             }
@@ -330,23 +325,7 @@ void* MainWindowWorkerThread::ThreadRoutine(void *a_ThreadParam)
                   (Rules::CanPlayerGo(thisThread->m_localGame.GetBoard(),
                                       opponent) == false) );
 
-        // the move has been calculated. Update the variable accordingly
-        g_mutex_lock(thisThread->m_mutex);
-        if (thisThread->m_threadStatus != PROCESSING_DIE)
-        {
-            if (thisThread->m_threadStatus == PROCESSING_STOP)
-            {
-                // we've been told to cancel previous processing. They might be
-                // waiting for us to do so. send a signal to them to wake them up
-                g_cond_broadcast(thisThread->m_cond);
-            }
-            
-            // processing was finished (both if it was computed or canceled)
-            // get back to waiting state unless the thread has been told to die
-            thisThread->m_threadStatus = PROCESSING_WAITING;
-        }
-        g_mutex_unlock(thisThread->m_mutex);
-    }
+    } // while (thisThread->m_threadStatus != PROCESSING_DIE)
 
     return NULL;
 }

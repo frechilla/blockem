@@ -63,6 +63,17 @@ public:
         e_heuristicCount, // stores the amount of heuristics. Must be always at the end
     } eHeuristicType_t;
 
+    /// heuristic data to be used in the heuristics config array
+    typedef struct
+    {
+        eHeuristicType_t m_type;
+        EvalFunction_t m_evalFunction;
+        std::string m_name;
+        std::string m_description;
+    } sHeuristicData_t;
+
+    static const sHeuristicData_t m_heuristicData[e_heuristicCount];
+
     virtual ~Heuristic();
 
     /// Calculate the heuristic value taking into account only the amount

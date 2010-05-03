@@ -38,7 +38,7 @@ class Singleton
 public:
     static TClass& Instance()
     {
-        if (m_instancePtr == NULL)
+        if (m_instancePtr == 0)
         {
             static TClass instance;
             m_instancePtr = &instance;
@@ -52,7 +52,7 @@ public:
     static TClass* GetPtr()
     {
 #ifdef DEBUG
-        assert(m_instancePtr != NULL);
+        assert(m_instancePtr != 0);
 #endif
 
         return m_instancePtr;
@@ -65,6 +65,6 @@ protected:
     static TClass *m_instancePtr;
 };
 
-template <class TClass> TClass* Singleton<TClass>::m_instancePtr = NULL;
+template <class TClass> TClass* Singleton<TClass>::m_instancePtr = 0;
 
 #endif // _SINGLETON_H_

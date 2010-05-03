@@ -65,7 +65,8 @@ public:
 
     /// Reset the player to its original configuration
     /// that is, no nucleation points saved and all the pieces present and reset too
-    void Reset();
+    /// @param player's starting coordinate
+    void Reset(const Coordinate &a_startingCoordinate = Coordinate(0,0));
 
     /// Sets the colour which represents this player
     /// values are uint8_t, that is, from 0 to 255

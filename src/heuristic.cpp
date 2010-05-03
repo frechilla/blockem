@@ -33,6 +33,21 @@
 #include "player.h"
 #include "rules.h"
 
+// instantiate the const heuristic data array. Heuristics must be defined here
+// in the same order they are described in Heuristic::eHeuristicType_t in heuristic.h
+const Heuristic::sHeuristicData_t Heuristic::m_heuristicData[e_heuristicCount] =
+{
+    {e_heuristicNKWeighted,
+     Heuristic::CalculateNKWeighted,
+     std::string("Nucleation Point weighted"),
+     std::string("Nucleation points are weighted. The more in the middle in the board a NK point is, the more important it is")
+    },
+    {e_heuristicSimple,
+     Heuristic::CalculateSimple,
+     std::string("Simple"),
+     std::string("Takes into account only the amount of squares of the deployed pieces")
+    }
+};
 
 Heuristic::Heuristic()
 {

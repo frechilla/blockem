@@ -122,12 +122,16 @@ Player& Player::operator= (const Player &a_src)
 
 void Player::CopyFromObject(const Player &a_src)
 {
-    this->m_name             = a_src.m_name;
-    this->m_presentationChar = a_src.m_presentationChar;
-    this->m_nPiecesAvailable = a_src.m_nPiecesAvailable;
-    this->m_nRowsInBoard     = a_src.m_nRowsInBoard;
-    this->m_nColumnsInBoard  = a_src.m_nColumnsInBoard;
-    this->m_nkPointsCount    = a_src.m_nkPointsCount;
+    this->m_name               = a_src.m_name;
+    this->m_presentationChar   = a_src.m_presentationChar;
+    this->m_nPiecesAvailable   = a_src.m_nPiecesAvailable;
+    this->m_nRowsInBoard       = a_src.m_nRowsInBoard;
+    this->m_nColumnsInBoard    = a_src.m_nColumnsInBoard;
+    this->m_nkPointsCount      = a_src.m_nkPointsCount;
+    this->m_startingCoordinate = a_src.m_startingCoordinate;
+    this->m_colourRed          = a_src.m_colourRed;
+    this->m_colourGreen        = a_src.m_colourGreen;
+    this->m_colourBlue         = a_src.m_colourBlue;
 
     // copy the state of the pieces
     for (int32_t i = e_minimumPieceIndex; i < e_numberOfPieces ; i++)
@@ -160,7 +164,7 @@ void Player::GetColour(uint8_t &out_colourRed, uint8_t &out_colourGreen, uint8_t
     out_colourBlue  = m_colourBlue;
 }
 
-void Player::Reset()
+void Player::Reset(const Coordinate &a_startingCoordinate)
 {
 	// reset all the pieces owned by the player
 	for (int8_t i = e_minimumPieceIndex; i < e_numberOfPieces; i++)
@@ -181,6 +185,8 @@ void Player::Reset()
 			UnsetNucleationPoint(i, j);
 		}
 	}
+    
+    SetStartingCoordinate(a_startingCoordinate);
 
 #ifdef DEBUG
 	assert(m_nkPointsCount == 0);

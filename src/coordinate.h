@@ -23,6 +23,7 @@
 /// @history
 /// Ref       Who                When         What
 ///           Faustino Frechilla 11-Sep-2009  Original development
+///           Faustino Frechilla 02-May-2010  Uninitialised value
 /// @endhistory
 ///
 // ============================================================================
@@ -30,13 +31,16 @@
 #ifndef COORDINATE_H_
 #define COORDINATE_H_
 
+/// uninitialised coord value
+const int32_t COORD_UNINITIALISED = 0xf0000000; // (-268435456)
+
 /// @brief represents a coordinate in the board
 class Coordinate
 {
 public:
 	Coordinate():
-	    m_row(0),
-	    m_col(0)
+	    m_row(COORD_UNINITIALISED),
+	    m_col(COORD_UNINITIALISED)
 	{};
 	Coordinate(int32_t a_row, int32_t a_column):
 	    m_row(a_row),

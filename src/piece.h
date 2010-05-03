@@ -83,6 +83,7 @@ public:
 	Piece(ePieceType_t a_type);
     virtual ~Piece();
 
+    /// @brief array of strings which describe every possible piece
     static const std::string PieceDescription[e_numberOfPieces];
 
     /// list of coords that describe the shape of the piece

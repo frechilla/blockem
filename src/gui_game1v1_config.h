@@ -30,9 +30,12 @@
 #ifndef __GUI_GAME1V1_CONFIG__
 #define __GUI_GAME1V1_CONFIG__
 
-#include "heuristic.h"
 #include "singleton.h"
+#include "heuristic.h"
+#include "coordinate.h"
 
+/// depth should be set to this value whenever search tree depth is
+/// left up to the Application
 const int32_t GAME1V1CONFIG_DEPTH_AUTOADJUST = 0;
 
 /// singleton which stores the configuration to apply to Game1v1
@@ -46,55 +49,66 @@ public:
         e_playerComputer,
         e_playerHuman,
     } ePlayerType_t;
-    
-    /// @brief contains the data relative to a heuristic
-    typedef struct
-    {
-        Heuristic::EvalFunction_t m_evalFunction;
-        std::string m_name;
-        std::string m_description;
-    } sHeuristicConfig_t;
 
-    /// @brief returns the current heuristic type
-    Heuristic::eHeuristicType_t GetHeuristicType() const; 
-    /// @brief sets the current heuristic
-    void SetHeuristicType(Heuristic::eHeuristicType_t a_heuristic);
-    /// @brief returns the data of 'a_heuristic'
-    const sHeuristicConfig_t& GetHeuristicData(Heuristic::eHeuristicType_t a_heuristic) const;
-    /// @brief sets the player1 type
-    void SetPlayer1Type(ePlayerType_t a_playerType);
+    /// @brief returns player1's heuristic type
+    Heuristic::eHeuristicType_t GetHeuristicTypePlayer1() const;
+    /// @brief returns player2's heuristic type
+    Heuristic::eHeuristicType_t GetHeuristicTypePlayer2() const;
     /// @brief returns true if player1 is set to computer type
-    bool IsPlayer1Computer();
-    /// @brief sets the player2 type
-    void SetPlayer2Type(ePlayerType_t a_playerType);
+    bool IsPlayer1Computer() const;
     /// @brief returns true if player2 is set to computer type
-    bool IsPlayer2Computer();
-    /// @brief sets the minimax depth
-    /// if a_depth is lower or equal to 0, minimax depth will be set to GAME1V1CONFIG_DEPTH_AUTOADJUST,
-    /// which means autoadjust value depending on complexity of search tree
-    void SetMinimaxDepth(int32_t a_depth);
-    /// @brief returns the minimax depth
+    bool IsPlayer2Computer() const;
+    /// @brief returns the minimax depth for player1
     /// GAME1V1CONFIG_DEPTH_AUTOADJUST means autoadjust value depending on complexity of search tree
-    int32_t GetMinimaxDepth() const;
+    int32_t GetMinimaxDepthPlayer1() const;
+    /// @brief returns the minimax depth for player1
+    /// GAME1V1CONFIG_DEPTH_AUTOADJUST means autoadjust value depending on complexity of search tree
+    int32_t GetMinimaxDepthPlayer2() const;
     /// @brief gets the colour of player1
     /// saves the values in the 3 paremeter references
     void GetPlayer1Colour(uint8_t &red, uint8_t &green, uint8_t &blue) const;
     /// @brief gets the colour of player2
     /// saves the values in the 3 paremeter references
     void GetPlayer2Colour(uint8_t &red, uint8_t &green, uint8_t &blue) const;
-    
+    /// @return player1's starting coordinate
+    const Coordinate& GetPlayer1StartingCoord() const;
+    /// @return player2's starting coordinate
+    const Coordinate& GetPlayer2StartingCoord() const;
+
+    /// @brief sets player1's current heuristic
+    void SetHeuristicTypePlayer1(Heuristic::eHeuristicType_t a_heuristic);
+    /// @brief sets player2's current heuristic
+    void SetHeuristicTypePlayer2(Heuristic::eHeuristicType_t a_heuristic);
+    /// @brief sets the player1 type
+    void SetPlayer1Type(ePlayerType_t a_playerType);
+    /// @brief sets the player2 type
+    void SetPlayer2Type(ePlayerType_t a_playerType);
+    /// @brief sets the minimax depth for player1
+    /// if a_depth is lower or equal to 0, minimax depth will be set to GAME1V1CONFIG_DEPTH_AUTOADJUST,
+    /// which means autoadjust value depending on complexity of search tree
+    void SetMinimaxDepthPlayer1(int32_t a_depth);
+    /// @brief sets the minimax depth for player2
+    /// if a_depth is lower or equal to 0, minimax depth will be set to GAME1V1CONFIG_DEPTH_AUTOADJUST,
+    /// which means autoadjust value depending on complexity of search tree
+    void SetMinimaxDepthPlayer2(int32_t a_depth);
+    /// @brief set player1's starting coordinate
+    void SetPlayer1StartingCoord(const Coordinate &a_startingCoord);
+    /// @brief set player2's starting coordinate
+    void SetPlayer2StartingCoord(const Coordinate &a_startingCoord);
+
 private:
-    /// currently selected heuristic. It will be used as the index for m_heuristicData
-    Heuristic::eHeuristicType_t m_currentHeuristic;
-    /// array with the data of all configured heuristics
-    /// indexes are Heuristic::eHeuristicType_t (in heuristic.h)
-    sHeuristicConfig_t m_heuristicData[Heuristic::e_heuristicCount];
+    /// currently selected heuristic for player1. It can be used as the index for Heuristic::m_heuristicData
+    Heuristic::eHeuristicType_t m_currentHeuristicPlayer1;
+    /// currently selected heuristic for player2. It can be used as the index for Heuristic::m_heuristicData
+    Heuristic::eHeuristicType_t m_currentHeuristicPlayer2;
     /// type of player of player1
     ePlayerType_t m_player1Type;
     /// type of player of player2
     ePlayerType_t m_player2Type;
-    /// depth for the minimax algorithm. 0 means unset
-    int32_t m_minimaxDepth;
+    /// depth for the minimax algorithm for player1. GAME1V1CONFIG_DEPTH_AUTOADJUST means autoadjust
+    int32_t m_minimaxDepthPlayer1;
+    /// depth for the minimax algorithm for player2. GAME1V1CONFIG_DEPTH_AUTOADJUST means autoadjust
+    int32_t m_minimaxDepthPlayer2;
     /// red channel of player1's colour
     uint8_t m_player1Red;
     /// green channel of player1's colour
@@ -107,10 +121,14 @@ private:
     uint8_t m_player2Green;
     /// blue channel of player2's colour
     uint8_t m_player2Blue;
+    /// player1's starting coordinate
+    Coordinate m_player1StartingCoord;
+    /// player2's starting coordinate
+    Coordinate m_player2StartingCoord;
 
     friend class Singleton<Game1v1Config>;
-    Game1v1Config();    
-    ~Game1v1Config();  
+    Game1v1Config();
+    ~Game1v1Config();
 };
 
 #endif // __GUI_GAME1V1_CONFIG__

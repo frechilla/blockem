@@ -43,6 +43,7 @@
 #include "gui_main_window.h"
 #include "gui_glade_defs.h"
 #include "game1v1.h"
+#include "gui_game1v1_config.h" // initialise singleton
 
 
 // the following code is needed to load the gui into the application.
@@ -287,6 +288,10 @@ int main(int argc, char **argv)
     MainWindow *pMainWindow = NULL;
     try
     {
+        // initialise singletons before extra threads are created.
+        // Singleton creation is not thread safe
+        Game1v1Config::Instance();
+
         // first of all retrieve the Gtk::window object
         gtkBuilder->get_widget_derived(GUI_MAIN_WINDOW_NAME, pMainWindow);
         if (pMainWindow == NULL)

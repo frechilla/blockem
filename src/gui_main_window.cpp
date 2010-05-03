@@ -41,9 +41,6 @@
 #include "gui_game1v1_config.h"
 #include "gui_glade_defs.h"
 
-/// uninitialised coord value
-static const int32_t COORD_UNITIALISED = 0xffffffff;
-
 /// message to be shown to the user when he/she requested the
 /// application to be closed, and the worker thread is busy computing
 static const char MESSAGE_ASK_BEFORE_CLOSE[] =
@@ -96,11 +93,13 @@ void MainWindow::ProgressUpdate(float a_progress)
     }
 }
 
-MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder)  throw (GUIException):
+MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder) throw (GUIException):
     Gtk::Window(cobject), //Calls the base class constructor
     m_gtkBuilder(a_gtkBuilder),
-    m_the1v1Game(),
-    m_lastCoord(COORD_UNITIALISED, COORD_UNITIALISED),
+    m_the1v1Game(
+        Game1v1Config::Instance().GetPlayer1StartingCoord(),
+        Game1v1Config::Instance().GetPlayer2StartingCoord()),
+    m_lastCoord(COORD_UNINITIALISED, COORD_UNINITIALISED),
     m_workerThread(),
     m_aboutDialog(NULL),
     m_pickPiecesDrawingArea(
@@ -113,18 +112,23 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     m_editPieceTable(NULL),
     m_stopWatchLabelPlayer1(
         STOPWATCH_UPDATE_PERIOD_MILLIS,
-        m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1).GetName() + std::string("'s elapsed time ")),
+        m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1).GetName() + std::string(" elapsed time ")),
     m_stopWatchLabelPlayer2(
         STOPWATCH_UPDATE_PERIOD_MILLIS,
-        m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2).GetName() + std::string("'s elapsed time "))
+        m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2).GetName() + std::string(" elapsed time "))
 {
     //TODO this is dirty (even though it works) the way MainWindow::ProgressUpdate
     // access the MainWindow Instance should be fixed in some way
-    // assert there's no more than 1 instance of MainWindow
 #ifdef DEBUG
+    // assert there's no more than 1 instance of MainWindow
     assert(g_pMainWindow == NULL);
 #endif
     g_pMainWindow = this;
+
+    // create and initialise the randomizer using now time as the seed
+    GTimeVal timeNow;
+    g_get_current_time(&timeNow);
+    m_randomizer = g_rand_new_with_seed(static_cast<guint32>(timeNow.tv_sec ^ timeNow.tv_usec));
 
     // icon of the window
     Glib::RefPtr< Gdk::Pixbuf > icon;
@@ -337,6 +341,9 @@ MainWindow::~MainWindow()
     // delete the worker thread
     m_workerThread.Join();
 
+    // delete the randomizer too
+    g_rand_free(m_randomizer);
+
     // http://library.gnome.org/devel/gtkmm/stable/classGtk_1_1Builder.html#ab8c6679c1296d6c4d8590ef907de4d5a
     // Note that you are responsible for deleting top-level widgets (windows and dialogs) instantiated
     // by the Builder object. Other widgets are instantiated as managed so they will be deleted
@@ -399,44 +406,13 @@ void MainWindow::MenuItemGameQuit_Activate()
 
 void MainWindow::MenuItemGameNew_Activate()
 {
-    /*
-    std::stringstream theMessage;
-    if ( (m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1).NumberOfPiecesAvailable() == e_numberOfPieces) &&
-         (m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2).NumberOfPiecesAvailable() == e_numberOfPieces) )
-    {
-        // the game never started. Restart the user timer
-        theMessage << "This will restart your elapsed time stopwatch. Are you sure?";
-    }
-    else if ( (Rules::CanPlayerGo(m_the1v1Game.GetBoard(), m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1)) == false) &&
-              (Rules::CanPlayerGo(m_the1v1Game.GetBoard(), m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2)) == false) )
-    {
-        // game is finished
-        theMessage << "If a new game starts the board will be wiped out. Are you sure?";
-    }
-    else
-    {
-        theMessage << "Are you sure you want to cancel the current Game?";
-    }
-
-    Gtk::MessageDialog::MessageDialog cancelCurrentGameMessage(
-            *this,
-            theMessage.str().c_str(),
-            true,
-            Gtk::MESSAGE_QUESTION,
-            Gtk::BUTTONS_YES_NO,
-            true);
-
-    if (cancelCurrentGameMessage.run() == Gtk::RESPONSE_YES)
-    {
-        LaunchNewGame();
-    }
-    */
-
     Gtk::ResponseType result = static_cast<Gtk::ResponseType>(m_configDialog->run());
-    switch(result)
+    if (result == Gtk::RESPONSE_OK)
     {
-    case Gtk::RESPONSE_OK:
-    {
+        // retrieve user settings from dialog and use them to set up global configuration
+        // before launching new game
+
+        // type of players
         if (m_configDialog->IsPlayer1TypeComputer())
         {
             Game1v1Config::Instance().SetPlayer1Type(Game1v1Config::e_playerComputer);
@@ -455,21 +431,37 @@ void MainWindow::MenuItemGameNew_Activate()
             Game1v1Config::Instance().SetPlayer2Type(Game1v1Config::e_playerHuman);
         }
 
+        // starting coords
+        Coordinate player1StartingCoord;
+        m_configDialog->GetPlayer1StartingCoord(player1StartingCoord);
+        Coordinate player2StartingCoord;
+        m_configDialog->GetPlayer2StartingCoord(player2StartingCoord);
+        Game1v1Config::Instance().SetPlayer1StartingCoord(player1StartingCoord);
+        Game1v1Config::Instance().SetPlayer2StartingCoord(player2StartingCoord);
+
+        // heuristic
+        Game1v1Config::Instance().SetHeuristicTypePlayer1(m_configDialog->GetPlayer1Heuristic());
+        Game1v1Config::Instance().SetHeuristicTypePlayer2(m_configDialog->GetPlayer2Heuristic());
+
         LaunchNewGame();
-        break;
     }
-    case Gtk::RESPONSE_CANCEL:
-    case Gtk::RESPONSE_DELETE_EVENT:
-        //TODO restore config dialog
-        //std::cout << "cancel" << std::endl;
-        break;
-    default:
-        // unexpected
+#if defined(DEBUG_PRINTING) || defined (DEBUG)
+    else if ( (result == Gtk::RESPONSE_CANCEL) || (result == Gtk::RESPONSE_DELETE_EVENT))
+    {
+        // config dialog cancelled
+        ;
+#ifdef DEBUG_PRINTING
+        std::cout << "Config Dialog cancelled" << std::endl;
+#endif // DEBUG_PRINTING
+    }
 #ifdef DEBUG
+    else
+    {
+        // unexpected
         assert(0);
-#endif
-        break;
-    } // switch(result)
+    }
+#endif // DEBUG
+#endif // defined(DEBUG_PRINTING) || defined (DEBUG)
 
     m_configDialog->hide();
 }
@@ -511,7 +503,10 @@ void MainWindow::LaunchNewGame()
     G_UNLOCK(s_computerMoveQueue);
 
     // reset the current game
-    m_the1v1Game.Reset();
+    m_the1v1Game.Reset(
+        Game1v1Config::Instance().GetPlayer1StartingCoord(),
+        Game1v1Config::Instance().GetPlayer2StartingCoord());
+
     // update the board view
     m_boardDrawingArea.CancelLatestPieceDeployedEffect();
     m_boardDrawingArea.Invalidate();
@@ -557,7 +552,7 @@ void MainWindow::LaunchNewGame()
         // computer is processing next move
         m_boardDrawingArea.UnsetCurrentPlayer();
 
-        RequestThreadToComputeNextMove(Game1v1::e_Game1v1Player1);
+        RequestThreadToComputeNextMove(Game1v1::e_Game1v1Player1, false);
     }
     else
     {
@@ -568,6 +563,7 @@ void MainWindow::LaunchNewGame()
 
 void MainWindow::RequestThreadToComputeNextMove(
         Game1v1::eGame1v1Player_t a_whoMoves,
+        bool                      a_blockCall,
         const Coordinate         &a_coordinate,
         const Piece              &a_piece)
 {
@@ -579,7 +575,73 @@ void MainWindow::RequestThreadToComputeNextMove(
         window->set_cursor(Gdk::Cursor(Gdk::WATCH));
     }
 
-    if (!m_workerThread.ComputeMove(m_the1v1Game, a_whoMoves, a_coordinate, a_piece))
+    // retrieve eval function pointer and depth from global configuration
+    Heuristic::eHeuristicType_t heuristicType = Heuristic::e_heuristicStartCount;
+    int32_t searchTreeDepth = GAME1V1CONFIG_DEPTH_AUTOADJUST;
+    switch(a_whoMoves)
+    {
+    case Game1v1::e_Game1v1Player1:
+        heuristicType   = Game1v1Config::Instance().GetHeuristicTypePlayer1();
+        searchTreeDepth = Game1v1Config::Instance().GetMinimaxDepthPlayer1();
+        break;
+    case Game1v1::e_Game1v1Player2:
+        heuristicType   = Game1v1Config::Instance().GetHeuristicTypePlayer2();
+        searchTreeDepth = Game1v1Config::Instance().GetMinimaxDepthPlayer2();
+        break;
+#ifdef DEBUG
+    default:
+        assert(0);
+#endif // DEBUG
+    } // switch(a_whoMoves)
+
+    const Heuristic::sHeuristicData_t &heuristicData = Heuristic::m_heuristicData[heuristicType];
+    const Player &currentPlayer = m_the1v1Game.GetPlayer(a_whoMoves);
+    const Player &opponent = m_the1v1Game.GetOpponent(a_whoMoves);
+
+    // search tree depth. If it is set to GAME1V1CONFIG_DEPTH_AUTOADJUST
+    // its value will be set here to a sensible value
+    if (searchTreeDepth == GAME1V1CONFIG_DEPTH_AUTOADJUST)
+    {
+        searchTreeDepth = 3;
+
+        //TODO 14 is a magic number
+        if ( (currentPlayer.NumberOfPiecesAvailable() < 14) &&
+             (Rules::CanPlayerGo(m_the1v1Game.GetBoard(), opponent) ) )
+        {
+            // if the opponent cannot go there is no point on setting the depth to 5.
+            // 3 should be good enough in that case
+            searchTreeDepth = 5;
+        }
+    }
+
+    bool computeMoveSucceded;
+    if ( (currentPlayer.NumberOfPiecesAvailable() == e_numberOfPieces) &&
+         (g_rand_int_range(m_randomizer, 0, 2) == 0) )
+    {
+        // pass the move made by the opponent to the minmax algorithm half of the times
+        // it will show a bit of randomness at the start to a potencial human user
+        computeMoveSucceded = m_workerThread.ComputeMove(
+                                    m_the1v1Game,
+                                    a_whoMoves,
+                                    heuristicData.m_evalFunction,
+                                    searchTreeDepth,
+                                    a_blockCall);
+    }
+    else
+    {
+        // use the latest coord and piece deployed by the opponent for half the starting moves
+        // and for all the rest of the moves
+        computeMoveSucceded = m_workerThread.ComputeMove(
+                                    m_the1v1Game,
+                                    a_whoMoves,
+                                    heuristicData.m_evalFunction,
+                                    searchTreeDepth,
+                                    a_blockCall,
+                                    a_coordinate,
+                                    a_piece);
+    }
+
+    if (!computeMoveSucceded)
     {
 #ifdef DEBUG_PRINT
         std::cout
@@ -709,7 +771,7 @@ void MainWindow::NotifyMoveComputed()
     // after the lock protected loop these variables will contain
     // the latest piece and latest coord deployed
     Piece latestPiece(e_noPiece);
-    Coordinate latestCoord(COORD_UNITIALISED, COORD_UNITIALISED);
+    Coordinate latestCoord(COORD_UNINITIALISED, COORD_UNINITIALISED);
     Game1v1::eGame1v1Player_t latestPlayerToMove;
 
     G_LOCK(s_computerMoveQueue);
@@ -822,11 +884,13 @@ void MainWindow::NotifyMoveComputed()
             // tell the worker thread to compute next move
             if (latestPlayerToMove == Game1v1::e_Game1v1Player1)
             {
-                RequestThreadToComputeNextMove(Game1v1::e_Game1v1Player2);
+                // block till the job is transfered to the worker thread
+                RequestThreadToComputeNextMove(Game1v1::e_Game1v1Player2, true, latestCoord, latestPiece);
             }
             else
             {
-                RequestThreadToComputeNextMove(Game1v1::e_Game1v1Player1);
+                // block till the job is transfered to the worker thread
+                RequestThreadToComputeNextMove(Game1v1::e_Game1v1Player1, true, latestCoord, latestPiece);
             }
         }
         else
@@ -860,7 +924,8 @@ void MainWindow::NotifyMoveComputed()
             GameFinished();
         }
         // else
-        // game is still on. Current player can put down more pieces
+        // game is still on. Current player can put down more pieces.
+        // Do nothing while current player thinks of the next move
     }
 }
 

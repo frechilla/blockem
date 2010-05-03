@@ -32,6 +32,8 @@
 
 #include <gtkmm.h>
 #include "gui_exception.h"
+#include "coordinate.h"
+#include "heuristic.h"
 
 class ConfigDialog :
     public Gtk::Dialog
@@ -44,25 +46,51 @@ public:
     // override Dialog::run. It will call Dialog::run internally to show the dialog on the screen
     int run();
 
-    // returns if player1 has been set to computer within the dialog
-    bool IsPlayer1TypeComputer();
-    // returns if player2 has been set to computer within the dialog
-    bool IsPlayer2TypeComputer();
+    /// @return true if player1 has been set to computer within the dialog
+    bool IsPlayer1TypeComputer() const;
+    /// @return true if player2 has been set to computer within the dialog
+    bool IsPlayer2TypeComputer() const;
+
+    /// @return player1's starting coordinate in the dialog
+    void GetPlayer1StartingCoord(Coordinate &a_coord) const;
+    /// @return player2's starting coordinate in the dialog
+    void GetPlayer2StartingCoord(Coordinate &a_coord) const;
+
+    /// @return selected player1's heuristic
+    Heuristic::eHeuristicType_t GetPlayer1Heuristic() const;
+    /// @return selected player2's heuristic
+    Heuristic::eHeuristicType_t GetPlayer2Heuristic() const;
 
 private:
     /// @brief used to retrieve the objects from the Glade design
     Glib::RefPtr<Gtk::Builder> m_gtkBuilder;
 
-    // Gtk::table used for configure player1
+    /// Gtk::table used for configure player1
     Gtk::Table* m_tablePlayer1;
-
-    // Gtk::table used for configure player2
+    /// Gtk::table used for configure player2
     Gtk::Table* m_tablePlayer2;
-
-    // combo box for type of player1
+    /// combo box for type of player1
     Gtk::ComboBoxText m_comboTypePlayer1;
-    // combo box for type of player2
+    /// combo box for type of player2
     Gtk::ComboBoxText m_comboTypePlayer2;
+    /// heuristic type combobox for player1
+    Gtk::ComboBoxText m_comboHeuristicPlayer1;
+    /// heuristic type combobox for player2
+    Gtk::ComboBoxText m_comboHeuristicPlayer2;
+
+    /// starting row spin button for player1
+    Gtk::SpinButton* m_spinbuttonStartingRowPlayer1;
+    Gtk::Adjustment  m_spinbuttonStartingRowPlayer1Adj;
+    /// starting column spin button for player1
+    Gtk::SpinButton* m_spinbuttonStartingColumnPlayer1;
+    Gtk::Adjustment  m_spinbuttonStartingColumnPlayer1Adj;
+
+    /// starting row spin button for player2
+    Gtk::SpinButton* m_spinbuttonStartingRowPlayer2;
+    Gtk::Adjustment  m_spinbuttonStartingRowPlayer2Adj;
+    /// starting column spin button for player2
+    Gtk::SpinButton* m_spinbuttonStartingColumnPlayer2;
+    Gtk::Adjustment  m_spinbuttonStartingColumnPlayer2Adj;
 
     // prevent the default constructors to be used
     ConfigDialog();

@@ -28,110 +28,72 @@
 // ============================================================================
 
 #include "gui_game1v1_config.h"
+#include "game1v1.h" // DEFAULT_STARTING_COORD_PLAYER1 and 2
 
-static Heuristic::eHeuristicType_t  DEFAULT_CURRENT_HEURISTIC = Heuristic::e_heuristicNKWeighted;
-static Game1v1Config::ePlayerType_t DEFAULT_PLAYER1_TYPE      = Game1v1Config::e_playerHuman;
-static Game1v1Config::ePlayerType_t DEFAULT_PLAYER2_TYPE      = Game1v1Config::e_playerComputer;
-static int32_t                      DEFAULT_MINIMAX_DEPTH     = GAME1V1CONFIG_DEPTH_AUTOADJUST;
-static uint8_t                      DEFAULT_PLAYER1_COLOUR_R  = 76;
-static uint8_t                      DEFAULT_PLAYER1_COLOUR_G  = 204;
-static uint8_t                      DEFAULT_PLAYER1_COLOUR_B  = 76;
-static uint8_t                      DEFAULT_PLAYER2_COLOUR_R  = 0;
-static uint8_t                      DEFAULT_PLAYER2_COLOUR_G  = 0;
-static uint8_t                      DEFAULT_PLAYER2_COLOUR_B  = 229;
+static const Heuristic::eHeuristicType_t  DEFAULT_CURRENT_HEURISTIC = Heuristic::e_heuristicNKWeighted;
+static const Game1v1Config::ePlayerType_t DEFAULT_PLAYER1_TYPE      = Game1v1Config::e_playerHuman;
+static const Game1v1Config::ePlayerType_t DEFAULT_PLAYER2_TYPE      = Game1v1Config::e_playerComputer;
+static const int32_t                      DEFAULT_MINIMAX_DEPTH     = GAME1V1CONFIG_DEPTH_AUTOADJUST;
+static const uint8_t                      DEFAULT_PLAYER1_COLOUR_R  = 76;
+static const uint8_t                      DEFAULT_PLAYER1_COLOUR_G  = 204;
+static const uint8_t                      DEFAULT_PLAYER1_COLOUR_B  = 76;
+static const uint8_t                      DEFAULT_PLAYER2_COLOUR_R  = 0;
+static const uint8_t                      DEFAULT_PLAYER2_COLOUR_G  = 0;
+static const uint8_t                      DEFAULT_PLAYER2_COLOUR_B  = 229;
+static const Coordinate                   DEFAULT_STARTING_COORD_1  = DEFAULT_STARTING_COORD_PLAYER1;
+static const Coordinate                   DEFAULT_STARTING_COORD_2  = DEFAULT_STARTING_COORD_PLAYER2;
 
 Game1v1Config::Game1v1Config() :
     Singleton<Game1v1Config>(),
-    m_currentHeuristic(DEFAULT_CURRENT_HEURISTIC),
+    m_currentHeuristicPlayer1(DEFAULT_CURRENT_HEURISTIC),
+    m_currentHeuristicPlayer2(DEFAULT_CURRENT_HEURISTIC),
     m_player1Type(DEFAULT_PLAYER1_TYPE),
     m_player2Type(DEFAULT_PLAYER2_TYPE),
-    m_minimaxDepth(DEFAULT_MINIMAX_DEPTH),
+    m_minimaxDepthPlayer1(DEFAULT_MINIMAX_DEPTH),
+    m_minimaxDepthPlayer2(DEFAULT_MINIMAX_DEPTH),
     m_player1Red(DEFAULT_PLAYER1_COLOUR_R),
     m_player1Green(DEFAULT_PLAYER1_COLOUR_G),
     m_player1Blue(DEFAULT_PLAYER1_COLOUR_B),
     m_player2Red(DEFAULT_PLAYER2_COLOUR_R),
     m_player2Green(DEFAULT_PLAYER2_COLOUR_G),
-    m_player2Blue(DEFAULT_PLAYER2_COLOUR_B)
+    m_player2Blue(DEFAULT_PLAYER2_COLOUR_B),
+    m_player1StartingCoord(DEFAULT_STARTING_COORD_1),
+    m_player2StartingCoord(DEFAULT_STARTING_COORD_2)
 {
-    // add available evaluation functions to the corresponding array
-    m_heuristicData[Heuristic::e_heuristicNKWeighted].m_evalFunction =
-        &Heuristic::CalculateNKWeighted;
-    m_heuristicData[Heuristic::e_heuristicNKWeighted].m_name =
-        std::string("Nucleation Point weighted");
-    m_heuristicData[Heuristic::e_heuristicNKWeighted].m_description =
-        std::string("Nucleation points are weighted. The more in the middle in the board a NK point is, the more important it is");
-
-    m_heuristicData[Heuristic::e_heuristicSimple].m_evalFunction =
-        &Heuristic::CalculateSimple;
-    m_heuristicData[Heuristic::e_heuristicSimple].m_name =
-        std::string("Simple");
-    m_heuristicData[Heuristic::e_heuristicSimple].m_description =
-        std::string("takes into account only the amount of squares of the deployed pieces");
 }
 
 Game1v1Config::~Game1v1Config()
 {
 }
 
-Heuristic::eHeuristicType_t Game1v1Config::GetHeuristicType() const
+Heuristic::eHeuristicType_t Game1v1Config::GetHeuristicTypePlayer1() const
 {
-    return m_currentHeuristic;
-}
-void Game1v1Config::SetHeuristicType(Heuristic::eHeuristicType_t a_heuristic)
-{
-#ifdef DEBUG
-    assert(a_heuristic >= Heuristic::e_heuristicStartCount);
-    assert(a_heuristic <  Heuristic::e_heuristicCount);
-#endif
-
-    m_currentHeuristic = a_heuristic;
+    return m_currentHeuristicPlayer1;
 }
 
-const Game1v1Config::sHeuristicConfig_t& Game1v1Config::GetHeuristicData(Heuristic::eHeuristicType_t a_heuristic) const
+Heuristic::eHeuristicType_t Game1v1Config::GetHeuristicTypePlayer2() const
 {
-#ifdef DEBUG
-    assert(a_heuristic >= Heuristic::e_heuristicStartCount);
-    assert(a_heuristic <  Heuristic::e_heuristicCount);
-#endif
-
-    return m_heuristicData[a_heuristic];
+    return m_currentHeuristicPlayer2;
 }
 
-void Game1v1Config::SetPlayer1Type(ePlayerType_t a_playerType)
-{
-    m_player1Type = a_playerType;
-}
-
-bool Game1v1Config::IsPlayer1Computer()
+bool Game1v1Config::IsPlayer1Computer() const
 {
     return (m_player1Type == e_playerComputer);
 }
 
-void Game1v1Config::SetPlayer2Type(ePlayerType_t a_playerType)
-{
-    m_player2Type = a_playerType;
-}
-
-bool Game1v1Config::IsPlayer2Computer()
+bool Game1v1Config::IsPlayer2Computer() const
 {
     return (m_player2Type == e_playerComputer);
 }
 
-void Game1v1Config::SetMinimaxDepth(int32_t a_depth)
+int32_t Game1v1Config::GetMinimaxDepthPlayer1() const
 {
-    if (a_depth <= 0)
-    {
-        m_minimaxDepth = GAME1V1CONFIG_DEPTH_AUTOADJUST;
-    }
-    else
-    {
-        m_minimaxDepth = a_depth;
-    }
+    return m_minimaxDepthPlayer1;
 }
 
-int32_t Game1v1Config::GetMinimaxDepth() const
+int32_t Game1v1Config::GetMinimaxDepthPlayer2() const
 {
-    return m_minimaxDepth;
+    return m_minimaxDepthPlayer2;
 }
 
 void Game1v1Config::GetPlayer1Colour(uint8_t &red, uint8_t &green, uint8_t &blue) const
@@ -146,4 +108,78 @@ void Game1v1Config::GetPlayer2Colour(uint8_t &red, uint8_t &green, uint8_t &blue
     red   = m_player2Red;
     green = m_player2Green;
     blue  = m_player2Blue;
+}
+
+const Coordinate& Game1v1Config::GetPlayer1StartingCoord() const
+{
+    return m_player1StartingCoord;
+}
+
+const Coordinate& Game1v1Config::GetPlayer2StartingCoord() const
+{
+    return m_player2StartingCoord;
+}
+
+void Game1v1Config::SetHeuristicTypePlayer1(Heuristic::eHeuristicType_t a_heuristic)
+{
+#ifdef DEBUG
+    assert(a_heuristic >= Heuristic::e_heuristicStartCount);
+    assert(a_heuristic <  Heuristic::e_heuristicCount);
+#endif
+
+    m_currentHeuristicPlayer1 = a_heuristic;
+}
+
+void Game1v1Config::SetHeuristicTypePlayer2(Heuristic::eHeuristicType_t a_heuristic)
+{
+#ifdef DEBUG
+    assert(a_heuristic >= Heuristic::e_heuristicStartCount);
+    assert(a_heuristic <  Heuristic::e_heuristicCount);
+#endif
+
+    m_currentHeuristicPlayer2 = a_heuristic;
+}
+
+void Game1v1Config::SetPlayer1Type(ePlayerType_t a_playerType)
+{
+    m_player1Type = a_playerType;
+}
+
+void Game1v1Config::SetPlayer2Type(ePlayerType_t a_playerType)
+{
+    m_player2Type = a_playerType;
+}
+
+void Game1v1Config::SetMinimaxDepthPlayer1(int32_t a_depth)
+{
+    if (a_depth <= 0)
+    {
+        m_minimaxDepthPlayer1 = GAME1V1CONFIG_DEPTH_AUTOADJUST;
+    }
+    else
+    {
+        m_minimaxDepthPlayer1 = a_depth;
+    }
+}
+
+void Game1v1Config::SetMinimaxDepthPlayer2(int32_t a_depth)
+{
+    if (a_depth <= 0)
+    {
+        m_minimaxDepthPlayer2 = GAME1V1CONFIG_DEPTH_AUTOADJUST;
+    }
+    else
+    {
+        m_minimaxDepthPlayer2 = a_depth;
+    }
+}
+
+void Game1v1Config::SetPlayer1StartingCoord(const Coordinate &a_startingCoord)
+{
+    m_player1StartingCoord = a_startingCoord;
+}
+
+void Game1v1Config::SetPlayer2StartingCoord(const Coordinate &a_startingCoord)
+{
+    m_player2StartingCoord = a_startingCoord;
 }
