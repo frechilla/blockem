@@ -59,6 +59,7 @@ public:
 
         e_heuristicNKWeighted = e_heuristicStartCount,
         e_heuristicSimple,
+        e_heuristicRandom,
 
         e_heuristicCount, // stores the amount of heuristics. Must be always at the end
     } eHeuristicType_t;
@@ -79,6 +80,12 @@ public:
     /// Calculate the heuristic value taking into account only the amount
     /// Of squares of the pieces put down
     static int32_t CalculateSimple(
+            const Board  &a_board,
+            const Player &a_playerMe,
+            const Player &a_playerOpponent);
+
+    /// return a random integer value between 0 and RAND_MAX
+    static int32_t CalculateRandom(
             const Board  &a_board,
             const Player &a_playerMe,
             const Player &a_playerOpponent);

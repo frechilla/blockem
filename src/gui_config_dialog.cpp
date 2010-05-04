@@ -27,35 +27,57 @@
 ///
 // ============================================================================
 
-#include <iostream> // std::cerr
-#include "config.h" // PACKAGE_VERSION
+#include "config.h" // OS_WIN32
 #include "gui_config_dialog.h"
 #include "gui_glade_defs.h"
 #include "gui_game1v1_config.h"
+#include "game1v1.h" // BOARD_1VS1_ROWS and DEFAULT_STARTING_COORD_PLAYER[1-2]
+#include "piece.h"   // e_numberOfPieces
 
 // strings for the user to choose the type of player
 static const char COMBO_PLAYER_TYPE_HUMAN[]    = "Human";
 static const char COMBO_PLAYER_TYPE_COMPUTER[] = "Computer";
 
+// maximum and minimum coordinate values for the starting coordinate spinbuttons
+// they start by 1.0 'cos is more user friendly than the c-style 0
+static const double MINIMUM_STARTING_COORD_ROW = 1;
+static const double MAXIMUM_STARTING_COORD_ROW = BOARD_1VS1_ROWS;
+static const double MINIMUM_STARTING_COORD_COL = 1;
+static const double MAXIMUM_STARTING_COORD_COL = BOARD_1VS1_COLUMNS;
+
 ConfigDialog::ConfigDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder)  throw (GUIException) :
     Gtk::Dialog(cobject), //Calls the base class constructor
     m_gtkBuilder(a_gtkBuilder),
-    m_spinbuttonStartingRowPlayer1Adj(4.0, 0.0, 13.0),
-    m_spinbuttonStartingColumnPlayer1Adj(4.0, 0.0, 13.0),
-    m_spinbuttonStartingRowPlayer2Adj(9.0, 0.0, 13.0),
-    m_spinbuttonStartingColumnPlayer2Adj(9.0, 0.0, 13.0)
+    m_spinbuttonStartingRowPlayer1Adj(
+        DEFAULT_STARTING_COORD_PLAYER1.m_row,
+        MINIMUM_STARTING_COORD_ROW,
+        MAXIMUM_STARTING_COORD_ROW),
+    m_spinbuttonStartingColumnPlayer1Adj(
+        DEFAULT_STARTING_COORD_PLAYER1.m_col,
+        MINIMUM_STARTING_COORD_COL,
+        MAXIMUM_STARTING_COORD_COL),
+    m_spinbuttonStartingRowPlayer2Adj(
+        DEFAULT_STARTING_COORD_PLAYER2.m_row,
+        MINIMUM_STARTING_COORD_ROW,
+        MAXIMUM_STARTING_COORD_ROW),
+    m_spinbuttonStartingColumnPlayer2Adj(
+        DEFAULT_STARTING_COORD_PLAYER2.m_col,
+        MINIMUM_STARTING_COORD_COL,
+        MAXIMUM_STARTING_COORD_COL),
+    m_spinbuttonDepthPlayer1Adj(0.0, 0.0, e_numberOfPieces * 2), // maximum depth is putting down all the pieces
+    m_spinbuttonDepthPlayer2Adj(0.0, 0.0, e_numberOfPieces * 2)  // maximum depth is putting down all the pieces
 {
     // add ok and cancel buttons
-#ifdef WIN32
+#ifdef OS_WIN32
     // win32 systems have ok/accept button at the left of the cancel button
-    this->add_button(Gtk::StockID("gtk-cancel"), Gtk::RESPONSE_OK);
-    this->add_button(Gtk::StockID("gtk-ok"), Gtk::RESPONSE_CANCEL);
+    this->add_button(Gtk::StockID("gtk-ok"), Gtk::RESPONSE_OK);
+    this->add_button(Gtk::StockID("gtk-cancel"), Gtk::RESPONSE_CANCEL);
 #else
     // any other system will follow gnome GUI guidelines:
     // OK button at the right of the cancel button
     this->add_button(Gtk::StockID("gtk-cancel"), Gtk::RESPONSE_CANCEL);
     this->add_button(Gtk::StockID("gtk-ok"), Gtk::RESPONSE_OK);
-#endif // WIN32
+#endif // OS_WIN32
 
     // retrieve widgets from the .glade file
     m_gtkBuilder->get_widget(GUI_CONFIG_TABLE_PLAYER1, m_tablePlayer1);
@@ -94,11 +116,39 @@ ConfigDialog::ConfigDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Buil
         throw new GUIException(std::string("gtk::spinbutton for starting col (player2) retrieval failed"));
     }
 
-    // adjustments for starting coordinates
+    m_gtkBuilder->get_widget(GUI_CONFIG_AI_TABLE_PLAYER1, m_AITablePlayer1);
+    if (m_AITablePlayer1 == NULL)
+    {
+        throw new GUIException(std::string("gtk::table for player 1 AI item retrieval failed"));
+    }
+
+    m_gtkBuilder->get_widget(GUI_CONFIG_AI_TABLE_PLAYER2, m_AITablePlayer2);
+    if (m_AITablePlayer2 == NULL)
+    {
+        throw new GUIException(std::string("gtk::table for player 2 AI item retrieval failed"));
+    }
+
+    m_gtkBuilder->get_widget(GUI_CONFIG_SPINBUTTON_DEPTH1, m_spinbuttonDepthPlayer1);
+    if (m_spinbuttonDepthPlayer1 == NULL)
+    {
+        throw new GUIException(std::string("gtk::spinbutton for search tree depth (player1) retrieval failed"));
+    }
+
+    m_gtkBuilder->get_widget(GUI_CONFIG_SPINBUTTON_DEPTH2, m_spinbuttonDepthPlayer2);
+    if (m_spinbuttonDepthPlayer2 == NULL)
+    {
+        throw new GUIException(std::string("gtk::spinbutton for search tree depth (player2) retrieval failed"));
+    }
+
+    // adjustments for starting coordinate spinbuttons
     m_spinbuttonStartingRowPlayer1->set_adjustment(m_spinbuttonStartingRowPlayer1Adj);
     m_spinbuttonStartingColumnPlayer1->set_adjustment(m_spinbuttonStartingColumnPlayer1Adj);
     m_spinbuttonStartingRowPlayer2->set_adjustment(m_spinbuttonStartingRowPlayer2Adj);
     m_spinbuttonStartingColumnPlayer2->set_adjustment(m_spinbuttonStartingColumnPlayer2Adj);
+
+    // adjustments for search tree depth
+    m_spinbuttonDepthPlayer1->set_adjustment(m_spinbuttonDepthPlayer1Adj);
+    m_spinbuttonDepthPlayer2->set_adjustment(m_spinbuttonDepthPlayer2Adj);
 
     // configure custom widgets
     // type of player1
@@ -162,7 +212,32 @@ ConfigDialog::ConfigDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Buil
             0);
     m_comboTypePlayer2.show();
 
-    //TODO attach m_comboHeuristicPlayer1 and m_comboHeuristicPlayer2
+    //m_comboHeuristicPlayer1 and m_comboHeuristicPlayer2
+    m_AITablePlayer1->attach(
+            m_comboHeuristicPlayer1,
+            1,
+            3,
+            0,
+            1,
+            Gtk::FILL | Gtk::EXPAND,
+            Gtk::EXPAND,
+            0,
+            0);
+    m_comboHeuristicPlayer1.show();
+
+    m_AITablePlayer2->attach(
+            m_comboHeuristicPlayer2,
+            1,
+            3,
+            0,
+            1,
+            Gtk::FILL | Gtk::EXPAND,
+            Gtk::EXPAND,
+            0,
+            0);
+    m_comboHeuristicPlayer2.show();
+
+    //TODO signal handling
 }
 
 ConfigDialog::~ConfigDialog()
@@ -181,14 +256,28 @@ bool ConfigDialog::IsPlayer2TypeComputer() const
 
 void ConfigDialog::GetPlayer1StartingCoord(Coordinate &a_coord) const
 {
-    //TODO retrieve value from widgets and remove hardcoded stuff
-    a_coord = Coordinate(4, 4);
+    // -1 because coordinates are shown to the user starting by 1 (not 0)
+    a_coord = Coordinate(
+                static_cast<int32_t>(m_spinbuttonStartingRowPlayer1Adj.get_value())    - 1,
+                static_cast<int32_t>(m_spinbuttonStartingColumnPlayer1Adj.get_value()) - 1);
 }
 
 void ConfigDialog::GetPlayer2StartingCoord(Coordinate &a_coord) const
 {
-    //TODO retrieve value from widgets and remove hardcoded stuff
-    a_coord = Coordinate(9, 9);
+    // -1 because coordinates are shown to the user starting by 1 (not 0)
+    a_coord = Coordinate(
+                static_cast<int32_t>(m_spinbuttonStartingRowPlayer2Adj.get_value())    - 1,
+                static_cast<int32_t>(m_spinbuttonStartingColumnPlayer2Adj.get_value()) - 1);
+}
+
+int32_t ConfigDialog::GetPlayer1SearchTreeDepth() const
+{
+    return static_cast<uint32_t>(m_spinbuttonDepthPlayer1Adj.get_value());
+}
+
+int32_t ConfigDialog::GetPlayer2SearchTreeDepth() const
+{
+    return static_cast<uint32_t>(m_spinbuttonDepthPlayer2Adj.get_value());
 }
 
 Heuristic::eHeuristicType_t ConfigDialog::GetPlayer1Heuristic() const
@@ -235,8 +324,7 @@ Heuristic::eHeuristicType_t ConfigDialog::GetPlayer2Heuristic() const
 
 int ConfigDialog::run()
 {
-    // load current global configuration into the widgets
-    // before showing the dialog
+    // load current global configuration into the widgets before showing the dialog
 
     // type of players
     if (Game1v1Config::Instance().IsPlayer1Computer())
@@ -257,7 +345,19 @@ int ConfigDialog::run()
         m_comboTypePlayer2.set_active_text(COMBO_PLAYER_TYPE_HUMAN);
     }
 
-    //TODO starting coordinates into widgets!!
+    // starting coordinates. +1 because coordinates are shown to the user starting by 1 (not 0)
+    m_spinbuttonStartingRowPlayer1Adj.set_value(
+        Game1v1Config::Instance().GetPlayer1StartingCoord().m_row + 1);
+    m_spinbuttonStartingColumnPlayer1Adj.set_value(
+        Game1v1Config::Instance().GetPlayer1StartingCoord().m_col + 1);
+    m_spinbuttonStartingRowPlayer2Adj.set_value(
+        Game1v1Config::Instance().GetPlayer2StartingCoord().m_row + 1);
+    m_spinbuttonStartingColumnPlayer2Adj.set_value(
+        Game1v1Config::Instance().GetPlayer2StartingCoord().m_col + 1);
+
+    // search tree depth
+    m_spinbuttonDepthPlayer1Adj.set_value(Game1v1Config::Instance().GetMinimaxDepthPlayer1());
+    m_spinbuttonDepthPlayer2Adj.set_value(Game1v1Config::Instance().GetMinimaxDepthPlayer2());
 
     // heuristic type
     const Heuristic::sHeuristicData_t &selectedHeuristicData1 =
@@ -267,6 +367,7 @@ int ConfigDialog::run()
         Heuristic::m_heuristicData[Game1v1Config::Instance().GetHeuristicTypePlayer2()];
     m_comboHeuristicPlayer2.set_active_text(selectedHeuristicData2.m_name);
 
+    // run the Gtk dialog once the custom widgets are configured properly
     return Gtk::Dialog::run();
 }
 

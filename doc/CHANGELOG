@@ -1,13 +1,13 @@
 : Version 0.2.0
     - An option has been added to show the nucleation points on the board.
-      Shared nucleation points are drawn in black colour.
+      Shared nucleation points are drawn in colour black.
     - App can be set up to play human vs human, human vs computer and 
       computer vs computer games
-    - When playing 1vs1 games against the computer, player1 (the one who goes
-      first) can be selected to be the computer (previous versions forced the
-      human player to go always first)
-    - Heuristic for computer players can be selected when a new game is 
-      launched
+    - Computer and human players can be selected to play as player1 or
+      player2 in any kind of game
+    - Type of heuristic (evaluation function) for computer players can 
+      be selected when a new game is launched. 3 types of heuristic
+      are included in this release: "NK weighted", "simple" and "random"
     - Starting coordinate can be edited when a new game is launched
     - Piece edition improved for those pieces with only one possible
       confuration
@@ -20,7 +20,7 @@
       binary for windows has been also reduced around 30%
     - Fixed possible deadlock that might have occurred when the game was about
       to finish
-    - Player handling through Game1v1 interface simplified
+    - Player handling through Game1v1 interface simplified in source code
 
 24/04/2010: Version 0.1.6
     - Computer's latest piece deployed glows so human user can easily notice

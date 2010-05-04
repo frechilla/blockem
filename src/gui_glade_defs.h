@@ -127,5 +127,9 @@ const char GUI_CONFIG_SPINBUTTON_STARTROW1[] = "spinbutton_startingrow1";
 const char GUI_CONFIG_SPINBUTTON_STARTCOL1[] = "spinbutton_startingcol1";
 const char GUI_CONFIG_SPINBUTTON_STARTROW2[] = "spinbutton_startingrow2";
 const char GUI_CONFIG_SPINBUTTON_STARTCOL2[] = "spinbutton_startingcol2";
+const char GUI_CONFIG_AI_TABLE_PLAYER1[]   = "config_table_ai_player1";
+const char GUI_CONFIG_AI_TABLE_PLAYER2[]   = "config_table_ai_player2";
+const char GUI_CONFIG_SPINBUTTON_DEPTH1[]  = "spinbutton_depth1";
+const char GUI_CONFIG_SPINBUTTON_DEPTH2[]  = "spinbutton_depth2";
 
 #endif /* GUI_GLADE_H_ */

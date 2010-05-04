@@ -56,6 +56,11 @@ public:
     /// @return player2's starting coordinate in the dialog
     void GetPlayer2StartingCoord(Coordinate &a_coord) const;
 
+    /// @return player1's search tree depth shown in the dialog
+    int32_t GetPlayer1SearchTreeDepth() const;
+    /// @return player2's search tree depth shown in the dialog
+    int32_t GetPlayer2SearchTreeDepth() const;
+
     /// @return selected player1's heuristic
     Heuristic::eHeuristicType_t GetPlayer1Heuristic() const;
     /// @return selected player2's heuristic
@@ -73,10 +78,6 @@ private:
     Gtk::ComboBoxText m_comboTypePlayer1;
     /// combo box for type of player2
     Gtk::ComboBoxText m_comboTypePlayer2;
-    /// heuristic type combobox for player1
-    Gtk::ComboBoxText m_comboHeuristicPlayer1;
-    /// heuristic type combobox for player2
-    Gtk::ComboBoxText m_comboHeuristicPlayer2;
 
     /// starting row spin button for player1
     Gtk::SpinButton* m_spinbuttonStartingRowPlayer1;
@@ -91,6 +92,25 @@ private:
     /// starting column spin button for player2
     Gtk::SpinButton* m_spinbuttonStartingColumnPlayer2;
     Gtk::Adjustment  m_spinbuttonStartingColumnPlayer2Adj;
+
+    /// AI table player1
+    Gtk::Table* m_AITablePlayer1;
+
+    /// AI table player2
+    Gtk::Table* m_AITablePlayer2;
+
+    /// heuristic type combobox for player1
+    Gtk::ComboBoxText m_comboHeuristicPlayer1;
+    /// heuristic type combobox for player2
+    Gtk::ComboBoxText m_comboHeuristicPlayer2;
+
+    /// search tree depth player1 spin button
+    Gtk::SpinButton* m_spinbuttonDepthPlayer1;
+    Gtk::Adjustment m_spinbuttonDepthPlayer1Adj;
+
+    /// search tree depth player2 spin button
+    Gtk::SpinButton* m_spinbuttonDepthPlayer2;
+    Gtk::Adjustment m_spinbuttonDepthPlayer2Adj;
 
     // prevent the default constructors to be used
     ConfigDialog();

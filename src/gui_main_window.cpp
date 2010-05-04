@@ -406,6 +406,7 @@ void MainWindow::MenuItemGameQuit_Activate()
 
 void MainWindow::MenuItemGameNew_Activate()
 {
+    m_configDialog->set_title("New 1vs1 game");
     Gtk::ResponseType result = static_cast<Gtk::ResponseType>(m_configDialog->run());
     if (result == Gtk::RESPONSE_OK)
     {
@@ -443,6 +444,11 @@ void MainWindow::MenuItemGameNew_Activate()
         Game1v1Config::Instance().SetHeuristicTypePlayer1(m_configDialog->GetPlayer1Heuristic());
         Game1v1Config::Instance().SetHeuristicTypePlayer2(m_configDialog->GetPlayer2Heuristic());
 
+        // search tree depth
+        Game1v1Config::Instance().SetMinimaxDepthPlayer1(m_configDialog->GetPlayer1SearchTreeDepth());
+        Game1v1Config::Instance().SetMinimaxDepthPlayer2(m_configDialog->GetPlayer2SearchTreeDepth());
+
+        // go for the brand new game!!
         LaunchNewGame();
     }
 #if defined(DEBUG_PRINTING) || defined (DEBUG)

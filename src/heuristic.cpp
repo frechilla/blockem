@@ -29,6 +29,7 @@
 
 #include <stdlib.h>
 #include <math.h>
+#include <time.h>
 #include "heuristic.h"
 #include "player.h"
 #include "rules.h"
@@ -39,13 +40,18 @@ const Heuristic::sHeuristicData_t Heuristic::m_heuristicData[e_heuristicCount] =
 {
     {e_heuristicNKWeighted,
      Heuristic::CalculateNKWeighted,
-     std::string("Nucleation Point weighted"),
+     std::string("NK weighted"),
      std::string("Nucleation points are weighted. The more in the middle in the board a NK point is, the more important it is")
     },
     {e_heuristicSimple,
      Heuristic::CalculateSimple,
      std::string("Simple"),
      std::string("Takes into account only the amount of squares of the deployed pieces")
+    },
+    {e_heuristicRandom,
+     Heuristic::CalculateRandom,
+     std::string("Random"),
+     std::string("Random heuristic. Evaluation function returns a random value so every heuristic can be chekced against it")
     }
 };
 
@@ -87,6 +93,24 @@ int32_t Heuristic::CalculateSimple(
     rv -= a_playerOpponent.NumberOfNucleationPoints();
 
     return rv;
+}
+
+int32_t Heuristic::CalculateRandom(
+        const Board  &a_board,
+        const Player &a_playerMe,
+        const Player &a_playerOpponent)
+{
+    static bool runOnceFlag = false;
+
+    if (runOnceFlag == false)
+    {
+        runOnceFlag = true;
+        // initialise seed. Not a very random way to initialise the seed
+        // but security is not an issue while playing blockem
+        srand (time(NULL));
+    }
+
+    return rand();
 }
 
 int32_t Heuristic::CalculateNKWeighted(
