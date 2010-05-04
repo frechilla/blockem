@@ -18,4 +18,6 @@ basic things that need to be done:
    board, with no opponent
  + Improve evaluation function through bitwise representations of boards and 
    pieces
+ + Final game dialog is shown twice sometimes when playing computer against
+   computer
    
