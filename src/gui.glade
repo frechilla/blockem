@@ -547,8 +547,9 @@ r</property>
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkFrame" id="frame_ai_player1">
+                          <object class="GtkFrame" id="config_frame_ai_player1">
                             <property name="visible">True</property>
+                            <property name="sensitive">False</property>
                             <property name="label_xalign">0</property>
                             <child>
                               <object class="GtkAlignment" id="alignment3">
@@ -767,7 +768,7 @@ r</property>
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkFrame" id="frame_ai_player2">
+                          <object class="GtkFrame" id="config_frame_ai_player2">
                             <property name="visible">True</property>
                             <property name="label_xalign">0</property>
                             <child>

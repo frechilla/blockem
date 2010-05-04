@@ -1,5 +1,5 @@
 // ============================================================================
-// Copyright 2009 Faustino Frechilla
+// Copyright 2010 Faustino Frechilla
 //
 // This file is part of Blockem.
 //
@@ -93,8 +93,14 @@ private:
     Gtk::SpinButton* m_spinbuttonStartingColumnPlayer2;
     Gtk::Adjustment  m_spinbuttonStartingColumnPlayer2Adj;
 
+    /// AI frame player1
+    Gtk::Frame* m_AIFramePlayer1;
+
     /// AI table player1
     Gtk::Table* m_AITablePlayer1;
+
+    /// AI frame player1
+    Gtk::Frame* m_AIFramePlayer2;
 
     /// AI table player2
     Gtk::Table* m_AITablePlayer2;
@@ -111,6 +117,11 @@ private:
     /// search tree depth player2 spin button
     Gtk::SpinButton* m_spinbuttonDepthPlayer2;
     Gtk::Adjustment m_spinbuttonDepthPlayer2Adj;
+
+    void ComboPlayer1Type_signalChanged();
+    void ComboPlayer2Type_signalChanged();
+    void ComboHeuristicPlayer1_signalChanged();
+    void ComboHeuristicPlayer2_signalChanged();
 
     // prevent the default constructors to be used
     ConfigDialog();

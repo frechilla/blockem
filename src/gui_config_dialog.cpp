@@ -1,5 +1,5 @@
 // ============================================================================
-// Copyright 2009 Faustino Frechilla
+// Copyright 2010 Faustino Frechilla
 //
 // This file is part of Blockem.
 //
@@ -26,7 +26,6 @@
 /// @endhistory
 ///
 // ============================================================================
-
 #include "config.h" // OS_WIN32
 #include "gui_config_dialog.h"
 #include "gui_glade_defs.h"
@@ -114,6 +113,18 @@ ConfigDialog::ConfigDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Buil
     if (m_spinbuttonStartingColumnPlayer2 == NULL)
     {
         throw new GUIException(std::string("gtk::spinbutton for starting col (player2) retrieval failed"));
+    }
+
+    m_gtkBuilder->get_widget(GUI_CONFIG_AI_FRAME_PLAYER1, m_AIFramePlayer1);
+    if (m_AIFramePlayer1 == NULL)
+    {
+        throw new GUIException(std::string("gtk::Frame for player 1 AI item retrieval failed"));
+    }
+
+    m_gtkBuilder->get_widget(GUI_CONFIG_AI_FRAME_PLAYER2, m_AIFramePlayer2);
+    if (m_AIFramePlayer2 == NULL)
+    {
+        throw new GUIException(std::string("gtk::Frame for player 2 AI item retrieval failed"));
     }
 
     m_gtkBuilder->get_widget(GUI_CONFIG_AI_TABLE_PLAYER1, m_AITablePlayer1);
@@ -237,11 +248,75 @@ ConfigDialog::ConfigDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Buil
             0);
     m_comboHeuristicPlayer2.show();
 
-    //TODO signal handling
+    //signal handling
+    m_comboTypePlayer1.signal_changed().connect(
+            sigc::mem_fun(*this, &ConfigDialog::ComboPlayer1Type_signalChanged));
+    m_comboTypePlayer2.signal_changed().connect(
+            sigc::mem_fun(*this, &ConfigDialog::ComboPlayer2Type_signalChanged));
+    m_comboHeuristicPlayer1.signal_changed().connect(
+            sigc::mem_fun(*this, &ConfigDialog::ComboHeuristicPlayer1_signalChanged));
+    m_comboHeuristicPlayer2.signal_changed().connect(
+            sigc::mem_fun(*this, &ConfigDialog::ComboHeuristicPlayer2_signalChanged));
 }
 
 ConfigDialog::~ConfigDialog()
 {
+}
+
+void ConfigDialog::ComboPlayer1Type_signalChanged()
+{
+    if (IsPlayer1TypeComputer())
+    {
+        m_AIFramePlayer1->set_sensitive(true);
+    }
+    else
+    {
+        m_AIFramePlayer1->set_sensitive(false);
+    }
+}
+
+void ConfigDialog::ComboPlayer2Type_signalChanged()
+{
+    if (IsPlayer2TypeComputer())
+    {
+        m_AIFramePlayer2->set_sensitive(true);
+    }
+    else
+    {
+        m_AIFramePlayer2->set_sensitive(false);
+    }
+}
+
+void ConfigDialog::ComboHeuristicPlayer1_signalChanged()
+{
+    const Heuristic::sHeuristicData_t &heuristicData =
+                Heuristic::m_heuristicData[Heuristic::e_heuristicRandom];
+
+    if (m_comboHeuristicPlayer1.get_active_text().compare(heuristicData.m_name) == 0)
+    {
+        m_spinbuttonDepthPlayer1Adj.set_value(1);
+        m_spinbuttonDepthPlayer1->set_sensitive(false);
+    }
+    else
+    {
+        m_spinbuttonDepthPlayer1->set_sensitive(true);
+    }
+}
+
+void ConfigDialog::ComboHeuristicPlayer2_signalChanged()
+{
+    const Heuristic::sHeuristicData_t &heuristicData =
+                Heuristic::m_heuristicData[Heuristic::e_heuristicRandom];
+
+    if (m_comboHeuristicPlayer2.get_active_text().compare(heuristicData.m_name) == 0)
+    {
+        m_spinbuttonDepthPlayer2Adj.set_value(1);
+        m_spinbuttonDepthPlayer2->set_sensitive(false);
+    }
+    else
+    {
+        m_spinbuttonDepthPlayer2->set_sensitive(true);
+    }
 }
 
 bool ConfigDialog::IsPlayer1TypeComputer() const
