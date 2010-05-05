@@ -128,7 +128,7 @@ void Board::CopyFromObject(const Board &a_src)
 }
 
 void Board::BitwiseBoardCalculate(
-        const Coordinate &a_coord, 
+        const Coordinate &a_coord,
         const Player     &a_player,
         uint64_t         &out_bitwiseBoard,
         uint64_t         &out_bitwisePlayerBoard) const
@@ -149,7 +149,7 @@ void Board::BitwiseBoardCalculate(
             // the whole row is out of the board
             out_bitwiseBoard <<= 7;
             out_bitwiseBoard |= static_cast<uint64_t>(0x7f);
-            
+
             out_bitwisePlayerBoard <<= 7;
             out_bitwisePlayerBoard |= static_cast<uint64_t>(0x7f);
         }
@@ -182,7 +182,7 @@ void Board::BitwiseBoardCalculate(
 }
 
 void Board::BitwiseBoardMoveRight(
-        const Coordinate &a_coord, 
+        const Coordinate &a_coord,
         const Player     &a_player,
         uint64_t         &in_out_bitwiseBoard,
         uint64_t         &in_out_bitwisePlayerBoard) const
@@ -211,7 +211,7 @@ void Board::BitwiseBoardMoveRight(
     for (int32_t i = (a_coord.m_row - 3); i <= (a_coord.m_row + 3); i++)
     {
         if ( (i < 0) || (i >= GetNRows()) ||
-             ((a_coord.m_col + 4) <= GetNColumns()) )
+             ((a_coord.m_col + 4) >= GetNColumns()) )
         {
             // out of the board
             in_out_bitwiseBoard       |= static_cast<uint64_t>(1) << ( (3 - (i - a_coord.m_row)) * 7);
@@ -232,7 +232,7 @@ void Board::BitwiseBoardMoveRight(
 }
 
 void Board::BitwiseBoardMoveLeft(
-        const Coordinate &a_coord, 
+        const Coordinate &a_coord,
         const Player     &a_player,
         uint64_t         &in_out_bitwiseBoard,
         uint64_t         &in_out_bitwisePlayerBoard) const
@@ -261,7 +261,7 @@ void Board::BitwiseBoardMoveLeft(
     for (int32_t i = (a_coord.m_row - 3); i <= (a_coord.m_row + 3); i++)
     {
         if ( (i < 0) || (i >= GetNRows()) ||
-             ((a_coord.m_col - 4) > 0) )
+             ((a_coord.m_col - 4) < 0) )
         {
             // out of the board
             in_out_bitwiseBoard       |= static_cast<uint64_t>(1) << (((3 - (i - a_coord.m_row)) * 7) + 6);
@@ -282,7 +282,7 @@ void Board::BitwiseBoardMoveLeft(
 }
 
 void Board::BitwiseBoardMoveDown(
-        const Coordinate &a_coord, 
+        const Coordinate &a_coord,
         const Player     &a_player,
         uint64_t         &in_out_bitwiseBoard,
         uint64_t         &in_out_bitwisePlayerBoard) const
@@ -314,7 +314,7 @@ void Board::BitwiseBoardMoveDown(
         {
             in_out_bitwiseBoard       <<= 1;
             in_out_bitwisePlayerBoard <<= 1;
-            if ( (i < 0) || (i >= GetNColumns()) )
+            if ( (i < 0) || (i >= GetNColumns()) || ((a_coord.m_col + 4) >= GetNRows()))
             {
                 // out of the board
                 in_out_bitwiseBoard       |= static_cast<uint64_t>(0x01);

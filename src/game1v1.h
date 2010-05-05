@@ -80,8 +80,8 @@ public:
 
 	/// @brief builds the game
 	/// It creates a board where the game will be played
-    /// @param player1 starting coordinate 
-    /// @param player2 starting coordinate 
+    /// @param player1 starting coordinate
+    /// @param player2 starting coordinate
     Game1v1(
         const Coordinate &a_player1StartingCoord = DEFAULT_STARTING_COORD_PLAYER1,
         const Coordinate &a_player2StartingCoord = DEFAULT_STARTING_COORD_PLAYER2);
@@ -95,7 +95,7 @@ public:
 
 	/// @brief sets the progress functor
 	void SetProgressHandler(ProgressFunctor_t a_progressFunctor);
-    
+
     /// @returns a const reference to the player passed as parameter
     const Player& GetPlayer(eGame1v1Player_t a_playerType) const;
 
@@ -228,10 +228,12 @@ protected:
             Player           &a_playerOpponent);
 
     /// @brief calculate the first piece to be put in the board
+    /// a_board, a_playerMe and a_playerOpponent are not const references, but they
+    /// are not modified after this method is run
     static int32_t ComputeFirstPiece(
-            const Board      &a_board,
-            const Player     &a_playerMe,
-            const Player     &a_playerOpponent,
+            Board            &a_board,
+            Player           &a_playerMe,
+            Player           &a_playerOpponent,
             const Coordinate &a_lastOpponentPieceCoord,
             const Piece      &a_lastOpponentPiece,
             Piece            &out_resultPiece,

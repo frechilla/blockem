@@ -39,15 +39,221 @@ Game1v1Test::~Game1v1Test()
 {
 }
 
+void Game1v1Test::TestBitwise()
+{
+    // ensure the game1v1 hasn't been modified
+    Reset();
+
+    // it'll be used to save if piece is deployable using the legacy (old) way
+    bool isDeployableLegacy;
+    // it'll be used to save if piece is deployable using the bitwise way
+    bool isDeployableBitwise;
+
+    // 0: empty
+    // +: player2
+    // X: player1
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 + 0 0 0 0 0 0 0 0
+    // 0 0 0 + + + 0 0 0 0 0 0 0
+    // 0 0 0 0 + 0 X 0 0 0 0 0 0
+    // 0 0 0 0 0 X X X 0 0 0 0 0
+    // 0 0 0 0 0 0 X 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0
+    Game1v1::PutDownPiece(m_player1.m_pieces[e_5Piece_Cross], Coordinate(6, 6), Game1v1::e_Game1v1Player1);
+    Game1v1::PutDownPiece(m_player2.m_pieces[e_5Piece_Cross], Coordinate(4, 4), Game1v1::e_Game1v1Player2);
+
+    // neither player1 nor player2 have the cross piece now, it won't be tested in this first stage
+    // of the test, but they will be tested a bit later (when the only pieces deployed are the
+    // baby pieces)
+
+    for (int8_t i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
+    {
+        if (!m_player1.IsPieceAvailable(static_cast<ePieceType_t>(i)))
+        {
+            continue;
+        }
+
+        const std::list<uint64_t> &pieceConfigurations = m_player1.m_pieces[i].GetBitwiseList();
+        std::list<uint64_t>::const_iterator it = pieceConfigurations.begin();
+
+        do
+        {
+            int8_t nRotations = 0;
+            while(nRotations < m_player1.m_pieces[i].GetNRotations())
+            {
+                // current coordinate being studied
+                Coordinate thisCoord(0, 0);
+
+                uint64_t bitwiseBoard;   // place in the board is empty or not
+                uint64_t bitwiseBoardPlayer1; // place in the board is occupied by player me
+                m_board.BitwiseBoardCalculate(thisCoord, m_player1, bitwiseBoard, bitwiseBoardPlayer1);
+                // bitwise representation of current piece
+                uint64_t bPiece = (*it);
+
+                // the following loop goes trough the board doing a S-like movement.
+                // it goes from left to right, then down, then right to left, then down,
+                // then left to right...
+                // checking how many pieces can be put down per position on the board
+                while (true)
+                {
+                    for (thisCoord.m_col = 0;
+                         thisCoord.m_col < (m_board.GetNColumns() - 1);
+                         thisCoord.m_col += 1)
+                    {
+                        // check
+                        isDeployableLegacy =
+                            Rules::IsPieceDeployable(m_board,
+                                              m_player1.m_pieces[i],
+                                              thisCoord,
+                                              m_player1);
+                        isDeployableBitwise =
+                            Rules::IsDeployableBitwise(bPiece,
+                                                bitwiseBoard,
+                                                bitwiseBoardPlayer1);
+                        std::cout << isDeployableLegacy << " " << isDeployableBitwise << std::endl;
+                        assert(isDeployableLegacy == isDeployableBitwise);
+
+                        m_board.BitwiseBoardMoveRight(thisCoord, m_player1, bitwiseBoard, bitwiseBoardPlayer1);
+                    }
+                    // latest configuration wasn't checked
+                    // check
+                    isDeployableLegacy =
+                        Rules::IsPieceDeployable(m_board,
+                                          m_player1.m_pieces[i],
+                                          thisCoord,
+                                          m_player1);
+                    isDeployableBitwise =
+                        Rules::IsDeployableBitwise(bPiece,
+                                            bitwiseBoard,
+                                            bitwiseBoardPlayer1);
+                    std::cout << isDeployableLegacy << " " << isDeployableBitwise << std::endl;
+                    assert(isDeployableLegacy == isDeployableBitwise);
+
+                    if ((thisCoord.m_row + 1) >= m_board.GetNRows())
+                    {
+                        break; // got to the latest row of the board
+                    }
+
+                    // next row
+                    m_board.BitwiseBoardMoveDown(thisCoord, m_player1, bitwiseBoard, bitwiseBoardPlayer1);
+                    thisCoord.m_row++;
+
+                    // check moving to the left
+                    for (thisCoord.m_col = (m_board.GetNColumns() - 1);
+                         thisCoord.m_col > 0;
+                         thisCoord.m_col -= 1)
+                    {
+                        // check
+                        isDeployableLegacy =
+                            Rules::IsPieceDeployable(m_board,
+                                              m_player1.m_pieces[i],
+                                              thisCoord,
+                                              m_player1);
+                        isDeployableBitwise =
+                            Rules::IsDeployableBitwise(bPiece,
+                                                bitwiseBoard,
+                                                bitwiseBoardPlayer1);
+                        std::cout << isDeployableLegacy << " " << isDeployableBitwise << std::endl;
+                        assert(isDeployableLegacy == isDeployableBitwise);
+
+                        m_board.BitwiseBoardMoveLeft(thisCoord, m_player1, bitwiseBoard, bitwiseBoardPlayer1);
+                    }
+                    // latest configuration wasn't checked
+                    //check
+                    isDeployableLegacy =
+                        Rules::IsPieceDeployable(m_board,
+                                          m_player1.m_pieces[i],
+                                          thisCoord,
+                                          m_player1);
+                    isDeployableBitwise =
+                        Rules::IsDeployableBitwise(bPiece,
+                                            bitwiseBoard,
+                                            bitwiseBoardPlayer1);
+                    std::cout << isDeployableLegacy << " " << isDeployableBitwise << std::endl;
+                    assert(isDeployableLegacy == isDeployableBitwise);
+
+                    if ((thisCoord.m_row + 1) >= m_board.GetNRows())
+                    {
+                        break; // got to the latest row of the board
+                    }
+
+                    // next row
+                    m_board.BitwiseBoardMoveDown(thisCoord, m_player1, bitwiseBoard, bitwiseBoardPlayer1);
+                    thisCoord.m_row++;
+                }
+
+                // next bitwise representation (rotate right)
+                it++;
+                // rotate right the old way representation
+                nRotations++;
+                m_player1.m_pieces[i].RotateRight();
+
+            } // while (nOrigRotations > a_playerMe.m_pieces[i].GetNRotationsRight())
+
+            if ( (m_player1.m_pieces[i].GetType() == e_4Piece_LittleS) &&
+                 (m_player1.m_pieces[i].IsMirrored() == false) )
+            {
+                // For this piece the maximum number or rotations is 2
+                // and the piece is not symmetric, the configuration after
+                // the 3rd rotation is the same shape as the original, but
+                // the coords moved. Reset the piece before mirroring to
+                // avoid unexpected results
+                //
+                // it also happens with 2piece and 4longPiece, but those pieces
+                // don't have mirror, so there's no need for this extra check
+                m_player1.m_pieces[i].Reset();
+            }
+
+            if (m_player1.m_pieces[i].CanMirror())
+            {
+                // next bitwise representation (mirror)
+                it++;
+            }
+
+        } while (m_player1.m_pieces[i].MirrorYAxis());
+
+        assert(it == pieceConfigurations.end());
+
+        // leave the piece as it was!!!
+        m_player1.m_pieces[i].Reset();
+
+    } // for (int i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
+
+
+    // reset the board to launch next test (where only 2 baby pieces are deployed)
+    Reset();
+
+    // 0: empty
+    // +: player2
+    // X: player1
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 + 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 X 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0
+    Game1v1::PutDownPiece(m_player1.m_pieces[e_1Piece_BabyPiece], Coordinate(6, 6), Game1v1::e_Game1v1Player1);
+    Game1v1::PutDownPiece(m_player2.m_pieces[e_1Piece_BabyPiece], Coordinate(4, 4), Game1v1::e_Game1v1Player2);
+}
+
 void Game1v1Test::TestPieces()
 {
     int32_t possibleConfigurations = 0;
-
-#ifdef NDEBUG
-    std::cout << "Warning: asserts in Game1v1Test will fail silently. "
-              << "Compile without the -DNDEBUG flag for a proper test."
-              << std::endl;
-#endif
 
     for (int32_t i = e_minimumPieceIndex; i < e_numberOfPieces ; i++)
     {

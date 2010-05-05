@@ -41,7 +41,10 @@ public:
     Game1v1Test();
     virtual ~Game1v1Test();
 
+    // tests the pieces are configured as they are supposed to
     void TestPieces();
+    // test the bitwise representation against he legacy well tested way
+    void TestBitwise();
 
 private:
 

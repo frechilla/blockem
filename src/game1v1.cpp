@@ -150,13 +150,11 @@ void Game1v1::SetPlayerColour(
         m_player1.SetColour(a_red, a_green, a_blue);
         break;
     }
-
     case e_Game1v1Player2:
     {
         m_player2.SetColour(a_red, a_green, a_blue);
         break;
     }
-
 #ifdef DEBUG
     default:
         assert(0);
@@ -177,14 +175,12 @@ void Game1v1::RemovePiece(
         m_player1.SetPiece(a_piece.GetType());
         break;
     }
-
     case e_Game1v1Player2:
     {
         Game1v1::RemovePiece(m_board, a_piece, a_coord, m_player2, m_player1);
         m_player2.SetPiece(a_piece.GetType());
         break;
     }
-
 #ifdef DEBUG
     default:
         assert(0);
@@ -256,14 +252,12 @@ void Game1v1::PutDownPiece(
         m_player1.UnsetPiece(a_piece.GetType());
         break;
     }
-
     case e_Game1v1Player2:
     {
         Game1v1::PutDownPiece(m_board, a_piece, a_coord, m_player2, m_player1);
         m_player2.UnsetPiece(a_piece.GetType());
         break;
     }
-
 #ifdef DEBUG
     default:
         assert(0);
@@ -337,14 +331,12 @@ int32_t Game1v1::MinMax(
         playerOpponent = &m_player2;
         break;
     }
-
     case e_Game1v1Player2:
     {
         playerMe       = &m_player2;
         playerOpponent = &m_player1;
         break;
     }
-
 #ifdef DEBUG
     default:
         assert(0);
@@ -563,15 +555,12 @@ int32_t Game1v1::MinMax(
 
                 }// while (nOrigRotations > a_playerMe.m_pieces[i].GetNRotationsRight())
 
-                // reset the amount of rotations done before mirroring
-                nRotations = 0;
-
                 if ( (playerMe->m_pieces[i].GetType() == e_4Piece_LittleS) &&
                      (playerMe->m_pieces[i].IsMirrored() == false) )
                 {
                     // For this piece the maximum number or rotations is 2
                     // and the piece is not symmetric, the configuration after
-                    // the 3rd rotation is the shame shape as the original, but
+                    // the 3rd rotation is the same shape as the original, but
                     // the coords moved. Reset the piece before mirroring to
                     // avoid unexpected results
                     //
@@ -601,14 +590,15 @@ int32_t Game1v1::MinMax(
 }
 
 int32_t Game1v1::ComputeFirstPiece(
-        const Board      &a_board,
-        const Player     &a_playerMe,
-        const Player     &a_playerOpponent,
+        Board            &a_board,
+        Player           &a_playerMe,
+        Player           &a_playerOpponent,
         const Coordinate &a_lastOpponentPieceCoord,
         const Piece      &a_lastOpponentPiece,
         Piece            &out_resultPiece,
         Coordinate       &out_coord)
 {
+    // try to calculate a 'smart' first move quickly
     if ( (a_playerMe.NumberOfPiecesAvailable() == e_numberOfPieces) &&
          (a_lastOpponentPiece.GetType() != e_noPiece) &&
          (a_lastOpponentPiece.GetNSquares() == 5) &&
@@ -626,8 +616,11 @@ int32_t Game1v1::ComputeFirstPiece(
     else
     {
         // we shouldn't copy the 1st user's move, because it was shit
-        // temporary solution. Put the cross in 9,8 (acceptable first move),
-        // or 5,6
+        // Do an acceptable 1st move (quick and dirty solution).
+        // The folloing piece of code will put the cross in an 'good'
+        // place, for example in 9,8 -if starting coord is (9,9)-
+        // or 5,6 if starting coord is (4,4). Which are the standard
+        // starting coords
         out_resultPiece = Piece(e_5Piece_Cross);
 
         Coordinate startingCoord = a_playerMe.GetStartingCoordinate();
@@ -645,6 +638,98 @@ int32_t Game1v1::ComputeFirstPiece(
         }
 
         out_coord.m_row = startingCoord.m_row;
+    }
+
+    // check out now if the move calculated in the previous step is valid
+    if (!Rules::IsPieceDeployableInStartingPoint(
+            a_board,
+            out_resultPiece,
+            out_coord,
+            a_playerMe.GetStartingCoordinate()) )
+    {
+        // move wasn't valid. calculate a new one (if it is possible)
+
+        // new move. Restart variables which save the calculated move
+        out_resultPiece = Piece(e_noPiece);
+        out_coord = Coordinate();
+
+        int32_t heuristicValue = -INFINITE;
+
+        for (int8_t i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
+        {
+            // go trough the list of pieces to find out what move is the best one
+            if (!a_playerMe.IsPieceAvailable(static_cast<ePieceType_t>(i)))
+            {
+                // it is the 1st piece to be deployed. It shouldn't be needed
+                continue;
+            }
+
+			do
+			{
+                int8_t nRotations = 0;
+                while(nRotations < a_playerMe.m_pieces[i].GetNRotations())
+                {
+                    Coordinate validCoords[VALID_COORDS_SIZE];
+                    int32_t nValidCoords = Rules::CalculateValidCoordsInStartingPoint(
+                                                a_board,
+                                                a_playerMe.m_pieces[i],
+                                                a_playerMe.GetStartingCoordinate(),
+                                                a_playerMe,
+                                                validCoords,
+                                                VALID_COORDS_SIZE);
+                    for (uint8_t k = 0 ; k < nValidCoords ; k++)
+                    {
+                        Game1v1::PutDownPiece(
+                                a_board,
+                                a_playerMe.m_pieces[i],
+                                validCoords[k],
+                                a_playerMe,
+                                a_playerOpponent);
+
+                        // taking over the center of the board is pretty important. Use
+                        // nk weighted heuristic to try to calculate alternative 1st move
+                        int32_t currentValue =
+                            Heuristic::CalculateNKWeighted(a_board, a_playerMe, a_playerOpponent);
+
+                        if (currentValue > heuristicValue)
+                        {
+                            // this is the best move so far
+                            heuristicValue = currentValue;
+                            out_resultPiece = a_playerMe.m_pieces[i];
+                            out_coord = validCoords[k];
+                        }
+
+                        Game1v1::RemovePiece(
+                                a_board,
+                                a_playerMe.m_pieces[i],
+                                validCoords[k],
+                                a_playerMe,
+                                a_playerOpponent);
+                    }
+
+					nRotations++;
+					a_playerMe.m_pieces[i].RotateRight();
+				} // while(nOrigRotations < a_playerMe.m_pieces[i].GetNRotationsRight())
+
+	            if ( (a_playerMe.m_pieces[i].GetType() == e_4Piece_LittleS) &&
+	                 (a_playerMe.m_pieces[i].IsMirrored() == false) )
+	            {
+	                // For this piece the maximum number or rotations is 2
+	                // and the piece is not symmetric, the configuration after
+	                // the 3rd rotation is the same shape as the original, but
+	                // the coords moved. Reset the piece before mirroring to
+	                // avoid unexpected results
+	                //
+	                // it also happens with 2piece and 4longPiece, but those pieces
+	                // don't have mirror, so there's no need for this extra check
+	                a_playerMe.m_pieces[i].Reset();
+	            }
+
+			} while (a_playerMe.m_pieces[i].MirrorYAxis());
+
+            // leave the piece as it was!!
+            a_playerMe.m_pieces[i].Reset();
+        }
     }
 
 	return 0;
@@ -694,8 +779,7 @@ int32_t Game1v1::MinMaxAlphaBetaCompute(
 
     // save a pointer to this set in the place (index) reserved for it
     // (originalDepth / 2) - (depth / 2) represents this level of relative depth
-    // to the pieces put by 'me'. originalDepth should be odd for this
-    // calculation to work properly
+    // to the pieces put by 'me'
     a_oldNkPointsMe[(originalDepth / 2) - (depth / 2)] = &nkPointSetMe;
 
     // number of pieces successfully put down
@@ -854,15 +938,12 @@ int32_t Game1v1::MinMaxAlphaBetaCompute(
 
 				} // while(nOrigRotations > a_playerMe.m_pieces[i].GetNRotationsRight())
 
-	            // reset the amount of rotations done before mirroring
-                nRotations = 0;
-
 	            if ( (a_playerMe.m_pieces[i].GetType() == e_4Piece_LittleS) &&
 	                 (a_playerMe.m_pieces[i].IsMirrored() == false) )
 	            {
 	                // For this piece the maximum number or rotations is 2
 	                // and the piece is not symmetric, the configuration after
-	                // the 3rd rotation is the shame shape as the original, but
+	                // the 3rd rotation is the same shape as the original, but
 	                // the coords moved. Reset the piece before mirroring to
 	                // avoid unexpected results
 	                //

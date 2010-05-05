@@ -20,4 +20,7 @@ basic things that need to be done:
    pieces
  + Final game dialog is shown twice sometimes when playing computer against
    computer
+ + App cores when starting coords are the same or are touching for player1 
+   and player2 (it doesn't matter if whoever has to go it is a human or 
+   the computer)
    

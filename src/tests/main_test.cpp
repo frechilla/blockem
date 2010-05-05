@@ -36,12 +36,19 @@ void simpleTest();
 
 int main(int argc, char** argv)
 {
+#ifdef NDEBUG
+    std::cout << "Warning: asserts will fail silently. "
+              << "Compile without the -DNDEBUG flag for a proper test."
+              << std::endl;
+#endif
+
     // Game1v1 test
     std::cout << "Game1v1 test started... ";
     std::cout.flush();
 
     Game1v1Test the1v1Test;
     the1v1Test.TestPieces();
+    the1v1Test.TestBitwise();
 
     std::cout << "  [Passed]" << std::endl << std::endl;
 
