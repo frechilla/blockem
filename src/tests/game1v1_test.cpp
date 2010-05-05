@@ -117,7 +117,8 @@ void Game1v1Test::TestBitwise()
                             Rules::IsDeployableBitwise(bPiece,
                                                 bitwiseBoard,
                                                 bitwiseBoardPlayer1);
-                        std::cout << isDeployableLegacy << " " << isDeployableBitwise << std::endl;
+                        std::cout << isDeployableLegacy << " " << isDeployableBitwise
+                                  << std::hex << bPiece << " " << bitwiseBoard << " " << bitwiseBoardPlayer1 << std::endl;
                         assert(isDeployableLegacy == isDeployableBitwise);
 
                         m_board.BitwiseBoardMoveRight(thisCoord, m_player1, bitwiseBoard, bitwiseBoardPlayer1);
@@ -133,7 +134,8 @@ void Game1v1Test::TestBitwise()
                         Rules::IsDeployableBitwise(bPiece,
                                             bitwiseBoard,
                                             bitwiseBoardPlayer1);
-                    std::cout << isDeployableLegacy << " " << isDeployableBitwise << std::endl;
+                    std::cout << isDeployableLegacy << " " << isDeployableBitwise
+                              << std::hex << bPiece << " " << bitwiseBoard << " " << bitwiseBoardPlayer1 << std::endl;
                     assert(isDeployableLegacy == isDeployableBitwise);
 
                     if ((thisCoord.m_row + 1) >= m_board.GetNRows())
@@ -160,7 +162,8 @@ void Game1v1Test::TestBitwise()
                             Rules::IsDeployableBitwise(bPiece,
                                                 bitwiseBoard,
                                                 bitwiseBoardPlayer1);
-                        std::cout << isDeployableLegacy << " " << isDeployableBitwise << std::endl;
+                        std::cout << isDeployableLegacy << " " << isDeployableBitwise
+                                  << std::hex << bPiece << " " << bitwiseBoard << " " << bitwiseBoardPlayer1 << std::endl;
                         assert(isDeployableLegacy == isDeployableBitwise);
 
                         m_board.BitwiseBoardMoveLeft(thisCoord, m_player1, bitwiseBoard, bitwiseBoardPlayer1);
@@ -176,7 +179,8 @@ void Game1v1Test::TestBitwise()
                         Rules::IsDeployableBitwise(bPiece,
                                             bitwiseBoard,
                                             bitwiseBoardPlayer1);
-                    std::cout << isDeployableLegacy << " " << isDeployableBitwise << std::endl;
+                    std::cout << isDeployableLegacy << " " << isDeployableBitwise
+                              << std::hex << bPiece << " " << bitwiseBoard << " " << bitwiseBoardPlayer1 << std::endl;
                     assert(isDeployableLegacy == isDeployableBitwise);
 
                     if ((thisCoord.m_row + 1) >= m_board.GetNRows())
