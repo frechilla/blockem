@@ -5,16 +5,21 @@ Blockem package
 This is a package that contains the latest version of the game Blockem.
 Blockem is a strategy board game based on the well-known game blokus (R)
 
-Currently it only supports 1vs1 mode to be played against the computer (which
-has a bit of AI). It's still a very early release but it's a fully functional
-package (with a lot of improvement to be done)
+It supports 1vs1 mode which can be player between 2 human beings, and also
+against the computer, which has an AI engine based on the minimax algorithm.
+The app allows the user to pick amongst several types of heuristic (evaluation
+function used in the minimax algorithm). Aditionally it also supports games
+where the 2 players are set up to be managed by the minimax engine using
+differet (or the same) evaluation function. A developer can easily create a
+new evaluation function, add it into the GUI and test it against an existing
+heuristic. A "random" evaluation function has been added for this matter
 
 This is the URL of the project, where you should be able to find much more than
-what is written in this README:
+what it is written in this README:
 
-http://sourceforge.net/projects/blockem
+http://blockem.sourceforge.net
 
-Any query, please contact frechilla@gmail.com. I'll be glad to help.
+Any query, please contact frechilla -at- gmail.com. I'll be glad to help.
 
 
 Documentation
@@ -31,17 +36,16 @@ Building and installing
 
 Blockem has been developed using OS independent C++ and GTKmm (the C++ version
 of GTK+) to build the GUI. It *should* compile in every platform where GTKmm
-has been ported, but it has only been tested in linux and windows so far. 
-You'll need the following libraries to be able to compile this package:
- * gtkmm-2.4
- * glademm-2.4
+has been ported, but it has only been tested in linux and windows so far.
+You'll need the gtkmm-2.4 library, with a version bigger or equal to 2.16
+to compile this package. For versions older than 0.2.0 you'll also need
+glademm-2.4, but I would recommend to use the latest available version 
  
-In a Debian based system try to install the following packages. It has been 
-tested in ubuntu 9.10:
- * libgtkmm-2.4-dev
- * libglademm-2.4-dev
+In a Debian based system try to install 'libgtkmm-2.4-dev'. (It has been 
+tested in ubuntu 9.10). Again, if you are trying to compile a version
+older than 0.2.0 you'll also need to install 'libglademm-2.4-dev'
  
-Once those libraries are present in your system untar the package, cd into it,
+Once that library is present in your system, untar the package, cd into it,
 and run the famous ./configure && make. && make install.
 Once the compiling process is done you'll be able to run a binary called 
 'blockem' which should be installed in the default binary directory (normally
@@ -64,8 +68,9 @@ Developers
 ----------
  
 I haven't had enough time to build the doxygen documentation for the project,
-but I tried to document a lot in code using the doxygen standard. There will
-be (at some point) a small introduction to the project, including some class 
-diagrams to explain the system easily for whoever wants to participate (or
-whoever is curious enough to know what is going on in this project)
+but I tried to document as much as possible in code using the doxygen standard
+There will be (at some point) a small introduction to the project, including
+some class diagrams to explain the system easily for whoever wants to 
+participate (or whoever is curious enough to know what is going on in this 
+project)
 

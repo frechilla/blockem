@@ -6,9 +6,10 @@ http://www.mingw.org/wiki/HOWTO_Install_the_MinGW_GCC_Compiler_Suite
 
 You'll also need the port of the GTKmm library for windows. Have a look at:
 http://live.gnome.org/gtkmm/MSWindows/
+at the time version 2.16 was supposed to be the most stable
 
 I installed the following packages in my windows machine to compile blockem
-in windows. And it works:
+in windows. And it worked!
 
 gtkmm-win32-devel-2.16.0-4.exe
 gcc-c++-4.4.0-mingw32-bin.tar.gz

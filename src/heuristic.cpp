@@ -318,15 +318,16 @@ int32_t Heuristic::CalculatePiecesPerNKPoint(
 int32_t Heuristic::CalculateCircularWeight(
 		const Board &a_board, int32_t a_row, int32_t a_column)
 {
-#ifdef DEBUG
-    // this function has been modified to use a static
-    // 14x14 array for performance reasons. if the size of the
-    // board is not 14 it won't work properly. Use the code
-    // between #if 0 ... #endif at the end of this very same function
-    // if board is not expected to be 14x14
+#if 0
+//#ifdef DEBUG
+    // this piece of code tried to improve performance using
+    // a precalculated static 14x14 array.
+    // it might not make a lot of sense, but it is slower
+    // than the code below, which runs a calculation
+    // instead of just accessing an array
     assert(a_board.GetNRows() == 14);
     assert(a_board.GetNColumns() == 14);
-#endif
+//#endif
     // values precalculated for a 14x14 board
     static const int8_t s_circularWeightValues[14][14] =
     {
@@ -347,11 +348,8 @@ int32_t Heuristic::CalculateCircularWeight(
     };
 
     return static_cast<int32_t>(s_circularWeightValues[a_row][a_column]);
+#endif
 
-#if 0
-    //WARNING this is the code for any board size. It has been replaced
-    // by specific code for 14x14 boards since it is the only board
-    // available, but it might be needed in the future
     int32_t tmpValue =
         std::max(
                 abs(a_row + 1    - (a_board.GetNRows() / 2)),
@@ -360,7 +358,6 @@ int32_t Heuristic::CalculateCircularWeight(
     int32_t weightedValue = ( ( (a_board.GetNRows() / 2) - tmpValue ) / 2) + 1;
 
     return weightedValue;
-#endif
 }
 
 bool Heuristic::IsPointTouchingPlayer(
