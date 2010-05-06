@@ -14,5 +14,13 @@ game1v1_test.h
 
 # this should be changed at some point. we should be crating a library with the base blockem classes
 # and then add that library to blockemtest_LIBADD
-blockemtest_LDADD = ../board.o ../game1v1.o ../game_total_allocation.o ../heuristic.o ../piece.o ../player.o ../rules.o
+blockemtest_LDADD = \
+../board.o \
+../game1v1.o \
+../game_total_allocation.o \
+../heuristic.o \
+../piece.o \
+../player.o \
+../rules.o \
+../bitwise.o
 

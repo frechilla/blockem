@@ -126,65 +126,6 @@ public:
     /// should be used as little as possible. Better to use SetPlayerInCoord
     void SetSquare(char a_char, int32_t a_row, int32_t a_col);
 
-    /// Calculate a 7x7 bitwise representation of the board with center
-    /// wherever the parameter a_coord says. It has 1 where the board is taken/busy
-    /// and 0 wherever is empty
-    /// This 7x7 representation can be used with the bitwise representations
-    /// of pieces (have a look at Piece:BuildUpBitwiseRepresentation)
-    /// Basically takes a picture of the current state of the board and saves
-    /// it in an uint64_t (which is returned)
-    /// The bitwise representation of the board is surrounded by 3 rows and 3 cols
-    /// which will be always set to 1 (non available) in order to easily (and quickly)
-    /// check whether a piece is inside or outside the board. For example, if the board is 14x14
-    /// a 7x7 bitwise representation of the coordinate 0,0 is (note that the coordinate 0,0 is
-    /// written by an 'x'. 1 means taken and 0 empty)
-    /// 1 1 1 1 1 1 1
-    /// 1 1 1 1 1 1 1
-    /// 1 1 1 1 1 1 1
-    /// 1 1 1 x 0 0 0
-    /// 1 1 1 0 0 0 0
-    /// 1 1 1 0 0 0 0
-    /// 1 1 1 0 0 0 0
-    ///
-    /// which would be: 1111111 1111111 1111111 111x000 1110000 1110000 1110000 = fffffffffe1c3870 (if x is 0)
-    /// @param coordinate to be used as center of the 7x7 square
-    /// @param player whose pieces will be represented in out_bitwisePlayerBoard
-    /// @param 7x7 representation of the whole board (1 means coord is not empty, 0 it is empty)
-    /// @param 7x7 representation of the pieces of 'a_player'. 1 means the player is in that specific coord
-    ///        0 means player is not in that position
-    void BitwiseBoardCalculate(
-        const Coordinate &a_coord, 
-        const Player     &a_player,
-        uint64_t         &out_bitwiseBoard,
-        uint64_t         &out_bitwisePlayerBoard) const;
-
-    /// Move right the 7x7 bitwise representaions of the board saved in in_out_bitwiseBoard and
-    /// bitwise representation of 'a_player' pieces in in_out_bitwisePlayerBoard
-    /// a_coord contains the old coord i.e. before moving to the right
-    void BitwiseBoardMoveRight(
-        const Coordinate &a_coord, 
-        const Player     &a_player,
-        uint64_t         &in_out_bitwiseBoard,
-        uint64_t         &in_out_bitwisePlayerBoard) const;
-
-    /// Move left the 7x7 bitwise representaions of the board saved in in_out_bitwiseBoard and
-    /// bitwise representation of 'a_player' pieces in in_out_bitwisePlayerBoard
-    /// a_coord contains the old coord i.e. before moving to the left
-    void BitwiseBoardMoveLeft(
-        const Coordinate &a_coord, 
-        const Player     &a_player,
-        uint64_t         &in_out_bitwiseBoard,
-        uint64_t         &in_out_bitwisePlayerBoard) const;
-
-    /// Move down the the 7x7 bitwise representaions of the board saved in in_out_bitwiseBoard and
-    /// bitwise representation of 'a_player' pieces in in_out_bitwisePlayerBoard
-    /// a_coord contains the old coord i.e. before moving downwards
-    void BitwiseBoardMoveDown(
-        const Coordinate &a_coord, 
-        const Player     &a_player,
-        uint64_t         &in_out_bitwiseBoard,
-        uint64_t         &in_out_bitwisePlayerBoard) const;
-
 private:
     /// the actual board
     char** m_theBoard;

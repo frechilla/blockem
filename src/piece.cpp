@@ -99,7 +99,16 @@ Piece::Piece(ePieceType_t a_type):
 {
 	if (a_type != e_noPiece)
 	{
-		LoadPieceData(a_type);
+#ifdef DEBUG
+	    assert(a_type >= e_minimumPieceIndex);
+	    assert(a_type < e_numberOfPieces);
+	    assert(a_type != e_noPiece);
+#endif
+	    // load the legacy piece representation
+        (m_loadFunctionMap[a_type])(*this);
+
+        // build up the bitwise representation too
+        BuildUpBitwiseRepresentation();
 	}
 	else
 	{
@@ -111,6 +120,11 @@ Piece::Piece(ePieceType_t a_type):
 
 Piece::~Piece()
 {
+}
+
+inline void LoadPieceData(ePieceType_t a_piece)
+{
+
 }
 
 void Piece::SetPiece(

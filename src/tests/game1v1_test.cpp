@@ -29,6 +29,7 @@
 // ============================================================================
 
 #include "game1v1_test.h"
+#include "bitwise.h"
 
 Game1v1Test::Game1v1Test() :
     Game1v1()
@@ -55,21 +56,24 @@ void Game1v1Test::TestBitwiseCheckConfiguration(
     // board to calculate the bitwise representation. Check calculated values against bitwiseBoard
     // and bitwiseBoardPlayer1 which are supposed to have been calculated using Board::BitwiseBoardMoveRight
     // Board::BitwiseBoardMoveLeft or Board::BitwiseBoardMoveDown
-    m_board.BitwiseBoardCalculate(thisCoord, m_player1, bitwiseBoardTest, bitwiseBoardPlayer1Test);
+    bitwise::BoardCalculate(m_board, thisCoord, m_player1, bitwiseBoardTest, bitwiseBoardPlayer1Test);
     assert(bitwiseBoardTest == bitwiseBoard);
     assert(bitwiseBoardPlayer1Test == bitwiseBoardPlayer1);
 
     // check if piece is deployable using the legacy old way and bitwise way
     // assert both ways gives same result
     isDeployableLegacy =
-        Rules::IsPieceDeployable(m_board,
-                          piece,
-                          thisCoord,
-                          m_player1);
+        Rules::IsPieceDeployable(
+                m_board,
+                piece,
+                thisCoord,
+                m_player1);
+
     isDeployableBitwise =
-        Rules::IsDeployableBitwise(bPiece,
-                            bitwiseBoard,
-                            bitwiseBoardPlayer1);
+        bitwise::IsPieceDeployable(
+                    bPiece,
+                    bitwiseBoard,
+                    bitwiseBoardPlayer1);
 
     //std::cout << isDeployableLegacy << " " << isDeployableBitwise << " "
     //          << std::hex << bPiece << " " << bitwiseBoard << " " << bitwiseBoardPlayer1 << std::endl;
@@ -114,7 +118,7 @@ void Game1v1Test::TestBoardAndPiecesBitwise(int32_t a_nUsedPieces, ePieceType_t 
                 uint64_t bitwiseBoard;
                 // bitwise representation of the board. Coord is occuppied by player1
                 uint64_t bitwiseBoardPlayer1;
-                m_board.BitwiseBoardCalculate(thisCoord, m_player1, bitwiseBoard, bitwiseBoardPlayer1);
+                bitwise::BoardCalculate(m_board, thisCoord, m_player1, bitwiseBoard, bitwiseBoardPlayer1);
                 // bitwise representation of current piece
                 uint64_t bPiece = (*it);
 
@@ -135,7 +139,7 @@ void Game1v1Test::TestBoardAndPiecesBitwise(int32_t a_nUsedPieces, ePieceType_t 
                             bitwiseBoard,
                             bitwiseBoardPlayer1);
 
-                        m_board.BitwiseBoardMoveRight(thisCoord, m_player1, bitwiseBoard, bitwiseBoardPlayer1);
+                        bitwise::BoardMoveRight(m_board, thisCoord, m_player1, bitwiseBoard, bitwiseBoardPlayer1);
                     }
                     // latest configuration wasn't checked
                     // check
@@ -152,7 +156,7 @@ void Game1v1Test::TestBoardAndPiecesBitwise(int32_t a_nUsedPieces, ePieceType_t 
                     }
 
                     // next row
-                    m_board.BitwiseBoardMoveDown(thisCoord, m_player1, bitwiseBoard, bitwiseBoardPlayer1);
+                    bitwise::BoardMoveDown(m_board, thisCoord, m_player1, bitwiseBoard, bitwiseBoardPlayer1);
                     thisCoord.m_row++;
 
                     // check moving to the left
@@ -168,7 +172,7 @@ void Game1v1Test::TestBoardAndPiecesBitwise(int32_t a_nUsedPieces, ePieceType_t 
                             bitwiseBoard,
                             bitwiseBoardPlayer1);
 
-                        m_board.BitwiseBoardMoveLeft(thisCoord, m_player1, bitwiseBoard, bitwiseBoardPlayer1);
+                        bitwise::BoardMoveLeft(m_board, thisCoord, m_player1, bitwiseBoard, bitwiseBoardPlayer1);
                     }
                     // latest configuration wasn't checked
                     //check
@@ -185,7 +189,7 @@ void Game1v1Test::TestBoardAndPiecesBitwise(int32_t a_nUsedPieces, ePieceType_t 
                     }
 
                     // next row
-                    m_board.BitwiseBoardMoveDown(thisCoord, m_player1, bitwiseBoard, bitwiseBoardPlayer1);
+                    bitwise::BoardMoveDown(m_board, thisCoord, m_player1, bitwiseBoard, bitwiseBoardPlayer1);
                     thisCoord.m_row++;
                 }
 

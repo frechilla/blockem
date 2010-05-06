@@ -33,6 +33,7 @@
 #include "heuristic.h"
 #include "player.h"
 #include "rules.h"
+#include "bitwise.h"
 
 // instantiate the const heuristic data array. Heuristics must be defined here
 // in the same order they are described in Heuristic::eHeuristicType_t in heuristic.h
@@ -228,7 +229,7 @@ int32_t Heuristic::CalculatePiecesPerNKPoint(
     Coordinate thisCoord(0, 0);
     uint64_t bitwiseBoard;   // place in the board is empty or not
     uint64_t bitwiseBoardMe; // place in the board is occupied by player me
-    a_board.BitwiseBoardCalculate(thisCoord, a_playerMe, bitwiseBoard, bitwiseBoardMe);
+    bitwise::BoardCalculate(a_board, thisCoord, a_playerMe, bitwiseBoard, bitwiseBoardMe);
 
     // the following loop goes trough the board doing a S-like movement.
     // it goes from left to right, then down, then right to left, then down,
@@ -246,7 +247,7 @@ int32_t Heuristic::CalculatePiecesPerNKPoint(
                                         bitwiseBoard,
                                         bitwiseBoardMe);
 
-            a_board.BitwiseBoardMoveRight(thisCoord, a_playerMe, bitwiseBoard, bitwiseBoardMe);
+            bitwise::BoardMoveRight(a_board, thisCoord, a_playerMe, bitwiseBoard, bitwiseBoardMe);
         }
         // latest configuration wasn't checked
         nSquaresCanDeployMe += CountSquaresCanBeDeployedBitwise(
@@ -262,7 +263,7 @@ int32_t Heuristic::CalculatePiecesPerNKPoint(
         }
 
         // next row
-        a_board.BitwiseBoardMoveDown(thisCoord, a_playerMe, bitwiseBoard, bitwiseBoardMe);
+        bitwise::BoardMoveDown(a_board, thisCoord, a_playerMe, bitwiseBoard, bitwiseBoardMe);
 
         // check moving to the left
         for (thisCoord.m_col = (a_board.GetNColumns() - 1);
@@ -275,7 +276,7 @@ int32_t Heuristic::CalculatePiecesPerNKPoint(
                                         bitwiseBoard,
                                         bitwiseBoardMe);
 
-            a_board.BitwiseBoardMoveLeft(thisCoord, a_playerMe, bitwiseBoard, bitwiseBoardMe);
+            bitwise::BoardMoveLeft(a_board, thisCoord, a_playerMe, bitwiseBoard, bitwiseBoardMe);
         }
         // latest configuration wasn't checked
         nSquaresCanDeployMe += CountSquaresCanBeDeployedBitwise(
@@ -291,7 +292,7 @@ int32_t Heuristic::CalculatePiecesPerNKPoint(
         }
 
         // next row
-        a_board.BitwiseBoardMoveDown(thisCoord, a_playerMe, bitwiseBoard, bitwiseBoardMe);
+        bitwise::BoardMoveDown(a_board, thisCoord, a_playerMe, bitwiseBoard, bitwiseBoardMe);
     }
 
     for (int8_t i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)

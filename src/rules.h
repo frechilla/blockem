@@ -218,41 +218,6 @@ public:
 
     /// @return true if the 'a_player' can put down at least one piece on the board
     static bool CanPlayerGo(const Board &a_board, const Player &a_player);
-
-    /// @brief chekcs if a_bPiece can be put down in the board
-    /// have a look at Board::BitwiseBoardCalculate if you want to know more about bitwise operations
-    /// @param bitwise representation of the piece
-    /// @param bitwise representation of the whole board
-    /// @param bitwise representation of the a_bPiece's owner's (player) pieces on the board
-    /// @return true if a_bPiece can be put down on the board
-    inline static bool IsDeployableBitwise(uint64_t a_bPiece, uint64_t a_bitwiseBoard, uint64_t a_bitwisePlayerBoard)
-    {
-        // does the piece fit in the board?
-        if ( (a_bPiece ^ (a_bPiece & a_bitwiseBoard)) == a_bPiece )
-        {
-            // there's space for this piece in the board. Check if this
-            // place is valid
-
-            // does the piece touch the side of another a_player's piece?
-            if ( (((a_bPiece << 7) ^ ((a_bPiece << 7) & a_bitwisePlayerBoard)) == (a_bPiece << 7)) && // move up
-                 (((a_bPiece >> 7) ^ ((a_bPiece >> 7) & a_bitwisePlayerBoard)) == (a_bPiece >> 7)) && // move down
-                 (((a_bPiece << 1) ^ ((a_bPiece << 1) & a_bitwisePlayerBoard)) == (a_bPiece << 1)) && // move left
-                 (((a_bPiece >> 1) ^ ((a_bPiece >> 1) & a_bitwisePlayerBoard)) == (a_bPiece >> 1)) )  // move right
-            {
-                // does it touch a corner (a.k.a. nk point)?
-                if ( (((a_bPiece << 8) ^ ((a_bPiece << 8) & a_bitwisePlayerBoard)) != (a_bPiece << 8)) || // up-left corner
-                     (((a_bPiece << 6) ^ ((a_bPiece << 6) & a_bitwisePlayerBoard)) != (a_bPiece << 6)) || // up-right corner
-                     (((a_bPiece >> 8) ^ ((a_bPiece >> 8) & a_bitwisePlayerBoard)) != (a_bPiece >> 8)) || // down-left corner
-                     (((a_bPiece >> 6) ^ ((a_bPiece >> 6) & a_bitwisePlayerBoard)) != (a_bPiece >> 6)) )  // down-right corner
-                {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
 };
 
 #endif /* RULES_H_ */

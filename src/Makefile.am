@@ -45,6 +45,8 @@ gui.glade    \
 blockem.rc
 
 blockem_SOURCES = \
+bitwise.cpp \
+bitwise.h \
 board.cpp \
 board.h \
 coordinate.h \

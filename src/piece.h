@@ -158,7 +158,7 @@ public:
     {
         return m_squareSideHalfSize;
     }
-    
+
     /// returns the list of bitwise representations of the piece
     /// have a look at the documentation for BuildUpBitwiseRepresentation to learn
     /// more about this way of representing pieces
@@ -196,19 +196,12 @@ private:
     /// @param squareSideHalfSize is the half of the size of the side of the square where the piece fits
     ///        the real size of the square is: ( (squareSideSize * 2) + 1)
     ///        For example the fullSquare will be 1, and the baby piece should be 0
-    void SetPiece(Coordinate a_coords[PIECE_MAX_SQUARES], uint8_t a_nSquares, bool a_mirror, int8_t a_nRotations, uint8_t a_squareSideHalfSize);
-
-    /// sets the properties of *this* object to represent the a_piece
-    /// @param a_piece the piece type to be loaded in this object
-    inline void LoadPieceData(ePieceType_t a_piece)
-    {
-#ifdef DEBUG
-        assert( ((a_piece >= e_minimumPieceIndex) && (a_piece < e_numberOfPieces)) && (a_piece != e_noPiece) );
-#endif
-		(m_loadFunctionMap[a_piece])(*this);
-        // build up the bitwise representation too
-        BuildUpBitwiseRepresentation();
-    }
+    void SetPiece(
+            Coordinate a_coords[PIECE_MAX_SQUARES],
+            uint8_t a_nSquares,
+            bool a_mirror,
+            int8_t a_nRotations,
+            uint8_t a_squareSideHalfSize);
 
     // static functions to load the description of each piece in the object passed as parameter
     static void LoadPiece_1BabyPiece  (Piece &thisPiece);
@@ -236,19 +229,20 @@ private:
     // mapping the type of pieces to the corresponding Load function
     typedef void (*LoadPieceFunction_t) (Piece &);
     static LoadPieceFunction_t m_loadFunctionMap[e_numberOfPieces];
-    
+
     /// build up the bitwise representation of all the configurations of the piece
-    /// this methid must be called once the m_origCoords array and the rest of 
-    /// attributes of the object has been set
+    /// this method must be called once the m_origCoords array and the rest of
+    /// attributes of the object has been set (have a look at the constructor of
+    /// this class)
     /// it rotates and mirrors the piece as many times as possible and then
     /// calls Reset to restore the original status of it. DO NOT CALL TO THIS
     /// FUNCTION ONCE THE PIECE COULD HAVE BEEN EDITED BY AN EXTERNAL USER
     /// BECAUSE IT RESETS THE PIECE
     ///
-    /// the bitwise represenation of a piece constist of a "string" of 49 bits
+    /// the bitwise representation of a piece consists of a "string" of 49 bits
     /// that hold the piece configuration.
     /// Those 49 bits represent 7 rows of 7 bits where the bit in the coordinate
-    /// (4, 4) is the center of that piece (given that cords are valid from 1 to 7)
+    /// (4, 4) is the centre of that piece (given that cords are valid from 1 to 7)
     /// for example, the saf piece would be:
     /// 0 0 0 0 0 0 0
     /// 0 0 0 0 0 0 0
@@ -263,11 +257,11 @@ private:
     ///
     /// every piece could fit in a square 5x5 but a square 7x7 has been chosen to be able to move
     /// a piece up/down/right/left easily using the same representation (the uint64_t)
-    /// Using this representation moving a piece to the right is a matter of (>>1) and to the 
+    /// Using this representation moving a piece to the right is a matter of (>>1) and to the
     /// left (<< 1). Moving up and down is (<<7) and (>>7) respectively
     ///
-    /// Thses binary representations are saved into the list m_bitwiseRepresentations, which holds
-    /// a maximum of 8 (4 rotations X 2 mirrors) confgurations
+    /// These binary representations are saved into the list m_bitwiseRepresentations, which holds
+    /// a maximum of 8 (4 rotations X 2 mirrors) configurations
     void BuildUpBitwiseRepresentation();
 };
 

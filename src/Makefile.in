@@ -52,9 +52,10 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_blockem_OBJECTS = board.$(OBJEXT) game1v1.$(OBJEXT) \
-	game_total_allocation.$(OBJEXT) gui_about_dialog.$(OBJEXT) \
-	gui_config_dialog.$(OBJEXT) gui_drawing_area_board.$(OBJEXT) \
+am_blockem_OBJECTS = bitwise.$(OBJEXT) board.$(OBJEXT) \
+	game1v1.$(OBJEXT) game_total_allocation.$(OBJEXT) \
+	gui_about_dialog.$(OBJEXT) gui_config_dialog.$(OBJEXT) \
+	gui_drawing_area_board.$(OBJEXT) \
 	gui_drawing_area_show_pieces.$(OBJEXT) \
 	gui_game1v1_config.$(OBJEXT) gui_main_window.$(OBJEXT) \
 	gui_main_window_worker_thread.$(OBJEXT) \
@@ -199,6 +200,8 @@ gui.glade    \
 blockem.rc
 
 blockem_SOURCES = \
+bitwise.cpp \
+bitwise.h \
 board.cpp \
 board.h \
 coordinate.h \
@@ -319,6 +322,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bitwise.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/board.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/game1v1.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/game_total_allocation.Po@am__quote@

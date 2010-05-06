@@ -23,6 +23,7 @@
 /// @history
 /// Ref       Who                When         What
 ///           Faustino Frechilla 13-Sep-2009  Original development
+///           Faustino Frechilla 06-May-2010  Bitwise configuration check
 /// @endhistory
 ///
 // ============================================================================
