@@ -93,6 +93,11 @@ public:
     static void ProgressUpdate(float a_progress);
 
 private:
+    /// @brief current game is finished. It is set to false at the beginning of a game
+    ///        in LaunchNewGame and set to true whenever GameFinished is called
+    /// it prevents GameFinished code to run twice for the same game
+    bool m_currentGameFinished;
+
     /// @brief used to retrieve the objects from the Glade design
     Glib::RefPtr<Gtk::Builder> m_gtkBuilder;
 
@@ -103,7 +108,7 @@ private:
     Coordinate m_lastCoord;
 
     /// @brief the worker thread used to leave the GUI active while the next moves is calculated
-    MainWindowWorkerThread m_workerThread;    
+    MainWindowWorkerThread m_workerThread;
 
     /// @brief randomizer 'cos we might use a bit of randomness when computing the next move
     GRand* m_randomizer;

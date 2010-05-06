@@ -175,7 +175,7 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
         const Player* thisPlayer = *it;
         thisPlayer->GetColour(red, green, blue);
 
-        if ( thisPlayer->NumberOfPiecesAvailable() == e_numberOfPieces)
+        if (thisPlayer->NumberOfPiecesAvailable() == e_numberOfPieces)
         {
             // if this player put down no pieces yet, draw a small circle in the starting point
             cr->set_source_rgba(
@@ -185,9 +185,9 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
                     STARTING_COORD_ALPHA);
 
             cr->arc(xc - squareWidth/2  +
-                        (littleSquare * thisPlayer->GetStartingCoordinate().m_row) + littleSquare/2,
-                    yc - squareHeight/2 +
                         (littleSquare * thisPlayer->GetStartingCoordinate().m_col) + littleSquare/2,
+                    yc - squareHeight/2 +
+                        (littleSquare * thisPlayer->GetStartingCoordinate().m_row) + littleSquare/2,
                     (littleSquare / 2) - (littleSquare / 4),
                     0.0,
                     2 * M_PI);

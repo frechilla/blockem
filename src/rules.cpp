@@ -305,7 +305,12 @@ int32_t Rules::CalculateValidCoordsInNucleationPoint(
 					{
 					    out_validCoords[nValidCoords] = thisCoord;
 					}
-
+#ifdef DEBUG
+                    else
+                    {
+                        assert(0);
+                    }
+#endif
 					nValidCoords++;
 				}
             }
@@ -400,8 +405,9 @@ int32_t Rules::CalculateValidCoordsInStartingPoint(
 							a_startingPointCoord.m_row + i + a_piece.m_coords[k].m_row,
 							a_startingPointCoord.m_col + j + a_piece.m_coords[k].m_col);
 
-					if ( (thisCoord.m_row < 0) || (thisCoord.m_row >= a_board.GetNRows()) ||
-						 (thisCoord.m_col < 0) || (thisCoord.m_col >= a_board.GetNColumns()) )
+					if ( (thisCoord.m_row < 0) || (thisCoord.m_row >= a_board.GetNRows())    ||
+						 (thisCoord.m_col < 0) || (thisCoord.m_col >= a_board.GetNColumns()) ||
+						 (a_board.IsCoordEmpty(thisCoord) == false) )
 					{
 						validCoord = false;
 						break; // exit this fucking loop. The piece can't be place there 'cos it will be out of the board
@@ -414,28 +420,29 @@ int32_t Rules::CalculateValidCoordsInStartingPoint(
 					}
 				}
 
-				if (validCoord)
+				if (validCoord && a_board.IsCoordEmpty(a_startingPointCoord))
 				{
-#ifdef DEBUG
-                    assert(a_board.IsCoordEmpty(a_startingPointCoord));
-#endif
 					// check if there's too many valid coords to be saved in this array
 					if (nValidCoords < a_size)
 					{
                         out_validCoords[nValidCoords].m_row = a_startingPointCoord.m_row + i;
                         out_validCoords[nValidCoords].m_col = a_startingPointCoord.m_col + j;
 					}
-
+#ifdef DEBUG
+					else
+					{
+					    assert(0);
+					}
+#endif
 					nValidCoords++;
 				}
 			}
 		}
     }
-    else
+    else if (a_board.IsCoordEmpty(a_startingPointCoord))
     {
     	// starting with the baby piece. It doesn't seem to be the most sensible thing to do
 #ifdef DEBUG
-        assert(a_board.IsCoordEmpty(a_startingPointCoord));
     	assert(0 < a_size);
 #endif
 		out_validCoords[nValidCoords].m_row = a_startingPointCoord.m_row;

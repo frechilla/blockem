@@ -1,6 +1,6 @@
 : Version 0.2.0
     - An option has been added to show the nucleation points on the board.
-      Shared nucleation points are drawn in colour black.
+      Shared nucleation points are drawn in black colour
     - App can be set up to play human vs human, human vs computer and 
       computer vs computer games
     - Computer and human players can be selected to play as player1 or
@@ -13,8 +13,8 @@
       confuration
     - Application is able to cancel a computing operation for a new game
       to start. In previous versions cancelling the current computing operation
-      was only enabled when the human user wanted to close the application, new
-      games had to wait 'till the worker thread had finished its calculations
+      was only enabled when the human user wanted to close the application (new
+      games had to wait until the worker thread had finished its calculations)
     - libglade dependency removed. Gtkbuilder is used instead
     - Executable in windows has reduced its size around 50%. Released zipped
       binary for windows has been also reduced around 30%

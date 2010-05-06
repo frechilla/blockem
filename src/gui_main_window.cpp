@@ -95,6 +95,7 @@ void MainWindow::ProgressUpdate(float a_progress)
 
 MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder) throw (GUIException):
     Gtk::Window(cobject), //Calls the base class constructor
+    m_currentGameFinished(false),
     m_gtkBuilder(a_gtkBuilder),
     m_the1v1Game(
         Game1v1Config::Instance().GetPlayer1StartingCoord(),
@@ -552,6 +553,9 @@ void MainWindow::LaunchNewGame()
     // Start player1's timer
     m_stopWatchLabelPlayer1.Continue();
 
+    // new game just strted. It can't be finished!
+    m_currentGameFinished = false;
+
     if (Game1v1Config::Instance().IsPlayer1Computer())
     {
         // next player is the computer. Disallow editing the board while
@@ -937,6 +941,13 @@ void MainWindow::NotifyMoveComputed()
 
 void MainWindow::GameFinished()
 {
+    // once this function is called, game is supposed to e finished
+    if (m_currentGameFinished == true)
+    {
+        return;
+    }
+    m_currentGameFinished = true;
+
     // reset the cursor (even if it's been already done)
     Glib::RefPtr<Gdk::Window> window = m_boardDrawingArea.get_window();
     if (window)
@@ -1025,6 +1036,13 @@ void MainWindow::GameFinished()
 void MainWindow::NotifyProgressUpdate()
 {
     float progress;
+
+    if (m_currentGameFinished)
+    {
+        // do not update the progress bar if the current game is finished
+        return;
+    }
+
     G_LOCK(s_computingCurrentProgress);
         progress = s_computingCurrentProgress;
     G_UNLOCK(s_computingCurrentProgress);
