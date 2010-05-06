@@ -23,12 +23,12 @@
 /// @history
 /// Ref       Who                When         What
 ///           Faustino Frechilla 13-Sep-2009  Original development
+///           Faustino Frechilla 06-May-2010  Bitwise configuration check
 /// @endhistory
 ///
 // ============================================================================
 
 #include "game1v1_test.h"
-#include <iostream>
 
 Game1v1Test::Game1v1Test() :
     Game1v1()
@@ -39,44 +39,63 @@ Game1v1Test::~Game1v1Test()
 {
 }
 
-void Game1v1Test::TestBitwise()
+void Game1v1Test::TestBitwiseCheckConfiguration(
+    const Coordinate &thisCoord,
+    const Piece      &piece,
+    uint64_t         bPiece,
+    uint64_t         bitwiseBoard,
+    uint64_t         bitwiseBoardPlayer1)
 {
-    // ensure the game1v1 hasn't been modified
-    Reset();
+    bool isDeployableLegacy;          // is piece deployable using the legacy (old) way
+    bool isDeployableBitwise;         // is piece deployable using the bitwise way?
+    uint64_t bitwiseBoardTest;        // recalculated locally here to check if it is the same as the
+    uint64_t bitwiseBoardPlayer1Test; // bitwise representations calculated moving left, right or downwards
 
-    // it'll be used to save if piece is deployable using the legacy (old) way
-    bool isDeployableLegacy;
-    // it'll be used to save if piece is deployable using the bitwise way
-    bool isDeployableBitwise;
+    // recalculate bitwise representations using BitwiseBoardCalculate which goes trhough the whole
+    // board to calculate the bitwise representation. Check calculated values against bitwiseBoard
+    // and bitwiseBoardPlayer1 which are supposed to have been calculated using Board::BitwiseBoardMoveRight
+    // Board::BitwiseBoardMoveLeft or Board::BitwiseBoardMoveDown
+    m_board.BitwiseBoardCalculate(thisCoord, m_player1, bitwiseBoardTest, bitwiseBoardPlayer1Test);
+    assert(bitwiseBoardTest == bitwiseBoard);
+    assert(bitwiseBoardPlayer1Test == bitwiseBoardPlayer1);
 
-    // 0: empty
-    // +: player2
-    // X: player1
-    // 0 0 0 0 0 0 0 0 0 0 0 0 0
-    // 0 0 0 0 0 0 0 0 0 0 0 0 0
-    // 0 0 0 0 0 0 0 0 0 0 0 0 0
-    // 0 0 0 0 + 0 0 0 0 0 0 0 0
-    // 0 0 0 + + + 0 0 0 0 0 0 0
-    // 0 0 0 0 + 0 X 0 0 0 0 0 0
-    // 0 0 0 0 0 X X X 0 0 0 0 0
-    // 0 0 0 0 0 0 X 0 0 0 0 0 0
-    // 0 0 0 0 0 0 0 0 0 0 0 0 0
-    // 0 0 0 0 0 0 0 0 0 0 0 0 0
-    // 0 0 0 0 0 0 0 0 0 0 0 0 0
-    // 0 0 0 0 0 0 0 0 0 0 0 0 0
-    // 0 0 0 0 0 0 0 0 0 0 0 0 0
-    // 0 0 0 0 0 0 0 0 0 0 0 0 0
-    Game1v1::PutDownPiece(m_player1.m_pieces[e_5Piece_Cross], Coordinate(6, 6), Game1v1::e_Game1v1Player1);
-    Game1v1::PutDownPiece(m_player2.m_pieces[e_5Piece_Cross], Coordinate(4, 4), Game1v1::e_Game1v1Player2);
+    // check if piece is deployable using the legacy old way and bitwise way
+    // assert both ways gives same result
+    isDeployableLegacy =
+        Rules::IsPieceDeployable(m_board,
+                          piece,
+                          thisCoord,
+                          m_player1);
+    isDeployableBitwise =
+        Rules::IsDeployableBitwise(bPiece,
+                            bitwiseBoard,
+                            bitwiseBoardPlayer1);
 
-    // neither player1 nor player2 have the cross piece now, it won't be tested in this first stage
-    // of the test, but they will be tested a bit later (when the only pieces deployed are the
-    // baby pieces)
+    //std::cout << isDeployableLegacy << " " << isDeployableBitwise << " "
+    //          << std::hex << bPiece << " " << bitwiseBoard << " " << bitwiseBoardPlayer1 << std::endl;
+    assert(isDeployableLegacy == isDeployableBitwise);
+}
+
+void Game1v1Test::TestBoardAndPiecesBitwise(int32_t a_nUsedPieces, ePieceType_t a_pieceMissing)
+{
+    // assert params are correct
+    if (a_pieceMissing != e_noPiece)
+    {
+        assert(a_nUsedPieces == 1);
+    }
+
+    int32_t nUsedPiecesChecked = 0;
 
     for (int8_t i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
     {
         if (!m_player1.IsPieceAvailable(static_cast<ePieceType_t>(i)))
         {
+            // this is the only piece that should be missing
+            if (a_pieceMissing != e_noPiece)
+            {
+                assert(a_pieceMissing == static_cast<ePieceType_t>(i));
+            }
+            nUsedPiecesChecked++;
             continue;
         }
 
@@ -91,8 +110,10 @@ void Game1v1Test::TestBitwise()
                 // current coordinate being studied
                 Coordinate thisCoord(0, 0);
 
-                uint64_t bitwiseBoard;   // place in the board is empty or not
-                uint64_t bitwiseBoardPlayer1; // place in the board is occupied by player me
+                // bitwise representation of the board. Coord is empty or not
+                uint64_t bitwiseBoard;
+                // bitwise representation of the board. Coord is occuppied by player1
+                uint64_t bitwiseBoardPlayer1;
                 m_board.BitwiseBoardCalculate(thisCoord, m_player1, bitwiseBoard, bitwiseBoardPlayer1);
                 // bitwise representation of current piece
                 uint64_t bPiece = (*it);
@@ -100,7 +121,6 @@ void Game1v1Test::TestBitwise()
                 // the following loop goes trough the board doing a S-like movement.
                 // it goes from left to right, then down, then right to left, then down,
                 // then left to right...
-                // checking how many pieces can be put down per position on the board
                 while (true)
                 {
                     for (thisCoord.m_col = 0;
@@ -108,35 +128,23 @@ void Game1v1Test::TestBitwise()
                          thisCoord.m_col += 1)
                     {
                         // check
-                        isDeployableLegacy =
-                            Rules::IsPieceDeployable(m_board,
-                                              m_player1.m_pieces[i],
-                                              thisCoord,
-                                              m_player1);
-                        isDeployableBitwise =
-                            Rules::IsDeployableBitwise(bPiece,
-                                                bitwiseBoard,
-                                                bitwiseBoardPlayer1);
-                        std::cout << isDeployableLegacy << " " << isDeployableBitwise
-                                  << std::hex << bPiece << " " << bitwiseBoard << " " << bitwiseBoardPlayer1 << std::endl;
-                        assert(isDeployableLegacy == isDeployableBitwise);
+                        TestBitwiseCheckConfiguration(
+                            thisCoord,
+                            m_player1.m_pieces[i],
+                            bPiece,
+                            bitwiseBoard,
+                            bitwiseBoardPlayer1);
 
                         m_board.BitwiseBoardMoveRight(thisCoord, m_player1, bitwiseBoard, bitwiseBoardPlayer1);
                     }
                     // latest configuration wasn't checked
                     // check
-                    isDeployableLegacy =
-                        Rules::IsPieceDeployable(m_board,
-                                          m_player1.m_pieces[i],
-                                          thisCoord,
-                                          m_player1);
-                    isDeployableBitwise =
-                        Rules::IsDeployableBitwise(bPiece,
-                                            bitwiseBoard,
-                                            bitwiseBoardPlayer1);
-                    std::cout << isDeployableLegacy << " " << isDeployableBitwise
-                              << std::hex << bPiece << " " << bitwiseBoard << " " << bitwiseBoardPlayer1 << std::endl;
-                    assert(isDeployableLegacy == isDeployableBitwise);
+                    TestBitwiseCheckConfiguration(
+                        thisCoord,
+                        m_player1.m_pieces[i],
+                        bPiece,
+                        bitwiseBoard,
+                        bitwiseBoardPlayer1);
 
                     if ((thisCoord.m_row + 1) >= m_board.GetNRows())
                     {
@@ -153,35 +161,23 @@ void Game1v1Test::TestBitwise()
                          thisCoord.m_col -= 1)
                     {
                         // check
-                        isDeployableLegacy =
-                            Rules::IsPieceDeployable(m_board,
-                                              m_player1.m_pieces[i],
-                                              thisCoord,
-                                              m_player1);
-                        isDeployableBitwise =
-                            Rules::IsDeployableBitwise(bPiece,
-                                                bitwiseBoard,
-                                                bitwiseBoardPlayer1);
-                        std::cout << isDeployableLegacy << " " << isDeployableBitwise
-                                  << std::hex << bPiece << " " << bitwiseBoard << " " << bitwiseBoardPlayer1 << std::endl;
-                        assert(isDeployableLegacy == isDeployableBitwise);
+                        TestBitwiseCheckConfiguration(
+                            thisCoord,
+                            m_player1.m_pieces[i],
+                            bPiece,
+                            bitwiseBoard,
+                            bitwiseBoardPlayer1);
 
                         m_board.BitwiseBoardMoveLeft(thisCoord, m_player1, bitwiseBoard, bitwiseBoardPlayer1);
                     }
                     // latest configuration wasn't checked
                     //check
-                    isDeployableLegacy =
-                        Rules::IsPieceDeployable(m_board,
-                                          m_player1.m_pieces[i],
-                                          thisCoord,
-                                          m_player1);
-                    isDeployableBitwise =
-                        Rules::IsDeployableBitwise(bPiece,
-                                            bitwiseBoard,
-                                            bitwiseBoardPlayer1);
-                    std::cout << isDeployableLegacy << " " << isDeployableBitwise
-                              << std::hex << bPiece << " " << bitwiseBoard << " " << bitwiseBoardPlayer1 << std::endl;
-                    assert(isDeployableLegacy == isDeployableBitwise);
+                    TestBitwiseCheckConfiguration(
+                        thisCoord,
+                        m_player1.m_pieces[i],
+                        bPiece,
+                        bitwiseBoard,
+                        bitwiseBoardPlayer1);
 
                     if ((thisCoord.m_row + 1) >= m_board.GetNRows())
                     {
@@ -194,6 +190,8 @@ void Game1v1Test::TestBitwise()
                 }
 
                 // next bitwise representation (rotate right)
+                // if it is the latest rotation and the piece can be mirrored
+                // it'll represent the piece mirrored
                 it++;
                 // rotate right the old way representation
                 nRotations++;
@@ -215,14 +213,9 @@ void Game1v1Test::TestBitwise()
                 m_player1.m_pieces[i].Reset();
             }
 
-            if (m_player1.m_pieces[i].CanMirror())
-            {
-                // next bitwise representation (mirror)
-                it++;
-            }
-
         } while (m_player1.m_pieces[i].MirrorYAxis());
 
+        // asserting we checked all possible configurations
         assert(it == pieceConfigurations.end());
 
         // leave the piece as it was!!!
@@ -230,6 +223,37 @@ void Game1v1Test::TestBitwise()
 
     } // for (int i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
 
+    // assert we checked as many pieces as we were expected to
+    assert (nUsedPiecesChecked == a_nUsedPieces);
+}
+void Game1v1Test::TestBitwise()
+{
+    // ensure the game1v1 hasn't been modified
+    Reset();
+
+    // 0: empty
+    // +: player2
+    // X: player1
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 + 0 0 0 0 0 0 0 0 0
+    // 0 0 0 + + + 0 0 0 0 0 0 0 0
+    // 0 0 0 0 + 0 X 0 0 0 0 0 0 0
+    // 0 0 0 0 0 X X X 0 0 0 0 0 0
+    // 0 0 0 0 0 0 X 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    Game1v1::PutDownPiece(m_player1.m_pieces[e_5Piece_Cross], Coordinate(6, 6), Game1v1::e_Game1v1Player1);
+    Game1v1::PutDownPiece(m_player2.m_pieces[e_5Piece_Cross], Coordinate(4, 4), Game1v1::e_Game1v1Player2);
+
+    // neither player1 nor player2 have the cross piece now, it won't be tested in this first stage
+    // of the test, but they will be tested a bit later, in the 2 following tests
+    TestBoardAndPiecesBitwise(1, e_5Piece_Cross);
 
     // reset the board to launch next test (where only 2 baby pieces are deployed)
     Reset();
@@ -237,22 +261,116 @@ void Game1v1Test::TestBitwise()
     // 0: empty
     // +: player2
     // X: player1
-    // 0 0 0 0 0 0 0 0 0 0 0 0 0
-    // 0 0 0 0 0 0 0 0 0 0 0 0 0
-    // 0 0 0 0 0 0 0 0 0 0 0 0 0
-    // 0 0 0 0 0 0 0 0 0 0 0 0 0
-    // 0 0 0 0 + 0 0 0 0 0 0 0 0
-    // 0 0 0 0 0 0 0 0 0 0 0 0 0
-    // 0 0 0 0 0 0 X 0 0 0 0 0 0
-    // 0 0 0 0 0 0 0 0 0 0 0 0 0
-    // 0 0 0 0 0 0 0 0 0 0 0 0 0
-    // 0 0 0 0 0 0 0 0 0 0 0 0 0
-    // 0 0 0 0 0 0 0 0 0 0 0 0 0
-    // 0 0 0 0 0 0 0 0 0 0 0 0 0
-    // 0 0 0 0 0 0 0 0 0 0 0 0 0
-    // 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 + 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 X 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
     Game1v1::PutDownPiece(m_player1.m_pieces[e_1Piece_BabyPiece], Coordinate(6, 6), Game1v1::e_Game1v1Player1);
     Game1v1::PutDownPiece(m_player2.m_pieces[e_1Piece_BabyPiece], Coordinate(4, 4), Game1v1::e_Game1v1Player2);
+
+    // go for the test!
+    TestBoardAndPiecesBitwise(1, e_1Piece_BabyPiece);
+
+    // reset the board to launch next test (where only two 3-square triangle pieces are deployed)
+    Reset();
+
+    // 0: empty
+    // +: player2
+    // X: player1
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 + 0 0 0 0 0 0 0 0 0
+    // 0 0 0 + + 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 X X 0 0 0 0 0 0
+    // 0 0 0 0 0 0 X 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+
+    // e_3Piece_Triangle is originaly described as:
+    //  X(X)
+    //    X
+    m_player1.m_pieces[e_3Piece_Triangle].RotateLeft();
+    Game1v1::PutDownPiece(m_player1.m_pieces[e_3Piece_Triangle], Coordinate(6, 6), Game1v1::e_Game1v1Player1);
+    m_player2.m_pieces[e_3Piece_Triangle].RotateRight();
+    Game1v1::PutDownPiece(m_player2.m_pieces[e_3Piece_Triangle], Coordinate(4, 4), Game1v1::e_Game1v1Player2);
+
+    // go for the test!
+    TestBoardAndPiecesBitwise(1, e_3Piece_Triangle);
+
+
+    // 0: empty
+    // +: player2
+    // X: player1
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 + 0 0 0 X 0 0 0 0 0
+    // 0 0 0 + + 0 X X X 0 0 0 0 0
+    // 0 0 + 0 0 0 0 0 X 0 0 0 0 0
+    // 0 0 + + + 0 X X 0 0 0 0 0 0
+    // 0 0 + 0 0 0 X 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+
+    // put down an extra Mr. T piece. e_5Piece_MrT is originally described as:
+    //     X
+    // X(X)X
+    //     X
+    Game1v1::PutDownPiece(m_player1.m_pieces[e_5Piece_MrT], Coordinate(4, 7), Game1v1::e_Game1v1Player1);
+    m_player2.m_pieces[e_5Piece_MrT].RotateRight();
+    m_player2.m_pieces[e_5Piece_MrT].RotateRight();
+    Game1v1::PutDownPiece(m_player2.m_pieces[e_5Piece_MrT], Coordinate(6, 3), Game1v1::e_Game1v1Player2);
+
+    // go for the test! (2 pieces were deployed on the board before launching the test)
+    TestBoardAndPiecesBitwise(2);
+
+
+    // 0: empty
+    // +: player2
+    // X: player1
+    // 0 0 0 0 0 0 0 0 0 0 X X 0 0
+    // 0 0 0 0 0 0 0 0 0 0 X 0 0 0
+    // 0 0 0 0 0 0 0 0 0 X X 0 0 0
+    // 0 0 0 0 + 0 0 0 X 0 0 0 0 0
+    // 0 0 0 + + 0 X X X 0 0 0 0 0
+    // 0 0 + 0 0 0 0 0 X 0 0 0 0 0
+    // 0 0 + + + 0 X X 0 0 0 0 0 0
+    // 0 0 + 0 0 0 X 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+
+    // put down an extra Big S piece. e_5Piece_BigS is originally described as:
+    //   X X
+    //  (X)
+    // X X
+    Game1v1::PutDownPiece(m_player1.m_pieces[e_5Piece_BigS], Coordinate(1, 10), Game1v1::e_Game1v1Player1);
+
+    // go for the test! (3 pieces were deployed on the board by m_player1 before launching the test)
+    TestBoardAndPiecesBitwise(3);
 }
 
 void Game1v1Test::TestPieces()

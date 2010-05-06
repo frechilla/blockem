@@ -47,6 +47,27 @@ public:
     void TestBitwise();
 
 private:
+    /// checks if a piece can be deployed in thisCoord using both legacy and bitwise representations
+    /// and asserts if results match. It also checks if a brand new calculation of bitwise configuration
+    /// of the board in thisCoord matches the paramaters bitwiseBoard, bitwiseBoardPlayer1, which are
+    /// supposed to have been calculated using Board::BitwiseBoardMoveRight, Board::BitwiseBoardMoveLeft
+    /// and Board::BitwiseBoardMoveDown
+    void TestBitwiseCheckConfiguration(
+            const Coordinate &thisCoord,
+            const Piece      &piece,
+            uint64_t         bPiece,
+            uint64_t         bitwiseBoard,
+            uint64_t         bitwiseBoardPlayer1);
+
+    /// Test that legacy and bitwise representation of board and pieces match. It uses the board
+    /// which is part of the Game1v1, so the caller must modify it before calling to this function
+    /// it also uses m_player1 to check whether its pieces can be deployed in each coord of the board
+    /// @param number of pieces that were picked to be put down on the board so they can't be checked
+    ///        in the this function (player1 already used them)
+    /// @param piece type that has been put on the board before calling to the function if a_nUsedPieces is 1
+    ///        function will assert it is the only piece which is not checked.
+    ///        iot can be set to e_noPiece to prevent the assertion from being run
+    void TestBoardAndPiecesBitwise(int32_t a_nUsedPieces, ePieceType_t a_pieceMissing = e_noPiece);
 
     void PutDownPiece(Piece &a_piece)
     {

@@ -234,16 +234,16 @@ public:
             // place is valid
 
             // does the piece touch the side of another a_player's piece?
-            if ( (((a_bPiece << 7) ^ ((a_bPiece << 7) & a_bitwisePlayerBoard)) == (a_bPiece << 7)) && // move down
-                 (((a_bPiece >> 7) ^ ((a_bPiece >> 7) & a_bitwisePlayerBoard)) == (a_bPiece >> 7)) && // move up
-                 (((a_bPiece << 1) ^ ((a_bPiece << 1) & a_bitwisePlayerBoard)) == (a_bPiece << 1)) && // move right
-                 (((a_bPiece >> 1) ^ ((a_bPiece >> 1) & a_bitwisePlayerBoard)) == (a_bPiece >> 1)) )  // move left
+            if ( (((a_bPiece << 7) ^ ((a_bPiece << 7) & a_bitwisePlayerBoard)) == (a_bPiece << 7)) && // move up
+                 (((a_bPiece >> 7) ^ ((a_bPiece >> 7) & a_bitwisePlayerBoard)) == (a_bPiece >> 7)) && // move down
+                 (((a_bPiece << 1) ^ ((a_bPiece << 1) & a_bitwisePlayerBoard)) == (a_bPiece << 1)) && // move left
+                 (((a_bPiece >> 1) ^ ((a_bPiece >> 1) & a_bitwisePlayerBoard)) == (a_bPiece >> 1)) )  // move right
             {
                 // does it touch a corner (a.k.a. nk point)?
-                if ( (((a_bPiece << 8) ^ ((a_bPiece << 8) & a_bitwisePlayerBoard)) != (a_bPiece << 8)) || // down-right corner
-                     (((a_bPiece << 6) ^ ((a_bPiece << 6) & a_bitwisePlayerBoard)) != (a_bPiece << 6)) || // down-left corner
-                     (((a_bPiece >> 8) ^ ((a_bPiece >> 8) & a_bitwisePlayerBoard)) != (a_bPiece >> 8)) || // up-right corner
-                     (((a_bPiece >> 6) ^ ((a_bPiece >> 6) & a_bitwisePlayerBoard)) != (a_bPiece >> 6)) )  // up-left corner
+                if ( (((a_bPiece << 8) ^ ((a_bPiece << 8) & a_bitwisePlayerBoard)) != (a_bPiece << 8)) || // up-left corner
+                     (((a_bPiece << 6) ^ ((a_bPiece << 6) & a_bitwisePlayerBoard)) != (a_bPiece << 6)) || // up-right corner
+                     (((a_bPiece >> 8) ^ ((a_bPiece >> 8) & a_bitwisePlayerBoard)) != (a_bPiece >> 8)) || // down-left corner
+                     (((a_bPiece >> 6) ^ ((a_bPiece >> 6) & a_bitwisePlayerBoard)) != (a_bPiece >> 6)) )  // down-right corner
                 {
                     return true;
                 }

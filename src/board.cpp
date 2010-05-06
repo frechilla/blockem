@@ -31,6 +31,11 @@
 #include <iostream>
 #include <iomanip> // setw
 
+/// while using bitwise representations of the board only the 49 (7x7) least
+/// significant bits are used. Therefore the 1st 15 (64 - 49) are the unused bits
+/// which can be set to 1 by this flag (or to 0 using ~BITWISE_UNUSED_BITS_FLAG)
+static const uint64_t BITWISE_UNUSED_BITS_FLAG = 0xfffe000000000000ull;
+
 Board::Board(int32_t a_rows, int32_t a_columns, char a_emptyChar, char** a_board):
     m_emptyChar(a_emptyChar),
     m_nRows(a_rows),
@@ -141,7 +146,7 @@ void Board::BitwiseBoardCalculate(
 #endif
 
     out_bitwiseBoard       = static_cast<uint64_t>(0xffffffffffffffffull);
-    out_bitwisePlayerBoard = static_cast<uint64_t>(0xffffffffffffffffull);
+    out_bitwisePlayerBoard = static_cast<uint64_t>(0x0000000000000000ull);
     for (int32_t i = (a_coord.m_row - 3); i <= (a_coord.m_row + 3); i++)
     {
         if ( (i < 0) || (i >= GetNRows()) )
@@ -150,8 +155,10 @@ void Board::BitwiseBoardCalculate(
             out_bitwiseBoard <<= 7;
             out_bitwiseBoard |= static_cast<uint64_t>(0x7f);
 
+            // bitwise player board has 0s where the player has no piece. Even if
+            // it is outside the board
             out_bitwisePlayerBoard <<= 7;
-            out_bitwisePlayerBoard |= static_cast<uint64_t>(0x7f);
+            //out_bitwisePlayerBoard |= static_cast<uint64_t>(0x7f);
         }
         else
         {
@@ -163,7 +170,7 @@ void Board::BitwiseBoardCalculate(
                 {
                     // out of the board
                     out_bitwiseBoard       |= static_cast<uint64_t>(0x01);
-                    out_bitwisePlayerBoard |= static_cast<uint64_t>(0x01);
+                    //out_bitwisePlayerBoard |= static_cast<uint64_t>(0x01);
                 }
                 else if (IsPlayerInCoord(i, j, a_player))
                 {
@@ -179,6 +186,9 @@ void Board::BitwiseBoardCalculate(
             }
         }
     }
+    // no need to use BITWISE_UNUSED_BITS_FLAG for out_bitwiseBoard when the representation
+    // of the board is first created. It serves no purpuse and can save a couple of cycles ;)
+    out_bitwisePlayerBoard |= BITWISE_UNUSED_BITS_FLAG;
 }
 
 void Board::BitwiseBoardMoveRight(
@@ -210,12 +220,11 @@ void Board::BitwiseBoardMoveRight(
     in_out_bitwisePlayerBoard &= BLANK_OUT_MOVE_RIGHT;
     for (int32_t i = (a_coord.m_row - 3); i <= (a_coord.m_row + 3); i++)
     {
-        if ( (i < 0) || (i >= GetNRows()) ||
-             ((a_coord.m_col + 4) >= GetNColumns()) )
+        if ( (i < 0) || (i >= GetNRows()) || ((a_coord.m_col + 4) >= GetNColumns()) )
         {
             // out of the board
             in_out_bitwiseBoard       |= static_cast<uint64_t>(1) << ( (3 - (i - a_coord.m_row)) * 7);
-            in_out_bitwisePlayerBoard |= static_cast<uint64_t>(1) << ( (3 - (i - a_coord.m_row)) * 7);
+            //in_out_bitwisePlayerBoard |= static_cast<uint64_t>(1) << ( (3 - (i - a_coord.m_row)) * 7);
         }
         else if (IsPlayerInCoord(i, a_coord.m_col + 4, a_player))
         {
@@ -229,6 +238,10 @@ void Board::BitwiseBoardMoveRight(
             in_out_bitwiseBoard       |= static_cast<uint64_t>(1) << ( (3 - (i - a_coord.m_row)) * 7);
         }
     }
+
+    // set unused bits to 1
+    in_out_bitwiseBoard       |= BITWISE_UNUSED_BITS_FLAG;
+    in_out_bitwisePlayerBoard |= BITWISE_UNUSED_BITS_FLAG;
 }
 
 void Board::BitwiseBoardMoveLeft(
@@ -252,7 +265,7 @@ void Board::BitwiseBoardMoveLeft(
     // we'll have to calculate a_coord.m_col - 4
 
     // .... 0111111 0111111 0111111 0111111 0111111 0111111 0111111
-    static const uint64_t BLANK_OUT_MOVE_LEFT = static_cast<uint64_t>(0xfff7fdfbf7efdfbfull);
+    static const uint64_t BLANK_OUT_MOVE_LEFT = static_cast<uint64_t>(0xfffefdfbf7efdfbfull);
 
     in_out_bitwiseBoard       >>= 1;
     in_out_bitwisePlayerBoard >>= 1;
@@ -260,12 +273,11 @@ void Board::BitwiseBoardMoveLeft(
     in_out_bitwisePlayerBoard &= BLANK_OUT_MOVE_LEFT;
     for (int32_t i = (a_coord.m_row - 3); i <= (a_coord.m_row + 3); i++)
     {
-        if ( (i < 0) || (i >= GetNRows()) ||
-             ((a_coord.m_col - 4) < 0) )
+        if ( (i < 0) || (i >= GetNRows()) || ((a_coord.m_col - 4) < 0) )
         {
             // out of the board
             in_out_bitwiseBoard       |= static_cast<uint64_t>(1) << (((3 - (i - a_coord.m_row)) * 7) + 6);
-            in_out_bitwisePlayerBoard |= static_cast<uint64_t>(1) << (((3 - (i - a_coord.m_row)) * 7) + 6);
+            //in_out_bitwisePlayerBoard |= static_cast<uint64_t>(1) << (((3 - (i - a_coord.m_row)) * 7) + 6);
         }
         else if (IsPlayerInCoord(i, a_coord.m_col - 4, a_player))
         {
@@ -279,6 +291,10 @@ void Board::BitwiseBoardMoveLeft(
             in_out_bitwiseBoard       |= static_cast<uint64_t>(1) << (((3 - (i - a_coord.m_row)) * 7) + 6);
         }
     }
+
+    // set unused bits to 1
+    in_out_bitwiseBoard       |= BITWISE_UNUSED_BITS_FLAG;
+    in_out_bitwisePlayerBoard |= BITWISE_UNUSED_BITS_FLAG;
 }
 
 void Board::BitwiseBoardMoveDown(
@@ -303,10 +319,13 @@ void Board::BitwiseBoardMoveDown(
     if ((a_coord.m_row + 4) >= GetNRows()) // || ((a_coord.m_row + 4) < 0) )
     {
         // row out of the board
-        in_out_bitwiseBoard       <<= 7;
+        in_out_bitwiseBoard <<= 7;
+        in_out_bitwiseBoard |= static_cast<uint64_t>(0x7f);
+
+        // bitwise player board has 0s where the player has no piece. Even if
+        // it is outside the board
         in_out_bitwisePlayerBoard <<= 7;
-        in_out_bitwiseBoard       |= static_cast<uint64_t>(0x7f);
-        in_out_bitwisePlayerBoard |= static_cast<uint64_t>(0x7f);
+        //in_out_bitwisePlayerBoard |= static_cast<uint64_t>(0x7f);
     }
     else
     {
@@ -314,13 +333,13 @@ void Board::BitwiseBoardMoveDown(
         {
             in_out_bitwiseBoard       <<= 1;
             in_out_bitwisePlayerBoard <<= 1;
-            if ( (i < 0) || (i >= GetNColumns()) || ((a_coord.m_col + 4) >= GetNRows()))
+            if ( (i < 0) || (i >= GetNColumns()) || ((a_coord.m_row + 4) >= GetNRows()))
             {
                 // out of the board
-                in_out_bitwiseBoard       |= static_cast<uint64_t>(0x01);
-                in_out_bitwisePlayerBoard |= static_cast<uint64_t>(0x01);
+                in_out_bitwiseBoard |= static_cast<uint64_t>(0x01);
+                //in_out_bitwisePlayerBoard |= static_cast<uint64_t>(0x01);
             }
-            else if (IsPlayerInCoord(a_coord.m_col + 4, i, a_player))
+            else if (IsPlayerInCoord(a_coord.m_row + 4, i, a_player))
             {
                 // 'a_player' is occupying this coord
                 in_out_bitwiseBoard       |= static_cast<uint64_t>(0x01);
@@ -333,6 +352,10 @@ void Board::BitwiseBoardMoveDown(
             }
         }
     }
+
+    // set unused bits to 1
+    in_out_bitwiseBoard       |= BITWISE_UNUSED_BITS_FLAG;
+    in_out_bitwisePlayerBoard |= BITWISE_UNUSED_BITS_FLAG;
 }
 
 void Board::SetSquare(char a_char, int32_t a_row, int32_t a_col)
