@@ -80,6 +80,9 @@ public:
     /// @brief callback to be called when the menuitem Help->about is pressed
     void MenuItemHelpAbout_Activate();
 
+    /// @brief callback to be called when the menuitem Settings->Preferences is pressed
+    void MenuItemSettingsPreferences_Activate();
+
     /// @brief  callback to be called when the menuitem Settings->view nk points is toggled
     void MenuItemSettingsViewNKPoints_Toggled();
 
@@ -97,6 +100,9 @@ private:
     ///        in LaunchNewGame and set to true whenever GameFinished is called
     /// it prevents GameFinished code to run twice for the same game
     bool m_currentGameFinished;
+
+    /// this variables contains whose go it is
+    Game1v1::eGame1v1Player_t m_currentMovingPlayer;
 
     /// @brief used to retrieve the objects from the Glade design
     Glib::RefPtr<Gtk::Builder> m_gtkBuilder;
@@ -134,6 +140,7 @@ private:
     Gtk::MenuItem* m_newMenuItem;
     Gtk::MenuItem* m_quitMenuItem;
     Gtk::MenuItem* m_helpAboutMenuItem;
+    Gtk::MenuItem* m_settingsPrefsMenuItem;
     Gtk::CheckMenuItem* m_settingsNKPointsMenuItem;
 
     /// @brief the vertical box that keeps the board + pieces

@@ -1,8 +1,9 @@
 This document contains quite a lot of ideas that cross over my mind, which are
 supposed to be integrated in blockem at some point in the future:
 
- + Options in menu Settings and Preferences should do something. This should 
-   be pretty straight-forward
+ + Save and load game can be used through command line but they are not 
+   available in the GUI. Load game code needs a bit more of checking
+   for the format of the file 
  + Lots of calculation time is being wasted now. The decission tree should be
    calculated and kept in memory, and even updated while the human player is
    thinking (normally the human player takes longer than the computer to 
@@ -18,4 +19,10 @@ supposed to be integrated in blockem at some point in the future:
    board, with no opponent
  + Improve evaluation function through bitwise representations of boards and 
    pieces
+ + There should be puzzles. give somebody a set situation and get them to put 
+   down all their pieces. you know hte way with those puzzle games. the first 
+   one is very easy. e.g. give an empty 5x5 board and get them to put down 
+   three pieces...
+ + why not making starting coordinate editable at all times (not only when a
+   new game is launched)?
    

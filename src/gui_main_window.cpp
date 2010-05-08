@@ -96,6 +96,7 @@ void MainWindow::ProgressUpdate(float a_progress)
 MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder) throw (GUIException):
     Gtk::Window(cobject), //Calls the base class constructor
     m_currentGameFinished(false),
+    m_currentMovingPlayer(Game1v1::e_Game1v1Player1),
     m_gtkBuilder(a_gtkBuilder),
     m_the1v1Game(
         Game1v1Config::Instance().GetPlayer1StartingCoord(),
@@ -197,6 +198,12 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     if (m_settingsNKPointsMenuItem == NULL)
     {
         throw new GUIException(std::string("view nk points menu item retrieval failed"));
+    }
+
+    m_gtkBuilder->get_widget(GUI_MENU_ITEM_SETTINGS_PREFS, m_settingsPrefsMenuItem);
+    if (m_settingsPrefsMenuItem == NULL)
+    {
+        throw new GUIException(std::string("settings->preferences menu item retrieval failed"));
     }
 
     m_gtkBuilder->get_widget(GUI_MENU_ITEM_HELP_ABOUT, m_helpAboutMenuItem);
@@ -315,6 +322,8 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
             sigc::mem_fun(*this, &MainWindow::MenuItemGameQuit_Activate));
     m_helpAboutMenuItem->signal_activate().connect(
             sigc::mem_fun(*this, &MainWindow::MenuItemHelpAbout_Activate));
+    m_settingsPrefsMenuItem->signal_activate().connect(
+            sigc::mem_fun(*this, &MainWindow::MenuItemSettingsPreferences_Activate));
     m_settingsNKPointsMenuItem->signal_toggled().connect(
             sigc::mem_fun(*this, &MainWindow::MenuItemSettingsViewNKPoints_Toggled));
 
@@ -408,46 +417,14 @@ void MainWindow::MenuItemGameQuit_Activate()
 void MainWindow::MenuItemGameNew_Activate()
 {
     m_configDialog->set_title("New 1vs1 game");
+    // starting coords can always be edited when a new game is launched
+    m_configDialog->SetStartingCoordEditionSensitive(true);
+
     Gtk::ResponseType result = static_cast<Gtk::ResponseType>(m_configDialog->run());
     if (result == Gtk::RESPONSE_OK)
     {
-        // retrieve user settings from dialog and use them to set up global configuration
-        // before launching new game
-
-        // type of players
-        if (m_configDialog->IsPlayer1TypeComputer())
-        {
-            Game1v1Config::Instance().SetPlayer1Type(Game1v1Config::e_playerComputer);
-        }
-        else
-        {
-            Game1v1Config::Instance().SetPlayer1Type(Game1v1Config::e_playerHuman);
-        }
-
-        if (m_configDialog->IsPlayer2TypeComputer())
-        {
-            Game1v1Config::Instance().SetPlayer2Type(Game1v1Config::e_playerComputer);
-        }
-        else
-        {
-            Game1v1Config::Instance().SetPlayer2Type(Game1v1Config::e_playerHuman);
-        }
-
-        // starting coords
-        Coordinate player1StartingCoord;
-        m_configDialog->GetPlayer1StartingCoord(player1StartingCoord);
-        Coordinate player2StartingCoord;
-        m_configDialog->GetPlayer2StartingCoord(player2StartingCoord);
-        Game1v1Config::Instance().SetPlayer1StartingCoord(player1StartingCoord);
-        Game1v1Config::Instance().SetPlayer2StartingCoord(player2StartingCoord);
-
-        // heuristic
-        Game1v1Config::Instance().SetHeuristicTypePlayer1(m_configDialog->GetPlayer1Heuristic());
-        Game1v1Config::Instance().SetHeuristicTypePlayer2(m_configDialog->GetPlayer2Heuristic());
-
-        // search tree depth
-        Game1v1Config::Instance().SetMinimaxDepthPlayer1(m_configDialog->GetPlayer1SearchTreeDepth());
-        Game1v1Config::Instance().SetMinimaxDepthPlayer2(m_configDialog->GetPlayer2SearchTreeDepth());
+        // save configuration shown by the dialog into global config singleton
+        m_configDialog->SaveCurrentConfigIntoGlobalSettings();
 
         // go for the brand new game!!
         LaunchNewGame();
@@ -483,6 +460,78 @@ void MainWindow::MenuItemSettingsViewNKPoints_Toggled()
     {
         m_boardDrawingArea.HideNucleationPoints();
     }
+}
+
+void MainWindow::MenuItemSettingsPreferences_Activate()
+{
+    Gtk::ResponseType result;
+    m_configDialog->set_title("Configure current game");
+
+    //TODO starting coords cannot be edited through the configuration dialog yet
+    m_configDialog->SetStartingCoordEditionSensitive(false);
+
+    result = static_cast<Gtk::ResponseType>(m_configDialog->run());
+    if (result == Gtk::RESPONSE_OK)
+    {
+        // if current player is a human being and it's been set to computer
+        // next move will have to be requested to the worker thread.
+        // otherwise new settings will be automatically applied once current move
+        // is finished
+
+        if ( ( (m_currentMovingPlayer == Game1v1::e_Game1v1Player1)     &&
+               (Game1v1Config::Instance().IsPlayer1Computer() == false) &&
+               (m_configDialog->IsPlayer1TypeComputer() == true)        )
+             ||
+             ( (m_currentMovingPlayer == Game1v1::e_Game1v1Player2)     &&
+               (Game1v1Config::Instance().IsPlayer2Computer() == false) &&
+               (m_configDialog->IsPlayer2TypeComputer() == true)        )
+           )
+        {
+            // current player is not the computer and it has been
+            // requested in the config dialog to change it to be the computer
+            // save configuration shown by the dialog into global config singleton
+            // and request the processing thread to compute next player1 move
+            m_configDialog->SaveCurrentConfigIntoGlobalSettings();
+
+            RequestThreadToComputeNextMove(m_currentMovingPlayer, true);
+        }
+        else
+        {
+            bool showInfoMessage = false;
+            if ( ( (m_currentMovingPlayer == Game1v1::e_Game1v1Player1)     &&
+                   (Game1v1Config::Instance().IsPlayer1Computer() == true) )
+                 ||
+                 ( (m_currentMovingPlayer == Game1v1::e_Game1v1Player2)     &&
+                 (Game1v1Config::Instance().IsPlayer2Computer() == true) )
+               )
+            {
+                showInfoMessage = true;
+            }
+
+            // save configuration shown by the dialog into global config singleton
+            // new configuratio will be applied once current mvoe is calculated
+            m_configDialog->SaveCurrentConfigIntoGlobalSettings();
+
+            // show the info message after global settings have been applied
+            if (showInfoMessage)
+            {
+                Gtk::MessageDialog::MessageDialog infoMessage(
+                    *this,
+                    "Changes will be applied once current move is calculated by the computer",
+                    true,
+                    Gtk::MESSAGE_INFO,
+                    Gtk::BUTTONS_OK,
+                    true);
+
+                if (infoMessage.run())
+                {
+                    ; // the dialog only has 1 button
+                }
+            }
+        }
+    }
+
+    m_configDialog->hide();
 }
 
 void MainWindow::MenuItemHelpAbout_Activate()
@@ -553,8 +602,10 @@ void MainWindow::LaunchNewGame()
     // Start player1's timer
     m_stopWatchLabelPlayer1.Continue();
 
-    // new game just strted. It can't be finished!
+    // new game just started. It can't be finished!
     m_currentGameFinished = false;
+    // player1 is the one who's got to put a piece next
+    m_currentMovingPlayer = Game1v1::e_Game1v1Player1;
 
     if (Game1v1Config::Instance().IsPlayer1Computer())
     {
@@ -818,6 +869,7 @@ void MainWindow::NotifyMoveComputed()
     const Player &latestPlayer   = m_the1v1Game.GetPlayer(latestPlayerToMove);
     const Player &latestOpponent = m_the1v1Game.GetOpponent(latestPlayerToMove);
 
+    Game1v1::eGame1v1Player_t playerWhoDidntMove; // player who didn't put a piece o the board this time
     StopWatchLabel* stopWatchPlayer;   // pointer to the stopwatch of the latest player to move
     StopWatchLabel* stopWatchOpponent; // pointer to the stopwatch of the opponent of latest player to move
     switch (latestPlayerToMove)
@@ -826,12 +878,14 @@ void MainWindow::NotifyMoveComputed()
     {
         stopWatchPlayer   = &m_stopWatchLabelPlayer1;
         stopWatchOpponent = &m_stopWatchLabelPlayer2;
+        playerWhoDidntMove= Game1v1::e_Game1v1Player2;
         break;
     }
     case Game1v1::e_Game1v1Player2:
     {
         stopWatchPlayer   = &m_stopWatchLabelPlayer2;
         stopWatchOpponent = &m_stopWatchLabelPlayer1;
+        playerWhoDidntMove= Game1v1::e_Game1v1Player1;
         break;
     }
 #ifdef DEBUG
@@ -880,6 +934,9 @@ void MainWindow::NotifyMoveComputed()
         // opponent will select pieces while currentPlayer's will be only shown
         m_pickPiecesDrawingArea.Invalidate(latestOpponent);
         m_showOpponentPiecesDrawingArea.Invalidate(latestPlayer);
+
+        // current player to move will have to be updated
+        m_currentMovingPlayer = playerWhoDidntMove;
 
         // --it checks if the next player to put down a piece is a computer--
         if ( ( (latestPlayerToMove == Game1v1::e_Game1v1Player2) &&

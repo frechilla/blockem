@@ -52,7 +52,7 @@ const Heuristic::sHeuristicData_t Heuristic::m_heuristicData[e_heuristicCount] =
     {e_heuristicRandom,
      Heuristic::CalculateRandom,
      std::string("Random"),
-     std::string("Random heuristic. Evaluation function returns a random value so every heuristic can be chekced against it")
+     std::string("Random heuristic. Evaluation function returns a random value so any heuristic can be checked against it")
     }
 };
 

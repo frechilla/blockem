@@ -283,6 +283,14 @@ ConfigDialog::~ConfigDialog()
 {
 }
 
+void ConfigDialog::SetStartingCoordEditionSensitive(bool action)
+{
+    m_spinbuttonStartingRowPlayer1->set_sensitive(action);
+    m_spinbuttonStartingColumnPlayer1->set_sensitive(action);
+    m_spinbuttonStartingRowPlayer2->set_sensitive(action);
+    m_spinbuttonStartingColumnPlayer2->set_sensitive(action);
+}
+
 void ConfigDialog::ComboPlayer1Type_signalChanged()
 {
     if (IsPlayer1TypeComputer())
@@ -500,3 +508,42 @@ int ConfigDialog::run()
     return Gtk::Dialog::run();
 }
 
+void ConfigDialog::SaveCurrentConfigIntoGlobalSettings() const
+{
+    // retrieve user settings from dialog and use them to set up global configuration
+
+    // type of players
+    if (this->IsPlayer1TypeComputer())
+    {
+        Game1v1Config::Instance().SetPlayer1Type(Game1v1Config::e_playerComputer);
+    }
+    else
+    {
+        Game1v1Config::Instance().SetPlayer1Type(Game1v1Config::e_playerHuman);
+    }
+
+    if (this->IsPlayer2TypeComputer())
+    {
+        Game1v1Config::Instance().SetPlayer2Type(Game1v1Config::e_playerComputer);
+    }
+    else
+    {
+        Game1v1Config::Instance().SetPlayer2Type(Game1v1Config::e_playerHuman);
+    }
+
+    // starting coords
+    Coordinate player1StartingCoord;
+    this->GetPlayer1StartingCoord(player1StartingCoord);
+    Coordinate player2StartingCoord;
+    this->GetPlayer2StartingCoord(player2StartingCoord);
+    Game1v1Config::Instance().SetPlayer1StartingCoord(player1StartingCoord);
+    Game1v1Config::Instance().SetPlayer2StartingCoord(player2StartingCoord);
+
+    // heuristic
+    Game1v1Config::Instance().SetHeuristicTypePlayer1(this->GetPlayer1Heuristic());
+    Game1v1Config::Instance().SetHeuristicTypePlayer2(this->GetPlayer2Heuristic());
+
+    // search tree depth
+    Game1v1Config::Instance().SetMinimaxDepthPlayer1(this->GetPlayer1SearchTreeDepth());
+    Game1v1Config::Instance().SetMinimaxDepthPlayer2(this->GetPlayer2SearchTreeDepth());
+}

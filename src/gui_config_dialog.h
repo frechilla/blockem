@@ -43,6 +43,10 @@ public:
     ConfigDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder) throw (GUIException);
     virtual ~ConfigDialog();
 
+    /// set starting coords spinbuttons to sensitive or unsensitive so they can/cannot be edited
+    /// @param true will set it to sensitive. false will blur them so they cannot be edited
+    void SetStartingCoordEditionSensitive(bool action);
+
     // override Dialog::run. It will call Dialog::run internally to show the dialog on the screen
     int run();
 
@@ -65,6 +69,10 @@ public:
     Heuristic::eHeuristicType_t GetPlayer1Heuristic() const;
     /// @return selected player2's heuristic
     Heuristic::eHeuristicType_t GetPlayer2Heuristic() const;
+
+    /// saves all the configuration shows in the widgets of this dialog
+    /// into the game1v1 config singleton
+    void SaveCurrentConfigIntoGlobalSettings() const;
 
 private:
     /// @brief used to retrieve the objects from the Glade design

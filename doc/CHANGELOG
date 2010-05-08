@@ -5,12 +5,17 @@
       computer vs computer games
     - Computer and human players can be selected to play as player1 or
       player2 in any kind of game
+    - Settings of a game can be edited at all times through the preferences
+      menu (in the settings menu) except for starting coordinates, which
+      can only be selected when a new game is started
     - Type of heuristic (evaluation function) for computer players can 
-      be selected when a new game is launched. 3 types of heuristic
-      are included in this release: "NK weighted", "simple" and "random"
-    - Starting coordinate can be edited when a new game is launched
+      be edited through both the preferences dialog and when a new game is
+      launched. 3 types of heuristic have been included in this release: 
+      "NK weighted", "simple" and "random"
+    - Starting coordinate can be edited when a new game is launched. They can
+      also be edited if no pieces have been put down on the board
     - Piece edition improved for those pieces with only one possible
-      confuration
+      configuration
     - Application is able to cancel a computing operation for a new game
       to start. In previous versions cancelling the current computing operation
       was only enabled when the human user wanted to close the application (new
