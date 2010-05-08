@@ -25,4 +25,5 @@ supposed to be integrated in blockem at some point in the future:
    three pieces...
  + why not making starting coordinate editable at all times (not only when a
    new game is launched)?
+ + Fix warning when  compiling in windows
    
