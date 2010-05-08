@@ -26,7 +26,6 @@
 /// @endhistory
 ///
 // ============================================================================
-#include "config.h" // OS_WIN32
 #include "gui_config_dialog.h"
 #include "gui_glade_defs.h"
 #include "gui_game1v1_config.h"
@@ -67,7 +66,7 @@ ConfigDialog::ConfigDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Buil
     m_spinbuttonDepthPlayer2Adj(0.0, 0.0, e_numberOfPieces * 2)  // maximum depth is putting down all the pieces
 {
     // add ok and cancel buttons
-#ifdef OS_WIN32
+#ifdef WIN32
     // win32 systems have ok/accept button at the left of the cancel button
     this->add_button(Gtk::StockID("gtk-ok"), Gtk::RESPONSE_OK);
     this->add_button(Gtk::StockID("gtk-cancel"), Gtk::RESPONSE_CANCEL);

@@ -53,7 +53,7 @@
 // Windows hasn't got any underscore at the start, while the object in linux
 // has it. This is enough to check whether we are in the windows environment
 // or not
-#ifdef OS_WIN32
+#ifdef WIN32
 extern const char binary_gui_glade_start[];
 extern const char binary_gui_glade_end[];
 extern int        binary_gui_glade_size[];
