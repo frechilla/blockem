@@ -131,7 +131,9 @@ const char GUI_CONFIG_AI_FRAME_PLAYER1[]   = "config_frame_ai_player1";
 const char GUI_CONFIG_AI_FRAME_PLAYER2[]   = "config_frame_ai_player2";
 const char GUI_CONFIG_AI_TABLE_PLAYER1[]   = "config_table_ai_player1";
 const char GUI_CONFIG_AI_TABLE_PLAYER2[]   = "config_table_ai_player2";
-const char GUI_CONFIG_SPINBUTTON_DEPTH1[]  = "spinbutton_depth1";
-const char GUI_CONFIG_SPINBUTTON_DEPTH2[]  = "spinbutton_depth2";
+const char GUI_CONFIG_AI_SPINBUTTON_DEPTH1[] = "spinbutton_depth1";
+const char GUI_CONFIG_AI_SPINBUTTON_DEPTH2[] = "spinbutton_depth2";
+const char GUI_CONFIG_AI_TEXTVIEW_HEURISTIC1[] = "textview_heuristic_player1";
+const char GUI_CONFIG_AI_TEXTVIEW_HEURISTIC2[] = "textview_heuristic_player2";
 
 #endif /* GUI_GLADE_H_ */

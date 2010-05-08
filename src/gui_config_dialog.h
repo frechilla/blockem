@@ -118,6 +118,17 @@ private:
     Gtk::SpinButton* m_spinbuttonDepthPlayer2;
     Gtk::Adjustment m_spinbuttonDepthPlayer2Adj;
 
+    /// heuristic explanation player1
+    Gtk::TextView* m_textViewHeuristic1;
+
+    // heuristic explanation player2
+    Gtk::TextView* m_textViewHeuristic2;
+
+    /// Text Buffers which contain every heuristic description to be shown in
+    /// m_textViewHeuristic1 and m_textViewHeuristic2
+    Glib::RefPtr<Gtk::TextBuffer> m_refHeuristicDescriptionBuffer[Heuristic::e_heuristicCount];
+
+
     void ComboPlayer1Type_signalChanged();
     void ComboPlayer2Type_signalChanged();
     void ComboHeuristicPlayer1_signalChanged();

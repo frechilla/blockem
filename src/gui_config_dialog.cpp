@@ -139,16 +139,28 @@ ConfigDialog::ConfigDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Buil
         throw new GUIException(std::string("gtk::table for player 2 AI item retrieval failed"));
     }
 
-    m_gtkBuilder->get_widget(GUI_CONFIG_SPINBUTTON_DEPTH1, m_spinbuttonDepthPlayer1);
+    m_gtkBuilder->get_widget(GUI_CONFIG_AI_SPINBUTTON_DEPTH1, m_spinbuttonDepthPlayer1);
     if (m_spinbuttonDepthPlayer1 == NULL)
     {
         throw new GUIException(std::string("gtk::spinbutton for search tree depth (player1) retrieval failed"));
     }
 
-    m_gtkBuilder->get_widget(GUI_CONFIG_SPINBUTTON_DEPTH2, m_spinbuttonDepthPlayer2);
+    m_gtkBuilder->get_widget(GUI_CONFIG_AI_SPINBUTTON_DEPTH2, m_spinbuttonDepthPlayer2);
     if (m_spinbuttonDepthPlayer2 == NULL)
     {
         throw new GUIException(std::string("gtk::spinbutton for search tree depth (player2) retrieval failed"));
+    }
+
+    m_gtkBuilder->get_widget(GUI_CONFIG_AI_TEXTVIEW_HEURISTIC1, m_textViewHeuristic1);
+    if (m_textViewHeuristic1 == NULL)
+    {
+        throw new GUIException(std::string("gtk::TextView for heuristic (player1) retrieval failed"));
+    }
+
+    m_gtkBuilder->get_widget(GUI_CONFIG_AI_TEXTVIEW_HEURISTIC2, m_textViewHeuristic2);
+    if (m_textViewHeuristic2 == NULL)
+    {
+        throw new GUIException(std::string("gtk::TextView for heuristic (player2) retrieval failed"));
     }
 
     // adjustments for starting coordinate spinbuttons
@@ -180,13 +192,21 @@ ConfigDialog::ConfigDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Buil
 
         m_comboHeuristicPlayer1.append_text(heuristicData.m_name);
         m_comboHeuristicPlayer2.append_text(heuristicData.m_name);
+
+        // fill the TextBuffers with the descriptions
+        m_refHeuristicDescriptionBuffer[i] = Gtk::TextBuffer::create();
+        m_refHeuristicDescriptionBuffer[i]->set_text(heuristicData.m_description.c_str());
     }
+
     const Heuristic::sHeuristicData_t &selectedHeuristicData1 =
         Heuristic::m_heuristicData[Game1v1Config::Instance().GetHeuristicTypePlayer1()];
     m_comboHeuristicPlayer1.set_active_text(selectedHeuristicData1.m_name);
+    m_textViewHeuristic1->set_buffer(m_refHeuristicDescriptionBuffer[selectedHeuristicData1.m_type]);
+
     const Heuristic::sHeuristicData_t &selectedHeuristicData2 =
         Heuristic::m_heuristicData[Game1v1Config::Instance().GetHeuristicTypePlayer2()];
     m_comboHeuristicPlayer2.set_active_text(selectedHeuristicData2.m_name);
+    m_textViewHeuristic2->set_buffer(m_refHeuristicDescriptionBuffer[selectedHeuristicData2.m_type]);
 
     // attach custom widgets (the ones not present in the .glade file) into the dialog
     //    void Gtk::Table::attach (
@@ -226,24 +246,24 @@ ConfigDialog::ConfigDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Buil
     //m_comboHeuristicPlayer1 and m_comboHeuristicPlayer2
     m_AITablePlayer1->attach(
             m_comboHeuristicPlayer1,
-            1,
-            3,
             0,
+            2,
             1,
+            2,
             Gtk::FILL | Gtk::EXPAND,
-            Gtk::EXPAND,
+            Gtk::FILL,
             0,
             0);
     m_comboHeuristicPlayer1.show();
 
     m_AITablePlayer2->attach(
             m_comboHeuristicPlayer2,
-            1,
-            3,
             0,
+            2,
             1,
+            2,
             Gtk::FILL | Gtk::EXPAND,
-            Gtk::EXPAND,
+            Gtk::FILL,
             0,
             0);
     m_comboHeuristicPlayer2.show();
@@ -290,31 +310,65 @@ void ConfigDialog::ComboPlayer2Type_signalChanged()
 void ConfigDialog::ComboHeuristicPlayer1_signalChanged()
 {
     const Heuristic::sHeuristicData_t &heuristicData =
-                Heuristic::m_heuristicData[Heuristic::e_heuristicRandom];
+                Heuristic::m_heuristicData[GetPlayer1Heuristic()];
 
-    if (m_comboHeuristicPlayer1.get_active_text().compare(heuristicData.m_name) == 0)
+    m_textViewHeuristic1->set_buffer(
+            m_refHeuristicDescriptionBuffer[heuristicData.m_type]);
+
+    // this old depth will save what the depth was before
+    // the random heuristic was selected to use that value when the random
+    // heuristic is unselected again. -1 is a magic number that can't be
+    // entered by the user according to MINIMUM_STARTING_COORD_ROW
+    // and MINIMUM_STARTING_COORD_COL
+    static int32_t oldDepth = -1;
+    if (heuristicData.m_type == Heuristic::e_heuristicRandom)
     {
+        oldDepth = m_spinbuttonDepthPlayer1Adj.get_value();
+
         m_spinbuttonDepthPlayer1Adj.set_value(1);
         m_spinbuttonDepthPlayer1->set_sensitive(false);
     }
     else
     {
+        if (oldDepth != -1)
+        {
+            m_spinbuttonDepthPlayer1Adj.set_value(oldDepth);
+            oldDepth = -1;
+        }
         m_spinbuttonDepthPlayer1->set_sensitive(true);
     }
+
 }
 
 void ConfigDialog::ComboHeuristicPlayer2_signalChanged()
 {
     const Heuristic::sHeuristicData_t &heuristicData =
-                Heuristic::m_heuristicData[Heuristic::e_heuristicRandom];
+                Heuristic::m_heuristicData[GetPlayer2Heuristic()];
 
-    if (m_comboHeuristicPlayer2.get_active_text().compare(heuristicData.m_name) == 0)
+    m_textViewHeuristic2->set_buffer(
+            m_refHeuristicDescriptionBuffer[heuristicData.m_type]);
+
+    // this old depth will save what the depth was before
+    // the random heuristic was selected to use that value when the random
+    // heuristic is unselected again. -1 is a magic number that can't be
+    // entered by the user according to MINIMUM_STARTING_COORD_ROW
+    // and MINIMUM_STARTING_COORD_COL
+    static int32_t oldDepth = -1;
+
+    if (heuristicData.m_type == Heuristic::e_heuristicRandom)
     {
+        oldDepth = m_spinbuttonDepthPlayer2Adj.get_value();
+
         m_spinbuttonDepthPlayer2Adj.set_value(1);
         m_spinbuttonDepthPlayer2->set_sensitive(false);
     }
     else
     {
+        if (oldDepth != -1)
+        {
+            m_spinbuttonDepthPlayer2Adj.set_value(oldDepth);
+            oldDepth = -1;
+        }
         m_spinbuttonDepthPlayer2->set_sensitive(true);
     }
 }
