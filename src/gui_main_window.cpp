@@ -200,6 +200,12 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
         throw new GUIException(std::string("view nk points menu item retrieval failed"));
     }
 
+    m_gtkBuilder->get_widget(GUI_MENU_ITEM_SETTINGS_FORBIDDENAREA, m_settingsForbiddenAreaMenuItem);
+    if (m_settingsForbiddenAreaMenuItem == NULL)
+    {
+        throw new GUIException(std::string("show forbidden area menu item retrieval failed"));
+    }
+
     m_gtkBuilder->get_widget(GUI_MENU_ITEM_SETTINGS_PREFS, m_settingsPrefsMenuItem);
     if (m_settingsPrefsMenuItem == NULL)
     {
@@ -326,6 +332,8 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
             sigc::mem_fun(*this, &MainWindow::MenuItemSettingsPreferences_Activate));
     m_settingsNKPointsMenuItem->signal_toggled().connect(
             sigc::mem_fun(*this, &MainWindow::MenuItemSettingsViewNKPoints_Toggled));
+    m_settingsForbiddenAreaMenuItem->signal_toggled().connect(
+            sigc::mem_fun(*this, &MainWindow::MenuItemSettingsShowForbiddenArea_Toggled));
 
     // retrieve the default colour from the config class to apply it to the players
     uint8_t red, green, blue;
@@ -459,6 +467,18 @@ void MainWindow::MenuItemSettingsViewNKPoints_Toggled()
     else
     {
         m_boardDrawingArea.HideNucleationPoints();
+    }
+}
+
+void MainWindow::MenuItemSettingsShowForbiddenArea_Toggled()
+{
+    if (m_settingsForbiddenAreaMenuItem->property_active())
+    {
+        m_boardDrawingArea.ShowCurrentPlayerForbiddenArea();
+    }
+    else
+    {
+        m_boardDrawingArea.HideCurrentPlayerForbiddenArea();
     }
 }
 

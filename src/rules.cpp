@@ -38,6 +38,49 @@ Rules::~Rules()
 {
 }
 
+bool Rules::IsCoordTouchingPlayer(
+            const Board      &a_board,
+            const Coordinate &a_coord,
+            const Player     &a_player)
+{
+#ifdef DEBUG
+    assert(a_coord.m_row >= 0);
+    assert(a_coord.m_row < a_board.GetNRows());
+    assert(a_coord.m_col >= 0);
+    assert(a_coord.m_col < a_board.GetNColumns());
+#endif
+
+    if ( (a_coord.m_row > 0) &&
+          a_board.IsPlayerInCoord(a_coord.m_row - 1, a_coord.m_col, a_player) )
+    {
+        // touching a a_player's piece
+        return true;
+    }
+
+    if ( (a_coord.m_col > 0) &&
+          a_board.IsPlayerInCoord(a_coord.m_row, a_coord.m_col - 1, a_player) )
+    {
+        // touching a a_player's piece
+        return true;
+    }
+
+    if ( (a_coord.m_row < (a_board.GetNRows() - 1)) &&
+            a_board.IsPlayerInCoord(a_coord.m_row + 1, a_coord.m_col, a_player))
+    {
+        // touching a a_player's piece
+        return true;
+    }
+
+    if ( (a_coord.m_col < (a_board.GetNColumns() - 1)) &&
+            a_board.IsPlayerInCoord(a_coord.m_row, a_coord.m_col + 1, a_player) )
+    {
+        // touching a a_player's piece
+        return true;
+    }
+
+    return false;
+}
+
 bool Rules::IsPieceDeployable(
         const Board      &a_board,
         const Piece      &a_piece,
@@ -48,45 +91,26 @@ bool Rules::IsPieceDeployable(
 
     for (uint8_t i = 0 ; i < a_piece.GetNSquares() ; i++)
     {
-        int32_t row    = a_coord.m_row + a_piece.m_coords[i].m_row;
-        int32_t column = a_coord.m_col + a_piece.m_coords[i].m_col;
+        Coordinate currentCoord(
+                a_coord.m_row + a_piece.m_coords[i].m_row,
+                a_coord.m_col + a_piece.m_coords[i].m_col);
 
-        if ( (row    < 0) || (row    >= a_board.GetNRows())    ||
-             (column < 0) || (column >= a_board.GetNColumns()) ||
-             (a_board.IsCoordEmpty(row, column) == false) )
+        if ( (currentCoord.m_row < 0) || (currentCoord.m_row >= a_board.GetNRows())    ||
+             (currentCoord.m_col < 0) || (currentCoord.m_col >= a_board.GetNColumns()) ||
+             (a_board.IsCoordEmpty(currentCoord.m_row, currentCoord.m_col) == false) )
         {
             // this square is out of the board or it's not empty
             return false;
         }
 
-        if ( (row    > 0) && a_board.IsPlayerInCoord(row - 1, column, a_player) )
+        if (IsCoordTouchingPlayer(a_board, currentCoord, a_player))
         {
-        	// touching a piece not in a corner
-        	return false;
+            return false;
         }
 
-        if ( (column > 0) && a_board.IsPlayerInCoord(row, column - 1, a_player) )
-		{
-        	// touching a piece not in a corner
-        	return false;
-		}
-
-        if ( (row < a_board.GetNRows() - 1) &&
-                a_board.IsPlayerInCoord(row + 1, column, a_player))
-        {
-        	// touching a piece not in a corner
-        	return false;
-        }
-
-		if ( (column < a_board.GetNColumns() - 1) &&
-                a_board.IsPlayerInCoord(row, column + 1, a_player) )
-        {
-			// touching a piece not in a corner
-        	return false;
-        }
-
+        //TODO IsNucleationPointCompute performs again same checks done by IsCoordTouchingPlayer
         if ( (touchingNKPoint == false) &&
-        	 (IsNucleationPointCompute(a_board, a_player, row, column)) )
+        	 (IsNucleationPointCompute(a_board, a_player, currentCoord.m_row, currentCoord.m_col)) )
         {
         	// the piece will have to be occupying at least one nucleation point to
         	// be deployed in this place. Once it occupies one nk point we don't need to
@@ -113,46 +137,25 @@ bool Rules::IsPieceDeployableInNKPoint(
 
     for (uint8_t i = 0 ; i < a_piece.GetNSquares() ; i++)
     {
-        int32_t row    = a_coord.m_row + a_piece.m_coords[i].m_row;
-        int32_t column = a_coord.m_col + a_piece.m_coords[i].m_col;
+        Coordinate currentCoord(
+                a_coord.m_row + a_piece.m_coords[i].m_row,
+                a_coord.m_col + a_piece.m_coords[i].m_col);
 
-        if ( (row    < 0) || (row    >= a_board.GetNRows())    ||
-             (column < 0) || (column >= a_board.GetNColumns()) ||
-             (a_board.IsCoordEmpty(row, column) == false) )
+        if ( (currentCoord.m_row < 0) || (currentCoord.m_row >= a_board.GetNRows())    ||
+             (currentCoord.m_col < 0) || (currentCoord.m_col >= a_board.GetNColumns()) ||
+             (a_board.IsCoordEmpty(currentCoord.m_row, currentCoord.m_col) == false) )
         {
             // this square is out of the board or it's not empty
             return false;
         }
 
-        if ( (column != 0) &&
-             (a_board.IsPlayerInCoord(row, column-1, a_player)) )
+        if (IsCoordTouchingPlayer(a_board, currentCoord, a_player))
         {
-            // touching a piece not in a corner
             return false;
         }
 
-        if ( (column != (a_board.GetNColumns() - 1)) &&
-             (a_board.IsPlayerInCoord(row, column+1, a_player)) )
-        {
-        	// touching a piece not in a corner
-            return false;
-        }
-
-        if ( (row != 0) &&
-             (a_board.IsPlayerInCoord(row-1, column, a_player)) )
-		{
-        	// touching a piece not in a corner
-			return false;
-		}
-
-        if ( (row != (a_board.GetNRows() - 1)) &&
-             (a_board.IsPlayerInCoord(row+1, column, a_player)) )
-		{
-        	// touching a piece not in a corner
-			return false;
-		}
-
-        if ( (row == a_nkPoint.m_row) && (column == a_nkPoint.m_col) )
+        if ( (currentCoord.m_row == a_nkPoint.m_row) &&
+             (currentCoord.m_col == a_nkPoint.m_col) )
         {
         	touchesNKPoint = true;
         }

@@ -49,6 +49,7 @@ static const float COLOUR_BLACK_CHANNEL_BLUE  = 0.0;
 static const float STARTING_COORD_ALPHA    = 0.6;
 static const float GHOST_PIECE_ALPHA_RIGHT = 0.8;
 static const float GHOST_PIECE_ALPHA_WRONG = 0.2;
+static const float FORBIDDEN_AREA_ALPHA    = 0.3;
 
 // 1000 = 1 second
 static const uint32_t LAST_PIECE_EFFECT_MILLIS = 300;
@@ -69,7 +70,8 @@ DrawingAreaBoard::DrawingAreaBoard(const Board &a_board) :
     m_latestPieceDeployedCoord(COORD_UNINITIALISED, COORD_UNINITIALISED),
     m_latestPieceDeployedPlayer(NULL),
     m_latestPieceDeployedTransparency(LAST_PIECE_EFFECT_INITIAL_ALPHA),
-    m_showNKPoints(false) // nlk points won't be shown by default
+    m_showNKPoints(false),     // nk points won't be shown by default
+    m_showForbiddenArea(false) // forbidden area of current player won't be shown by default
 {
     // these events are going to be handled by the drawing area (apart from the usual expose event)
     this->add_events(Gdk::BUTTON_PRESS_MASK);
@@ -122,6 +124,27 @@ void DrawingAreaBoard::HideNucleationPoints()
     {
         // Invalidating is expensive. Do it only if it is needed
         m_showNKPoints = false;
+        Invalidate();
+    }
+}
+
+
+void DrawingAreaBoard::ShowCurrentPlayerForbiddenArea()
+{
+    if (m_showForbiddenArea == false)
+    {
+        // Invalidating is expensive. Do it only if it is needed
+        m_showForbiddenArea = true;
+        Invalidate();
+    }
+}
+
+void DrawingAreaBoard::HideCurrentPlayerForbiddenArea()
+{
+    if (m_showForbiddenArea == true)
+    {
+        // Invalidating is expensive. Do it only if it is needed
+        m_showForbiddenArea = false;
         Invalidate();
     }
 }
@@ -223,8 +246,35 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
 
                         cr->fill();
                     }
-                }
-            }
+
+                    if ((m_currentPlayer == thisPlayer) && m_showForbiddenArea)
+                    {
+                        // mark the coords in the board where the current player can't go
+                        if ( m_theBoard.IsCoordEmpty(rowCount, columnCount) &&
+                             Rules::IsCoordTouchingPlayer(m_theBoard, Coordinate(rowCount, columnCount), *thisPlayer) )
+                        {
+                            cr->set_source_rgba(
+                                    static_cast<float>(red)  / 255,
+                                    static_cast<float>(green)/ 255,
+                                    static_cast<float>(blue) / 255,
+                                    FORBIDDEN_AREA_ALPHA);
+
+                            cr->rectangle(
+                                    (xc - squareWidth/2) +  (littleSquare * columnCount) + 1,
+                                    (yc - squareHeight/2) + (littleSquare * rowCount) + 1,
+                                    littleSquare - 1,
+                                    littleSquare - 1);
+
+                            cr->fill();
+
+                            cr->set_source_rgb(
+                                    static_cast<float>(red)  / 255,
+                                    static_cast<float>(green)/ 255,
+                                    static_cast<float>(blue) / 255);
+                        }
+                    } // if ((m_currentPlayer == thisPlayer) && m_showForbiddenArea)
+                } // for (int32_t columnCount
+            } // for (int32_t rowCount
 
             // draw a small little circle where nk points are (with a bit of transparency)
             if (m_showNKPoints)

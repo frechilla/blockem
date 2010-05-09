@@ -82,6 +82,15 @@ public:
     /// it invalidates the drawing area to show the new configuration
     void HideNucleationPoints();
 
+    /// forbidden area of current player will be shown on the board filling
+    /// squares with a small hint of current player's colour
+    /// it invalidates the drawing area to show the new configuration
+    void ShowCurrentPlayerForbiddenArea();
+
+    /// forbidden area of current player won't be shown
+    /// it invalidates the drawing area to show the new configuration
+    void HideCurrentPlayerForbiddenArea();
+
     /// Access to the m_signalBoardClicked signal private member, which is sent
     /// when a the user clicked on the board and there is a current player and piece selected
     inline sigc::signal<void, const Coordinate &, const Piece &, const Player &>& signal_boardPicked()
@@ -129,6 +138,9 @@ private:
 
     /// are nucleation points shown on the board?
     bool m_showNKPoints;
+
+    /// mark the coords in the board where the current player can't go
+    bool m_showForbiddenArea;
 
     /// signal to be sent when a the user clicked on the board and there is a current player and piece
     /// selected

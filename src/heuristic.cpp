@@ -143,10 +143,10 @@ int32_t Heuristic::CalculateNKWeighted(
 
                     valueNkOpponent += weightedValue;
                     /*
-                    if (Rules::IsPieceDeployable(a_board, m_FullSquare, rowCount, columnCount, a_playerOpponent) ||
-                        Rules::IsPieceDeployable(a_board, m_FullSquare, rowCount - 1, columnCount, a_playerOpponent) ||
-                        Rules::IsPieceDeployable(a_board, m_FullSquare, rowCount, columnCount - 1, a_playerOpponent) ||
-                        Rules::IsPieceDeployable(a_board, m_FullSquare, rowCount - 1, columnCount - 1, a_playerOpponent) )
+                    if (Rules::IsPieceDeployableInNKPoint(a_board, m_FullSquare, rowCount, columnCount, a_playerOpponent) ||
+                        Rules::IsPieceDeployableInNKPoint(a_board, m_FullSquare, rowCount - 1, columnCount, a_playerOpponent) ||
+                        Rules::IsPieceDeployableInNKPoint(a_board, m_FullSquare, rowCount, columnCount - 1, a_playerOpponent) ||
+                        Rules::IsPieceDeployableInNKPoint(a_board, m_FullSquare, rowCount - 1, columnCount - 1, a_playerOpponent) )
                     {
                         valueNkOpponent += weightedValue * 2;
                     }
@@ -180,10 +180,10 @@ int32_t Heuristic::CalculateNKWeighted(
                     valueNkMe += weightedValue;
 
                     /*
-                    if (Rules::IsPieceDeployable(a_board, m_FullSquare, rowCount, columnCount, a_playerMe) ||
-                        Rules::IsPieceDeployable(a_board, m_FullSquare, rowCount - 1, columnCount, a_playerMe) ||
-                        Rules::IsPieceDeployable(a_board, m_FullSquare, rowCount, columnCount - 1, a_playerMe) ||
-                        Rules::IsPieceDeployable(a_board, m_FullSquare, rowCount - 1, columnCount - 1, a_playerMe) )
+                    if (Rules::IsPieceDeployableInNKPoint(a_board, m_FullSquare, rowCount, columnCount, a_playerMe) ||
+                        Rules::IsPieceDeployableInNKPoint(a_board, m_FullSquare, rowCount - 1, columnCount, a_playerMe) ||
+                        Rules::IsPieceDeployableInNKPoint(a_board, m_FullSquare, rowCount, columnCount - 1, a_playerMe) ||
+                        Rules::IsPieceDeployableInNKPoint(a_board, m_FullSquare, rowCount - 1, columnCount - 1, a_playerMe) )
                     {
                         valueNkMe += weightedValue * 2 ;
                     }

@@ -86,6 +86,9 @@ public:
     /// @brief  callback to be called when the menuitem Settings->view nk points is toggled
     void MenuItemSettingsViewNKPoints_Toggled();
 
+    /// @brief  callback to be called when the menuitem Settings->show forbidden area is toggled
+    void MenuItemSettingsShowForbiddenArea_Toggled();
+
     /// @brief callback to be called when a button is pressed inside the board
     void BoardDrawingArea_BoardClicked(const Coordinate &, const Piece &, const Player &);
 
@@ -142,6 +145,7 @@ private:
     Gtk::MenuItem* m_helpAboutMenuItem;
     Gtk::MenuItem* m_settingsPrefsMenuItem;
     Gtk::CheckMenuItem* m_settingsNKPointsMenuItem;
+    Gtk::CheckMenuItem* m_settingsForbiddenAreaMenuItem;
 
     /// @brief the vertical box that keeps the board + pieces
     Gtk::VBox* m_vBoxDrawing;

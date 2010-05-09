@@ -107,6 +107,7 @@ const char GUI_CONFIG_DIALOG_NAME[]        = "configdialog";
 const char GUI_MENU_ITEM_GAME_NEW[]        = "imagemenuitem_game_new";
 const char GUI_MENU_ITEM_GAME_QUIT[]       = "imagemenuitem_game_quit";
 const char GUI_MENU_ITEM_SETTINGS_NKPOINTS[] = "checkmenuitem_settings_nkpoints";
+const char GUI_MENU_ITEM_SETTINGS_FORBIDDENAREA[] = "checkmenuitem_settings_forbidden";
 const char GUI_MENU_ITEM_SETTINGS_PREFS[]  = "imagemenuitem_settings_preferences";
 const char GUI_MENU_ITEM_HELP_ABOUT[]      = "imagemenuitem_help_about";
 const char GUI_VBOX_DRAWING_NAME[]         = "vbox_drawing";

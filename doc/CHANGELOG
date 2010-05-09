@@ -1,6 +1,8 @@
 : Version 0.2.0
     - An option has been added to show the nucleation points on the board.
       Shared nucleation points are drawn in black colour
+    - Current player's forbidden places on the board can also be shown
+      selectingthe "show forbidden area" option in the menu
     - App can be set up to play human vs human, human vs computer and 
       computer vs computer games
     - Computer and human players can be selected to play as player1 or

@@ -45,6 +45,17 @@ public:
     Rules();
     virtual ~Rules();
 
+    /// return true if 'a_coord' is touching one of a_player's pieces as
+    /// that coord would be an illegal place to put one of a_player's pieces
+    /// as it is touching one of its pieces (not corners)
+    /// @param the blokus board
+    /// @param coord (x, y) of the piece
+    /// @param the player that owns the pieces
+    static bool IsCoordTouchingPlayer(
+            const Board      &a_board,
+            const Coordinate &a_coord,
+            const Player     &a_player);
+
     /// return true if the piece can be deployed in the position defined by the 3rd and 4th parameters
     /// it checks:
     ///   1) if the space that the piece will occupy is empty (and inside the board)
@@ -57,8 +68,7 @@ public:
     /// it doesn't rotate or mirror the piece
     /// @param the blokus board
     /// @param the piece
-    /// @param coord x of the piece
-    /// @param coord y of the piece
+    /// @param coord (x, y) of the piece
     /// @param the player that owns the pieces
     static bool IsPieceDeployable(
             const Board      &a_board,

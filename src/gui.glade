@@ -83,6 +83,13 @@
                   <object class="GtkMenu" id="menu2">
                     <property name="visible">True</property>
                     <child>
+                      <object class="GtkCheckMenuItem" id="checkmenuitem_settings_forbidden">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Show _forbidden area</property>
+                        <property name="use_underline">True</property>
+                      </object>
+                    </child>
+                    <child>
                       <object class="GtkCheckMenuItem" id="checkmenuitem_settings_nkpoints">
                         <property name="visible">True</property>
                         <property name="label" translatable="yes">Show _nucleation points</property>
