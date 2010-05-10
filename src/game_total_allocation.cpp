@@ -63,20 +63,20 @@ void GameTotalAllocation::RemovePiece(
     for (uint8_t i = 0 ; i < a_piece.GetNSquares() ; i++)
     {
 #ifdef DEBUG
-        assert( ((a_coord.m_row + a_piece.m_coords[i].m_row) >= 0) &&
-        		((a_coord.m_row + a_piece.m_coords[i].m_row) < m_board.GetNRows())    );
-        assert( ((a_coord.m_col + a_piece.m_coords[i].m_col) >= 0) &&
-        		((a_coord.m_col + a_piece.m_coords[i].m_col) < m_board.GetNColumns()) );
+        assert( ((a_coord.m_row + a_piece.GetCoord(i).m_row) >= 0) &&
+        		((a_coord.m_row + a_piece.GetCoord(i).m_row) < m_board.GetNRows())    );
+        assert( ((a_coord.m_col + a_piece.GetCoord(i).m_col) >= 0) &&
+        		((a_coord.m_col + a_piece.GetCoord(i).m_col) < m_board.GetNColumns()) );
 
         assert(m_board.IsPlayerInCoord(
-        		a_coord.m_row + a_piece.m_coords[i].m_row,
-        		a_coord.m_col + a_piece.m_coords[i].m_col,
+        		a_coord.m_row + a_piece.GetCoord(i).m_row,
+        		a_coord.m_col + a_piece.GetCoord(i).m_col,
         		m_player));
 #endif
 
         m_board.BlankCoord(
-        		a_coord.m_row + a_piece.m_coords[i].m_row,
-        		a_coord.m_col + a_piece.m_coords[i].m_col);
+        		a_coord.m_row + a_piece.GetCoord(i).m_row,
+        		a_coord.m_col + a_piece.GetCoord(i).m_col);
     }
 
     // recalculate all the nk points around the piece we just put down
@@ -98,19 +98,19 @@ void GameTotalAllocation::PutDownPiece(
     for (int i = 0 ; i < a_piece.GetNSquares() ; i++)
     {
 #ifdef DEBUG
-        assert( ((a_coord.m_row + a_piece.m_coords[i].m_row) >= 0) &&
-        		((a_coord.m_row + a_piece.m_coords[i].m_row) < m_board.GetNRows())    );
-        assert( ((a_coord.m_col + a_piece.m_coords[i].m_col) >= 0) &&
-        		((a_coord.m_col + a_piece.m_coords[i].m_col) < m_board.GetNColumns()) );
+        assert( ((a_coord.m_row + a_piece.GetCoord(i).m_row) >= 0) &&
+        		((a_coord.m_row + a_piece.GetCoord(i).m_row) < m_board.GetNRows())    );
+        assert( ((a_coord.m_col + a_piece.GetCoord(i).m_col) >= 0) &&
+        		((a_coord.m_col + a_piece.GetCoord(i).m_col) < m_board.GetNColumns()) );
 
         assert(m_board.IsCoordEmpty(
-        		a_coord.m_row + a_piece.m_coords[i].m_row,
-        		a_coord.m_col + a_piece.m_coords[i].m_col));
+        		a_coord.m_row + a_piece.GetCoord(i).m_row,
+        		a_coord.m_col + a_piece.GetCoord(i).m_col));
 #endif
 
         m_board.SetPlayerInCoord(
-        		a_coord.m_row + a_piece.m_coords[i].m_row,
-        		a_coord.m_col + a_piece.m_coords[i].m_col,
+        		a_coord.m_row + a_piece.GetCoord(i).m_row,
+        		a_coord.m_col + a_piece.GetCoord(i).m_col,
         		m_player);
     }
 
@@ -124,12 +124,12 @@ bool GameTotalAllocation::Solve(const Coordinate &a_startingCoord)
 	Coordinate validCoords[VALID_COORDS_SIZE];
 
 	// declare the array of last pieces and old NK points and clear them out
-	Piece* lastPieces[e_numberOfPieces];
+	ePieceType_t lastPieces[e_numberOfPieces];
 	STLCoordinateSet_t* oldNkPoints[e_numberOfPieces];
 
 	for (int32_t i = e_minimumPieceIndex ; i < e_numberOfPieces ; i++)
 	{
-		lastPieces[i]  = NULL;
+		lastPieces[i]  = e_noPiece;
 		oldNkPoints[i] = NULL;
 	}
 
@@ -140,59 +140,43 @@ bool GameTotalAllocation::Solve(const Coordinate &a_startingCoord)
     {
     	m_player.UnsetPiece(static_cast<ePieceType_t>(i));
 
-        do
+        const std::list< CoordinateArray<PIECE_MAX_SQUARES> > &coordConfList =
+            m_player.m_pieces[i].GetPrecalculatedConfs();
+        std::list< CoordinateArray<PIECE_MAX_SQUARES> >::const_iterator pieceCoordIt;
+
+        for (pieceCoordIt = coordConfList.begin();
+             pieceCoordIt != coordConfList.end();
+             pieceCoordIt++)
         {
-            int8_t nOrigRotations = 0;
-            while(nOrigRotations < m_player.m_pieces[i].GetNRotations())
+            // update piece with current precalculated configuration
+            m_player.m_pieces[i].SetCurrentCoords(*pieceCoordIt);
+
+            int32_t nValidCoords = Rules::CalculateValidCoordsInStartingPoint(
+                                              m_board,
+                                              m_player.m_pieces[i],
+                                              a_startingCoord,
+                                              m_player,
+                                              validCoords,
+                                              VALID_COORDS_SIZE);
+
+            if (nValidCoords > VALID_COORDS_SIZE)
             {
-            	int32_t nValidCoords = Rules::CalculateValidCoordsInStartingPoint(
-                		                          m_board,
-                		                          m_player.m_pieces[i],
-                		                          a_startingCoord,
-                                                  m_player,
-                                                  validCoords,
-                                                  VALID_COORDS_SIZE);
+                std::cerr << "Jaysus" << std::endl << std::endl;
+                exit(-1);
+            }
 
-            	if (nValidCoords > VALID_COORDS_SIZE)
-            	{
-            	    std::cerr << "Jaysus" << std::endl << std::endl;
-            	    exit(-1);
-            	}
+            for (int32_t k = 0 ; k < nValidCoords ; k++)
+            {
+                PutDownPiece(m_player.m_pieces[i], validCoords[k]);
 
-                for (int32_t k = 0 ; k < nValidCoords ; k++)
+                if (AllocateAllPieces(lastPieces, oldNkPoints))
                 {
-                	PutDownPiece(m_player.m_pieces[i], validCoords[k]);
-
-                    if (AllocateAllPieces(lastPieces, oldNkPoints))
-                    {
-                        return true;
-                    }
-
-                    RemovePiece(m_player.m_pieces[i], validCoords[k]);
+                    return true;
                 }
 
-                nOrigRotations++;
-                m_player.m_pieces[i].RotateRight();
+                RemovePiece(m_player.m_pieces[i], validCoords[k]);
             }
-
-            // reset the amount of rotations done before mirroring
-            nOrigRotations = 0;
-
-            if ( (m_player.m_pieces[i].GetType() == e_4Piece_LittleS) &&
-                 (m_player.m_pieces[i].IsMirrored() == false) )
-            {
-                // For this piece the maximum number or rotations is 2
-                // and the piece is not symmetric, the configuration after
-                // the 3rd rotation is the shame shape as the original, but
-                // the coords moved. Reset the piece before mirroring to
-                // avoid unexpected results
-                //
-                // it also happens with 2piece and 4longPiece, but those pieces
-                // don't have mirror, so there's no need for this extra check
-                m_player.m_pieces[i].Reset();
-            }
-
-        } while (m_player.m_pieces[i].MirrorYAxis());
+        } // for (pieceCoordIt = coordConfList.begin()
 
         // leave the piece as it was
         m_player.m_pieces[i].Reset();
@@ -205,7 +189,7 @@ bool GameTotalAllocation::Solve(const Coordinate &a_startingCoord)
 
 
 bool GameTotalAllocation::AllocateAllPieces(
-		Piece*              a_lastPieces[e_numberOfPieces],
+        ePieceType_t        a_lastPieces[e_numberOfPieces],
 		STLCoordinateSet_t* a_oldNkPoints[e_numberOfPieces])
 {
 	// this set will be used not to place the same piece in the same place more than once
@@ -229,116 +213,104 @@ bool GameTotalAllocation::AllocateAllPieces(
 
 	for (int32_t i = e_numberOfPieces - 1; i >= e_minimumPieceIndex; i--)
 	{
-		if (m_player.IsPieceAvailable(static_cast<ePieceType_t>(i)))
+		if (!m_player.IsPieceAvailable(static_cast<ePieceType_t>(i)))
 		{
-			m_player.UnsetPiece(static_cast<ePieceType_t>(i));
-			do
-			{
-	            int8_t nOrigRotations = 0;
-	            while(nOrigRotations < m_player.m_pieces[i].GetNRotations())
-				{
-				    STLCoordinateSet_t::iterator nkIterator = nkPointSet.begin();
-				    while(nkIterator != nkPointSet.end())
-				    {
-			    		// before putting down the piece test if the future configuration
-			    		// could be tested by some other level in the backtrack tree
-				    	// using (e_numberOfPieces - m_player.NumberOfPiecesAvailable() - 2)
-				    	// because m_player.NumberOfPiecesAvailable() - 1 is this current level in the tree
-				    	// and we don't want to use it. No need for using the level 0 either, because
-				    	// a_lastPieces[0] and  a_oldNkPoints[0] is set to NULL
-				    	int32_t thisLevel;
-				    	for (thisLevel = e_numberOfPieces - m_player.NumberOfPiecesAvailable() - 2;
-				    	     thisLevel > 0;
-				    	     thisLevel--)
-				    	{
-				    		// if the current piece's index is bigger than the old piece deployed on
-				    		// the board, put down the piece only if this nucleation doesn't belong to the
-				    		// old nucleation point's set
-				    		// both old piece and old nk points set correspond to this particular
-				    		// level of the backtrack tree
-					        if (i >= a_lastPieces[thisLevel]->GetType())
-					        {
-					            STLCoordinateSet_t::iterator it;
-					        	it = a_oldNkPoints[thisLevel]->find(*nkIterator);
-					            if (it != a_oldNkPoints[thisLevel]->end())
-					            {
-					            	nkIterator++;
-	                                break;
-					            }
-					        }
-				    	}
+		    continue;
+		}
 
-				    	if (thisLevel > 0)
-				    	{
-				    		// the previous loop called break before the end
-				    		continue;
-				    	}
+		m_player.UnsetPiece(static_cast<ePieceType_t>(i));
 
-				        // retrieve the valid coords of this piece in the current nk point
-				        Coordinate validCoords[VALID_COORDS_SIZE];
-		                int32_t nValidCoords = Rules::CalculateValidCoordsInNucleationPoint(
-                                                                                  m_board,
-                                                                                  m_player.m_pieces[i],
-                                                                                  *nkIterator,
-                                                                                  m_player,
-                                                                                  validCoords,
-                                                                                  VALID_COORDS_SIZE);
+        const std::list< CoordinateArray<PIECE_MAX_SQUARES> > &coordConfList =
+            m_player.m_pieces[i].GetPrecalculatedConfs();
+        std::list< CoordinateArray<PIECE_MAX_SQUARES> >::const_iterator pieceCoordIt;
 
-                        for (int32_t k = 0; k < nValidCoords; k++)
+        for (pieceCoordIt = coordConfList.begin();
+             pieceCoordIt != coordConfList.end();
+             pieceCoordIt++)
+        {
+            // update piece with current precalculated configuration
+            m_player.m_pieces[i].SetCurrentCoords(*pieceCoordIt);
+
+            STLCoordinateSet_t::iterator nkIterator = nkPointSet.begin();
+            while(nkIterator != nkPointSet.end())
+            {
+                // before putting down the piece test if the future configuration
+                // could be tested by some other level in the backtrack tree
+                // using (e_numberOfPieces - m_player.NumberOfPiecesAvailable() - 2)
+                // because m_player.NumberOfPiecesAvailable() - 1 is this current level in the tree
+                // and we don't want to use it. No need for using the level 0 either, because
+                // a_lastPieces[0] and  a_oldNkPoints[0] is set to NULL
+                int32_t thisLevel;
+                for (thisLevel = e_numberOfPieces - m_player.NumberOfPiecesAvailable() - 2;
+                     thisLevel > 0;
+                     thisLevel--)
+                {
+                    // if the current piece's index is bigger than the old piece deployed on
+                    // the board, put down the piece only if this nucleation doesn't belong to the
+                    // old nucleation point's set
+                    // both old piece and old nk points set correspond to this particular
+                    // level of the backtrack tree
+                    if (i >= a_lastPieces[thisLevel])
+                    {
+                        STLCoordinateSet_t::iterator it;
+                        it = a_oldNkPoints[thisLevel]->find(*nkIterator);
+                        if (it != a_oldNkPoints[thisLevel]->end())
                         {
-                            STLCoordinateSet_t::iterator it =
-                                testedCoords.find(validCoords[k]);
-                            if (it == testedCoords.end())
-                            {
-                                testedCoords.insert(validCoords[k]);
+                            nkIterator++;
+                            break;
+                        }
+                    }
+                }
 
-                                PutDownPiece(m_player.m_pieces[i], validCoords[k]);
+                if (thisLevel > 0)
+                {
+                    // the previous loop called break before the end
+                    continue;
+                }
 
-                            	// it's m_player.NumberOfPiecesAvailable()-1 because current piece
-                            	// has already being removed from the player
-                                a_lastPieces[e_numberOfPieces - m_player.NumberOfPiecesAvailable() - 1]  =
-                                	&m_player.m_pieces[i];
+                // retrieve the valid coords of this piece in the current nk point
+                Coordinate validCoords[VALID_COORDS_SIZE];
+                int32_t nValidCoords = Rules::CalculateValidCoordsInNucleationPoint(
+                                                                          m_board,
+                                                                          m_player.m_pieces[i],
+                                                                          *nkIterator,
+                                                                          m_player,
+                                                                          validCoords,
+                                                                          VALID_COORDS_SIZE);
 
-                                if (AllocateAllPieces(a_lastPieces, a_oldNkPoints))
-                                {
-                                    return true;
-                                }
+                for (int32_t k = 0; k < nValidCoords; k++)
+                {
+                    STLCoordinateSet_t::iterator it =
+                        testedCoords.find(validCoords[k]);
+                    if (it == testedCoords.end())
+                    {
+                        testedCoords.insert(validCoords[k]);
 
-                                RemovePiece(m_player.m_pieces[i], validCoords[k]);
-                            }
+                        PutDownPiece(m_player.m_pieces[i], validCoords[k]);
+
+                        // it's m_player.NumberOfPiecesAvailable()-1 because current piece
+                        // has already being removed from the player
+                        a_lastPieces[e_numberOfPieces - m_player.NumberOfPiecesAvailable() - 1]  =
+                            m_player.m_pieces[i].GetType();
+
+                        if (AllocateAllPieces(a_lastPieces, a_oldNkPoints))
+                        {
+                            return true;
                         }
 
-                        nkIterator++;
-				    }
+                        RemovePiece(m_player.m_pieces[i], validCoords[k]);
+                    }
+                } // for (int32_t k = 0; k < nValidCoords; k++)
 
-					testedCoords.clear();
-					nOrigRotations++;
-					m_player.m_pieces[i].RotateRight();
-	            }
+                nkIterator++;
+            } // while(nkIterator != nkPointSet.end())
 
-	            // reset the amount of rotations done before mirroring
-	            nOrigRotations = 0;
+            testedCoords.clear();
+        } // for (pieceCoordIt = coordConfList.begin()
 
-	            if ( (m_player.m_pieces[i].GetType() == e_4Piece_LittleS) &&
-	                 (m_player.m_pieces[i].IsMirrored() == false) )
-	            {
-	                // For this piece the maximum number or rotations is 2
-	                // and the piece is not symmetric, the configuration after
-	                // the 3rd rotation is the shame shape as the original, but
-	                // the coords moved. Reset the piece before mirroring to
-	                // avoid unexpected results
-	                //
-	                // it also happens with 2piece and 4longPiece, but those pieces
-	                // don't have mirror, so there's no need for this extra check
-	                m_player.m_pieces[i].Reset();
-	            }
+        m_player.m_pieces[i].Reset();
+        m_player.SetPiece(static_cast<ePieceType_t>(i));
 
-			} while (m_player.m_pieces[i].MirrorYAxis());
-
-			m_player.SetPiece(static_cast<ePieceType_t>(i));
-			m_player.m_pieces[i].Reset();
-
-		} // for (int i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
 	} // for (int i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
 
     return false;

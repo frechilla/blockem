@@ -400,8 +400,8 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
         for (uint8_t i = 0; i < m_currentPiece.GetNSquares(); i++)
         {
             Coordinate coord(
-                    m_currentCoord.m_row + m_currentPiece.m_coords[i].m_row,
-                    m_currentCoord.m_col + m_currentPiece.m_coords[i].m_col);
+                    m_currentCoord.m_row + m_currentPiece.GetCoord(i).m_row,
+                    m_currentCoord.m_col + m_currentPiece.GetCoord(i).m_col);
 
             cr->rectangle(
                     (xc - squareWidth /2) + (littleSquare * coord.m_col) + 1,
@@ -444,8 +444,8 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
         for (uint8_t i = 0; i < m_latestPieceDeployed.GetNSquares(); i++)
         {
             Coordinate coord(
-                    m_latestPieceDeployedCoord.m_row + m_latestPieceDeployed.m_coords[i].m_row,
-                    m_latestPieceDeployedCoord.m_col + m_latestPieceDeployed.m_coords[i].m_col);
+                    m_latestPieceDeployedCoord.m_row + m_latestPieceDeployed.GetCoord(i).m_row,
+                    m_latestPieceDeployedCoord.m_col + m_latestPieceDeployed.GetCoord(i).m_col);
 
             cr->rectangle(
                     (xc - squareWidth /2) + (littleSquare * coord.m_col) + 1,

@@ -96,7 +96,7 @@ int main(int argc, char** argv)
     std::cout << "GameTotalAllocation test started... ";
 
     GameTotalAllocation totalAllocation1PlayerGame(14, 14);
-    totalAllocation1PlayerGame.Solve(Coordinate(8, 8));
+    assert(totalAllocation1PlayerGame.Solve(Coordinate(8, 8)));
 
     //totalAllocation1PlayerGame.GetBoard().PrintBoard(std::cout);
 

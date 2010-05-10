@@ -31,6 +31,8 @@
 #ifndef COORDINATE_H_
 #define COORDINATE_H_
 
+#include <stdint.h> // for types
+
 /// uninitialised coord value
 const int32_t COORD_UNINITIALISED = 0xf0000000; // (-268435456)
 
@@ -80,6 +82,36 @@ public:
 	int32_t m_row;
 	/// column of this coordinate
 	int32_t m_col;
+};
+
+/// @brief a magical array of coordinates to be used with STL
+template<int32_t NCOORDS>
+class CoordinateArray
+{
+public:
+
+    inline Coordinate& operator[] (uint32_t n)
+    {
+        return m_coords[n];
+    }
+
+    inline const Coordinate& operator[] (uint32_t n) const
+    {
+        return m_coords[n];
+    }
+
+    inline CoordinateArray<NCOORDS>& operator=(const CoordinateArray<NCOORDS> &a_src)
+    {
+        for (int32_t i = 0; i < NCOORDS; i++)
+        {
+            m_coords[i] = a_src.m_coords[i];
+        }
+
+        return *this;
+    }
+
+private:
+    Coordinate m_coords[NCOORDS];
 };
 
 #endif /* COORDINATE_H_ */

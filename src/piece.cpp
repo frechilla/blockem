@@ -58,7 +58,7 @@ const std::string Piece::PieceDescription[e_numberOfPieces] =
 	"5Piece_TheUltimate"
 };
 
-// load the load piece map
+// instantiate the load piece map.
 Piece::LoadPieceFunction_t Piece::m_loadFunctionMap[] =
 {
     Piece::LoadPiece_1BabyPiece,    // e_1Piece_BabyPiece
@@ -84,18 +84,11 @@ Piece::LoadPieceFunction_t Piece::m_loadFunctionMap[] =
     Piece::LoadPiece_5TheUltimate   // e_5Piece_TheUltimate
 };
 
-
-Piece::Piece():
-	m_type(e_noPiece),
-    m_initialised(false)
-{
-    Coordinate coords[0];
-    SetPiece(coords, 0, false, 0, 0);
-}
-
 Piece::Piece(ePieceType_t a_type):
-	m_type(a_type),
-    m_initialised(false)
+	m_type(a_type)
+#ifdef DEBUG
+    ,m_initialised(false)
+#endif
 {
 	if (a_type != e_noPiece)
 	{
@@ -107,8 +100,8 @@ Piece::Piece(ePieceType_t a_type):
 	    // load the legacy piece representation
         (m_loadFunctionMap[a_type])(*this);
 
-        // build up the bitwise representation too
-        BuildUpBitwiseRepresentation();
+        // build up the precalculated configuration too
+        BuildUpPrecalculatedRepresentations();
 	}
 	else
 	{
@@ -120,11 +113,6 @@ Piece::Piece(ePieceType_t a_type):
 
 Piece::~Piece()
 {
-}
-
-inline void LoadPieceData(ePieceType_t a_piece)
-{
-
 }
 
 void Piece::SetPiece(
@@ -156,8 +144,9 @@ void Piece::SetPiece(
         m_coords[i].m_row = m_origCoords[i].m_row = 0;
         m_coords[i].m_col = m_origCoords[i].m_col = 0;
     }
-
+#ifdef DEBUG
     m_initialised = true;
+#endif
 }
 
 void Piece::Reset()
@@ -608,21 +597,23 @@ void Piece::LoadPiece_5TheUltimate(Piece &thisPiece)
     thisPiece.SetPiece(coords, 5, true,  4, 2);
 }
 
-void Piece::BuildUpBitwiseRepresentation()
+void Piece::BuildUpPrecalculatedRepresentations()
 {
     do
     {
         int16_t nRotations = 0;
         while(nRotations < GetNRotations())
         {
-            uint64_t bitwisePiece = 0x0000000000000000ull;
+            // save current configuration into precalculated list of coords
+            m_precalculatedConfsList.push_back(m_coords);
 
+            // calculate and save bitwise representation of this configuration
+            uint64_t bitwisePiece = 0x0000000000000000ull;
             for (int8_t i = 0; i < GetNSquares(); i++)
             {
                 // this piece of magic converts a piece into a string of bits
                 bitwisePiece |= static_cast<uint64_t>(1) << ( ((3 - m_coords[i].m_row) * 7) + (3 - m_coords[i].m_col) );
             }
-
             m_bitwiseRepresentationList.push_back(bitwisePiece);
 
             RotateRight();
@@ -645,6 +636,6 @@ void Piece::BuildUpBitwiseRepresentation()
 
     } while (MirrorYAxis());
 
-    // leave the piece as it was before doig the bitwise representation
+    // leave the piece as it was originally described
     Reset();
 }

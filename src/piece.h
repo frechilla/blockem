@@ -24,6 +24,7 @@
 /// Ref       Who                When         What
 ///           Faustino Frechilla 30-Mar-2009  Original development
 ///           Faustino Frechilla 19-Apr-2010  Bitwise representations
+///           Faustino Frechilla  9-MAy-2010  Precalculated representations
 /// @endhistory
 ///
 // ============================================================================
@@ -40,10 +41,13 @@
 /// maximum number of squares a piece can have
 const uint8_t PIECE_MAX_SQUARES = 5;
 
-/// @brief available blokus pieces
+/// @brief available blockem pieces
 typedef enum
 {
+    // WARNING:
     // if this enum is modified, ensure all the constants are updated accordingly
+    // ensure also Piece::PieceDescription and Piece::m_loadFunctionMap
+    // are updated with the correct order described in this enum
 	e_minimumPieceIndex = 0,
 
 	e_1Piece_BabyPiece   = e_minimumPieceIndex,
@@ -76,19 +80,13 @@ typedef enum
 class Piece
 {
 public:
-    // @brief an uninitialised piece of type e_noPiece. It's the same as calling Piece(e_noPiece)
-    Piece();
 	/// @brief constructor
 	/// @param a_type type of blokus piece
-	Piece(ePieceType_t a_type);
+	Piece(ePieceType_t a_type = e_noPiece);
     virtual ~Piece();
 
     /// @brief array of strings which describe every possible piece
     static const std::string PieceDescription[e_numberOfPieces];
-
-    /// list of coords that describe the shape of the piece
-    /// Stores one coordinate per square
-    Coordinate m_coords[PIECE_MAX_SQUARES];
 
     /// Reset the piece to the original configuration
     void Reset();
@@ -112,19 +110,19 @@ public:
     ///         false if the actual configuration is the same as the original
     bool MirrorXAxis();
 
-    /// @returns the number of possible different rotations the piece has originally
+    /// @return the number of possible different rotations the piece has originally
     inline int8_t GetNRotations() const
     {
-#ifdef DEBUF
+#ifdef DEBUG
         assert(m_initialised);
 #endif
         return m_origRotations;
     }
 
-    /// @returns true if the piece can be mirrored
+    /// @return true if the piece can be mirrored
     inline bool CanMirror() const
     {
-#ifdef DEBUF
+#ifdef DEBUG
         assert(m_initialised);
 #endif
         return m_origMirror;
@@ -133,25 +131,25 @@ public:
     /// @return true if the actual configuration of the piece corresponds to the mirror of the original
     inline bool IsMirrored() const
     {
-#ifdef DEBUF
+#ifdef DEBUG
         assert(m_initialised);
 #endif
         return ( m_origMirror && (m_nMirrors & 0x01) );
     }
 
-    /// returns the type of piece
+    /// @return the type of piece
     inline ePieceType_t GetType() const
     {
         return m_type;
     }
 
-    /// returns the amount of squares the piece is made of
+    /// @return the amount of squares the piece is made of
     inline uint8_t GetNSquares() const
     {
     	return m_nSquares;
     }
 
-    /// returns the half of the size of the side of the square where the piece fits
+    /// @return the half of the size of the side of the square where the piece fits
     /// the real size of the square is: ( (squareSideSize * 2) + 1)
     /// For example the fullSquare will be 1, and the baby piece should be 0
     inline uint8_t GetSquareSideHalfSize() const
@@ -159,7 +157,13 @@ public:
         return m_squareSideHalfSize;
     }
 
-    /// returns the list of bitwise representations of the piece
+    /// @return the list of precalculated configurations of the piece
+    inline const std::list< CoordinateArray<PIECE_MAX_SQUARES> >& GetPrecalculatedConfs() const
+    {
+        return m_precalculatedConfsList;
+    }
+
+    /// @return the list of bitwise representations of the piece
     /// have a look at the documentation for BuildUpBitwiseRepresentation to learn
     /// more about this way of representing pieces
     inline const std::list<uint64_t>& GetBitwiseList() const
@@ -167,23 +171,49 @@ public:
         return m_bitwiseRepresentationList;
     }
 
+    /// set current coords of the piece to the coordinates specified by a_newCoords
+    inline void SetCurrentCoords(const CoordinateArray<PIECE_MAX_SQUARES> &a_newCoords)
+    {
+        for (int8_t i = 0; i < GetNSquares(); i++)
+        {
+            m_coords[i] = a_newCoords[i];
+        }
+    }
+
+    /// gives access to the current coords of the piece
+    /// @return the coordinate saved in a_squareIndex in the Coordinate Array of the piece
+    inline const Coordinate& GetCoord(uint8_t a_squareIndex) const
+    {
+#ifdef DEBUG
+        assert(a_squareIndex < GetNSquares());
+#endif
+        return m_coords[a_squareIndex];
+    }
+
 private:
-    /// saves the type of piece
+    /// type of piece
     ePieceType_t m_type;
+#ifdef DEBUG
     /// true if the piece has been initialised
     bool m_initialised;
+#endif
     /// number of square the piece is made of
     uint8_t m_nSquares;
+    /// list of coords that describe the current shape of the piece
+    /// Stores one coordinate per square occupied by the piece
+    CoordinateArray<PIECE_MAX_SQUARES> m_coords;
     /// original coords
-    Coordinate m_origCoords[PIECE_MAX_SQUARES];
+    CoordinateArray<PIECE_MAX_SQUARES> m_origCoords;
     /// true if the piece has a different mirror image
     bool m_origMirror;
     /// number of possible different rotations
-    int8_t  m_origRotations;
+    int8_t m_origRotations;
     /// save the number of times the function Mirror has been called
     int8_t m_nMirrors;
     ///  half of the size of the side of the square where the piece fits (see comment for SetPiece)
     uint8_t m_squareSideHalfSize;
+    /// list of precaculated configurations of the piece
+    std::list< CoordinateArray<PIECE_MAX_SQUARES> > m_precalculatedConfsList;
     /// bitwise representation of al the possible configurations of the piece
     /// have a look at BuildUpBitwiseRepresentation to learn more
     std::list<uint64_t> m_bitwiseRepresentationList;
@@ -195,7 +225,7 @@ private:
     /// @param nRotations number of possible rotations (from 1 to 4)
     /// @param squareSideHalfSize is the half of the size of the side of the square where the piece fits
     ///        the real size of the square is: ( (squareSideSize * 2) + 1)
-    ///        For example the fullSquare will be 1, and the baby piece should be 0
+    ///        For example the fullSquare shall be 1, and the baby piece should be 0
     void SetPiece(
             Coordinate a_coords[PIECE_MAX_SQUARES],
             uint8_t a_nSquares,
@@ -226,11 +256,19 @@ private:
     static void LoadPiece_5BoringPiece(Piece &thisPiece);
     static void LoadPiece_5TheUltimate(Piece &thisPiece);
 
-    // mapping the type of pieces to the corresponding Load function
+    /// @brief type of function used to load the values of the function
     typedef void (*LoadPieceFunction_t) (Piece &);
+    /// array to map type of pieces to the corresponding Load function
     static LoadPieceFunction_t m_loadFunctionMap[e_numberOfPieces];
 
-    /// build up the bitwise representation of all the configurations of the piece
+    /// @brief build up precalculated list of configurations of this piece
+    /// Saves into m_precalculatedConfsList a list of Coordinate[PIECE_MAX_SQUARES]
+    /// which represents the piece using an array of coordinates of the squares
+    /// which form the piece
+    ///
+    /// it also build up the bitwise representation of all the configurations of
+    /// the piece
+    ///
     /// this method must be called once the m_origCoords array and the rest of
     /// attributes of the object has been set (have a look at the constructor of
     /// this class)
@@ -262,7 +300,7 @@ private:
     ///
     /// These binary representations are saved into the list m_bitwiseRepresentations, which holds
     /// a maximum of 8 (4 rotations X 2 mirrors) configurations
-    void BuildUpBitwiseRepresentation();
+    void BuildUpPrecalculatedRepresentations();
 };
 
 #endif /* __PIECE_H__ */

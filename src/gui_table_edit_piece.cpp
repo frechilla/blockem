@@ -223,8 +223,8 @@ bool TableEditPiece::EditPieceDrawingArea_ExposeEvent(GdkEventExpose* event)
             for (uint8_t i = 0; i < m_thePiece.GetNSquares(); i++)
             {
                 cr->rectangle(
-                        (xc - littleSquare/2) + (littleSquare * m_thePiece.m_coords[i].m_col) + 1,
-                        (yc - littleSquare/2) + (littleSquare * m_thePiece.m_coords[i].m_row) + 1,
+                        (xc - littleSquare/2) + (littleSquare * m_thePiece.GetCoord(i).m_col) + 1,
+                        (yc - littleSquare/2) + (littleSquare * m_thePiece.GetCoord(i).m_row) + 1,
                         littleSquare - 1,
                         littleSquare - 1);
 

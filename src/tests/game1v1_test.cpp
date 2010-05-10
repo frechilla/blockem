@@ -106,42 +106,38 @@ void Game1v1Test::TestBoardAndPiecesBitwise(int32_t a_nUsedPieces, ePieceType_t 
         const std::list<uint64_t> &pieceConfigurations = m_player1.m_pieces[i].GetBitwiseList();
         std::list<uint64_t>::const_iterator it = pieceConfigurations.begin();
 
-        do
+        // retrieve legacy precalculated coords
+        const std::list< CoordinateArray<PIECE_MAX_SQUARES> > &coordConfList =
+            m_player1.m_pieces[i].GetPrecalculatedConfs();
+        std::list< CoordinateArray<PIECE_MAX_SQUARES> >::const_iterator pieceCoordIt;
+
+        for (pieceCoordIt = coordConfList.begin();
+             pieceCoordIt != coordConfList.end();
+             pieceCoordIt++)
         {
-            int8_t nRotations = 0;
-            while(nRotations < m_player1.m_pieces[i].GetNRotations())
+            // update piece with current precalculated configuration
+            m_player1.m_pieces[i].SetCurrentCoords(*pieceCoordIt);
+
+            // current coordinate being studied
+            Coordinate thisCoord(0, 0);
+
+            // bitwise representation of the board. Coord is empty or not
+            uint64_t bitwiseBoard;
+            // bitwise representation of the board. Coord is occuppied by player1
+            uint64_t bitwiseBoardPlayer1;
+            bitwise::BoardCalculate(m_board, thisCoord, m_player1, bitwiseBoard, bitwiseBoardPlayer1);
+            // bitwise representation of current piece
+            uint64_t bPiece = (*it);
+
+            // the following loop goes trough the board doing a S-like movement.
+            // it goes from left to right, then down, then right to left, then down,
+            // then left to right...
+            while (true)
             {
-                // current coordinate being studied
-                Coordinate thisCoord(0, 0);
-
-                // bitwise representation of the board. Coord is empty or not
-                uint64_t bitwiseBoard;
-                // bitwise representation of the board. Coord is occuppied by player1
-                uint64_t bitwiseBoardPlayer1;
-                bitwise::BoardCalculate(m_board, thisCoord, m_player1, bitwiseBoard, bitwiseBoardPlayer1);
-                // bitwise representation of current piece
-                uint64_t bPiece = (*it);
-
-                // the following loop goes trough the board doing a S-like movement.
-                // it goes from left to right, then down, then right to left, then down,
-                // then left to right...
-                while (true)
+                for (thisCoord.m_col = 0;
+                     thisCoord.m_col < (m_board.GetNColumns() - 1);
+                     thisCoord.m_col += 1)
                 {
-                    for (thisCoord.m_col = 0;
-                         thisCoord.m_col < (m_board.GetNColumns() - 1);
-                         thisCoord.m_col += 1)
-                    {
-                        // check
-                        TestBitwiseCheckConfiguration(
-                            thisCoord,
-                            m_player1.m_pieces[i],
-                            bPiece,
-                            bitwiseBoard,
-                            bitwiseBoardPlayer1);
-
-                        bitwise::BoardMoveRight(m_board, thisCoord, m_player1, bitwiseBoard, bitwiseBoardPlayer1);
-                    }
-                    // latest configuration wasn't checked
                     // check
                     TestBitwiseCheckConfiguration(
                         thisCoord,
@@ -150,32 +146,32 @@ void Game1v1Test::TestBoardAndPiecesBitwise(int32_t a_nUsedPieces, ePieceType_t 
                         bitwiseBoard,
                         bitwiseBoardPlayer1);
 
-                    if ((thisCoord.m_row + 1) >= m_board.GetNRows())
-                    {
-                        break; // got to the latest row of the board
-                    }
+                    bitwise::BoardMoveRight(m_board, thisCoord, m_player1, bitwiseBoard, bitwiseBoardPlayer1);
+                }
+                // latest configuration wasn't checked
+                // check
+                TestBitwiseCheckConfiguration(
+                    thisCoord,
+                    m_player1.m_pieces[i],
+                    bPiece,
+                    bitwiseBoard,
+                    bitwiseBoardPlayer1);
 
-                    // next row
-                    bitwise::BoardMoveDown(m_board, thisCoord, m_player1, bitwiseBoard, bitwiseBoardPlayer1);
-                    thisCoord.m_row++;
+                if ((thisCoord.m_row + 1) >= m_board.GetNRows())
+                {
+                    break; // got to the latest row of the board
+                }
 
-                    // check moving to the left
-                    for (thisCoord.m_col = (m_board.GetNColumns() - 1);
-                         thisCoord.m_col > 0;
-                         thisCoord.m_col -= 1)
-                    {
-                        // check
-                        TestBitwiseCheckConfiguration(
-                            thisCoord,
-                            m_player1.m_pieces[i],
-                            bPiece,
-                            bitwiseBoard,
-                            bitwiseBoardPlayer1);
+                // next row
+                bitwise::BoardMoveDown(m_board, thisCoord, m_player1, bitwiseBoard, bitwiseBoardPlayer1);
+                thisCoord.m_row++;
 
-                        bitwise::BoardMoveLeft(m_board, thisCoord, m_player1, bitwiseBoard, bitwiseBoardPlayer1);
-                    }
-                    // latest configuration wasn't checked
-                    //check
+                // check moving to the left
+                for (thisCoord.m_col = (m_board.GetNColumns() - 1);
+                     thisCoord.m_col > 0;
+                     thisCoord.m_col -= 1)
+                {
+                    // check
                     TestBitwiseCheckConfiguration(
                         thisCoord,
                         m_player1.m_pieces[i],
@@ -183,41 +179,33 @@ void Game1v1Test::TestBoardAndPiecesBitwise(int32_t a_nUsedPieces, ePieceType_t 
                         bitwiseBoard,
                         bitwiseBoardPlayer1);
 
-                    if ((thisCoord.m_row + 1) >= m_board.GetNRows())
-                    {
-                        break; // got to the latest row of the board
-                    }
+                    bitwise::BoardMoveLeft(m_board, thisCoord, m_player1, bitwiseBoard, bitwiseBoardPlayer1);
+                }
+                // latest configuration wasn't checked
+                //check
+                TestBitwiseCheckConfiguration(
+                    thisCoord,
+                    m_player1.m_pieces[i],
+                    bPiece,
+                    bitwiseBoard,
+                    bitwiseBoardPlayer1);
 
-                    // next row
-                    bitwise::BoardMoveDown(m_board, thisCoord, m_player1, bitwiseBoard, bitwiseBoardPlayer1);
-                    thisCoord.m_row++;
+                if ((thisCoord.m_row + 1) >= m_board.GetNRows())
+                {
+                    break; // got to the latest row of the board
                 }
 
-                // next bitwise representation (rotate right)
-                // if it is the latest rotation and the piece can be mirrored
-                // it'll represent the piece mirrored
-                it++;
-                // rotate right the old way representation
-                nRotations++;
-                m_player1.m_pieces[i].RotateRight();
+                // next row
+                bitwise::BoardMoveDown(m_board, thisCoord, m_player1, bitwiseBoard, bitwiseBoardPlayer1);
+                thisCoord.m_row++;
+            } // while (true)
 
-            } // while (nOrigRotations > a_playerMe.m_pieces[i].GetNRotationsRight())
+            // next bitwise representation (rotate right)
+            // if it is the latest rotation and the piece can be mirrored
+            // it'll represent the piece mirrored
+            it++;
 
-            if ( (m_player1.m_pieces[i].GetType() == e_4Piece_LittleS) &&
-                 (m_player1.m_pieces[i].IsMirrored() == false) )
-            {
-                // For this piece the maximum number or rotations is 2
-                // and the piece is not symmetric, the configuration after
-                // the 3rd rotation is the same shape as the original, but
-                // the coords moved. Reset the piece before mirroring to
-                // avoid unexpected results
-                //
-                // it also happens with 2piece and 4longPiece, but those pieces
-                // don't have mirror, so there's no need for this extra check
-                m_player1.m_pieces[i].Reset();
-            }
-
-        } while (m_player1.m_pieces[i].MirrorYAxis());
+        } // for (pieceCoordIt = coordConfList.begin()
 
         // asserting we checked all possible configurations
         assert(it == pieceConfigurations.end());
@@ -397,6 +385,26 @@ void Game1v1Test::TestPieces()
         } while (m_player1.m_pieces[i].MirrorYAxis());
 
         m_player1.m_pieces[i].Reset();
+    }
+
+    // this is a magic number, but you've got to trust me it is right
+    assert(possibleConfigurations == 91);
+
+    // check again with precalculated coords
+    possibleConfigurations = 0;
+    for (int32_t i = e_minimumPieceIndex; i < e_numberOfPieces ; i++)
+    {
+        // retrieve legacy precalculated coords
+        const std::list< CoordinateArray<PIECE_MAX_SQUARES> > &coordConfList =
+            m_player1.m_pieces[i].GetPrecalculatedConfs();
+        std::list< CoordinateArray<PIECE_MAX_SQUARES> >::const_iterator pieceCoordIt;
+
+        for (pieceCoordIt = coordConfList.begin();
+             pieceCoordIt != coordConfList.end();
+             pieceCoordIt++)
+        {
+            possibleConfigurations++;
+        }
     }
 
     // this is a magic number, but you've got to trust me it is right

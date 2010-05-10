@@ -83,13 +83,13 @@ private:
 
     /// once there is at least one piece put down in the board this function
     /// will try to put down all the pieces in the existing nk points in the board
-    /// @param an array with pointers to the latest pieces set in previous
+    /// @param an array with piece types of the latest pieces set in previous
     ///        iterations of the game
     /// @param an array with pointers to sets with the nucleation points of the previous
     ///        itearations of the game
     /// @return true if it succeeded. False otherwise
     bool AllocateAllPieces(
-            Piece*              a_lastPieces[e_numberOfPieces],
+            ePieceType_t        a_lastPieces[e_numberOfPieces],
             STLCoordinateSet_t* a_oldNkPoints[e_numberOfPieces]);
 
     // prevent this class to be instantiated without the proper arguments

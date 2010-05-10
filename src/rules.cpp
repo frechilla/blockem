@@ -92,8 +92,8 @@ bool Rules::IsPieceDeployable(
     for (uint8_t i = 0 ; i < a_piece.GetNSquares() ; i++)
     {
         Coordinate currentCoord(
-                a_coord.m_row + a_piece.m_coords[i].m_row,
-                a_coord.m_col + a_piece.m_coords[i].m_col);
+                a_coord.m_row + a_piece.GetCoord(i).m_row,
+                a_coord.m_col + a_piece.GetCoord(i).m_col);
 
         if ( (currentCoord.m_row < 0) || (currentCoord.m_row >= a_board.GetNRows())    ||
              (currentCoord.m_col < 0) || (currentCoord.m_col >= a_board.GetNColumns()) ||
@@ -138,8 +138,8 @@ bool Rules::IsPieceDeployableInNKPoint(
     for (uint8_t i = 0 ; i < a_piece.GetNSquares() ; i++)
     {
         Coordinate currentCoord(
-                a_coord.m_row + a_piece.m_coords[i].m_row,
-                a_coord.m_col + a_piece.m_coords[i].m_col);
+                a_coord.m_row + a_piece.GetCoord(i).m_row,
+                a_coord.m_col + a_piece.GetCoord(i).m_col);
 
         if ( (currentCoord.m_row < 0) || (currentCoord.m_row >= a_board.GetNRows())    ||
              (currentCoord.m_col < 0) || (currentCoord.m_col >= a_board.GetNColumns()) ||
@@ -174,8 +174,8 @@ bool Rules::IsPieceDeployableInStartingPoint(
 
     for (uint8_t i = 0 ; i < a_piece.GetNSquares() ; i++)
     {
-        int32_t row    = a_coord.m_row + a_piece.m_coords[i].m_row;
-        int32_t column = a_coord.m_col + a_piece.m_coords[i].m_col;
+        int32_t row    = a_coord.m_row + a_piece.GetCoord(i).m_row;
+        int32_t column = a_coord.m_col + a_piece.GetCoord(i).m_col;
 
         if ( (row    < 0) || (row    >= a_board.GetNRows())    ||
              (column < 0) || (column >= a_board.GetNColumns()) ||
@@ -405,8 +405,8 @@ int32_t Rules::CalculateValidCoordsInStartingPoint(
 				for (uint8_t k = 0 ; k < a_piece.GetNSquares() ; k++)
 				{
 					Coordinate thisCoord(
-							a_startingPointCoord.m_row + i + a_piece.m_coords[k].m_row,
-							a_startingPointCoord.m_col + j + a_piece.m_coords[k].m_col);
+							a_startingPointCoord.m_row + i + a_piece.GetCoord(k).m_row,
+							a_startingPointCoord.m_col + j + a_piece.GetCoord(k).m_col);
 
 					if ( (thisCoord.m_row < 0) || (thisCoord.m_row >= a_board.GetNRows())    ||
 						 (thisCoord.m_col < 0) || (thisCoord.m_col >= a_board.GetNColumns()) ||
@@ -529,65 +529,6 @@ bool Rules::CanPlayerGo(const Board &a_board, const Player &a_player)
         return false;
     }
 
-    // check starting point first
-    if (a_player.NumberOfPiecesAvailable() == e_numberOfPieces)
-    {
-        for (int8_t i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
-        {
-            if (a_player.IsPieceAvailable(static_cast<ePieceType_t>(i)) == false)
-            {
-                continue;
-            }
-
-            // copy the piece so the original is not modified
-            Piece thisPiece(a_player.m_pieces[i].GetType());
-
-            do
-            {
-                int8_t nRotations = 0;
-                while(nRotations < thisPiece.GetNRotations())
-                {
-
-                    int32_t nValidCoords = CalculateValidCoordsInStartingPoint(
-                                            a_board,
-                                            thisPiece,
-                                            a_player.GetStartingCoordinate(),
-                                            a_player,
-                                            validCoords,
-                                            VALID_COORDS_SIZE);
-
-                    if (nValidCoords)
-                    {
-                        return true;
-                    }
-
-                    nRotations++;
-                    thisPiece.RotateRight();
-                }
-
-                // reset the amount of rotations done before mirroring
-                nRotations = 0;
-
-                if ( (thisPiece.GetType() == e_4Piece_LittleS) &&
-                     (thisPiece.IsMirrored() == false) )
-                {
-                    // For this piece the maximum number or rotations is 2
-                    // and the piece is not symmetric, the configuration after
-                    // the 3rd rotation is the shame shape as the original, but
-                    // the coords moved. Reset the piece before mirroring to
-                    // avoid unexpected results
-                    //
-                    // it also happens with 2piece and 4longPiece, but those pieces
-                    // don't have mirror, so there's no need for this extra check
-                    thisPiece.Reset();
-                }
-
-            } while (thisPiece.MirrorYAxis());
-
-        } // for (int i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
-    }
-
-    // check nk points
     for (int8_t i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
     {
         if (a_player.IsPieceAvailable(static_cast<ePieceType_t>(i)) == false)
@@ -598,59 +539,58 @@ bool Rules::CanPlayerGo(const Board &a_board, const Player &a_player)
         // copy the piece so the original is not modified
         Piece thisPiece(a_player.m_pieces[i].GetType());
 
-        do
+        const std::list< CoordinateArray<PIECE_MAX_SQUARES> > &coordConfList =
+            thisPiece.GetPrecalculatedConfs();
+        std::list< CoordinateArray<PIECE_MAX_SQUARES> >::const_iterator pieceCoordIt;
+
+        for (pieceCoordIt = coordConfList.begin();
+             pieceCoordIt != coordConfList.end();
+             pieceCoordIt++)
         {
-            int8_t nRotations = 0;
-            while(nRotations < thisPiece.GetNRotations())
-            {
-                bool nkExists;
-                Coordinate thisNkPoint;
-                Player::SpiralIterator nkIterator;
+            // update piece with current precalculated configuration
+            thisPiece.SetCurrentCoords(*pieceCoordIt);
 
-                nkExists = a_player.GetFirstNucleationPointSpiral(nkIterator, thisNkPoint);
-                while(nkExists)
+            if (a_player.NumberOfPiecesAvailable() == e_numberOfPieces)
+            {
+                int32_t nValidCoords = CalculateValidCoordsInStartingPoint(
+                                        a_board,
+                                        thisPiece,
+                                        a_player.GetStartingCoordinate(),
+                                        a_player,
+                                        validCoords,
+                                        VALID_COORDS_SIZE);
+
+                if (nValidCoords)
                 {
-                    // retrieve the valid coords of this piece in the current nk point
-                    int32_t nValidCoords = Rules::CalculateValidCoordsInNucleationPoint(
-                                                a_board,
-                                                thisPiece,
-                                                thisNkPoint,
-                                                a_player,
-                                                validCoords,
-                                                VALID_COORDS_SIZE);
+                    return true;
+                }
+            } // if (a_player.NumberOfPiecesAvailable() == e_numberOfPieces)
 
-                    if (nValidCoords > 0)
-                    {
-                        return true;
-                    }
+            bool nkExists;
+            Coordinate thisNkPoint;
+            Player::SpiralIterator nkIterator;
 
-                    nkExists = a_player.GetNextNucleationPointSpiral(nkIterator, thisNkPoint);
-
-                } // while(nkExists)
-
-                nRotations++;
-                thisPiece.RotateRight();
-            }
-
-            // reset the amount of rotations done before mirroring
-            nRotations = 0;
-
-            if ( (thisPiece.GetType() == e_4Piece_LittleS) &&
-                 (thisPiece.IsMirrored() == false) )
+            nkExists = a_player.GetFirstNucleationPointSpiral(nkIterator, thisNkPoint);
+            while(nkExists)
             {
-                // For this piece the maximum number or rotations is 2
-                // and the piece is not symmetric, the configuration after
-                // the 3rd rotation is the shame shape as the original, but
-                // the coords moved. Reset the piece before mirroring to
-                // avoid unexpected results
-                //
-                // it also happens with 2piece and 4longPiece, but those pieces
-                // don't have mirror, so there's no need for this extra check
-                thisPiece.Reset();
-            }
+                // retrieve the valid coords of this piece in the current nk point
+                int32_t nValidCoords = Rules::CalculateValidCoordsInNucleationPoint(
+                                            a_board,
+                                            thisPiece,
+                                            thisNkPoint,
+                                            a_player,
+                                            validCoords,
+                                            VALID_COORDS_SIZE);
 
-        } while (thisPiece.MirrorYAxis());
+                if (nValidCoords > 0)
+                {
+                    return true;
+                }
 
+                nkExists = a_player.GetNextNucleationPointSpiral(nkIterator, thisNkPoint);
+
+            } // while(nkExists)
+        } // for (pieceCoordIt = coordConfList.begin()
     } // for (int i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
 
     return false;
@@ -668,8 +608,8 @@ void Rules::GetNKCorrespondingToPiece(
 {
 	for (uint8_t i = 0 ; i < a_piece->GetNSquares() ; i++)
 	{
-		int8_t pieceX = a_coordX + a_piece->m_coords[i][0];
-		int8_t pieceY = a_coordY + a_piece->m_coords[i][1];
+		int8_t pieceX = a_coordX + a_piece->GetCoord(i)[0];
+		int8_t pieceY = a_coordY + a_piece->GetCoord(i)[1];
 
 		if ( (pieceX > 0) && (pieceY > 0) )
 		{
