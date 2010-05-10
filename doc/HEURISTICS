@@ -1,6 +1,6 @@
 CUSTOMISE BLOCKEM ARTIFICIAL INTELLIGENCE
 
-To understand the Artifical intelligence (AI) used in Blockem, a few terms must
+  To understand the Artifical intelligence (AI) used in Blockem, a few terms must
 be understood first:
 * Game tree (from wikipedia) is a directed graph whose nodes are positions in a 
   game and whose edges are moves. The complete game tree for a game is the game 
@@ -13,7 +13,7 @@ be understood first:
   Go, etc.). It seeks to reduce the number of nodes that are evaluated in the 
   search tree by the minimax algorithm
 
-As you could have guessed, Blockem AI is based on the MiniMAx algorithm with 
+  As you could have guessed, Blockem AI is based on the MiniMAx algorithm with 
 alpha-beta prunning, to reduce the number of nodes in the search tree ensuring 
 the same result as it would be got with Minimax.
 The big deal about the Minimax-alphabeta algorithm is the evaluation function, 
@@ -26,8 +26,9 @@ int32_t EvalFunction(
              const Player &a_playerMe,
              const Player &a_playerOpponent);
 
-Inside a class called Heuristic (in heuristic.h) there's a typedef which 
+  Inside a class called Heuristic (in heuristic.h) there's a typedef which 
 defines exactly this interface:
+
 class Heuristic
 {
     /* ... */
@@ -35,11 +36,14 @@ class Heuristic
     /* ... */
 }
 
-So modyfing the way blockem calculates the next computer move is pretty easy:
+  You can easily write a new heuristic and make it available in the blockem GUI. 
+The following explanation applies to blockem version 0.2.0 or higher, where
+the process of adding new heuristics has been improved and simplified.
+
 
  1) Implement a function that suits the 'EvalFunction' Interface. A very 
     obvious one (though too simple) might be based on the number of squares
-    each player managed to   allocate on the board:
+    each player managed to allocate on the board.
  
     int32_t SimpleEvalFunction(
             const Board  &a_board,
@@ -67,112 +71,225 @@ So modyfing the way blockem calculates the next computer move is pretty easy:
             }
         }
    
+        rv += squaresMe;
+        rv -= squaresOpponent;
+   
+        return rv;
+    }
+    
+    If we take the former heuristic as the base one, we can slightly improve 
+    its performance taking into account also the nucleation points. The 
+    following code is the heuristic called "Simple" in the configuration
+    dialog. It assigns twice as much of importance to create a new nucleation
+    point than removing one from the opponent. You could easily adapt this
+    heuristic to something that is only focused on stopping the opponent, 
+    or vice-versa
+
+    int32_t SimpleEvalFunction(
+            const Board  &a_board,
+            const Player &a_playerMe,
+            const Player &a_playerOpponent)
+    {
+        int32_t squaresMe = 0;
+        int32_t squaresOpponent = 0;
+        int32_t rv = 0;
+   
+        for (uint8_t rowCount = 0; rowCount < a_board.GetNRows() ; rowCount++)
+        {
+            for (uint8_t columnCount = 0; 
+                 columnCount <  a_board.GetNColumns(); 
+                 columnCount++)
+            {
+                if (a_board.IsPlayerInCoord(rowCount, columnCount, a_playerMe))
+                {
+                    squaresMe++;
+                }
+                else if (a_board.IsPlayerInCoord(rowCount, columnCount, a_playerOpponent))
+                {
+                    squaresOpponent++;
+                }
+            }
+        }
+   
         rv += squaresMe*4;
+        rv += a_playerMe.NumberOfNucleationPoints()*2;
         rv -= squaresOpponent*4;
+        rv -= a_playerOpponent.NumberOfNucleationPoints();
    
         return rv;
     }
 
-    There are a few functions defined in rules.h that might help you out to 
-    write a powerful evaluation function (things like IsThisANucleationPoint, 
-    and so on...)
+    Have a look at heuristic.cpp and heuristic.h to see more examples of 
+    already implemented heuristics. There are a few functions defined in 
+    rules.h that might help you out to write a powerful evaluation function 
+    (things like IsThisANucleationPoint, and so on...)
  
- 2) Create a function pointer, and assign it to your brand new evaluation 
-    function:
+ 2) All the available heuristics are added to an array defined in the Heuristic
+    class called m_heuristicData. This array is defined in heuristic.h as:
+    
+    54     /// types of heuristic
+    56     typedef enum
+    57     {
+    58         e_heuristicStartCount = 0, // this element must be always 0 and must be at the start
+    59 
+    60         e_heuristicNKWeighted = e_heuristicStartCount,
+    61         e_heuristicSimple,
+    62         e_heuristicRandom,
+    63 
+    64         e_heuristicCount, // stores the amount of heuristics. Must be always at the end
+    65     } eHeuristicType_t;
+    66 
+    67     /// heuristic data to be used in the heuristics config array
+    68     typedef struct
+    69     {
+    70         eHeuristicType_t m_type;
+    71         EvalFunction_t m_evalFunction;
+    72         std::string m_name;
+    73         std::string m_description;
+    74     } sHeuristicData_t;
+    75 
+    76     static const sHeuristicData_t m_heuristicData[e_heuristicCount];
 
-    #include "heuristic.h"
-    /* ... */
-    Heuristic::EvalFunction_t pEvalFunction = NULL;
-    pEvalFunction = SimpleEvalFunction;
-   
- 3) Now you can test your new heuristic and try to beat yourself playing blokus
-    graphically:
-    Use that function pointer in the call to Game1v1::MinMax which Blockem uses
-    to calculate the next move. The Game1v1 Minmax framework will call your 
-    customised function to evaluate each tested configuration. To do so, open 
-    up the file gui_main_window_worker_thread.cpp and scroll down to the 
-    function MainWindowWorkerThread::ThreadRoutine
-   
-    /* ... */
-    int32_t depth = 3;
-    Heuristic::EvalFunction_t heuristicMethod = Heuristic::CalculateNKWeighted;
-    if ( (thisThread->m_localGame.GetPlayerMe().NumberOfPiecesAvailable() < 14)
-         &&
-         (thisThread->m_localGame.CanPlayerOpponentGo()) )
+    At the top of heuristic.cpp the list of available heuristic is instantiated:
+    
+    38 // instantiate the const heuristic data array. Heuristics must be defined here
+    39 // in the same order they are described in Heuristic::eHeuristicType_t in heuristic.h
+    40 const Heuristic::sHeuristicData_t Heuristic::m_heuristicData[e_heuristicCount] =
+    41 {
+    42     {e_heuristicNKWeighted,
+    43      Heuristic::CalculateNKWeighted,
+    44      std::string("NK weighted"),
+    45      std::string("Nucleation points are weighted. The more in the middle in the board a NK point is, the more important it is")
+    46     },
+    47     {e_heuristicSimple,
+    48      Heuristic::CalculateSimple,
+    49      std::string("Simple"),
+    50      std::string("Takes into account only the amount of squares of the deployed pieces")
+    51     },
+    52     {e_heuristicRandom,
+    53      Heuristic::CalculateRandom,
+    54      std::string("Random"),
+    55      std::string("Random heuristic. Evaluation function returns a random value so any heuristic can be checked against it")
+    56     }
+    57 };
+    
+    To add a brand new Heuristic in a function called, for example, 
+    "MyCustomisedHeuristic", first of all you must add an entry in the 
+    eHeuristicType_t enum in heuristic.h
+
+    /// types of heuristic
+    typedef enum
     {
-        depth = 5;
-        // heuristicMethod = Heuristic::CalculatePiecesPerNKPoint;
-    }
-    /* ... */
+        e_heuristicStartCount = 0, // this element must be always 0 and must be at the start
+
+        e_heuristicNKWeighted = e_heuristicStartCount,
+        e_heuristicSimple,
+        e_heuristicRandom,
+        e_heuristicMyCustomisedHeuristic, // <-- Your brand new heuristic
+
+        e_heuristicCount, // stores the amount of heuristics. Must be always at the end
+    } eHeuristicType_t;
+
+    And then add it to the m_heuristicData array in heuristic.cpp:
+    
+    // instantiate the const heuristic data array. Heuristics must be defined here
+    // in the same order they are described in Heuristic::eHeuristicType_t in heuristic.h
+    const Heuristic::sHeuristicData_t Heuristic::m_heuristicData[e_heuristicCount] =
+    {
+        {e_heuristicNKWeighted,
+         Heuristic::CalculateNKWeighted,
+         std::string("NK weighted"),
+         std::string("Nucleation points are weighted. The more in the middle in the board a NK point is, the more important it is")
+        },
+        {e_heuristicSimple,
+         Heuristic::CalculateSimple,
+         std::string("Simple"),
+         std::string("Takes into account only the amount of squares of the deployed pieces")
+        },
+        {e_heuristicRandom,
+         Heuristic::CalculateRandom,
+         std::string("Random"),
+         std::string("Random heuristic. Evaluation function returns a random value so any heuristic can be checked against it")
+        },
+        {e_heuristicMyCustomisedHeuristic,      // as defined in eHeuristicType_t in heuristic.h
+         MyCustomisedHeuristic,                 // pointer to the heuristic function you wrote
+         std::string("MyCustomised"),           // Name of the heuristic. It'll be used in the GUI
+         std::string("This is my brand new...") // Description of your heuristic. It'll also be used in the GUI
+        }
+    };
+    
+ 3) Save all the changes, recompile blockem and your heuristic will be 
+    magically available to be selected in the "new Game" and the "configuration"
+    menu. You will be able to test your new heuristic against the "random" one,
+    or try to beat it playing blockem in a 1vs1 game
 
 
 UNDERSTANDING DEPTH OF THE SEARCH TREE
 
-The depth of the search tree is set by default to 3, unless the player has less
-than 14 pieces left. The depth of the search tree defines how many pieces are 
-"virtually" put down by the minmax algorithm to test how good a specific move. 
-Depth 3 means minmax will put down a piece of the player whose move is being 
-calculated, then it will put down a piece of the opponent (normally the human
-user) and finally another piece of the player whole move is being calculated. 
-Once this is done the evaluation function is calculated and the value returned 
-is used to "tag" this particular move. That set of 3 moves which maximises the 
-minmax algorithm at the end of the whole process is picked as winner, and the 
-move returned by the MinMax algorithm will be the corresponding first move of 
-the set.
+  The depth of the search tree defines how many pieces are "virtually" put down 
+by the minmax algorithm to test how good a specific move is. Depth 3 means 
+minimax will put down a piece of the player whose move is being calculated, 
+then it will put down a piece of the opponent (normally the human user) and 
+finally another piece of the player whose move is being calculated. Once this 
+is done the evaluation function is applied to that specific configuration of
+the board and the value returned is used to "tag" it. The set of 3 moves which
+maximises the minimax algorithm at the end of the whole process is picked as 
+winner, and the move returned by the MinMax algorithm will be the corresponding
+first move of the "winner" set.
 
-Minimum depth possible is 1, where no futurising is done. Evaluation function 
-is calculated after puting down a piece by the user whose move is being 
-calculated. On the contrary, depth 5 means 3 pieces of the "computer" player 
-and 2 of the "human" one will be place on the board before the evaluation 
-method is run.
+  Minimum depth possible is 1, where no futurising is done. Evaluation function 
+is calculated after the user whose move is being calculated "virtually" puts 
+down each available piece in every possible place. An example for a bigger
+depth, for example 5, means 3 pieces of the "computer" player and 2 of the 
+"human" one will be place on the board before the evaluation method is run.
    
-Depth can also be set to an even number, though it is discouraged because 
+  Depth can also be set to an even number, though it is discouraged because 
 better results have been observed using an odd number. This is due to the fact 
-that an odd number maximises the current user, instead of trying to minimise 
-the opponent.
+that an odd number maximises the current user while an even number tries to 
+minimise the opponent.
    
-Obviously, the deeper you calculate the search tree, the better. But if the
+  Obviously, the deeper you calculate the search tree, the better. But if the
 search tree is too big, for instance because there are too many pieces left,
 computing a new depth for the search tree is very expensive in time, which can 
 be bad for the user experience.
 
-Let's use an example to explain it: At the beginning of the game each player 
+  Let's use an example to explain it: At the beginning of the game each player 
 has 21 pieces left. Since placing this 1st piece on the board has different 
 rules than the rest of the pieces, let's assume both players put down the 
 simplest of the pieces, the baby piece (1 square). It has 4 nucleation 
 points (corners).
    
-If we set MinMax to calculate with depth = 1 it will call the evaluation 
+  If we set MinMax to calculate with depth = 1 it will call the evaluation 
 function once per allowed movement in each nucleation point, that might be, 
 roughly, 90 different configurations (20 pieces + rotated pieces + mirror 
 pieces + rotated and mirrored pieces...) multiplied by 4 nucleation points 
-equals 360 times. In reality it's even worse, because some pieces can be put 
-down more than once with the same configuration in the same nucleation point 
-(for instance, think of how many different ways you can place a the cross piece
-next to a baby piece)
+equals 360 times. In reality this number is even bigger, because some pieces 
+can be put down more than once with the same configuration in the same 
+nucleation point (for instance, think of how many different ways you can place
+a the cross piece, which can't be rotated or mirrored, next to a baby piece)
    
-Let's assume there will be always around 360 different possibilities (as I said
+  Let's assume there will be always around 360 different possibilities (as I said
 it is even worse, there are several ways to deploy a piece in a nucleation 
 point, and normally there are more than only 4 corners). Anyway, assuming this
 beautiful world of "only 360", the next depth in the search tree will be 
 360 * 360 = 129,600 (360 new configuration per each old possibility), and the 
 following one (depth 3), will be 360*360*360 = 46,656,000!!!
 
-The reality is that things are not that bad really, because the alpha beta 
-prunning takes care of lots of different useless branches of the search tree 
-before they are calculated, but this example shows why you must use the depth 
-parameter with a lot of care.
+  Luckily enough things are not that bad. The alpha beta prunning takes care of 
+lots of different useless branches of the search tree before they are 
+calculated, but this example shows why you must use the depth parameter with 
+a lot of care.
    
    
 STEPS DONE (AND SOME YET TO BE DONE) TO IMPROVE THE HEURISTICS
    
-As it is described in the wikipedia about the alpha-beta prunning, "Further 
+  As it is described in the wikipedia about the alpha-beta prunning, "Further 
 improvement can be achieved without sacrificing accuracy, by using ordering 
 heuristics to search parts of the tree that are likely to force alpha-beta 
 cutoffs early, For example, in chess, moves that take pieces may be examined 
 before moves that do not".
    
-To improve speed in the Blockem implementation of the alpha-beta prunning, 
+  To improve speed in the Blockem implementation of the alpha-beta prunning, 
 bigger pieces are always checked before smaller ones (they are more likely to 
 be better as an important part of the evaluation function must be the amount 
 of squaresd eployed on the board). They are checked in inverse order as they 
@@ -196,11 +313,11 @@ from worse to better (from less likely to do a good move to more likely):
     } ePieceType_t;
 
    
-Another design step was made to trim out possibly useless branches of the 
+  Another design step was made to trim out possibly useless branches of the 
 search tree. It sacrifices a bit of accuracy assuming no 4,3,2 or 1 square 
-pieces are put down before the 6th move. Obviously Assume makes an ass out of 
-u and me, but sometimes assumptions must be made. A constant has been defined 
-in game1v1.cpp (MIN_5SQUARE_PIECES_AT_START) which describes how many 5-square 
+pieces are put down before the 6th move. Assume makes an ass out of u and me, 
+but sometimes assumptions must be made. A constant has been defined in 
+game1v1.cpp (MIN_5SQUARE_PIECES_AT_START) which describes how many 5-square 
 pieces will be put in-a-row before even considering to put a 4,3,2 or 1 square 
 piece on the board.
 

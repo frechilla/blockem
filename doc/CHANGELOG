@@ -1,21 +1,21 @@
 : Version 0.2.0
-    - An option has been added to show the nucleation points on the board.
-      Shared nucleation points are drawn in black colour
-    - Current player's forbidden places on the board can also be shown
-      selectingthe "show forbidden area" option in the menu
+    - Nucleation points are drawn on the board if user selects the suitable
+      option in the menu. They are drawn using player's colour. Shared 
+      nucleation points are drawn in black colour
+    - Current player's forbidden places can also be shown selecting the 
+      "show forbidden area" option in the menu
     - App can be set up to play human vs human, human vs computer and 
       computer vs computer games
     - Computer and human players can be selected to play as player1 or
       player2 in any kind of game
     - Settings of a game can be edited at all times through the preferences
-      menu (in the settings menu) except for starting coordinates, which
-      can only be selected when a new game is started
+      menu (in settings) except for starting coordinates, which can be edited
+      either when a new game is launched or if no pieces have been put down on 
+      the board
     - Type of heuristic (evaluation function) for computer players can 
       be edited through both the preferences dialog and when a new game is
       launched. 3 types of heuristic have been included in this release: 
       "NK weighted", "simple" and "random"
-    - Starting coordinate can be edited when a new game is launched. They can
-      also be edited if no pieces have been put down on the board
     - Piece edition improved for those pieces with only one possible
       configuration
     - Application is able to cancel a computing operation for a new game
