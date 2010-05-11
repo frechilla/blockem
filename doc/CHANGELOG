@@ -1,8 +1,8 @@
-: Version 0.2.0
-    - Nucleation points are drawn on the board if user selects the suitable
-      option in the menu. They are drawn using player's colour. Shared 
-      nucleation points are drawn in black colour
-    - Current player's forbidden places can also be shown selecting the 
+12/05/2010: Version 0.2.0
+    - Nucleation points are drawn on the board (if user selects the suitable
+      option in the menu) using player's colour. Shared nucleation points 
+      are black.
+    - Current player's forbidden areas can also be shown selecting the 
       "show forbidden area" option in the menu
     - App can be set up to play human vs human, human vs computer and 
       computer vs computer games
