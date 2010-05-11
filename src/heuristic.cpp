@@ -54,6 +54,11 @@ const Heuristic::sHeuristicData_t Heuristic::m_heuristicData[e_heuristicCount] =
      std::string("Random"),
      std::string("Random heuristic. Evaluation function returns a random value so any heuristic can be checked against it")
     }
+//    ,{e_heuristicAmountOfPieces,
+//     Heuristic::CalculateNPieces,
+//     std::string("Amount of pieces"),
+//     std::string("The more pieces can be put down, the better")
+//    }
 };
 
 Heuristic::Heuristic()
@@ -127,26 +132,27 @@ int32_t Heuristic::CalculateNKWeighted(
     int32_t squaresOpponent = 0;
 
 
-    for (uint8_t rowCount = 0; rowCount < a_board.GetNRows() ; rowCount++)
+    Coordinate thisCoord;
+    for (thisCoord.m_row = 0; thisCoord.m_row < a_board.GetNRows() ; thisCoord.m_row++)
     {
-        for (uint8_t columnCount = 0; columnCount < a_board.GetNColumns() ; columnCount++)
+        for (thisCoord.m_col = 0; thisCoord.m_col < a_board.GetNColumns() ; thisCoord.m_col++)
         {
-            if (a_board.IsCoordEmpty(rowCount, columnCount))
+            if (a_board.IsCoordEmpty(thisCoord.m_row, thisCoord.m_col))
             {
                 bool opponentNKPoint = false;
                 int32_t weightedValue = 0;
 
-                if (a_playerOpponent.IsNucleationPoint(rowCount, columnCount))
+                if (a_playerOpponent.IsNucleationPoint(thisCoord.m_row, thisCoord.m_col))
                 {
-              		weightedValue = std::max(1, CalculateCircularWeight(a_board, rowCount, columnCount)/2);
+              		weightedValue = std::max(1, CalculateCircularWeight(a_board, thisCoord)/2);
                     opponentNKPoint = true;
 
                     valueNkOpponent += weightedValue;
                     /*
-                    if (Rules::IsPieceDeployableInNKPoint(a_board, m_FullSquare, rowCount, columnCount, a_playerOpponent) ||
-                        Rules::IsPieceDeployableInNKPoint(a_board, m_FullSquare, rowCount - 1, columnCount, a_playerOpponent) ||
-                        Rules::IsPieceDeployableInNKPoint(a_board, m_FullSquare, rowCount, columnCount - 1, a_playerOpponent) ||
-                        Rules::IsPieceDeployableInNKPoint(a_board, m_FullSquare, rowCount - 1, columnCount - 1, a_playerOpponent) )
+                    if (Rules::IsPieceDeployableInNKPoint(a_board, m_FullSquare, thisCoord.m_row, thisCoord.m_col, a_playerOpponent) ||
+                        Rules::IsPieceDeployableInNKPoint(a_board, m_FullSquare, thisCoord.m_row - 1, thisCoord.m_col, a_playerOpponent) ||
+                        Rules::IsPieceDeployableInNKPoint(a_board, m_FullSquare, thisCoord.m_row, thisCoord.m_col - 1, a_playerOpponent) ||
+                        Rules::IsPieceDeployableInNKPoint(a_board, m_FullSquare, thisCoord.m_row - 1, thisCoord.m_col - 1, a_playerOpponent) )
                     {
                         valueNkOpponent += weightedValue * 2;
                     }
@@ -155,14 +161,14 @@ int32_t Heuristic::CalculateNKWeighted(
                         valueNkOpponent += weightedValue;
                     }
                     */
-                } // if (a_playerOpponent->IsNucleationPoint(rowCount, columnCount))
+                } // if (a_playerOpponent->IsNucleationPoint(thisCoord.m_row, thisCoord.m_col))
 
-                if (a_playerMe.IsNucleationPoint(rowCount, columnCount))
+                if (a_playerMe.IsNucleationPoint(thisCoord.m_row, thisCoord.m_col))
                 {
                     if (!opponentNKPoint)
                     {
-                        weightedValue = std::max(1, CalculateCircularWeight(a_board, rowCount, columnCount)/2);
-                    	if (IsPointTouchingPlayer(a_board, rowCount, columnCount, a_playerOpponent))
+                        weightedValue = std::max(1, CalculateCircularWeight(a_board, thisCoord)/2);
+                    	if (Rules::IsCoordTouchingPlayer(a_board, thisCoord, a_playerOpponent))
                     	{
                     	    // an nk point that is touching the other player is unblockable by the opponent
                     	    // (it might get bloked, but not directly)
@@ -180,10 +186,10 @@ int32_t Heuristic::CalculateNKWeighted(
                     valueNkMe += weightedValue;
 
                     /*
-                    if (Rules::IsPieceDeployableInNKPoint(a_board, m_FullSquare, rowCount, columnCount, a_playerMe) ||
-                        Rules::IsPieceDeployableInNKPoint(a_board, m_FullSquare, rowCount - 1, columnCount, a_playerMe) ||
-                        Rules::IsPieceDeployableInNKPoint(a_board, m_FullSquare, rowCount, columnCount - 1, a_playerMe) ||
-                        Rules::IsPieceDeployableInNKPoint(a_board, m_FullSquare, rowCount - 1, columnCount - 1, a_playerMe) )
+                    if (Rules::IsPieceDeployableInNKPoint(a_board, m_FullSquare, thisCoord.m_row, thisCoord.m_col, a_playerMe) ||
+                        Rules::IsPieceDeployableInNKPoint(a_board, m_FullSquare, thisCoord.m_row - 1, thisCoord.m_col, a_playerMe) ||
+                        Rules::IsPieceDeployableInNKPoint(a_board, m_FullSquare, thisCoord.m_row, thisCoord.m_col - 1, a_playerMe) ||
+                        Rules::IsPieceDeployableInNKPoint(a_board, m_FullSquare, thisCoord.m_row - 1, thisCoord.m_col - 1, a_playerMe) )
                     {
                         valueNkMe += weightedValue * 2 ;
                     }
@@ -192,13 +198,13 @@ int32_t Heuristic::CalculateNKWeighted(
                         valueNkMe += weightedValue;
                     }
                     */
-                } // if (a_playerMe->IsNucleationPoint(rowCount, columnCount))
+                } // if (a_playerMe->IsNucleationPoint(thisCoord.m_row, thisCoord.m_col))
             }
-            else if (a_board.IsPlayerInCoord(rowCount, columnCount, a_playerMe))
+            else if (a_board.IsPlayerInCoord(thisCoord.m_row, thisCoord.m_col, a_playerMe))
             {
                 squaresMe++;
             }
-            else // if (a_board.IsPlayerInCoord(rowCount, columnCount, a_playeOpponent)
+            else // if (a_board.IsPlayerInCoord(thisCoord.m_row, thisCoord.m_col, a_playeOpponent)
             {
                 squaresOpponent++;
             }
@@ -213,7 +219,7 @@ int32_t Heuristic::CalculateNKWeighted(
     return rv;
 }
 
-int32_t Heuristic::CalculatePiecesPerNKPoint(
+int32_t Heuristic::CalculateNPieces(
         const Board  &a_board,
         const Player &a_playerMe,
         const Player &a_playerOpponent)
@@ -221,7 +227,7 @@ int32_t Heuristic::CalculatePiecesPerNKPoint(
     int32_t rv = 0;
 
     int32_t nSquaresCanDeployMe = 0;
-    int32_t nSquaresCanDeployOpponent = 0;
+    //int32_t nSquaresCanDeployOpponent = 0;
     int32_t squaresMe = 0;
     int32_t squaresOpponent = 0;
 
@@ -256,14 +262,14 @@ int32_t Heuristic::CalculatePiecesPerNKPoint(
                                     bitwiseBoard,
                                     bitwiseBoardMe);
 
-        thisCoord.m_row++;
-        if (thisCoord.m_row >= a_board.GetNRows())
+        if ((thisCoord.m_row + 1) >= a_board.GetNRows())
         {
             break; // got to the latest row of the board
         }
 
         // next row
         bitwise::BoardMoveDown(a_board, thisCoord, a_playerMe, bitwiseBoard, bitwiseBoardMe);
+        thisCoord.m_row++;
 
         // check moving to the left
         for (thisCoord.m_col = (a_board.GetNColumns() - 1);
@@ -285,14 +291,14 @@ int32_t Heuristic::CalculatePiecesPerNKPoint(
                                     bitwiseBoard,
                                     bitwiseBoardMe);
 
-        thisCoord.m_row++;
-        if (thisCoord.m_row >= a_board.GetNRows())
+        if ((thisCoord.m_row + 1) >= a_board.GetNRows())
         {
             break; // got to the latest row of the board
         }
 
         // next row
         bitwise::BoardMoveDown(a_board, thisCoord, a_playerMe, bitwiseBoard, bitwiseBoardMe);
+        thisCoord.m_row++;
     }
 
     for (int8_t i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
@@ -307,16 +313,16 @@ int32_t Heuristic::CalculatePiecesPerNKPoint(
         }
     }
 
-    rv += (squaresMe * 4);
+    rv += (squaresMe * 10);
     rv += (nSquaresCanDeployMe);
-    rv -= (squaresOpponent);
-    rv -= (nSquaresCanDeployOpponent * 4);
+    //rv -= (squaresOpponent);
+    //rv -= (nSquaresCanDeployOpponent * 4);
 
     return rv;
 }
 
 int32_t Heuristic::CalculateCircularWeight(
-		const Board &a_board, int32_t a_row, int32_t a_column)
+		const Board &a_board, const Coordinate &a_coord)
 {
 #if 0
 //#ifdef DEBUG
@@ -347,49 +353,17 @@ int32_t Heuristic::CalculateCircularWeight(
         { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }
     };
 
-    return static_cast<int32_t>(s_circularWeightValues[a_row][a_column]);
+    return static_cast<int32_t>(s_circularWeightValues[a_coord.m_row][a_coord.m_col]);
 #endif
 
     int32_t tmpValue =
         std::max(
-                abs(a_row + 1    - (a_board.GetNRows() / 2)),
-                abs(a_column + 1 - (a_board.GetNColumns() / 2)) );
+                abs(a_coord.m_row + 1 - (a_board.GetNRows() / 2)),
+                abs(a_coord.m_col + 1 - (a_board.GetNColumns() / 2)) );
 
     int32_t weightedValue = ( ( (a_board.GetNRows() / 2) - tmpValue ) / 2) + 1;
 
     return weightedValue;
-}
-
-bool Heuristic::IsPointTouchingPlayer(
-            const Board &a_board,
-            int32_t a_row,
-            int32_t a_col,
-            const Player &a_player)
-{
-    if ( (a_col > 0) &&
-         (a_board.IsPlayerInCoord(a_row, a_col-1, a_player)))
-    {
-        return true;
-    }
-    if ( (a_col < a_board.GetNColumns() - 1) &&
-         (a_board.IsPlayerInCoord(a_row, a_col+1, a_player)))
-    {
-        return true;
-    }
-
-    if ( (a_row > 0) &&
-         (a_board.IsPlayerInCoord(a_row-1, a_col, a_player)) )
-    {
-        return true;
-    }
-
-    if ( (a_row < a_board.GetNRows() - 1) &&
-         (a_board.IsPlayerInCoord(a_row+1, a_col, a_player)) )
-    {
-        return true;
-    }
-
-    return false;
 }
 
 int32_t Heuristic::CountSquaresCanBeDeployedBitwise(
@@ -412,29 +386,13 @@ int32_t Heuristic::CountSquaresCanBeDeployedBitwise(
         while (it != pieceConfigurations.end())
         {
             uint64_t bPiece = (*it);
-            // does the piece fit in the board?
-            if ( (bPiece ^ (bPiece & a_bitwiseBoard)) == bPiece )
-            {
-                // there's space for this piece in the board. Check if this
-                // place is valid
 
-                // does the piece touch the side of another a_player's piece?
-                if ( (((bPiece << 7) ^ ((bPiece << 7) & a_bitwisePlayerBoard)) == (bPiece << 7)) && // move down
-                     (((bPiece >> 7) ^ ((bPiece >> 7) & a_bitwisePlayerBoard)) == (bPiece >> 7)) && // move up
-                     (((bPiece << 1) ^ ((bPiece << 1) & a_bitwisePlayerBoard)) == (bPiece << 1)) && // move right
-                     (((bPiece >> 1) ^ ((bPiece >> 1) & a_bitwisePlayerBoard)) == (bPiece >> 1)) )  // move left
-                {
-                    // does it touch a corner (aka nk point)?
-                    if ( (((bPiece << 8) ^ ((bPiece << 8) & a_bitwisePlayerBoard)) == (bPiece << 8)) || // down-right corner
-                         (((bPiece << 6) ^ ((bPiece << 6) & a_bitwisePlayerBoard)) == (bPiece << 6)) || // down-left corner
-                         (((bPiece >> 8) ^ ((bPiece >> 8) & a_bitwisePlayerBoard)) == (bPiece >> 8)) || // up-right corner
-                         (((bPiece >> 6) ^ ((bPiece >> 6) & a_bitwisePlayerBoard)) == (bPiece >> 6)) )  // up-left corner
-                    {
-                        rValue += a_player.m_pieces[i].GetNSquares();
-                        break; // exit the ineer most while. This piece can be put down here
-                    }
-                }
+            if (bitwise::IsPieceDeployable(bPiece, a_bitwiseBoard, a_bitwisePlayerBoard))
+            {
+                rValue += a_player.m_pieces[i].GetNSquares();
+                break;
             }
+
             it++;
         }
     }

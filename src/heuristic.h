@@ -61,6 +61,8 @@ public:
         e_heuristicSimple,
         e_heuristicRandom,
 
+//        e_heuristicAmountOfPieces,
+
         e_heuristicCount, // stores the amount of heuristics. Must be always at the end
     } eHeuristicType_t;
 
@@ -97,10 +99,10 @@ public:
             const Player &a_playerMe,
             const Player &a_playerOpponent);
 
-    /// Calculate the heurisitc value based on the amount of pieces that cna be put down
-    /// per nk point. It uses bitwise representation of pieces and board to improve
+    /// Calculate the heurisitc value based on the amount of pieces that can be put down
+    /// on the board. It uses bitwise representation of pieces and board to improve
     /// calculation times
-    static int32_t CalculatePiecesPerNKPoint(
+    static int32_t CalculateNPieces(
             const Board  &a_board,
             const Player &a_playerMe,
             const Player &a_playerOpponent);
@@ -124,15 +126,7 @@ protected:
     ///    1 1 1 1 1 1 1 1 1 1 1 1 1 1
     ///    1 1 1 1 1 1 1 1 1 1 1 1 1 1
     static int32_t CalculateCircularWeight(
-            const Board &a_board, int32_t a_row, int32_t a_column);
-
-    /// @returns true if the point (x, y) in the board is touching any player piece
-    ///          note that touching a corner is not 'touching' for this function
-    static bool IsPointTouchingPlayer(
-            const Board &a_board,
-            int32_t a_row,
-            int32_t a_column,
-            const Player &a_player);
+            const Board &a_board, const Coordinate &a_coord);
 
     /// @returns the amount of squares (the ones that make up the pieces) that can be deployed
     ///          in a specific nk point

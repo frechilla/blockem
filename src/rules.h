@@ -47,7 +47,8 @@ public:
 
     /// return true if 'a_coord' is touching one of a_player's pieces as
     /// that coord would be an illegal place to put one of a_player's pieces
-    /// as it is touching one of its pieces (not corners)
+    /// as it is touching one of its pieces.
+    /// note that touching a corner is not 'touching' for this function
     /// @param the blokus board
     /// @param coord (x, y) of the piece
     /// @param the player that owns the pieces
