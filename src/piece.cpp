@@ -29,7 +29,6 @@
 
 #include "piece.h"
 #include "stdio.h"
-#include <iostream>
 
 // a piece has to fit in a square (2*2) + 1
 static const uint8_t PIECE_MAX_SQUARESIDEHALFSIZE = 2;
