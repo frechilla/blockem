@@ -195,7 +195,7 @@ int main(int argc, char **argv)
             theGame.MinMax(
                     heuristic,
                     s_depth,
-                    Game1v1::e_Game1v1Player2,
+                    Game1v1::e_Game1v1Player1,
                     resultPiece,
                     resultCoord,
                     dummyAtomic);

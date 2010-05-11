@@ -513,10 +513,18 @@ void MainWindow::MenuItemSettingsPreferences_Activate()
             // and request the processing thread to compute next player1 move
             m_configDialog->SaveCurrentConfigIntoGlobalSettings();
 
+            // next move was being calculated by a human being, but now it has
+            // been swapped to a computer player. Humans are not allowed to edit
+            // pieces while computer is thinking
+            m_editPieceTable->set_sensitive(false);
+
+            // requesting the thread!!
             RequestThreadToComputeNextMove(m_currentMovingPlayer, true);
         }
         else
         {
+            // an info message might be needed to inform the user changes will be
+            // applied later
             bool showInfoMessage = false;
             if ( ( (m_currentMovingPlayer == Game1v1::e_Game1v1Player1)     &&
                    (Game1v1Config::Instance().IsPlayer1Computer() == true) )
@@ -525,11 +533,14 @@ void MainWindow::MenuItemSettingsPreferences_Activate()
                  (Game1v1Config::Instance().IsPlayer2Computer() == true) )
                )
             {
+                // current moving player is the computer. Changes will be applied
+                // once current move is calculated
                 showInfoMessage = true;
             }
 
             // save configuration shown by the dialog into global config singleton
-            // new configuratio will be applied once current mvoe is calculated
+            // new configuratio will be applied once current move is calculated
+            // no changes need to be applied to the editPieceTable
             m_configDialog->SaveCurrentConfigIntoGlobalSettings();
 
             // show the info message after global settings have been applied
@@ -600,17 +611,11 @@ void MainWindow::LaunchNewGame()
         static_cast<float>(red)   / 255,
         static_cast<float>(green) / 255,
         static_cast<float>(blue)  / 255);
-    // reset and force redraw editPieceTable
-    m_editPieceTable->SetPiece(e_noPiece);
 
     UpdateScoreStatus();
 
     // reset the cursor (even if it's been already done)
-    Glib::RefPtr<Gdk::Window> window = m_boardDrawingArea.get_window();
-    if (window)
-    {
-        window->set_cursor();
-    }
+    ResetCursor();
 
     // stopwatches must be restarted.
     m_stopWatchLabelPlayer1.Reset();
@@ -622,6 +627,10 @@ void MainWindow::LaunchNewGame()
     // Start player1's timer
     m_stopWatchLabelPlayer1.Continue();
 
+    // reset and force redraw editPieceTable. It'l be set to sensitive
+    // or unsensitive depending on the type of player1
+    m_editPieceTable->SetPiece(e_noPiece);
+
     // new game just started. It can't be finished!
     m_currentGameFinished = false;
     // player1 is the one who's got to put a piece next
@@ -629,14 +638,17 @@ void MainWindow::LaunchNewGame()
 
     if (Game1v1Config::Instance().IsPlayer1Computer())
     {
-        // next player is the computer. Disallow editing the board while
-        // computer is processing next move
-        m_boardDrawingArea.UnsetCurrentPlayer();
+        // next player is the computer. Disallow editing the edit piece
+        // area while computer is processing next move
+        m_editPieceTable->set_sensitive(false);
 
         RequestThreadToComputeNextMove(Game1v1::e_Game1v1Player1, false);
     }
     else
     {
+        // a human b eing is allowed to edit next piece
+        m_editPieceTable->set_sensitive(true);
+
         // player1 is a human and he/she will put down the next piece (player1 goes always first)
         m_boardDrawingArea.SetCurrentPlayer(m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1));
     }
@@ -650,11 +662,7 @@ void MainWindow::RequestThreadToComputeNextMove(
 {
     // set the cursor to busy in the board drawing area, so the user
     // won't get (very) nervous while the computer is processing the next move
-    Glib::RefPtr<Gdk::Window> window = m_boardDrawingArea.get_window();
-    if (window)
-    {
-        window->set_cursor(Gdk::Cursor(Gdk::WATCH));
-    }
+    SetWaitCursor();
 
     // retrieve eval function pointer and depth from global configuration
     Heuristic::eHeuristicType_t heuristicType = Heuristic::e_heuristicStartCount;
@@ -889,7 +897,7 @@ void MainWindow::NotifyMoveComputed()
     const Player &latestPlayer   = m_the1v1Game.GetPlayer(latestPlayerToMove);
     const Player &latestOpponent = m_the1v1Game.GetOpponent(latestPlayerToMove);
 
-    Game1v1::eGame1v1Player_t playerWhoDidntMove; // player who didn't put a piece o the board this time
+    Game1v1::eGame1v1Player_t followingPlayer; // player who didn't put a piece o the board this time
     StopWatchLabel* stopWatchPlayer;   // pointer to the stopwatch of the latest player to move
     StopWatchLabel* stopWatchOpponent; // pointer to the stopwatch of the opponent of latest player to move
     switch (latestPlayerToMove)
@@ -898,14 +906,14 @@ void MainWindow::NotifyMoveComputed()
     {
         stopWatchPlayer   = &m_stopWatchLabelPlayer1;
         stopWatchOpponent = &m_stopWatchLabelPlayer2;
-        playerWhoDidntMove= Game1v1::e_Game1v1Player2;
+        followingPlayer   = Game1v1::e_Game1v1Player2;
         break;
     }
     case Game1v1::e_Game1v1Player2:
     {
         stopWatchPlayer   = &m_stopWatchLabelPlayer2;
         stopWatchOpponent = &m_stopWatchLabelPlayer1;
-        playerWhoDidntMove= Game1v1::e_Game1v1Player1;
+        followingPlayer   = Game1v1::e_Game1v1Player1;
         break;
     }
 #ifdef DEBUG
@@ -929,6 +937,9 @@ void MainWindow::NotifyMoveComputed()
     // player to put down a piece can move
     if ( Rules::CanPlayerGo(m_the1v1Game.GetBoard(), latestOpponent) )
     {
+        // next player to move is the opponent
+        m_boardDrawingArea.SetCurrentPlayer(latestOpponent);
+
         // stop current player's stopwatch
         stopWatchPlayer->Stop();
         // resume the opponent's stopwatch
@@ -956,17 +967,17 @@ void MainWindow::NotifyMoveComputed()
         m_showOpponentPiecesDrawingArea.Invalidate(latestPlayer);
 
         // current player to move will have to be updated
-        m_currentMovingPlayer = playerWhoDidntMove;
+        m_currentMovingPlayer = followingPlayer;
 
         // --it checks if the next player to put down a piece is a computer--
-        if ( ( (latestPlayerToMove == Game1v1::e_Game1v1Player2) &&
+        if ( ( (m_currentMovingPlayer == Game1v1::e_Game1v1Player1) &&
                     Game1v1Config::Instance().IsPlayer1Computer() ) ||
-             ( (latestPlayerToMove == Game1v1::e_Game1v1Player1) &&
+             ( (m_currentMovingPlayer == Game1v1::e_Game1v1Player2) &&
                     Game1v1Config::Instance().IsPlayer2Computer() ) )
         {
-            // next player is the computer. Disallow editing the board while
-            // computer is processing next move
-            m_boardDrawingArea.UnsetCurrentPlayer();
+            // next player is the computer. Disallow editing the edit piece
+            // area while computer is processing next move
+            m_editPieceTable->set_sensitive(false);
 
             // tell the worker thread to compute next move
             if (latestPlayerToMove == Game1v1::e_Game1v1Player1)
@@ -982,16 +993,13 @@ void MainWindow::NotifyMoveComputed()
         }
         else
         {
-            // allow next player to edit the board 'cos it's a human being
-            m_boardDrawingArea.SetCurrentPlayer(latestOpponent);
+            // allow next player to edit the piece to put down on the board
+            // 'cos it's a human being
+            m_editPieceTable->set_sensitive(true);
 
             // restore the mouse cursor so the human being who has to put down next piece
             // can do it
-            Glib::RefPtr<Gdk::Window> window = m_boardDrawingArea.get_window();
-            if (window)
-            {
-                window->set_cursor();
-            }
+            ResetCursor();
         }
     }
     else
@@ -1026,11 +1034,7 @@ void MainWindow::GameFinished()
     m_currentGameFinished = true;
 
     // reset the cursor (even if it's been already done)
-    Glib::RefPtr<Gdk::Window> window = m_boardDrawingArea.get_window();
-    if (window)
-    {
-        window->set_cursor();
-    }
+    ResetCursor();
 
     // stop stopwatches (even if it was already done)
     m_stopWatchLabelPlayer1.Stop();
@@ -1038,6 +1042,9 @@ void MainWindow::GameFinished()
 
     // no player is expected to put down any piece on the board now
     m_boardDrawingArea.UnsetCurrentPlayer();
+
+    // allow a possible human user to play with the edit pieces area
+    m_editPieceTable->set_sensitive(true);
 
     // restart the progress bar
     m_progressBar.set_fraction(0.0);
@@ -1165,4 +1172,23 @@ void MainWindow::UpdateScoreStatus()
                << " left";
 
     m_player1ScoreLabel.set_text(theMessage.str().c_str());
+}
+
+void MainWindow::SetWaitCursor()
+{
+    Glib::RefPtr<Gdk::Window> window;
+    window = m_editPieceTable->get_window();
+    if (window)
+    {
+        get_window()->set_cursor(Gdk::Cursor(Gdk::WATCH));
+    }
+}
+void MainWindow::ResetCursor()
+{
+    Glib::RefPtr<Gdk::Window> window;
+    window= m_editPieceTable->get_window();
+    if (window)
+    {
+        window->set_cursor();
+    }
 }

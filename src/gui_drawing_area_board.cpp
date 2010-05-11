@@ -246,19 +246,30 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
 
                         cr->fill();
                     }
+                } // for (int32_t columnCount
+            } // for (int32_t rowCount
 
-                    if ((m_currentPlayer == thisPlayer) && m_showForbiddenArea)
+            // show forbidden area if we are supposed to do so
+            if ((m_currentPlayer == thisPlayer) && m_showForbiddenArea)
+            {
+                cr->set_source_rgba(
+                        static_cast<float>(red)  / 255,
+                        static_cast<float>(green)/ 255,
+                        static_cast<float>(blue) / 255,
+                        FORBIDDEN_AREA_ALPHA);
+
+                for (int32_t rowCount = 0;
+                             rowCount < m_theBoard.GetNRows() ;
+                             rowCount++)
+                {
+                    for (int32_t columnCount = 0;
+                                 columnCount <  m_theBoard.GetNColumns() ;
+                                 columnCount++)
                     {
                         // mark the coords in the board where the current player can't go
                         if ( m_theBoard.IsCoordEmpty(rowCount, columnCount) &&
                              Rules::IsCoordTouchingPlayer(m_theBoard, Coordinate(rowCount, columnCount), *thisPlayer) )
                         {
-                            cr->set_source_rgba(
-                                    static_cast<float>(red)  / 255,
-                                    static_cast<float>(green)/ 255,
-                                    static_cast<float>(blue) / 255,
-                                    FORBIDDEN_AREA_ALPHA);
-
                             cr->rectangle(
                                     (xc - squareWidth/2) +  (littleSquare * columnCount) + 1,
                                     (yc - squareHeight/2) + (littleSquare * rowCount) + 1,
@@ -266,15 +277,10 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
                                     littleSquare - 1);
 
                             cr->fill();
-
-                            cr->set_source_rgb(
-                                    static_cast<float>(red)  / 255,
-                                    static_cast<float>(green)/ 255,
-                                    static_cast<float>(blue) / 255);
                         }
-                    } // if ((m_currentPlayer == thisPlayer) && m_showForbiddenArea)
-                } // for (int32_t columnCount
-            } // for (int32_t rowCount
+                    } // for (int32_t columnCount
+                } // for (int32_t rowCount
+            } // if((m_currentPlayer == thisPlayer) && m_showForbiddenArea)
 
             // draw a small little circle where nk points are (with a bit of transparency)
             if (m_showNKPoints)

@@ -45,6 +45,10 @@ public:
 	TableEditPiece(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder) throw (GUIException);
 	~TableEditPiece();
 
+    /// @brief gray out the whole table and children widgets
+    /// It resets the current piece so there won't be any piece shown
+    void set_sensitive(gboolean a_sensitive);
+    
     /// @brief callback to be called when the edit piece drawing area is redraw on screen
     bool EditPieceDrawingArea_ExposeEvent(GdkEventExpose* event);
 

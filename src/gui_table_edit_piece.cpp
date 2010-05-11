@@ -122,6 +122,17 @@ TableEditPiece::~TableEditPiece()
 {
 }
 
+void TableEditPiece::set_sensitive(gboolean a_sensitive)
+{
+    if ( a_sensitive && (GetPiece().GetType() != e_noPiece) )
+    {
+        SetPiece(e_noPiece);
+    }
+
+    // call the parent's method to apply visual changes
+    Gtk::Table::set_sensitive(a_sensitive);
+}
+
 void TableEditPiece::SetPieceRGB(float a_red, float a_green, float a_blue)
 {
 	m_red   = a_red;
@@ -134,8 +145,10 @@ void TableEditPiece::SetPieceRGB(float a_red, float a_green, float a_blue)
 
 void TableEditPiece::SetPiece(ePieceType_t a_newPiece)
 {
-    // only update the piece ONLY if it changes
-    if (a_newPiece == m_thePiece.GetType())
+    // only update the piece ONLY if it changes and
+    // widget is set to sensitive
+    if ( (a_newPiece == m_thePiece.GetType()) ||
+         (Gtk::Table::get_sensitive() == false) )
     {
         return;
     }

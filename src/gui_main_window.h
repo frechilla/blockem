@@ -228,6 +228,14 @@ private:
     /// variables accordingly
     void UpdateScoreStatus();
 
+    /// sets mouse cursor to a watch in certain areas of the window
+    /// to indicate computer is "thinking"
+    void SetWaitCursor();
+
+    /// sets mouse cursor to the default pointer in the areas where
+    /// SetWaitCursor might have set it to a watch
+    void ResetCursor();
+
     // prevent the default constructors to be used
     MainWindow();
     MainWindow(const MainWindow &a_src);
