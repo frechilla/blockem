@@ -42,7 +42,7 @@ const Heuristic::sHeuristicData_t Heuristic::m_heuristicData[e_heuristicCount] =
     {e_heuristicNKWeighted,
      Heuristic::CalculateNKWeighted,
      std::string("NK weighted"),
-     std::string("Nucleation points are weighted. The more in the middle in the board a NK point is, the more important it is")
+     std::string("Nucleation points are weighted. The more in the middle of the board a nucleation point is, the better")
     },
     {e_heuristicSimple,
      Heuristic::CalculateSimple,

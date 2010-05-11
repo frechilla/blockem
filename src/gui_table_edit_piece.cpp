@@ -148,7 +148,7 @@ void TableEditPiece::SetPiece(ePieceType_t a_newPiece)
     // only update the piece ONLY if it changes and
     // widget is set to sensitive
     if ( (a_newPiece == m_thePiece.GetType()) ||
-         (Gtk::Table::get_sensitive() == false) )
+         (Gtk::Table::is_sensitive() == false) )
     {
         return;
     }
