@@ -31,6 +31,7 @@
 #include "gui_game1v1_config.h"
 #include "game1v1.h" // BOARD_1VS1_ROWS and DEFAULT_STARTING_COORD_PLAYER[1-2]
 #include "piece.h"   // e_numberOfPieces
+#include <iostream>
 
 // strings for the user to choose the type of player
 static const char COMBO_PLAYER_TYPE_HUMAN[]    = "Human";
@@ -276,10 +277,31 @@ ConfigDialog::ConfigDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Buil
             sigc::mem_fun(*this, &ConfigDialog::ComboHeuristicPlayer1_signalChanged));
     m_comboHeuristicPlayer2.signal_changed().connect(
             sigc::mem_fun(*this, &ConfigDialog::ComboHeuristicPlayer2_signalChanged));
+
+    m_spinbuttonDepthPlayer1->signal_value_changed().connect(
+            sigc::mem_fun(*this, &ConfigDialog::SpinButtonDepthPlayer1_SignalValueChanged));
+    m_spinbuttonDepthPlayer2->signal_value_changed().connect(
+            sigc::mem_fun(*this, &ConfigDialog::SpinButtonDepthPlayer2_SignalValueChanged));
 }
 
 ConfigDialog::~ConfigDialog()
 {
+}
+
+bool ConfigDialog::on_expose_event (GdkEventExpose* event)
+{
+    // workaround to show the "Auto" string in the depth spin buttons
+    // m_spinbuttonDepthPlayer1->set_text("Auto") doesn't work until
+    // the dialog is shown
+    static bool firstTime = false;
+    if (firstTime == false)
+    {
+        firstTime = true;
+        m_spinbuttonDepthPlayer1Adj.value_changed();
+        m_spinbuttonDepthPlayer2Adj.value_changed();
+    }
+
+    return Gtk::Dialog::on_expose_event(event);
 }
 
 void ConfigDialog::SetStartingCoordEditionSensitive(bool action)
@@ -288,6 +310,40 @@ void ConfigDialog::SetStartingCoordEditionSensitive(bool action)
     m_spinbuttonStartingColumnPlayer1->set_sensitive(action);
     m_spinbuttonStartingRowPlayer2->set_sensitive(action);
     m_spinbuttonStartingColumnPlayer2->set_sensitive(action);
+}
+
+void ConfigDialog::SpinButtonDepthPlayer1_SignalValueChanged()
+{
+    if (static_cast<int32_t>(m_spinbuttonDepthPlayer1Adj.get_value()) == 0)
+    {
+        if (m_spinbuttonDepthPlayer1->get_numeric() == true)
+        {
+            m_spinbuttonDepthPlayer1->set_numeric(false);
+        }
+
+        m_spinbuttonDepthPlayer1->set_text("Auto");
+    }
+    else if (m_spinbuttonDepthPlayer1->get_numeric() == false)
+    {
+        m_spinbuttonDepthPlayer1->set_numeric(true);
+    }
+}
+
+void ConfigDialog::SpinButtonDepthPlayer2_SignalValueChanged()
+{
+    if (static_cast<int32_t>(m_spinbuttonDepthPlayer2Adj.get_value()) == 0)
+    {
+        if (m_spinbuttonDepthPlayer2->get_numeric() == true)
+        {
+            m_spinbuttonDepthPlayer2->set_numeric(false);
+        }
+
+        m_spinbuttonDepthPlayer2->set_text("Auto");
+    }
+    else if (m_spinbuttonDepthPlayer2->get_numeric() == false)
+    {
+        m_spinbuttonDepthPlayer2->set_numeric(true);
+    }
 }
 
 void ConfigDialog::ComboPlayer1Type_signalChanged()
@@ -493,7 +549,9 @@ int ConfigDialog::run()
 
     // search tree depth
     m_spinbuttonDepthPlayer1Adj.set_value(Game1v1Config::Instance().GetMinimaxDepthPlayer1());
+    //SpinButtonDepthPlayer1_SignalValueChanged();
     m_spinbuttonDepthPlayer2Adj.set_value(Game1v1Config::Instance().GetMinimaxDepthPlayer2());
+    //SpinButtonDepthPlayer2_SignalValueChanged();
 
     // heuristic type
     const Heuristic::sHeuristicData_t &selectedHeuristicData1 =
