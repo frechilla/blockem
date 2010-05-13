@@ -1,4 +1,4 @@
-12/05/2010: Version 0.2.0
+13/05/2010: Version 0.2.0
     - Nucleation points are drawn on the board (if user selects the suitable
       option in the menu) using player's colour. Shared nucleation points 
       are black.

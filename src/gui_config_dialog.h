@@ -137,10 +137,15 @@ private:
     Glib::RefPtr<Gtk::TextBuffer> m_refHeuristicDescriptionBuffer[Heuristic::e_heuristicCount];
 
 
+    // signals
     void ComboPlayer1Type_signalChanged();
     void ComboPlayer2Type_signalChanged();
     void ComboHeuristicPlayer1_signalChanged();
     void ComboHeuristicPlayer2_signalChanged();
+    void SpinButtonDepthPlayer1_SignalValueChanged();
+    void SpinButtonDepthPlayer2_SignalValueChanged();
+
+    bool on_expose_event (GdkEventExpose* event);
 
     // prevent the default constructors to be used
     ConfigDialog();

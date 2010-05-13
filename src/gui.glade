@@ -599,7 +599,7 @@ r</property>
                                       <object class="GtkSpinButton" id="spinbutton_depth1">
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
-                                        <property name="max_length">2</property>
+                                        <property name="max_length">4</property>
                                         <property name="invisible_char">&#x2022;</property>
                                         <property name="width_chars">2</property>
                                         <property name="snap_to_ticks">True</property>
@@ -829,7 +829,7 @@ r</property>
                                       <object class="GtkSpinButton" id="spinbutton_depth2">
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
-                                        <property name="max_length">2</property>
+                                        <property name="max_length">4</property>
                                         <property name="invisible_char">&#x2022;</property>
                                         <property name="width_chars">2</property>
                                         <property name="snap_to_ticks">True</property>
