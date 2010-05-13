@@ -31,7 +31,7 @@
 #include "gui_game1v1_config.h"
 #include "game1v1.h" // BOARD_1VS1_ROWS and DEFAULT_STARTING_COORD_PLAYER[1-2]
 #include "piece.h"   // e_numberOfPieces
-#include <iostream>
+
 
 // strings for the user to choose the type of player
 static const char COMBO_PLAYER_TYPE_HUMAN[]    = "Human";
@@ -549,9 +549,7 @@ int ConfigDialog::run()
 
     // search tree depth
     m_spinbuttonDepthPlayer1Adj.set_value(Game1v1Config::Instance().GetMinimaxDepthPlayer1());
-    //SpinButtonDepthPlayer1_SignalValueChanged();
     m_spinbuttonDepthPlayer2Adj.set_value(Game1v1Config::Instance().GetMinimaxDepthPlayer2());
-    //SpinButtonDepthPlayer2_SignalValueChanged();
 
     // heuristic type
     const Heuristic::sHeuristicData_t &selectedHeuristicData1 =
