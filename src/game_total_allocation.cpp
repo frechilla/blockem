@@ -62,21 +62,18 @@ void GameTotalAllocation::RemovePiece(
 
     for (uint8_t i = 0 ; i < a_piece.GetNSquares() ; i++)
     {
+        Coordinate thisCoord(a_coord.m_row + a_piece.GetCoord(i).m_row,
+                             a_coord.m_col + a_piece.GetCoord(i).m_col);
 #ifdef DEBUG
         assert( ((a_coord.m_row + a_piece.GetCoord(i).m_row) >= 0) &&
         		((a_coord.m_row + a_piece.GetCoord(i).m_row) < m_board.GetNRows())    );
         assert( ((a_coord.m_col + a_piece.GetCoord(i).m_col) >= 0) &&
         		((a_coord.m_col + a_piece.GetCoord(i).m_col) < m_board.GetNColumns()) );
 
-        assert(m_board.IsPlayerInCoord(
-        		a_coord.m_row + a_piece.GetCoord(i).m_row,
-        		a_coord.m_col + a_piece.GetCoord(i).m_col,
-        		m_player));
+        assert(m_board.IsPlayerInCoord(thisCoord, m_player));
 #endif
 
-        m_board.BlankCoord(
-        		a_coord.m_row + a_piece.GetCoord(i).m_row,
-        		a_coord.m_col + a_piece.GetCoord(i).m_col);
+        m_board.BlankCoord(thisCoord);
     }
 
     // recalculate all the nk points around the piece we just put down
@@ -97,21 +94,18 @@ void GameTotalAllocation::PutDownPiece(
 
     for (int i = 0 ; i < a_piece.GetNSquares() ; i++)
     {
+        Coordinate thisCoord(a_coord.m_row + a_piece.GetCoord(i).m_row,
+                             a_coord.m_col + a_piece.GetCoord(i).m_col);
 #ifdef DEBUG
         assert( ((a_coord.m_row + a_piece.GetCoord(i).m_row) >= 0) &&
         		((a_coord.m_row + a_piece.GetCoord(i).m_row) < m_board.GetNRows())    );
         assert( ((a_coord.m_col + a_piece.GetCoord(i).m_col) >= 0) &&
         		((a_coord.m_col + a_piece.GetCoord(i).m_col) < m_board.GetNColumns()) );
 
-        assert(m_board.IsCoordEmpty(
-        		a_coord.m_row + a_piece.GetCoord(i).m_row,
-        		a_coord.m_col + a_piece.GetCoord(i).m_col));
+        assert(m_board.IsCoordEmpty(thisCoord));
 #endif
 
-        m_board.SetPlayerInCoord(
-        		a_coord.m_row + a_piece.GetCoord(i).m_row,
-        		a_coord.m_col + a_piece.GetCoord(i).m_col,
-        		m_player);
+        m_board.SetPlayerInCoord(thisCoord,	m_player);
     }
 
     // recalculate all the nk points around the piece we just put down

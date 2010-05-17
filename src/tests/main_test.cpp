@@ -62,10 +62,10 @@ int main(int argc, char** argv)
 
     b1.SetSquare('1', 0, 0);
     b3 = b1;
-    assert(b3.IsCoordEmpty(0, 0) == b1.IsCoordEmpty(0, 0));
+    assert(b3.IsCoordEmpty(Coordinate(0, 0)) == b1.IsCoordEmpty(Coordinate(0, 0)));
 
-    b3.BlankCoord(0, 0);
-    assert(b3.IsCoordEmpty(0, 0) != b1.IsCoordEmpty(0, 0));
+    b3.BlankCoord(Coordinate(0, 0));
+    assert(b3.IsCoordEmpty(Coordinate(0, 0)) != b1.IsCoordEmpty(Coordinate(0, 0)));
 
     std::cout << "  [Passed]" << std::endl << std::endl;
 
@@ -75,19 +75,19 @@ int main(int argc, char** argv)
     Player p1(std::string("tester1"), 'T', 5, 5);
     Player p2(p1);
     Player p3(std::string("tester3"), 'T', 6, 6);
-    assert(p2.IsNucleationPoint(0, 0) == p1.IsNucleationPoint(0, 0));
+    assert(p2.IsNucleationPoint(Coordinate(0, 0)) == p1.IsNucleationPoint(Coordinate(0, 0)));
 
-    p2.SetNucleationPoint(0, 0);
-    assert(p2.IsNucleationPoint(0, 0) != p1.IsNucleationPoint(0, 0));
+    p2.SetNucleationPoint(Coordinate(0, 0));
+    assert(p2.IsNucleationPoint(Coordinate(0, 0)) != p1.IsNucleationPoint(Coordinate(0, 0)));
 
     p1 = p2;
-    assert(p2.IsNucleationPoint(0, 0) == p1.IsNucleationPoint(0, 0));
+    assert(p2.IsNucleationPoint(Coordinate(0, 0)) == p1.IsNucleationPoint(Coordinate(0, 0)));
 
     p3 = p1;
-    assert(p3.IsNucleationPoint(0, 0) == p1.IsNucleationPoint(0, 0));
+    assert(p3.IsNucleationPoint(Coordinate(0, 0)) == p1.IsNucleationPoint(Coordinate(0, 0)));
 
-    p3.UnsetNucleationPoint(0, 0);
-    assert(p3.IsNucleationPoint(0, 0) != p1.IsNucleationPoint(0, 0));
+    p3.UnsetNucleationPoint(Coordinate(0, 0));
+    assert(p3.IsNucleationPoint(Coordinate(0, 0)) != p1.IsNucleationPoint(Coordinate(0, 0)));
 
     std::cout << "  [Passed]" << std::endl << std::endl;
 

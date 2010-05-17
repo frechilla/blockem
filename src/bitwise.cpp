@@ -50,9 +50,13 @@ void bitwise::BoardCalculate(
 
     out_bitwiseBoard       = static_cast<uint64_t>(0xffffffffffffffffull);
     out_bitwisePlayerBoard = static_cast<uint64_t>(0x0000000000000000ull);
-    for (int32_t i = (a_coord.m_row - 3); i <= (a_coord.m_row + 3); i++)
+
+    Coordinate thisCoord(0, 0);
+    for (thisCoord.m_row = (a_coord.m_row - 3);
+         thisCoord.m_row <= (a_coord.m_row + 3);
+         thisCoord.m_row++)
     {
-        if ( (i < 0) || (i >= a_board.GetNRows()) )
+        if ( (thisCoord.m_row < 0) || (thisCoord.m_row >= a_board.GetNRows()) )
         {
             // the whole row is out of the board
             out_bitwiseBoard <<= 7;
@@ -65,30 +69,33 @@ void bitwise::BoardCalculate(
         }
         else
         {
-            for (int32_t j = (a_coord.m_col - 3); j <= (a_coord.m_col + 3); j++)
+            for (thisCoord.m_col = (a_coord.m_col - 3);
+                 thisCoord.m_col <= (a_coord.m_col + 3);
+                 thisCoord.m_col++)
             {
                 out_bitwiseBoard       <<= 1;
                 out_bitwisePlayerBoard <<= 1;
-                if ( (j < 0) || (j >= a_board.GetNColumns()))
+                if ( (thisCoord.m_col < 0) || (thisCoord.m_col >= a_board.GetNColumns()))
                 {
                     // out of the board
                     out_bitwiseBoard       |= static_cast<uint64_t>(0x01);
                     //out_bitwisePlayerBoard |= static_cast<uint64_t>(0x01);
                 }
-                else if (a_board.IsPlayerInCoord(i, j, a_player))
+                else if (a_board.IsPlayerInCoord(thisCoord, a_player))
                 {
                     // coord occupied by a_player
                     out_bitwiseBoard       |= static_cast<uint64_t>(0x01);
                     out_bitwisePlayerBoard |= static_cast<uint64_t>(0x01);
                 }
-                else if (a_board.IsCoordEmpty(i, j) == false)
+                else if (a_board.IsCoordEmpty(thisCoord) == false)
                 {
                     // someone else is occupying this coordinate
                     out_bitwiseBoard       |= static_cast<uint64_t>(0x01);
                 }
-            }
-        }
-    }
+            } // for (thisCoord.m_col = (a_coord.m_col - 3);
+        } // else
+    } // for (thisCoord.m_row = (a_coord.m_row - 3);
+
     // no need to use BITWISE_UNUSED_BITS_FLAG for out_bitwiseBoard when the representation
     // of the board is first created. It serves no purpuse and can save a couple of cycles ;)
     out_bitwisePlayerBoard |= BITWISE_UNUSED_BITS_FLAG;
@@ -122,24 +129,31 @@ void bitwise::BoardMoveRight(
     in_out_bitwisePlayerBoard <<= 1;
     in_out_bitwiseBoard       &= BLANK_OUT_MOVE_RIGHT;
     in_out_bitwisePlayerBoard &= BLANK_OUT_MOVE_RIGHT;
-    for (int32_t i = (a_coord.m_row - 3); i <= (a_coord.m_row + 3); i++)
+
+    Coordinate thisCoord(0, a_coord.m_col + 4);
+    for (thisCoord.m_row = (a_coord.m_row - 3); thisCoord.m_row <= (a_coord.m_row + 3); thisCoord.m_row++)
     {
-        if ( (i < 0) || (i >= a_board.GetNRows()) || ((a_coord.m_col + 4) >= a_board.GetNColumns()) )
+        if ( (thisCoord.m_row < 0) ||
+             (thisCoord.m_row >= a_board.GetNRows()) ||
+             (thisCoord.m_col >= a_board.GetNColumns()) )
         {
             // out of the board
-            in_out_bitwiseBoard       |= static_cast<uint64_t>(1) << ( (3 - (i - a_coord.m_row)) * 7);
-            //in_out_bitwisePlayerBoard |= static_cast<uint64_t>(1) << ( (3 - (i - a_coord.m_row)) * 7);
+            in_out_bitwiseBoard |=
+                static_cast<uint64_t>(1) << ( (3 - (thisCoord.m_row - a_coord.m_row)) * 7);
         }
-        else if (a_board.IsPlayerInCoord(i, a_coord.m_col + 4, a_player))
+        else if (a_board.IsPlayerInCoord(thisCoord, a_player))
         {
             // 'a_player' is occupying this coord
-            in_out_bitwiseBoard       |= static_cast<uint64_t>(1) << ( (3 - (i - a_coord.m_row)) * 7);
-            in_out_bitwisePlayerBoard |= static_cast<uint64_t>(1) << ( (3 - (i - a_coord.m_row)) * 7);
+            in_out_bitwiseBoard |=
+                static_cast<uint64_t>(1) << ( (3 - (thisCoord.m_row - a_coord.m_row)) * 7);
+            in_out_bitwisePlayerBoard |=
+                static_cast<uint64_t>(1) << ( (3 - (thisCoord.m_row - a_coord.m_row)) * 7);
         }
-        else if (a_board.IsCoordEmpty(i, a_coord.m_col + 4) == false)
+        else if (a_board.IsCoordEmpty(thisCoord) == false)
         {
             // someone else is occupying this coord
-            in_out_bitwiseBoard       |= static_cast<uint64_t>(1) << ( (3 - (i - a_coord.m_row)) * 7);
+            in_out_bitwiseBoard |=
+                static_cast<uint64_t>(1) << ( (3 - (thisCoord.m_row - a_coord.m_row)) * 7);
         }
     }
 
@@ -176,24 +190,30 @@ void bitwise::BoardMoveLeft(
     in_out_bitwisePlayerBoard >>= 1;
     in_out_bitwiseBoard       &= BLANK_OUT_MOVE_LEFT;
     in_out_bitwisePlayerBoard &= BLANK_OUT_MOVE_LEFT;
-    for (int32_t i = (a_coord.m_row - 3); i <= (a_coord.m_row + 3); i++)
+
+    Coordinate thisCoord(0, a_coord.m_col - 4);
+    for (thisCoord.m_row = (a_coord.m_row - 3); thisCoord.m_row <= (a_coord.m_row + 3); thisCoord.m_row++)
     {
-        if ( (i < 0) || (i >= a_board.GetNRows()) || ((a_coord.m_col - 4) < 0) )
+        if ( (thisCoord.m_row < 0) ||
+             (thisCoord.m_row >= a_board.GetNRows()) ||
+             (thisCoord.m_col < 0) )
         {
             // out of the board
-            in_out_bitwiseBoard       |= static_cast<uint64_t>(1) << (((3 - (i - a_coord.m_row)) * 7) + 6);
-            //in_out_bitwisePlayerBoard |= static_cast<uint64_t>(1) << (((3 - (i - a_coord.m_row)) * 7) + 6);
+            in_out_bitwiseBoard |=
+                static_cast<uint64_t>(1) << (((3 - (thisCoord.m_row - a_coord.m_row)) * 7) + 6);
         }
-        else if (a_board.IsPlayerInCoord(i, a_coord.m_col - 4, a_player))
+        else if (a_board.IsPlayerInCoord(thisCoord, a_player))
         {
             // 'a_player' is occupying this coord
-            in_out_bitwiseBoard       |= static_cast<uint64_t>(1) << (((3 - (i - a_coord.m_row)) * 7) + 6);
-            in_out_bitwisePlayerBoard |= static_cast<uint64_t>(1) << (((3 - (i - a_coord.m_row)) * 7) + 6);
+            in_out_bitwiseBoard       |=
+                static_cast<uint64_t>(1) << (((3 - (thisCoord.m_row - a_coord.m_row)) * 7) + 6);
+            in_out_bitwisePlayerBoard |=
+                static_cast<uint64_t>(1) << (((3 - (thisCoord.m_row - a_coord.m_row)) * 7) + 6);
         }
-        else if (a_board.IsCoordEmpty(i, a_coord.m_col - 4) == false)
+        else if (a_board.IsCoordEmpty(thisCoord) == false)
         {
             // someone else is occupying this coord
-            in_out_bitwiseBoard       |= static_cast<uint64_t>(1) << (((3 - (i - a_coord.m_row)) * 7) + 6);
+            in_out_bitwiseBoard |= static_cast<uint64_t>(1) << (((3 - (thisCoord.m_row - a_coord.m_row)) * 7) + 6);
         }
     }
 
@@ -235,23 +255,27 @@ void bitwise::BoardMoveDown(
     }
     else
     {
-        for (int32_t i = (a_coord.m_col - 3); i <= (a_coord.m_col + 3); i++)
+        Coordinate thisCoord(a_coord.m_row + 4, 0);
+        for (thisCoord.m_col = (a_coord.m_col - 3);
+             thisCoord.m_col <= (a_coord.m_col + 3);
+             thisCoord.m_col++)
         {
             in_out_bitwiseBoard       <<= 1;
             in_out_bitwisePlayerBoard <<= 1;
-            if ( (i < 0) || (i >= a_board.GetNColumns()) || ((a_coord.m_row + 4) >= a_board.GetNRows()))
+            if ( (thisCoord.m_col < 0) ||
+                 (thisCoord.m_col >= a_board.GetNColumns()) ||
+                 (thisCoord.m_row >= a_board.GetNRows()) )
             {
                 // out of the board
                 in_out_bitwiseBoard |= static_cast<uint64_t>(0x01);
-                //in_out_bitwisePlayerBoard |= static_cast<uint64_t>(0x01);
             }
-            else if (a_board.IsPlayerInCoord(a_coord.m_row + 4, i, a_player))
+            else if (a_board.IsPlayerInCoord(thisCoord, a_player))
             {
                 // 'a_player' is occupying this coord
                 in_out_bitwiseBoard       |= static_cast<uint64_t>(0x01);
                 in_out_bitwisePlayerBoard |= static_cast<uint64_t>(0x01);
             }
-            else if (a_board.IsCoordEmpty(a_coord.m_row + 4, i) == false)
+            else if (a_board.IsCoordEmpty(thisCoord) == false)
             {
                 // someone else is occupying this coord
                 in_out_bitwiseBoard |= static_cast<uint64_t>(0x01);

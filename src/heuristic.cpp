@@ -78,15 +78,16 @@ int32_t Heuristic::CalculateSimple(
     int32_t squaresOpponent = 0;
     int32_t rv = 0;
 
-    for (uint8_t rowCount = 0; rowCount < a_board.GetNRows() ; rowCount++)
+    Coordinate thisCoord(0, 0);
+    for (thisCoord.m_row = 0; thisCoord.m_row < a_board.GetNRows() ; thisCoord.m_row++)
     {
-        for (uint8_t columnCount = 0; columnCount <  a_board.GetNColumns() ; columnCount++)
+        for (thisCoord.m_col = 0; thisCoord.m_col <  a_board.GetNColumns() ; thisCoord.m_col++)
         {
-            if (a_board.IsPlayerInCoord(rowCount, columnCount, a_playerMe))
+            if (a_board.IsPlayerInCoord(thisCoord, a_playerMe))
             {
                 squaresMe++;
             }
-            else if (a_board.IsPlayerInCoord(rowCount, columnCount, a_playerOpponent))
+            else if (a_board.IsPlayerInCoord(thisCoord, a_playerOpponent))
             {
                 squaresOpponent++;
             }
@@ -137,12 +138,12 @@ int32_t Heuristic::CalculateNKWeighted(
     {
         for (thisCoord.m_col = 0; thisCoord.m_col < a_board.GetNColumns() ; thisCoord.m_col++)
         {
-            if (a_board.IsCoordEmpty(thisCoord.m_row, thisCoord.m_col))
+            if (a_board.IsCoordEmpty(thisCoord))
             {
                 bool opponentNKPoint = false;
                 int32_t weightedValue = 0;
 
-                if (a_playerOpponent.IsNucleationPoint(thisCoord.m_row, thisCoord.m_col))
+                if (a_playerOpponent.IsNucleationPoint(thisCoord))
                 {
               		weightedValue = std::max(1, CalculateCircularWeight(a_board, thisCoord)/2);
                     opponentNKPoint = true;
@@ -163,7 +164,7 @@ int32_t Heuristic::CalculateNKWeighted(
                     */
                 } // if (a_playerOpponent->IsNucleationPoint(thisCoord.m_row, thisCoord.m_col))
 
-                if (a_playerMe.IsNucleationPoint(thisCoord.m_row, thisCoord.m_col))
+                if (a_playerMe.IsNucleationPoint(thisCoord))
                 {
                     if (!opponentNKPoint)
                     {
@@ -200,7 +201,7 @@ int32_t Heuristic::CalculateNKWeighted(
                     */
                 } // if (a_playerMe->IsNucleationPoint(thisCoord.m_row, thisCoord.m_col))
             }
-            else if (a_board.IsPlayerInCoord(thisCoord.m_row, thisCoord.m_col, a_playerMe))
+            else if (a_board.IsPlayerInCoord(thisCoord, a_playerMe))
             {
                 squaresMe++;
             }

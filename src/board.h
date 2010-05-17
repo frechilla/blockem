@@ -52,56 +52,51 @@ public:
     Board& operator= (const Board &a_src);
 
     /// @return true if the position specified by a_coord is empty
-    inline bool IsCoordEmpty(Coordinate a_coord) const
-    {
-    	return IsCoordEmpty(a_coord.m_row, a_coord.m_col);
-    }
-    /// @return true if the position (a_row, a_col) is empty
-    inline bool IsCoordEmpty(int32_t a_row, int32_t a_col) const
+    inline bool IsCoordEmpty(const Coordinate &a_coord) const
     {
 #ifdef DEBUG
-    	assert(a_row >= 0);
-    	assert(a_col >= 0);
-    	assert(a_row < m_nRows);
-    	assert(a_col < m_nColumns);
+        assert(a_coord.m_row >= 0);
+        assert(a_coord.m_col >= 0);
+        assert(a_coord.m_row < m_nRows);
+        assert(a_coord.m_col < m_nColumns);
 #endif
-    	return (m_theBoard[a_row][a_col] == m_emptyChar);
+        return (m_theBoard[a_coord.m_row][a_coord.m_col] == m_emptyChar);
     }
 
     /// @brief set the coord passed as parameter to empty in the board
-    inline void BlankCoord(int32_t a_row, int32_t a_col)
+    inline void BlankCoord(const Coordinate &a_coord)
     {
 #ifdef DEBUG
-    	assert(a_row >= 0);
-    	assert(a_col >= 0);
-    	assert(a_row < m_nRows);
-    	assert(a_col < m_nColumns);
+        assert(a_coord.m_row >= 0);
+        assert(a_coord.m_col >= 0);
+        assert(a_coord.m_row < m_nRows);
+        assert(a_coord.m_col < m_nColumns);
 #endif
-        m_theBoard[a_row][a_col] = m_emptyChar;
+        m_theBoard[a_coord.m_row][a_coord.m_col] = m_emptyChar;
     }
 
-    /// @return true if the player is in the coords (a_row, a_col)
-    inline bool IsPlayerInCoord(int32_t a_row, int32_t a_col, const Player &a_player) const
+    /// @return true if the player is in a_coord
+    inline bool IsPlayerInCoord(const Coordinate &a_coord, const Player &a_player) const
     {
 #ifdef DEBUG
-    	assert(a_row >= 0);
-    	assert(a_col >= 0);
-    	assert(a_row < m_nRows);
-    	assert(a_col < m_nColumns);
+        assert(a_coord.m_row >= 0);
+        assert(a_coord.m_col >= 0);
+        assert(a_coord.m_row < m_nRows);
+        assert(a_coord.m_col < m_nColumns);
 #endif
-    	return (m_theBoard[a_row][a_col] == a_player.PresentationChar());
+    	return (m_theBoard[a_coord.m_row][a_coord.m_col] == a_player.PresentationChar());
     }
 
     /// @brief set the coord passed as paramater to be occupied by the player 'a_player'
-    inline void SetPlayerInCoord(int32_t a_row, int32_t a_col, const Player &a_player)
+    inline void SetPlayerInCoord(const Coordinate &a_coord, const Player &a_player)
     {
 #ifdef DEBUG
-    	assert(a_row >= 0);
-    	assert(a_col >= 0);
-    	assert(a_row < m_nRows);
-    	assert(a_col < m_nColumns);
+        assert(a_coord.m_row >= 0);
+        assert(a_coord.m_col >= 0);
+        assert(a_coord.m_row < m_nRows);
+        assert(a_coord.m_col < m_nColumns);
 #endif
-    	m_theBoard[a_row][a_col] = a_player.PresentationChar();
+    	m_theBoard[a_coord.m_row][a_coord.m_col] = a_player.PresentationChar();
     }
 
     /// Get the number of rows of the board

@@ -150,49 +150,43 @@ public:
     /// returns true if this player has a nucleation point in the coords specified
     inline bool IsNucleationPoint(const Coordinate &a_coord) const
     {
-        return IsNucleationPoint(a_coord.m_row, a_coord.m_col);
-    }
-
-    /// returns true if this player has a nucleation point in the coords specified
-    inline bool IsNucleationPoint(int32_t a_row, int32_t a_col) const
-    {
 #ifdef DEBUG
-    	assert((a_row >= 0) && (a_row < m_nRowsInBoard));
-    	assert((a_col >= 0) && (a_col < m_nColumnsInBoard));
+        assert((a_coord.m_row >= 0) && (a_coord.m_row < m_nRowsInBoard));
+        assert((a_coord.m_col >= 0) && (a_coord.m_col < m_nColumnsInBoard));
 #endif
-    	return static_cast<bool>(m_nkPoints[a_row][a_col]);
+        return static_cast<bool>(m_nkPoints[a_coord.m_row][a_coord.m_col]);
     }
 
     /// save a nucleation point in the coords passed as parameters
-    inline void SetNucleationPoint(int32_t a_row, int32_t a_col)
+    inline void SetNucleationPoint(const Coordinate &a_coord)
     {
 #ifdef DEBUG
-    	assert((a_row >= 0) && (a_row < m_nRowsInBoard));
-    	assert((a_col >= 0) && (a_col < m_nColumnsInBoard));
+    	assert((a_coord.m_row >= 0) && (a_coord.m_row < m_nRowsInBoard));
+    	assert((a_coord.m_col >= 0) && (a_coord.m_col < m_nColumnsInBoard));
 #endif
-        if (m_nkPoints[a_row][a_col] == 0)
+        if (m_nkPoints[a_coord.m_row][a_coord.m_col] == 0)
         {
 #ifdef DEBUG
             assert(m_nkPointsCount < (m_nRowsInBoard * m_nColumnsInBoard));
 #endif
-            m_nkPoints[a_row][a_col] = 1;
+            m_nkPoints[a_coord.m_row][a_coord.m_col] = 1;
             m_nkPointsCount++;
         }
     }
 
     /// delete a nucleation point in the coords passed as parameters
-    inline void UnsetNucleationPoint(int32_t a_row, int32_t a_col)
+    inline void UnsetNucleationPoint(const Coordinate &a_coord)
     {
 #ifdef DEBUG
-    	assert((a_row >= 0) && (a_row < m_nRowsInBoard));
-    	assert((a_col >= 0) && (a_col < m_nColumnsInBoard));
+    	assert((a_coord.m_row >= 0) && (a_coord.m_row < m_nRowsInBoard));
+    	assert((a_coord.m_col >= 0) && (a_coord.m_col < m_nColumnsInBoard));
 #endif
-        if (m_nkPoints[a_row][a_col])
+        if (m_nkPoints[a_coord.m_row][a_coord.m_col])
         {
 #ifdef DEBUG
              assert(m_nkPointsCount > 0);
 #endif
-            m_nkPoints[a_row][a_col] = 0;
+            m_nkPoints[a_coord.m_row][a_coord.m_col] = 0;
             m_nkPointsCount--;
         }
     }
@@ -278,7 +272,7 @@ private:
     /// the character that represents the player
     char m_presentationChar;
     /// amount of pieces available
-    uint16_t m_nPiecesAvailable;
+    uint8_t m_nPiecesAvailable;
     /// number of rows of the board where the player is playing
     int32_t m_nRowsInBoard;
     /// number of columns of the board where the player is playing

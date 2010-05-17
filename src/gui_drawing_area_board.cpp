@@ -225,22 +225,22 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
                     static_cast<float>(green)/ 255,
                     static_cast<float>(blue) / 255);
 
-            for (int32_t rowCount = 0;
-                         rowCount < m_theBoard.GetNRows() ;
-                         rowCount++)
+            Coordinate thisCoord(0, 0);
+            for (thisCoord.m_row = 0;
+                 thisCoord.m_row < m_theBoard.GetNRows() ;
+                 thisCoord.m_row++)
             {
-                for (int32_t columnCount = 0;
-                             columnCount <  m_theBoard.GetNColumns() ;
-                             columnCount++)
+                for (thisCoord.m_col = 0;
+                     thisCoord.m_col <  m_theBoard.GetNColumns() ;
+                     thisCoord.m_col++)
                 {
                     if (m_theBoard.IsPlayerInCoord(
-                            rowCount,
-                            columnCount,
+                            thisCoord,
                             *thisPlayer))
                     {
                         cr->rectangle(
-                                (xc - squareWidth/2) +  (littleSquare * columnCount) + 1,
-                                (yc - squareHeight/2) + (littleSquare * rowCount) + 1,
+                                (xc - squareWidth/2) +  (littleSquare * thisCoord.m_col) + 1,
+                                (yc - squareHeight/2) + (littleSquare * thisCoord.m_row) + 1,
                                 littleSquare - 1,
                                 littleSquare - 1);
 
@@ -258,21 +258,22 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
                         static_cast<float>(blue) / 255,
                         FORBIDDEN_AREA_ALPHA);
 
-                for (int32_t rowCount = 0;
-                             rowCount < m_theBoard.GetNRows() ;
-                             rowCount++)
+                Coordinate thisCoord(0, 0);
+                for (thisCoord.m_row = 0;
+                     thisCoord.m_row < m_theBoard.GetNRows() ;
+                     thisCoord.m_row++)
                 {
-                    for (int32_t columnCount = 0;
-                                 columnCount <  m_theBoard.GetNColumns() ;
-                                 columnCount++)
+                    for (thisCoord.m_col = 0;
+                         thisCoord.m_col <  m_theBoard.GetNColumns() ;
+                         thisCoord.m_col++)
                     {
                         // mark the coords in the board where the current player can't go
-                        if ( m_theBoard.IsCoordEmpty(rowCount, columnCount) &&
-                             Rules::IsCoordTouchingPlayer(m_theBoard, Coordinate(rowCount, columnCount), *thisPlayer) )
+                        if ( m_theBoard.IsCoordEmpty(thisCoord) &&
+                             Rules::IsCoordTouchingPlayer(m_theBoard, thisCoord, *thisPlayer) )
                         {
                             cr->rectangle(
-                                    (xc - squareWidth/2) +  (littleSquare * columnCount) + 1,
-                                    (yc - squareHeight/2) + (littleSquare * rowCount) + 1,
+                                    (xc - squareWidth/2) +  (littleSquare * thisCoord.m_col) + 1,
+                                    (yc - squareHeight/2) + (littleSquare * thisCoord.m_row) + 1,
                                     littleSquare - 1,
                                     littleSquare - 1);
 

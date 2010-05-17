@@ -50,29 +50,34 @@ bool Rules::IsCoordTouchingPlayer(
     assert(a_coord.m_col < a_board.GetNColumns());
 #endif
 
-    if ( (a_coord.m_row > 0) &&
-          a_board.IsPlayerInCoord(a_coord.m_row - 1, a_coord.m_col, a_player) )
+    Coordinate thisCoord(a_coord.m_row - 1, a_coord.m_col);
+    if ( (thisCoord.m_row >= 0) &&
+          a_board.IsPlayerInCoord(thisCoord, a_player) )
     {
         // touching a a_player's piece
         return true;
     }
 
-    if ( (a_coord.m_col > 0) &&
-          a_board.IsPlayerInCoord(a_coord.m_row, a_coord.m_col - 1, a_player) )
+    thisCoord.m_row = a_coord.m_row + 1;
+    if ( (thisCoord.m_row < a_board.GetNRows()) &&
+          a_board.IsPlayerInCoord(thisCoord, a_player))
     {
         // touching a a_player's piece
         return true;
     }
 
-    if ( (a_coord.m_row < (a_board.GetNRows() - 1)) &&
-            a_board.IsPlayerInCoord(a_coord.m_row + 1, a_coord.m_col, a_player))
+    thisCoord.m_row = a_coord.m_row;
+    thisCoord.m_col = a_coord.m_col - 1;
+    if ( (thisCoord.m_col >= 0) &&
+          a_board.IsPlayerInCoord(thisCoord, a_player) )
     {
         // touching a a_player's piece
         return true;
     }
 
-    if ( (a_coord.m_col < (a_board.GetNColumns() - 1)) &&
-            a_board.IsPlayerInCoord(a_coord.m_row, a_coord.m_col + 1, a_player) )
+    thisCoord.m_col = a_coord.m_col + 1;
+    if ( (thisCoord.m_col < a_board.GetNColumns()) &&
+          a_board.IsPlayerInCoord(thisCoord, a_player) )
     {
         // touching a a_player's piece
         return true;
@@ -97,7 +102,7 @@ bool Rules::IsPieceDeployable(
 
         if ( (currentCoord.m_row < 0) || (currentCoord.m_row >= a_board.GetNRows())    ||
              (currentCoord.m_col < 0) || (currentCoord.m_col >= a_board.GetNColumns()) ||
-             (a_board.IsCoordEmpty(currentCoord.m_row, currentCoord.m_col) == false) )
+             (a_board.IsCoordEmpty(currentCoord) == false) )
         {
             // this square is out of the board or it's not empty
             return false;
@@ -110,7 +115,7 @@ bool Rules::IsPieceDeployable(
 
         //TODO IsNucleationPointCompute performs again same checks done by IsCoordTouchingPlayer
         if ( (touchingNKPoint == false) &&
-        	 (IsNucleationPointCompute(a_board, a_player, currentCoord.m_row, currentCoord.m_col)) )
+        	 (IsNucleationPointCompute(a_board, a_player, currentCoord)) )
         {
         	// the piece will have to be occupying at least one nucleation point to
         	// be deployed in this place. Once it occupies one nk point we don't need to
@@ -143,7 +148,7 @@ bool Rules::IsPieceDeployableInNKPoint(
 
         if ( (currentCoord.m_row < 0) || (currentCoord.m_row >= a_board.GetNRows())    ||
              (currentCoord.m_col < 0) || (currentCoord.m_col >= a_board.GetNColumns()) ||
-             (a_board.IsCoordEmpty(currentCoord.m_row, currentCoord.m_col) == false) )
+             (a_board.IsCoordEmpty(currentCoord) == false) )
         {
             // this square is out of the board or it's not empty
             return false;
@@ -174,18 +179,20 @@ bool Rules::IsPieceDeployableInStartingPoint(
 
     for (uint8_t i = 0 ; i < a_piece.GetNSquares() ; i++)
     {
-        int32_t row    = a_coord.m_row + a_piece.GetCoord(i).m_row;
-        int32_t column = a_coord.m_col + a_piece.GetCoord(i).m_col;
+        Coordinate currentCoord(
+                a_coord.m_row + a_piece.GetCoord(i).m_row,
+                a_coord.m_col + a_piece.GetCoord(i).m_col);
 
-        if ( (row    < 0) || (row    >= a_board.GetNRows())    ||
-             (column < 0) || (column >= a_board.GetNColumns()) ||
-             (a_board.IsCoordEmpty(row, column) == false) )
+        if ( (currentCoord.m_row < 0) || (currentCoord.m_row >= a_board.GetNRows())    ||
+             (currentCoord.m_col < 0) || (currentCoord.m_col >= a_board.GetNColumns()) ||
+             (a_board.IsCoordEmpty(currentCoord) == false) )
         {
             // this square is out of the board or it's not empty
             return false;
         }
 
-        if ( (row == a_startingPoint.m_row) && (column == a_startingPoint.m_col) )
+        if ( (currentCoord.m_row == a_startingPoint.m_row) &&
+             (currentCoord.m_col == a_startingPoint.m_col) )
         {
         	touchesStartingPoint = true;
         }
@@ -195,80 +202,95 @@ bool Rules::IsPieceDeployableInStartingPoint(
 }
 
 bool Rules::IsNucleationPointCompute(
-        const Board  &a_board,
-        const Player &a_player,
-        int32_t      a_coordX,
-        int32_t      a_coordY)
+        const Board      &a_board,
+        const Player     &a_player,
+        const Coordinate &a_coord)
 {
 #ifdef DEBUG
-    assert(a_coordX >= 0);
-    assert(a_coordY >= 0);
-    assert(a_coordX < a_board.GetNRows());
-    assert(a_coordY < a_board.GetNColumns());
+    assert(a_coord.m_row >= 0);
+    assert(a_coord.m_col >= 0);
+    assert(a_coord.m_row < a_board.GetNRows());
+    assert(a_coord.m_col < a_board.GetNColumns());
 #endif
 
-    if (!a_board.IsCoordEmpty(a_coordX, a_coordY))
+    if (!a_board.IsCoordEmpty(a_coord))
     {
         return false;
     }
 
     bool isNucleationPoint = false;
 
-    if ( (a_coordY != 0) &&
-         (a_board.IsPlayerInCoord(a_coordX, a_coordY-1, a_player)) )
+    Coordinate thisCoord(a_coord.m_row, a_coord.m_col - 1);
+    if ( (thisCoord.m_col >= 0) &&
+         (a_board.IsPlayerInCoord(thisCoord, a_player)) )
     {
         // not a corner
         return false;
     }
 
-    if ( (a_coordY != (a_board.GetNColumns() - 1)) &&
-         (a_board.IsPlayerInCoord(a_coordX, a_coordY+1, a_player)) )
+    thisCoord.m_col = a_coord.m_col + 1;
+    if ( (thisCoord.m_col < a_board.GetNColumns()) &&
+         (a_board.IsPlayerInCoord(thisCoord, a_player)) )
     {
         // not a corner
         return false;
     }
 
-    if (a_coordX != 0)
+    if (a_coord.m_row != 0)
     {
-        if ( a_board.IsPlayerInCoord(a_coordX-1, a_coordY, a_player) )
+        thisCoord.m_row = a_coord.m_row - 1;
+        thisCoord.m_col = a_coord.m_col;
+        if ( a_board.IsPlayerInCoord(thisCoord, a_player) )
         {
             // not a corner
             return false;
         }
 
-        if ( (a_coordY != 0) &&
-             (a_board.IsPlayerInCoord(a_coordX-1, a_coordY-1, a_player)) )
+        thisCoord.m_col = a_coord.m_col - 1;
+        if ( (thisCoord.m_col >= 0) &&
+             (a_board.IsPlayerInCoord(thisCoord, a_player)) )
         {
             // nucleation point detected
             isNucleationPoint = true;
         }
-        else if ( (a_coordY != (a_board.GetNColumns() - 1)) &&
-                  (a_board.IsPlayerInCoord(a_coordX-1, a_coordY+1, a_player)) )
+        else
         {
-            // nucleation point detected
-            isNucleationPoint = true;
+            thisCoord.m_col = a_coord.m_col + 1;
+            if ( (thisCoord.m_col < a_board.GetNColumns() ) &&
+                 (a_board.IsPlayerInCoord(thisCoord, a_player)) )
+            {
+                // nucleation point detected
+                isNucleationPoint = true;
+            }
         }
     }
 
-    if (a_coordX != (a_board.GetNRows() - 1))
+    if (a_coord.m_row != (a_board.GetNRows() - 1))
     {
-        if ( a_board.IsPlayerInCoord(a_coordX+1, a_coordY, a_player))
+        thisCoord.m_row = a_coord.m_row + 1;
+        thisCoord.m_col = a_coord.m_col;
+        if (a_board.IsPlayerInCoord(thisCoord, a_player))
         {
             // not a corner
             return false;
         }
 
-        if ( (a_coordY != 0) &&
-             (a_board.IsPlayerInCoord(a_coordX+1, a_coordY-1, a_player)) )
+        thisCoord.m_col = a_coord.m_col - 1;
+        if ( (thisCoord.m_col >= 0) &&
+             (a_board.IsPlayerInCoord(thisCoord, a_player)) )
         {
             // nucleation point detected
             isNucleationPoint = true;
         }
-        else if ( (a_coordY != (a_board.GetNColumns() - 1)) &&
-                  (a_board.IsPlayerInCoord(a_coordX+1, a_coordY+1, a_player)) )
+        else
         {
-            // nucleation point detected
-            isNucleationPoint = true;
+            thisCoord.m_col = a_coord.m_col + 1;
+            if ( (thisCoord.m_col < a_board.GetNColumns()) &&
+                 (a_board.IsPlayerInCoord(thisCoord, a_player)) )
+            {
+                // nucleation point detected
+                isNucleationPoint = true;
+            }
         }
     }
 
@@ -288,14 +310,14 @@ int32_t Rules::CalculateValidCoordsInNucleationPoint(
     // the increment variable will save the amount of squares to be checked. The size of the square
     // will be (increment x 2) + 1
 
-    int16_t increment = static_cast<int16_t>(a_piece.GetSquareSideHalfSize());
+    int32_t increment = static_cast<int32_t>(a_piece.GetSquareSideHalfSize());
     int32_t nValidCoords = 0;
 
     if (increment > 0)
     {
-        for (int16_t i = -increment ; i <= increment ; i++)
+        for (int32_t i = -increment ; i <= increment ; i++)
         {
-            for (int16_t j = -increment ; j <= increment ; j++)
+            for (int32_t j = -increment ; j <= increment ; j++)
             {
             	Coordinate thisCoord(
             			a_nkPointCoord.m_row + i,
@@ -346,13 +368,13 @@ bool Rules::HasValidCoordInNucleationPoint(
     // the increment variable will save the amount of squares to be checked. The size of the square
     // will be (increment x 2) + 1
 
-    int16_t increment = static_cast<int16_t>(a_piece.GetSquareSideHalfSize());
+    int32_t increment = static_cast<int32_t>(a_piece.GetSquareSideHalfSize());
 
     if (increment > 0)
     {
-        for (int16_t i = -increment ; i <= increment ; i++)
+        for (int32_t i = -increment ; i <= increment ; i++)
         {
-            for (int16_t j = -increment ; j <= increment ; j++)
+            for (int32_t j = -increment ; j <= increment ; j++)
             {
                 Coordinate thisCoord(
                         a_nkPointCoord.m_row + i,
@@ -392,14 +414,14 @@ int32_t Rules::CalculateValidCoordsInStartingPoint(
     // the increment variable will save the amount of squares to be checked. The size of the square
     // will be (increment x 2) + 1
 
-    int16_t increment = static_cast<int16_t>(a_piece.GetSquareSideHalfSize());
+    int32_t increment = static_cast<int32_t>(a_piece.GetSquareSideHalfSize());
     int32_t nValidCoords = 0;
 
     if (increment > 0)
     {
-		for (int16_t i = -increment ; i <= increment ; i++)
+		for (int32_t i = -increment ; i <= increment ; i++)
 		{
-			for (int16_t j = -increment ; j <= increment ; j++)
+			for (int32_t j = -increment ; j <= increment ; j++)
 			{
 				bool validCoord = false;
 				for (uint8_t k = 0 ; k < a_piece.GetNSquares() ; k++)
@@ -462,26 +484,31 @@ void Rules::RecalculateNKInAllBoard(
 		Player      &a_playerMe,
 		Player      &a_playerOpponent)
 {
-	for (int32_t i = 0 ; i < a_board.GetNRows(); i++)
+    Coordinate thisCoord(0, 0);
+	for (thisCoord.m_row = 0 ;
+	     thisCoord.m_row < a_board.GetNRows();
+	     thisCoord.m_row++)
 	{
-		for (int32_t j = 0 ; j < a_board.GetNColumns(); j++)
+		for (thisCoord.m_col = 0 ;
+		     thisCoord.m_col < a_board.GetNColumns();
+		     thisCoord.m_col++)
 		{
-			if (Rules::IsNucleationPointCompute(a_board, a_playerMe, i, j))
+			if (Rules::IsNucleationPointCompute(a_board, a_playerMe, thisCoord))
 			{
-				a_playerMe.SetNucleationPoint(i, j);
+				a_playerMe.SetNucleationPoint(thisCoord);
 			}
 			else
 			{
-				a_playerMe.UnsetNucleationPoint(i, j);
+				a_playerMe.UnsetNucleationPoint(thisCoord);
 			}
 
-			if (Rules::IsNucleationPointCompute(a_board, a_playerOpponent, i, j))
+			if (Rules::IsNucleationPointCompute(a_board, a_playerOpponent, thisCoord))
 			{
-				a_playerOpponent.SetNucleationPoint(i, j);
+				a_playerOpponent.SetNucleationPoint(thisCoord);
 			}
 			else
 			{
-				a_playerOpponent.UnsetNucleationPoint(i, j);
+				a_playerOpponent.UnsetNucleationPoint(thisCoord);
 			}
 		}
 	}
@@ -498,23 +525,25 @@ void Rules::RecalculateNKAroundPiece(
 	// the increment variable will save the amount of squares to be checked. The size of the square
 	// will be (increment x 2) + 1
     int32_t increment = a_piece.GetSquareSideHalfSize() + 1;
-
-    int32_t startX = std::max(0, (a_coord.m_row - increment));
-    int32_t startY = std::max(0, (a_coord.m_col - increment));
     int32_t endX   = std::min(a_coord.m_row + increment, a_board.GetNRows() - 1);
     int32_t endY   = std::min(a_coord.m_col + increment, a_board.GetNColumns() - 1);
 
-    for (int32_t x = startX ; x <= endX; x++)
+    Coordinate thisCoord(0, 0);
+    for (thisCoord.m_row = std::max(0, (a_coord.m_row - increment)) ;
+         thisCoord.m_row <= endX;
+         thisCoord.m_row++)
     {
-		for (int32_t y = startY; y <= endY; y++)
+		for (thisCoord.m_col = std::max(0, (a_coord.m_col - increment));
+		     thisCoord.m_col <= endY;
+		     thisCoord.m_col++)
 		{
-			if (Rules::IsNucleationPointCompute(a_board, a_player, x, y))
+			if (Rules::IsNucleationPointCompute(a_board, a_player, thisCoord))
 			{
-				a_player.SetNucleationPoint(x, y);
+				a_player.SetNucleationPoint(thisCoord);
 			}
 			else
 			{
-				a_player.UnsetNucleationPoint(x, y);
+				a_player.UnsetNucleationPoint(thisCoord);
 			}
 		}
     }

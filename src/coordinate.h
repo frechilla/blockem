@@ -34,7 +34,13 @@
 #include <stdint.h> // for types
 
 /// uninitialised coord value
-const int32_t COORD_UNINITIALISED = 0xf0000000; // (-268435456)
+//const int16_t COORD_MAX_VALUE     =  32767;
+//const int16_t COORD_MIN_VALUE     = -32767;
+//const int16_t COORD_UNINITIALISED = -32768;
+
+const int32_t COORD_MAX_VALUE     =  2147483646; // 2147483647
+const int32_t COORD_MIN_VALUE     = -2147483646; // -2147483647
+const int32_t COORD_UNINITIALISED = -2147483647; // -2147483648
 
 /// @brief represents a coordinate in the board
 class Coordinate
@@ -85,7 +91,7 @@ public:
 };
 
 /// @brief a magical array of coordinates to be used with STL
-template<int32_t NCOORDS>
+template<uint32_t NCOORDS>
 class CoordinateArray
 {
 public:
@@ -102,7 +108,7 @@ public:
 
     inline CoordinateArray<NCOORDS>& operator=(const CoordinateArray<NCOORDS> &a_src)
     {
-        for (int32_t i = 0; i < NCOORDS; i++)
+        for (uint32_t i = 0; i < NCOORDS; i++)
         {
             m_coords[i] = a_src.m_coords[i];
         }

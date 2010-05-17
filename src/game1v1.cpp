@@ -205,6 +205,8 @@ void Game1v1::RemovePiece(
 
     for (uint8_t i = 0 ; i < a_piece.GetNSquares() ; i++)
     {
+        Coordinate thisCoord(a_coord.m_row + a_piece.GetCoord(i).m_row,
+                             a_coord.m_col + a_piece.GetCoord(i).m_col);
 #ifdef DEBUG
         assert( ((a_coord.m_row + a_piece.GetCoord(i).m_row) >= 0) &&
         		((a_coord.m_row + a_piece.GetCoord(i).m_row) < a_theBoard.GetNRows()) );
@@ -212,26 +214,20 @@ void Game1v1::RemovePiece(
         		((a_coord.m_col + a_piece.GetCoord(i).m_col) < a_theBoard.GetNColumns()) );
 
         assert(a_theBoard.IsPlayerInCoord(
-        		a_coord.m_row + a_piece.GetCoord(i).m_row,
-        		a_coord.m_col + a_piece.GetCoord(i).m_col,
+                thisCoord,
         		a_playerMe));
 #endif
 
-        a_theBoard.BlankCoord(
-        		a_coord.m_row + a_piece.GetCoord(i).m_row,
-        		a_coord.m_col + a_piece.GetCoord(i).m_col);
+        a_theBoard.BlankCoord(thisCoord);
 
         // (a_coordX + pieceX, a_coordY + pieceY) is now empty
         // is it now a nucleation point for the opponent? (it couldn't be before, as it was occupied by 'me')
         if (Rules::IsNucleationPointCompute(
                 a_theBoard,
         		a_playerOpponent,
-        		a_coord.m_row + a_piece.GetCoord(i).m_row,
-        		a_coord.m_col + a_piece.GetCoord(i).m_col))
+        		thisCoord))
         {
-        	a_playerOpponent.SetNucleationPoint(
-        			a_coord.m_row + a_piece.GetCoord(i).m_row,
-        			a_coord.m_col + a_piece.GetCoord(i).m_col);
+        	a_playerOpponent.SetNucleationPoint(thisCoord);
         }
     }
 
@@ -282,6 +278,8 @@ void Game1v1::PutDownPiece(
 
     for (int i = 0 ; i < a_piece.GetNSquares() ; i++)
     {
+        Coordinate thisCoord(a_coord.m_row + a_piece.GetCoord(i).m_row,
+                             a_coord.m_col + a_piece.GetCoord(i).m_col);
 #ifdef DEBUG
 
         assert( ((a_coord.m_row + a_piece.GetCoord(i).m_row) >= 0) &&
@@ -289,21 +287,16 @@ void Game1v1::PutDownPiece(
         assert( ((a_coord.m_col + a_piece.GetCoord(i).m_col) >= 0) &&
         		((a_coord.m_col + a_piece.GetCoord(i).m_col) < a_theBoard.GetNColumns()) );
 
-        assert(a_theBoard.IsCoordEmpty(
-        		a_coord.m_row + a_piece.GetCoord(i).m_row,
-        		a_coord.m_col + a_piece.GetCoord(i).m_col));
+        assert(a_theBoard.IsCoordEmpty(thisCoord));
 #endif
 
         a_theBoard.SetPlayerInCoord(
-        		a_coord.m_row + a_piece.GetCoord(i).m_row,
-        		a_coord.m_col + a_piece.GetCoord(i).m_col,
+                thisCoord,
         		a_playerMe);
 
         // this new point is being occupied by the player 'me'. It can't be a nucleation point
         // for the opponent any more
-        a_playerOpponent.UnsetNucleationPoint(
-        		a_coord.m_row + a_piece.GetCoord(i).m_row,
-        		a_coord.m_col + a_piece.GetCoord(i).m_col);
+        a_playerOpponent.UnsetNucleationPoint(thisCoord);
     }
 
     // recalculate all the nk points around the piece we just put down (player 'me')

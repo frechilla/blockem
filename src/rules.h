@@ -120,14 +120,12 @@ public:
     /// or removing a piece). If you want to know if a specific point of the board
     /// is a nk for a determined player use the accesor IsNucleationPoint in the class Player
     /// @param the player whose nucleation points are being calculated
-    /// @param the ABSOLUTE coord X of the place to be checked
-    /// @param the ABSOLUTE coord Y of the place to be checked
+    /// @param the ABSOLUTE coord of the place to be checked
     /// @returns true if it is, false otherwise
     static bool IsNucleationPointCompute(
-            const Board  &a_board,
-            const Player &a_player,
-            int32_t      a_coordX,
-            int32_t      a_coordY);
+            const Board      &a_board,
+            const Player     &a_player,
+            const Coordinate &a_coord);
 
     /// the pieces are described in such a way that the middle of the piece (0,0) is always a square and
     /// the maximum number of squares to the left/right or up/down from that point is 2, so every piece
