@@ -673,7 +673,7 @@ int32_t Game1v1::ComputeFirstPiece(
                     // taking over the center of the board is pretty important. Use
                     // nk weighted heuristic to try to calculate alternative 1st move
                     int32_t currentValue =
-                        Heuristic::CalculateNKWeighted(a_board, a_playerMe, a_playerOpponent);
+                        Heuristic::CalculateNKWeightedv1(a_board, a_playerMe, a_playerOpponent);
 
                     if (currentValue > heuristicValue)
                     {

@@ -48,32 +48,37 @@ typedef enum
     // if this enum is modified, ensure all the constants are updated accordingly
     // ensure also Piece::PieceDescription and Piece::m_loadFunctionMap
     // are updated with the correct order described in this enum
-	e_minimumPieceIndex = 0,
+    //
+    // pieces are described here from less complex to more complex. This ordering might
+    // be used in a minimax algorithm to try to prune out useless branches early
+    // using the alphabeta prunning
 
-	e_1Piece_BabyPiece   = e_minimumPieceIndex,
-	e_2Piece_TwoPiece    = 1,
-	e_3Piece_LongPiece   = 2,
-	e_3Piece_Triangle    = 3,
-	e_4Piece_LongPiece   = 4,
-	e_4Piece_LittleS     = 5,
-	e_4Piece_LittleT     = 6,
-	e_4Piece_LittleL     = 7,  // aka little brother
-	e_4Piece_FullSquare  = 8,
-	e_5Piece_BigS        = 9,  // aka big Z
-	e_5Piece_SafPiece    = 10,
-	e_5Piece_WPiece      = 11,
-	e_5Piece_CuntPiece   = 12,
-	e_5Piece_BigPenis    = 13,
-	e_5Piece_Cross       = 14,
-	e_5Piece_HalfSquare  = 15, // aka big L, aka Mike's piece
-	e_5Piece_BigL        = 16, // aka big brother
-	e_5Piece_MrT         = 17,
-	e_5Piece_SquarePlus  = 18, // (square++). formerly known as squareAppen (square + appendix)
-	e_5Piece_BoringPiece = 19,
-	e_5Piece_TheUltimate = 20,
+    e_minimumPieceIndex = 0,
 
-	e_numberOfPieces = 21,
-	e_noPiece = 22,
+    e_1Piece_BabyPiece   = e_minimumPieceIndex,
+    e_2Piece_TwoPiece    = 1,
+    e_3Piece_LongPiece   = 2,
+    e_3Piece_Triangle    = 3,
+    e_4Piece_FullSquare  = 4,
+    e_4Piece_LongPiece   = 5,
+    e_4Piece_LittleL     = 6,  // aka little brother
+    e_4Piece_LittleS     = 7,
+    e_4Piece_LittleT     = 8,
+    e_5Piece_BigPenis    = 9,
+    e_5Piece_SquarePlus  = 10, // (square++). formerly known as squareAppen (square + appendix)
+    e_5Piece_HalfSquare  = 11, // aka big L, aka Mike's piece
+    e_5Piece_CuntPiece   = 12,
+    e_5Piece_BigL        = 13, // aka big brother
+    e_5Piece_BoringPiece = 14,
+    e_5Piece_BigS        = 15,  // aka big Z
+    e_5Piece_MrT         = 16,
+    e_5Piece_TheUltimate = 17,
+    e_5Piece_SafPiece    = 18,
+    e_5Piece_WPiece      = 19,
+    e_5Piece_Cross       = 20,
+
+    e_numberOfPieces = 21,
+    e_noPiece = 22,
 
 } ePieceType_t;
 

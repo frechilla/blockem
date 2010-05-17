@@ -39,10 +39,15 @@
 // in the same order they are described in Heuristic::eHeuristicType_t in heuristic.h
 const Heuristic::sHeuristicData_t Heuristic::m_heuristicData[e_heuristicCount] =
 {
-    {e_heuristicNKWeighted,
-     Heuristic::CalculateNKWeighted,
-     std::string("NK weighted"),
-     std::string("Nucleation points are weighted. The more in the middle of the board a nucleation point is, the better")
+    {e_heuristicNKWeightedv2,
+     Heuristic::CalculateNKWeightedv2,
+     std::string("NK weighted v2"),
+     std::string("Evolution of the old NK weighted heuristic. Nucleation points are picked in the middle of the board at the beginning")
+    },
+    {e_heuristicNKWeightedv1,
+     Heuristic::CalculateNKWeightedv1,
+     std::string("NK weighted v1"),
+     std::string("The more in the middle of the board a nucleation point is, the better")
     },
     {e_heuristicSimple,
      Heuristic::CalculateSimple,
@@ -120,7 +125,7 @@ int32_t Heuristic::CalculateRandom(
     return rand();
 }
 
-int32_t Heuristic::CalculateNKWeighted(
+int32_t Heuristic::CalculateNKWeightedv1(
         const Board  &a_board,
         const Player &a_playerMe,
         const Player &a_playerOpponent)
@@ -149,19 +154,6 @@ int32_t Heuristic::CalculateNKWeighted(
                     opponentNKPoint = true;
 
                     valueNkOpponent += weightedValue;
-                    /*
-                    if (Rules::IsPieceDeployableInNKPoint(a_board, m_FullSquare, thisCoord.m_row, thisCoord.m_col, a_playerOpponent) ||
-                        Rules::IsPieceDeployableInNKPoint(a_board, m_FullSquare, thisCoord.m_row - 1, thisCoord.m_col, a_playerOpponent) ||
-                        Rules::IsPieceDeployableInNKPoint(a_board, m_FullSquare, thisCoord.m_row, thisCoord.m_col - 1, a_playerOpponent) ||
-                        Rules::IsPieceDeployableInNKPoint(a_board, m_FullSquare, thisCoord.m_row - 1, thisCoord.m_col - 1, a_playerOpponent) )
-                    {
-                        valueNkOpponent += weightedValue * 2;
-                    }
-                    else
-                    {
-                        valueNkOpponent += weightedValue;
-                    }
-                    */
                 } // if (a_playerOpponent->IsNucleationPoint(thisCoord.m_row, thisCoord.m_col))
 
                 if (a_playerMe.IsNucleationPoint(thisCoord))
@@ -185,20 +177,6 @@ int32_t Heuristic::CalculateNKWeighted(
                     }
 
                     valueNkMe += weightedValue;
-
-                    /*
-                    if (Rules::IsPieceDeployableInNKPoint(a_board, m_FullSquare, thisCoord.m_row, thisCoord.m_col, a_playerMe) ||
-                        Rules::IsPieceDeployableInNKPoint(a_board, m_FullSquare, thisCoord.m_row - 1, thisCoord.m_col, a_playerMe) ||
-                        Rules::IsPieceDeployableInNKPoint(a_board, m_FullSquare, thisCoord.m_row, thisCoord.m_col - 1, a_playerMe) ||
-                        Rules::IsPieceDeployableInNKPoint(a_board, m_FullSquare, thisCoord.m_row - 1, thisCoord.m_col - 1, a_playerMe) )
-                    {
-                        valueNkMe += weightedValue * 2 ;
-                    }
-                    else
-                    {
-                        valueNkMe += weightedValue;
-                    }
-                    */
                 } // if (a_playerMe->IsNucleationPoint(thisCoord.m_row, thisCoord.m_col))
             }
             else if (a_board.IsPlayerInCoord(thisCoord, a_playerMe))
@@ -216,6 +194,85 @@ int32_t Heuristic::CalculateNKWeighted(
     rv += (squaresMe * 4);
     rv -= (valueNkOpponent);
     rv -= (squaresOpponent * 4);
+
+    return rv;
+}
+
+int32_t Heuristic::CalculateNKWeightedv2(
+        const Board  &a_board,
+        const Player &a_playerMe,
+        const Player &a_playerOpponent)
+{
+    int32_t rv = 0;
+
+    int32_t valueNkMe = 0;
+    int32_t valueNkOpponent = 0;
+    int32_t squaresMe = 0;
+    int32_t squaresOpponent = 0;
+
+
+    Coordinate thisCoord;
+    for (thisCoord.m_row = 0; thisCoord.m_row < a_board.GetNRows() ; thisCoord.m_row++)
+    {
+        for (thisCoord.m_col = 0; thisCoord.m_col < a_board.GetNColumns() ; thisCoord.m_col++)
+        {
+            if (a_board.IsCoordEmpty(thisCoord))
+            {
+                bool opponentNKPoint = false;
+                int32_t weightedValue = 0;
+
+                if (a_playerOpponent.IsNucleationPoint(thisCoord))
+                {
+                    weightedValue = (a_playerOpponent.NumberOfPiecesAvailable() > (e_numberOfPieces - 3)) ?
+                                        CalculateCircularWeight(a_board, thisCoord) : 1;
+                    opponentNKPoint = true;
+
+                    valueNkOpponent += weightedValue;
+
+                } // if (a_playerOpponent->IsNucleationPoint(thisCoord.m_row, thisCoord.m_col))
+
+                if (a_playerMe.IsNucleationPoint(thisCoord))
+                {
+                    if (!opponentNKPoint)
+                    {
+                        weightedValue = (a_playerMe.NumberOfPiecesAvailable() > (e_numberOfPieces - 3)) ?
+                                            CalculateCircularWeight(a_board, thisCoord) : 1;
+
+                        if (Rules::IsCoordTouchingPlayer(a_board, thisCoord, a_playerOpponent))
+                        {
+                            // an nk point that is touching the other player is unblockable by the opponent
+                            // (it might get blocked, but not directly)
+                            weightedValue += 1;
+                        }
+                    }
+                    else
+                    {
+                        // the weighted value of this nk point is half the value of the opponent
+                        // because putting down a piece which is sharing nk points is bad
+                        // since the next go will be for the opponent
+                        weightedValue = (a_playerMe.NumberOfPiecesAvailable() > (e_numberOfPieces - 3)) ?
+                                            (weightedValue / 2) : 0;
+                    }
+
+                    valueNkMe += weightedValue;
+
+                } // if (a_playerMe->IsNucleationPoint(thisCoord.m_row, thisCoord.m_col))
+            }
+            else if (a_board.IsPlayerInCoord(thisCoord, a_playerMe))
+            {
+                squaresMe++;
+            }
+            else // if (a_board.IsPlayerInCoord(thisCoord, a_playeOpponent))
+            {
+                squaresOpponent++;
+            }
+        }
+    }
+
+    rv += (valueNkMe);
+    rv += (squaresMe);
+    rv -= (valueNkOpponent);
+    rv -= (squaresOpponent);
 
     return rv;
 }

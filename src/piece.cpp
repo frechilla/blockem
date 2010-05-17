@@ -35,27 +35,27 @@ static const uint8_t PIECE_MAX_SQUARESIDEHALFSIZE = 2;
 
 const std::string Piece::PieceDescription[e_numberOfPieces] =
 {
-	"1Piece_BabyPiece",
-	"2Piece_TwoPiece",
-	"3Piece_LongPiece",
-	"3Piece_Triangle",
-	"4Piece_LongPiece",
-	"4Piece_LittleS",
-	"4Piece_LittleT",
-	"4Piece_LittleL",
-	"4Piece_FullSquare",
-	"5Piece_BigS",
-	"5Piece_SafPiece",
-	"5Piece_WPiece",
-	"5Piece_CuntPiece",
-	"5Piece_BigPenis",
-	"5Piece_Cross",
-	"5Piece_HalfSquare",
-	"5Piece_BigL",
-	"5Piece_MrT",
-	"5Piece_SquareAppen",
-	"5Piece_BoringPiece",
-	"5Piece_TheUltimate"
+    "1Piece_BabyPiece",
+    "2Piece_TwoPiece",
+    "3Piece_LongPiece",
+    "3Piece_Triangle",
+    "4Piece_FullSquare",
+    "4Piece_LongPiece",
+    "4Piece_LittleL",
+    "4Piece_LittleS",
+    "4Piece_LittleT",
+    "5Piece_BigPeni",
+    "5Piece_SquarePlus",
+    "5Piece_HalfSquare",
+    "5Piece_CuntPiece",
+    "5Piece_BigL",
+    "5Piece_BoringPiece",
+    "5Piece_BigS",
+    "5Piece_MrT",
+    "5Piece_TheUltimate",
+    "5Piece_SafPiece",
+    "5Piece_WPiece",
+    "5Piece_Cross"
 };
 
 // instantiate the load piece map.
@@ -65,23 +65,23 @@ Piece::LoadPieceFunction_t Piece::m_loadFunctionMap[] =
     Piece::LoadPiece_2TwoPiece,	    // e_2Piece_TwoPiece
     Piece::LoadPiece_3LongPiece,    // e_3Piece_LongPiece
     Piece::LoadPiece_3Triangle,     // e_3Piece_Triangle
+    Piece::LoadPiece_4FullSquare,   // e_4Piece_FullSquare
     Piece::LoadPiece_4LongPiece,    // e_4Piece_LongPiece
+    Piece::LoadPiece_4littleL,      // e_4Piece_LittleL
     Piece::LoadPiece_4LittleS,      // e_4Piece_LittleS
     Piece::LoadPiece_4LittleT,      // e_4Piece_LittleT
-    Piece::LoadPiece_4littleL,      // e_4Piece_LittleL
-    Piece::LoadPiece_4FullSquare,   // e_4Piece_FullSquare
+    Piece::LoadPiece_5BigPenis,     // e_5Piece_BigPenis
+    Piece::LoadPiece_5SquareAppen,  // e_5Piece_SquareAppen
+    Piece::LoadPiece_5HalfSquare,   // e_5Piece_HalfSquare
+    Piece::LoadPiece_5CuntPiece,    // e_5Piece_CuntPiece
+    Piece::LoadPiece_5BigL,         // e_5Piece_BigL
+    Piece::LoadPiece_5BoringPiece,  // e_5Piece_BoringPiece
     Piece::LoadPiece_5BigS,         // e_5Piece_BigS
+    Piece::LoadPiece_5MrT,          // e_5Piece_MrT
+    Piece::LoadPiece_5TheUltimate,  // e_5Piece_TheUltimate
     Piece::LoadPiece_5SafPiece,     // e_5Piece_SafPiece
     Piece::LoadPiece_5WPiece,       // e_5Piece_WPiece
-    Piece::LoadPiece_5CuntPiece,    // e_5Piece_CuntPiece
-    Piece::LoadPiece_5BigPenis,     // e_5Piece_BigPenis
-    Piece::LoadPiece_5Cross,        // e_5Piece_Cross
-    Piece::LoadPiece_5HalfSquare,   // e_5Piece_HalfSquare
-    Piece::LoadPiece_5BigL,         // e_5Piece_BigL
-    Piece::LoadPiece_5MrT,          // e_5Piece_MrT
-    Piece::LoadPiece_5SquareAppen,  // e_5Piece_SquareAppen
-    Piece::LoadPiece_5BoringPiece,  // e_5Piece_BoringPiece
-    Piece::LoadPiece_5TheUltimate   // e_5Piece_TheUltimate
+    Piece::LoadPiece_5Cross         // e_5Piece_Cross
 };
 
 Piece::Piece(ePieceType_t a_type):

@@ -57,7 +57,8 @@ public:
     {
         e_heuristicStartCount = 0, // this element must be always 0 and must be at the start
 
-        e_heuristicNKWeighted = e_heuristicStartCount,
+        e_heuristicNKWeightedv2 = e_heuristicStartCount,
+        e_heuristicNKWeightedv1,
         e_heuristicSimple,
         e_heuristicRandom,
 
@@ -94,7 +95,12 @@ public:
 
     /// Calculate the heuristic value taking into account the weight nucleation points
     /// The more in the middle in the board a NK point is the more important it is
-    static int32_t CalculateNKWeighted(
+    static int32_t CalculateNKWeightedv1(
+            const Board  &a_board,
+            const Player &a_playerMe,
+            const Player &a_playerOpponent);
+
+    static int32_t CalculateNKWeightedv2(
             const Board  &a_board,
             const Player &a_playerMe,
             const Player &a_playerOpponent);
