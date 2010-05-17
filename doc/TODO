@@ -10,6 +10,8 @@ supposed to be integrated in blockem at some point in the future:
    "think" the next move)
  + It should be possible to generate doxygen. Add it to the makefiles
  + Installer for the windows platform
+ + precompiled binary in a .deb file for debain based linux distributions. RPM
+   file format should be trivial (see alien) once .deb is done
  + There's no need to compile the test app with all the gui libraries and flags
    Have a look at configure.ac and src/test/Makefile.am to fix it
  + Images and icons are not shown correctly in windows
@@ -17,15 +19,24 @@ supposed to be integrated in blockem at some point in the future:
    and resume an old game
  + Add option to play a game which aim is allocating all the pieces on the 
    board, with no opponent
- + Improve evaluation function through bitwise representations of boards and 
-   pieces
  + There should be puzzles. give somebody a set situation and get them to put 
    down all their pieces. you know hte way with those puzzle games. the first 
    one is very easy. e.g. give an empty 5x5 board and get them to put down 
    three pieces...
+ + Improve evaluation function through bitwise representations of boards and 
+   pieces. There's already some code done but it is too slow
  + why not making starting coordinate editable at all times (not only when a
    new game is launched)?
- + Fix warning when compiling in windows
+ + Fix warnings when compiling in windows
  + Checks like #ifdef WIN32 should be changed into something that is set by
    autotools in config.h
-   
+ + Add default button to the new/config dialog
+ + Convert std::lists to standard arrays in Piece
+ + Cancel a current move to apply changes done in config dialog. Starting 
+   coord should be available to be changed in the config dialog (it is only
+   possible in the new game dialog at the moment)
+ + Use precalculated array of pieces in minimax algorithm without setting
+   current piece coords. At the moment there's a call to SetCurrentCoords per
+   every coordinate retrieved from the array. Might be easier to check first
+   in game_total_allocation since it is easier
+ + SetSquare function in board class should be gone.

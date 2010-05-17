@@ -1,6 +1,7 @@
 : Version 0.2.1
     - Around 8% computing time improvement in the minimax algorithm (tested
       in a 32-bit centrino duo processor)
+    - New version of the old NK points based heuristic
 
 13/05/2010: Version 0.2.0
     - Nucleation points are drawn on the board (if user selects the suitable
