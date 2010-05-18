@@ -484,19 +484,22 @@ void MainWindow::MenuItemSettingsShowForbiddenArea_Toggled()
 
 void MainWindow::MenuItemSettingsPreferences_Activate()
 {
-    Gtk::ResponseType result;
     m_configDialog->set_title("Configure current game");
 
     //TODO starting coords cannot be edited through the configuration dialog yet
     m_configDialog->SetStartingCoordEditionSensitive(false);
 
+    // show a message informing the user a move was cancelled?
+    bool showInfoMessage = false;
+    Gtk::ResponseType result;
     result = static_cast<Gtk::ResponseType>(m_configDialog->run());
     if (result == Gtk::RESPONSE_OK)
     {
         // if current player is a human being and it's been set to computer
         // next move will have to be requested to the worker thread.
-        // otherwise new settings will be automatically applied once current move
-        // is finished
+        // if current player is the computer and its settings has been changed
+        // current move will be cancelled and new settings will be applied
+        // (both if player has been set up to be human or computer)
 
         if ( ( (m_currentMovingPlayer == Game1v1::e_Game1v1Player1)     &&
                (Game1v1Config::Instance().IsPlayer1Computer() == false) &&
@@ -521,48 +524,125 @@ void MainWindow::MenuItemSettingsPreferences_Activate()
             // requesting the thread!!
             RequestThreadToComputeNextMove(m_currentMovingPlayer, true);
         }
-        else
+        else if ( ( (m_currentMovingPlayer == Game1v1::e_Game1v1Player1)    &&
+                    (Game1v1Config::Instance().IsPlayer1Computer() == true) )
+                ||
+                  ( (m_currentMovingPlayer == Game1v1::e_Game1v1Player2)    &&
+                    (Game1v1Config::Instance().IsPlayer2Computer() == true) )
+                )
         {
-            // an info message might be needed to inform the user changes will be
-            // applied later
-            bool showInfoMessage = false;
-            if ( ( (m_currentMovingPlayer == Game1v1::e_Game1v1Player1)     &&
-                   (Game1v1Config::Instance().IsPlayer1Computer() == true) )
+            if ( ( (m_currentMovingPlayer == Game1v1::e_Game1v1Player1) &&
+                   (m_configDialog->IsPlayer1TypeComputer() == false) )
                  ||
-                 ( (m_currentMovingPlayer == Game1v1::e_Game1v1Player2)     &&
-                 (Game1v1Config::Instance().IsPlayer2Computer() == true) )
-               )
+                 ( (m_currentMovingPlayer == Game1v1::e_Game1v1Player2) &&
+                   (m_configDialog->IsPlayer2TypeComputer() == false) ) )
             {
-                // current moving player is the computer. Changes will be applied
-                // once current move is calculated
+                // current moving player is the computer and it has been set to be a human user
+                // cancel current calculation and launch the new move
+
+                // current move is going to be cancelled
                 showInfoMessage = true;
-            }
 
-            // save configuration shown by the dialog into global config singleton
-            // new configuratio will be applied once current move is calculated
-            // no changes need to be applied to the editPieceTable
-            m_configDialog->SaveCurrentConfigIntoGlobalSettings();
+                // cancel worker thread current computing process
+                m_workerThread.CancelComputing();
 
-            // show the info message after global settings have been applied
-            if (showInfoMessage)
+                // empty out move queue
+                G_LOCK(s_computerMoveQueue);
+                    while (!s_computerMoveQueue.empty())
+                    {
+                        s_computerMoveQueue.pop();
+                    }
+                G_UNLOCK(s_computerMoveQueue);
+
+                // save new settings into global config
+                m_configDialog->SaveCurrentConfigIntoGlobalSettings();
+
+                // restart the progress bar (computer is not thinking thisn move anymore)
+                m_progressBar.set_fraction(0.0);
+
+                // allow the new human user to put down pieces on the board
+                m_editPieceTable->set_sensitive(true);
+
+                // restore the mouse cursor so the human being who has to put down next piece
+                // can do it
+                ResetCursor();
+            } // if (m_configDialog->IsPlayer1TypeComputer() == false)
+            else if (
+                  ( (m_currentMovingPlayer == Game1v1::e_Game1v1Player1)      &&
+                    ( (Game1v1Config::Instance().GetMinimaxDepthPlayer1() !=
+                          m_configDialog->GetPlayer1SearchTreeDepth()        )
+                      ||
+                      (Game1v1Config::Instance().GetHeuristicTypePlayer1() !=
+                          m_configDialog->GetPlayer1Heuristic()              ) ) )
+                  ||
+                  ( (m_currentMovingPlayer == Game1v1::e_Game1v1Player2)      &&
+                    ( (Game1v1Config::Instance().GetMinimaxDepthPlayer2() !=
+                           m_configDialog->GetPlayer2SearchTreeDepth()        )
+                       ||
+                       (Game1v1Config::Instance().GetHeuristicTypePlayer2() !=
+                           m_configDialog->GetPlayer2Heuristic()              ) ) ) )
             {
-                Gtk::MessageDialog::MessageDialog infoMessage(
-                    *this,
-                    "Changes will be applied once current move is calculated by the computer",
-                    true,
-                    Gtk::MESSAGE_INFO,
-                    Gtk::BUTTONS_OK,
-                    true);
+                // current player was the computer and it still is.
+                // cancel current move process if there has been a change
+                // in any of the rest of the settings (all but the
+                // type of player: type of heuristic, depth of
+                // search tree)
 
-                if (infoMessage.run())
-                {
-                    ; // the dialog only has 1 button
-                }
+                // current move is going to be cancelled
+                showInfoMessage = true;
+
+                // cancel worker thread current computing process
+                m_workerThread.CancelComputing();
+
+                // empty out move queue
+                G_LOCK(s_computerMoveQueue);
+                    while (!s_computerMoveQueue.empty())
+                    {
+                        s_computerMoveQueue.pop();
+                    }
+                G_UNLOCK(s_computerMoveQueue);
+
+                // restart the progress bar
+                m_progressBar.set_fraction(0.0);
+
+                // save current config for it to be applied in the future
+                m_configDialog->SaveCurrentConfigIntoGlobalSettings();
+
+                // requesting the thread!!
+                RequestThreadToComputeNextMove(m_currentMovingPlayer, true);
+            }
+            else
+            {
+                // current player settings weren't modified. Save them
+                // but do not cancel current calculation
+                m_configDialog->SaveCurrentConfigIntoGlobalSettings();
             }
         }
-    }
+        else
+        {
+            // changes to the config dialog don't affect current move
+            // save configuration shown by the dialog into global config singleton
+            // new configuratio will be applied once current move is calculated
+            m_configDialog->SaveCurrentConfigIntoGlobalSettings();
+        }
+    } // if (result == Gtk::RESPONSE_OK)
 
     m_configDialog->hide();
+
+    if (showInfoMessage)
+    {
+        // message for the user to inform he/she wants calculation was cancelled
+        // after the config dialog is hidden
+        Gtk::MessageDialog::MessageDialog infoMessage(
+                *this,
+                "Previous move had to be cancelled before applying new settings",
+                true,
+                Gtk::MESSAGE_INFO,
+                Gtk::BUTTONS_OK,
+                true);
+
+        infoMessage.run(); // there will be only one type of value returned
+    }
 }
 
 void MainWindow::MenuItemHelpAbout_Activate()
@@ -748,7 +828,7 @@ void MainWindow::RequestThreadToComputeNextMove(
             *this,
             theMessage.str().c_str(),
             true,
-            Gtk::MESSAGE_INFO,
+            Gtk::MESSAGE_ERROR,
             Gtk::BUTTONS_OK,
             true);
 

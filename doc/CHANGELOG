@@ -2,6 +2,11 @@
     - Around 8% computing time improvement in the minimax algorithm (tested
       in a 32-bit centrino duo processor)
     - New version of the old NK points based heuristic
+    - Changes to the configuration are applied just after closing the config
+      dialog instead of waiting for the next turn as it happened in the 
+      previous version. If, for example, the user sets the search tree depth
+      to a big value and computing is taking too long, the config dialog
+      can be opened again, settings changed and changes applied instantly 
 
 13/05/2010: Version 0.2.0
     - Nucleation points are drawn on the board (if user selects the suitable
