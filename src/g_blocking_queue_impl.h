@@ -188,7 +188,7 @@ bool BlockingQueue<T>::TimedWaitPop(T &data, int32_t microsecs)
     g_get_current_time(&abs_time);
     g_time_val_add(&abs_time, microsecs);
 
-    gboolean retcode;
+    gboolean retcode = TRUE;
     while (m_theQueue.empty() && (retcode != FALSE))
     {
         // Returns TRUE if cond was signalled, or FALSE on timeout
