@@ -1,12 +1,28 @@
 // ============================================================================
+// Copyright 2009 Faustino Frechilla
+//
+// This file is part of Blockem.
+//
+// Blockem is free software: you can redistribute it and/or modify it under the
+// terms of the GNU General Public License as published by the Free Software
+// Foundation, either version 3 of the License, or (at your option) any later
+// version.
+//
+// Blockem is distributed in the hope that it will be useful, but WITHOUT ANY
+// WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+// details.
+//
+// You should have received a copy of the GNU General Public License along
+// with Blockem. If not, see http://www.gnu.org/licenses/.
+//
 /// @file g_blocking_queue.h
 /// @brief This file contains the Blocking queue class.
 ///
-/// @copyright
 /// @history
 /// Ref        Who                When        What
 ///            Faustino Frechilla 04-May-2009 Original development
-///            Faustino Frechilla 19-May-2010 Adapted to use glib mutexes and conds
+///            Faustino Frechilla 19-May-2010 Adapted to blockem using glib mutexes
 /// @endhistory
 ///
 // ============================================================================

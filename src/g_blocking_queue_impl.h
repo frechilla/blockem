@@ -1,17 +1,34 @@
 // ============================================================================
+// Copyright 2009 Faustino Frechilla
+//
+// This file is part of Blockem.
+//
+// Blockem is free software: you can redistribute it and/or modify it under the
+// terms of the GNU General Public License as published by the Free Software
+// Foundation, either version 3 of the License, or (at your option) any later
+// version.
+//
+// Blockem is distributed in the hope that it will be useful, but WITHOUT ANY
+// WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+// details.
+//
+// You should have received a copy of the GNU General Public License along
+// with Blockem. If not, see http://www.gnu.org/licenses/.
+//
 /// @file
 /// @brief This file contains the implementation of the Blocking queue class.
 ///
-/// @copyright
 /// @history
 /// Ref        Who                When        What
 ///            Faustino Frechilla 04-May-2009 Original development
+///            Faustino Frechilla 19-May-2010 Adapted to blockem using glib mutexes
 /// @endhistory
 ///
 // ============================================================================
 
-#ifndef BLOCKINGQUEUEIMPL_H_
-#define BLOCKINGQUEUEIMPL_H_
+#ifndef _GBLOCKINGQUEUEIMPL_H_
+#define _GBLOCKINGQUEUEIMPL_H_
 
 #include <assert.h>
 #include <errno.h>
@@ -199,4 +216,4 @@ bool BlockingQueue<T>::TimedWaitPop(T &data, int32_t microsecs)
     return rv;
 }
 
-#endif /* BLOCKINGQUEUEIMPL_H_ */
+#endif /* _GBLOCKINGQUEUEIMPL_H_ */
