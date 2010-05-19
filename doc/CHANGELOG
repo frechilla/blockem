@@ -6,7 +6,8 @@
       dialog instead of waiting for the next turn as it happened in the 
       previous version. If, for example, the user sets the search tree depth
       to a big value and computing is taking too long, the config dialog
-      can be opened again, settings changed and changes applied instantly 
+      can be opened again, settings changed and changes applied instantly
+    - Improved progress bar handling
 
 13/05/2010: Version 0.2.0
     - Nucleation points are drawn on the board (if user selects the suitable

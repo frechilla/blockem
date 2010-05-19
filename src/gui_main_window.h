@@ -35,6 +35,7 @@
 #include <exception>
 #include <gtkmm.h>
 
+#include "g_blocking_queue.h"
 #include "gui_about_dialog.h"
 #include "gui_config_dialog.h"
 #include "gui_drawing_area_show_pieces.h"
@@ -99,10 +100,24 @@ public:
     static void ProgressUpdate(float a_progress);
 
 private:
+
+    /// struct which contains the info that stores a move (piece + where + who)
+    /// it is for internal use within the MainWindow class
+    typedef struct
+    {
+        Piece                     piece;
+        Coordinate                coord;
+        Game1v1::eGame1v1Player_t playerToMove;
+    } CalculatedMove_t;
+
     /// @brief current game is finished. It is set to false at the beginning of a game
     ///        in LaunchNewGame and set to true whenever GameFinished is called
     /// it prevents GameFinished code to run twice for the same game
     bool m_currentGameFinished;
+
+    /// a thread safe queue to save moves calculated by worker thread
+    /// for the main thread to retrieve them
+    BlockingQueue<CalculatedMove_t> m_moveQueue;
 
     /// this variables contains whose go it is
     Game1v1::eGame1v1Player_t m_currentMovingPlayer;

@@ -53,23 +53,12 @@ static const int32_t MESSAGE_LENGTH = 100;
 static const uint32_t STOPWATCH_UPDATE_PERIOD_MILLIS = 500; // 1000 = 1 second
 
 
-// contains the info that stores a move (piece + where + who)
-typedef struct
-{
-    Piece               piece;
-    Coordinate          coord;
-    Game1v1::eGame1v1Player_t playerToMove;
-} sCalculatedMove_t;
-
-// this queue is used to communicate the worker thread with the main thread
+// static methods to communicate Game1v1 progress with MainWindow
+// this float is used to communicate the worker thread with the main thread
 // in a thread-safe manner. It's a bit dirty but it will do it for now
-static std::queue< sCalculatedMove_t > s_computerMoveQueue = std::queue< sCalculatedMove_t >();
+static float s_computingCurrentProgress = 0.0;
 // static easy to use mutex for shared data across threads
 // http://tadeboro.blogspot.com/2009/06/multi-threaded-gtk-applications.html
-G_LOCK_DEFINE_STATIC(s_computerMoveQueue);
-
-// static methods to communicate Game1v1 progress with MainWindow
-static float s_computingCurrentProgress = 0.0;
 G_LOCK_DEFINE_STATIC(s_computingCurrentProgress);
 
 // this is a pointer to the MainWindow itself so it can be used from the static method
@@ -547,17 +536,19 @@ void MainWindow::MenuItemSettingsPreferences_Activate()
                 m_workerThread.CancelComputing();
 
                 // empty out move queue
-                G_LOCK(s_computerMoveQueue);
-                    while (!s_computerMoveQueue.empty())
-                    {
-                        s_computerMoveQueue.pop();
-                    }
-                G_UNLOCK(s_computerMoveQueue);
+                while (!m_moveQueue.IsEmpty())
+                {
+                    CalculatedMove_t dummy;
+                    m_moveQueue.Pop(dummy);
+                }
 
                 // save new settings into global config
                 m_configDialog->SaveCurrentConfigIntoGlobalSettings();
 
-                // restart the progress bar (computer is not thinking thisn move anymore)
+                // restart the progress bar (computer is not thinking this move anymore)
+                G_LOCK(s_computingCurrentProgress);
+                    s_computingCurrentProgress = 0.0;
+                G_UNLOCK(s_computingCurrentProgress);
                 m_progressBar.set_fraction(0.0);
 
                 // allow the new human user to put down pieces on the board
@@ -595,14 +586,16 @@ void MainWindow::MenuItemSettingsPreferences_Activate()
                 m_workerThread.CancelComputing();
 
                 // empty out move queue
-                G_LOCK(s_computerMoveQueue);
-                    while (!s_computerMoveQueue.empty())
-                    {
-                        s_computerMoveQueue.pop();
-                    }
-                G_UNLOCK(s_computerMoveQueue);
+                while (!m_moveQueue.IsEmpty())
+                {
+                    CalculatedMove_t dummy;
+                    m_moveQueue.Pop(dummy);
+                }
 
-                // restart the progress bar
+                // restart the progress bar (computer is not thinking this move anymore)
+                G_LOCK(s_computingCurrentProgress);
+                    s_computingCurrentProgress = 0.0;
+                G_UNLOCK(s_computingCurrentProgress);
                 m_progressBar.set_fraction(0.0);
 
                 // save current config for it to be applied in the future
@@ -662,12 +655,11 @@ void MainWindow::LaunchNewGame()
     }
 
     // clear old moves from the move queue. They belong to the old game
-    G_LOCK(s_computerMoveQueue);
-        while (!s_computerMoveQueue.empty())
-        {
-            s_computerMoveQueue.pop();
-        }
-    G_UNLOCK(s_computerMoveQueue);
+    while (!m_moveQueue.IsEmpty())
+    {
+        CalculatedMove_t dummy;
+        m_moveQueue.Pop(dummy);
+    }
 
     // reset the current game
     m_the1v1Game.Reset(
@@ -702,6 +694,9 @@ void MainWindow::LaunchNewGame()
     m_stopWatchLabelPlayer2.Reset();
 
     // restart the progress bar
+    G_LOCK(s_computingCurrentProgress);
+        s_computingCurrentProgress = 0.0;
+    G_UNLOCK(s_computingCurrentProgress);
     m_progressBar.set_fraction(0.0);
 
     // Start player1's timer
@@ -854,20 +849,28 @@ void MainWindow::WorkerThread_computingFinished(
     // WARNING: this method is run by another thread.
     // once the m_signal_moveComputed signal is emited the
     // main thread will update the GUI widgets
+    CalculatedMove_t thisMove;
+    thisMove.piece = a_piece;
+    thisMove.coord = a_coord;
+    thisMove.playerToMove = a_playerToMove;
+#if defined(DEBUG) || defined(DEBUG_PRINT)
+    bool result =
+#endif
+    m_moveQueue.Push(thisMove);
 
-    G_LOCK(s_computerMoveQueue);
-        sCalculatedMove_t data;
-        data.piece = a_piece;
-        data.coord = a_coord;
-        data.playerToMove = a_playerToMove;
-        s_computerMoveQueue.push(data);
-    G_UNLOCK(s_computerMoveQueue);
 
 #ifdef DEBUG_PRINT
+    if (result == false)
+    {
+        std::cout << "Computer move could not be added to the queue" << std::endl;
+    }
     if (a_piece.GetType() == e_noPiece)
     {
         std::cout << "Computer can't move" << std::endl;
     }
+#endif
+#ifdef DEBUG
+    assert(result == true);
 #endif
 
     // this signal is being issued from the MainWindowWorkerThread
@@ -916,13 +919,24 @@ void MainWindow::BoardDrawingArea_BoardClicked(const Coordinate &a_coord, const 
 
     // don't save the move directly in the board. Use the same interface as the worker thread
     // Game 1v1 board will be only be modified in NotifyMoveComputed
-    G_LOCK(s_computerMoveQueue);
-        sCalculatedMove_t data;
-        data.piece = a_piece;
-        data.coord = a_coord;
-        data.playerToMove = m_the1v1Game.GetPlayerType(a_player);
-        s_computerMoveQueue.push(data);
-    G_UNLOCK(s_computerMoveQueue);
+    CalculatedMove_t thisMove;
+    thisMove.piece = a_piece;
+    thisMove.coord = a_coord;
+    thisMove.playerToMove =  m_the1v1Game.GetPlayerType(a_player);
+#if defined(DEBUG) || defined(DEBUG_PRINT)
+    bool result =
+#endif
+    m_moveQueue.Push(thisMove);
+
+#ifdef DEBUG_PRINT
+    if (result == false)
+    {
+        std::cout << "Human move could not be added to the queue" << std::endl;
+    }
+#endif
+#ifdef DEBUG
+    assert(result == true);
+#endif
 
     // this method is not expected to be run by another thread, but if both worker thread and human
     // user use the same interface, things are much easier to understand
@@ -943,35 +957,33 @@ void MainWindow::NotifyMoveComputed()
     Coordinate latestCoord(COORD_UNINITIALISED, COORD_UNINITIALISED);
     Game1v1::eGame1v1Player_t latestPlayerToMove;
 
-    G_LOCK(s_computerMoveQueue);
-
-        if (s_computerMoveQueue.empty())
+    CalculatedMove_t currentMove;
+    bool moveQueueEmpty = true;
+    while(m_moveQueue.TryPop(currentMove))
+    {
+        if (moveQueueEmpty == true)
         {
-            G_UNLOCK(s_computerMoveQueue);
-            return;
+            moveQueueEmpty = false;
         }
 
-        // save the latest moves on the board
-        do
+        latestPiece        = currentMove.piece;
+        latestCoord        = currentMove.coord;
+        latestPlayerToMove = currentMove.playerToMove;
+
+        if (latestPiece.GetType() != e_noPiece)
         {
-            latestPiece        = s_computerMoveQueue.front().piece;
-            latestCoord        = s_computerMoveQueue.front().coord;
-            latestPlayerToMove = s_computerMoveQueue.front().playerToMove;
+            m_the1v1Game.PutDownPiece(
+                    latestPiece,
+                    latestCoord,
+                    latestPlayerToMove);
+        }
+    } // while(m_moveQueue.TryPop(currentMove))
 
-            if (latestPiece.GetType() != e_noPiece)
-            {
-                m_the1v1Game.PutDownPiece(
-                        latestPiece,
-                        latestCoord,
-                        latestPlayerToMove);
-            }
-
-            s_computerMoveQueue.pop();
-
-        } while (!s_computerMoveQueue.empty());
-
-    G_UNLOCK(s_computerMoveQueue);
-
+    if (moveQueueEmpty)
+    {
+        // there was no moves stored. Nothing to be done
+        return;
+    }
 
     // actions will depend on who put down the latest piece
     const Player &latestPlayer   = m_the1v1Game.GetPlayer(latestPlayerToMove);
@@ -1025,6 +1037,9 @@ void MainWindow::NotifyMoveComputed()
         // resume the opponent's stopwatch
         stopWatchOpponent->Continue();
         // restart the progress bar
+        G_LOCK(s_computingCurrentProgress);
+            s_computingCurrentProgress = 0.0;
+        G_UNLOCK(s_computingCurrentProgress);
         m_progressBar.set_fraction(0.0);
 
         // it will be platestOpponent's go next. set piece colour to latestOpponent's
@@ -1127,6 +1142,9 @@ void MainWindow::GameFinished()
     m_editPieceTable->set_sensitive(true);
 
     // restart the progress bar
+    G_LOCK(s_computingCurrentProgress);
+        s_computingCurrentProgress = 0.0;
+    G_UNLOCK(s_computingCurrentProgress);
     m_progressBar.set_fraction(0.0);
 
     int32_t squaresLeftPlayer1 = 0;
