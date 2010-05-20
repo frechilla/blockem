@@ -60,7 +60,7 @@ int main(int argc, char** argv)
     Board b2(b1);
     Board b3(6, 6, ' ');
 
-    b1.SetSquare('1', 0, 0);
+    b1.SetPlayerInCoord(Coordinate(0, 0), the1v1Test.GetPlayer(Game1v1::e_Game1v1Player1));
     b3 = b1;
     assert(b3.IsCoordEmpty(Coordinate(0, 0)) == b1.IsCoordEmpty(Coordinate(0, 0)));
 

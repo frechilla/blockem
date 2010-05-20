@@ -32,4 +32,3 @@ supposed to be integrated in blockem at some point in the future:
    current piece coords. At the moment there's a call to SetCurrentCoords per
    every coordinate retrieved from the array. Might be easier to check first
    in game_total_allocation since it is easier
- + SetSquare function in board class should be gone.

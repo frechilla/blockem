@@ -984,8 +984,24 @@ bool Game1v1::LoadGame(std::istream& a_inStream)
         int charInLine = 5;
         for (int j = 0; j < m_board.GetNColumns() ; j++)
         {
-        	m_board.SetSquare(line.at(charInLine), i, j);
-             charInLine += 4;
+            switch(line.at(charInLine))
+            {
+            case CHAR_EMPTY:
+                m_board.BlankCoord(Coordinate(i, j));
+                break;
+            case CHAR_PLAYER1:
+                m_board.SetPlayerInCoord(Coordinate(i, j), m_player1);
+                break;
+            case CHAR_PLAYER2:
+                m_board.SetPlayerInCoord(Coordinate(i, j), m_player2);
+                break;
+            default:
+                m_board.BlankCoord(Coordinate(i, j));
+#ifdef DEBUG
+                assert(0);
+#endif
+            } // switch(line.at(charInLine))
+            charInLine += 4;
         }
     }
     getline(a_inStream, line); // don't need it

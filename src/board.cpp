@@ -127,17 +127,6 @@ void Board::CopyFromObject(const Board &a_src)
     }
 }
 
-void Board::SetSquare(char a_char, int32_t a_row, int32_t a_col)
-{
-#ifdef DEBUG
-    assert(a_row >= 0);
-    assert(a_row < m_nRows);
-    assert(a_col >= 0);
-    assert(a_col < m_nColumns);
-#endif
-    m_theBoard[a_row][a_col] = a_char;
-}
-
 void Board::PrintBoard(std::ostream& a_outStream) const
 {
     a_outStream << "  ";

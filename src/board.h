@@ -117,10 +117,6 @@ public:
     /// blank out the board
     void Reset();
 
-    /// set a square of the board to a particular value
-    /// should be used as little as possible. Better to use SetPlayerInCoord
-    void SetSquare(char a_char, int32_t a_row, int32_t a_col);
-
 private:
     /// the actual board
     char** m_theBoard;
