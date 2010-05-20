@@ -100,7 +100,7 @@ int main(int argc, char **argv)
     GError *error = NULL;
     GOptionContext *cmdContext;
 
-    cmdContext = g_option_context_new ("- A GNU clone of 1vs1 blokus");
+    cmdContext = g_option_context_new ("- The GNU polyominoes board game");
     // to add i18n:
     //   g_option_context_add_main_entries (cmdContext, s_cmdEntries, GETTEXT_PACKAGE);
     g_option_context_add_main_entries (cmdContext, s_cmdEntries, NULL);
