@@ -1,0 +1,33 @@
+Package: blockem
+Version: 0.2.0-4
+Section: games
+Priority: optional
+Maintainer: Faustino Frechilla <frechilla@gmail.com>
+Architecture: i386
+Depends: libc6 (>= 2.1.3), libgtkmm-2.4-1c2a (>= 2.16.0-2), libglibmm-2.4-1c2a (>= 2.20.1-1), libglib2.0-0 (>= 2.20.0)
+Installed-Size: 9709
+Maintainer: Faustino Frechilla <frechilla@gmail.com>
+Description: The GNU polyominoes board game
+ Blockem is a board game which consists on putting down
+ a set of 21 pieces (set of all the possible free polyominoes 
+ from 1 to 5 squares) while preventing your opponent from doing 
+ the same. The blockem homepage can be found at 
+ http://blockem.sourceforge.net/
+ .
+ There are 3 basic rules to put down pieces on the board:
+  - The first piece played of each color is placed 5 squares far
+ from one of the board's four corners. The opponent starts 5 
+ squares far from the opposite corner
+  - Each new piece played must be placed so that it touches at
+ least one piece of the same color, with only corner-to-corner
+ contact allowed. (Edges cannot touch)
+  - When a player cannot place a piece, he or she passes, and
+ play continues as normal. The game ends when no one can place
+ a piece
+ .
+ A lot of effort has been invested on letting possible 
+ developers to add new heuristics. This package contains only
+ the binary package, but if you are interested on this part of
+ blockem have a look at 
+ http://blockem.sourceforge.net/doc/heuristics.html
+

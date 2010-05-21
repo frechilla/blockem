@@ -10,8 +10,6 @@ supposed to be integrated in blockem at some point in the future:
    "think" the next move)
  + It should be possible to generate doxygen. Add it to the makefiles
  + Installer for the windows platform
- + precompiled binary in a .deb file for debain based linux distributions. RPM
-   file format should be trivial (see alien) once .deb is done
  + There's no need to compile the test app with all the gui libraries and flags
    Have a look at configure.ac and src/test/Makefile.am to fix it
  + Images and icons are not shown correctly in windows
