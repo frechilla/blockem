@@ -8,6 +8,7 @@
       to a big value and computing is taking too long, the config dialog
       can be opened again, settings changed and changes applied instantly
     - Improved progress bar handling
+    - Accelerators for New and quit options in the Game menu
 
 13/05/2010: Version 0.2.0
     - Nucleation points are drawn on the board (if user selects the suitable

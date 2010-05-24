@@ -104,6 +104,7 @@ const char GUI_PATH_TO_128PICTURE[] = "pixmaps/blockemlogo128.png";
 const char GUI_MAIN_WINDOW_NAME[]          = "window_main";
 const char GUI_ABOUT_DIALOG_NAME[]         = "aboutdialog";
 const char GUI_CONFIG_DIALOG_NAME[]        = "configdialog";
+const char GUI_MENU_ITEM_ACCELERATOR[]     = "accelgroup1";
 const char GUI_MENU_ITEM_GAME_NEW[]        = "imagemenuitem_game_new";
 const char GUI_MENU_ITEM_GAME_QUIT[]       = "imagemenuitem_game_quit";
 const char GUI_MENU_ITEM_SETTINGS_NKPOINTS[] = "checkmenuitem_settings_nkpoints";

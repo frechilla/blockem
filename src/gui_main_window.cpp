@@ -171,38 +171,51 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     }
 
     // retrieve the rest of objects from the GUI design
-    m_gtkBuilder->get_widget(GUI_MENU_ITEM_GAME_NEW, m_newMenuItem);
-    if (m_newMenuItem == NULL)
+    m_accelGroup = Glib::RefPtr<Gtk::AccelGroup>::cast_static(
+            m_gtkBuilder->get_object(GUI_MENU_ITEM_ACCELERATOR));
+    if (!m_accelGroup)
+    {
+        throw new GUIException(std::string("menu accelerator item retrieval failed"));
+    }
+
+    m_newMenuItem = Glib::RefPtr<Gtk::MenuItem>::cast_static(
+            m_gtkBuilder->get_object(GUI_MENU_ITEM_GAME_NEW));
+    if (!m_newMenuItem)
     {
         throw new GUIException(std::string("new menu item retrieval failed"));
     }
 
-    m_gtkBuilder->get_widget(GUI_MENU_ITEM_GAME_QUIT, m_quitMenuItem);
-    if (m_quitMenuItem == NULL)
+    m_quitMenuItem = Glib::RefPtr<Gtk::MenuItem>::cast_static(
+            m_gtkBuilder->get_object(GUI_MENU_ITEM_GAME_QUIT));
+    if (!m_quitMenuItem)
     {
         throw new GUIException(std::string("quit menu item retrieval failed"));
     }
 
-    m_gtkBuilder->get_widget(GUI_MENU_ITEM_SETTINGS_NKPOINTS, m_settingsNKPointsMenuItem);
-    if (m_settingsNKPointsMenuItem == NULL)
+    m_settingsNKPointsMenuItem = Glib::RefPtr<Gtk::CheckMenuItem>::cast_static(
+            m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_NKPOINTS));
+    if (!m_settingsNKPointsMenuItem)
     {
         throw new GUIException(std::string("view nk points menu item retrieval failed"));
     }
 
-    m_gtkBuilder->get_widget(GUI_MENU_ITEM_SETTINGS_FORBIDDENAREA, m_settingsForbiddenAreaMenuItem);
-    if (m_settingsForbiddenAreaMenuItem == NULL)
+    m_settingsForbiddenAreaMenuItem = Glib::RefPtr<Gtk::CheckMenuItem>::cast_static(
+            m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_FORBIDDENAREA));
+    if (!m_settingsForbiddenAreaMenuItem)
     {
         throw new GUIException(std::string("show forbidden area menu item retrieval failed"));
     }
 
-    m_gtkBuilder->get_widget(GUI_MENU_ITEM_SETTINGS_PREFS, m_settingsPrefsMenuItem);
-    if (m_settingsPrefsMenuItem == NULL)
+    m_settingsPrefsMenuItem = Glib::RefPtr<Gtk::MenuItem>::cast_static(
+            m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_PREFS));
+    if (!m_settingsPrefsMenuItem)
     {
         throw new GUIException(std::string("settings->preferences menu item retrieval failed"));
     }
 
-    m_gtkBuilder->get_widget(GUI_MENU_ITEM_HELP_ABOUT, m_helpAboutMenuItem);
-    if (m_helpAboutMenuItem == NULL)
+    m_helpAboutMenuItem = Glib::RefPtr<Gtk::MenuItem>::cast_static(
+            m_gtkBuilder->get_object(GUI_MENU_ITEM_HELP_ABOUT));
+    if (!m_helpAboutMenuItem)
     {
         throw new GUIException(std::string("help->about menu item retrieval failed"));
     }
@@ -237,6 +250,8 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
         throw new GUIException(std::string("status bar hbox retrieval failed"));
     }
 
+    // accelerators for main_window menu
+    this->add_accel_group(m_accelGroup);
 
     // place the custom widgets where they are expected to be
     // pack_start (Widget& child, bool expand, bool fill, guint padding=0)
@@ -955,7 +970,7 @@ void MainWindow::NotifyMoveComputed()
     // the latest piece and latest coord deployed
     Piece latestPiece(e_noPiece);
     Coordinate latestCoord(COORD_UNINITIALISED, COORD_UNINITIALISED);
-    Game1v1::eGame1v1Player_t latestPlayerToMove;
+    Game1v1::eGame1v1Player_t latestPlayerToMove = Game1v1::e_Game1v1Player1;
 
     CalculatedMove_t currentMove;
     bool moveQueueEmpty = true;

@@ -28,6 +28,7 @@
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
+                        <property name="accel_group">accelgroup1</property>
                       </object>
                     </child>
                     <child>
@@ -65,6 +66,7 @@
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
+                        <property name="accel_group">accelgroup1</property>
                       </object>
                     </child>
                   </object>
@@ -943,4 +945,5 @@ r</property>
       </object>
     </child>
   </object>
+  <object class="GtkAccelGroup" id="accelgroup1"/>
 </interface>

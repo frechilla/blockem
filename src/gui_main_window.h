@@ -155,12 +155,13 @@ private:
     /// @brief the table where the selected piece is edited
     TableEditPiece* m_editPieceTable;
 
-    Gtk::MenuItem* m_newMenuItem;
-    Gtk::MenuItem* m_quitMenuItem;
-    Gtk::MenuItem* m_helpAboutMenuItem;
-    Gtk::MenuItem* m_settingsPrefsMenuItem;
-    Gtk::CheckMenuItem* m_settingsNKPointsMenuItem;
-    Gtk::CheckMenuItem* m_settingsForbiddenAreaMenuItem;
+    Glib::RefPtr<Gtk::AccelGroup> m_accelGroup;
+    Glib::RefPtr<Gtk::MenuItem> m_newMenuItem;
+    Glib::RefPtr<Gtk::MenuItem> m_quitMenuItem;
+    Glib::RefPtr<Gtk::MenuItem> m_helpAboutMenuItem;
+    Glib::RefPtr<Gtk::MenuItem> m_settingsPrefsMenuItem;
+    Glib::RefPtr<Gtk::CheckMenuItem> m_settingsNKPointsMenuItem;
+    Glib::RefPtr<Gtk::CheckMenuItem> m_settingsForbiddenAreaMenuItem;
 
     /// @brief the vertical box that keeps the board + pieces
     Gtk::VBox* m_vBoxDrawing;
