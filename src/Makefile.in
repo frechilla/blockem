@@ -40,7 +40,7 @@ bin_PROGRAMS = blockem$(EXEEXT)
 
 #DATADIR in windows is the current directory
 # otherwise autotools "datadir" is used
-@OS_WIN32_TRUE@am__append_1 = -DDATADIR=./
+@OS_WIN32_TRUE@am__append_1 = -DDATADIR=.
 @OS_WIN32_FALSE@am__append_2 = -DDATADIR=\"$(datadir)/@PACKAGE@\"
 @OS_WIN32_TRUE@am__append_3 = blockem_res.o
 @OS_WIN32_TRUE@am__append_4 = blockem_res.o

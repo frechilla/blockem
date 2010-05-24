@@ -10,7 +10,7 @@ AM_LDFLAGS =
 #DATADIR in windows is the current directory
 # otherwise autotools "datadir" is used
 if OS_WIN32    
-    AM_CXXFLAGS += -DDATADIR=./
+    AM_CXXFLAGS += -DDATADIR=.
 else
     AM_CXXFLAGS += -DDATADIR=\"$(datadir)/@PACKAGE@\"
 endif
