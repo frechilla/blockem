@@ -58,12 +58,12 @@ const Heuristic::sHeuristicData_t Heuristic::m_heuristicData[e_heuristicCount] =
      Heuristic::CalculateRandom,
      std::string("Random"),
      std::string("Random heuristic. Evaluation function returns a random value so any heuristic can be checked against it")
+    },
+    {e_heuristicAmountOfPieces,
+     Heuristic::CalculateNPieces,
+     std::string("Amount of pieces"),
+     std::string("The more pieces can be put down per NK point, the better. It's slow and a bit crazy (sometimes)")
     }
-//    ,{e_heuristicAmountOfPieces,
-//     Heuristic::CalculateNPieces,
-//     std::string("Amount of pieces"),
-//     std::string("The more pieces can be put down, the better")
-//    }
 };
 
 Heuristic::Heuristic()
@@ -371,9 +371,9 @@ int32_t Heuristic::CalculateNPieces(
         }
     }
 
-    rv += (squaresMe * 10);
+    rv += (squaresMe << 7); // * 128
     rv += (nSquaresCanDeployMe);
-    //rv -= (squaresOpponent);
+    rv -= (squaresOpponent << 7); // * 128
     //rv -= (nSquaresCanDeployOpponent * 4);
 
     return rv;

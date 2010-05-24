@@ -61,8 +61,7 @@ public:
         e_heuristicNKWeightedv1,
         e_heuristicSimple,
         e_heuristicRandom,
-
-//        e_heuristicAmountOfPieces,
+        e_heuristicAmountOfPieces,
 
         e_heuristicCount, // stores the amount of heuristics. Must be always at the end
     } eHeuristicType_t;

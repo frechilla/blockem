@@ -46,9 +46,6 @@
 static const char MESSAGE_ASK_BEFORE_CLOSE[] =
         "The game is computing the next move. Are you sure do you want to close the application?";
 
-/// length of the custom messages to be shown to the user
-static const int32_t MESSAGE_LENGTH = 100;
-
 /// how often stopwatches are updated
 static const uint32_t STOPWATCH_UPDATE_PERIOD_MILLIS = 500; // 1000 = 1 second
 
@@ -171,49 +168,49 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     }
 
     // retrieve the rest of objects from the GUI design
-    m_accelGroup = Glib::RefPtr<Gtk::AccelGroup>::cast_static(
+    m_accelGroup = Glib::RefPtr<Gtk::AccelGroup>::cast_dynamic(
             m_gtkBuilder->get_object(GUI_MENU_ITEM_ACCELERATOR));
     if (!m_accelGroup)
     {
         throw new GUIException(std::string("menu accelerator item retrieval failed"));
     }
 
-    m_newMenuItem = Glib::RefPtr<Gtk::MenuItem>::cast_static(
+    m_newMenuItem = Glib::RefPtr<Gtk::MenuItem>::cast_dynamic(
             m_gtkBuilder->get_object(GUI_MENU_ITEM_GAME_NEW));
     if (!m_newMenuItem)
     {
         throw new GUIException(std::string("new menu item retrieval failed"));
     }
 
-    m_quitMenuItem = Glib::RefPtr<Gtk::MenuItem>::cast_static(
+    m_quitMenuItem = Glib::RefPtr<Gtk::MenuItem>::cast_dynamic(
             m_gtkBuilder->get_object(GUI_MENU_ITEM_GAME_QUIT));
     if (!m_quitMenuItem)
     {
         throw new GUIException(std::string("quit menu item retrieval failed"));
     }
 
-    m_settingsNKPointsMenuItem = Glib::RefPtr<Gtk::CheckMenuItem>::cast_static(
+    m_settingsNKPointsMenuItem = Glib::RefPtr<Gtk::CheckMenuItem>::cast_dynamic(
             m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_NKPOINTS));
     if (!m_settingsNKPointsMenuItem)
     {
         throw new GUIException(std::string("view nk points menu item retrieval failed"));
     }
 
-    m_settingsForbiddenAreaMenuItem = Glib::RefPtr<Gtk::CheckMenuItem>::cast_static(
+    m_settingsForbiddenAreaMenuItem = Glib::RefPtr<Gtk::CheckMenuItem>::cast_dynamic(
             m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_FORBIDDENAREA));
     if (!m_settingsForbiddenAreaMenuItem)
     {
         throw new GUIException(std::string("show forbidden area menu item retrieval failed"));
     }
 
-    m_settingsPrefsMenuItem = Glib::RefPtr<Gtk::MenuItem>::cast_static(
+    m_settingsPrefsMenuItem = Glib::RefPtr<Gtk::MenuItem>::cast_dynamic(
             m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_PREFS));
     if (!m_settingsPrefsMenuItem)
     {
         throw new GUIException(std::string("settings->preferences menu item retrieval failed"));
     }
 
-    m_helpAboutMenuItem = Glib::RefPtr<Gtk::MenuItem>::cast_static(
+    m_helpAboutMenuItem = Glib::RefPtr<Gtk::MenuItem>::cast_dynamic(
             m_gtkBuilder->get_object(GUI_MENU_ITEM_HELP_ABOUT));
     if (!m_helpAboutMenuItem)
     {
@@ -251,7 +248,7 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     }
 
     // accelerators for main_window menu
-    this->add_accel_group(m_accelGroup);
+    //this->add_accel_group(m_accelGroup);
 
     // place the custom widgets where they are expected to be
     // pack_start (Widget& child, bool expand, bool fill, guint padding=0)
