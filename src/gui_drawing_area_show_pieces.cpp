@@ -134,12 +134,12 @@ bool DrawingAreaShowPieces::on_expose_event(GdkEventExpose* event)
 	int32_t height = allocation.get_height();
 
 	// side of the small square which makes up the pieces
-	int32_t littleSquare;
+	int32_t littleSquare = 0;
 
 	// coordinates for the centre of the drawing area
 	// they are different depending on the orientation of the drawing area
-	int32_t xc;
-	int32_t yc;
+	int32_t xc = 0;
+	int32_t yc = 0;
 
 	switch(m_orientation)
 	{
@@ -335,11 +335,11 @@ bool DrawingAreaShowPieces::on_button_press_event(GdkEventButton *event)
     int32_t height = allocation.get_height();
 
     // side of the small square which makes up the pieces
-    int32_t littleSquare;
+    int32_t littleSquare = 0;
 
     // the sides of the rectangle which contains the pieces
-    int32_t rectHeight;
-    int32_t rectWidth;
+    int32_t rectHeight = 0;
+    int32_t rectWidth = 0;
 
     switch(m_orientation)
     {

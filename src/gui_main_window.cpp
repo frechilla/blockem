@@ -1001,9 +1001,12 @@ void MainWindow::NotifyMoveComputed()
     const Player &latestPlayer   = m_the1v1Game.GetPlayer(latestPlayerToMove);
     const Player &latestOpponent = m_the1v1Game.GetOpponent(latestPlayerToMove);
 
-    Game1v1::eGame1v1Player_t followingPlayer; // player who didn't put a piece o the board this time
-    StopWatchLabel* stopWatchPlayer;   // pointer to the stopwatch of the latest player to move
-    StopWatchLabel* stopWatchOpponent; // pointer to the stopwatch of the opponent of latest player to move
+    // player who didn't put a piece o the board this time
+    Game1v1::eGame1v1Player_t followingPlayer;
+    // pointer to the stopwatch of the latest player to move
+    StopWatchLabel* stopWatchPlayer = NULL;
+    // pointer to the stopwatch of the opponent of latest player to move
+    StopWatchLabel* stopWatchOpponent = NULL;
     switch (latestPlayerToMove)
     {
     case Game1v1::e_Game1v1Player1:
