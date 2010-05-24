@@ -4,8 +4,16 @@ bin_PROGRAMS = blockem
 
 INCLUDES = -I$(srcdir)
 
-AM_CXXFLAGS = $(GTKMM_CFLAGS) $(GLADEMM_CFLAGS) $(GTHREAD_CFLAGS) -DDATADIR=\"$(datadir)/@PACKAGE@\"
+AM_CXXFLAGS = $(GTKMM_CFLAGS) $(GLADEMM_CFLAGS) $(GTHREAD_CFLAGS)
 AM_LDFLAGS = 
+
+#DATADIR in windows is the current directory
+# otherwise autotools "datadir" is used
+if OS_WIN32    
+    AM_CXXFLAGS += -DDATADIR=./
+else
+    AM_CXXFLAGS += -DDATADIR=\"$(datadir)/@PACKAGE@\"
+endif
 
 # if uncommented compiletime.h will be overwritten everytime the `make` command is run
 #.PHONY: compiletime.h
