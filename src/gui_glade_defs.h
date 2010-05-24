@@ -87,18 +87,17 @@
 #ifndef GUI_GLADE_H_
 #define GUI_GLADE_H_
 
+#include <string>
+
 // path to the pictures and logos
-#ifdef DATADIR
-const char GUI_PATH_TO_LOGO[]       = DATADIR"/pixmaps/blockemlogo.png";
-const char GUI_PATH_TO_16PICTURE[]  = DATADIR"/pixmaps/blockemlogo16.png";
-const char GUI_PATH_TO_48PICTURE[]  = DATADIR"/pixmaps/blockemlogo48.png";
-const char GUI_PATH_TO_128PICTURE[] = DATADIR"/pixmaps/blockemlogo128.png";
-#else
-const char GUI_PATH_TO_LOGO[]       = "pixmaps/blockemlogo.png";
-const char GUI_PATH_TO_16PICTURE[]  = "pixmaps/blockemlogo16.png";
-const char GUI_PATH_TO_48PICTURE[]  = "pixmaps/blockemlogo48.png";
-const char GUI_PATH_TO_128PICTURE[] = "pixmaps/blockemlogo128.png";
-#endif // DATADIR
+#ifndef DATADIR
+#define DATADIR "."
+#endif
+
+const std::string GUI_PATH_TO_LOGO_STR      (std::string(DATADIR) + std::string("/pixmaps/blockemlogo.png"));
+const std::string GUI_PATH_TO_16PICTURE_STR (std::string(DATADIR) + std::string("/pixmaps/blockemlogo16.png"));
+const std::string GUI_PATH_TO_48PICTURE_STR (std::string(DATADIR) + std::string("/pixmaps/blockemlogo48.png"));
+const std::string GUI_PATH_TO_128PICTURE_STR(std::string(DATADIR) + std::string("/pixmaps/blockemlogo128.png"));
 
 // have a look at the name of the glade interfaces
 const char GUI_MAIN_WINDOW_NAME[]          = "window_main";

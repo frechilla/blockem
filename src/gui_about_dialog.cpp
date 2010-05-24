@@ -43,18 +43,18 @@ AboutDialog::AboutDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builde
     this->set_version(PACKAGE_VERSION);
 
     // try to set the big logo in the AboutDialog
-    if (g_file_test(GUI_PATH_TO_LOGO, G_FILE_TEST_IS_REGULAR))
+    if (g_file_test(GUI_PATH_TO_LOGO_STR.c_str(), G_FILE_TEST_IS_REGULAR))
     {
         try
         {
-            picture = Gdk::Pixbuf::create_from_file(GUI_PATH_TO_LOGO);
+            picture = Gdk::Pixbuf::create_from_file(GUI_PATH_TO_LOGO_STR.c_str());
         }
         catch(...)
         {
             picture.reset();
             std::cerr
                << "WARNING: Exception occurred when setting the logo into the AboutDialog from "
-               << GUI_PATH_TO_LOGO
+               << GUI_PATH_TO_LOGO_STR
                << std::endl;
         }
 
@@ -65,18 +65,18 @@ AboutDialog::AboutDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builde
     }
 
     // try to set up the icon in the AboutDialog
-    if (g_file_test(GUI_PATH_TO_16PICTURE, G_FILE_TEST_IS_REGULAR))
+    if (g_file_test(GUI_PATH_TO_16PICTURE_STR.c_str(), G_FILE_TEST_IS_REGULAR))
     {
         try
         {
-            picture = Gdk::Pixbuf::create_from_file(GUI_PATH_TO_16PICTURE);
+            picture = Gdk::Pixbuf::create_from_file(GUI_PATH_TO_16PICTURE_STR.c_str());
         }
         catch(...)
         {
             picture.reset();
             std::cerr
                << "WARNING: Exception occurred when setting the 16x16 icon into the AboutDialog from "
-               << GUI_PATH_TO_16PICTURE
+               << GUI_PATH_TO_16PICTURE_STR
                << std::endl;
         }
 
