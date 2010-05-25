@@ -248,7 +248,7 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     }
 
     // accelerators for main_window menu
-    //this->add_accel_group(m_accelGroup);
+    this->add_accel_group(m_accelGroup);
 
     // place the custom widgets where they are expected to be
     // pack_start (Widget& child, bool expand, bool fill, guint padding=0)
