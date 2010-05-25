@@ -145,6 +145,14 @@ protected:
             uint64_t      a_bitwiseBoard,
             uint64_t      a_bitwisePlayerBoard);
 
+
+    /// @calculates a nk based heuristic value of thisCoord
+    static int32_t NKBasedHeuristicThisCoord(
+            const Board  &a_board,
+            const Player &a_playerMe,
+            const Player &a_playerOpponent,
+            const Coordinate &thisCoord);
+
 private:
     /// @brief constructor
     /// The constructor of the class does nothing. This class is used as a container for

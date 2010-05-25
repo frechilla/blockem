@@ -228,7 +228,6 @@ int32_t Heuristic::CalculateNKWeightedv2(
                     opponentNKPoint = true;
 
                     valueNkOpponent += weightedValue;
-
                 } // if (a_playerOpponent->IsNucleationPoint(thisCoord.m_row, thisCoord.m_col))
 
                 if (a_playerMe.IsNucleationPoint(thisCoord))
@@ -255,7 +254,6 @@ int32_t Heuristic::CalculateNKWeightedv2(
                     }
 
                     valueNkMe += weightedValue;
-
                 } // if (a_playerMe->IsNucleationPoint(thisCoord.m_row, thisCoord.m_col))
             }
             else if (a_board.IsPlayerInCoord(thisCoord, a_playerMe))
@@ -266,8 +264,8 @@ int32_t Heuristic::CalculateNKWeightedv2(
             {
                 squaresOpponent++;
             }
-        }
-    }
+        } // for (thisCoord.m_col = 0; thisCoord.m_col < a_board.GetNColumns() ; thisCoord.m_col++)
+    } // for (thisCoord.m_row = 0; thisCoord.m_row < a_board.GetNRows() ; thisCoord.m_row++)
 
     rv += (valueNkMe);
     rv += (squaresMe);
@@ -286,8 +284,6 @@ int32_t Heuristic::CalculateNPieces(
 
     int32_t nSquaresCanDeployMe = 0;
     //int32_t nSquaresCanDeployOpponent = 0;
-    int32_t squaresMe = 0;
-    int32_t squaresOpponent = 0;
 
     // current coordiante being studied
     Coordinate thisCoord(0, 0);
@@ -305,20 +301,39 @@ int32_t Heuristic::CalculateNPieces(
              thisCoord.m_col < (a_board.GetNColumns() - 1);
              thisCoord.m_col += 1)
         {
+            if (a_board.IsCoordEmpty(thisCoord))
+            {
+                nSquaresCanDeployMe += CountSquaresCanBeDeployedBitwise(
+                                            a_board,
+                                            a_playerMe,
+                                            bitwiseBoard,
+                                            bitwiseBoardMe);
+            }
+
+            rv += NKBasedHeuristicThisCoord(
+                    a_board,
+                    a_playerMe,
+                    a_playerOpponent,
+                    thisCoord);
+
+            bitwise::BoardMoveRight(a_board, thisCoord, a_playerMe, bitwiseBoard, bitwiseBoardMe);
+        }
+        // latest configuration wasn't checked
+        if (a_board.IsCoordEmpty(thisCoord))
+        {
             nSquaresCanDeployMe += CountSquaresCanBeDeployedBitwise(
                                         a_board,
                                         a_playerMe,
                                         bitwiseBoard,
                                         bitwiseBoardMe);
-
-            bitwise::BoardMoveRight(a_board, thisCoord, a_playerMe, bitwiseBoard, bitwiseBoardMe);
         }
-        // latest configuration wasn't checked
-        nSquaresCanDeployMe += CountSquaresCanBeDeployedBitwise(
-                                    a_board,
-                                    a_playerMe,
-                                    bitwiseBoard,
-                                    bitwiseBoardMe);
+
+        rv += NKBasedHeuristicThisCoord(
+                    a_board,
+                    a_playerMe,
+                    a_playerOpponent,
+                    thisCoord);
+
 
         if ((thisCoord.m_row + 1) >= a_board.GetNRows())
         {
@@ -334,20 +349,39 @@ int32_t Heuristic::CalculateNPieces(
              thisCoord.m_col > 0;
              thisCoord.m_col -= 1)
         {
+            if (a_board.IsCoordEmpty(thisCoord))
+            {
+                nSquaresCanDeployMe += CountSquaresCanBeDeployedBitwise(
+                                            a_board,
+                                            a_playerMe,
+                                            bitwiseBoard,
+                                            bitwiseBoardMe);
+            }
+
+            rv += NKBasedHeuristicThisCoord(
+                    a_board,
+                    a_playerMe,
+                    a_playerOpponent,
+                    thisCoord);
+
+            bitwise::BoardMoveLeft(a_board, thisCoord, a_playerMe, bitwiseBoard, bitwiseBoardMe);
+        }
+        // latest configuration wasn't checked
+        if (a_board.IsCoordEmpty(thisCoord))
+        {
             nSquaresCanDeployMe += CountSquaresCanBeDeployedBitwise(
                                         a_board,
                                         a_playerMe,
                                         bitwiseBoard,
                                         bitwiseBoardMe);
-
-            bitwise::BoardMoveLeft(a_board, thisCoord, a_playerMe, bitwiseBoard, bitwiseBoardMe);
         }
-        // latest configuration wasn't checked
-        nSquaresCanDeployMe += CountSquaresCanBeDeployedBitwise(
-                                    a_board,
-                                    a_playerMe,
-                                    bitwiseBoard,
-                                    bitwiseBoardMe);
+
+        rv += NKBasedHeuristicThisCoord(
+                    a_board,
+                    a_playerMe,
+                    a_playerOpponent,
+                    thisCoord);
+
 
         if ((thisCoord.m_row + 1) >= a_board.GetNRows())
         {
@@ -359,22 +393,88 @@ int32_t Heuristic::CalculateNPieces(
         thisCoord.m_row++;
     }
 
+    int32_t squaresAvailableMe = 0;
+    //int32_t squaresOpponent = 0;
     for (int8_t i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
     {
-        if (!a_playerMe.IsPieceAvailable(static_cast<ePieceType_t>(i)))
+        if (a_playerMe.IsPieceAvailable(static_cast<ePieceType_t>(i)))
         {
-            squaresMe += a_playerMe.m_pieces[i].GetNSquares();
+            squaresAvailableMe += a_playerMe.m_pieces[i].GetNSquares();
         }
-        if (!a_playerOpponent.IsPieceAvailable(static_cast<ePieceType_t>(i)))
-        {
-            squaresOpponent += a_playerOpponent.m_pieces[i].GetNSquares();
-        }
+//        if (!a_playerOpponent.IsPieceAvailable(static_cast<ePieceType_t>(i)))
+//        {
+//            squaresOpponent += a_playerOpponent.m_pieces[i].GetNSquares();
+//        }
     }
 
-    rv += (squaresMe << 7); // * 128
-    rv += (nSquaresCanDeployMe);
-    rv -= (squaresOpponent << 7); // * 128
-    //rv -= (nSquaresCanDeployOpponent * 4);
+//    rv += (squaresMe);
+//    rv -= (squaresOpponent);
+      //rv -= (nSquaresCanDeployOpponent * 4);
+
+    rv <<= 3;
+    int32_t nTotalUsableSquares = squaresAvailableMe * a_board.GetNRows() * a_board.GetNColumns();
+    if ( (nTotalUsableSquares - nSquaresCanDeployMe) > (nTotalUsableSquares << 2) )
+    {
+        // number of squares that can be deployed is less than 3 quarters of the total amount of squares
+        // use the average amount of deployable squares in the heuristic. It forces moves to touch
+        // the opponent (which is a common thing human beings do)
+        rv += (nSquaresCanDeployMe / (a_board.GetNRows() * a_board.GetNColumns()));
+    }
+
+    return rv;
+}
+
+int32_t Heuristic::NKBasedHeuristicThisCoord(
+        const Board  &a_board,
+        const Player &a_playerMe,
+        const Player &a_playerOpponent,
+        const Coordinate &thisCoord)
+{
+    int32_t valueNkMe = 0;
+    int32_t valueNkOpponent = 0;
+    int32_t squaresMe = 0;
+    int32_t squaresOpponent = 0;
+
+    if (a_board.IsCoordEmpty(thisCoord))
+    {
+        if (a_playerOpponent.IsNucleationPoint(thisCoord))
+        {
+            valueNkOpponent = 2;
+        }
+
+        if (a_playerMe.IsNucleationPoint(thisCoord))
+        {
+            if (valueNkOpponent == 0)
+            {
+                valueNkMe = 2;
+                if (Rules::IsCoordTouchingPlayer(a_board, thisCoord, a_playerOpponent))
+                {
+                    // an nk point that is touching the other player is unblockable by the opponent
+                    // (it might get blocked, but not directly)
+                    valueNkMe += 1;
+                }
+            }
+            else
+            {
+                // the weighted value of this nk point is half the value of the opponent
+                // because putting down a piece which is sharing nk points is bad
+                // since the next go will be for the opponent
+                valueNkMe = 1;
+            }
+        } // if (a_playerMe->IsNucleationPoint(thisCoord.m_row, thisCoord.m_col))
+    }
+    else if (a_board.IsPlayerInCoord(thisCoord, a_playerMe))
+    {
+        squaresMe++;
+    }
+    else // if (a_board.IsPlayerInCoord(thisCoord, a_playeOpponent))
+    {
+        squaresOpponent++;
+    }
+
+    int32_t rv = 0;
+    rv += squaresMe + valueNkMe;
+    rv -= squaresOpponent + valueNkOpponent;
 
     return rv;
 }
@@ -434,24 +534,22 @@ int32_t Heuristic::CountSquaresCanBeDeployedBitwise(
 
     for (int8_t i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
     {
-        if (!a_player.IsPieceAvailable(static_cast<ePieceType_t>(i)))
+        if (a_player.IsPieceAvailable(static_cast<ePieceType_t>(i)))
         {
-            continue;
-        }
-
-        const std::list<uint64_t> &pieceConfigurations = a_player.m_pieces[i].GetBitwiseList();
-        std::list<uint64_t>::const_iterator it = pieceConfigurations.begin();
-        while (it != pieceConfigurations.end())
-        {
-            uint64_t bPiece = (*it);
-
-            if (bitwise::IsPieceDeployable(bPiece, a_bitwiseBoard, a_bitwisePlayerBoard))
+            const std::list<uint64_t> &pieceConfigurations = a_player.m_pieces[i].GetBitwiseList();
+            std::list<uint64_t>::const_iterator it = pieceConfigurations.begin();
+            while (it != pieceConfigurations.end())
             {
-                rValue += a_player.m_pieces[i].GetNSquares();
-                break;
-            }
+                uint64_t bPiece = (*it);
 
-            it++;
+                if (bitwise::IsPieceDeployable(bPiece, a_bitwiseBoard, a_bitwisePlayerBoard))
+                {
+                    rValue += a_player.m_pieces[i].GetNSquares();
+                    break;
+                }
+
+                it++;
+            }
         }
     }
 
