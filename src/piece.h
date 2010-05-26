@@ -35,6 +35,7 @@
 #include <string>
 #include <stdint.h> // for types
 #include <list>
+#include <vector>
 #include "assert.h"
 #include "coordinate.h"
 
@@ -82,6 +83,11 @@ typedef enum
 
 } ePieceType_t;
 
+/// A piece configuration represents what the piece is like at the moment
+/// Once a piece is rotated/mirrored the piece configuration changes
+typedef std::vector<Coordinate> pieceConfiguration_t;
+
+/// @brief represents a piece
 class Piece
 {
 public:
@@ -149,21 +155,22 @@ public:
     }
 
     /// @return the amount of squares the piece is made of
-    inline uint8_t GetNSquares() const
+    inline int32_t GetNSquares() const
     {
-    	return m_nSquares;
+    	return m_coords.size();
     }
 
-    /// @return the half of the size of the side of the square where the piece fits
+    /// @return "radius" of the square where the piece fits
     /// the real size of the square is: ( (squareSideSize * 2) + 1)
-    /// For example the fullSquare will be 1, and the baby piece should be 0
-    inline uint8_t GetSquareSideHalfSize() const
+    /// For example for fullSquare will be 1, and for baby piece should be 0
+    /// and for the bigpenis 2
+    inline uint8_t GetRadius() const
     {
-        return m_squareSideHalfSize;
+        return m_radius;
     }
 
     /// @return the list of precalculated configurations of the piece
-    inline const std::list< CoordinateArray<PIECE_MAX_SQUARES> >& GetPrecalculatedConfs() const
+    inline const std::list<pieceConfiguration_t>& GetPrecalculatedConfs() const
     {
         return m_precalculatedConfsList;
     }
@@ -177,7 +184,7 @@ public:
     }
 
     /// set current coords of the piece to the coordinates specified by a_newCoords
-    inline void SetCurrentCoords(const CoordinateArray<PIECE_MAX_SQUARES> &a_newCoords)
+    inline void SetCurrentConfiguration(const pieceConfiguration_t &a_newCoords)
     {
         for (int8_t i = 0; i < GetNSquares(); i++)
         {
@@ -185,9 +192,14 @@ public:
         }
     }
 
+    inline const pieceConfiguration_t& GetCurrentConfiguration() const
+    {
+        return m_coords;
+    }
+
     /// gives access to the current coords of the piece
-    /// @return the coordinate saved in a_squareIndex in the Coordinate Array of the piece
-    inline const Coordinate& GetCoord(uint8_t a_squareIndex) const
+    /// @return the coordinate saved in a_squareIndex in the current piece configuration
+    inline const Coordinate& GetCoord(int32_t a_squareIndex) const
     {
 #ifdef DEBUG
         assert(a_squareIndex < GetNSquares());
@@ -198,45 +210,45 @@ public:
 private:
     /// type of piece
     ePieceType_t m_type;
-#ifdef DEBUG
-    /// true if the piece has been initialised
-    bool m_initialised;
-#endif
-    /// number of square the piece is made of
-    uint8_t m_nSquares;
     /// list of coords that describe the current shape of the piece
     /// Stores one coordinate per square occupied by the piece
-    CoordinateArray<PIECE_MAX_SQUARES> m_coords;
-    /// original coords
-    CoordinateArray<PIECE_MAX_SQUARES> m_origCoords;
+    pieceConfiguration_t m_coords;
+    /// original coords. To be used in the reset function
+    pieceConfiguration_t m_origCoords;
     /// true if the piece has a different mirror image
     bool m_origMirror;
     /// number of possible different rotations
     int8_t m_origRotations;
     /// save the number of times the function Mirror has been called
     int8_t m_nMirrors;
-    ///  half of the size of the side of the square where the piece fits (see comment for SetPiece)
-    uint8_t m_squareSideHalfSize;
+    /// "radius" of the square where the piece fits (see comment for SetPiece)
+    uint8_t m_radius;
     /// list of precaculated configurations of the piece
-    std::list< CoordinateArray<PIECE_MAX_SQUARES> > m_precalculatedConfsList;
+    std::list< pieceConfiguration_t > m_precalculatedConfsList;
     /// bitwise representation of al the possible configurations of the piece
     /// have a look at BuildUpBitwiseRepresentation to learn more
     std::list<uint64_t> m_bitwiseRepresentationList;
+
+#ifdef DEBUG
+    /// true if the piece has been initialised
+    bool m_initialised;
+#endif
 
     /// @brief set original configuration of the piece.
     /// @param array with the coordinates which make up the piece
     /// @param nSquares number of squares of the piece
     /// @param mirror set to true if the piece has a mirror image
     /// @param nRotations number of possible rotations (from 1 to 4)
-    /// @param squareSideHalfSize is the half of the size of the side of the square where the piece fits
+    /// @param radius is half the size of the side of the square where the piece fits
     ///        the real size of the square is: ( (squareSideSize * 2) + 1)
     ///        For example the fullSquare shall be 1, and the baby piece should be 0
+    ///        For that piece called bigpenis it is 2
     void SetPiece(
             Coordinate a_coords[PIECE_MAX_SQUARES],
-            uint8_t a_nSquares,
-            bool a_mirror,
-            int8_t a_nRotations,
-            uint8_t a_squareSideHalfSize);
+            uint8_t    a_nSquares,
+            bool       a_mirror,
+            int8_t     a_nRotations,
+            uint8_t    a_radius);
 
     // static functions to load the description of each piece in the object passed as parameter
     static void LoadPiece_1BabyPiece  (Piece &thisPiece);

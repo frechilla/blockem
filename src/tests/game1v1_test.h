@@ -54,11 +54,11 @@ private:
     /// supposed to have been calculated using Board::BitwiseBoardMoveRight, Board::BitwiseBoardMoveLeft
     /// and Board::BitwiseBoardMoveDown
     void TestBitwiseCheckConfiguration(
-            const Coordinate &thisCoord,
-            const Piece      &piece,
-            uint64_t         bPiece,
-            uint64_t         bitwiseBoard,
-            uint64_t         bitwiseBoardPlayer1);
+            const Coordinate           &thisCoord,
+            const pieceConfiguration_t &piece,
+            uint64_t                    bPiece,
+            uint64_t                    bitwiseBoard,
+            uint64_t                    bitwiseBoardPlayer1);
 
     /// Test that legacy and bitwise representation of board and pieces match. It uses the board
     /// which is part of the Game1v1, so the caller must modify it before calling to this function

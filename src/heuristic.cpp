@@ -66,14 +66,6 @@ const Heuristic::sHeuristicData_t Heuristic::m_heuristicData[e_heuristicCount] =
     }
 };
 
-Heuristic::Heuristic()
-{
-}
-
-Heuristic::~Heuristic()
-{
-}
-
 int32_t Heuristic::CalculateSimple(
         const Board  &a_board,
         const Player &a_playerMe,
@@ -554,4 +546,42 @@ int32_t Heuristic::CountSquaresCanBeDeployedBitwise(
     }
 
     return rValue;
+}
+
+int32_t Heuristic::BiggestPieceDeployableInNKPointSize(
+        const Board      &a_board,
+        const Player     &a_player,
+        const Coordinate &a_NKPointCoord)
+{
+    // Player used as a container for all the pieces
+    const static Player sPlayer(
+            std::string("tmpPlayer"), '_', 1, 1);
+
+    for (int8_t i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
+    {
+        if (a_player.IsPieceAvailable(static_cast<ePieceType_t>(i)))
+        {
+            const std::list<pieceConfiguration_t> &coordConfList =
+                                sPlayer.m_pieces[i].GetPrecalculatedConfs();
+            std::list<pieceConfiguration_t>::const_iterator pieceConfIt;
+
+            for (pieceConfIt  = coordConfList.begin();
+                 pieceConfIt != coordConfList.end();
+                 pieceConfIt++)
+            {
+                if (Rules::HasValidCoordInNucleationPoint(
+                        a_board,
+                        a_player,
+                        a_NKPointCoord,
+                        *(pieceConfIt),
+                        sPlayer.m_pieces[i].GetRadius()) )
+                {
+                    return sPlayer.m_pieces[i].GetNSquares();
+                }
+            } // for (pieceConfIt  = coordConfList.begin()
+        } // if (a_player.IsPieceAvailable(static_cast<ePieceType_t>(i)))
+    } // for (int8_t i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
+
+    // no piece can be deployed
+    return 0;
 }

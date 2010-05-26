@@ -1,3 +1,7 @@
+: Version 0.2.2
+    - Using precalculated array of pieces in minimax algorithm without 
+      setting current piece coords.
+
 24/05/2010: Version 0.2.1
     - Around 8% computing time improvement in the minimax algorithm (tested
       in a 32-bit centrino duo processor)

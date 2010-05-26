@@ -153,6 +153,13 @@ protected:
             const Player &a_playerOpponent,
             const Coordinate &thisCoord);
 
+    /// @return the size of the maximum piece deployable in a particular NK point
+    // it assumes pieces are defined in piece.h in reversed order from 5 to 1 squares (and they are)
+    int32_t BiggestPieceDeployableInNKPointSize(
+            const Board      &a_board,
+            const Player     &a_player,
+            const Coordinate &a_NKPointCoord);
+
 private:
     /// @brief constructor
     /// The constructor of the class does nothing. This class is used as a container for

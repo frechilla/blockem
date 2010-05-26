@@ -36,7 +36,7 @@
 #include "coordinate.h"
 
 /// Size of the valid coords arrays
-const int8_t VALID_COORDS_SIZE = 5;
+const uint8_t VALID_COORDS_SIZE = PIECE_MAX_SQUARES;
 
 /// @brief this class contains all the methods that define any blokus game
 class Rules
@@ -57,7 +57,7 @@ public:
             const Coordinate &a_coord,
             const Player     &a_player);
 
-    /// return true if the piece can be deployed in the position defined by the 3rd and 4th parameters
+    /// return true if the piece can be deployed in the position defined by the 3th parameter
     /// it checks:
     ///   1) if the space that the piece will occupy is empty (and inside the board)
     ///   2) if the piece is touching at least one nucleation point
@@ -68,14 +68,14 @@ public:
     /// and it doesn't check if every square occupied by the piece is a nk point
     /// it doesn't rotate or mirror the piece
     /// @param the blokus board
-    /// @param the piece
+    /// @param the piece configuration
     /// @param coord (x, y) of the piece
     /// @param the player that owns the pieces
     static bool IsPieceDeployable(
-            const Board      &a_board,
-            const Piece      &a_piece,
-            const Coordinate &a_coord,
-            const Player     &a_player);
+            const Board                &a_board,
+            const pieceConfiguration_t &a_pieceConf,
+            const Coordinate           &a_coord,
+            const Player               &a_player);
 
     /// return true if the piece can be deployed in the position defined by the 3rdparameter
     /// it checks:
@@ -85,15 +85,15 @@ public:
     /// it doesn't rotate or mirror the piece
     /// @param the blokus board
     /// @param the piece
-    /// @param coord of the piece
-    /// @param coord of the nucleation point
+    /// @param coord where the piece is going to be deployed
+    /// @param coord of the nucleation point the piece must make use of
     /// @param the player that owns the pieces
     static bool IsPieceDeployableInNKPoint(
-            const Board      &a_board,
-            const Piece      &a_piece,
-            const Coordinate &a_coord,
-            const Coordinate &a_nkPoint,
-            const Player     &a_player);
+            const Board                &a_board,
+            const pieceConfiguration_t &a_pieceConf,
+            const Coordinate           &a_coord,
+            const Coordinate           &a_nkPoint,
+            const Player               &a_player);
 
     /// return true if the piece can be deployed in the position defined by the 3rdparameter
     /// it checks:
@@ -105,12 +105,12 @@ public:
     /// @param the blokus board
     /// @param the piece
     /// @param coord of the piece
-    /// @param coord of the starting point
+    /// @param coord of the starting point the piece must make use of
     static bool IsPieceDeployableInStartingPoint(
-            const Board      &a_board,
-            const Piece      &a_piece,
-            const Coordinate &a_coord,
-            const Coordinate &a_startingPoint);
+            const Board                &a_board,
+            const pieceConfiguration_t &a_pieceConf,
+            const Coordinate           &a_coord,
+            const Coordinate           &a_startingPoint);
 
     /// Calculates using the current state of the board if a point in the board is
     /// a nucleation point for a specific player
@@ -156,73 +156,71 @@ public:
     ///
     /// the piece will have to be moved 2 points to the left
     ///
-    /// The result will be saved in the 5th parameter. The user has to ensure the size of the array is big enough (for example
-    /// 5, since it is the size of the piece) If the size of the array wasn't big enough this function will save a_size
-    /// elements in out_validCoords, but it will return a number bigger than a_size
-    /// the user must check a_nkPointCoord is a nk point before calling the function
+    /// The result will be saved in the 6th parameter. The user should have initialised the vector to a big enough size
+    /// so that inserting elements in vector won't step on random memory locations
+    /// A size of PIECE_MAX_SQUARES will do it, since a piece can only be deployed in as many ways as squares it has
     /// @param the blokus board
-    /// @param the piece
-    /// @param coord of the nucleation point
     /// @param the player who needs the valid coords
-    /// @param array where the list of absolute coords where the piece can be deployed in that nucleation point will be saved
-    /// @param size of the array
-    /// @return the number of nucleation points saved into the output array
+    /// @param coord of the nucleation point
+    /// @param the piece configuration
+    /// @param radius of the piece that will be checked looking for NK points
+    /// @param vector where the list of absolute coords where the piece can be deployed in that nucleation point will be saved
+    /// @return the number of nucleation points saved into the vector
     static int32_t CalculateValidCoordsInNucleationPoint(
-            const Board      &a_board,
-            const Piece      &a_piece,
-            const Coordinate &a_nkPointCoord,
-            const Player     &a_player,
-            Coordinate       out_validCoords[],
-            int32_t          a_size);
+            const Board                &a_board,
+            const Player               &a_player,
+            const Coordinate           &a_nkPointCoord,
+            const pieceConfiguration_t &a_pieceConf,
+            int32_t                     a_pieceRadius,
+            std::vector<Coordinate>    &out_validCoords);
 
     /// @brief returns true if there's a way to deploy the piece in this coord, even if the piece has to be moved around
     ///        it doesn't rotate or mirror the piece
     ///        it is based on CalculateValidCoordsInNucleationPoint, but it doesn't save the valid coords, it just
     ///        returns once it finds a valid coord for the piece to be deployed
     static bool HasValidCoordInNucleationPoint(
-            const Board      &a_board,
-            const Piece      &a_piece,
-            const Coordinate &a_nkPointCoord,
-            const Player     &a_player);
+            const Board                &a_board,
+            const Player               &a_player,
+            const Coordinate           &a_nkPointCoord,
+            const pieceConfiguration_t &a_pieceConf,
+            int32_t                     a_pieceRadius);
 
     /// see comment in CalculateValidCoordsInNucleationPoint
-    /// The result will be saved in the 5th parameter. The user has to ensure the size of the array is big enough (for example
-    /// 5, since it is the size of the piece) If the size of the array wasn't big enough this function will overwrite random memory
-    /// running in release mode since the check has been deleted to improve performance
+    /// The result will be saved in the 6th parameter. The user should have initialised the vector to a big enough size
+    /// so that inserting elements in vector won't step on random memory locations
+    /// A size of PIECE_MAX_SQUARES will do it, since a piece can only be deployed in as many ways as squares it has
     /// the user must check a_startingPointCoord is empty before calling the function
     /// @param the blokus board
-    /// @param the piece
-    /// @param coord of the starting point
     /// @param the player who needs the valid coords
-    /// @param array where the list of absolute coords where the piece can be deployed in that starting point will be saved
-    /// @param size of the array
+    /// @param coord of the starting point
+    /// @param the piece
+    /// @param radius of the piece that will be checked looking for NK points
+    /// @param vector where the list of absolute coords where the piece can be deployed in that nucleation point will be saved
     /// @return the number of nucleation points saved into the output array
     static int32_t CalculateValidCoordsInStartingPoint(
-        const Board      &a_board,
-        const Piece      &a_piece,
-        const Coordinate &a_startingPointCoord,
-        const Player     &a_player,
-        Coordinate       out_validCoords[],
-        int32_t          a_size);
+            const Board                &a_board,
+            const Player               &a_player,
+            const Coordinate           &a_startingPointCoord,
+            const pieceConfiguration_t &a_pieceConf,
+            int32_t                     a_pieceRadius,
+            std::vector<Coordinate>    &out_validCoords);
 
-    /// @brief recalculate the nucleation points using the whole blokus board and save them into the players
-    static void RecalculateNKInAllBoard(
-    		const Board &a_board,
-    		Player      &a_playerMe,
-    		Player      &a_playerOpponent);
-
-    /// recalculate the nucleation points around the piece.
-    /// all the pieces fit in a square 5x5 pieces. We've got to check a maximum square of 7x7
+    /// recalculate the nucleation points around a specific coord.
+    /// If the function is to be used to recalculate the NK points after a piece has been deployed
+    /// user must take into account that all the pieces fit in a square of 5x5 pieces, but in the case
+    /// the piece does need a 5x5 square the fucntion should recalculate a 7x7 square around a_coorf
     /// (1 more row and column at each side: up, down, left and right)
     /// It will update the matrix saved in a_player with the nk points with the new configuration
     /// @param the board
-    /// @param the piece
-    /// @param the coords
+    /// @param the coord
+    /// @param the rows/columns at left/right up/down to be recalculated.
+    ///        for example, if a square of 5x5 is to be recalculated this param should be 2
+    ///        in the case of a square of 7x7, it should be 3.
     /// @param the player that owns the piece
-    static void RecalculateNKAroundPiece(
+    static void RecalculateNKAroundCoord(
     		const Board      &a_board,
-            const Piece      &a_piece,
             const Coordinate &a_coord,
+            int32_t           a_radiusToCheck,
             Player           &a_player);
 
     /// @return true if the 'a_player' can put down at least one piece on the board

@@ -67,19 +67,23 @@ private:
 
     /// remove a piece from the board. The user is supposed to check if the piece was there
     /// before calling this function since it just will set to empty the squares
-    /// @param the piece
     /// @param the ABSOLUTE coord
+    /// @param the piece configuration
+    /// @param radius of the piece (1 will be added to it to calculate the to check for new nk points)
     void RemovePiece(
-            const Piece      &a_piece,
-            const Coordinate &a_coord);
+            const Coordinate           &a_coord,
+            const pieceConfiguration_t &a_pieceConf,
+            int32_t                     a_pieceRadius);
 
     /// put down a piece on the board. The user is supposed to check if there is space for
     /// it before calling
-    /// @param the piece
     /// @param the ABSOLUTE coord
+    /// @param the piece configuration
+    /// @param radius of the piece (1 will be added to it to calculate the to check for new nk points)
     void PutDownPiece(
-            const Piece      &a_piece,
-            const Coordinate &a_coord);
+            const Coordinate           &a_coord,
+            const pieceConfiguration_t &a_pieceConf,
+            int32_t                     a_pieceRadius);
 
     /// once there is at least one piece put down in the board this function
     /// will try to put down all the pieces in the existing nk points in the board

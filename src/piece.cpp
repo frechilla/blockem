@@ -31,7 +31,7 @@
 #include "stdio.h"
 
 // a piece has to fit in a square (2*2) + 1
-static const uint8_t PIECE_MAX_SQUARESIDEHALFSIZE = 2;
+static const uint8_t PIECE_MAX_RADIUS = 2;
 
 const std::string Piece::PieceDescription[e_numberOfPieces] =
 {
@@ -85,7 +85,9 @@ Piece::LoadPieceFunction_t Piece::m_loadFunctionMap[] =
 };
 
 Piece::Piece(ePieceType_t a_type):
-	m_type(a_type)
+	m_type(a_type),
+    m_coords(PIECE_MAX_SQUARES),
+    m_origCoords(PIECE_MAX_SQUARES)
 #ifdef DEBUG
     ,m_initialised(false)
 #endif
@@ -117,33 +119,32 @@ Piece::~Piece()
 
 void Piece::SetPiece(
     Coordinate a_coords[PIECE_MAX_SQUARES],
-    uint8_t a_nSquares, bool a_mirror,
+    uint8_t a_nSquares,
+    bool a_mirror,
     int8_t a_nRotations,
-    uint8_t a_squareSideHalfSize)
+    uint8_t a_radius)
 {
 #ifdef DEBUG
     assert(a_nSquares <= PIECE_MAX_SQUARES);
-    assert(a_squareSideHalfSize <= PIECE_MAX_SQUARESIDEHALFSIZE);
+    assert(a_radius <= PIECE_MAX_RADIUS);
 #endif
 
-    m_nSquares           = a_nSquares;
-    m_origMirror         = a_mirror;
-    m_origRotations      = a_nRotations;
-    m_squareSideHalfSize = a_squareSideHalfSize;
+    m_origMirror    = a_mirror;
+    m_origRotations = a_nRotations;
+    m_radius        = a_radius;
 
     m_nMirrors = 0;
 
+    m_coords.resize(a_nSquares);
+    m_origCoords.resize(a_nSquares);
+
     uint8_t i;
-    for (i = 0; i < a_nSquares ; i++)
+    for (i = 0; i < a_nSquares; i++)
     {
         m_coords[i].m_row = m_origCoords[i].m_row = a_coords[i].m_row;
         m_coords[i].m_col = m_origCoords[i].m_col = a_coords[i].m_col;
     }
-    for (i = a_nSquares; i < PIECE_MAX_SQUARES ; i++)
-    {
-        m_coords[i].m_row = m_origCoords[i].m_row = 0;
-        m_coords[i].m_col = m_origCoords[i].m_col = 0;
-    }
+
 #ifdef DEBUG
     m_initialised = true;
 #endif
@@ -156,12 +157,7 @@ void Piece::Reset()
 #endif
 
     uint8_t i;
-    for (i = 0; i < m_nSquares ; i++)
-    {
-        m_coords[i].m_row = m_origCoords[i].m_row;
-        m_coords[i].m_col = m_origCoords[i].m_col;
-    }
-    for (i = m_nSquares; i < PIECE_MAX_SQUARES ; i++)
+    for (i = 0; i < GetNSquares(); i++)
     {
         m_coords[i].m_row = m_origCoords[i].m_row;
         m_coords[i].m_col = m_origCoords[i].m_col;
@@ -182,36 +178,38 @@ void Piece::RotateRight()
     	return;
     }
 
-    for (uint8_t i = 0; i < m_nSquares; i++)
+    for (pieceConfiguration_t::iterator it = m_coords.begin();
+        it != m_coords.end();
+        it++)
     {
     	int8_t aux;
-        if ((m_coords[i].m_row >= 0) && (m_coords[i].m_col >= 0))
+        if ((it->m_row >= 0) && (it->m_col >= 0))
         {
             // X will be positive. Y negative
-            aux = m_coords[i].m_row;
-            m_coords[i].m_row = m_coords[i].m_col;
-            m_coords[i].m_col = -aux;
+            aux = it->m_row;
+            it->m_row = it->m_col;
+            it->m_col = -aux;
         }
-        else if ((m_coords[i].m_row >= 0) && (m_coords[i].m_col < 0))
+        else if ((it->m_row >= 0) && (it->m_col < 0))
         {
             // both will be negative
-            aux = m_coords[i].m_row;
-            m_coords[i].m_row = m_coords[i].m_col;
-            m_coords[i].m_col = -aux;
+            aux = it->m_row;
+            it->m_row = it->m_col;
+            it->m_col = -aux;
         }
-        else if ((m_coords[i].m_row < 0) && (m_coords[i].m_col < 0))
+        else if ((it->m_row < 0) && (it->m_col < 0))
         {
             // X will be negative. Y positive
-            aux = m_coords[i].m_row;
-            m_coords[i].m_row = m_coords[i].m_col;
-            m_coords[i].m_col = -aux;
+            aux = it->m_row;
+            it->m_row = it->m_col;
+            it->m_col = -aux;
         }
-        else // ((m_coords[i].m_row < 0) && (m_coords[i].m_col >= 0))
+        else // ((it->m_row < 0) && (it->m_col >= 0))
         {
             // both will be positive
-            aux = m_coords[i].m_row;
-            m_coords[i].m_row = m_coords[i].m_col;
-            m_coords[i].m_col = -aux;
+            aux = it->m_row;
+            it->m_row = it->m_col;
+            it->m_col = -aux;
         }
     }
 
@@ -230,36 +228,38 @@ void Piece::RotateLeft()
         return;
     }
 
-    for (uint8_t i = 0; i < m_nSquares; i++)
+    for (pieceConfiguration_t::iterator it = m_coords.begin();
+        it != m_coords.end();
+        it++)
     {
         int8_t aux;
-        if ((m_coords[i].m_row >= 0) && (m_coords[i].m_col >= 0))
+        if ((it->m_row >= 0) && (it->m_col >= 0))
         {
             // X will be negative. Y positive
-            aux = m_coords[i].m_row;
-            m_coords[i].m_row = -m_coords[i].m_col;
-            m_coords[i].m_col = aux;
+            aux = it->m_row;
+            it->m_row = -it->m_col;
+            it->m_col = aux;
         }
-        else if ((m_coords[i].m_row >= 0) && (m_coords[i].m_col < 0))
+        else if ((it->m_row >= 0) && (it->m_col < 0))
         {
             // both will be positive
-            aux = m_coords[i].m_row;
-            m_coords[i].m_row = -m_coords[i].m_col;
-            m_coords[i].m_col = aux;
+            aux = it->m_row;
+            it->m_row = -it->m_col;
+            it->m_col = aux;
         }
-        else if ((m_coords[i].m_row < 0) && (m_coords[i].m_col < 0))
+        else if ((it->m_row < 0) && (it->m_col < 0))
         {
             // X will be positive. Y negative
-            aux = m_coords[i].m_row;
-            m_coords[i].m_row = -m_coords[i].m_col;
-            m_coords[i].m_col = aux;
+            aux = it->m_row;
+            it->m_row = -it->m_col;
+            it->m_col = aux;
         }
-        else // ((m_coords[i].m_row < 0) && (m_coords[i].m_col >= 0))
+        else // ((it->m_row < 0) && (it->m_col >= 0))
         {
             // both will be negative
-            aux = m_coords[i].m_row;
-            m_coords[i].m_row = -m_coords[i].m_col;
-            m_coords[i].m_col = aux;
+            aux = it->m_row;
+            it->m_row = -it->m_col;
+            it->m_col = aux;
         }
     }
 
@@ -272,9 +272,11 @@ bool Piece::MirrorYAxis()
     assert(m_initialised);
 #endif
 
-    for (uint8_t i = 0; i < m_nSquares; i++)
+    for (pieceConfiguration_t::iterator it = m_coords.begin();
+        it != m_coords.end();
+        it++)
     {
-        m_coords[i].m_col = -m_coords[i].m_col;
+        it->m_col = -it->m_col;
     }
 
     if (!m_origMirror)
@@ -293,9 +295,11 @@ bool Piece::MirrorXAxis()
     assert(m_initialised);
 #endif
 
-    for (uint8_t i = 0; i < m_nSquares; i++)
+    for (pieceConfiguration_t::iterator it = m_coords.begin();
+        it != m_coords.end();
+        it++)
     {
-        m_coords[i].m_row = -m_coords[i].m_row;
+        it->m_row = -it->m_row;
     }
 
     if (!m_origMirror)
@@ -601,7 +605,7 @@ void Piece::BuildUpPrecalculatedRepresentations()
 {
     do
     {
-        int16_t nRotations = 0;
+        int8_t nRotations = 0;
         while(nRotations < GetNRotations())
         {
             // save current configuration into precalculated list of coords
@@ -609,10 +613,12 @@ void Piece::BuildUpPrecalculatedRepresentations()
 
             // calculate and save bitwise representation of this configuration
             uint64_t bitwisePiece = 0x0000000000000000ull;
-            for (int8_t i = 0; i < GetNSquares(); i++)
+            for (pieceConfiguration_t::const_iterator it = m_coords.begin();
+                it != m_coords.end();
+                it++)
             {
                 // this piece of magic converts a piece into a string of bits
-                bitwisePiece |= static_cast<uint64_t>(1) << ( ((3 - m_coords[i].m_row) * 7) + (3 - m_coords[i].m_col) );
+                bitwisePiece |= static_cast<uint64_t>(1) << ( ((3 - it->m_row) * 7) + (3 - it->m_col) );
             }
             m_bitwiseRepresentationList.push_back(bitwisePiece);
 

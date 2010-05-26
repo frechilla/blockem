@@ -913,13 +913,13 @@ void MainWindow::BoardDrawingArea_BoardClicked(const Coordinate &a_coord, const 
     if( ( (a_player.NumberOfPiecesAvailable() == e_numberOfPieces) &&
           (!Rules::IsPieceDeployableInStartingPoint(
                     m_the1v1Game.GetBoard(),
-                    a_piece,
+                    a_piece.GetCurrentConfiguration(),
                     a_coord,
                     a_player.GetStartingCoordinate())) ) ||
         ( (a_player.NumberOfPiecesAvailable() < e_numberOfPieces) &&
           (!Rules::IsPieceDeployable(
                     m_the1v1Game.GetBoard(),
-                    a_piece,
+                    a_piece.GetCurrentConfiguration(),
                     a_coord,
                     a_player)) ) )
     {

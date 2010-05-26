@@ -49,8 +49,9 @@ GameTotalAllocation::~GameTotalAllocation()
 }
 
 void GameTotalAllocation::RemovePiece(
-        const Piece      &a_piece,
-        const Coordinate &a_coord)
+        const Coordinate           &a_coord,
+        const pieceConfiguration_t &a_pieceConf,
+        int32_t                     a_pieceRadius)
 {
 #ifdef DEBUG
     assert(a_coord.m_row >= 0);
@@ -60,15 +61,17 @@ void GameTotalAllocation::RemovePiece(
     assert(a_coord.m_col < m_board.GetNColumns());
 #endif
 
-    for (uint8_t i = 0 ; i < a_piece.GetNSquares() ; i++)
+    for (pieceConfiguration_t::const_iterator it = a_pieceConf.begin();
+         it != a_pieceConf.end();
+         it++)
     {
-        Coordinate thisCoord(a_coord.m_row + a_piece.GetCoord(i).m_row,
-                             a_coord.m_col + a_piece.GetCoord(i).m_col);
+        Coordinate thisCoord(a_coord.m_row + it->m_row,
+                             a_coord.m_col + it->m_col);
 #ifdef DEBUG
-        assert( ((a_coord.m_row + a_piece.GetCoord(i).m_row) >= 0) &&
-        		((a_coord.m_row + a_piece.GetCoord(i).m_row) < m_board.GetNRows())    );
-        assert( ((a_coord.m_col + a_piece.GetCoord(i).m_col) >= 0) &&
-        		((a_coord.m_col + a_piece.GetCoord(i).m_col) < m_board.GetNColumns()) );
+        assert( ((a_coord.m_row + it->m_row) >= 0) &&
+        		((a_coord.m_row + it->m_row) < m_board.GetNRows())    );
+        assert( ((a_coord.m_col + it->m_col) >= 0) &&
+        		((a_coord.m_col + it->m_col) < m_board.GetNColumns()) );
 
         assert(m_board.IsPlayerInCoord(thisCoord, m_player));
 #endif
@@ -77,12 +80,13 @@ void GameTotalAllocation::RemovePiece(
     }
 
     // recalculate all the nk points around the piece we just put down
-    Rules::RecalculateNKAroundPiece(m_board, a_piece, a_coord, m_player);
+    Rules::RecalculateNKAroundCoord(m_board, a_coord, a_pieceRadius + 1, m_player);
 }
 
 void GameTotalAllocation::PutDownPiece(
-        const Piece      &a_piece,
-        const Coordinate &a_coord)
+        const Coordinate           &a_coord,
+        const pieceConfiguration_t &a_pieceConf,
+        int32_t                     a_pieceRadius)
 {
 #ifdef DEBUG
     assert(a_coord.m_row >= 0);
@@ -92,15 +96,17 @@ void GameTotalAllocation::PutDownPiece(
     assert(a_coord.m_col < m_board.GetNColumns());
 #endif
 
-    for (int i = 0 ; i < a_piece.GetNSquares() ; i++)
+    for (pieceConfiguration_t::const_iterator it = a_pieceConf.begin();
+         it != a_pieceConf.end();
+         it++)
     {
-        Coordinate thisCoord(a_coord.m_row + a_piece.GetCoord(i).m_row,
-                             a_coord.m_col + a_piece.GetCoord(i).m_col);
+        Coordinate thisCoord(a_coord.m_row + it->m_row,
+                             a_coord.m_col + it->m_col);
 #ifdef DEBUG
-        assert( ((a_coord.m_row + a_piece.GetCoord(i).m_row) >= 0) &&
-        		((a_coord.m_row + a_piece.GetCoord(i).m_row) < m_board.GetNRows())    );
-        assert( ((a_coord.m_col + a_piece.GetCoord(i).m_col) >= 0) &&
-        		((a_coord.m_col + a_piece.GetCoord(i).m_col) < m_board.GetNColumns()) );
+        assert( ((a_coord.m_row + it->m_row) >= 0) &&
+        		((a_coord.m_row + it->m_row) < m_board.GetNRows())    );
+        assert( ((a_coord.m_col + it->m_col) >= 0) &&
+        		((a_coord.m_col + it->m_col) < m_board.GetNColumns()) );
 
         assert(m_board.IsCoordEmpty(thisCoord));
 #endif
@@ -109,16 +115,16 @@ void GameTotalAllocation::PutDownPiece(
     }
 
     // recalculate all the nk points around the piece we just put down
-    Rules::RecalculateNKAroundPiece(m_board, a_piece, a_coord, m_player);
+    Rules::RecalculateNKAroundCoord(m_board, a_coord, a_pieceRadius + 1, m_player);
 }
 
 bool GameTotalAllocation::Solve(const Coordinate &a_startingCoord)
 {
     STLCoordinateSet_t emptySet;
-	Coordinate validCoords[VALID_COORDS_SIZE];
 
 	// declare the array of last pieces and old NK points and clear them out
 	ePieceType_t lastPieces[e_numberOfPieces];
+	// pointers to the stack, it is a bad idea, but they won't be used badly I promise
 	STLCoordinateSet_t* oldNkPoints[e_numberOfPieces];
 
 	for (int32_t i = e_minimumPieceIndex ; i < e_numberOfPieces ; i++)
@@ -134,24 +140,23 @@ bool GameTotalAllocation::Solve(const Coordinate &a_startingCoord)
     {
     	m_player.UnsetPiece(static_cast<ePieceType_t>(i));
 
-        const std::list< CoordinateArray<PIECE_MAX_SQUARES> > &coordConfList =
+    	std::vector<Coordinate> validCoords(PIECE_MAX_SQUARES);
+
+        const std::list<pieceConfiguration_t> &coordConfList =
             m_player.m_pieces[i].GetPrecalculatedConfs();
-        std::list< CoordinateArray<PIECE_MAX_SQUARES> >::const_iterator pieceCoordIt;
+        std::list<pieceConfiguration_t>::const_iterator pieceCoordIt;
 
         for (pieceCoordIt = coordConfList.begin();
              pieceCoordIt != coordConfList.end();
              pieceCoordIt++)
         {
-            // update piece with current precalculated configuration
-            m_player.m_pieces[i].SetCurrentCoords(*pieceCoordIt);
-
             int32_t nValidCoords = Rules::CalculateValidCoordsInStartingPoint(
                                               m_board,
-                                              m_player.m_pieces[i],
-                                              a_startingCoord,
                                               m_player,
-                                              validCoords,
-                                              VALID_COORDS_SIZE);
+                                              a_startingCoord,
+                                              *pieceCoordIt,
+                                              m_player.m_pieces[i].GetRadius(),
+                                              validCoords);
 
             if (nValidCoords > VALID_COORDS_SIZE)
             {
@@ -161,26 +166,23 @@ bool GameTotalAllocation::Solve(const Coordinate &a_startingCoord)
 
             for (int32_t k = 0 ; k < nValidCoords ; k++)
             {
-                PutDownPiece(m_player.m_pieces[i], validCoords[k]);
+                PutDownPiece(validCoords[k], *pieceCoordIt, m_player.m_pieces[i].GetRadius());
 
                 if (AllocateAllPieces(lastPieces, oldNkPoints))
                 {
                     return true;
                 }
 
-                RemovePiece(m_player.m_pieces[i], validCoords[k]);
+                RemovePiece(validCoords[k], *pieceCoordIt, m_player.m_pieces[i].GetRadius());
             }
         } // for (pieceCoordIt = coordConfList.begin()
 
-        // leave the piece as it was
-        m_player.m_pieces[i].Reset();
         m_player.SetPiece(static_cast<ePieceType_t>(i));
-    }
+    } // for (int32_t i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
 
     // if we got here we couldn't put down the pieces in the board. Pity
     return false;
 }
-
 
 bool GameTotalAllocation::AllocateAllPieces(
         ePieceType_t        a_lastPieces[e_numberOfPieces],
@@ -214,17 +216,16 @@ bool GameTotalAllocation::AllocateAllPieces(
 
 		m_player.UnsetPiece(static_cast<ePieceType_t>(i));
 
-        const std::list< CoordinateArray<PIECE_MAX_SQUARES> > &coordConfList =
+		std::vector<Coordinate> validCoords(PIECE_MAX_SQUARES);
+
+        const std::list<pieceConfiguration_t> &coordConfList =
             m_player.m_pieces[i].GetPrecalculatedConfs();
-        std::list< CoordinateArray<PIECE_MAX_SQUARES> >::const_iterator pieceCoordIt;
+        std::list<pieceConfiguration_t>::const_iterator pieceCoordIt;
 
         for (pieceCoordIt = coordConfList.begin();
              pieceCoordIt != coordConfList.end();
              pieceCoordIt++)
         {
-            // update piece with current precalculated configuration
-            m_player.m_pieces[i].SetCurrentCoords(*pieceCoordIt);
-
             STLCoordinateSet_t::iterator nkIterator = nkPointSet.begin();
             while(nkIterator != nkPointSet.end())
             {
@@ -263,14 +264,13 @@ bool GameTotalAllocation::AllocateAllPieces(
                 }
 
                 // retrieve the valid coords of this piece in the current nk point
-                Coordinate validCoords[VALID_COORDS_SIZE];
                 int32_t nValidCoords = Rules::CalculateValidCoordsInNucleationPoint(
                                                                           m_board,
-                                                                          m_player.m_pieces[i],
-                                                                          *nkIterator,
                                                                           m_player,
-                                                                          validCoords,
-                                                                          VALID_COORDS_SIZE);
+                                                                          *nkIterator,
+                                                                          *pieceCoordIt,
+                                                                          m_player.m_pieces[i].GetRadius(),
+                                                                          validCoords);
 
                 for (int32_t k = 0; k < nValidCoords; k++)
                 {
@@ -280,7 +280,7 @@ bool GameTotalAllocation::AllocateAllPieces(
                     {
                         testedCoords.insert(validCoords[k]);
 
-                        PutDownPiece(m_player.m_pieces[i], validCoords[k]);
+                        PutDownPiece(validCoords[k], *pieceCoordIt, m_player.m_pieces[i].GetRadius());
 
                         // it's m_player.NumberOfPiecesAvailable()-1 because current piece
                         // has already being removed from the player
@@ -292,7 +292,7 @@ bool GameTotalAllocation::AllocateAllPieces(
                             return true;
                         }
 
-                        RemovePiece(m_player.m_pieces[i], validCoords[k]);
+                        RemovePiece(validCoords[k], *pieceCoordIt, m_player.m_pieces[i].GetRadius());
                     }
                 } // for (int32_t k = 0; k < nValidCoords; k++)
 
@@ -302,7 +302,6 @@ bool GameTotalAllocation::AllocateAllPieces(
             testedCoords.clear();
         } // for (pieceCoordIt = coordConfList.begin()
 
-        m_player.m_pieces[i].Reset();
         m_player.SetPiece(static_cast<ePieceType_t>(i));
 
 	} // for (int i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)

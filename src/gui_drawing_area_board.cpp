@@ -363,7 +363,7 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
         {
             if (Rules::IsPieceDeployableInStartingPoint(
                     m_theBoard,
-                    m_currentPiece,
+                    m_currentPiece.GetCurrentConfiguration(),
                     m_currentCoord,
                     m_currentPlayer->GetStartingCoordinate()))
             {
@@ -384,7 +384,7 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
         }
         else if (Rules::IsPieceDeployable(
                 m_theBoard,
-                m_currentPiece,
+                m_currentPiece.GetCurrentConfiguration(),
                 m_currentCoord,
                 *m_currentPlayer))
         {

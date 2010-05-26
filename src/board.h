@@ -34,7 +34,7 @@
 #include <stdint.h> // types
 #include <ostream>
 #include "assert.h"
-#include "piece.h"
+#include "coordinate.h"
 #include "player.h"
 
 class Board
