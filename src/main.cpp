@@ -147,7 +147,7 @@ int main(int argc, char **argv)
             std::cerr << "Warning: For better results you might want to set the depth to an odd number" << std::endl;
         }
 
-        Heuristic::EvalFunction_t heuristicNKWeighted = Heuristic::CalculateNKWeightedv2;
+        Heuristic::EvalFunction_t heuristicNKWeighted = Heuristic::CalculateNKWeightedv1;
         //Heuristic::EvalFunction_t heuristicSimple = Heuristic::CalculateSimple;
         //Heuristic::EvalFunction_t heuristicPiecePerNKPoint = Heuristic::CalculatePiecesPerNKPoint;
 

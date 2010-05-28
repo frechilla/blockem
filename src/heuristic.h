@@ -57,8 +57,9 @@ public:
     {
         e_heuristicStartCount = 0, // this element must be always 0 and must be at the start
 
-        e_heuristicNKWeightedv2 = e_heuristicStartCount,
-        e_heuristicNKWeightedv1,
+        e_heuristicNKWeightedv1 = e_heuristicStartCount,
+        e_heuristicAdvanced,
+        e_heuristicCentreFocused,
         e_heuristicSimple,
         e_heuristicRandom,
         e_heuristicAmountOfPieces,
@@ -94,12 +95,17 @@ public:
 
     /// Calculate the heuristic value taking into account the weight nucleation points
     /// The more in the middle in the board a NK point is the more important it is
+    static int32_t CalculateCentreFocused(
+            const Board  &a_board,
+            const Player &a_playerMe,
+            const Player &a_playerOpponent);
+
     static int32_t CalculateNKWeightedv1(
             const Board  &a_board,
             const Player &a_playerMe,
             const Player &a_playerOpponent);
 
-    static int32_t CalculateNKWeightedv2(
+    static int32_t CalculateNKWeightedv3(
             const Board  &a_board,
             const Player &a_playerMe,
             const Player &a_playerOpponent);
@@ -155,7 +161,7 @@ protected:
 
     /// @return the size of the maximum piece deployable in a particular NK point
     // it assumes pieces are defined in piece.h in reversed order from 5 to 1 squares (and they are)
-    int32_t BiggestPieceDeployableInNKPointSize(
+    static int32_t BiggestPieceDeployableInNKPointSize(
             const Board      &a_board,
             const Player     &a_player,
             const Coordinate &a_NKPointCoord);
