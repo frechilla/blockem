@@ -705,6 +705,7 @@ enable_option_checking
 enable_dependency_tracking
 enable_debug
 enable_debug_printing
+enable_gprof
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1346,6 +1347,8 @@ Optional Features:
   --enable-dependency-tracking   do not reject slow dependency extractors
   --enable-debug          Enable debugging code
   --enable-debug-printing Enable debugging printing to standard out
+  --enable-gprof          Enable code profiling. You might get better results
+                          enabling debugging code too
 
 Some influential environment variables:
   CXX         C++ compiler command
@@ -2758,7 +2761,7 @@ am__tar='${AMTAR} chof - "$$tardir"'; am__untar='${AMTAR} xf -'
 ac_config_headers="$ac_config_headers config.h"
 
 
-$as_echo "#define SVN_REVISION \"168\"" >>confdefs.h
+$as_echo "#define SVN_REVISION \"168:173M\"" >>confdefs.h
 
 
 # Checks for programs.
@@ -5466,6 +5469,21 @@ if test "${enable_debug_printing+set}" = set; then :
   enableval=$enable_debug_printing;  if test x$enableval = xyes; then
         debugprinting=yes
         CXXFLAGS+=" -DDEBUG_PRINT"
+    fi
+fi
+
+
+# from: http://www.cs.utah.edu/dept/old/texinfo/as/gprof.html
+# In addition, you would probably want to specify the profiling C library,
+# `/usr/lib/libc_p.a', by writing `-lc_p' instead of the usual `-lc'.
+# This is not absolutely necessary, but doing this gives you number-of-calls
+# information for standard library functions such as read and open
+# Check whether --enable-gprof was given.
+if test "${enable_gprof+set}" = set; then :
+  enableval=$enable_gprof;  if test x$enableval = xyes; then
+        debugprof=yes
+        CXXFLAGS+=" -pg"
+        LDFLAGS=" -lc"
     fi
 fi
 

@@ -94,6 +94,19 @@ AC_ARG_ENABLE(debug-printing,
         CXXFLAGS+=" -DDEBUG_PRINT"
     fi])
 
+# from: http://www.cs.utah.edu/dept/old/texinfo/as/gprof.html
+# In addition, you would probably want to specify the profiling C library, 
+# `/usr/lib/libc_p.a', by writing `-lc_p' instead of the usual `-lc'. 
+# This is not absolutely necessary, but doing this gives you number-of-calls 
+# information for standard library functions such as read and open
+AC_ARG_ENABLE(gprof,
+    AC_HELP_STRING([--enable-gprof], [Enable code profiling. You might get better results enabling debugging code too]),
+    [ if test x$enableval = xyes; then
+        debugprof=yes
+        CXXFLAGS+=" -pg"
+        LDFLAGS=" -lc"
+    fi])
+
 # if in win32 add these flags to remove the extra terminal window and avoid strange errors
 # http://live.gnome.org/GTK%2B/Win32/Apps
 if test "$os_win32" = "yes"; then
