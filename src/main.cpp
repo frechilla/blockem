@@ -214,7 +214,7 @@ int main(int argc, char **argv)
             theGame.PutDownPiece(
                     resultPiece,
                     resultCoord,
-                    Game1v1::e_Game1v1Player2);
+                    Game1v1::e_Game1v1Player1);
         }
 
         theGame.SaveGame(std::cout);

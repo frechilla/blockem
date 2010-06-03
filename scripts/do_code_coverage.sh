@@ -1,16 +1,39 @@
 #!/bin/bash
 
+#####################################################################
+# This script generates html based code coverage report in          #
+# blockem-path/src/tests/gcoverage/gcovYYYYMMDDHHSS                 #
+# You can browse it opening the index.html file stored in that path #
+# This script doesn't take any parameters by command line           #
+#####################################################################
+
+if [ $# -eq 1 ]; then
+    if [ $1 = "--help" ]; then
+        echo "This script generates html based code coverage report in"
+        echo "blockem-path/src/tests/gcoverage/gcovYYYYMMDDHHSS"
+        echo "You can browse it opening the index.html file stored in that path"
+        echo "This script doesn't take any parameters by command line"
+    else
+        echo "bad parameter. Try '--help'"
+    fi
+    
+    exit 0
+fi
+
 OUTPUT_DIR=gcov`date +%Y%m%d%H%M%S`
 GCOV_OUTPUT_NAME=blockem.gcov
 LCOV_OUTPUT_NAME=blockem.lcov
 DEPTH=3
 
+#cd into base directory
+cd ../
+
 # test if the binaries exist
-if [ ! -f ../../blockem ]; then
+if [ ! -f src/blockem ]; then
 	echo "You must compile blockem before launching the code coverage utility man..."
 	exit
 fi
-if [ ! -f ../blockemtest ] ; then
+if [ ! -f src/tests/blockemtest ] ; then
 	echo "You must compile blockem before launching the code coverage utility man..."
 	exit
 fi
@@ -19,20 +42,19 @@ fi
 type lcov &> /dev/null ||  { echo "lcov is required but it's not installed.  Aborting." >&2; exit 1; }
 
 # reset lcov counters
-lcov --directory ../ --zerocounters
-lcov --directory ../.. --zerocounters
+lcov --directory src/ --zerocounters
+lcov --directory src/tests/ --zerocounters
 
 # apps must be run from their directories or counters won't be updated properly
 # firstly run the blockem test application
-cd ../
+cd src/tests
 echo "running blockem test application in src/tests"
 ./blockemtest
 
 # run blockem in console mode against the game examples. cd into src/ since blockem
 # must be run from there
 cd ../
-for THIS_FILE in `find tests/examples/games -maxdepth 1 -not -iname "*error*"`; do
-    BASENAME=`basename $THIS_FILE`
+for THIS_FILE in `find tests/examples/games -maxdepth 1 -type f -not -iname "*error*"`; do
     echo "running ./blockem -d $DEPTH -c $THIS_FILE"
     ./blockem -d $DEPTH -c $THIS_FILE 
 done
