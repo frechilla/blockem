@@ -269,7 +269,7 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
                     {
                         // mark the coords in the board where the current player can't go
                         if ( m_theBoard.IsCoordEmpty(thisCoord) &&
-                             Rules::IsCoordTouchingPlayer(m_theBoard, thisCoord, *thisPlayer) )
+                             rules::IsCoordTouchingPlayer(m_theBoard, thisCoord, *thisPlayer) )
                         {
                             cr->rectangle(
                                     (xc - squareWidth/2) +  (littleSquare * thisCoord.m_col) + 1,
@@ -361,7 +361,7 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
 
         if (m_currentPlayer->NumberOfPiecesAvailable() == e_numberOfPieces)
         {
-            if (Rules::IsPieceDeployableInStartingPoint(
+            if (rules::IsPieceDeployableInStartingPoint(
                     m_theBoard,
                     m_currentPiece.GetCurrentConfiguration(),
                     m_currentCoord,
@@ -382,7 +382,7 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
                         GHOST_PIECE_ALPHA_WRONG);
             }
         }
-        else if (Rules::IsPieceDeployable(
+        else if (rules::IsPieceDeployable(
                 m_theBoard,
                 m_currentPiece.GetCurrentConfiguration(),
                 m_currentCoord,

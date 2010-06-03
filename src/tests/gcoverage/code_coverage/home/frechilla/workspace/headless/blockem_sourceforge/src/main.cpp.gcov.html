@@ -1,0 +1,401 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <title>LCOV - Blockem Tests Code Coverage - /home/frechilla/workspace/headless/blockem_sourceforge/src/main.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+        <tr>
+          <td width="5%"></td>
+          <td width="10%" class="headerItem">Current view:</td>
+          <td width="35%" class="headerValue"><a href="../../../../../../index.html">directory</a> - <a href="index.html">home/frechilla/workspace/headless/blockem_sourceforge/src</a> - main.cpp (source / <a href="main.cpp.func.html">functions</a>)</td>
+          <td width="10%"></td>
+          <td width="10%" class="headerCovTableHead">Found</td>
+          <td width="10%" class="headerCovTableHead">Hit</td>
+          <td width="15%" class="headerCovTableHead">Coverage</td>
+          <td width="5%"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="headerItem">Test:</td>
+          <td class="headerValue">Blockem Tests Code Coverage</td>
+          <td class="headerItem">Lines:</td>
+          <td class="headerCovTableEntry">82</td>
+          <td class="headerCovTableEntry">33</td>
+          <td class="headerCovTableEntryMed">40.2 %</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="headerItem">Date:</td>
+          <td class="headerValue">2010-06-03</td>
+          <td class="headerItem">Functions:</td>
+          <td class="headerCovTableEntry">3</td>
+          <td class="headerCovTableEntry">3</td>
+          <td class="headerCovTableEntryHi">100.0 %</td>
+        </tr>
+                <tr><td><img src="../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+    <tr><td class="ruler"><img src="../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td><pre class="source">
+<a name="1"><span class="lineNum">       1 </span>                : // ============================================================================</a>
+<span class="lineNum">       2 </span>                : // Copyright 2009 Faustino Frechilla
+<span class="lineNum">       3 </span>                : //
+<span class="lineNum">       4 </span>                : // This file is part of Blockem.
+<span class="lineNum">       5 </span>                : //
+<span class="lineNum">       6 </span>                : // Blockem is free software: you can redistribute it and/or modify it under the
+<span class="lineNum">       7 </span>                : // terms of the GNU General Public License as published by the Free Software
+<span class="lineNum">       8 </span>                : // Foundation, either version 3 of the License, or (at your option) any later
+<span class="lineNum">       9 </span>                : // version.
+<span class="lineNum">      10 </span>                : //
+<span class="lineNum">      11 </span>                : // Blockem is distributed in the hope that it will be useful, but WITHOUT ANY
+<span class="lineNum">      12 </span>                : // WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      13 </span>                : // FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+<span class="lineNum">      14 </span>                : // details.
+<span class="lineNum">      15 </span>                : //
+<span class="lineNum">      16 </span>                : // You should have received a copy of the GNU General Public License along
+<span class="lineNum">      17 </span>                : // with Blockem. If not, see http://www.gnu.org/licenses/.
+<span class="lineNum">      18 </span>                : //
+<span class="lineNum">      19 </span>                : /// @file main.cpp
+<span class="lineNum">      20 </span>                : /// @brief
+<span class="lineNum">      21 </span>                : ///
+<span class="lineNum">      22 </span>                : /// @author Faustino Frechilla
+<span class="lineNum">      23 </span>                : /// @history
+<span class="lineNum">      24 </span>                : /// Ref       Who                When         What
+<span class="lineNum">      25 </span>                : ///           Faustino Frechilla 30-Mar-2009  Original development
+<span class="lineNum">      26 </span>                : /// @endhistory
+<span class="lineNum">      27 </span>                : ///
+<span class="lineNum">      28 </span>                : // ============================================================================
+<span class="lineNum">      29 </span>                : 
+<span class="lineNum">      30 </span>                : #include &lt;stdio.h&gt;
+<span class="lineNum">      31 </span>                : #include &lt;stdlib.h&gt;
+<span class="lineNum">      32 </span>                : #include &lt;math.h&gt;
+<span class="lineNum">      33 </span>                : #include &lt;string.h&gt; // strcmp
+<span class="lineNum">      34 </span>                : #include &lt;iostream&gt;
+<span class="lineNum">      35 </span>                : #include &lt;fstream&gt;
+<span class="lineNum">      36 </span>                : #include &lt;glib.h&gt;   // glib-Commandline-option-parser
+<span class="lineNum">      37 </span>                : #include &lt;gtkmm.h&gt;
+<span class="lineNum">      38 </span>                : #include &quot;config.h&quot; // autotools header file
+<span class="lineNum">      39 </span>                : #include &quot;assert.h&quot;
+<span class="lineNum">      40 </span>                : 
+<span class="lineNum">      41 </span>                : // header file created during the make process which saves the current date
+<span class="lineNum">      42 </span>                : #include &quot;compiletime.h&quot;
+<span class="lineNum">      43 </span>                : #include &quot;gui_main_window.h&quot;
+<span class="lineNum">      44 </span>                : #include &quot;gui_glade_defs.h&quot;
+<span class="lineNum">      45 </span>                : #include &quot;game1v1.h&quot;
+<span class="lineNum">      46 </span>                : #include &quot;gui_game1v1_config.h&quot; // initialise singleton
+<span class="lineNum">      47 </span>                : 
+<span class="lineNum">      48 </span>                : 
+<span class="lineNum">      49 </span>                : // the following code is needed to load the gui into the application.
+<span class="lineNum">      50 </span>                : // (See big comment in gui.h)
+<span class="lineNum">      51 </span>                : // objdump in windows and linux is different and they create
+<span class="lineNum">      52 </span>                : // the following variables different from one another.
+<span class="lineNum">      53 </span>                : // Windows hasn't got any underscore at the start, while the object in linux
+<span class="lineNum">      54 </span>                : // has it. This is enough to check whether we are in the windows environment
+<span class="lineNum">      55 </span>                : // or not
+<span class="lineNum">      56 </span>                : #ifdef WIN32
+<span class="lineNum">      57 </span>                : extern const char binary_gui_glade_start[];
+<span class="lineNum">      58 </span>                : extern const char binary_gui_glade_end[];
+<span class="lineNum">      59 </span>                : extern int        binary_gui_glade_size[];
+<span class="lineNum">      60 </span>                : 
+<span class="lineNum">      61 </span>                : #define __BIN_GUI_GLADE_START__ binary_gui_glade_start
+<span class="lineNum">      62 </span>                : #define __BIN_GUI_GLADE_END__   binary_gui_glade_end
+<span class="lineNum">      63 </span>                : #define __BIN_GUI_GLADE_SIZE__  binary_gui_glade_size
+<span class="lineNum">      64 </span>                : 
+<span class="lineNum">      65 </span>                : #else
+<span class="lineNum">      66 </span>                : extern const char _binary_gui_glade_start[];
+<span class="lineNum">      67 </span>                : extern const char _binary_gui_glade_end[];
+<span class="lineNum">      68 </span>                : extern int        _binary_gui_glade_size[];
+<span class="lineNum">      69 </span>                : 
+<span class="lineNum">      70 </span>                : #define __BIN_GUI_GLADE_START__ _binary_gui_glade_start
+<span class="lineNum">      71 </span>                : #define __BIN_GUI_GLADE_END__   _binary_gui_glade_end
+<span class="lineNum">      72 </span>                : #define __BIN_GUI_GLADE_SIZE__  _binary_gui_glade_size
+<span class="lineNum">      73 </span>                : 
+<span class="lineNum">      74 </span>                : #endif // ifdef WIN32
+<span class="lineNum">      75 </span>                : 
+<span class="lineNum">      76 </span>                : // parsing command line arguments
+<span class="lineNum">      77 </span>                : // http://library.gnome.org/devel/glib/unstable/glib-Commandline-option-parser.html
+<span class="lineNum">      78 </span>                : // there was also the option of popt (http://directory.fsf.org/project/popt) but it would have added
+<span class="lineNum">      79 </span>                : // an extra dependency
+<span class="lineNum">      80 </span>                : static gboolean s_version = 0;
+<span class="lineNum">      81 </span>                : static gint s_depth = 0;
+<span class="lineNum">      82 </span>                : static gchar *s_blockemfilePath = NULL;
+<span class="lineNum">      83 </span>                : 
+<span class="lineNum">      84 </span>                : static GOptionEntry s_cmdEntries[] =
+<span class="lineNum">      85 </span>                : {
+<span class="lineNum">      86 </span>                :     { &quot;version&quot;,   0, 0, G_OPTION_ARG_NONE,   &amp;s_version, &quot;Prints the current version of the software and exists&quot;, NULL },
+<span class="lineNum">      87 </span>                :     { &quot;compute&quot;, 'c', 0, G_OPTION_ARG_STRING, &amp;s_blockemfilePath, &quot;Loads game saved in FILE, calculates next move and prints out the result in console&quot;, &quot;FILE&quot;},
+<span class="lineNum">      88 </span>                :     { &quot;depth&quot;  , 'd', 0, G_OPTION_ARG_INT,    &amp;s_depth, &quot;sets the maximum depth of search tree to N when using \&quot;--compute\&quot;&quot;, &quot;N&quot;},
+<span class="lineNum">      89 </span>                : //    {G_OPTION_REMAINING, 0, G_OPTION_ARG_FILENAME_ARRAY, &amp;s_fileArray, &quot;Blockem game file to load. The app will calculate next move and print out the result in console. GUI won't be started&quot;, &quot;[FILE]&quot;},
+<span class="lineNum">      90 </span>                : //    { &quot;max-size&quot;, 'm', 0, G_OPTION_ARG_INT, &amp;max_size, &quot;Test up to 2^M items&quot;, &quot;M&quot; },
+<span class="lineNum">      91 </span>                : //    { &quot;verbose&quot;, 'v', 0, G_OPTION_ARG_NONE, &amp;verbose, &quot;Be verbose&quot;, NULL },
+<span class="lineNum">      92 </span>                : //    { &quot;beep&quot;, 'b', 0, G_OPTION_ARG_NONE, &amp;beep, &quot;Beep when done&quot;, NULL },
+<span class="lineNum">      93 </span>                : //    { &quot;rand&quot;, 0, 0, G_OPTION_ARG_NONE, &amp;rand, &quot;Randomize the data&quot;, NULL },
+<span class="lineNum">      94 </span>                :     { NULL }
+<span class="lineNum">      95 </span>                : };
+<a name="96"><span class="lineNum">      96 </span>                : </a>
+<span class="lineNum">      97 </span>                : 
+<span class="lineNum">      98 </span><span class="lineCov">             17 : int main(int argc, char **argv)</span>
+<span class="lineNum">      99 </span>                : {
+<span class="lineNum">     100 </span><span class="lineCov">             17 :     GError *error = NULL;</span>
+<span class="lineNum">     101 </span>                :     GOptionContext *cmdContext;
+<span class="lineNum">     102 </span>                : 
+<span class="lineNum">     103 </span><span class="lineCov">             17 :     cmdContext = g_option_context_new (&quot;- The GNU polyominoes board game&quot;);</span>
+<span class="lineNum">     104 </span>                :     // to add i18n:
+<span class="lineNum">     105 </span>                :     //   g_option_context_add_main_entries (cmdContext, s_cmdEntries, GETTEXT_PACKAGE);
+<span class="lineNum">     106 </span><span class="lineCov">             17 :     g_option_context_add_main_entries (cmdContext, s_cmdEntries, NULL);</span>
+<span class="lineNum">     107 </span>                :     // http://library.gnome.org/devel/glib/unstable/glib-Commandline-option-parser.html#g-option-context-add-group
+<span class="lineNum">     108 </span><span class="lineCov">             17 :     g_option_context_add_group (cmdContext, gtk_get_option_group (TRUE));</span>
+<span class="lineNum">     109 </span><span class="lineCov">             17 :     if (!g_option_context_parse (cmdContext, &amp;argc, &amp;argv, &amp;error))</span>
+<span class="lineNum">     110 </span>                :     {
+<span class="lineNum">     111 </span><span class="lineNoCov">              0 :         std::cout &lt;&lt; argv[0] &lt;&lt; &quot;: Error parsing command line: &quot; &lt;&lt; error-&gt;message &lt;&lt; std::endl;</span>
+<span class="lineNum">     112 </span><span class="lineNoCov">              0 :         std::cout &lt;&lt; argv[0] &lt;&lt; &quot;: Try '&quot; &lt;&lt; argv[0] &lt;&lt;  &quot; --help'&quot; &lt;&lt; std::endl;</span>
+<span class="lineNum">     113 </span><span class="lineNoCov">              0 :         return 1;</span>
+<span class="lineNum">     114 </span>                :     }
+<span class="lineNum">     115 </span>                : 
+<span class="lineNum">     116 </span><span class="lineCov">             17 :     if (s_version)</span>
+<span class="lineNum">     117 </span>                :     {
+<span class="lineNum">     118 </span><span class="lineNoCov">              0 :         std::cout &lt;&lt; &quot;Blockem, version &quot; &lt;&lt; VERSION &lt;&lt; &quot; (r&quot; &lt;&lt; SVN_REVISION &lt;&lt; &quot;)&quot; &lt;&lt; std::endl;</span>
+<span class="lineNum">     119 </span><span class="lineNoCov">              0 :         std::cout &lt;&lt; &quot;  Compiled &quot; &lt;&lt; COMPILETIME &lt;&lt; std::endl &lt;&lt; std::endl;</span>
+<span class="lineNum">     120 </span><span class="lineNoCov">              0 :         std::cout &lt;&lt; &quot;Copyright (C) 2009-2010 Faustino Frechilla&quot; &lt;&lt; std::endl;</span>
+<span class="lineNum">     121 </span>                :         std::cout &lt;&lt; &quot;Blockem is open source software, see http://blockem.sourceforge.net/&quot;
+<span class="lineNum">     122 </span><span class="lineNoCov">              0 :                   &lt;&lt; std::endl &lt;&lt; std::endl;</span>
+<span class="lineNum">     123 </span>                : 
+<span class="lineNum">     124 </span><span class="lineNoCov">              0 :         return 0;</span>
+<span class="lineNum">     125 </span>                :     }
+<span class="lineNum">     126 </span>                : 
+<span class="lineNum">     127 </span><span class="lineCov">             17 :     if (s_blockemfilePath != NULL)</span>
+<span class="lineNum">     128 </span>                :     {
+<span class="lineNum">     129 </span><span class="lineCov">             17 :         if (!g_file_test(s_blockemfilePath, G_FILE_TEST_IS_REGULAR))</span>
+<span class="lineNum">     130 </span>                :         {
+<span class="lineNum">     131 </span><span class="lineCov">              2 :             std::cerr &lt;&lt; &quot;Error: &quot; &lt;&lt; s_blockemfilePath &lt;&lt; &quot; doesn't exist. Exiting...&quot; &lt;&lt; std::endl;</span>
+<span class="lineNum">     132 </span><span class="lineCov">              2 :             return 2;</span>
+<span class="lineNum">     133 </span>                :         }
+<span class="lineNum">     134 </span>                : 
+<span class="lineNum">     135 </span><span class="lineCov">             15 :         if (s_depth &lt;= 0)</span>
+<span class="lineNum">     136 </span>                :         {
+<span class="lineNum">     137 </span><span class="lineNoCov">              0 :             std::cerr &lt;&lt; &quot;Error: depth must be set to a positive value. Exiting...&quot; &lt;&lt; std::endl;</span>
+<span class="lineNum">     138 </span><span class="lineNoCov">              0 :             return 3;</span>
+<span class="lineNum">     139 </span>                :         }
+<span class="lineNum">     140 </span>                : 
+<span class="lineNum">     141 </span>                :         std::cout &lt;&lt; &quot;Loading game from &quot; &lt;&lt; s_blockemfilePath &lt;&lt; &quot; and calculating next move...&quot; &lt;&lt; std::endl
+<span class="lineNum">     142 </span><span class="lineCov">             15 :                   &lt;&lt; &quot;    (search tree depth set to: &quot; &lt;&lt; s_depth &lt;&lt; &quot;)&quot; &lt;&lt; std::endl &lt;&lt; std::endl;</span>
+<span class="lineNum">     143 </span>                : 
+<span class="lineNum">     144 </span>                : 
+<span class="lineNum">     145 </span><span class="lineCov">             15 :         if ( (s_depth &amp; 0x01) == 0)</span>
+<span class="lineNum">     146 </span>                :         {
+<span class="lineNum">     147 </span><span class="lineNoCov">              0 :             std::cerr &lt;&lt; &quot;Warning: For better results you might want to set the depth to an odd number&quot; &lt;&lt; std::endl;</span>
+<span class="lineNum">     148 </span>                :         }
+<span class="lineNum">     149 </span>                : 
+<span class="lineNum">     150 </span><span class="lineCov">             15 :         Heuristic::EvalFunction_t heuristicNKWeighted = Heuristic::CalculateNKWeightedv1;</span>
+<span class="lineNum">     151 </span>                :         //Heuristic::EvalFunction_t heuristicSimple = Heuristic::CalculateSimple;
+<span class="lineNum">     152 </span>                :         //Heuristic::EvalFunction_t heuristicPiecePerNKPoint = Heuristic::CalculatePiecesPerNKPoint;
+<span class="lineNum">     153 </span>                : 
+<span class="lineNum">     154 </span><span class="lineCov">             15 :         Heuristic::EvalFunction_t heuristic = heuristicNKWeighted;</span>
+<span class="lineNum">     155 </span>                :         //Heuristic::EvalFunction_t heuristic = heuristicSimple;
+<span class="lineNum">     156 </span>                :         //Heuristic::EvalFunction_t heuristic = heuristicPiecePerNKPoint;
+<span class="lineNum">     157 </span>                : 
+<span class="lineNum">     158 </span><span class="lineCov">             15 :         std::ifstream cin;</span>
+<span class="lineNum">     159 </span>                : 
+<span class="lineNum">     160 </span><span class="lineCov">             15 :         cin.open(s_blockemfilePath);</span>
+<span class="lineNum">     161 </span><span class="lineCov">             15 :         if(!cin)</span>
+<span class="lineNum">     162 </span>                :         {
+<span class="lineNum">     163 </span><span class="lineNoCov">              0 :             std::cerr &lt;&lt; &quot;Error: file could not be opened&quot; &lt;&lt; std::endl;</span>
+<span class="lineNum">     164 </span><span class="lineNoCov">              0 :             return 4;</span>
+<span class="lineNum">     165 </span>                :         }
+<span class="lineNum">     166 </span>                : 
+<span class="lineNum">     167 </span><span class="lineCov">             15 :         Game1v1 theGame;</span>
+<span class="lineNum">     168 </span><span class="lineCov">             15 :         if (theGame.LoadGame(cin) == false)</span>
+<span class="lineNum">     169 </span>                :         {
+<span class="lineNum">     170 </span><span class="lineNoCov">              0 :             std::cerr &lt;&lt; &quot;Error while loading the game from &quot; &lt;&lt; s_blockemfilePath &lt;&lt; std::endl;</span>
+<span class="lineNum">     171 </span><span class="lineNoCov">              0 :             cin.close();</span>
+<span class="lineNum">     172 </span>                : 
+<span class="lineNum">     173 </span><span class="lineNoCov">              0 :             return 4;</span>
+<span class="lineNum">     174 </span>                :         }
+<span class="lineNum">     175 </span>                : 
+<span class="lineNum">     176 </span><span class="lineCov">             15 :         cin.close();</span>
+<span class="lineNum">     177 </span>                : 
+<span class="lineNum">     178 </span><span class="lineCov">             15 :         theGame.SaveGame(std::cout);</span>
+<span class="lineNum">     179 </span>                : 
+<span class="lineNum">     180 </span>                :         //test(&amp;theGame, theGame.GetMe(), theGame.GetOpponent());
+<span class="lineNum">     181 </span>                :         //exit(0);
+<span class="lineNum">     182 </span>                : 
+<span class="lineNum">     183 </span>                :         //std::cout &lt;&lt; std::endl &lt;&lt; std::endl;
+<span class="lineNum">     184 </span>                :         //theGame.GetMe().PrintNucleationPoints(std::cout);
+<span class="lineNum">     185 </span>                : 
+<span class="lineNum">     186 </span>                :         //std::cout &lt;&lt; std::endl &lt;&lt; std::endl;
+<span class="lineNum">     187 </span>                :         //theGame.GetOpponent().PrintNucleationPoints(std::cout);
+<span class="lineNum">     188 </span>                : 
+<span class="lineNum">     189 </span>                : 
+<span class="lineNum">     190 </span><span class="lineCov">             15 :         Piece resultPiece(e_noPiece);</span>
+<span class="lineNum">     191 </span><span class="lineCov">             15 :         Coordinate resultCoord;</span>
+<span class="lineNum">     192 </span>                : 
+<span class="lineNum">     193 </span><span class="lineCov">             15 :         volatile sig_atomic_t dummyAtomic = 0;</span>
+<span class="lineNum">     194 </span>                :         int32_t minimaxWinner =
+<span class="lineNum">     195 </span>                :             theGame.MinMax(
+<span class="lineNum">     196 </span>                :                     heuristic,
+<span class="lineNum">     197 </span>                :                     s_depth,
+<span class="lineNum">     198 </span>                :                     Game1v1::e_Game1v1Player1,
+<span class="lineNum">     199 </span>                :                     resultPiece,
+<span class="lineNum">     200 </span>                :                     resultCoord,
+<span class="lineNum">     201 </span><span class="lineCov">             15 :                     dummyAtomic);</span>
+<span class="lineNum">     202 </span>                : 
+<span class="lineNum">     203 </span><span class="lineCov">             15 :         std::cout &lt;&lt; &quot;Winning evaluation function value: &quot; &lt;&lt; minimaxWinner &lt;&lt; std::endl;</span>
+<span class="lineNum">     204 </span>                : 
+<span class="lineNum">     205 </span><span class="lineCov">             15 :         if (resultPiece.GetType() == e_noPiece)</span>
+<span class="lineNum">     206 </span>                :         {
+<span class="lineNum">     207 </span><span class="lineNoCov">              0 :             std::cout &lt;&lt; std::endl;</span>
+<span class="lineNum">     208 </span><span class="lineNoCov">              0 :             std::cout &lt;&lt; &quot;\t===================================================&quot; &lt;&lt; std::endl;</span>
+<span class="lineNum">     209 </span><span class="lineNoCov">              0 :             std::cout &lt;&lt; &quot;\t=== END OF THE GAME. NO PIECE COULD BE PUT DOWN ===&quot; &lt;&lt; std::endl;</span>
+<span class="lineNum">     210 </span><span class="lineNoCov">              0 :             std::cout &lt;&lt; &quot;\t===================================================&quot; &lt;&lt; std::endl;</span>
+<span class="lineNum">     211 </span>                :         }
+<span class="lineNum">     212 </span>                :         else
+<span class="lineNum">     213 </span>                :         {
+<span class="lineNum">     214 </span>                :             theGame.PutDownPiece(
+<span class="lineNum">     215 </span>                :                     resultPiece,
+<span class="lineNum">     216 </span>                :                     resultCoord,
+<span class="lineNum">     217 </span><span class="lineCov">             15 :                     Game1v1::e_Game1v1Player2);</span>
+<span class="lineNum">     218 </span>                :         }
+<span class="lineNum">     219 </span>                : 
+<span class="lineNum">     220 </span><span class="lineCov">             15 :         theGame.SaveGame(std::cout);</span>
+<span class="lineNum">     221 </span>                : 
+<span class="lineNum">     222 </span>                :         //theGame.GetMe().PrintNucleationPoints(std::cout);
+<span class="lineNum">     223 </span>                :         //theGame.GetOpponent().PrintNucleationPoints(std::cout);
+<span class="lineNum">     224 </span>                : 
+<span class="lineNum">     225 </span><span class="lineCov">             15 :         return 0;</span>
+<span class="lineNum">     226 </span>                :     } // if (s_blockemfilePath != NULL)
+<span class="lineNum">     227 </span>                : 
+<span class="lineNum">     228 </span>                : 
+<span class="lineNum">     229 </span>                :     //////////////////
+<span class="lineNum">     230 </span>                :     // GUI
+<span class="lineNum">     231 </span>                : 
+<span class="lineNum">     232 </span><span class="lineNoCov">              0 :     Gtk::Main::init_gtkmm_internals();</span>
+<span class="lineNum">     233 </span>                : 
+<span class="lineNum">     234 </span>                :     // Initialise gthreads even before gtk_init
+<span class="lineNum">     235 </span><span class="lineNoCov">              0 :     if(!g_thread_supported())</span>
+<span class="lineNum">     236 </span>                :     {
+<span class="lineNum">     237 </span><span class="lineNoCov">              0 :         g_thread_init(NULL);</span>
+<span class="lineNum">     238 </span>                :         // This call is needed only if extra threads (not the main thread)
+<span class="lineNum">     239 </span>                :         // updates directly the GUI widgets using gdk_threads_enter
+<span class="lineNum">     240 </span>                :         // and gdk_threads_leave
+<span class="lineNum">     241 </span>                :         // It's not really needed since there's only 1 extra thread
+<span class="lineNum">     242 </span>                :         // (apart from the main one) and it doesn't update the GUI
+<span class="lineNum">     243 </span>                :         // straight away. It uses signals for that matter (see comment
+<span class="lineNum">     244 </span>                :         // in MainWindow::WorkerThread_computingFinished)
+<span class="lineNum">     245 </span>                :         //gdk_threads_init();
+<span class="lineNum">     246 </span>                :     }
+<span class="lineNum">     247 </span>                :     else
+<span class="lineNum">     248 </span>                :     {
+<span class="lineNum">     249 </span><span class="lineNoCov">              0 :         std::cerr &lt;&lt; &quot;error: gthread_supported call failed when initialising gthreads&quot; &lt;&lt; std::endl;</span>
+<span class="lineNum">     250 </span><span class="lineNoCov">              0 :         std::cerr &lt;&lt; &quot;error: App can't start without gthreads support&quot; &lt;&lt; std::endl;</span>
+<span class="lineNum">     251 </span><span class="lineNoCov">              0 :         return -1;</span>
+<span class="lineNum">     252 </span>                :     }
+<span class="lineNum">     253 </span>                : 
+<span class="lineNum">     254 </span>                :     // this should eb called before starting manipulating GUI stuff
+<span class="lineNum">     255 </span><span class="lineNoCov">              0 :     Gtk::Main kit(argc, argv);</span>
+<span class="lineNum">     256 </span>                : 
+<span class="lineNum">     257 </span>                :     // create a new gtk builder. add_from_string will load the definitions
+<span class="lineNum">     258 </span><span class="lineNoCov">              0 :     Glib::RefPtr&lt;Gtk::Builder&gt; gtkBuilder = Gtk::Builder::create();</span>
+<span class="lineNum">     259 </span>                : 
+<span class="lineNum">     260 </span>                : #ifdef GLIBMM_EXCEPTIONS_ENABLED
+<span class="lineNum">     261 </span>                :     try
+<span class="lineNum">     262 </span>                :     {
+<span class="lineNum">     263 </span>                : #endif // GLIBMM_EXCEPTIONS_ENABLED
+<span class="lineNum">     264 </span>                : 
+<span class="lineNum">     265 </span><span class="lineNoCov">              0 :         if (!gtkBuilder-&gt;add_from_string(</span>
+<span class="lineNum">     266 </span>                :                 reinterpret_cast&lt;const char *&gt;(__BIN_GUI_GLADE_START__),
+<span class="lineNum">     267 </span>                :                 reinterpret_cast&lt;long int&gt;(__BIN_GUI_GLADE_SIZE__)))
+<span class="lineNum">     268 </span>                :         {
+<span class="lineNum">     269 </span><span class="lineNoCov">              0 :             std::cerr &lt;&lt; &quot;Couldn't load Gtkbuilder definitions. Exiting...&quot; &lt;&lt; std::endl;</span>
+<span class="lineNum">     270 </span><span class="lineNoCov">              0 :             return 1;</span>
+<span class="lineNum">     271 </span>                :         }
+<span class="lineNum">     272 </span>                : 
+<span class="lineNum">     273 </span>                : #ifdef GLIBMM_EXCEPTIONS_ENABLED
+<span class="lineNum">     274 </span>                :     }
+<span class="lineNum">     275 </span><span class="lineNoCov">              0 :     catch(const Glib::MarkupError&amp; ex)</span>
+<span class="lineNum">     276 </span>                :     {
+<span class="lineNum">     277 </span><span class="lineNoCov">              0 :         std::cerr &lt;&lt; ex.what() &lt;&lt; std::endl;</span>
+<span class="lineNum">     278 </span><span class="lineNoCov">              0 :         return 1;</span>
+<span class="lineNum">     279 </span>                :     }
+<span class="lineNum">     280 </span><span class="lineNoCov">              0 :     catch(const Gtk::BuilderError&amp; ex)</span>
+<span class="lineNum">     281 </span>                :     {
+<span class="lineNum">     282 </span><span class="lineNoCov">              0 :         std::cerr &lt;&lt; ex.what() &lt;&lt; std::endl;</span>
+<span class="lineNum">     283 </span><span class="lineNoCov">              0 :         return -1;</span>
+<span class="lineNum">     284 </span>                :     }
+<span class="lineNum">     285 </span>                : #endif // GLIBMM_EXCEPTIONS_ENABLED
+<span class="lineNum">     286 </span>                : 
+<span class="lineNum">     287 </span>                : 
+<span class="lineNum">     288 </span><span class="lineNoCov">              0 :     MainWindow *pMainWindow = NULL;</span>
+<span class="lineNum">     289 </span>                :     try
+<span class="lineNum">     290 </span>                :     {
+<span class="lineNum">     291 </span>                :         // initialise singletons before extra threads are created.
+<span class="lineNum">     292 </span>                :         // Singleton creation is not thread safe
+<span class="lineNum">     293 </span><span class="lineNoCov">              0 :         Game1v1Config::Instance();</span>
+<span class="lineNum">     294 </span>                : 
+<span class="lineNum">     295 </span>                :         // first of all retrieve the Gtk::window object
+<span class="lineNum">     296 </span><span class="lineNoCov">              0 :         gtkBuilder-&gt;get_widget_derived(GUI_MAIN_WINDOW_NAME, pMainWindow);</span>
+<span class="lineNum">     297 </span><span class="lineNoCov">              0 :         if (pMainWindow == NULL)</span>
+<span class="lineNum">     298 </span>                :         {
+<span class="lineNum">     299 </span><span class="lineNoCov">              0 :             throw new GUIException(std::string(&quot;couldn't retrieve the MainWindow from the .glade file&quot;));</span>
+<span class="lineNum">     300 </span>                :         }
+<span class="lineNum">     301 </span>                : 
+<span class="lineNum">     302 </span>                :         // if gdk_threads_enter and gdk_threads_leave were to be used
+<span class="lineNum">     303 </span>                :         // the Gtk::Main::run loop should be surrounded by
+<span class="lineNum">     304 </span>                :         // gdk_threads_enter and gdk_threads_leave
+<span class="lineNum">     305 </span>                :         // http://tadeboro.blogspot.com/2009/06/multi-threaded-gtk-applications.html
+<span class="lineNum">     306 </span>                : 
+<span class="lineNum">     307 </span><span class="lineNoCov">              0 :         kit.run(*pMainWindow);</span>
+<span class="lineNum">     308 </span>                :     }
+<span class="lineNum">     309 </span><span class="lineNoCov">              0 :     catch (GUIException ex)</span>
+<span class="lineNum">     310 </span>                :     {
+<span class="lineNum">     311 </span><span class="lineNoCov">              0 :         std::cerr &lt;&lt; ex.what() &lt;&lt; std::endl;</span>
+<span class="lineNum">     312 </span><span class="lineNoCov">              0 :         exit(-1);</span>
+<span class="lineNum">     313 </span>                :     }
+<span class="lineNum">     314 </span>                : 
+<span class="lineNum">     315 </span><span class="lineNoCov">              0 :     if (pMainWindow)</span>
+<span class="lineNum">     316 </span>                :     {
+<span class="lineNum">     317 </span><span class="lineNoCov">              0 :         delete (pMainWindow);</span>
+<span class="lineNum">     318 </span>                :     }
+<span class="lineNum">     319 </span>                : 
+<span class="lineNum">     320 </span>                :     // GUI
+<span class="lineNum">     321 </span>                :     //////////////////
+<a name="322"><span class="lineNum">     322 </span>                : </a>
+<span class="lineNum">     323 </span><span class="lineNoCov">              0 :     return 0;</span>
+<span class="lineNum">     324 </span><span class="lineCov">             51 : }</span>
+<span class="lineNum">     325 </span>                : 
+<span class="lineNum">     326 </span>                : 
+<span class="lineNum">     327 </span>                : 
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+  <tr><td class="ruler"><img src="../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+  <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.7</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

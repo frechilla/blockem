@@ -1,0 +1,215 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <title>LCOV - Blockem Tests Code Coverage - /home/frechilla/workspace/headless/blockem_sourceforge/src/gui_table_edit_piece.h</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+        <tr>
+          <td width="5%"></td>
+          <td width="10%" class="headerItem">Current view:</td>
+          <td width="35%" class="headerValue"><a href="../../../../../../index.html">directory</a> - <a href="index.html">home/frechilla/workspace/headless/blockem_sourceforge/src</a> - gui_table_edit_piece.h (source / <a href="gui_table_edit_piece.h.func.html">functions</a>)</td>
+          <td width="10%"></td>
+          <td width="10%" class="headerCovTableHead">Found</td>
+          <td width="10%" class="headerCovTableHead">Hit</td>
+          <td width="15%" class="headerCovTableHead">Coverage</td>
+          <td width="5%"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="headerItem">Test:</td>
+          <td class="headerValue">Blockem Tests Code Coverage</td>
+          <td class="headerItem">Lines:</td>
+          <td class="headerCovTableEntry">4</td>
+          <td class="headerCovTableEntry">0</td>
+          <td class="headerCovTableEntryLo">0.0 %</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="headerItem">Date:</td>
+          <td class="headerValue">2010-06-03</td>
+          <td class="headerItem">Functions:</td>
+          <td class="headerCovTableEntry">2</td>
+          <td class="headerCovTableEntry">0</td>
+          <td class="headerCovTableEntryLo">0.0 %</td>
+        </tr>
+                <tr><td><img src="../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+    <tr><td class="ruler"><img src="../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td><pre class="source">
+<a name="1"><span class="lineNum">       1 </span>                : // ============================================================================</a>
+<span class="lineNum">       2 </span>                : // Copyright 2010 Faustino Frechilla
+<span class="lineNum">       3 </span>                : //
+<span class="lineNum">       4 </span>                : // This file is part of Blockem.
+<span class="lineNum">       5 </span>                : //
+<span class="lineNum">       6 </span>                : // Blockem is free software: you can redistribute it and/or modify it under the
+<span class="lineNum">       7 </span>                : // terms of the GNU General Public License as published by the Free Software
+<span class="lineNum">       8 </span>                : // Foundation, either version 3 of the License, or (at your option) any later
+<span class="lineNum">       9 </span>                : // version.
+<span class="lineNum">      10 </span>                : //
+<span class="lineNum">      11 </span>                : // Blockem is distributed in the hope that it will be useful, but WITHOUT ANY
+<span class="lineNum">      12 </span>                : // WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      13 </span>                : // FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+<span class="lineNum">      14 </span>                : // details.
+<span class="lineNum">      15 </span>                : //
+<span class="lineNum">      16 </span>                : // You should have received a copy of the GNU General Public License along
+<span class="lineNum">      17 </span>                : // with Blockem. If not, see http://www.gnu.org/licenses/.
+<span class="lineNum">      18 </span>                : //
+<span class="lineNum">      19 </span>                : /// @file gui_table_edit_piece.h
+<span class="lineNum">      20 </span>                : /// @brief
+<span class="lineNum">      21 </span>                : ///
+<span class="lineNum">      22 </span>                : /// @author Faustino Frechilla
+<span class="lineNum">      23 </span>                : /// @history
+<span class="lineNum">      24 </span>                : /// Ref       Who                When         What
+<span class="lineNum">      25 </span>                : ///           Faustino Frechilla 30-Mar-2010  Original development
+<span class="lineNum">      26 </span>                : ///           Faustino Frechilla 25-Apr-2010  libglade dependency removed. Code migrated to GtkBuilder
+<span class="lineNum">      27 </span>                : /// @endhistory
+<span class="lineNum">      28 </span>                : ///
+<span class="lineNum">      29 </span>                : // ============================================================================
+<span class="lineNum">      30 </span>                : 
+<span class="lineNum">      31 </span>                : #ifndef _GUI_TABLE_EDIT_PIECE_H_
+<span class="lineNum">      32 </span>                : #define _GUI_TABLE_EDIT_PIECE_H_
+<span class="lineNum">      33 </span>                : 
+<span class="lineNum">      34 </span>                : #include &lt;gtkmm.h&gt;
+<span class="lineNum">      35 </span>                : #include &quot;gui_exception.h&quot;
+<span class="lineNum">      36 </span>                : #include &quot;piece.h&quot;
+<span class="lineNum">      37 </span>                : 
+<span class="lineNum">      38 </span>                : class TableEditPiece :
+<span class="lineNum">      39 </span>                :     public Gtk::Table
+<span class="lineNum">      40 </span>                : {
+<span class="lineNum">      41 </span>                : public:
+<span class="lineNum">      42 </span>                :         /// Instantiates the class. It needs a Gtk::Builder object to retrieve the
+<span class="lineNum">      43 </span>                :         /// glade info
+<span class="lineNum">      44 </span>                :     // to be used with m_gtkBuilder-&gt;get_widget_derived(GUI_ABOUT_DIALOG_NAME, m_aboutDialog)
+<span class="lineNum">      45 </span>                :         TableEditPiece(BaseObjectType* cobject, const Glib::RefPtr&lt;Gtk::Builder&gt;&amp; a_gtkBuilder) throw (GUIException);
+<span class="lineNum">      46 </span>                :         ~TableEditPiece();
+<span class="lineNum">      47 </span>                : 
+<span class="lineNum">      48 </span>                :     /// @brief gray out the whole table and children widgets
+<span class="lineNum">      49 </span>                :     /// It resets the current piece so there won't be any piece shown
+<span class="lineNum">      50 </span>                :     void set_sensitive(gboolean a_sensitive);
+<span class="lineNum">      51 </span>                :     
+<span class="lineNum">      52 </span>                :     /// @brief callback to be called when the edit piece drawing area is redraw on screen
+<span class="lineNum">      53 </span>                :     bool EditPieceDrawingArea_ExposeEvent(GdkEventExpose* event);
+<span class="lineNum">      54 </span>                : 
+<span class="lineNum">      55 </span>                :     /// @brief callback to be called when the rotate right button is pressed
+<span class="lineNum">      56 </span>                :     void RotateRightButton_ButtonPressed();
+<span class="lineNum">      57 </span>                : 
+<span class="lineNum">      58 </span>                :     /// @brief callback to be called when the rotate left button is pressed
+<span class="lineNum">      59 </span>                :     void RotateLeftButton_ButtonPressed();
+<span class="lineNum">      60 </span>                : 
+<span class="lineNum">      61 </span>                :     /// @brief callback to be called when the mirror over the Y axis button is pressed
+<span class="lineNum">      62 </span>                :     void MirrorYAxisButton_ButtonPressed();
+<span class="lineNum">      63 </span>                : 
+<span class="lineNum">      64 </span>                :     /// @brief callback to be called when the mirror over the X axis button is pressed
+<span class="lineNum">      65 </span>                :     void MirrorXAxisButton_ButtonPressed();
+<a name="66"><span class="lineNum">      66 </span>                : </a>
+<span class="lineNum">      67 </span>                :     /// @brief return the piece being edited at the moment in the widget
+<span class="lineNum">      68 </span><span class="lineNoCov">              0 :     inline const Piece&amp; GetPiece()</span>
+<span class="lineNum">      69 </span>                :     {
+<span class="lineNum">      70 </span><span class="lineNoCov">              0 :         return m_thePiece;</span>
+<span class="lineNum">      71 </span>                :     }
+<a name="72"><span class="lineNum">      72 </span>                : </a>
+<span class="lineNum">      73 </span>                :     /// Access to the piece_changed signal private member
+<span class="lineNum">      74 </span><span class="lineNoCov">              0 :     inline sigc::signal&lt;void, const Piece&amp;&gt;&amp; signal_pieceChanged()</span>
+<span class="lineNum">      75 </span>                :     {
+<span class="lineNum">      76 </span><span class="lineNoCov">              0 :         return m_signalPieceChanged;</span>
+<span class="lineNum">      77 </span>                :     }
+<span class="lineNum">      78 </span>                : 
+<span class="lineNum">      79 </span>                :     /// @brief sets the piece to be shown to the user for it to be edited
+<span class="lineNum">      80 </span>                :     /// it always resets the piece to the new piece (if it is the same piece as
+<span class="lineNum">      81 </span>                :     /// it is currently being edited the edition will be restarted anyway)
+<span class="lineNum">      82 </span>                :     /// It does the following actions
+<span class="lineNum">      83 </span>                :     ///     1) update the current edit piece (m_thePiece) accordingly
+<span class="lineNum">      84 </span>                :     ///     2) invalidate the pieces drawing area
+<span class="lineNum">      85 </span>                :     /// It can also be used to clean the editPiecesDrawingArea using e_noPiece as a parameter
+<span class="lineNum">      86 </span>                :     /// since it will set m_editPiece to e_noPiece and
+<span class="lineNum">      87 </span>                :     /// invalidate the m_editPiecesDrawingArea (which will draw nothing)
+<span class="lineNum">      88 </span>                :     void SetPiece(ePieceType_t a_newPiece);
+<span class="lineNum">      89 </span>                : 
+<span class="lineNum">      90 </span>                :     /// @brief sets the colour which will be used to draw the piece
+<span class="lineNum">      91 </span>                :     void SetPieceRGB(float a_red, float a_green, float a_blue);
+<span class="lineNum">      92 </span>                : 
+<span class="lineNum">      93 </span>                : private:
+<span class="lineNum">      94 </span>                :     /// @brief the drawing area where the piece is edited
+<span class="lineNum">      95 </span>                :     Gtk::DrawingArea* m_editPieceDrawingArea;
+<span class="lineNum">      96 </span>                : 
+<span class="lineNum">      97 </span>                :     /// @brief rotate label
+<span class="lineNum">      98 </span>                :     Gtk::Label* m_rotateLabel;
+<span class="lineNum">      99 </span>                : 
+<span class="lineNum">     100 </span>                :     /// @brief mirror label
+<span class="lineNum">     101 </span>                :     Gtk::Label* m_mirrorLabel;
+<span class="lineNum">     102 </span>                : 
+<span class="lineNum">     103 </span>                :     /// @brief the rotate right button to edit the piece
+<span class="lineNum">     104 </span>                :     Gtk::Button* m_rotateRightButton;
+<span class="lineNum">     105 </span>                : 
+<span class="lineNum">     106 </span>                :     /// @brief the rotate left button to edit the piece
+<span class="lineNum">     107 </span>                :     Gtk::Button* m_rotateLeftButton;
+<span class="lineNum">     108 </span>                : 
+<span class="lineNum">     109 </span>                :     /// @brief the mirror over Y axis button to edit the piece
+<span class="lineNum">     110 </span>                :     Gtk::Button* m_mirrorButtonYAxis;
+<span class="lineNum">     111 </span>                : 
+<span class="lineNum">     112 </span>                :     /// @brief the mirror over X axis button to edit the piece
+<span class="lineNum">     113 </span>                :     Gtk::Button* m_mirrorButtonXAxis;
+<span class="lineNum">     114 </span>                : 
+<span class="lineNum">     115 </span>                :     /// @brief used to retrieve the objects from the Glade design using GtkBuilder
+<span class="lineNum">     116 </span>                :     Glib::RefPtr&lt;Gtk::Builder&gt; m_gtkBuilder;
+<span class="lineNum">     117 </span>                : 
+<span class="lineNum">     118 </span>                :     /// @brief instance of a piece which is being edited by the user
+<span class="lineNum">     119 </span>                :     Piece m_thePiece;
+<span class="lineNum">     120 </span>                : 
+<span class="lineNum">     121 </span>                :     /// @brief Piece's colour: red channel
+<span class="lineNum">     122 </span>                :     float m_red;
+<span class="lineNum">     123 </span>                :     /// @brief Piece's colour: green channel
+<span class="lineNum">     124 </span>                :     float m_green;
+<span class="lineNum">     125 </span>                :     /// @brief Piece's colour: blue channel
+<span class="lineNum">     126 </span>                :     float m_blue;
+<span class="lineNum">     127 </span>                : 
+<span class="lineNum">     128 </span>                :     /// signal to be sent when the current piece being edited changes
+<span class="lineNum">     129 </span>                :     /// either because it's a different piece or because it was edited
+<span class="lineNum">     130 </span>                :     sigc::signal&lt;void, const Piece&amp;&gt; m_signalPieceChanged;
+<span class="lineNum">     131 </span>                : 
+<span class="lineNum">     132 </span>                :     // force the editPiece drawing area to be repainted
+<span class="lineNum">     133 </span>                :     bool InvalidateEditPieceDrawingArea();
+<span class="lineNum">     134 </span>                : 
+<span class="lineNum">     135 </span>                :     // prevent the default constructors from being used
+<span class="lineNum">     136 </span>                :         TableEditPiece();
+<span class="lineNum">     137 </span>                :         TableEditPiece(const TableEditPiece &amp;a_src);
+<span class="lineNum">     138 </span>                :         TableEditPiece&amp; operator=(const TableEditPiece &amp;a_src);
+<span class="lineNum">     139 </span>                : };
+<span class="lineNum">     140 </span>                : 
+<span class="lineNum">     141 </span>                : #endif // _GUI_TABLE_EDIT_PIECE_H_
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+  <tr><td class="ruler"><img src="../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+  <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.7</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

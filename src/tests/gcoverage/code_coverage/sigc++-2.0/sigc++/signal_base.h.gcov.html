@@ -1,0 +1,374 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <title>LCOV - Blockem Tests Code Coverage - sigc++-2.0/sigc++/signal_base.h</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+        <tr>
+          <td width="5%"></td>
+          <td width="10%" class="headerItem">Current view:</td>
+          <td width="35%" class="headerValue"><a href="../../index.html">directory</a> - <a href="index.html">sigc++-2.0/sigc++</a> - signal_base.h (source / <a href="signal_base.h.func.html">functions</a>)</td>
+          <td width="10%"></td>
+          <td width="10%" class="headerCovTableHead">Found</td>
+          <td width="10%" class="headerCovTableHead">Hit</td>
+          <td width="15%" class="headerCovTableHead">Coverage</td>
+          <td width="5%"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="headerItem">Test:</td>
+          <td class="headerValue">Blockem Tests Code Coverage</td>
+          <td class="headerItem">Lines:</td>
+          <td class="headerCovTableEntry">20</td>
+          <td class="headerCovTableEntry">0</td>
+          <td class="headerCovTableEntryLo">0.0 %</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="headerItem">Date:</td>
+          <td class="headerValue">2010-06-03</td>
+          <td class="headerItem">Functions:</td>
+          <td class="headerCovTableEntry">9</td>
+          <td class="headerCovTableEntry">0</td>
+          <td class="headerCovTableEntryLo">0.0 %</td>
+        </tr>
+                <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td><pre class="source">
+<a name="1"><span class="lineNum">       1 </span>                : // -*- c++ -*-</a>
+<span class="lineNum">       2 </span>                : /*
+<span class="lineNum">       3 </span>                :  * Copyright 2002, The libsigc++ Development Team
+<span class="lineNum">       4 </span>                :  *
+<span class="lineNum">       5 </span>                :  *  This library is free software; you can redistribute it and/or
+<span class="lineNum">       6 </span>                :  *  modify it under the terms of the GNU Lesser General Public
+<span class="lineNum">       7 </span>                :  *  License as published by the Free Software Foundation; either
+<span class="lineNum">       8 </span>                :  *  version 2.1 of the License, or (at your option) any later version.
+<span class="lineNum">       9 </span>                :  *
+<span class="lineNum">      10 </span>                :  *  This library is distributed in the hope that it will be useful,
+<span class="lineNum">      11 </span>                :  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+<span class="lineNum">      12 </span>                :  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+<span class="lineNum">      13 </span>                :  *  Lesser General Public License for more details.
+<span class="lineNum">      14 </span>                :  *
+<span class="lineNum">      15 </span>                :  *  You should have received a copy of the GNU Lesser General Public
+<span class="lineNum">      16 </span>                :  *  License along with this library; if not, write to the Free Software
+<span class="lineNum">      17 </span>                :  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+<span class="lineNum">      18 </span>                :  *
+<span class="lineNum">      19 </span>                :  */
+<span class="lineNum">      20 </span>                : 
+<span class="lineNum">      21 </span>                : #ifndef _SIGC_SIGNAL_BASE_H_
+<span class="lineNum">      22 </span>                : #define _SIGC_SIGNAL_BASE_H_
+<span class="lineNum">      23 </span>                : 
+<span class="lineNum">      24 </span>                : #include &lt;list&gt;
+<span class="lineNum">      25 </span>                : #include &lt;sigc++config.h&gt;
+<span class="lineNum">      26 </span>                : #include &lt;sigc++/type_traits.h&gt;
+<span class="lineNum">      27 </span>                : #include &lt;sigc++/trackable.h&gt;
+<span class="lineNum">      28 </span>                : #include &lt;sigc++/functors/slot.h&gt;
+<span class="lineNum">      29 </span>                : #include &lt;sigc++/functors/mem_fun.h&gt;
+<span class="lineNum">      30 </span>                : 
+<span class="lineNum">      31 </span>                : namespace sigc
+<span class="lineNum">      32 </span>                : {
+<span class="lineNum">      33 </span>                : 
+<span class="lineNum">      34 </span>                : namespace internal
+<span class="lineNum">      35 </span>                : {
+<span class="lineNum">      36 </span>                : 
+<span class="lineNum">      37 </span>                : /** Implementation of the signal interface.
+<span class="lineNum">      38 </span>                :  * signal_impl manages a list of slots. When a slot becomes
+<span class="lineNum">      39 </span>                :  * invalid (because some referred object dies), notify() is executed.
+<span class="lineNum">      40 </span>                :  * notify() either calls sweep() directly or defers the execution of
+<span class="lineNum">      41 </span>                :  * sweep() when the signal is being emitted. sweep() removes all
+<span class="lineNum">      42 </span>                :  * invalid slot from the list.
+<a name="43"><span class="lineNum">      43 </span>                :  */</a>
+<span class="lineNum">      44 </span>                : struct SIGC_API signal_impl
+<span class="lineNum">      45 </span><span class="lineNoCov">              0 : {</span>
+<span class="lineNum">      46 </span>                :   typedef size_t size_type;
+<span class="lineNum">      47 </span>                :   typedef std::list&lt;slot_base&gt; slot_list;
+<span class="lineNum">      48 </span>                :   typedef slot_list::iterator       iterator_type;
+<span class="lineNum">      49 </span>                :   typedef slot_list::const_iterator const_iterator_type;
+<span class="lineNum">      50 </span>                : 
+<span class="lineNum">      51 </span>                :   signal_impl();
+<span class="lineNum">      52 </span>                : 
+<span class="lineNum">      53 </span>                :   // only MSVC needs this to guarantee that all new/delete are executed from the DLL module
+<span class="lineNum">      54 </span>                : #ifdef SIGC_NEW_DELETE_IN_LIBRARY_ONLY
+<span class="lineNum">      55 </span>                :   void* operator new(size_t size_);
+<span class="lineNum">      56 </span>                :   void operator delete(void* p);
+<span class="lineNum">      57 </span>                : #endif
+<span class="lineNum">      58 </span>                : 
+<span class="lineNum">      59 </span>                :   /// Increments the reference counter.
+<span class="lineNum">      60 </span>                :   inline void reference()
+<span class="lineNum">      61 </span>                :     { ++ref_count_; }
+<a name="62"><span class="lineNum">      62 </span>                : </a>
+<span class="lineNum">      63 </span>                :   /// Increments the reference and execution counter.
+<span class="lineNum">      64 </span><span class="lineNoCov">              0 :   inline void reference_exec()</span>
+<span class="lineNum">      65 </span><span class="lineNoCov">              0 :     { ++ref_count_; ++exec_count_; }</span>
+<span class="lineNum">      66 </span>                : 
+<span class="lineNum">      67 </span>                :   /** Decrements the reference counter.
+<span class="lineNum">      68 </span>                :    * The object is deleted when the reference counter reaches zero.
+<span class="lineNum">      69 </span>                :    */
+<span class="lineNum">      70 </span>                :   inline void unreference()
+<span class="lineNum">      71 </span>                :     { if (!(--ref_count_)) delete this; }
+<span class="lineNum">      72 </span>                : 
+<span class="lineNum">      73 </span>                :   /** Decrements the reference and execution counter.
+<span class="lineNum">      74 </span>                :    * Invokes sweep() if the execution counter reaches zero and the
+<a name="75"><span class="lineNum">      75 </span>                :    * removal of one or more slots has been deferred.</a>
+<span class="lineNum">      76 </span>                :    */
+<span class="lineNum">      77 </span><span class="lineNoCov">              0 :   inline void unreference_exec()</span>
+<span class="lineNum">      78 </span>                :     {
+<span class="lineNum">      79 </span><span class="lineNoCov">              0 :       if (!(--ref_count_)) delete this;</span>
+<span class="lineNum">      80 </span><span class="lineNoCov">              0 :       else if (!(--exec_count_) &amp;&amp; deferred_) sweep();</span>
+<span class="lineNum">      81 </span><span class="lineNoCov">              0 :     }</span>
+<span class="lineNum">      82 </span>                : 
+<span class="lineNum">      83 </span>                :   /** Returns whether the list of slots is empty.
+<span class="lineNum">      84 </span>                :    * @return @p true if the list of slots is empty.
+<span class="lineNum">      85 </span>                :    */
+<span class="lineNum">      86 </span>                :   inline bool empty() const
+<span class="lineNum">      87 </span>                :     { return slots_.empty(); }
+<span class="lineNum">      88 </span>                : 
+<span class="lineNum">      89 </span>                :   /// Empties the list of slots.
+<span class="lineNum">      90 </span>                :   void clear();
+<span class="lineNum">      91 </span>                : 
+<span class="lineNum">      92 </span>                :   /** Returns the number of slots in the list.
+<span class="lineNum">      93 </span>                :    * @return The number of slots in the list.
+<span class="lineNum">      94 </span>                :    */
+<span class="lineNum">      95 </span>                :   size_type size() const;
+<span class="lineNum">      96 </span>                : 
+<span class="lineNum">      97 </span>                :   /** Adds a slot at the bottom of the list of slots.
+<span class="lineNum">      98 </span>                :    * @param slot_ The slot to add to the list of slots.
+<span class="lineNum">      99 </span>                :    * @return An iterator pointing to the new slot in the list.
+<span class="lineNum">     100 </span>                :    */
+<span class="lineNum">     101 </span>                :   iterator_type connect(const slot_base&amp; slot_);
+<span class="lineNum">     102 </span>                : 
+<span class="lineNum">     103 </span>                :   /** Adds a slot at the given position into the list of slots.
+<span class="lineNum">     104 </span>                :    * @param i An iterator indicating the position where @p slot_ should be inserted.
+<span class="lineNum">     105 </span>                :    * @param slot_ The slot to add to the list of slots.
+<span class="lineNum">     106 </span>                :    * @return An iterator pointing to the new slot in the list.
+<span class="lineNum">     107 </span>                :    */
+<span class="lineNum">     108 </span>                :   iterator_type insert(iterator_type i, const slot_base&amp; slot_);
+<span class="lineNum">     109 </span>                : 
+<span class="lineNum">     110 </span>                :   /** Removes the slot at the given position from the list of slots.
+<span class="lineNum">     111 </span>                :    * @param i An iterator pointing to the slot to be removed.
+<span class="lineNum">     112 </span>                :    * @return An iterator pointing to the slot in the list after the one removed.
+<span class="lineNum">     113 </span>                :    */
+<span class="lineNum">     114 </span>                :   iterator_type erase(iterator_type i);
+<span class="lineNum">     115 </span>                : 
+<span class="lineNum">     116 </span>                :   /// Removes invalid slots from the list of slots.
+<span class="lineNum">     117 </span>                :   void sweep();
+<span class="lineNum">     118 </span>                : 
+<span class="lineNum">     119 </span>                :   /** Callback that is executed when some slot becomes invalid.
+<span class="lineNum">     120 </span>                :    * This callback is registered in every slot when inserted into
+<span class="lineNum">     121 </span>                :    * the list of slots. It is executed when a slot becomes invalid
+<span class="lineNum">     122 </span>                :    * because of some referred object being destroyed.
+<span class="lineNum">     123 </span>                :    * It either calls sweep() directly or defers the execution of
+<span class="lineNum">     124 </span>                :    * sweep() when the signal is being emitted.
+<span class="lineNum">     125 </span>                :    * @param d The signal object (@p this).
+<span class="lineNum">     126 </span>                :    */
+<span class="lineNum">     127 </span>                :   static void* notify(void* d);
+<span class="lineNum">     128 </span>                : 
+<span class="lineNum">     129 </span>                :   /** Reference counter.
+<span class="lineNum">     130 </span>                :    * The object is destroyed when @em ref_count_ reaches zero.
+<span class="lineNum">     131 </span>                :    */
+<span class="lineNum">     132 </span>                :   short ref_count_;
+<span class="lineNum">     133 </span>                : 
+<span class="lineNum">     134 </span>                :   /** Execution counter.
+<span class="lineNum">     135 </span>                :    * Indicates whether the signal is being emitted.
+<span class="lineNum">     136 </span>                :    */
+<span class="lineNum">     137 </span>                :   short exec_count_;
+<span class="lineNum">     138 </span>                : 
+<span class="lineNum">     139 </span>                :   /// Indicates whether the execution of sweep() is being deferred.
+<span class="lineNum">     140 </span>                :   bool deferred_;
+<span class="lineNum">     141 </span>                : 
+<span class="lineNum">     142 </span>                :   /// The list of slots.
+<span class="lineNum">     143 </span>                :   std::list&lt;slot_base&gt; slots_;
+<span class="lineNum">     144 </span>                : };
+<span class="lineNum">     145 </span>                : 
+<span class="lineNum">     146 </span>                : /// Exception safe sweeper for cleaning up invalid slots on the slot list.
+<span class="lineNum">     147 </span>                : struct SIGC_API signal_exec
+<span class="lineNum">     148 </span>                : {
+<span class="lineNum">     149 </span>                :   /// The parent sigc::signal_impl object.
+<span class="lineNum">     150 </span>                :   signal_impl* sig_;
+<span class="lineNum">     151 </span>                : 
+<span class="lineNum">     152 </span>                :   /** Increments the reference and execution counter of the parent sigc::signal_impl object.
+<a name="153"><span class="lineNum">     153 </span>                :    * @param sig The parent sigc::signal_impl object.</a>
+<span class="lineNum">     154 </span>                :    */
+<span class="lineNum">     155 </span><span class="lineNoCov">              0 :   inline signal_exec(const signal_impl* sig)</span>
+<span class="lineNum">     156 </span><span class="lineNoCov">              0 :     : sig_(const_cast&lt;signal_impl*&gt;(sig) )</span>
+<span class="lineNum">     157 </span><span class="lineNoCov">              0 :     { sig_-&gt;reference_exec(); }</span>
+<a name="158"><span class="lineNum">     158 </span>                : </a>
+<span class="lineNum">     159 </span>                :   /// Decrements the reference and execution counter of the parent sigc::signal_impl object.
+<span class="lineNum">     160 </span><span class="lineNoCov">              0 :   inline ~signal_exec()</span>
+<span class="lineNum">     161 </span><span class="lineNoCov">              0 :     { sig_-&gt;unreference_exec(); }</span>
+<span class="lineNum">     162 </span>                : };
+<span class="lineNum">     163 </span>                : 
+<span class="lineNum">     164 </span>                : /** Temporary slot list used during signal emission.
+<span class="lineNum">     165 </span>                :  *  Through evolution this class is slightly misnamed.  It is now
+<span class="lineNum">     166 </span>                :  *  an index into the slot_list passed into it.  It simply keeps track
+<span class="lineNum">     167 </span>                :  *  of where the end of this list was at construction, and pretends that's
+<span class="lineNum">     168 </span>                :  *  the end of your list.  This way you may connect during emittion without
+<span class="lineNum">     169 </span>                :  *  inadvertently entering an infinite loop, as well as make other
+<span class="lineNum">     170 </span>                :  *  modifications to the slot_list at your own risk.
+<span class="lineNum">     171 </span>                :  */
+<span class="lineNum">     172 </span>                : struct temp_slot_list
+<span class="lineNum">     173 </span>                : {
+<span class="lineNum">     174 </span>                :   typedef signal_impl::slot_list slot_list;
+<span class="lineNum">     175 </span>                :   typedef signal_impl::iterator_type iterator;
+<a name="176"><span class="lineNum">     176 </span>                :   typedef signal_impl::const_iterator_type const_iterator;</a>
+<span class="lineNum">     177 </span>                : 
+<span class="lineNum">     178 </span><span class="lineNoCov">              0 :   temp_slot_list(slot_list &amp;slots) : slots_(slots)</span>
+<span class="lineNum">     179 </span>                :   {
+<span class="lineNum">     180 </span><span class="lineNoCov">              0 :     placeholder = slots_.insert(slots_.end(), slot_base());</span>
+<a name="181"><span class="lineNum">     181 </span><span class="lineNoCov">              0 :   }</span></a>
+<span class="lineNum">     182 </span>                : 
+<span class="lineNum">     183 </span><span class="lineNoCov">              0 :   ~temp_slot_list()</span>
+<span class="lineNum">     184 </span>                :   {
+<span class="lineNum">     185 </span><span class="lineNoCov">              0 :     slots_.erase(placeholder);</span>
+<a name="186"><span class="lineNum">     186 </span><span class="lineNoCov">              0 :   }</span></a>
+<a name="187"><span class="lineNum">     187 </span>                : </a>
+<span class="lineNum">     188 </span><span class="lineNoCov">              0 :   iterator begin() { return slots_.begin(); }</span>
+<span class="lineNum">     189 </span><span class="lineNoCov">              0 :   iterator end() { return placeholder; }</span>
+<span class="lineNum">     190 </span>                :   const_iterator begin() const { return slots_.begin(); }
+<span class="lineNum">     191 </span>                :   const_iterator end() const { return placeholder; }
+<span class="lineNum">     192 </span>                : 
+<span class="lineNum">     193 </span>                : private:
+<span class="lineNum">     194 </span>                :   slot_list &amp;slots_;
+<span class="lineNum">     195 </span>                :   slot_list::iterator placeholder;
+<span class="lineNum">     196 </span>                : };
+<span class="lineNum">     197 </span>                :   
+<span class="lineNum">     198 </span>                : } /* namespace internal */
+<span class="lineNum">     199 </span>                : 
+<span class="lineNum">     200 </span>                : 
+<span class="lineNum">     201 </span>                : /** @defgroup signal Signals
+<span class="lineNum">     202 </span>                :  * Use sigc::signal::connect() with sigc::mem_fun() and sigc::ptr_fun() to connect a method or function with a signal.
+<span class="lineNum">     203 </span>                :  *
+<span class="lineNum">     204 </span>                :  * @code
+<span class="lineNum">     205 </span>                :  * signal_clicked.connect( sigc::mem_fun(*this, &amp;MyWindow::on_clicked) );
+<span class="lineNum">     206 </span>                :  * @endcode
+<span class="lineNum">     207 </span>                :  *
+<span class="lineNum">     208 </span>                :  * When the signal is emitted your method will be called.
+<span class="lineNum">     209 </span>                :  *
+<span class="lineNum">     210 </span>                :  * signal::connect() returns a connection, which you can later use to disconnect your method.
+<span class="lineNum">     211 </span>                :  * If the type of your object inherits from sigc::trackable the method is disconnected
+<span class="lineNum">     212 </span>                :  * automatically when your object is destroyed.
+<span class="lineNum">     213 </span>                :  *
+<span class="lineNum">     214 </span>                :  * When signals are copied they share the underlying information,
+<span class="lineNum">     215 </span>                :  * so you can have a protected/private sigc::signal member and a public accessor method.
+<span class="lineNum">     216 </span>                :  *
+<span class="lineNum">     217 </span>                :  * signal and slot objects provide the core functionality of this
+<span class="lineNum">     218 </span>                :  * library. A slot is a container for an arbitrary functor.
+<span class="lineNum">     219 </span>                :  * A signal is a list of slots that are executed on emission.
+<span class="lineNum">     220 </span>                :  * For compile time type safety a list of template arguments
+<span class="lineNum">     221 </span>                :  * must be provided for the signal template that determines the
+<span class="lineNum">     222 </span>                :  * parameter list for emission. Functors and closures are converted
+<span class="lineNum">     223 </span>                :  * into slots implicitely on connection, triggering compiler errors
+<span class="lineNum">     224 </span>                :  * if the given functor or closure cannot be invoked with the
+<span class="lineNum">     225 </span>                :  * parameter list of the signal to connect to.
+<span class="lineNum">     226 </span>                :  */
+<span class="lineNum">     227 </span>                : 
+<span class="lineNum">     228 </span>                : /** Base class for the sigc::signal# templates.
+<span class="lineNum">     229 </span>                :  * signal_base integrates most of the interface of the derived sigc::signal#
+<span class="lineNum">     230 </span>                :  * templates. The implementation, however, resides in sigc::internal::signal_impl.
+<span class="lineNum">     231 </span>                :  * A sigc::internal::signal_impl object is dynamically allocated from signal_base
+<span class="lineNum">     232 </span>                :  * when first connecting a slot to the signal. This ensures that empty signals
+<span class="lineNum">     233 </span>                :  * don't waste memory.
+<span class="lineNum">     234 </span>                :  *
+<span class="lineNum">     235 </span>                :  * @ingroup signal
+<span class="lineNum">     236 </span>                :  */
+<span class="lineNum">     237 </span>                : struct SIGC_API signal_base : public trackable
+<span class="lineNum">     238 </span>                : {
+<span class="lineNum">     239 </span>                :   typedef size_t size_type;
+<span class="lineNum">     240 </span>                : 
+<span class="lineNum">     241 </span>                :   signal_base();
+<span class="lineNum">     242 </span>                : 
+<span class="lineNum">     243 </span>                :   signal_base(const signal_base&amp; src);
+<span class="lineNum">     244 </span>                : 
+<span class="lineNum">     245 </span>                :   ~signal_base();
+<span class="lineNum">     246 </span>                : 
+<span class="lineNum">     247 </span>                :   signal_base&amp; operator = (const signal_base&amp; src);
+<span class="lineNum">     248 </span>                : 
+<span class="lineNum">     249 </span>                :   /** Returns whether the list of slots is empty.
+<span class="lineNum">     250 </span>                :    * @return @p true if the list of slots is empty.
+<span class="lineNum">     251 </span>                :    */
+<span class="lineNum">     252 </span>                :   inline bool empty() const
+<span class="lineNum">     253 </span>                :     { return (!impl_ || impl_-&gt;empty()); }
+<span class="lineNum">     254 </span>                : 
+<span class="lineNum">     255 </span>                :   /// Empties the list of slots.
+<span class="lineNum">     256 </span>                :   void clear();
+<span class="lineNum">     257 </span>                : 
+<span class="lineNum">     258 </span>                :   /** Returns the number of slots in the list.
+<span class="lineNum">     259 </span>                :    * @return The number of slots in the list.
+<span class="lineNum">     260 </span>                :    */
+<span class="lineNum">     261 </span>                :   size_type size() const;
+<span class="lineNum">     262 </span>                : 
+<span class="lineNum">     263 </span>                : protected:
+<span class="lineNum">     264 </span>                :   typedef internal::signal_impl::iterator_type iterator_type;
+<span class="lineNum">     265 </span>                : 
+<span class="lineNum">     266 </span>                :   /** Adds a slot at the end of the list of slots.
+<span class="lineNum">     267 </span>                :    * With connect(), slots can also be added during signal emission.
+<span class="lineNum">     268 </span>                :    * In this case, they won't be executed until the next emission occurs.
+<span class="lineNum">     269 </span>                :    * @param slot_ The slot to add to the list of slots.
+<span class="lineNum">     270 </span>                :    * @return An iterator pointing to the new slot in the list.
+<span class="lineNum">     271 </span>                :    */
+<span class="lineNum">     272 </span>                :   iterator_type connect(const slot_base&amp; slot_);
+<span class="lineNum">     273 </span>                : 
+<span class="lineNum">     274 </span>                :   /** Adds a slot at the given position into the list of slots.
+<span class="lineNum">     275 </span>                :    * Note that this function does not work during signal emission!
+<span class="lineNum">     276 </span>                :    * @param i An iterator indicating the position where @e slot_ should be inserted.
+<span class="lineNum">     277 </span>                :    * @param slot_ The slot to add to the list of slots.
+<span class="lineNum">     278 </span>                :    * @return An iterator pointing to the new slot in the list.
+<span class="lineNum">     279 </span>                :    */
+<span class="lineNum">     280 </span>                :   iterator_type insert(iterator_type i, const slot_base&amp; slot_);
+<span class="lineNum">     281 </span>                : 
+<span class="lineNum">     282 </span>                :   /** Removes the slot at the given position from the list of slots.
+<span class="lineNum">     283 </span>                :    * Note that this function does not work during signal emission!
+<span class="lineNum">     284 </span>                :    * @param i An iterator pointing to the slot to be removed.
+<span class="lineNum">     285 </span>                :    * @return An iterator pointing to the slot in the list after the one removed.
+<span class="lineNum">     286 </span>                :    */
+<span class="lineNum">     287 </span>                :   iterator_type erase(iterator_type i);
+<span class="lineNum">     288 </span>                : 
+<span class="lineNum">     289 </span>                :   /** Returns the signal_impl object encapsulating the list of slots.
+<span class="lineNum">     290 </span>                :    * @return The signal_impl object encapsulating the list of slots.
+<span class="lineNum">     291 </span>                :    */
+<span class="lineNum">     292 </span>                :   internal::signal_impl* impl() const;
+<span class="lineNum">     293 </span>                : 
+<span class="lineNum">     294 </span>                :   /// The signal_impl object encapsulating the slot list.
+<span class="lineNum">     295 </span>                :   mutable internal::signal_impl* impl_;
+<span class="lineNum">     296 </span>                : };
+<span class="lineNum">     297 </span>                : 
+<span class="lineNum">     298 </span>                : } //namespace sigc
+<span class="lineNum">     299 </span>                : 
+<span class="lineNum">     300 </span>                : #endif /* _SIGC_SIGNAL_BASE_H_ */
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+  <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.7</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

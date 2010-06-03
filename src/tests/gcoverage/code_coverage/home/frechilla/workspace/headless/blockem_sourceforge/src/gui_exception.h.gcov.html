@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <title>LCOV - Blockem Tests Code Coverage - /home/frechilla/workspace/headless/blockem_sourceforge/src/gui_exception.h</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+        <tr>
+          <td width="5%"></td>
+          <td width="10%" class="headerItem">Current view:</td>
+          <td width="35%" class="headerValue"><a href="../../../../../../index.html">directory</a> - <a href="index.html">home/frechilla/workspace/headless/blockem_sourceforge/src</a> - gui_exception.h (source / <a href="gui_exception.h.func.html">functions</a>)</td>
+          <td width="10%"></td>
+          <td width="10%" class="headerCovTableHead">Found</td>
+          <td width="10%" class="headerCovTableHead">Hit</td>
+          <td width="15%" class="headerCovTableHead">Coverage</td>
+          <td width="5%"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="headerItem">Test:</td>
+          <td class="headerValue">Blockem Tests Code Coverage</td>
+          <td class="headerItem">Lines:</td>
+          <td class="headerCovTableEntry">9</td>
+          <td class="headerCovTableEntry">0</td>
+          <td class="headerCovTableEntryLo">0.0 %</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="headerItem">Date:</td>
+          <td class="headerValue">2010-06-03</td>
+          <td class="headerItem">Functions:</td>
+          <td class="headerCovTableEntry">5</td>
+          <td class="headerCovTableEntry">0</td>
+          <td class="headerCovTableEntryLo">0.0 %</td>
+        </tr>
+                <tr><td><img src="../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+    <tr><td class="ruler"><img src="../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td><pre class="source">
+<a name="1"><span class="lineNum">       1 </span>                : // ============================================================================</a>
+<span class="lineNum">       2 </span>                : // Copyright 2009 Faustino Frechilla
+<span class="lineNum">       3 </span>                : //
+<span class="lineNum">       4 </span>                : // This file is part of Blockem.
+<span class="lineNum">       5 </span>                : //
+<span class="lineNum">       6 </span>                : // Blockem is free software: you can redistribute it and/or modify it under the
+<span class="lineNum">       7 </span>                : // terms of the GNU General Public License as published by the Free Software
+<span class="lineNum">       8 </span>                : // Foundation, either version 3 of the License, or (at your option) any later
+<span class="lineNum">       9 </span>                : // version.
+<span class="lineNum">      10 </span>                : //
+<span class="lineNum">      11 </span>                : // Blockem is distributed in the hope that it will be useful, but WITHOUT ANY
+<span class="lineNum">      12 </span>                : // WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      13 </span>                : // FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+<span class="lineNum">      14 </span>                : // details.
+<span class="lineNum">      15 </span>                : //
+<span class="lineNum">      16 </span>                : // You should have received a copy of the GNU General Public License along
+<span class="lineNum">      17 </span>                : // with Blockem. If not, see http://www.gnu.org/licenses/.
+<span class="lineNum">      18 </span>                : //
+<span class="lineNum">      19 </span>                : /// @file GUIException.h
+<span class="lineNum">      20 </span>                : /// @brief
+<span class="lineNum">      21 </span>                : ///
+<span class="lineNum">      22 </span>                : /// @author Faustino Frechilla
+<span class="lineNum">      23 </span>                : /// @history
+<span class="lineNum">      24 </span>                : /// Ref       Who                When         What
+<span class="lineNum">      25 </span>                : ///           Faustino Frechilla 26-Nov-2009  Original development
+<span class="lineNum">      26 </span>                : /// @endhistory
+<span class="lineNum">      27 </span>                : ///
+<span class="lineNum">      28 </span>                : // ============================================================================
+<span class="lineNum">      29 </span>                : 
+<span class="lineNum">      30 </span>                : #ifndef GUIEXCEPTION_H_
+<span class="lineNum">      31 </span>                : #define GUIEXCEPTION_H_
+<span class="lineNum">      32 </span>                : 
+<span class="lineNum">      33 </span>                : #include &lt;stdexcept&gt;
+<span class="lineNum">      34 </span>                : 
+<a name="35"><span class="lineNum">      35 </span>                : /// @brief default exception handling the GUI</a>
+<span class="lineNum">      36 </span>                : class GUIException : public std::runtime_error
+<a name="37"><span class="lineNum">      37 </span><span class="lineNoCov">              0 : {</span></a>
+<span class="lineNum">      38 </span>                : public:
+<span class="lineNum">      39 </span><span class="lineNoCov">              0 :     GUIException(const std::string &amp;a_message) :</span>
+<span class="lineNum">      40 </span>                :         std::runtime_error(&quot;GUIException happened&quot;),
+<span class="lineNum">      41 </span><span class="lineNoCov">              0 :         a_msg(a_message)</span>
+<a name="42"><span class="lineNum">      42 </span><span class="lineNoCov">              0 :     {}</span></a>
+<span class="lineNum">      43 </span>                : 
+<span class="lineNum">      44 </span><span class="lineNoCov">              0 :     virtual ~GUIException() throw()</span>
+<a name="45"><span class="lineNum">      45 </span><span class="lineNoCov">              0 :     {}</span></a>
+<span class="lineNum">      46 </span>                : 
+<span class="lineNum">      47 </span><span class="lineNoCov">              0 :     virtual const char* what() const throw()</span>
+<span class="lineNum">      48 </span><span class="lineNoCov">              0 :     {</span>
+<span class="lineNum">      49 </span><span class="lineNoCov">              0 :         return a_msg.c_str();</span>
+<span class="lineNum">      50 </span>                :     }
+<span class="lineNum">      51 </span>                : 
+<span class="lineNum">      52 </span>                : private:
+<span class="lineNum">      53 </span>                :     std::string a_msg;
+<span class="lineNum">      54 </span>                : };
+<span class="lineNum">      55 </span>                : 
+<span class="lineNum">      56 </span>                : #endif /* GUIEXCEPTION_H_ */
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+  <tr><td class="ruler"><img src="../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+  <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.7</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

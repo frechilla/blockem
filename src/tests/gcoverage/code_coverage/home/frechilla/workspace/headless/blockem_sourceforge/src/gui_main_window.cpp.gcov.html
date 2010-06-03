@@ -1,0 +1,1381 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <title>LCOV - Blockem Tests Code Coverage - /home/frechilla/workspace/headless/blockem_sourceforge/src/gui_main_window.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+        <tr>
+          <td width="5%"></td>
+          <td width="10%" class="headerItem">Current view:</td>
+          <td width="35%" class="headerValue"><a href="../../../../../../index.html">directory</a> - <a href="index.html">home/frechilla/workspace/headless/blockem_sourceforge/src</a> - gui_main_window.cpp (source / <a href="gui_main_window.cpp.func.html">functions</a>)</td>
+          <td width="10%"></td>
+          <td width="10%" class="headerCovTableHead">Found</td>
+          <td width="10%" class="headerCovTableHead">Hit</td>
+          <td width="15%" class="headerCovTableHead">Coverage</td>
+          <td width="5%"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="headerItem">Test:</td>
+          <td class="headerValue">Blockem Tests Code Coverage</td>
+          <td class="headerItem">Lines:</td>
+          <td class="headerCovTableEntry">422</td>
+          <td class="headerCovTableEntry">1</td>
+          <td class="headerCovTableEntryLo">0.2 %</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="headerItem">Date:</td>
+          <td class="headerValue">2010-06-03</td>
+          <td class="headerItem">Functions:</td>
+          <td class="headerCovTableEntry">25</td>
+          <td class="headerCovTableEntry">2</td>
+          <td class="headerCovTableEntryLo">8.0 %</td>
+        </tr>
+                <tr><td><img src="../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+    <tr><td class="ruler"><img src="../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td><pre class="source">
+<a name="1"><span class="lineNum">       1 </span>                : // ============================================================================</a>
+<span class="lineNum">       2 </span>                : // Copyright 2009 Faustino Frechilla
+<span class="lineNum">       3 </span>                : //
+<span class="lineNum">       4 </span>                : // This file is part of Blockem.
+<span class="lineNum">       5 </span>                : //
+<span class="lineNum">       6 </span>                : // Blockem is free software: you can redistribute it and/or modify it under the
+<span class="lineNum">       7 </span>                : // terms of the GNU General Public License as published by the Free Software
+<span class="lineNum">       8 </span>                : // Foundation, either version 3 of the License, or (at your option) any later
+<span class="lineNum">       9 </span>                : // version.
+<span class="lineNum">      10 </span>                : //
+<span class="lineNum">      11 </span>                : // Blockem is distributed in the hope that it will be useful, but WITHOUT ANY
+<span class="lineNum">      12 </span>                : // WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      13 </span>                : // FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+<span class="lineNum">      14 </span>                : // details.
+<span class="lineNum">      15 </span>                : //
+<span class="lineNum">      16 </span>                : // You should have received a copy of the GNU General Public License along
+<span class="lineNum">      17 </span>                : // with Blockem. If not, see http://www.gnu.org/licenses/.
+<span class="lineNum">      18 </span>                : //
+<span class="lineNum">      19 </span>                : /// @file gui_main_window.cpp
+<span class="lineNum">      20 </span>                : /// @brief
+<span class="lineNum">      21 </span>                : ///
+<span class="lineNum">      22 </span>                : /// @author Faustino Frechilla
+<span class="lineNum">      23 </span>                : /// @history
+<span class="lineNum">      24 </span>                : /// Ref       Who                When         What
+<span class="lineNum">      25 </span>                : ///           Faustino Frechilla 13-Nov-2009  Original development
+<span class="lineNum">      26 </span>                : ///           Faustino Frechilla 01-Apr-2010  Add drawing board with computer's pieces left
+<span class="lineNum">      27 </span>                : ///           Faustino Frechilla 06-Apr-2010  StopWatch for human and computer
+<span class="lineNum">      28 </span>                : ///           Faustino Frechilla 25-Apr-2010  libglade dependency removed. Code migrated to GtkBuilder
+<span class="lineNum">      29 </span>                : ///           Faustino Frechilla 27-Apr-2010  2 human players allowed. Computer can start from both player1 and 2
+<span class="lineNum">      30 </span>                : /// @endhistory
+<span class="lineNum">      31 </span>                : ///
+<span class="lineNum">      32 </span>                : // ============================================================================
+<span class="lineNum">      33 </span>                : 
+<span class="lineNum">      34 </span>                : #ifdef DEBUG_PRINT
+<span class="lineNum">      35 </span>                : #include &lt;iostream&gt;
+<span class="lineNum">      36 </span>                : #endif
+<span class="lineNum">      37 </span>                : 
+<span class="lineNum">      38 </span>                : #include &lt;queue&gt;   // queue computer's moves
+<span class="lineNum">      39 </span>                : #include &lt;iomanip&gt; // setw
+<span class="lineNum">      40 </span>                : #include &quot;gui_main_window.h&quot;
+<span class="lineNum">      41 </span>                : #include &quot;gui_game1v1_config.h&quot;
+<span class="lineNum">      42 </span>                : #include &quot;gui_glade_defs.h&quot;
+<span class="lineNum">      43 </span>                : 
+<span class="lineNum">      44 </span>                : /// message to be shown to the user when he/she requested the
+<span class="lineNum">      45 </span>                : /// application to be closed, and the worker thread is busy computing
+<span class="lineNum">      46 </span>                : static const char MESSAGE_ASK_BEFORE_CLOSE[] =
+<span class="lineNum">      47 </span>                :         &quot;The game is computing the next move. Are you sure do you want to close the application?&quot;;
+<span class="lineNum">      48 </span>                : 
+<span class="lineNum">      49 </span>                : /// how often stopwatches are updated
+<span class="lineNum">      50 </span>                : static const uint32_t STOPWATCH_UPDATE_PERIOD_MILLIS = 500; // 1000 = 1 second
+<span class="lineNum">      51 </span>                : 
+<span class="lineNum">      52 </span>                : 
+<span class="lineNum">      53 </span>                : // static methods to communicate Game1v1 progress with MainWindow
+<span class="lineNum">      54 </span>                : // this float is used to communicate the worker thread with the main thread
+<span class="lineNum">      55 </span>                : // in a thread-safe manner. It's a bit dirty but it will do it for now
+<span class="lineNum">      56 </span>                : static float s_computingCurrentProgress = 0.0;
+<span class="lineNum">      57 </span>                : // static easy to use mutex for shared data across threads
+<span class="lineNum">      58 </span>                : // http://tadeboro.blogspot.com/2009/06/multi-threaded-gtk-applications.html
+<span class="lineNum">      59 </span>                : G_LOCK_DEFINE_STATIC(s_computingCurrentProgress);
+<span class="lineNum">      60 </span>                : 
+<span class="lineNum">      61 </span>                : // this is a pointer to the MainWindow itself so it can be used from the static method
+<span class="lineNum">      62 </span>                : // MainWindow::ProgressUpdate. It is dirty, but it works (and it is enough for now)
+<span class="lineNum">      63 </span>                : // WARNING: it won't work if MainWindow is instantiated twice
+<a name="64"><span class="lineNum">      64 </span>                : static MainWindow *g_pMainWindow = NULL;</a>
+<span class="lineNum">      65 </span>                : 
+<span class="lineNum">      66 </span><span class="lineNoCov">              0 : void MainWindow::ProgressUpdate(float a_progress)</span>
+<span class="lineNum">      67 </span>                : {
+<span class="lineNum">      68 </span>                :     // WARNING: this method is run by another thread.
+<span class="lineNum">      69 </span>                :     // once the m_signal_moveComputed signal is emited the
+<span class="lineNum">      70 </span>                :     // main thread will update the GUI widgets
+<span class="lineNum">      71 </span>                : 
+<span class="lineNum">      72 </span><span class="lineNoCov">              0 :     G_LOCK(s_computingCurrentProgress);</span>
+<span class="lineNum">      73 </span><span class="lineNoCov">              0 :         s_computingCurrentProgress = a_progress;</span>
+<span class="lineNum">      74 </span><span class="lineNoCov">              0 :     G_UNLOCK(s_computingCurrentProgress);</span>
+<span class="lineNum">      75 </span>                : 
+<span class="lineNum">      76 </span><span class="lineNoCov">              0 :     if (g_pMainWindow)</span>
+<span class="lineNum">      77 </span>                :     {
+<span class="lineNum">      78 </span><span class="lineNoCov">              0 :         g_pMainWindow-&gt;m_signal_computingProgressUpdated.emit();</span>
+<span class="lineNum">      79 </span>                :     }
+<a name="80"><span class="lineNum">      80 </span><span class="lineNoCov">              0 : }</span></a>
+<span class="lineNum">      81 </span>                : 
+<span class="lineNum">      82 </span><span class="lineNoCov">              0 : MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr&lt;Gtk::Builder&gt;&amp; a_gtkBuilder) throw (GUIException):</span>
+<span class="lineNum">      83 </span>                :     Gtk::Window(cobject), //Calls the base class constructor
+<span class="lineNum">      84 </span>                :     m_currentGameFinished(false),
+<span class="lineNum">      85 </span>                :     m_currentMovingPlayer(Game1v1::e_Game1v1Player1),
+<span class="lineNum">      86 </span>                :     m_gtkBuilder(a_gtkBuilder),
+<span class="lineNum">      87 </span>                :     m_the1v1Game(
+<span class="lineNum">      88 </span>                :         Game1v1Config::Instance().GetPlayer1StartingCoord(),
+<span class="lineNum">      89 </span>                :         Game1v1Config::Instance().GetPlayer2StartingCoord()),
+<span class="lineNum">      90 </span>                :     m_lastCoord(COORD_UNINITIALISED, COORD_UNINITIALISED),
+<span class="lineNum">      91 </span>                :     m_workerThread(),
+<span class="lineNum">      92 </span>                :     m_aboutDialog(NULL),
+<span class="lineNum">      93 </span>                :     m_pickPiecesDrawingArea(
+<span class="lineNum">      94 </span>                :         m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1),
+<span class="lineNum">      95 </span>                :         DrawingAreaShowPieces::eOrientation_leftToRight),
+<span class="lineNum">      96 </span>                :     m_showOpponentPiecesDrawingArea(
+<span class="lineNum">      97 </span>                :         m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2),
+<span class="lineNum">      98 </span>                :         DrawingAreaShowPieces::eOrientation_bottomToTop),
+<span class="lineNum">      99 </span>                :     m_boardDrawingArea(m_the1v1Game.GetBoard()),
+<span class="lineNum">     100 </span>                :     m_editPieceTable(NULL),
+<span class="lineNum">     101 </span>                :     m_stopWatchLabelPlayer1(
+<span class="lineNum">     102 </span>                :         STOPWATCH_UPDATE_PERIOD_MILLIS,
+<span class="lineNum">     103 </span>                :         m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1).GetName() + std::string(&quot; elapsed time &quot;)),
+<span class="lineNum">     104 </span>                :     m_stopWatchLabelPlayer2(
+<span class="lineNum">     105 </span>                :         STOPWATCH_UPDATE_PERIOD_MILLIS,
+<span class="lineNum">     106 </span><span class="lineNoCov">              0 :         m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2).GetName() + std::string(&quot; elapsed time &quot;))</span>
+<span class="lineNum">     107 </span>                : {
+<span class="lineNum">     108 </span>                :     //TODO this is dirty (even though it works) the way MainWindow::ProgressUpdate
+<span class="lineNum">     109 </span>                :     // access the MainWindow Instance should be fixed in some way
+<span class="lineNum">     110 </span>                : #ifdef DEBUG
+<span class="lineNum">     111 </span>                :     // assert there's no more than 1 instance of MainWindow
+<span class="lineNum">     112 </span><span class="lineNoCov">              0 :     assert(g_pMainWindow == NULL);</span>
+<span class="lineNum">     113 </span>                : #endif
+<span class="lineNum">     114 </span><span class="lineNoCov">              0 :     g_pMainWindow = this;</span>
+<span class="lineNum">     115 </span>                : 
+<span class="lineNum">     116 </span>                :     // create and initialise the randomizer using now time as the seed
+<span class="lineNum">     117 </span>                :     GTimeVal timeNow;
+<span class="lineNum">     118 </span><span class="lineNoCov">              0 :     g_get_current_time(&amp;timeNow);</span>
+<span class="lineNum">     119 </span><span class="lineNoCov">              0 :     m_randomizer = g_rand_new_with_seed(static_cast&lt;guint32&gt;(timeNow.tv_sec ^ timeNow.tv_usec));</span>
+<span class="lineNum">     120 </span>                : 
+<span class="lineNum">     121 </span>                :     // icon of the window
+<span class="lineNum">     122 </span><span class="lineNoCov">              0 :     Glib::RefPtr&lt; Gdk::Pixbuf &gt; icon;</span>
+<span class="lineNum">     123 </span>                :     // gboolean g_file_test(const gchar *filename, GFileTest test);
+<span class="lineNum">     124 </span><span class="lineNoCov">              0 :     if (g_file_test(GUI_PATH_TO_16PICTURE_STR.c_str(), G_FILE_TEST_IS_REGULAR))</span>
+<span class="lineNum">     125 </span>                :     {
+<span class="lineNum">     126 </span>                :         try
+<span class="lineNum">     127 </span>                :         {
+<span class="lineNum">     128 </span><span class="lineNoCov">              0 :             icon = Gdk::Pixbuf::create_from_file(GUI_PATH_TO_16PICTURE_STR.c_str());</span>
+<span class="lineNum">     129 </span><span class="lineNoCov">              0 :         } catch(...)</span>
+<span class="lineNum">     130 </span>                :         {
+<span class="lineNum">     131 </span><span class="lineNoCov">              0 :             icon.reset();</span>
+<span class="lineNum">     132 </span>                : #ifdef DEBUG_PRINT
+<span class="lineNum">     133 </span>                :             std::cerr
+<span class="lineNum">     134 </span>                :                &lt;&lt; &quot;WARNING: Exception occurred when setting the 16x16 icon into the Main Window from &quot;
+<span class="lineNum">     135 </span>                :                &lt;&lt; GUI_PATH_TO_16PICTURE_STR
+<span class="lineNum">     136 </span><span class="lineNoCov">              0 :                &lt;&lt; std::endl;</span>
+<span class="lineNum">     137 </span>                : #endif
+<span class="lineNum">     138 </span>                :         }
+<span class="lineNum">     139 </span>                : 
+<span class="lineNum">     140 </span><span class="lineNoCov">              0 :         if (icon)</span>
+<span class="lineNum">     141 </span>                :         {
+<span class="lineNum">     142 </span><span class="lineNoCov">              0 :             this-&gt;set_icon(icon);</span>
+<span class="lineNum">     143 </span>                :         }
+<span class="lineNum">     144 </span>                :     }
+<span class="lineNum">     145 </span>                : 
+<span class="lineNum">     146 </span>                :     // retrieve the config dialog. It must be retrieved calling get_widget_derived
+<span class="lineNum">     147 </span>                :     // otherwise app will core
+<span class="lineNum">     148 </span><span class="lineNoCov">              0 :     m_gtkBuilder-&gt;get_widget_derived(GUI_CONFIG_DIALOG_NAME, m_configDialog);</span>
+<span class="lineNum">     149 </span><span class="lineNoCov">              0 :     if (m_configDialog == NULL)</span>
+<span class="lineNum">     150 </span>                :     {
+<span class="lineNum">     151 </span><span class="lineNoCov">              0 :         throw new GUIException(std::string(&quot;ConfigDialog retrieval failed&quot;));</span>
+<span class="lineNum">     152 </span>                :     }
+<span class="lineNum">     153 </span>                : 
+<span class="lineNum">     154 </span>                :     // retrieve the about dialog. It must be retrieved calling get_widget_derived
+<span class="lineNum">     155 </span>                :     // otherwise app will core
+<span class="lineNum">     156 </span><span class="lineNoCov">              0 :     m_gtkBuilder-&gt;get_widget_derived(GUI_ABOUT_DIALOG_NAME, m_aboutDialog);</span>
+<span class="lineNum">     157 </span><span class="lineNoCov">              0 :     if (m_aboutDialog == NULL)</span>
+<span class="lineNum">     158 </span>                :     {
+<span class="lineNum">     159 </span><span class="lineNoCov">              0 :         throw new GUIException(std::string(&quot;AboutDialog retrieval failed&quot;));</span>
+<span class="lineNum">     160 </span>                :     }
+<span class="lineNum">     161 </span>                : 
+<span class="lineNum">     162 </span>                :     // retrieve the editing piece table. It must be retrieved calling get_widget_derived
+<span class="lineNum">     163 </span>                :     // otherwise app will core
+<span class="lineNum">     164 </span><span class="lineNoCov">              0 :     m_gtkBuilder-&gt;get_widget_derived(GUI_TABLE_EDITING_PIECE_NAME, m_editPieceTable);</span>
+<span class="lineNum">     165 </span><span class="lineNoCov">              0 :     if (m_editPieceTable == NULL)</span>
+<span class="lineNum">     166 </span>                :     {
+<span class="lineNum">     167 </span><span class="lineNoCov">              0 :         throw new GUIException(std::string(&quot;Edit pieces table retrieval failed&quot;));</span>
+<span class="lineNum">     168 </span>                :     }
+<span class="lineNum">     169 </span>                : 
+<span class="lineNum">     170 </span>                :     // retrieve the rest of objects from the GUI design
+<span class="lineNum">     171 </span>                :     m_accelGroup = Glib::RefPtr&lt;Gtk::AccelGroup&gt;::cast_dynamic(
+<span class="lineNum">     172 </span><span class="lineNoCov">              0 :             m_gtkBuilder-&gt;get_object(GUI_MENU_ITEM_ACCELERATOR));</span>
+<span class="lineNum">     173 </span><span class="lineNoCov">              0 :     if (!m_accelGroup)</span>
+<span class="lineNum">     174 </span>                :     {
+<span class="lineNum">     175 </span><span class="lineNoCov">              0 :         throw new GUIException(std::string(&quot;menu accelerator item retrieval failed&quot;));</span>
+<span class="lineNum">     176 </span>                :     }
+<span class="lineNum">     177 </span>                : 
+<span class="lineNum">     178 </span>                :     m_newMenuItem = Glib::RefPtr&lt;Gtk::MenuItem&gt;::cast_dynamic(
+<span class="lineNum">     179 </span><span class="lineNoCov">              0 :             m_gtkBuilder-&gt;get_object(GUI_MENU_ITEM_GAME_NEW));</span>
+<span class="lineNum">     180 </span><span class="lineNoCov">              0 :     if (!m_newMenuItem)</span>
+<span class="lineNum">     181 </span>                :     {
+<span class="lineNum">     182 </span><span class="lineNoCov">              0 :         throw new GUIException(std::string(&quot;new menu item retrieval failed&quot;));</span>
+<span class="lineNum">     183 </span>                :     }
+<span class="lineNum">     184 </span>                : 
+<span class="lineNum">     185 </span>                :     m_quitMenuItem = Glib::RefPtr&lt;Gtk::MenuItem&gt;::cast_dynamic(
+<span class="lineNum">     186 </span><span class="lineNoCov">              0 :             m_gtkBuilder-&gt;get_object(GUI_MENU_ITEM_GAME_QUIT));</span>
+<span class="lineNum">     187 </span><span class="lineNoCov">              0 :     if (!m_quitMenuItem)</span>
+<span class="lineNum">     188 </span>                :     {
+<span class="lineNum">     189 </span><span class="lineNoCov">              0 :         throw new GUIException(std::string(&quot;quit menu item retrieval failed&quot;));</span>
+<span class="lineNum">     190 </span>                :     }
+<span class="lineNum">     191 </span>                : 
+<span class="lineNum">     192 </span>                :     m_settingsNKPointsMenuItem = Glib::RefPtr&lt;Gtk::CheckMenuItem&gt;::cast_dynamic(
+<span class="lineNum">     193 </span><span class="lineNoCov">              0 :             m_gtkBuilder-&gt;get_object(GUI_MENU_ITEM_SETTINGS_NKPOINTS));</span>
+<span class="lineNum">     194 </span><span class="lineNoCov">              0 :     if (!m_settingsNKPointsMenuItem)</span>
+<span class="lineNum">     195 </span>                :     {
+<span class="lineNum">     196 </span><span class="lineNoCov">              0 :         throw new GUIException(std::string(&quot;view nk points menu item retrieval failed&quot;));</span>
+<span class="lineNum">     197 </span>                :     }
+<span class="lineNum">     198 </span>                : 
+<span class="lineNum">     199 </span>                :     m_settingsForbiddenAreaMenuItem = Glib::RefPtr&lt;Gtk::CheckMenuItem&gt;::cast_dynamic(
+<span class="lineNum">     200 </span><span class="lineNoCov">              0 :             m_gtkBuilder-&gt;get_object(GUI_MENU_ITEM_SETTINGS_FORBIDDENAREA));</span>
+<span class="lineNum">     201 </span><span class="lineNoCov">              0 :     if (!m_settingsForbiddenAreaMenuItem)</span>
+<span class="lineNum">     202 </span>                :     {
+<span class="lineNum">     203 </span><span class="lineNoCov">              0 :         throw new GUIException(std::string(&quot;show forbidden area menu item retrieval failed&quot;));</span>
+<span class="lineNum">     204 </span>                :     }
+<span class="lineNum">     205 </span>                : 
+<span class="lineNum">     206 </span>                :     m_settingsPrefsMenuItem = Glib::RefPtr&lt;Gtk::MenuItem&gt;::cast_dynamic(
+<span class="lineNum">     207 </span><span class="lineNoCov">              0 :             m_gtkBuilder-&gt;get_object(GUI_MENU_ITEM_SETTINGS_PREFS));</span>
+<span class="lineNum">     208 </span><span class="lineNoCov">              0 :     if (!m_settingsPrefsMenuItem)</span>
+<span class="lineNum">     209 </span>                :     {
+<span class="lineNum">     210 </span><span class="lineNoCov">              0 :         throw new GUIException(std::string(&quot;settings-&gt;preferences menu item retrieval failed&quot;));</span>
+<span class="lineNum">     211 </span>                :     }
+<span class="lineNum">     212 </span>                : 
+<span class="lineNum">     213 </span>                :     m_helpAboutMenuItem = Glib::RefPtr&lt;Gtk::MenuItem&gt;::cast_dynamic(
+<span class="lineNum">     214 </span><span class="lineNoCov">              0 :             m_gtkBuilder-&gt;get_object(GUI_MENU_ITEM_HELP_ABOUT));</span>
+<span class="lineNum">     215 </span><span class="lineNoCov">              0 :     if (!m_helpAboutMenuItem)</span>
+<span class="lineNum">     216 </span>                :     {
+<span class="lineNum">     217 </span><span class="lineNoCov">              0 :         throw new GUIException(std::string(&quot;help-&gt;about menu item retrieval failed&quot;));</span>
+<span class="lineNum">     218 </span>                :     }
+<span class="lineNum">     219 </span>                : 
+<span class="lineNum">     220 </span><span class="lineNoCov">              0 :     m_gtkBuilder-&gt;get_widget(GUI_VBOX_DRAWING_NAME, m_vBoxDrawing);</span>
+<span class="lineNum">     221 </span><span class="lineNoCov">              0 :     if (m_vBoxDrawing == NULL)</span>
+<span class="lineNum">     222 </span>                :     {
+<span class="lineNum">     223 </span><span class="lineNoCov">              0 :         throw new GUIException(std::string(&quot;Drawing area vbox retrieval failed&quot;));</span>
+<span class="lineNum">     224 </span>                :     }
+<span class="lineNum">     225 </span>                : 
+<span class="lineNum">     226 </span><span class="lineNoCov">              0 :     m_gtkBuilder-&gt;get_widget(GUI_HBOX_GAME_STATUS_NAME, m_hBoxGameStatus);</span>
+<span class="lineNum">     227 </span><span class="lineNoCov">              0 :     if (m_hBoxGameStatus == NULL)</span>
+<span class="lineNum">     228 </span>                :     {
+<span class="lineNum">     229 </span><span class="lineNoCov">              0 :         throw new GUIException(std::string(&quot;Game status hbox retrieval failed&quot;));</span>
+<span class="lineNum">     230 </span>                :     }
+<span class="lineNum">     231 </span>                : 
+<span class="lineNum">     232 </span><span class="lineNoCov">              0 :     m_gtkBuilder-&gt;get_widget(GUI_HBOX_COMPUTER_PIECES_NAME, m_hBoxComputerPieces);</span>
+<span class="lineNum">     233 </span><span class="lineNoCov">              0 :     if (m_hBoxComputerPieces == NULL)</span>
+<span class="lineNum">     234 </span>                :     {
+<span class="lineNum">     235 </span><span class="lineNoCov">              0 :         throw new GUIException(std::string(&quot;Computer pieces hbox retrieval failed&quot;));</span>
+<span class="lineNum">     236 </span>                :     }
+<span class="lineNum">     237 </span>                : 
+<span class="lineNum">     238 </span><span class="lineNoCov">              0 :     m_gtkBuilder-&gt;get_widget(GUI_HBOX_PIECES_AREA_NAME, m_hBoxEditPieces);</span>
+<span class="lineNum">     239 </span><span class="lineNoCov">              0 :     if (m_hBoxEditPieces == NULL)</span>
+<span class="lineNum">     240 </span>                :     {
+<span class="lineNum">     241 </span><span class="lineNoCov">              0 :         throw new GUIException(std::string(&quot;PiecesHBox retrieval failed&quot;));</span>
+<span class="lineNum">     242 </span>                :     }
+<span class="lineNum">     243 </span>                : 
+<span class="lineNum">     244 </span><span class="lineNoCov">              0 :     m_gtkBuilder-&gt;get_widget(GUI_HBOX_STATUSBAR_NAME, m_hBoxStatusBar);</span>
+<span class="lineNum">     245 </span><span class="lineNoCov">              0 :     if (m_hBoxStatusBar == NULL)</span>
+<span class="lineNum">     246 </span>                :     {
+<span class="lineNum">     247 </span><span class="lineNoCov">              0 :         throw new GUIException(std::string(&quot;status bar hbox retrieval failed&quot;));</span>
+<span class="lineNum">     248 </span>                :     }
+<span class="lineNum">     249 </span>                : 
+<span class="lineNum">     250 </span>                :     // accelerators for main_window menu
+<span class="lineNum">     251 </span><span class="lineNoCov">              0 :     this-&gt;add_accel_group(m_accelGroup);</span>
+<span class="lineNum">     252 </span>                : 
+<span class="lineNum">     253 </span>                :     // place the custom widgets where they are expected to be
+<span class="lineNum">     254 </span>                :     // pack_start (Widget&amp; child, bool expand, bool fill, guint padding=0)
+<span class="lineNum">     255 </span>                :     // first the board drawing area to the game status hbox and display it
+<span class="lineNum">     256 </span><span class="lineNoCov">              0 :     m_hBoxGameStatus-&gt;pack_start(m_boardDrawingArea, true, true);</span>
+<span class="lineNum">     257 </span><span class="lineNoCov">              0 :     m_hBoxGameStatus-&gt;reorder_child(m_boardDrawingArea, 0);</span>
+<span class="lineNum">     258 </span><span class="lineNoCov">              0 :     m_boardDrawingArea.show();</span>
+<span class="lineNum">     259 </span>                : 
+<span class="lineNum">     260 </span>                :     // pick pieces drawing area, edit pieces table and show opponent's pieces
+<span class="lineNum">     261 </span><span class="lineNoCov">              0 :     m_hBoxEditPieces-&gt;pack_start(m_pickPiecesDrawingArea, true, true);</span>
+<span class="lineNum">     262 </span><span class="lineNoCov">              0 :     m_hBoxEditPieces-&gt;pack_start(*m_editPieceTable, false, false);</span>
+<span class="lineNum">     263 </span>                : 
+<span class="lineNum">     264 </span>                :     m_hBoxComputerPieces-&gt;pack_start(
+<span class="lineNum">     265 </span>                :             m_showOpponentPiecesDrawingArea,
+<span class="lineNum">     266 </span>                :             true,
+<span class="lineNum">     267 </span><span class="lineNoCov">              0 :             true);</span>
+<span class="lineNum">     268 </span>                : 
+<span class="lineNum">     269 </span>                :     // if we don't show them, nobody will be able to see them
+<span class="lineNum">     270 </span>                :     // set_visible doesn't work in 2.16 (which is used in windows). use show!
+<span class="lineNum">     271 </span><span class="lineNoCov">              0 :     m_pickPiecesDrawingArea.show();</span>
+<span class="lineNum">     272 </span><span class="lineNoCov">              0 :     m_showOpponentPiecesDrawingArea.show();</span>
+<span class="lineNum">     273 </span>                : 
+<span class="lineNum">     274 </span>                :     // update the score shown in the status bar
+<span class="lineNum">     275 </span><span class="lineNoCov">              0 :     UpdateScoreStatus();</span>
+<span class="lineNum">     276 </span>                : 
+<span class="lineNum">     277 </span>                :     // the custom status bar
+<span class="lineNum">     278 </span><span class="lineNoCov">              0 :     m_hBoxStatusBar-&gt;pack_start(m_player1ScoreLabel, true, true);</span>
+<span class="lineNum">     279 </span><span class="lineNoCov">              0 :     m_hBoxStatusBar-&gt;pack_start(m_arrayStatusBarSeparator[0], false, true);</span>
+<span class="lineNum">     280 </span><span class="lineNoCov">              0 :     m_hBoxStatusBar-&gt;pack_start(m_stopWatchLabelPlayer1, true, true);</span>
+<span class="lineNum">     281 </span><span class="lineNoCov">              0 :     m_hBoxStatusBar-&gt;pack_start(m_arrayStatusBarSeparator[1], false, true);</span>
+<span class="lineNum">     282 </span><span class="lineNoCov">              0 :     m_hBoxStatusBar-&gt;pack_start(m_player2ScoreLabel, true, true);</span>
+<span class="lineNum">     283 </span><span class="lineNoCov">              0 :     m_hBoxStatusBar-&gt;pack_start(m_arrayStatusBarSeparator[2], false, true);</span>
+<span class="lineNum">     284 </span><span class="lineNoCov">              0 :     m_hBoxStatusBar-&gt;pack_start(m_stopWatchLabelPlayer2, true, true);</span>
+<span class="lineNum">     285 </span><span class="lineNoCov">              0 :     m_progressBar.set_orientation(Gtk::PROGRESS_LEFT_TO_RIGHT);</span>
+<span class="lineNum">     286 </span><span class="lineNoCov">              0 :     m_progressBar.set_fraction(0.0);</span>
+<span class="lineNum">     287 </span><span class="lineNoCov">              0 :     m_hBoxStatusBar-&gt;pack_start(m_progressBar, true, true);</span>
+<span class="lineNum">     288 </span><span class="lineNoCov">              0 :     m_hBoxStatusBar-&gt;show_all();</span>
+<span class="lineNum">     289 </span>                : 
+<span class="lineNum">     290 </span>                :     // progress handler for the computing process of the MinMax algorithm
+<span class="lineNum">     291 </span><span class="lineNoCov">              0 :     m_the1v1Game.SetProgressHandler(&amp;MainWindow::ProgressUpdate);</span>
+<span class="lineNum">     292 </span>                : 
+<span class="lineNum">     293 </span>                :     // connect the interthread communication (GLib::Dispatcher) to invalidate the
+<span class="lineNum">     294 </span>                :     // board drawing area
+<span class="lineNum">     295 </span>                :     m_signal_moveComputed.connect(
+<span class="lineNum">     296 </span><span class="lineNoCov">              0 :             sigc::mem_fun(*this, &amp;MainWindow::NotifyMoveComputed));</span>
+<span class="lineNum">     297 </span>                : 
+<span class="lineNum">     298 </span>                :     // connect the interthread communication to update the progress bar
+<span class="lineNum">     299 </span>                :     m_signal_computingProgressUpdated.connect(
+<span class="lineNum">     300 </span><span class="lineNoCov">              0 :             sigc::mem_fun(*this, &amp;MainWindow::NotifyProgressUpdate));</span>
+<span class="lineNum">     301 </span>                : 
+<span class="lineNum">     302 </span>                :     // connect the worker thread signal
+<span class="lineNum">     303 </span>                :     m_workerThread.signal_computingFinished().connect(
+<span class="lineNum">     304 </span><span class="lineNoCov">              0 :             sigc::mem_fun(*this, &amp;MainWindow::WorkerThread_computingFinished));</span>
+<span class="lineNum">     305 </span>                :             //sigc::ptr_fun(f) );
+<span class="lineNum">     306 </span>                : 
+<span class="lineNum">     307 </span>                :     // connect the signal coming from the pickPiecesDrawingArea to update TableEditPiece
+<span class="lineNum">     308 </span>                :     m_pickPiecesDrawingArea.signal_piecePicked().connect(
+<span class="lineNum">     309 </span><span class="lineNoCov">              0 :             sigc::mem_fun(*m_editPieceTable, &amp;TableEditPiece::SetPiece));</span>
+<span class="lineNum">     310 </span>                : 
+<span class="lineNum">     311 </span>                :     // connect the signal coming from the editing piece table to process the change in the
+<span class="lineNum">     312 </span>                :     // currently editing piece
+<span class="lineNum">     313 </span>                :     m_editPieceTable-&gt;signal_pieceChanged().connect(
+<span class="lineNum">     314 </span><span class="lineNoCov">              0 :             sigc::mem_fun(m_boardDrawingArea, &amp;DrawingAreaBoard::SetCurrentPiece));</span>
+<span class="lineNum">     315 </span>                : 
+<span class="lineNum">     316 </span>                :     // connect the signal coming fromt he board drawing area to process when the user clicks
+<span class="lineNum">     317 </span>                :     // on the board
+<span class="lineNum">     318 </span>                :     m_boardDrawingArea.signal_boardPicked().connect(
+<span class="lineNum">     319 </span><span class="lineNoCov">              0 :             sigc::mem_fun(*this, &amp;MainWindow::BoardDrawingArea_BoardClicked));</span>
+<span class="lineNum">     320 </span>                : 
+<span class="lineNum">     321 </span>                : 
+<span class="lineNum">     322 </span>                :     // connect the rest of the signals to the handlers
+<span class="lineNum">     323 </span>                :     // if the handler is not part of an object use sigc::ptr_fun
+<span class="lineNum">     324 </span>                :     this-&gt;signal_delete_event().connect(
+<span class="lineNum">     325 </span><span class="lineNoCov">              0 :             sigc::mem_fun(*this, &amp;MainWindow::MainWindow_DeleteEvent));</span>
+<span class="lineNum">     326 </span>                :     m_newMenuItem-&gt;signal_activate().connect(
+<span class="lineNum">     327 </span><span class="lineNoCov">              0 :             sigc::mem_fun(*this, &amp;MainWindow::MenuItemGameNew_Activate));</span>
+<span class="lineNum">     328 </span>                :     m_quitMenuItem-&gt;signal_activate().connect(
+<span class="lineNum">     329 </span><span class="lineNoCov">              0 :             sigc::mem_fun(*this, &amp;MainWindow::MenuItemGameQuit_Activate));</span>
+<span class="lineNum">     330 </span>                :     m_helpAboutMenuItem-&gt;signal_activate().connect(
+<span class="lineNum">     331 </span><span class="lineNoCov">              0 :             sigc::mem_fun(*this, &amp;MainWindow::MenuItemHelpAbout_Activate));</span>
+<span class="lineNum">     332 </span>                :     m_settingsPrefsMenuItem-&gt;signal_activate().connect(
+<span class="lineNum">     333 </span><span class="lineNoCov">              0 :             sigc::mem_fun(*this, &amp;MainWindow::MenuItemSettingsPreferences_Activate));</span>
+<span class="lineNum">     334 </span>                :     m_settingsNKPointsMenuItem-&gt;signal_toggled().connect(
+<span class="lineNum">     335 </span><span class="lineNoCov">              0 :             sigc::mem_fun(*this, &amp;MainWindow::MenuItemSettingsViewNKPoints_Toggled));</span>
+<span class="lineNum">     336 </span>                :     m_settingsForbiddenAreaMenuItem-&gt;signal_toggled().connect(
+<span class="lineNum">     337 </span><span class="lineNoCov">              0 :             sigc::mem_fun(*this, &amp;MainWindow::MenuItemSettingsShowForbiddenArea_Toggled));</span>
+<span class="lineNum">     338 </span>                : 
+<span class="lineNum">     339 </span>                :     // retrieve the default colour from the config class to apply it to the players
+<span class="lineNum">     340 </span>                :     uint8_t red, green, blue;
+<span class="lineNum">     341 </span><span class="lineNoCov">              0 :     Game1v1Config::Instance().GetPlayer1Colour(red, green, blue);</span>
+<span class="lineNum">     342 </span><span class="lineNoCov">              0 :     m_the1v1Game.SetPlayerColour(Game1v1::e_Game1v1Player1, red, green, blue);</span>
+<span class="lineNum">     343 </span><span class="lineNoCov">              0 :     Game1v1Config::Instance().GetPlayer2Colour(red, green, blue);</span>
+<span class="lineNum">     344 </span><span class="lineNoCov">              0 :     m_the1v1Game.SetPlayerColour(Game1v1::e_Game1v1Player2, red, green, blue);</span>
+<span class="lineNum">     345 </span>                : 
+<span class="lineNum">     346 </span>                :     // initialise the list of players of the board drawing area
+<span class="lineNum">     347 </span><span class="lineNoCov">              0 :     m_boardDrawingArea.AddPlayerToList(&amp;(m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1)));</span>
+<span class="lineNum">     348 </span><span class="lineNoCov">              0 :     m_boardDrawingArea.AddPlayerToList(&amp;(m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2)));</span>
+<span class="lineNum">     349 </span>                : 
+<span class="lineNum">     350 </span>                :     // launch the game!!
+<span class="lineNum">     351 </span><span class="lineNoCov">              0 :     LaunchNewGame();</span>
+<a name="352"><span class="lineNum">     352 </span><span class="lineNoCov">              0 : }</span></a>
+<span class="lineNum">     353 </span>                : 
+<span class="lineNum">     354 </span><span class="lineNoCov">              0 : MainWindow::~MainWindow()</span>
+<span class="lineNum">     355 </span>                : {
+<span class="lineNum">     356 </span>                :     //TODO this is dirty too. See comment at the beginning of the constructor
+<span class="lineNum">     357 </span>                :     // it might cause a lot of trouble if there are more than 1 instance of MainWindow
+<span class="lineNum">     358 </span><span class="lineNoCov">              0 :     g_pMainWindow = NULL;</span>
+<span class="lineNum">     359 </span>                : 
+<span class="lineNum">     360 </span>                :     // delete the worker thread
+<span class="lineNum">     361 </span><span class="lineNoCov">              0 :     m_workerThread.Join();</span>
+<span class="lineNum">     362 </span>                : 
+<span class="lineNum">     363 </span>                :     // delete the randomizer too
+<span class="lineNum">     364 </span><span class="lineNoCov">              0 :     g_rand_free(m_randomizer);</span>
+<span class="lineNum">     365 </span>                : 
+<span class="lineNum">     366 </span>                :     // http://library.gnome.org/devel/gtkmm/stable/classGtk_1_1Builder.html#ab8c6679c1296d6c4d8590ef907de4d5a
+<span class="lineNum">     367 </span>                :     // Note that you are responsible for deleting top-level widgets (windows and dialogs) instantiated
+<span class="lineNum">     368 </span>                :     // by the Builder object. Other widgets are instantiated as managed so they will be deleted
+<span class="lineNum">     369 </span>                :     // automatically if you add them to a container widget
+<span class="lineNum">     370 </span><span class="lineNoCov">              0 :     delete(m_aboutDialog);</span>
+<span class="lineNum">     371 </span><span class="lineNoCov">              0 :     delete(m_configDialog);</span>
+<span class="lineNum">     372 </span>                :     //delete(m_editPieceTable);
+<a name="373"><span class="lineNum">     373 </span><span class="lineNoCov">              0 : }</span></a>
+<span class="lineNum">     374 </span>                : 
+<span class="lineNum">     375 </span><span class="lineNoCov">              0 : bool MainWindow::MainWindow_DeleteEvent(GdkEventAny*)</span>
+<span class="lineNum">     376 </span>                : {
+<span class="lineNum">     377 </span><span class="lineNoCov">              0 :     if (m_workerThread.IsThreadComputingMove())</span>
+<span class="lineNum">     378 </span>                :     {
+<span class="lineNum">     379 </span>                :         Gtk::MessageDialog::MessageDialog exitingMessage(
+<span class="lineNum">     380 </span>                :                 *this,
+<span class="lineNum">     381 </span>                :                 MESSAGE_ASK_BEFORE_CLOSE,
+<span class="lineNum">     382 </span>                :                 true,
+<span class="lineNum">     383 </span>                :                 Gtk::MESSAGE_QUESTION,
+<span class="lineNum">     384 </span>                :                 Gtk::BUTTONS_YES_NO,
+<span class="lineNum">     385 </span><span class="lineNoCov">              0 :                 true);</span>
+<span class="lineNum">     386 </span>                : 
+<span class="lineNum">     387 </span><span class="lineNoCov">              0 :         if (exitingMessage.run() == Gtk::RESPONSE_NO)</span>
+<span class="lineNum">     388 </span>                :         {
+<span class="lineNum">     389 </span>                :             // cancel delete event
+<span class="lineNum">     390 </span><span class="lineNoCov">              0 :             return true;</span>
+<span class="lineNum">     391 </span><span class="lineNoCov">              0 :         }</span>
+<span class="lineNum">     392 </span>                :     }
+<span class="lineNum">     393 </span>                : 
+<span class="lineNum">     394 </span>                :     // cancel the worker thread
+<span class="lineNum">     395 </span><span class="lineNoCov">              0 :     m_workerThread.CancelComputing();</span>
+<span class="lineNum">     396 </span>                : 
+<span class="lineNum">     397 </span>                :     // continue with delete event
+<span class="lineNum">     398 </span><span class="lineNoCov">              0 :     return false;</span>
+<a name="399"><span class="lineNum">     399 </span>                : }</a>
+<span class="lineNum">     400 </span>                : 
+<span class="lineNum">     401 </span><span class="lineNoCov">              0 : void MainWindow::MenuItemGameQuit_Activate()</span>
+<span class="lineNum">     402 </span>                : {
+<span class="lineNum">     403 </span><span class="lineNoCov">              0 :     if (m_workerThread.IsThreadComputingMove())</span>
+<span class="lineNum">     404 </span>                :     {
+<span class="lineNum">     405 </span>                :         Gtk::MessageDialog::MessageDialog exitingMessage(
+<span class="lineNum">     406 </span>                :                 *this,
+<span class="lineNum">     407 </span>                :                 MESSAGE_ASK_BEFORE_CLOSE,
+<span class="lineNum">     408 </span>                :                 true,
+<span class="lineNum">     409 </span>                :                 Gtk::MESSAGE_QUESTION,
+<span class="lineNum">     410 </span>                :                 Gtk::BUTTONS_YES_NO,
+<span class="lineNum">     411 </span><span class="lineNoCov">              0 :                 true);</span>
+<span class="lineNum">     412 </span>                : 
+<span class="lineNum">     413 </span><span class="lineNoCov">              0 :         if (exitingMessage.run() == Gtk::RESPONSE_NO)</span>
+<span class="lineNum">     414 </span>                :         {
+<span class="lineNum">     415 </span>                :             // cancel delete event
+<span class="lineNum">     416 </span>                :             return;
+<span class="lineNum">     417 </span><span class="lineNoCov">              0 :         }</span>
+<span class="lineNum">     418 </span>                :     }
+<span class="lineNum">     419 </span>                : 
+<span class="lineNum">     420 </span><span class="lineNoCov">              0 :     m_workerThread.CancelComputing();</span>
+<span class="lineNum">     421 </span>                : 
+<span class="lineNum">     422 </span>                :     // exit the app
+<span class="lineNum">     423 </span><span class="lineNoCov">              0 :     this-&gt;hide();</span>
+<a name="424"><span class="lineNum">     424 </span>                : }</a>
+<span class="lineNum">     425 </span>                : 
+<span class="lineNum">     426 </span><span class="lineNoCov">              0 : void MainWindow::MenuItemGameNew_Activate()</span>
+<span class="lineNum">     427 </span>                : {
+<span class="lineNum">     428 </span><span class="lineNoCov">              0 :     m_configDialog-&gt;set_title(&quot;New 1vs1 game&quot;);</span>
+<span class="lineNum">     429 </span>                :     // starting coords can always be edited when a new game is launched
+<span class="lineNum">     430 </span><span class="lineNoCov">              0 :     m_configDialog-&gt;SetStartingCoordEditionSensitive(true);</span>
+<span class="lineNum">     431 </span>                : 
+<span class="lineNum">     432 </span><span class="lineNoCov">              0 :     Gtk::ResponseType result = static_cast&lt;Gtk::ResponseType&gt;(m_configDialog-&gt;run());</span>
+<span class="lineNum">     433 </span><span class="lineNoCov">              0 :     if (result == Gtk::RESPONSE_OK)</span>
+<span class="lineNum">     434 </span>                :     {
+<span class="lineNum">     435 </span>                :         // save configuration shown by the dialog into global config singleton
+<span class="lineNum">     436 </span><span class="lineNoCov">              0 :         m_configDialog-&gt;SaveCurrentConfigIntoGlobalSettings();</span>
+<span class="lineNum">     437 </span>                : 
+<span class="lineNum">     438 </span>                :         // go for the brand new game!!
+<span class="lineNum">     439 </span><span class="lineNoCov">              0 :         LaunchNewGame();</span>
+<span class="lineNum">     440 </span>                :     }
+<span class="lineNum">     441 </span>                : #if defined(DEBUG_PRINTING) || defined (DEBUG)
+<span class="lineNum">     442 </span><span class="lineNoCov">              0 :     else if ( (result == Gtk::RESPONSE_CANCEL) || (result == Gtk::RESPONSE_DELETE_EVENT))</span>
+<span class="lineNum">     443 </span>                :     {
+<span class="lineNum">     444 </span>                :         // config dialog cancelled
+<span class="lineNum">     445 </span>                :         ;
+<span class="lineNum">     446 </span>                : #ifdef DEBUG_PRINTING
+<span class="lineNum">     447 </span>                :         std::cout &lt;&lt; &quot;Config Dialog cancelled&quot; &lt;&lt; std::endl;
+<span class="lineNum">     448 </span>                : #endif // DEBUG_PRINTING
+<span class="lineNum">     449 </span>                :     }
+<span class="lineNum">     450 </span>                : #ifdef DEBUG
+<span class="lineNum">     451 </span>                :     else
+<span class="lineNum">     452 </span>                :     {
+<span class="lineNum">     453 </span>                :         // unexpected
+<span class="lineNum">     454 </span><span class="lineNoCov">              0 :         assert(0);</span>
+<span class="lineNum">     455 </span>                :     }
+<span class="lineNum">     456 </span>                : #endif // DEBUG
+<span class="lineNum">     457 </span>                : #endif // defined(DEBUG_PRINTING) || defined (DEBUG)
+<span class="lineNum">     458 </span>                : 
+<span class="lineNum">     459 </span><span class="lineNoCov">              0 :     m_configDialog-&gt;hide();</span>
+<a name="460"><span class="lineNum">     460 </span><span class="lineNoCov">              0 : }</span></a>
+<span class="lineNum">     461 </span>                : 
+<span class="lineNum">     462 </span><span class="lineNoCov">              0 : void MainWindow::MenuItemSettingsViewNKPoints_Toggled()</span>
+<span class="lineNum">     463 </span>                : {
+<span class="lineNum">     464 </span><span class="lineNoCov">              0 :     if (m_settingsNKPointsMenuItem-&gt;property_active())</span>
+<span class="lineNum">     465 </span>                :     {
+<span class="lineNum">     466 </span><span class="lineNoCov">              0 :         m_boardDrawingArea.ShowNucleationPoints();</span>
+<span class="lineNum">     467 </span>                :     }
+<span class="lineNum">     468 </span>                :     else
+<span class="lineNum">     469 </span>                :     {
+<span class="lineNum">     470 </span><span class="lineNoCov">              0 :         m_boardDrawingArea.HideNucleationPoints();</span>
+<span class="lineNum">     471 </span>                :     }
+<a name="472"><span class="lineNum">     472 </span><span class="lineNoCov">              0 : }</span></a>
+<span class="lineNum">     473 </span>                : 
+<span class="lineNum">     474 </span><span class="lineNoCov">              0 : void MainWindow::MenuItemSettingsShowForbiddenArea_Toggled()</span>
+<span class="lineNum">     475 </span>                : {
+<span class="lineNum">     476 </span><span class="lineNoCov">              0 :     if (m_settingsForbiddenAreaMenuItem-&gt;property_active())</span>
+<span class="lineNum">     477 </span>                :     {
+<span class="lineNum">     478 </span><span class="lineNoCov">              0 :         m_boardDrawingArea.ShowCurrentPlayerForbiddenArea();</span>
+<span class="lineNum">     479 </span>                :     }
+<span class="lineNum">     480 </span>                :     else
+<span class="lineNum">     481 </span>                :     {
+<span class="lineNum">     482 </span><span class="lineNoCov">              0 :         m_boardDrawingArea.HideCurrentPlayerForbiddenArea();</span>
+<span class="lineNum">     483 </span>                :     }
+<a name="484"><span class="lineNum">     484 </span><span class="lineNoCov">              0 : }</span></a>
+<span class="lineNum">     485 </span>                : 
+<span class="lineNum">     486 </span><span class="lineNoCov">              0 : void MainWindow::MenuItemSettingsPreferences_Activate()</span>
+<span class="lineNum">     487 </span>                : {
+<span class="lineNum">     488 </span><span class="lineNoCov">              0 :     m_configDialog-&gt;set_title(&quot;Configure current game&quot;);</span>
+<span class="lineNum">     489 </span>                : 
+<span class="lineNum">     490 </span>                :     //TODO starting coords cannot be edited through the configuration dialog yet
+<span class="lineNum">     491 </span><span class="lineNoCov">              0 :     m_configDialog-&gt;SetStartingCoordEditionSensitive(false);</span>
+<span class="lineNum">     492 </span>                : 
+<span class="lineNum">     493 </span>                :     // show a message informing the user a move was cancelled?
+<span class="lineNum">     494 </span><span class="lineNoCov">              0 :     bool showInfoMessage = false;</span>
+<span class="lineNum">     495 </span>                :     Gtk::ResponseType result;
+<span class="lineNum">     496 </span><span class="lineNoCov">              0 :     result = static_cast&lt;Gtk::ResponseType&gt;(m_configDialog-&gt;run());</span>
+<span class="lineNum">     497 </span><span class="lineNoCov">              0 :     if (result == Gtk::RESPONSE_OK)</span>
+<span class="lineNum">     498 </span>                :     {
+<span class="lineNum">     499 </span>                :         // if current player is a human being and it's been set to computer
+<span class="lineNum">     500 </span>                :         // next move will have to be requested to the worker thread.
+<span class="lineNum">     501 </span>                :         // if current player is the computer and its settings has been changed
+<span class="lineNum">     502 </span>                :         // current move will be cancelled and new settings will be applied
+<span class="lineNum">     503 </span>                :         // (both if player has been set up to be human or computer)
+<span class="lineNum">     504 </span>                : 
+<span class="lineNum">     505 </span><span class="lineNoCov">              0 :         if ( ( (m_currentMovingPlayer == Game1v1::e_Game1v1Player1)     &amp;&amp;</span>
+<span class="lineNum">     506 </span>                :                (Game1v1Config::Instance().IsPlayer1Computer() == false) &amp;&amp;
+<span class="lineNum">     507 </span>                :                (m_configDialog-&gt;IsPlayer1TypeComputer() == true)        )
+<span class="lineNum">     508 </span>                :              ||
+<span class="lineNum">     509 </span>                :              ( (m_currentMovingPlayer == Game1v1::e_Game1v1Player2)     &amp;&amp;
+<span class="lineNum">     510 </span>                :                (Game1v1Config::Instance().IsPlayer2Computer() == false) &amp;&amp;
+<span class="lineNum">     511 </span>                :                (m_configDialog-&gt;IsPlayer2TypeComputer() == true)        )
+<span class="lineNum">     512 </span>                :            )
+<span class="lineNum">     513 </span>                :         {
+<span class="lineNum">     514 </span>                :             // current player is not the computer and it has been
+<span class="lineNum">     515 </span>                :             // requested in the config dialog to change it to be the computer
+<span class="lineNum">     516 </span>                :             // save configuration shown by the dialog into global config singleton
+<span class="lineNum">     517 </span>                :             // and request the processing thread to compute next player1 move
+<span class="lineNum">     518 </span><span class="lineNoCov">              0 :             m_configDialog-&gt;SaveCurrentConfigIntoGlobalSettings();</span>
+<span class="lineNum">     519 </span>                : 
+<span class="lineNum">     520 </span>                :             // next move was being calculated by a human being, but now it has
+<span class="lineNum">     521 </span>                :             // been swapped to a computer player. Humans are not allowed to edit
+<span class="lineNum">     522 </span>                :             // pieces while computer is thinking
+<span class="lineNum">     523 </span><span class="lineNoCov">              0 :             m_editPieceTable-&gt;set_sensitive(false);</span>
+<span class="lineNum">     524 </span>                : 
+<span class="lineNum">     525 </span>                :             // requesting the thread!!
+<span class="lineNum">     526 </span><span class="lineNoCov">              0 :             RequestThreadToComputeNextMove(m_currentMovingPlayer, true);</span>
+<span class="lineNum">     527 </span>                :         }
+<span class="lineNum">     528 </span><span class="lineNoCov">              0 :         else if ( ( (m_currentMovingPlayer == Game1v1::e_Game1v1Player1)    &amp;&amp;</span>
+<span class="lineNum">     529 </span>                :                     (Game1v1Config::Instance().IsPlayer1Computer() == true) )
+<span class="lineNum">     530 </span>                :                 ||
+<span class="lineNum">     531 </span>                :                   ( (m_currentMovingPlayer == Game1v1::e_Game1v1Player2)    &amp;&amp;
+<span class="lineNum">     532 </span>                :                     (Game1v1Config::Instance().IsPlayer2Computer() == true) )
+<span class="lineNum">     533 </span>                :                 )
+<span class="lineNum">     534 </span>                :         {
+<span class="lineNum">     535 </span><span class="lineNoCov">              0 :             if ( ( (m_currentMovingPlayer == Game1v1::e_Game1v1Player1) &amp;&amp;</span>
+<span class="lineNum">     536 </span>                :                    (m_configDialog-&gt;IsPlayer1TypeComputer() == false) )
+<span class="lineNum">     537 </span>                :                  ||
+<span class="lineNum">     538 </span>                :                  ( (m_currentMovingPlayer == Game1v1::e_Game1v1Player2) &amp;&amp;
+<span class="lineNum">     539 </span>                :                    (m_configDialog-&gt;IsPlayer2TypeComputer() == false) ) )
+<span class="lineNum">     540 </span>                :             {
+<span class="lineNum">     541 </span>                :                 // current moving player is the computer and it has been set to be a human user
+<span class="lineNum">     542 </span>                :                 // cancel current calculation and launch the new move
+<span class="lineNum">     543 </span>                : 
+<span class="lineNum">     544 </span>                :                 // current move is going to be cancelled
+<span class="lineNum">     545 </span><span class="lineNoCov">              0 :                 showInfoMessage = true;</span>
+<span class="lineNum">     546 </span>                : 
+<span class="lineNum">     547 </span>                :                 // cancel worker thread current computing process
+<span class="lineNum">     548 </span><span class="lineNoCov">              0 :                 m_workerThread.CancelComputing();</span>
+<span class="lineNum">     549 </span>                : 
+<span class="lineNum">     550 </span>                :                 // empty out move queue
+<span class="lineNum">     551 </span><span class="lineNoCov">              0 :                 while (!m_moveQueue.IsEmpty())</span>
+<span class="lineNum">     552 </span>                :                 {
+<span class="lineNum">     553 </span><span class="lineNoCov">              0 :                     CalculatedMove_t dummy;</span>
+<span class="lineNum">     554 </span><span class="lineNoCov">              0 :                     m_moveQueue.Pop(dummy);</span>
+<span class="lineNum">     555 </span>                :                 }
+<span class="lineNum">     556 </span>                : 
+<span class="lineNum">     557 </span>                :                 // save new settings into global config
+<span class="lineNum">     558 </span><span class="lineNoCov">              0 :                 m_configDialog-&gt;SaveCurrentConfigIntoGlobalSettings();</span>
+<span class="lineNum">     559 </span>                : 
+<span class="lineNum">     560 </span>                :                 // restart the progress bar (computer is not thinking this move anymore)
+<span class="lineNum">     561 </span><span class="lineNoCov">              0 :                 G_LOCK(s_computingCurrentProgress);</span>
+<span class="lineNum">     562 </span><span class="lineNoCov">              0 :                     s_computingCurrentProgress = 0.0;</span>
+<span class="lineNum">     563 </span><span class="lineNoCov">              0 :                 G_UNLOCK(s_computingCurrentProgress);</span>
+<span class="lineNum">     564 </span><span class="lineNoCov">              0 :                 m_progressBar.set_fraction(0.0);</span>
+<span class="lineNum">     565 </span>                : 
+<span class="lineNum">     566 </span>                :                 // allow the new human user to put down pieces on the board
+<span class="lineNum">     567 </span><span class="lineNoCov">              0 :                 m_editPieceTable-&gt;set_sensitive(true);</span>
+<span class="lineNum">     568 </span>                : 
+<span class="lineNum">     569 </span>                :                 // restore the mouse cursor so the human being who has to put down next piece
+<span class="lineNum">     570 </span>                :                 // can do it
+<span class="lineNum">     571 </span><span class="lineNoCov">              0 :                 ResetCursor();</span>
+<span class="lineNum">     572 </span>                :             } // if (m_configDialog-&gt;IsPlayer1TypeComputer() == false)
+<span class="lineNum">     573 </span><span class="lineNoCov">              0 :             else if (</span>
+<span class="lineNum">     574 </span>                :                   ( (m_currentMovingPlayer == Game1v1::e_Game1v1Player1)      &amp;&amp;
+<span class="lineNum">     575 </span>                :                     ( (Game1v1Config::Instance().GetMinimaxDepthPlayer1() !=
+<span class="lineNum">     576 </span>                :                           m_configDialog-&gt;GetPlayer1SearchTreeDepth()        )
+<span class="lineNum">     577 </span>                :                       ||
+<span class="lineNum">     578 </span>                :                       (Game1v1Config::Instance().GetHeuristicTypePlayer1() !=
+<span class="lineNum">     579 </span>                :                           m_configDialog-&gt;GetPlayer1Heuristic()              ) ) )
+<span class="lineNum">     580 </span>                :                   ||
+<span class="lineNum">     581 </span>                :                   ( (m_currentMovingPlayer == Game1v1::e_Game1v1Player2)      &amp;&amp;
+<span class="lineNum">     582 </span>                :                     ( (Game1v1Config::Instance().GetMinimaxDepthPlayer2() !=
+<span class="lineNum">     583 </span>                :                            m_configDialog-&gt;GetPlayer2SearchTreeDepth()        )
+<span class="lineNum">     584 </span>                :                        ||
+<span class="lineNum">     585 </span>                :                        (Game1v1Config::Instance().GetHeuristicTypePlayer2() !=
+<span class="lineNum">     586 </span>                :                            m_configDialog-&gt;GetPlayer2Heuristic()              ) ) ) )
+<span class="lineNum">     587 </span>                :             {
+<span class="lineNum">     588 </span>                :                 // current player was the computer and it still is.
+<span class="lineNum">     589 </span>                :                 // cancel current move process if there has been a change
+<span class="lineNum">     590 </span>                :                 // in any of the rest of the settings (all but the
+<span class="lineNum">     591 </span>                :                 // type of player: type of heuristic, depth of
+<span class="lineNum">     592 </span>                :                 // search tree)
+<span class="lineNum">     593 </span>                : 
+<span class="lineNum">     594 </span>                :                 // current move is going to be cancelled
+<span class="lineNum">     595 </span><span class="lineNoCov">              0 :                 showInfoMessage = true;</span>
+<span class="lineNum">     596 </span>                : 
+<span class="lineNum">     597 </span>                :                 // cancel worker thread current computing process
+<span class="lineNum">     598 </span><span class="lineNoCov">              0 :                 m_workerThread.CancelComputing();</span>
+<span class="lineNum">     599 </span>                : 
+<span class="lineNum">     600 </span>                :                 // empty out move queue
+<span class="lineNum">     601 </span><span class="lineNoCov">              0 :                 while (!m_moveQueue.IsEmpty())</span>
+<span class="lineNum">     602 </span>                :                 {
+<span class="lineNum">     603 </span><span class="lineNoCov">              0 :                     CalculatedMove_t dummy;</span>
+<span class="lineNum">     604 </span><span class="lineNoCov">              0 :                     m_moveQueue.Pop(dummy);</span>
+<span class="lineNum">     605 </span>                :                 }
+<span class="lineNum">     606 </span>                : 
+<span class="lineNum">     607 </span>                :                 // restart the progress bar (computer is not thinking this move anymore)
+<span class="lineNum">     608 </span><span class="lineNoCov">              0 :                 G_LOCK(s_computingCurrentProgress);</span>
+<span class="lineNum">     609 </span><span class="lineNoCov">              0 :                     s_computingCurrentProgress = 0.0;</span>
+<span class="lineNum">     610 </span><span class="lineNoCov">              0 :                 G_UNLOCK(s_computingCurrentProgress);</span>
+<span class="lineNum">     611 </span><span class="lineNoCov">              0 :                 m_progressBar.set_fraction(0.0);</span>
+<span class="lineNum">     612 </span>                : 
+<span class="lineNum">     613 </span>                :                 // save current config for it to be applied in the future
+<span class="lineNum">     614 </span><span class="lineNoCov">              0 :                 m_configDialog-&gt;SaveCurrentConfigIntoGlobalSettings();</span>
+<span class="lineNum">     615 </span>                : 
+<span class="lineNum">     616 </span>                :                 // requesting the thread!!
+<span class="lineNum">     617 </span><span class="lineNoCov">              0 :                 RequestThreadToComputeNextMove(m_currentMovingPlayer, true);</span>
+<span class="lineNum">     618 </span>                :             }
+<span class="lineNum">     619 </span>                :             else
+<span class="lineNum">     620 </span>                :             {
+<span class="lineNum">     621 </span>                :                 // current player settings weren't modified. Save them
+<span class="lineNum">     622 </span>                :                 // but do not cancel current calculation
+<span class="lineNum">     623 </span><span class="lineNoCov">              0 :                 m_configDialog-&gt;SaveCurrentConfigIntoGlobalSettings();</span>
+<span class="lineNum">     624 </span>                :             }
+<span class="lineNum">     625 </span>                :         }
+<span class="lineNum">     626 </span>                :         else
+<span class="lineNum">     627 </span>                :         {
+<span class="lineNum">     628 </span>                :             // changes to the config dialog don't affect current move
+<span class="lineNum">     629 </span>                :             // save configuration shown by the dialog into global config singleton
+<span class="lineNum">     630 </span>                :             // new configuratio will be applied once current move is calculated
+<span class="lineNum">     631 </span><span class="lineNoCov">              0 :             m_configDialog-&gt;SaveCurrentConfigIntoGlobalSettings();</span>
+<span class="lineNum">     632 </span>                :         }
+<span class="lineNum">     633 </span>                :     } // if (result == Gtk::RESPONSE_OK)
+<span class="lineNum">     634 </span>                : 
+<span class="lineNum">     635 </span><span class="lineNoCov">              0 :     m_configDialog-&gt;hide();</span>
+<span class="lineNum">     636 </span>                : 
+<span class="lineNum">     637 </span><span class="lineNoCov">              0 :     if (showInfoMessage)</span>
+<span class="lineNum">     638 </span>                :     {
+<span class="lineNum">     639 </span>                :         // message for the user to inform he/she wants calculation was cancelled
+<span class="lineNum">     640 </span>                :         // after the config dialog is hidden
+<span class="lineNum">     641 </span>                :         Gtk::MessageDialog::MessageDialog infoMessage(
+<span class="lineNum">     642 </span>                :                 *this,
+<span class="lineNum">     643 </span>                :                 &quot;Previous move had to be cancelled before applying new settings&quot;,
+<span class="lineNum">     644 </span>                :                 true,
+<span class="lineNum">     645 </span>                :                 Gtk::MESSAGE_INFO,
+<span class="lineNum">     646 </span>                :                 Gtk::BUTTONS_OK,
+<span class="lineNum">     647 </span><span class="lineNoCov">              0 :                 true);</span>
+<span class="lineNum">     648 </span>                : 
+<span class="lineNum">     649 </span><span class="lineNoCov">              0 :         infoMessage.run(); // there will be only one type of value returned</span>
+<span class="lineNum">     650 </span>                :     }
+<a name="651"><span class="lineNum">     651 </span><span class="lineNoCov">              0 : }</span></a>
+<span class="lineNum">     652 </span>                : 
+<span class="lineNum">     653 </span><span class="lineNoCov">              0 : void MainWindow::MenuItemHelpAbout_Activate()</span>
+<span class="lineNum">     654 </span>                : {
+<span class="lineNum">     655 </span><span class="lineNoCov">              0 :     m_aboutDialog-&gt;run();</span>
+<span class="lineNum">     656 </span><span class="lineNoCov">              0 :     m_aboutDialog-&gt;hide();</span>
+<a name="657"><span class="lineNum">     657 </span><span class="lineNoCov">              0 : }</span></a>
+<span class="lineNum">     658 </span>                : 
+<span class="lineNum">     659 </span><span class="lineNoCov">              0 : void MainWindow::LaunchNewGame()</span>
+<span class="lineNum">     660 </span>                : {
+<span class="lineNum">     661 </span><span class="lineNoCov">              0 :     if (m_workerThread.IsThreadComputingMove())</span>
+<span class="lineNum">     662 </span>                :     {
+<span class="lineNum">     663 </span>                :         // stop worker thread. Current calculation won't be needed in the new game
+<span class="lineNum">     664 </span>                :         // this call blocks the current thread until the worker thread is ready to
+<span class="lineNum">     665 </span>                :         // calculate next move
+<span class="lineNum">     666 </span><span class="lineNoCov">              0 :         m_workerThread.CancelComputing();</span>
+<span class="lineNum">     667 </span>                :     }
+<span class="lineNum">     668 </span>                : 
+<span class="lineNum">     669 </span>                :     // clear old moves from the move queue. They belong to the old game
+<span class="lineNum">     670 </span><span class="lineNoCov">              0 :     while (!m_moveQueue.IsEmpty())</span>
+<span class="lineNum">     671 </span>                :     {
+<span class="lineNum">     672 </span><span class="lineNoCov">              0 :         CalculatedMove_t dummy;</span>
+<span class="lineNum">     673 </span><span class="lineNoCov">              0 :         m_moveQueue.Pop(dummy);</span>
+<span class="lineNum">     674 </span>                :     }
+<span class="lineNum">     675 </span>                : 
+<span class="lineNum">     676 </span>                :     // reset the current game
+<span class="lineNum">     677 </span>                :     m_the1v1Game.Reset(
+<span class="lineNum">     678 </span>                :         Game1v1Config::Instance().GetPlayer1StartingCoord(),
+<span class="lineNum">     679 </span><span class="lineNoCov">              0 :         Game1v1Config::Instance().GetPlayer2StartingCoord());</span>
+<span class="lineNum">     680 </span>                : 
+<span class="lineNum">     681 </span>                :     // update the board view
+<span class="lineNum">     682 </span><span class="lineNoCov">              0 :     m_boardDrawingArea.CancelLatestPieceDeployedEffect();</span>
+<span class="lineNum">     683 </span><span class="lineNoCov">              0 :     m_boardDrawingArea.Invalidate();</span>
+<span class="lineNum">     684 </span>                :     // player1 will be picking next piece
+<span class="lineNum">     685 </span><span class="lineNoCov">              0 :     m_pickPiecesDrawingArea.Invalidate(m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1));</span>
+<span class="lineNum">     686 </span>                :     // player2's pieces will be shown on the right side
+<span class="lineNum">     687 </span><span class="lineNoCov">              0 :     m_showOpponentPiecesDrawingArea.Invalidate(m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2));</span>
+<span class="lineNum">     688 </span>                : 
+<span class="lineNum">     689 </span>                :     // it will be player1's go next. set piece colour to player1's
+<span class="lineNum">     690 </span><span class="lineNoCov">              0 :     uint8_t red   = 0;</span>
+<span class="lineNum">     691 </span><span class="lineNoCov">              0 :     uint8_t green = 0;</span>
+<span class="lineNum">     692 </span><span class="lineNoCov">              0 :     uint8_t blue  = 0;</span>
+<span class="lineNum">     693 </span><span class="lineNoCov">              0 :     m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1).GetColour(red, green, blue);</span>
+<span class="lineNum">     694 </span>                :     m_editPieceTable-&gt;SetPieceRGB(
+<span class="lineNum">     695 </span>                :         static_cast&lt;float&gt;(red)   / 255,
+<span class="lineNum">     696 </span>                :         static_cast&lt;float&gt;(green) / 255,
+<span class="lineNum">     697 </span><span class="lineNoCov">              0 :         static_cast&lt;float&gt;(blue)  / 255);</span>
+<span class="lineNum">     698 </span>                : 
+<span class="lineNum">     699 </span><span class="lineNoCov">              0 :     UpdateScoreStatus();</span>
+<span class="lineNum">     700 </span>                : 
+<span class="lineNum">     701 </span>                :     // reset the cursor (even if it's been already done)
+<span class="lineNum">     702 </span><span class="lineNoCov">              0 :     ResetCursor();</span>
+<span class="lineNum">     703 </span>                : 
+<span class="lineNum">     704 </span>                :     // stopwatches must be restarted.
+<span class="lineNum">     705 </span><span class="lineNoCov">              0 :     m_stopWatchLabelPlayer1.Reset();</span>
+<span class="lineNum">     706 </span><span class="lineNoCov">              0 :     m_stopWatchLabelPlayer2.Reset();</span>
+<span class="lineNum">     707 </span>                : 
+<span class="lineNum">     708 </span>                :     // restart the progress bar
+<span class="lineNum">     709 </span><span class="lineNoCov">              0 :     G_LOCK(s_computingCurrentProgress);</span>
+<span class="lineNum">     710 </span><span class="lineNoCov">              0 :         s_computingCurrentProgress = 0.0;</span>
+<span class="lineNum">     711 </span><span class="lineNoCov">              0 :     G_UNLOCK(s_computingCurrentProgress);</span>
+<span class="lineNum">     712 </span><span class="lineNoCov">              0 :     m_progressBar.set_fraction(0.0);</span>
+<span class="lineNum">     713 </span>                : 
+<span class="lineNum">     714 </span>                :     // Start player1's timer
+<span class="lineNum">     715 </span><span class="lineNoCov">              0 :     m_stopWatchLabelPlayer1.Continue();</span>
+<span class="lineNum">     716 </span>                : 
+<span class="lineNum">     717 </span>                :     // reset and force redraw editPieceTable. It'l be set to sensitive
+<span class="lineNum">     718 </span>                :     // or unsensitive depending on the type of player1
+<span class="lineNum">     719 </span><span class="lineNoCov">              0 :     m_editPieceTable-&gt;SetPiece(e_noPiece);</span>
+<span class="lineNum">     720 </span>                : 
+<span class="lineNum">     721 </span>                :     // new game just started. It can't be finished!
+<span class="lineNum">     722 </span><span class="lineNoCov">              0 :     m_currentGameFinished = false;</span>
+<span class="lineNum">     723 </span>                :     // player1 is the one who's got to put a piece next
+<span class="lineNum">     724 </span><span class="lineNoCov">              0 :     m_currentMovingPlayer = Game1v1::e_Game1v1Player1;</span>
+<span class="lineNum">     725 </span>                : 
+<span class="lineNum">     726 </span><span class="lineNoCov">              0 :     if (Game1v1Config::Instance().IsPlayer1Computer())</span>
+<span class="lineNum">     727 </span>                :     {
+<span class="lineNum">     728 </span>                :         // next player is the computer. Disallow editing the edit piece
+<span class="lineNum">     729 </span>                :         // area while computer is processing next move
+<span class="lineNum">     730 </span><span class="lineNoCov">              0 :         m_editPieceTable-&gt;set_sensitive(false);</span>
+<span class="lineNum">     731 </span>                : 
+<span class="lineNum">     732 </span><span class="lineNoCov">              0 :         RequestThreadToComputeNextMove(Game1v1::e_Game1v1Player1, false);</span>
+<span class="lineNum">     733 </span>                :     }
+<span class="lineNum">     734 </span>                :     else
+<span class="lineNum">     735 </span>                :     {
+<span class="lineNum">     736 </span>                :         // a human b eing is allowed to edit next piece
+<span class="lineNum">     737 </span><span class="lineNoCov">              0 :         m_editPieceTable-&gt;set_sensitive(true);</span>
+<span class="lineNum">     738 </span>                : 
+<span class="lineNum">     739 </span>                :         // player1 is a human and he/she will put down the next piece (player1 goes always first)
+<span class="lineNum">     740 </span><span class="lineNoCov">              0 :         m_boardDrawingArea.SetCurrentPlayer(m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1));</span>
+<span class="lineNum">     741 </span>                :     }
+<a name="742"><span class="lineNum">     742 </span><span class="lineNoCov">              0 : }</span></a>
+<span class="lineNum">     743 </span>                : 
+<span class="lineNum">     744 </span><span class="lineNoCov">              0 : void MainWindow::RequestThreadToComputeNextMove(</span>
+<span class="lineNum">     745 </span>                :         Game1v1::eGame1v1Player_t a_whoMoves,
+<span class="lineNum">     746 </span>                :         bool                      a_blockCall,
+<span class="lineNum">     747 </span>                :         const Coordinate         &amp;a_coordinate,
+<span class="lineNum">     748 </span>                :         const Piece              &amp;a_piece)
+<span class="lineNum">     749 </span>                : {
+<span class="lineNum">     750 </span>                :     // set the cursor to busy in the board drawing area, so the user
+<span class="lineNum">     751 </span>                :     // won't get (very) nervous while the computer is processing the next move
+<span class="lineNum">     752 </span><span class="lineNoCov">              0 :     SetWaitCursor();</span>
+<span class="lineNum">     753 </span>                : 
+<span class="lineNum">     754 </span>                :     // retrieve eval function pointer and depth from global configuration
+<span class="lineNum">     755 </span><span class="lineNoCov">              0 :     Heuristic::eHeuristicType_t heuristicType = Heuristic::e_heuristicStartCount;</span>
+<span class="lineNum">     756 </span><span class="lineNoCov">              0 :     int32_t searchTreeDepth = GAME1V1CONFIG_DEPTH_AUTOADJUST;</span>
+<span class="lineNum">     757 </span><span class="lineNoCov">              0 :     switch(a_whoMoves)</span>
+<span class="lineNum">     758 </span>                :     {
+<span class="lineNum">     759 </span>                :     case Game1v1::e_Game1v1Player1:
+<span class="lineNum">     760 </span><span class="lineNoCov">              0 :         heuristicType   = Game1v1Config::Instance().GetHeuristicTypePlayer1();</span>
+<span class="lineNum">     761 </span><span class="lineNoCov">              0 :         searchTreeDepth = Game1v1Config::Instance().GetMinimaxDepthPlayer1();</span>
+<span class="lineNum">     762 </span><span class="lineNoCov">              0 :         break;</span>
+<span class="lineNum">     763 </span>                :     case Game1v1::e_Game1v1Player2:
+<span class="lineNum">     764 </span><span class="lineNoCov">              0 :         heuristicType   = Game1v1Config::Instance().GetHeuristicTypePlayer2();</span>
+<span class="lineNum">     765 </span><span class="lineNoCov">              0 :         searchTreeDepth = Game1v1Config::Instance().GetMinimaxDepthPlayer2();</span>
+<span class="lineNum">     766 </span><span class="lineNoCov">              0 :         break;</span>
+<span class="lineNum">     767 </span>                : #ifdef DEBUG
+<span class="lineNum">     768 </span>                :     default:
+<span class="lineNum">     769 </span><span class="lineNoCov">              0 :         assert(0);</span>
+<span class="lineNum">     770 </span>                : #endif // DEBUG
+<span class="lineNum">     771 </span>                :     } // switch(a_whoMoves)
+<span class="lineNum">     772 </span>                : 
+<span class="lineNum">     773 </span><span class="lineNoCov">              0 :     const Heuristic::sHeuristicData_t &amp;heuristicData = Heuristic::m_heuristicData[heuristicType];</span>
+<span class="lineNum">     774 </span><span class="lineNoCov">              0 :     const Player &amp;currentPlayer = m_the1v1Game.GetPlayer(a_whoMoves);</span>
+<span class="lineNum">     775 </span><span class="lineNoCov">              0 :     const Player &amp;opponent = m_the1v1Game.GetOpponent(a_whoMoves);</span>
+<span class="lineNum">     776 </span>                : 
+<span class="lineNum">     777 </span>                :     // search tree depth. If it is set to GAME1V1CONFIG_DEPTH_AUTOADJUST
+<span class="lineNum">     778 </span>                :     // its value will be set here to a sensible value
+<span class="lineNum">     779 </span><span class="lineNoCov">              0 :     if (searchTreeDepth == GAME1V1CONFIG_DEPTH_AUTOADJUST)</span>
+<span class="lineNum">     780 </span>                :     {
+<span class="lineNum">     781 </span><span class="lineNoCov">              0 :         searchTreeDepth = 3;</span>
+<span class="lineNum">     782 </span>                : 
+<span class="lineNum">     783 </span>                :         //TODO 14 is a magic number
+<span class="lineNum">     784 </span><span class="lineNoCov">              0 :         if ( (currentPlayer.NumberOfPiecesAvailable() &lt; 14) &amp;&amp;</span>
+<span class="lineNum">     785 </span>                :              (rules::CanPlayerGo(m_the1v1Game.GetBoard(), opponent) ) )
+<span class="lineNum">     786 </span>                :         {
+<span class="lineNum">     787 </span>                :             // if the opponent cannot go there is no point on setting the depth to 5.
+<span class="lineNum">     788 </span>                :             // 3 should be good enough in that case
+<span class="lineNum">     789 </span><span class="lineNoCov">              0 :             searchTreeDepth = 5;</span>
+<span class="lineNum">     790 </span>                :         }
+<span class="lineNum">     791 </span>                :     }
+<span class="lineNum">     792 </span>                : 
+<span class="lineNum">     793 </span>                :     bool computeMoveSucceded;
+<span class="lineNum">     794 </span><span class="lineNoCov">              0 :     if ( (currentPlayer.NumberOfPiecesAvailable() == e_numberOfPieces) &amp;&amp;</span>
+<span class="lineNum">     795 </span>                :          (g_rand_int_range(m_randomizer, 0, 2) == 0) )
+<span class="lineNum">     796 </span>                :     {
+<span class="lineNum">     797 </span>                :         // pass the move made by the opponent to the minmax algorithm half of the times
+<span class="lineNum">     798 </span>                :         // it will show a bit of randomness at the start to a potencial human user
+<span class="lineNum">     799 </span>                :         computeMoveSucceded = m_workerThread.ComputeMove(
+<span class="lineNum">     800 </span>                :                                     m_the1v1Game,
+<span class="lineNum">     801 </span>                :                                     a_whoMoves,
+<span class="lineNum">     802 </span>                :                                     heuristicData.m_evalFunction,
+<span class="lineNum">     803 </span>                :                                     searchTreeDepth,
+<span class="lineNum">     804 </span><span class="lineNoCov">              0 :                                     a_blockCall);</span>
+<span class="lineNum">     805 </span>                :     }
+<span class="lineNum">     806 </span>                :     else
+<span class="lineNum">     807 </span>                :     {
+<span class="lineNum">     808 </span>                :         // use the latest coord and piece deployed by the opponent for half the starting moves
+<span class="lineNum">     809 </span>                :         // and for all the rest of the moves
+<span class="lineNum">     810 </span>                :         computeMoveSucceded = m_workerThread.ComputeMove(
+<span class="lineNum">     811 </span>                :                                     m_the1v1Game,
+<span class="lineNum">     812 </span>                :                                     a_whoMoves,
+<span class="lineNum">     813 </span>                :                                     heuristicData.m_evalFunction,
+<span class="lineNum">     814 </span>                :                                     searchTreeDepth,
+<span class="lineNum">     815 </span>                :                                     a_blockCall,
+<span class="lineNum">     816 </span>                :                                     a_coordinate,
+<span class="lineNum">     817 </span><span class="lineNoCov">              0 :                                     a_piece);</span>
+<span class="lineNum">     818 </span>                :     }
+<span class="lineNum">     819 </span>                : 
+<span class="lineNum">     820 </span><span class="lineNoCov">              0 :     if (!computeMoveSucceded)</span>
+<span class="lineNum">     821 </span>                :     {
+<span class="lineNum">     822 </span>                : #ifdef DEBUG_PRINT
+<span class="lineNum">     823 </span>                :         std::cout
+<span class="lineNum">     824 </span>                :             &lt;&lt; &quot;Error while telling the thread to start computing.&quot;
+<span class="lineNum">     825 </span>                :             &lt;&lt; std::endl
+<span class="lineNum">     826 </span>                :             &lt;&lt; &quot;The worker thread seems to be busy&quot;
+<span class="lineNum">     827 </span><span class="lineNoCov">              0 :             &lt;&lt; std::endl;</span>
+<span class="lineNum">     828 </span>                : #endif
+<span class="lineNum">     829 </span><span class="lineNoCov">              0 :         std::stringstream theMessage;</span>
+<span class="lineNum">     830 </span>                :         theMessage &lt;&lt; &quot;&lt;b&gt;Fatal Error&lt;/b&gt; telling the computing to start computing (seems to be busy).&quot;
+<span class="lineNum">     831 </span>                :                    &lt;&lt; std::endl
+<span class="lineNum">     832 </span><span class="lineNoCov">              0 :                    &lt;&lt; &quot;Application will try to exit now!&quot;;</span>
+<span class="lineNum">     833 </span>                : 
+<span class="lineNum">     834 </span>                :         Gtk::MessageDialog::MessageDialog fatalErrorMessage(
+<span class="lineNum">     835 </span>                :             *this,
+<span class="lineNum">     836 </span>                :             theMessage.str().c_str(),
+<span class="lineNum">     837 </span>                :             true,
+<span class="lineNum">     838 </span>                :             Gtk::MESSAGE_ERROR,
+<span class="lineNum">     839 </span>                :             Gtk::BUTTONS_OK,
+<span class="lineNum">     840 </span><span class="lineNoCov">              0 :             true);</span>
+<span class="lineNum">     841 </span>                : 
+<span class="lineNum">     842 </span><span class="lineNoCov">              0 :         if (fatalErrorMessage.run())</span>
+<span class="lineNum">     843 </span>                :         {
+<span class="lineNum">     844 </span>                :             ; // the dialog only has 1 button
+<span class="lineNum">     845 </span>                :         }
+<span class="lineNum">     846 </span>                : 
+<span class="lineNum">     847 </span>                :         // kill the worker thread
+<span class="lineNum">     848 </span><span class="lineNoCov">              0 :         m_workerThread.CancelComputing();</span>
+<span class="lineNum">     849 </span>                : 
+<span class="lineNum">     850 </span>                :         // exit the app
+<span class="lineNum">     851 </span><span class="lineNoCov">              0 :         this-&gt;hide();</span>
+<span class="lineNum">     852 </span>                :     }
+<a name="853"><span class="lineNum">     853 </span><span class="lineNoCov">              0 : }</span></a>
+<span class="lineNum">     854 </span>                : 
+<span class="lineNum">     855 </span><span class="lineNoCov">              0 : void MainWindow::WorkerThread_computingFinished(</span>
+<span class="lineNum">     856 </span>                :         const Piece              &amp;a_piece,
+<span class="lineNum">     857 </span>                :         const Coordinate         &amp;a_coord,
+<span class="lineNum">     858 </span>                :         Game1v1::eGame1v1Player_t a_playerToMove,
+<span class="lineNum">     859 </span>                :         int32_t                   a_returnValue)
+<span class="lineNum">     860 </span>                : {
+<span class="lineNum">     861 </span>                :     // WARNING: this method is run by another thread.
+<span class="lineNum">     862 </span>                :     // once the m_signal_moveComputed signal is emited the
+<span class="lineNum">     863 </span>                :     // main thread will update the GUI widgets
+<span class="lineNum">     864 </span><span class="lineNoCov">              0 :     CalculatedMove_t thisMove;</span>
+<span class="lineNum">     865 </span><span class="lineNoCov">              0 :     thisMove.piece = a_piece;</span>
+<span class="lineNum">     866 </span><span class="lineNoCov">              0 :     thisMove.coord = a_coord;</span>
+<span class="lineNum">     867 </span><span class="lineNoCov">              0 :     thisMove.playerToMove = a_playerToMove;</span>
+<span class="lineNum">     868 </span>                : #if defined(DEBUG) || defined(DEBUG_PRINT)
+<span class="lineNum">     869 </span>                :     bool result =
+<span class="lineNum">     870 </span>                : #endif
+<span class="lineNum">     871 </span><span class="lineNoCov">              0 :     m_moveQueue.Push(thisMove);</span>
+<span class="lineNum">     872 </span>                : 
+<span class="lineNum">     873 </span>                : 
+<span class="lineNum">     874 </span>                : #ifdef DEBUG_PRINT
+<span class="lineNum">     875 </span><span class="lineNoCov">              0 :     if (result == false)</span>
+<span class="lineNum">     876 </span>                :     {
+<span class="lineNum">     877 </span><span class="lineNoCov">              0 :         std::cout &lt;&lt; &quot;Computer move could not be added to the queue&quot; &lt;&lt; std::endl;</span>
+<span class="lineNum">     878 </span>                :     }
+<span class="lineNum">     879 </span><span class="lineNoCov">              0 :     if (a_piece.GetType() == e_noPiece)</span>
+<span class="lineNum">     880 </span>                :     {
+<span class="lineNum">     881 </span><span class="lineNoCov">              0 :         std::cout &lt;&lt; &quot;Computer can't move&quot; &lt;&lt; std::endl;</span>
+<span class="lineNum">     882 </span>                :     }
+<span class="lineNum">     883 </span>                : #endif
+<span class="lineNum">     884 </span>                : #ifdef DEBUG
+<span class="lineNum">     885 </span><span class="lineNoCov">              0 :     assert(result == true);</span>
+<span class="lineNum">     886 </span>                : #endif
+<span class="lineNum">     887 </span>                : 
+<span class="lineNum">     888 </span>                :     // this signal is being issued from the MainWindowWorkerThread
+<span class="lineNum">     889 </span>                :     // GTK is not thread safe, so every GUI function should be called from the same thread
+<span class="lineNum">     890 </span>                :     // we need inter-thread communication to force the main thread to invalidate the
+<span class="lineNum">     891 </span>                :     // board drawing area
+<span class="lineNum">     892 </span>                :     // have a look at:
+<span class="lineNum">     893 </span>                :     //     http://library.gnome.org/devel/glibmm/stable/thread_2dispatcher_8cc-example.html
+<span class="lineNum">     894 </span><span class="lineNoCov">              0 :     m_signal_moveComputed.emit();</span>
+<a name="895"><span class="lineNum">     895 </span><span class="lineNoCov">              0 : }</span></a>
+<span class="lineNum">     896 </span>                : 
+<span class="lineNum">     897 </span><span class="lineNoCov">              0 : void MainWindow::BoardDrawingArea_BoardClicked(const Coordinate &amp;a_coord, const Piece &amp;a_piece, const Player &amp;a_player)</span>
+<span class="lineNum">     898 </span>                : {
+<span class="lineNum">     899 </span>                : #ifdef DEBUG_PRINT
+<span class="lineNum">     900 </span><span class="lineNoCov">              0 :     std::cout &lt;&lt; a_player.GetName() &lt;&lt;  &quot; clicked in (&quot; &lt;&lt; a_coord.m_row &lt;&lt; &quot;, &quot; &lt;&lt; a_coord.m_col &lt;&lt; &quot;)&quot; &lt;&lt; std::endl;</span>
+<span class="lineNum">     901 </span>                : #endif
+<span class="lineNum">     902 </span>                : 
+<span class="lineNum">     903 </span><span class="lineNoCov">              0 :         if (m_workerThread.IsThreadComputingMove())</span>
+<span class="lineNum">     904 </span>                :         {
+<span class="lineNum">     905 </span>                : #ifdef DEBUG_PRINT
+<span class="lineNum">     906 </span>                :             std::cout
+<span class="lineNum">     907 </span>                :             &lt;&lt; &quot;The worker thread is busy. Please be patient (a polite way to say: 'Fuck off')&quot;
+<span class="lineNum">     908 </span><span class="lineNoCov">              0 :             &lt;&lt; std::endl;</span>
+<span class="lineNum">     909 </span>                : #endif
+<span class="lineNum">     910 </span><span class="lineNoCov">              0 :             return;</span>
+<span class="lineNum">     911 </span>                :         }
+<span class="lineNum">     912 </span>                : 
+<span class="lineNum">     913 </span><span class="lineNoCov">              0 :     if( ( (a_player.NumberOfPiecesAvailable() == e_numberOfPieces) &amp;&amp;</span>
+<span class="lineNum">     914 </span>                :           (!rules::IsPieceDeployableInStartingPoint(
+<span class="lineNum">     915 </span>                :                     m_the1v1Game.GetBoard(),
+<span class="lineNum">     916 </span>                :                     a_piece.GetCurrentConfiguration(),
+<span class="lineNum">     917 </span>                :                     a_coord,
+<span class="lineNum">     918 </span>                :                     a_player.GetStartingCoordinate())) ) ||
+<span class="lineNum">     919 </span>                :         ( (a_player.NumberOfPiecesAvailable() &lt; e_numberOfPieces) &amp;&amp;
+<span class="lineNum">     920 </span>                :           (!rules::IsPieceDeployable(
+<span class="lineNum">     921 </span>                :                     m_the1v1Game.GetBoard(),
+<span class="lineNum">     922 </span>                :                     a_piece.GetCurrentConfiguration(),
+<span class="lineNum">     923 </span>                :                     a_coord,
+<span class="lineNum">     924 </span>                :                     a_player)) ) )
+<span class="lineNum">     925 </span>                :     {
+<span class="lineNum">     926 </span>                : #ifdef DEBUG_PRINT
+<span class="lineNum">     927 </span><span class="lineNoCov">              0 :         std::cout &lt;&lt; &quot;Cheeky you! Don't try to put a piece where it's not allowed to&quot; &lt;&lt; std::endl;</span>
+<span class="lineNum">     928 </span>                : #endif
+<span class="lineNum">     929 </span><span class="lineNoCov">              0 :         return;</span>
+<span class="lineNum">     930 </span>                :     }
+<span class="lineNum">     931 </span>                : 
+<span class="lineNum">     932 </span>                :     // don't save the move directly in the board. Use the same interface as the worker thread
+<span class="lineNum">     933 </span>                :     // Game 1v1 board will be only be modified in NotifyMoveComputed
+<span class="lineNum">     934 </span><span class="lineNoCov">              0 :     CalculatedMove_t thisMove;</span>
+<span class="lineNum">     935 </span><span class="lineNoCov">              0 :     thisMove.piece = a_piece;</span>
+<span class="lineNum">     936 </span><span class="lineNoCov">              0 :     thisMove.coord = a_coord;</span>
+<span class="lineNum">     937 </span><span class="lineNoCov">              0 :     thisMove.playerToMove =  m_the1v1Game.GetPlayerType(a_player);</span>
+<span class="lineNum">     938 </span>                : #if defined(DEBUG) || defined(DEBUG_PRINT)
+<span class="lineNum">     939 </span>                :     bool result =
+<span class="lineNum">     940 </span>                : #endif
+<span class="lineNum">     941 </span><span class="lineNoCov">              0 :     m_moveQueue.Push(thisMove);</span>
+<span class="lineNum">     942 </span>                : 
+<span class="lineNum">     943 </span>                : #ifdef DEBUG_PRINT
+<span class="lineNum">     944 </span><span class="lineNoCov">              0 :     if (result == false)</span>
+<span class="lineNum">     945 </span>                :     {
+<span class="lineNum">     946 </span><span class="lineNoCov">              0 :         std::cout &lt;&lt; &quot;Human move could not be added to the queue&quot; &lt;&lt; std::endl;</span>
+<span class="lineNum">     947 </span>                :     }
+<span class="lineNum">     948 </span>                : #endif
+<span class="lineNum">     949 </span>                : #ifdef DEBUG
+<span class="lineNum">     950 </span><span class="lineNoCov">              0 :     assert(result == true);</span>
+<span class="lineNum">     951 </span>                : #endif
+<span class="lineNum">     952 </span>                : 
+<span class="lineNum">     953 </span>                :     // this method is not expected to be run by another thread, but if both worker thread and human
+<span class="lineNum">     954 </span>                :     // user use the same interface, things are much easier to understand
+<span class="lineNum">     955 </span>                :     // so, there's no need to emit any signal (which adds a bit of overhead), but
+<span class="lineNum">     956 </span>                :     // interfaces must be followed, so NotifyMoveComputed is caled directly instead of emiting interthread
+<span class="lineNum">     957 </span>                :     // signals
+<span class="lineNum">     958 </span>                :     //m_signal_moveComputed.emit();
+<span class="lineNum">     959 </span><span class="lineNoCov">              0 :     NotifyMoveComputed();</span>
+<span class="lineNum">     960 </span>                : 
+<span class="lineNum">     961 </span><span class="lineNoCov">              0 :     return;</span>
+<a name="962"><span class="lineNum">     962 </span>                : }</a>
+<span class="lineNum">     963 </span>                : 
+<span class="lineNum">     964 </span><span class="lineNoCov">              0 : void MainWindow::NotifyMoveComputed()</span>
+<span class="lineNum">     965 </span>                : {
+<span class="lineNum">     966 </span>                :     // after the lock protected loop these variables will contain
+<span class="lineNum">     967 </span>                :     // the latest piece and latest coord deployed
+<span class="lineNum">     968 </span><span class="lineNoCov">              0 :     Piece latestPiece(e_noPiece);</span>
+<span class="lineNum">     969 </span><span class="lineNoCov">              0 :     Coordinate latestCoord(COORD_UNINITIALISED, COORD_UNINITIALISED);</span>
+<span class="lineNum">     970 </span><span class="lineNoCov">              0 :     Game1v1::eGame1v1Player_t latestPlayerToMove = Game1v1::e_Game1v1Player1;</span>
+<span class="lineNum">     971 </span>                : 
+<span class="lineNum">     972 </span><span class="lineNoCov">              0 :     CalculatedMove_t currentMove;</span>
+<span class="lineNum">     973 </span><span class="lineNoCov">              0 :     bool moveQueueEmpty = true;</span>
+<span class="lineNum">     974 </span><span class="lineNoCov">              0 :     while(m_moveQueue.TryPop(currentMove))</span>
+<span class="lineNum">     975 </span>                :     {
+<span class="lineNum">     976 </span><span class="lineNoCov">              0 :         if (moveQueueEmpty == true)</span>
+<span class="lineNum">     977 </span>                :         {
+<span class="lineNum">     978 </span><span class="lineNoCov">              0 :             moveQueueEmpty = false;</span>
+<span class="lineNum">     979 </span>                :         }
+<span class="lineNum">     980 </span>                : 
+<span class="lineNum">     981 </span><span class="lineNoCov">              0 :         latestPiece        = currentMove.piece;</span>
+<span class="lineNum">     982 </span><span class="lineNoCov">              0 :         latestCoord        = currentMove.coord;</span>
+<span class="lineNum">     983 </span><span class="lineNoCov">              0 :         latestPlayerToMove = currentMove.playerToMove;</span>
+<span class="lineNum">     984 </span>                : 
+<span class="lineNum">     985 </span><span class="lineNoCov">              0 :         if (latestPiece.GetType() != e_noPiece)</span>
+<span class="lineNum">     986 </span>                :         {
+<span class="lineNum">     987 </span>                :             m_the1v1Game.PutDownPiece(
+<span class="lineNum">     988 </span>                :                     latestPiece,
+<span class="lineNum">     989 </span>                :                     latestCoord,
+<span class="lineNum">     990 </span><span class="lineNoCov">              0 :                     latestPlayerToMove);</span>
+<span class="lineNum">     991 </span>                :         }
+<span class="lineNum">     992 </span>                :     } // while(m_moveQueue.TryPop(currentMove))
+<span class="lineNum">     993 </span>                : 
+<span class="lineNum">     994 </span><span class="lineNoCov">              0 :     if (moveQueueEmpty)</span>
+<span class="lineNum">     995 </span>                :     {
+<span class="lineNum">     996 </span>                :         // there was no moves stored. Nothing to be done
+<span class="lineNum">     997 </span>                :         return;
+<span class="lineNum">     998 </span>                :     }
+<span class="lineNum">     999 </span>                : 
+<span class="lineNum">    1000 </span>                :     // actions will depend on who put down the latest piece
+<span class="lineNum">    1001 </span><span class="lineNoCov">              0 :     const Player &amp;latestPlayer   = m_the1v1Game.GetPlayer(latestPlayerToMove);</span>
+<span class="lineNum">    1002 </span><span class="lineNoCov">              0 :     const Player &amp;latestOpponent = m_the1v1Game.GetOpponent(latestPlayerToMove);</span>
+<span class="lineNum">    1003 </span>                : 
+<span class="lineNum">    1004 </span>                :     // player who didn't put a piece o the board this time
+<span class="lineNum">    1005 </span>                :     Game1v1::eGame1v1Player_t followingPlayer;
+<span class="lineNum">    1006 </span>                :     // pointer to the stopwatch of the latest player to move
+<span class="lineNum">    1007 </span><span class="lineNoCov">              0 :     StopWatchLabel* stopWatchPlayer = NULL;</span>
+<span class="lineNum">    1008 </span>                :     // pointer to the stopwatch of the opponent of latest player to move
+<span class="lineNum">    1009 </span><span class="lineNoCov">              0 :     StopWatchLabel* stopWatchOpponent = NULL;</span>
+<span class="lineNum">    1010 </span><span class="lineNoCov">              0 :     switch (latestPlayerToMove)</span>
+<span class="lineNum">    1011 </span>                :     {
+<span class="lineNum">    1012 </span>                :     case Game1v1::e_Game1v1Player1:
+<span class="lineNum">    1013 </span>                :     {
+<span class="lineNum">    1014 </span><span class="lineNoCov">              0 :         stopWatchPlayer   = &amp;m_stopWatchLabelPlayer1;</span>
+<span class="lineNum">    1015 </span><span class="lineNoCov">              0 :         stopWatchOpponent = &amp;m_stopWatchLabelPlayer2;</span>
+<span class="lineNum">    1016 </span><span class="lineNoCov">              0 :         followingPlayer   = Game1v1::e_Game1v1Player2;</span>
+<span class="lineNum">    1017 </span><span class="lineNoCov">              0 :         break;</span>
+<span class="lineNum">    1018 </span>                :     }
+<span class="lineNum">    1019 </span>                :     case Game1v1::e_Game1v1Player2:
+<span class="lineNum">    1020 </span>                :     {
+<span class="lineNum">    1021 </span><span class="lineNoCov">              0 :         stopWatchPlayer   = &amp;m_stopWatchLabelPlayer2;</span>
+<span class="lineNum">    1022 </span><span class="lineNoCov">              0 :         stopWatchOpponent = &amp;m_stopWatchLabelPlayer1;</span>
+<span class="lineNum">    1023 </span><span class="lineNoCov">              0 :         followingPlayer   = Game1v1::e_Game1v1Player1;</span>
+<span class="lineNum">    1024 </span><span class="lineNoCov">              0 :         break;</span>
+<span class="lineNum">    1025 </span>                :     }
+<span class="lineNum">    1026 </span>                : #ifdef DEBUG
+<span class="lineNum">    1027 </span>                :     default:
+<span class="lineNum">    1028 </span>                :     {
+<span class="lineNum">    1029 </span><span class="lineNoCov">              0 :         assert(0);</span>
+<span class="lineNum">    1030 </span>                :     }
+<span class="lineNum">    1031 </span>                : #endif
+<span class="lineNum">    1032 </span>                :     } // switch (latestPlayerToMove)
+<span class="lineNum">    1033 </span>                : 
+<span class="lineNum">    1034 </span>                :     // invalidate the board drawing area to show the new moves
+<span class="lineNum">    1035 </span>                :     // activating the latest piece deployed glowing effect
+<span class="lineNum">    1036 </span>                :     m_boardDrawingArea.Invalidate(
+<span class="lineNum">    1037 </span>                :             latestPiece,
+<span class="lineNum">    1038 </span>                :             latestCoord,
+<span class="lineNum">    1039 </span><span class="lineNoCov">              0 :             latestPlayer);</span>
+<span class="lineNum">    1040 </span>                : 
+<span class="lineNum">    1041 </span><span class="lineNoCov">              0 :         UpdateScoreStatus();</span>
+<span class="lineNum">    1042 </span>                : 
+<span class="lineNum">    1043 </span>                :     // there's a few things that have to be done if the opponent of the latest
+<span class="lineNum">    1044 </span>                :     // player to put down a piece can move
+<span class="lineNum">    1045 </span><span class="lineNoCov">              0 :     if ( rules::CanPlayerGo(m_the1v1Game.GetBoard(), latestOpponent) )</span>
+<span class="lineNum">    1046 </span>                :     {
+<span class="lineNum">    1047 </span>                :         // next player to move is the opponent
+<span class="lineNum">    1048 </span><span class="lineNoCov">              0 :         m_boardDrawingArea.SetCurrentPlayer(latestOpponent);</span>
+<span class="lineNum">    1049 </span>                : 
+<span class="lineNum">    1050 </span>                :         // stop current player's stopwatch
+<span class="lineNum">    1051 </span><span class="lineNoCov">              0 :         stopWatchPlayer-&gt;Stop();</span>
+<span class="lineNum">    1052 </span>                :         // resume the opponent's stopwatch
+<span class="lineNum">    1053 </span><span class="lineNoCov">              0 :         stopWatchOpponent-&gt;Continue();</span>
+<span class="lineNum">    1054 </span>                :         // restart the progress bar
+<span class="lineNum">    1055 </span><span class="lineNoCov">              0 :         G_LOCK(s_computingCurrentProgress);</span>
+<span class="lineNum">    1056 </span><span class="lineNoCov">              0 :             s_computingCurrentProgress = 0.0;</span>
+<span class="lineNum">    1057 </span><span class="lineNoCov">              0 :         G_UNLOCK(s_computingCurrentProgress);</span>
+<span class="lineNum">    1058 </span><span class="lineNoCov">              0 :         m_progressBar.set_fraction(0.0);</span>
+<span class="lineNum">    1059 </span>                : 
+<span class="lineNum">    1060 </span>                :         // it will be platestOpponent's go next. set piece colour to latestOpponent's
+<span class="lineNum">    1061 </span><span class="lineNoCov">              0 :         uint8_t red   = 0;</span>
+<span class="lineNum">    1062 </span><span class="lineNoCov">              0 :         uint8_t green = 0;</span>
+<span class="lineNum">    1063 </span><span class="lineNoCov">              0 :         uint8_t blue  = 0;</span>
+<span class="lineNum">    1064 </span><span class="lineNoCov">              0 :         latestOpponent.GetColour(red, green, blue);</span>
+<span class="lineNum">    1065 </span>                :         m_editPieceTable-&gt;SetPieceRGB(
+<span class="lineNum">    1066 </span>                :             static_cast&lt;float&gt;(red)   / 255,
+<span class="lineNum">    1067 </span>                :             static_cast&lt;float&gt;(green) / 255,
+<span class="lineNum">    1068 </span><span class="lineNoCov">              0 :             static_cast&lt;float&gt;(blue)  / 255);</span>
+<span class="lineNum">    1069 </span>                : 
+<span class="lineNum">    1070 </span>                :         // remove the actual piece being edited from the edit piece drawing area
+<span class="lineNum">    1071 </span>                :         // and force the edit piece drawing area to be redraw
+<span class="lineNum">    1072 </span><span class="lineNoCov">              0 :         m_editPieceTable-&gt;SetPiece(e_noPiece);</span>
+<span class="lineNum">    1073 </span>                : 
+<span class="lineNum">    1074 </span>                :         // swap pieces being shown in pickPiecesDrawingArea and showOpponentPiecesDrawingArea
+<span class="lineNum">    1075 </span>                :         // opponent will select pieces while currentPlayer's will be only shown
+<span class="lineNum">    1076 </span><span class="lineNoCov">              0 :         m_pickPiecesDrawingArea.Invalidate(latestOpponent);</span>
+<span class="lineNum">    1077 </span><span class="lineNoCov">              0 :         m_showOpponentPiecesDrawingArea.Invalidate(latestPlayer);</span>
+<span class="lineNum">    1078 </span>                : 
+<span class="lineNum">    1079 </span>                :         // current player to move will have to be updated
+<span class="lineNum">    1080 </span><span class="lineNoCov">              0 :         m_currentMovingPlayer = followingPlayer;</span>
+<span class="lineNum">    1081 </span>                : 
+<span class="lineNum">    1082 </span>                :         // --it checks if the next player to put down a piece is a computer--
+<span class="lineNum">    1083 </span><span class="lineNoCov">              0 :         if ( ( (m_currentMovingPlayer == Game1v1::e_Game1v1Player1) &amp;&amp;</span>
+<span class="lineNum">    1084 </span>                :                     Game1v1Config::Instance().IsPlayer1Computer() ) ||
+<span class="lineNum">    1085 </span>                :              ( (m_currentMovingPlayer == Game1v1::e_Game1v1Player2) &amp;&amp;
+<span class="lineNum">    1086 </span>                :                     Game1v1Config::Instance().IsPlayer2Computer() ) )
+<span class="lineNum">    1087 </span>                :         {
+<span class="lineNum">    1088 </span>                :             // next player is the computer. Disallow editing the edit piece
+<span class="lineNum">    1089 </span>                :             // area while computer is processing next move
+<span class="lineNum">    1090 </span><span class="lineNoCov">              0 :             m_editPieceTable-&gt;set_sensitive(false);</span>
+<span class="lineNum">    1091 </span>                : 
+<span class="lineNum">    1092 </span>                :             // tell the worker thread to compute next move
+<span class="lineNum">    1093 </span><span class="lineNoCov">              0 :             if (latestPlayerToMove == Game1v1::e_Game1v1Player1)</span>
+<span class="lineNum">    1094 </span>                :             {
+<span class="lineNum">    1095 </span>                :                 // block till the job is transfered to the worker thread
+<span class="lineNum">    1096 </span><span class="lineNoCov">              0 :                 RequestThreadToComputeNextMove(Game1v1::e_Game1v1Player2, true, latestCoord, latestPiece);</span>
+<span class="lineNum">    1097 </span>                :             }
+<span class="lineNum">    1098 </span>                :             else
+<span class="lineNum">    1099 </span>                :             {
+<span class="lineNum">    1100 </span>                :                 // block till the job is transfered to the worker thread
+<span class="lineNum">    1101 </span><span class="lineNoCov">              0 :                 RequestThreadToComputeNextMove(Game1v1::e_Game1v1Player1, true, latestCoord, latestPiece);</span>
+<span class="lineNum">    1102 </span>                :             }
+<span class="lineNum">    1103 </span>                :         }
+<span class="lineNum">    1104 </span>                :         else
+<span class="lineNum">    1105 </span>                :         {
+<span class="lineNum">    1106 </span>                :             // allow next player to edit the piece to put down on the board
+<span class="lineNum">    1107 </span>                :             // 'cos it's a human being
+<span class="lineNum">    1108 </span><span class="lineNoCov">              0 :             m_editPieceTable-&gt;set_sensitive(true);</span>
+<span class="lineNum">    1109 </span>                : 
+<span class="lineNum">    1110 </span>                :             // restore the mouse cursor so the human being who has to put down next piece
+<span class="lineNum">    1111 </span>                :             // can do it
+<span class="lineNum">    1112 </span><span class="lineNoCov">              0 :             ResetCursor();</span>
+<span class="lineNum">    1113 </span>                :         }
+<span class="lineNum">    1114 </span>                :     }
+<span class="lineNum">    1115 </span>                :     else
+<span class="lineNum">    1116 </span>                :     {
+<span class="lineNum">    1117 </span>                :         // remove the actual piece being edited from the edit piece drawing area
+<span class="lineNum">    1118 </span>                :         // and force the edit piece drawing area to be redraw
+<span class="lineNum">    1119 </span><span class="lineNoCov">              0 :         m_editPieceTable-&gt;SetPiece(e_noPiece);</span>
+<span class="lineNum">    1120 </span>                : 
+<span class="lineNum">    1121 </span>                :         // latestPlayer can put down more pieces. Game is still on
+<span class="lineNum">    1122 </span><span class="lineNoCov">              0 :         m_pickPiecesDrawingArea.Invalidate();</span>
+<span class="lineNum">    1123 </span>                : 
+<span class="lineNum">    1124 </span><span class="lineNoCov">              0 :         if ( !rules::CanPlayerGo(m_the1v1Game.GetBoard(), latestPlayer) )</span>
+<span class="lineNum">    1125 </span>                :         {
+<span class="lineNum">    1126 </span>                :             // neither player1 nor player2 can move. Game is over
+<span class="lineNum">    1127 </span>                :             // piece calculated by computer is noPiece which means, no move, or
+<span class="lineNum">    1128 </span>                :             // human player can't put down any piece after the latest one
+<span class="lineNum">    1129 </span><span class="lineNoCov">              0 :             GameFinished();</span>
+<span class="lineNum">    1130 </span>                :         }
+<span class="lineNum">    1131 </span>                :         // else
+<span class="lineNum">    1132 </span>                :         // game is still on. Current player can put down more pieces.
+<span class="lineNum">    1133 </span>                :         // Do nothing while current player thinks of the next move
+<span class="lineNum">    1134 </span><span class="lineNoCov">              0 :     }</span>
+<a name="1135"><span class="lineNum">    1135 </span>                : }</a>
+<span class="lineNum">    1136 </span>                : 
+<span class="lineNum">    1137 </span><span class="lineNoCov">              0 : void MainWindow::GameFinished()</span>
+<span class="lineNum">    1138 </span>                : {
+<span class="lineNum">    1139 </span>                :     // once this function is called, game is supposed to e finished
+<span class="lineNum">    1140 </span><span class="lineNoCov">              0 :     if (m_currentGameFinished == true)</span>
+<span class="lineNum">    1141 </span>                :     {
+<span class="lineNum">    1142 </span><span class="lineNoCov">              0 :         return;</span>
+<span class="lineNum">    1143 </span>                :     }
+<span class="lineNum">    1144 </span><span class="lineNoCov">              0 :     m_currentGameFinished = true;</span>
+<span class="lineNum">    1145 </span>                : 
+<span class="lineNum">    1146 </span>                :     // reset the cursor (even if it's been already done)
+<span class="lineNum">    1147 </span><span class="lineNoCov">              0 :     ResetCursor();</span>
+<span class="lineNum">    1148 </span>                : 
+<span class="lineNum">    1149 </span>                :     // stop stopwatches (even if it was already done)
+<span class="lineNum">    1150 </span><span class="lineNoCov">              0 :     m_stopWatchLabelPlayer1.Stop();</span>
+<span class="lineNum">    1151 </span><span class="lineNoCov">              0 :     m_stopWatchLabelPlayer2.Stop();</span>
+<span class="lineNum">    1152 </span>                : 
+<span class="lineNum">    1153 </span>                :     // no player is expected to put down any piece on the board now
+<span class="lineNum">    1154 </span><span class="lineNoCov">              0 :     m_boardDrawingArea.UnsetCurrentPlayer();</span>
+<span class="lineNum">    1155 </span>                : 
+<span class="lineNum">    1156 </span>                :     // allow a possible human user to play with the edit pieces area
+<span class="lineNum">    1157 </span><span class="lineNoCov">              0 :     m_editPieceTable-&gt;set_sensitive(true);</span>
+<span class="lineNum">    1158 </span>                : 
+<span class="lineNum">    1159 </span>                :     // restart the progress bar
+<span class="lineNum">    1160 </span><span class="lineNoCov">              0 :     G_LOCK(s_computingCurrentProgress);</span>
+<span class="lineNum">    1161 </span><span class="lineNoCov">              0 :         s_computingCurrentProgress = 0.0;</span>
+<span class="lineNum">    1162 </span><span class="lineNoCov">              0 :     G_UNLOCK(s_computingCurrentProgress);</span>
+<span class="lineNum">    1163 </span><span class="lineNoCov">              0 :     m_progressBar.set_fraction(0.0);</span>
+<span class="lineNum">    1164 </span>                : 
+<span class="lineNum">    1165 </span><span class="lineNoCov">              0 :     int32_t squaresLeftPlayer1 = 0;</span>
+<span class="lineNum">    1166 </span><span class="lineNoCov">              0 :     int32_t squaresLeftPlayer2 = 0;</span>
+<span class="lineNum">    1167 </span><span class="lineNoCov">              0 :     const Player &amp;player1 = m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1);</span>
+<span class="lineNum">    1168 </span><span class="lineNoCov">              0 :     const Player &amp;player2 = m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2);</span>
+<span class="lineNum">    1169 </span><span class="lineNoCov">              0 :     for (int8_t i = e_minimumPieceIndex ; i &lt; e_numberOfPieces; i++)</span>
+<span class="lineNum">    1170 </span>                :     {
+<span class="lineNum">    1171 </span><span class="lineNoCov">              0 :         if (player1.IsPieceAvailable(static_cast&lt;ePieceType_t&gt;(i)))</span>
+<span class="lineNum">    1172 </span>                :         {
+<span class="lineNum">    1173 </span><span class="lineNoCov">              0 :             squaresLeftPlayer1 += player1.m_pieces[i].GetNSquares();</span>
+<span class="lineNum">    1174 </span>                :         }
+<span class="lineNum">    1175 </span>                : 
+<span class="lineNum">    1176 </span><span class="lineNoCov">              0 :         if (player2.IsPieceAvailable(static_cast&lt;ePieceType_t&gt;(i)))</span>
+<span class="lineNum">    1177 </span>                :         {
+<span class="lineNum">    1178 </span><span class="lineNoCov">              0 :             squaresLeftPlayer2 += player2.m_pieces[i].GetNSquares();</span>
+<span class="lineNum">    1179 </span>                :         }
+<span class="lineNum">    1180 </span>                :     }
+<span class="lineNum">    1181 </span>                : 
+<span class="lineNum">    1182 </span><span class="lineNoCov">              0 :     std::stringstream theMessage;</span>
+<span class="lineNum">    1183 </span><span class="lineNoCov">              0 :     if (squaresLeftPlayer1 == squaresLeftPlayer2)</span>
+<span class="lineNum">    1184 </span>                :     {
+<span class="lineNum">    1185 </span>                :         theMessage &lt;&lt; &quot;That was a &lt;b&gt;DRAW&lt;/b&gt;!&quot;
+<span class="lineNum">    1186 </span>                :                    &lt;&lt; std::endl
+<span class="lineNum">    1187 </span>                :                    &lt;&lt; &quot;    Both &quot;
+<span class="lineNum">    1188 </span>                :                    &lt;&lt; player1.GetName()
+<span class="lineNum">    1189 </span>                :                    &lt;&lt; &quot; and &quot;
+<span class="lineNum">    1190 </span>                :                    &lt;&lt; player2.GetName()
+<span class="lineNum">    1191 </span>                :                    &lt;&lt; &quot; have &lt;b&gt;&quot;
+<span class="lineNum">    1192 </span>                :                    &lt;&lt; squaresLeftPlayer1
+<span class="lineNum">    1193 </span><span class="lineNoCov">              0 :                    &lt;&lt; &quot;&lt;/b&gt; squares left&quot;;</span>
+<span class="lineNum">    1194 </span>                :     }
+<span class="lineNum">    1195 </span>                :     else //(squaresLeftPlayer1 != squaresLeftPlayer2)
+<span class="lineNum">    1196 </span>                :     {
+<span class="lineNum">    1197 </span>                :         theMessage &lt;&lt; &quot;&lt;b&gt;&quot;
+<span class="lineNum">    1198 </span>                :                    &lt;&lt; ((squaresLeftPlayer1 &lt; squaresLeftPlayer2) ? player1.GetName() : player2.GetName())
+<span class="lineNum">    1199 </span>                :                    &lt;&lt; &quot;&lt;/b&gt; won!&quot;
+<span class="lineNum">    1200 </span>                :                    &lt;&lt; std::endl
+<span class="lineNum">    1201 </span>                :                    &lt;&lt; &quot;    &quot;
+<span class="lineNum">    1202 </span>                :                    &lt;&lt; player1.GetName()
+<span class="lineNum">    1203 </span>                :                    &lt;&lt; &quot; has &lt;b&gt;&quot;
+<span class="lineNum">    1204 </span>                :                    &lt;&lt; squaresLeftPlayer1
+<span class="lineNum">    1205 </span>                :                    &lt;&lt; &quot;&lt;/b&gt; squares left and &quot;
+<span class="lineNum">    1206 </span>                :                    &lt;&lt; player2.GetName()
+<span class="lineNum">    1207 </span>                :                    &lt;&lt; &quot; &lt;b&gt;&quot;
+<span class="lineNum">    1208 </span>                :                    &lt;&lt; squaresLeftPlayer2
+<span class="lineNum">    1209 </span><span class="lineNoCov">              0 :                    &lt;&lt; &quot;&lt;/b&gt;&quot;;</span>
+<span class="lineNum">    1210 </span>                :     }
+<span class="lineNum">    1211 </span>                : 
+<span class="lineNum">    1212 </span>                :     //MessageDialog (
+<span class="lineNum">    1213 </span>                :     //        Gtk::Window&amp; parent,
+<span class="lineNum">    1214 </span>                :     //        const Glib::ustring&amp; message,
+<span class="lineNum">    1215 </span>                :     //        bool use_markup=false,
+<span class="lineNum">    1216 </span>                :     //        MessageType type=MESSAGE_INFO,
+<span class="lineNum">    1217 </span>                :     //        ButtonsType buttons=BUTTONS_OK,
+<span class="lineNum">    1218 </span>                :     //        bool modal=false)
+<span class="lineNum">    1219 </span>                :     Gtk::MessageDialog::MessageDialog gameOverMessage(
+<span class="lineNum">    1220 </span>                :             *this,
+<span class="lineNum">    1221 </span>                :             theMessage.str().c_str(),
+<span class="lineNum">    1222 </span>                :             true,
+<span class="lineNum">    1223 </span>                :             Gtk::MESSAGE_INFO,
+<span class="lineNum">    1224 </span>                :             Gtk::BUTTONS_OK,
+<span class="lineNum">    1225 </span><span class="lineNoCov">              0 :             true);</span>
+<span class="lineNum">    1226 </span>                : 
+<span class="lineNum">    1227 </span><span class="lineNoCov">              0 :     if (gameOverMessage.run())</span>
+<span class="lineNum">    1228 </span>                :     {
+<span class="lineNum">    1229 </span>                :         ; // the dialog only has 1 button
+<span class="lineNum">    1230 </span><span class="lineNoCov">              0 :     }</span>
+<a name="1231"><span class="lineNum">    1231 </span>                : }</a>
+<span class="lineNum">    1232 </span>                : 
+<span class="lineNum">    1233 </span><span class="lineNoCov">              0 : void MainWindow::NotifyProgressUpdate()</span>
+<span class="lineNum">    1234 </span>                : {
+<span class="lineNum">    1235 </span>                :     float progress;
+<span class="lineNum">    1236 </span>                : 
+<span class="lineNum">    1237 </span><span class="lineNoCov">              0 :     if (m_currentGameFinished)</span>
+<span class="lineNum">    1238 </span>                :     {
+<span class="lineNum">    1239 </span>                :         // do not update the progress bar if the current game is finished
+<span class="lineNum">    1240 </span><span class="lineNoCov">              0 :         return;</span>
+<span class="lineNum">    1241 </span>                :     }
+<span class="lineNum">    1242 </span>                : 
+<span class="lineNum">    1243 </span><span class="lineNoCov">              0 :     G_LOCK(s_computingCurrentProgress);</span>
+<span class="lineNum">    1244 </span><span class="lineNoCov">              0 :         progress = s_computingCurrentProgress;</span>
+<span class="lineNum">    1245 </span><span class="lineNoCov">              0 :     G_UNLOCK(s_computingCurrentProgress);</span>
+<span class="lineNum">    1246 </span>                : 
+<span class="lineNum">    1247 </span><span class="lineNoCov">              0 :     m_progressBar.set_fraction(progress);</span>
+<a name="1248"><span class="lineNum">    1248 </span>                : }</a>
+<span class="lineNum">    1249 </span>                : 
+<span class="lineNum">    1250 </span><span class="lineNoCov">              0 : void MainWindow::UpdateScoreStatus()</span>
+<span class="lineNum">    1251 </span>                : {
+<span class="lineNum">    1252 </span>                :     // calculate the number of squares left
+<span class="lineNum">    1253 </span><span class="lineNoCov">              0 :     int32_t squaresLeftPLayer1 = 0;</span>
+<span class="lineNum">    1254 </span><span class="lineNoCov">              0 :     int32_t squaresLeftPlayer2 = 0;</span>
+<span class="lineNum">    1255 </span><span class="lineNoCov">              0 :     const Player &amp;player1 = m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1);</span>
+<span class="lineNum">    1256 </span><span class="lineNoCov">              0 :     const Player &amp;player2 = m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2);</span>
+<span class="lineNum">    1257 </span><span class="lineNoCov">              0 :     for (int8_t i = e_minimumPieceIndex ; i &lt; e_numberOfPieces; i++)</span>
+<span class="lineNum">    1258 </span>                :     {
+<span class="lineNum">    1259 </span><span class="lineNoCov">              0 :         if (player1.IsPieceAvailable(static_cast&lt;ePieceType_t&gt;(i)))</span>
+<span class="lineNum">    1260 </span>                :         {
+<span class="lineNum">    1261 </span><span class="lineNoCov">              0 :             squaresLeftPLayer1 += player1.m_pieces[i].GetNSquares();</span>
+<span class="lineNum">    1262 </span>                :         }
+<span class="lineNum">    1263 </span>                : 
+<span class="lineNum">    1264 </span><span class="lineNoCov">              0 :         if (player2.IsPieceAvailable(static_cast&lt;ePieceType_t&gt;(i)))</span>
+<span class="lineNum">    1265 </span>                :         {
+<span class="lineNum">    1266 </span><span class="lineNoCov">              0 :             squaresLeftPlayer2 += player2.m_pieces[i].GetNSquares();</span>
+<span class="lineNum">    1267 </span>                :         }
+<span class="lineNum">    1268 </span>                :     }
+<span class="lineNum">    1269 </span>                : 
+<span class="lineNum">    1270 </span>                :     // update the GUI widgets
+<span class="lineNum">    1271 </span><span class="lineNoCov">              0 :     std::stringstream theMessage;</span>
+<span class="lineNum">    1272 </span>                :     theMessage &lt;&lt; player2.GetName()
+<span class="lineNum">    1273 </span>                :                &lt;&lt; &quot;: &quot;
+<span class="lineNum">    1274 </span>                :                &lt;&lt; std::setfill(' ') &lt;&lt; std::setw(2)
+<span class="lineNum">    1275 </span>                :                &lt;&lt; static_cast&lt;int32_t&gt;(squaresLeftPlayer2)
+<span class="lineNum">    1276 </span><span class="lineNoCov">              0 :                &lt;&lt; &quot; left&quot;;</span>
+<span class="lineNum">    1277 </span>                : 
+<span class="lineNum">    1278 </span><span class="lineNoCov">              0 :     m_player2ScoreLabel.set_text(theMessage.str().c_str());</span>
+<span class="lineNum">    1279 </span>                : 
+<span class="lineNum">    1280 </span><span class="lineNoCov">              0 :     theMessage.str(&quot;&quot;);</span>
+<span class="lineNum">    1281 </span>                :     theMessage &lt;&lt; player1.GetName()
+<span class="lineNum">    1282 </span>                :                &lt;&lt; &quot;: &quot;
+<span class="lineNum">    1283 </span>                :                &lt;&lt; std::setfill(' ') &lt;&lt; std::setw(2)
+<span class="lineNum">    1284 </span>                :                &lt;&lt; static_cast&lt;int32_t&gt;(squaresLeftPLayer1)
+<span class="lineNum">    1285 </span><span class="lineNoCov">              0 :                &lt;&lt; &quot; left&quot;;</span>
+<span class="lineNum">    1286 </span>                : 
+<span class="lineNum">    1287 </span><span class="lineNoCov">              0 :     m_player1ScoreLabel.set_text(theMessage.str().c_str());</span>
+<a name="1288"><span class="lineNum">    1288 </span><span class="lineNoCov">              0 : }</span></a>
+<span class="lineNum">    1289 </span>                : 
+<span class="lineNum">    1290 </span><span class="lineNoCov">              0 : void MainWindow::SetWaitCursor()</span>
+<span class="lineNum">    1291 </span>                : {
+<span class="lineNum">    1292 </span><span class="lineNoCov">              0 :     Glib::RefPtr&lt;Gdk::Window&gt; window;</span>
+<span class="lineNum">    1293 </span><span class="lineNoCov">              0 :     window = m_editPieceTable-&gt;get_window();</span>
+<span class="lineNum">    1294 </span><span class="lineNoCov">              0 :     if (window)</span>
+<span class="lineNum">    1295 </span>                :     {
+<span class="lineNum">    1296 </span><span class="lineNoCov">              0 :         get_window()-&gt;set_cursor(Gdk::Cursor(Gdk::WATCH));</span>
+<a name="1297"><span class="lineNum">    1297 </span><span class="lineNoCov">              0 :     }</span></a>
+<span class="lineNum">    1298 </span><span class="lineNoCov">              0 : }</span>
+<span class="lineNum">    1299 </span><span class="lineNoCov">              0 : void MainWindow::ResetCursor()</span>
+<span class="lineNum">    1300 </span>                : {
+<span class="lineNum">    1301 </span><span class="lineNoCov">              0 :     Glib::RefPtr&lt;Gdk::Window&gt; window;</span>
+<span class="lineNum">    1302 </span><span class="lineNoCov">              0 :     window= m_editPieceTable-&gt;get_window();</span>
+<span class="lineNum">    1303 </span><span class="lineNoCov">              0 :     if (window)</span>
+<span class="lineNum">    1304 </span>                :     {
+<a name="1305"><span class="lineNum">    1305 </span><span class="lineNoCov">              0 :         window-&gt;set_cursor();</span></a>
+<span class="lineNum">    1306 </span><span class="lineNoCov">              0 :     }</span>
+<span class="lineNum">    1307 </span><span class="lineCov">             51 : }</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+  <tr><td class="ruler"><img src="../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+  <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.7</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

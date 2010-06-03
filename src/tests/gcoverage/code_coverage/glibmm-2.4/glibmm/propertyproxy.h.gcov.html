@@ -1,0 +1,260 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <title>LCOV - Blockem Tests Code Coverage - glibmm-2.4/glibmm/propertyproxy.h</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+        <tr>
+          <td width="5%"></td>
+          <td width="10%" class="headerItem">Current view:</td>
+          <td width="35%" class="headerValue"><a href="../../index.html">directory</a> - <a href="index.html">glibmm-2.4/glibmm</a> - propertyproxy.h (source / <a href="propertyproxy.h.func.html">functions</a>)</td>
+          <td width="10%"></td>
+          <td width="10%" class="headerCovTableHead">Found</td>
+          <td width="10%" class="headerCovTableHead">Hit</td>
+          <td width="15%" class="headerCovTableHead">Coverage</td>
+          <td width="5%"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="headerItem">Test:</td>
+          <td class="headerValue">Blockem Tests Code Coverage</td>
+          <td class="headerItem">Lines:</td>
+          <td class="headerCovTableEntry">7</td>
+          <td class="headerCovTableEntry">0</td>
+          <td class="headerCovTableEntryLo">0.0 %</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="headerItem">Date:</td>
+          <td class="headerValue">2010-06-03</td>
+          <td class="headerItem">Functions:</td>
+          <td class="headerCovTableEntry">2</td>
+          <td class="headerCovTableEntry">0</td>
+          <td class="headerCovTableEntryLo">0.0 %</td>
+        </tr>
+                <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td><pre class="source">
+<a name="1"><span class="lineNum">       1 </span>                : // -*- c++ -*-</a>
+<span class="lineNum">       2 </span>                : #ifndef _GLIBMM_PROPERTYPROXY_H
+<span class="lineNum">       3 </span>                : #define _GLIBMM_PROPERTYPROXY_H
+<span class="lineNum">       4 </span>                : 
+<span class="lineNum">       5 </span>                : /* propertyproxy.h
+<span class="lineNum">       6 </span>                :  *
+<span class="lineNum">       7 </span>                :  * Copyright 2002 The gtkmm Development Team
+<span class="lineNum">       8 </span>                :  *
+<span class="lineNum">       9 </span>                :  * This library is free software; you can redistribute it and/or
+<span class="lineNum">      10 </span>                :  * modify it under the terms of the GNU Lesser General Public
+<span class="lineNum">      11 </span>                :  * License as published by the Free Software Foundation; either
+<span class="lineNum">      12 </span>                :  * version 2.1 of the License, or (at your option) any later version.
+<span class="lineNum">      13 </span>                :  *
+<span class="lineNum">      14 </span>                :  * This library is distributed in the hope that it will be useful,
+<span class="lineNum">      15 </span>                :  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+<span class="lineNum">      16 </span>                :  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+<span class="lineNum">      17 </span>                :  * Lesser General Public License for more details.
+<span class="lineNum">      18 </span>                :  *
+<span class="lineNum">      19 </span>                :  * You should have received a copy of the GNU Lesser General Public
+<span class="lineNum">      20 </span>                :  * License along with this library; if not, write to the Free
+<span class="lineNum">      21 </span>                :  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+<span class="lineNum">      22 </span>                :  */
+<span class="lineNum">      23 </span>                : 
+<span class="lineNum">      24 </span>                : #include &lt;glibmmconfig.h&gt;
+<span class="lineNum">      25 </span>                : #include &lt;glibmm/propertyproxy_base.h&gt;
+<span class="lineNum">      26 </span>                : 
+<span class="lineNum">      27 </span>                : #ifdef GLIBMM_PROPERTIES_ENABLED
+<span class="lineNum">      28 </span>                : 
+<span class="lineNum">      29 </span>                : namespace Glib
+<span class="lineNum">      30 </span>                : {
+<span class="lineNum">      31 </span>                : 
+<span class="lineNum">      32 </span>                : /** A PropertyProxy can be used to get and set the value of an object's property.
+<span class="lineNum">      33 </span>                :  * There are usually also get and set methods on the class itself, which you might find more convenient.
+<span class="lineNum">      34 </span>                :  * With the PropertyProxy, you may use either get_value() and set_value(), or operator=() and
+<span class="lineNum">      35 </span>                :  * operator PropertyType(), like so:
+<span class="lineNum">      36 </span>                :  * @code
+<span class="lineNum">      37 </span>                :  * int height = cellrenderer.property_height();
+<span class="lineNum">      38 </span>                :  * cellrenderer.property_editable() = true;
+<span class="lineNum">      39 </span>                :  * @endcode
+<span class="lineNum">      40 </span>                :  *
+<span class="lineNum">      41 </span>                :  * You may also receive notification when a property's value changes, by connecting to signal_changed().
+<span class="lineNum">      42 </span>                :  *
+<span class="lineNum">      43 </span>                :  * You may register new properties for your class (actually for the underlying GType) 
+<span class="lineNum">      44 </span>                :  * simply by adding a PropertyProxy instance as a class member.
+<span class="lineNum">      45 </span>                :  * However, your constructor must call the Glib::ObjectBase constructor with a new GType name, 
+<span class="lineNum">      46 </span>                :  * in order to register a new GType.
+<span class="lineNum">      47 </span>                :  */
+<span class="lineNum">      48 </span>                : template &lt;class T&gt;
+<span class="lineNum">      49 </span>                : class PropertyProxy : public PropertyProxy_Base
+<span class="lineNum">      50 </span>                : {
+<span class="lineNum">      51 </span>                : public:
+<span class="lineNum">      52 </span>                :   typedef T PropertyType;
+<span class="lineNum">      53 </span>                : 
+<span class="lineNum">      54 </span>                :   PropertyProxy(ObjectBase* obj, const char* name)
+<span class="lineNum">      55 </span>                :     : PropertyProxy_Base(obj, name) {}
+<span class="lineNum">      56 </span>                : 
+<span class="lineNum">      57 </span>                :   /** Set the value of this property.
+<span class="lineNum">      58 </span>                :    * @param data The new value for the property.
+<span class="lineNum">      59 </span>                :    */
+<span class="lineNum">      60 </span>                :   void set_value(const PropertyType&amp; data);
+<span class="lineNum">      61 </span>                : 
+<span class="lineNum">      62 </span>                :   /** Get the value of this property.
+<span class="lineNum">      63 </span>                :    * @result The current value of the property.
+<span class="lineNum">      64 </span>                :    */
+<span class="lineNum">      65 </span>                :   PropertyType get_value() const;
+<span class="lineNum">      66 </span>                : 
+<span class="lineNum">      67 </span>                :   /** Set the value of this property back to its default value
+<span class="lineNum">      68 </span>                :    */
+<span class="lineNum">      69 </span>                :   void reset_value()
+<span class="lineNum">      70 </span>                :     { reset_property_(); }
+<span class="lineNum">      71 </span>                : 
+<span class="lineNum">      72 </span>                :   PropertyProxy&lt;T&gt;&amp; operator=(const PropertyType&amp; data)
+<a name="73"><span class="lineNum">      73 </span>                :     { this-&gt;set_value(data); return *this; }</a>
+<span class="lineNum">      74 </span>                : 
+<span class="lineNum">      75 </span><span class="lineNoCov">              0 :   operator PropertyType() const</span>
+<span class="lineNum">      76 </span><span class="lineNoCov">              0 :     { return this-&gt;get_value(); }</span>
+<span class="lineNum">      77 </span>                : };
+<span class="lineNum">      78 </span>                : 
+<span class="lineNum">      79 </span>                : 
+<span class="lineNum">      80 </span>                : /** See PropertyProxy().
+<span class="lineNum">      81 </span>                :  * This property can be written, but not read, so there is no get_value() method.
+<span class="lineNum">      82 </span>                :  */
+<span class="lineNum">      83 </span>                : template &lt;class T&gt;
+<span class="lineNum">      84 </span>                : class PropertyProxy_WriteOnly : public PropertyProxy_Base
+<span class="lineNum">      85 </span>                : {
+<span class="lineNum">      86 </span>                : public:
+<span class="lineNum">      87 </span>                :   typedef T PropertyType;
+<span class="lineNum">      88 </span>                : 
+<span class="lineNum">      89 </span>                :   PropertyProxy_WriteOnly(ObjectBase* obj, const char* name)
+<span class="lineNum">      90 </span>                :     : PropertyProxy_Base(obj, name) {}
+<span class="lineNum">      91 </span>                : 
+<span class="lineNum">      92 </span>                :   /** Set the value of this property.
+<span class="lineNum">      93 </span>                :    * @param data The new value for the property.
+<span class="lineNum">      94 </span>                :    */
+<span class="lineNum">      95 </span>                :   void set_value(const PropertyType&amp; data);
+<span class="lineNum">      96 </span>                : 
+<span class="lineNum">      97 </span>                :   /** Set the value of this property back to its default value
+<span class="lineNum">      98 </span>                :    */
+<span class="lineNum">      99 </span>                :   void reset_value()
+<span class="lineNum">     100 </span>                :     { reset_property_(); }
+<span class="lineNum">     101 </span>                : 
+<span class="lineNum">     102 </span>                :   PropertyProxy_WriteOnly&lt;T&gt;&amp; operator=(const PropertyType&amp; data)
+<span class="lineNum">     103 </span>                :     { this-&gt;set_value(data); return *this; }
+<span class="lineNum">     104 </span>                : };
+<span class="lineNum">     105 </span>                : 
+<span class="lineNum">     106 </span>                : /** See PropertyProxy().
+<span class="lineNum">     107 </span>                :  * This property can be read, but not written, so there is no set_value() method.
+<span class="lineNum">     108 </span>                :  */
+<span class="lineNum">     109 </span>                : template &lt;class T&gt;
+<span class="lineNum">     110 </span>                : class PropertyProxy_ReadOnly : public PropertyProxy_Base
+<span class="lineNum">     111 </span>                : {
+<span class="lineNum">     112 </span>                : public:
+<span class="lineNum">     113 </span>                :   typedef T PropertyType;
+<span class="lineNum">     114 </span>                : 
+<span class="lineNum">     115 </span>                :   //obj is const, because this should be returned by const accessors.
+<span class="lineNum">     116 </span>                :   PropertyProxy_ReadOnly(const ObjectBase* obj, const char* name)
+<span class="lineNum">     117 </span>                :     : PropertyProxy_Base(const_cast&lt;ObjectBase*&gt;(obj), name) {}
+<span class="lineNum">     118 </span>                : 
+<span class="lineNum">     119 </span>                :   /** Get the value of this property.
+<span class="lineNum">     120 </span>                :    * @result The current value of the property.
+<span class="lineNum">     121 </span>                :    */
+<span class="lineNum">     122 </span>                :   PropertyType get_value() const;
+<span class="lineNum">     123 </span>                : 
+<span class="lineNum">     124 </span>                :   operator PropertyType() const
+<span class="lineNum">     125 </span>                :     { return this-&gt;get_value(); }
+<span class="lineNum">     126 </span>                : };
+<span class="lineNum">     127 </span>                : 
+<span class="lineNum">     128 </span>                : 
+<span class="lineNum">     129 </span>                : /**** Template Implementation **********************************************/
+<span class="lineNum">     130 </span>                : 
+<span class="lineNum">     131 </span>                : #ifndef DOXYGEN_SHOULD_SKIP_THIS
+<span class="lineNum">     132 </span>                : 
+<span class="lineNum">     133 </span>                : template &lt;class T&gt;
+<span class="lineNum">     134 </span>                : void PropertyProxy&lt;T&gt;::set_value(const T&amp; data)
+<span class="lineNum">     135 </span>                : {
+<span class="lineNum">     136 </span>                :   Glib::Value&lt;T&gt; value;
+<span class="lineNum">     137 </span>                :   value.init(Glib::Value&lt;T&gt;::value_type());
+<span class="lineNum">     138 </span>                : 
+<span class="lineNum">     139 </span>                :   value.set(data);
+<span class="lineNum">     140 </span>                :   set_property_(value);
+<span class="lineNum">     141 </span>                : }
+<a name="142"><span class="lineNum">     142 </span>                : </a>
+<span class="lineNum">     143 </span>                : template &lt;class T&gt;
+<span class="lineNum">     144 </span><span class="lineNoCov">              0 : T PropertyProxy&lt;T&gt;::get_value() const</span>
+<span class="lineNum">     145 </span>                : {
+<span class="lineNum">     146 </span><span class="lineNoCov">              0 :   Glib::Value&lt;T&gt; value;</span>
+<span class="lineNum">     147 </span><span class="lineNoCov">              0 :   value.init(Glib::Value&lt;T&gt;::value_type());</span>
+<span class="lineNum">     148 </span>                : 
+<span class="lineNum">     149 </span><span class="lineNoCov">              0 :   get_property_(value);</span>
+<span class="lineNum">     150 </span><span class="lineNoCov">              0 :   return value.get();</span>
+<span class="lineNum">     151 </span>                : }
+<span class="lineNum">     152 </span>                : 
+<span class="lineNum">     153 </span>                : //We previously just static_cast&lt;&gt; PropertyProxy_WriteOnly&lt;&gt; to PropertyProxy&lt;&gt; to call its set_value(), 
+<span class="lineNum">     154 </span>                : //to avoid code duplication.
+<span class="lineNum">     155 </span>                : //But the AIX compiler does not like that hack.
+<span class="lineNum">     156 </span>                : template &lt;class T&gt;
+<span class="lineNum">     157 </span>                : void PropertyProxy_WriteOnly&lt;T&gt;::set_value(const T&amp; data)
+<span class="lineNum">     158 </span>                : {
+<span class="lineNum">     159 </span>                :   Glib::Value&lt;T&gt; value;
+<span class="lineNum">     160 </span>                :   value.init(Glib::Value&lt;T&gt;::value_type());
+<span class="lineNum">     161 </span>                : 
+<span class="lineNum">     162 </span>                :   value.set(data);
+<span class="lineNum">     163 </span>                :   set_property_(value);
+<span class="lineNum">     164 </span>                : }
+<span class="lineNum">     165 </span>                : 
+<span class="lineNum">     166 </span>                : //We previously just static_cast&lt;&gt; PropertyProxy_WriteOnly&lt;&gt; to PropertyProxy&lt;&gt; to call its set_value(), 
+<span class="lineNum">     167 </span>                : //to avoid code duplication.
+<span class="lineNum">     168 </span>                : //But the AIX compiler does not like that hack.
+<span class="lineNum">     169 </span>                : template &lt;class T&gt;
+<span class="lineNum">     170 </span>                : T PropertyProxy_ReadOnly&lt;T&gt;::get_value() const
+<span class="lineNum">     171 </span>                : {
+<span class="lineNum">     172 </span>                :   Glib::Value&lt;T&gt; value;
+<span class="lineNum">     173 </span>                :   value.init(Glib::Value&lt;T&gt;::value_type());
+<span class="lineNum">     174 </span>                : 
+<span class="lineNum">     175 </span>                :   get_property_(value);
+<span class="lineNum">     176 </span>                :   return value.get();
+<span class="lineNum">     177 </span>                : }
+<span class="lineNum">     178 </span>                : 
+<span class="lineNum">     179 </span>                : #endif /* DOXYGEN_SHOULD_SKIP_THIS */
+<span class="lineNum">     180 </span>                : 
+<span class="lineNum">     181 </span>                : } // namespace Glib
+<span class="lineNum">     182 </span>                : 
+<span class="lineNum">     183 </span>                : #endif //GLIBMM_PROPERTIES_ENABLED
+<span class="lineNum">     184 </span>                : 
+<span class="lineNum">     185 </span>                : #endif /* _GLIBMM_PROPERTYPROXY_H */
+<span class="lineNum">     186 </span>                : 
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+  <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.7</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

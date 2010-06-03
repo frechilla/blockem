@@ -782,7 +782,7 @@ void MainWindow::RequestThreadToComputeNextMove(
 
         //TODO 14 is a magic number
         if ( (currentPlayer.NumberOfPiecesAvailable() < 14) &&
-             (Rules::CanPlayerGo(m_the1v1Game.GetBoard(), opponent) ) )
+             (rules::CanPlayerGo(m_the1v1Game.GetBoard(), opponent) ) )
         {
             // if the opponent cannot go there is no point on setting the depth to 5.
             // 3 should be good enough in that case
@@ -911,13 +911,13 @@ void MainWindow::BoardDrawingArea_BoardClicked(const Coordinate &a_coord, const 
 	}
 
     if( ( (a_player.NumberOfPiecesAvailable() == e_numberOfPieces) &&
-          (!Rules::IsPieceDeployableInStartingPoint(
+          (!rules::IsPieceDeployableInStartingPoint(
                     m_the1v1Game.GetBoard(),
                     a_piece.GetCurrentConfiguration(),
                     a_coord,
                     a_player.GetStartingCoordinate())) ) ||
         ( (a_player.NumberOfPiecesAvailable() < e_numberOfPieces) &&
-          (!Rules::IsPieceDeployable(
+          (!rules::IsPieceDeployable(
                     m_the1v1Game.GetBoard(),
                     a_piece.GetCurrentConfiguration(),
                     a_coord,
@@ -1042,7 +1042,7 @@ void MainWindow::NotifyMoveComputed()
 
     // there's a few things that have to be done if the opponent of the latest
     // player to put down a piece can move
-    if ( Rules::CanPlayerGo(m_the1v1Game.GetBoard(), latestOpponent) )
+    if ( rules::CanPlayerGo(m_the1v1Game.GetBoard(), latestOpponent) )
     {
         // next player to move is the opponent
         m_boardDrawingArea.SetCurrentPlayer(latestOpponent);
@@ -1121,7 +1121,7 @@ void MainWindow::NotifyMoveComputed()
         // latestPlayer can put down more pieces. Game is still on
         m_pickPiecesDrawingArea.Invalidate();
 
-        if ( !Rules::CanPlayerGo(m_the1v1Game.GetBoard(), latestPlayer) )
+        if ( !rules::CanPlayerGo(m_the1v1Game.GetBoard(), latestPlayer) )
         {
             // neither player1 nor player2 can move. Game is over
             // piece calculated by computer is noPiece which means, no move, or

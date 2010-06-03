@@ -38,13 +38,9 @@
 /// Size of the valid coords arrays
 const uint8_t VALID_COORDS_SIZE = PIECE_MAX_SQUARES;
 
-/// @brief this class contains all the methods that define any blokus game
-class Rules
+/// @brief this namespace contains all the methods that define any blockem game
+namespace rules
 {
-public:
-    Rules();
-    virtual ~Rules();
-
     /// return true if 'a_coord' is touching one of a_player's pieces as
     /// that coord would be an illegal place to put one of a_player's pieces
     /// as it is touching one of its pieces.
@@ -52,7 +48,7 @@ public:
     /// @param the blokus board
     /// @param coord (x, y) of the piece
     /// @param the player that owns the pieces
-    static bool IsCoordTouchingPlayer(
+    bool IsCoordTouchingPlayer(
             const Board      &a_board,
             const Coordinate &a_coord,
             const Player     &a_player);
@@ -71,7 +67,7 @@ public:
     /// @param the piece configuration
     /// @param coord (x, y) of the piece
     /// @param the player that owns the pieces
-    static bool IsPieceDeployable(
+    bool IsPieceDeployable(
             const Board                &a_board,
             const pieceConfiguration_t &a_pieceConf,
             const Coordinate           &a_coord,
@@ -88,7 +84,7 @@ public:
     /// @param coord where the piece is going to be deployed
     /// @param coord of the nucleation point the piece must make use of
     /// @param the player that owns the pieces
-    static bool IsPieceDeployableInNKPoint(
+    bool IsPieceDeployableInNKPoint(
             const Board                &a_board,
             const pieceConfiguration_t &a_pieceConf,
             const Coordinate           &a_coord,
@@ -106,7 +102,7 @@ public:
     /// @param the piece
     /// @param coord of the piece
     /// @param coord of the starting point the piece must make use of
-    static bool IsPieceDeployableInStartingPoint(
+    bool IsPieceDeployableInStartingPoint(
             const Board                &a_board,
             const pieceConfiguration_t &a_pieceConf,
             const Coordinate           &a_coord,
@@ -122,7 +118,7 @@ public:
     /// @param the player whose nucleation points are being calculated
     /// @param the ABSOLUTE coord of the place to be checked
     /// @returns true if it is, false otherwise
-    static bool IsNucleationPointCompute(
+    bool IsNucleationPointCompute(
             const Board      &a_board,
             const Player     &a_player,
             const Coordinate &a_coord);
@@ -166,7 +162,7 @@ public:
     /// @param radius of the piece that will be checked looking for NK points
     /// @param vector where the list of absolute coords where the piece can be deployed in that nucleation point will be saved
     /// @return the number of nucleation points saved into the vector
-    static int32_t CalculateValidCoordsInNucleationPoint(
+    int32_t CalculateValidCoordsInNucleationPoint(
             const Board                &a_board,
             const Player               &a_player,
             const Coordinate           &a_nkPointCoord,
@@ -178,7 +174,7 @@ public:
     ///        it doesn't rotate or mirror the piece
     ///        it is based on CalculateValidCoordsInNucleationPoint, but it doesn't save the valid coords, it just
     ///        returns once it finds a valid coord for the piece to be deployed
-    static bool HasValidCoordInNucleationPoint(
+    bool HasValidCoordInNucleationPoint(
             const Board                &a_board,
             const Player               &a_player,
             const Coordinate           &a_nkPointCoord,
@@ -197,7 +193,7 @@ public:
     /// @param radius of the piece that will be checked looking for NK points
     /// @param vector where the list of absolute coords where the piece can be deployed in that nucleation point will be saved
     /// @return the number of nucleation points saved into the output array
-    static int32_t CalculateValidCoordsInStartingPoint(
+    int32_t CalculateValidCoordsInStartingPoint(
             const Board                &a_board,
             const Player               &a_player,
             const Coordinate           &a_startingPointCoord,
@@ -217,14 +213,14 @@ public:
     ///        for example, if a square of 5x5 is to be recalculated this param should be 2
     ///        in the case of a square of 7x7, it should be 3.
     /// @param the player that owns the piece
-    static void RecalculateNKAroundCoord(
+    void RecalculateNKAroundCoord(
     		const Board      &a_board,
             const Coordinate &a_coord,
             int32_t           a_radiusToCheck,
             Player           &a_player);
 
     /// @return true if the 'a_player' can put down at least one piece on the board
-    static bool CanPlayerGo(const Board &a_board, const Player &a_player);
+    bool CanPlayerGo(const Board &a_board, const Player &a_player);
 };
 
 #endif /* RULES_H_ */

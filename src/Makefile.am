@@ -19,7 +19,7 @@ endif
 #.PHONY: compiletime.h
 
 compiletime.h:
-	@echo "Saving the current date into compiletime.h"
+	@echo "Saving current date into compiletime.h"
 	date '+#define COMPILETIME "%x %X"' > compiletime.h
 	@echo ' '
 

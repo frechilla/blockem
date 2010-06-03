@@ -29,16 +29,7 @@
 
 #include "rules.h"
 
-
-Rules::Rules()
-{
-}
-
-Rules::~Rules()
-{
-}
-
-bool Rules::IsCoordTouchingPlayer(
+bool rules::IsCoordTouchingPlayer(
             const Board      &a_board,
             const Coordinate &a_coord,
             const Player     &a_player)
@@ -86,7 +77,7 @@ bool Rules::IsCoordTouchingPlayer(
     return false;
 }
 
-bool Rules::IsPieceDeployable(
+bool rules::IsPieceDeployable(
         const Board                &a_board,
         const pieceConfiguration_t &a_pieceConf,
         const Coordinate           &a_coord,
@@ -129,7 +120,7 @@ bool Rules::IsPieceDeployable(
     return touchingNKPoint;
 }
 
-bool Rules::IsPieceDeployableInNKPoint(
+bool rules::IsPieceDeployableInNKPoint(
         const Board                &a_board,
         const pieceConfiguration_t &a_pieceConf,
         const Coordinate           &a_coord,
@@ -173,7 +164,7 @@ bool Rules::IsPieceDeployableInNKPoint(
     return touchesNKPoint;
 }
 
-bool Rules::IsPieceDeployableInStartingPoint(
+bool rules::IsPieceDeployableInStartingPoint(
         const Board                &a_board,
         const pieceConfiguration_t &a_pieceConf,
         const Coordinate           &a_coord,
@@ -207,7 +198,7 @@ bool Rules::IsPieceDeployableInStartingPoint(
     return touchesStartingPoint;
 }
 
-bool Rules::IsNucleationPointCompute(
+bool rules::IsNucleationPointCompute(
         const Board      &a_board,
         const Player     &a_player,
         const Coordinate &a_coord)
@@ -303,7 +294,7 @@ bool Rules::IsNucleationPointCompute(
     return isNucleationPoint;
 }
 
-int32_t Rules::CalculateValidCoordsInNucleationPoint(
+int32_t rules::CalculateValidCoordsInNucleationPoint(
         const Board                &a_board,
         const Player               &a_player,
         const Coordinate           &a_nkPointCoord,
@@ -355,7 +346,7 @@ int32_t Rules::CalculateValidCoordsInNucleationPoint(
     return nValidCoords;
 }
 
-bool Rules::HasValidCoordInNucleationPoint(
+bool rules::HasValidCoordInNucleationPoint(
         const Board                &a_board,
         const Player               &a_player,
         const Coordinate           &a_nkPointCoord,
@@ -393,7 +384,7 @@ bool Rules::HasValidCoordInNucleationPoint(
     return false;
 }
 
-int32_t Rules::CalculateValidCoordsInStartingPoint(
+int32_t rules::CalculateValidCoordsInStartingPoint(
         const Board                &a_board,
         const Player               &a_player,
         const Coordinate           &a_startingPointCoord,
@@ -464,7 +455,7 @@ int32_t Rules::CalculateValidCoordsInStartingPoint(
     return nValidCoords;
 }
 
-void Rules::RecalculateNKAroundCoord(
+void rules::RecalculateNKAroundCoord(
         const Board      &a_board,
         const Coordinate &a_coord,
         int32_t           a_radiusToCheck,
@@ -482,7 +473,7 @@ void Rules::RecalculateNKAroundCoord(
 		     thisCoord.m_col <= endCol;
 		     thisCoord.m_col++)
 		{
-			if (Rules::IsNucleationPointCompute(a_board, a_player, thisCoord))
+			if (rules::IsNucleationPointCompute(a_board, a_player, thisCoord))
 			{
 				a_player.SetNucleationPoint(thisCoord);
 			}
@@ -494,7 +485,7 @@ void Rules::RecalculateNKAroundCoord(
     }
 }
 
-bool Rules::CanPlayerGo(const Board &a_board, const Player &a_player)
+bool rules::CanPlayerGo(const Board &a_board, const Player &a_player)
 {
     if (a_player.NumberOfPiecesAvailable() == 0)
     {
@@ -542,7 +533,7 @@ bool Rules::CanPlayerGo(const Board &a_board, const Player &a_player)
             while(nkExists)
             {
                 // retrieve if there is a valid coord of this piece in the current nk point
-                bool nValidCoords = Rules::HasValidCoordInNucleationPoint(
+                bool nValidCoords = rules::HasValidCoordInNucleationPoint(
                                             a_board,
                                             a_player,
                                             thisNkPoint,
@@ -564,7 +555,7 @@ bool Rules::CanPlayerGo(const Board &a_board, const Player &a_player)
 
 //TODO this might help to know which nk points corresponds to the latest piece
 /*
-void Rules::GetNKCorrespondingToPiece(
+void rules::GetNKCorrespondingToPiece(
 		const Board &a_board,
         const BlokusPiece* a_piece,
         int32_t a_coordX,

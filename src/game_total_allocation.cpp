@@ -80,7 +80,7 @@ void GameTotalAllocation::RemovePiece(
     }
 
     // recalculate all the nk points around the piece we just put down
-    Rules::RecalculateNKAroundCoord(m_board, a_coord, a_pieceRadius + 1, m_player);
+    rules::RecalculateNKAroundCoord(m_board, a_coord, a_pieceRadius + 1, m_player);
 }
 
 void GameTotalAllocation::PutDownPiece(
@@ -115,7 +115,7 @@ void GameTotalAllocation::PutDownPiece(
     }
 
     // recalculate all the nk points around the piece we just put down
-    Rules::RecalculateNKAroundCoord(m_board, a_coord, a_pieceRadius + 1, m_player);
+    rules::RecalculateNKAroundCoord(m_board, a_coord, a_pieceRadius + 1, m_player);
 }
 
 bool GameTotalAllocation::Solve(const Coordinate &a_startingCoord)
@@ -150,7 +150,7 @@ bool GameTotalAllocation::Solve(const Coordinate &a_startingCoord)
              pieceCoordIt != coordConfList.end();
              pieceCoordIt++)
         {
-            int32_t nValidCoords = Rules::CalculateValidCoordsInStartingPoint(
+            int32_t nValidCoords = rules::CalculateValidCoordsInStartingPoint(
                                               m_board,
                                               m_player,
                                               a_startingCoord,
@@ -264,7 +264,7 @@ bool GameTotalAllocation::AllocateAllPieces(
                 }
 
                 // retrieve the valid coords of this piece in the current nk point
-                int32_t nValidCoords = Rules::CalculateValidCoordsInNucleationPoint(
+                int32_t nValidCoords = rules::CalculateValidCoordsInNucleationPoint(
                                                                           m_board,
                                                                           m_player,
                                                                           *nkIterator,

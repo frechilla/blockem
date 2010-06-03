@@ -1,0 +1,473 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <title>LCOV - Blockem Tests Code Coverage - cairomm-1.0/cairomm/refptr.h</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+        <tr>
+          <td width="5%"></td>
+          <td width="10%" class="headerItem">Current view:</td>
+          <td width="35%" class="headerValue"><a href="../../index.html">directory</a> - <a href="index.html">cairomm-1.0/cairomm</a> - refptr.h (source / <a href="refptr.h.func.html">functions</a>)</td>
+          <td width="10%"></td>
+          <td width="10%" class="headerCovTableHead">Found</td>
+          <td width="10%" class="headerCovTableHead">Hit</td>
+          <td width="15%" class="headerCovTableHead">Coverage</td>
+          <td width="5%"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="headerItem">Test:</td>
+          <td class="headerValue">Blockem Tests Code Coverage</td>
+          <td class="headerItem">Lines:</td>
+          <td class="headerCovTableEntry">15</td>
+          <td class="headerCovTableEntry">0</td>
+          <td class="headerCovTableEntryLo">0.0 %</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="headerItem">Date:</td>
+          <td class="headerValue">2010-06-03</td>
+          <td class="headerItem">Functions:</td>
+          <td class="headerCovTableEntry">3</td>
+          <td class="headerCovTableEntry">0</td>
+          <td class="headerCovTableEntryLo">0.0 %</td>
+        </tr>
+                <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td><pre class="source">
+<a name="1"><span class="lineNum">       1 </span>                : // -*- c++ -*-</a>
+<span class="lineNum">       2 </span>                : #ifndef _cairo_REFPTR_H
+<span class="lineNum">       3 </span>                : #define _cairo_REFPTR_H
+<span class="lineNum">       4 </span>                : 
+<span class="lineNum">       5 </span>                : /* $Id: refptr.h,v 1.6 2006-09-27 18:38:57 murrayc Exp $ */
+<span class="lineNum">       6 </span>                : 
+<span class="lineNum">       7 </span>                : /* Copyright 2005 The cairomm Development Team
+<span class="lineNum">       8 </span>                :  *
+<span class="lineNum">       9 </span>                :  * This library is free software; you can redistribute it and/or
+<span class="lineNum">      10 </span>                :  * modify it under the terms of the GNU Library General Public
+<span class="lineNum">      11 </span>                :  * License as published by the Free Software Foundation; either
+<span class="lineNum">      12 </span>                :  * version 2 of the License, or (at your option) any later version.
+<span class="lineNum">      13 </span>                :  *
+<span class="lineNum">      14 </span>                :  * This library is distributed in the hope that it will be useful,
+<span class="lineNum">      15 </span>                :  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+<span class="lineNum">      16 </span>                :  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+<span class="lineNum">      17 </span>                :  * Library General Public License for more details.
+<span class="lineNum">      18 </span>                :  *
+<span class="lineNum">      19 </span>                :  * You should have received a copy of the GNU Library General Public
+<span class="lineNum">      20 </span>                :  * License along with this library; if not, write to the Free Software
+<span class="lineNum">      21 </span>                :  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+<span class="lineNum">      22 </span>                :  * 02110-1301, USA.
+<span class="lineNum">      23 </span>                :  */
+<span class="lineNum">      24 </span>                : 
+<span class="lineNum">      25 </span>                : 
+<span class="lineNum">      26 </span>                : namespace Cairo
+<span class="lineNum">      27 </span>                : {
+<span class="lineNum">      28 </span>                : 
+<span class="lineNum">      29 </span>                : /** RefPtr&lt;&gt; is a reference-counting shared smartpointer.
+<span class="lineNum">      30 </span>                :  *
+<span class="lineNum">      31 </span>                :  * Reference counting means that a shared reference count is incremented each
+<span class="lineNum">      32 </span>                :  * time a RefPtr is copied, and decremented each time a RefPtr is destroyed,
+<span class="lineNum">      33 </span>                :  * for instance when it leaves its scope. When the reference count reaches
+<span class="lineNum">      34 </span>                :  * zero, the contained object is deleted
+<span class="lineNum">      35 </span>                :  *
+<span class="lineNum">      36 </span>                :  * cairomm uses RefPtr so that you don't need to remember
+<span class="lineNum">      37 </span>                :  * to delete the object explicitly, or know when a method expects you to delete 
+<span class="lineNum">      38 </span>                :  * the object that it returns, and to prevent any need to manually  reference 
+<span class="lineNum">      39 </span>                :  * and unreference() cairo objects.
+<span class="lineNum">      40 </span>                :  */
+<span class="lineNum">      41 </span>                : template &lt;class T_CppObject&gt;
+<span class="lineNum">      42 </span>                : class RefPtr
+<span class="lineNum">      43 </span>                : {
+<span class="lineNum">      44 </span>                : public:
+<span class="lineNum">      45 </span>                :   /** Default constructor
+<span class="lineNum">      46 </span>                :    *
+<span class="lineNum">      47 </span>                :    * Afterwards it will be null and use of -&gt; will cause a segmentation fault.
+<span class="lineNum">      48 </span>                :    */
+<span class="lineNum">      49 </span>                :   inline RefPtr();
+<span class="lineNum">      50 </span>                :   
+<span class="lineNum">      51 </span>                :   /// Destructor - decrements reference count.
+<span class="lineNum">      52 </span>                :   inline ~RefPtr();
+<span class="lineNum">      53 </span>                : 
+<span class="lineNum">      54 </span>                :   /** For use only in the internal implementation of cairomm, gtkmm, etc.
+<span class="lineNum">      55 </span>                :    *
+<span class="lineNum">      56 </span>                :    * This takes ownership of @a pCppObject, so it will be deleted when the 
+<span class="lineNum">      57 </span>                :    * last RefPtr is deleted, for instance when it goes out of scope.
+<span class="lineNum">      58 </span>                :    *
+<span class="lineNum">      59 </span>                :    * This assumes that @a pCppObject already has a starting reference for its underlying cairo object,
+<span class="lineNum">      60 </span>                :    * so that destruction of @a @pCppObject will cause a corresponding unreference of its underlying 
+<span class="lineNum">      61 </span>                :    * cairo object. For instance, a cairo_*_create() function usually provides a starting reference, 
+<span class="lineNum">      62 </span>                :    * but a cairo_*_get_*() function requires the caller to manually reference the returned object.
+<span class="lineNum">      63 </span>                :    * In this case, you should call reference() on @a pCppObject before passing it to this constructor.
+<span class="lineNum">      64 </span>                :    */
+<span class="lineNum">      65 </span>                :   explicit inline RefPtr(T_CppObject* pCppObject);
+<span class="lineNum">      66 </span>                : 
+<span class="lineNum">      67 </span>                :   ///  For use only in the internal implementation of sharedptr.
+<span class="lineNum">      68 </span>                :   explicit inline RefPtr(T_CppObject* pCppObject, int* refcount);
+<span class="lineNum">      69 </span>                : 
+<span class="lineNum">      70 </span>                :   /** Copy constructor
+<span class="lineNum">      71 </span>                :    *
+<span class="lineNum">      72 </span>                :    * This increments the shared reference count.
+<span class="lineNum">      73 </span>                :    */
+<span class="lineNum">      74 </span>                :   inline RefPtr(const RefPtr&lt;T_CppObject&gt;&amp; src);
+<span class="lineNum">      75 </span>                : 
+<span class="lineNum">      76 </span>                :   /** Copy constructor (from different, but castable type).
+<span class="lineNum">      77 </span>                :    *
+<span class="lineNum">      78 </span>                :    * Increments the reference count.
+<span class="lineNum">      79 </span>                :    */
+<span class="lineNum">      80 </span>                :   template &lt;class T_CastFrom&gt;
+<span class="lineNum">      81 </span>                :   inline RefPtr(const RefPtr&lt;T_CastFrom&gt;&amp; src);
+<span class="lineNum">      82 </span>                : 
+<span class="lineNum">      83 </span>                :   /** Swap the contents of two RefPtr&lt;&gt;.
+<span class="lineNum">      84 </span>                :    * This method swaps the internal pointers to T_CppObject.  This can be
+<span class="lineNum">      85 </span>                :    * done safely without involving a reference/unreference cycle and is
+<span class="lineNum">      86 </span>                :    * therefore highly efficient.
+<span class="lineNum">      87 </span>                :    */
+<span class="lineNum">      88 </span>                :   inline void swap(RefPtr&lt;T_CppObject&gt;&amp; other);
+<span class="lineNum">      89 </span>                : 
+<span class="lineNum">      90 </span>                :   /// Copy from another RefPtr:
+<span class="lineNum">      91 </span>                :   inline RefPtr&lt;T_CppObject&gt;&amp; operator=(const RefPtr&lt;T_CppObject&gt;&amp; src);
+<span class="lineNum">      92 </span>                : 
+<span class="lineNum">      93 </span>                :   /** Copy from different, but castable type).
+<span class="lineNum">      94 </span>                :    *
+<span class="lineNum">      95 </span>                :    * Increments the reference count.
+<span class="lineNum">      96 </span>                :    */
+<span class="lineNum">      97 </span>                :   template &lt;class T_CastFrom&gt;
+<span class="lineNum">      98 </span>                :   inline RefPtr&lt;T_CppObject&gt;&amp; operator=(const RefPtr&lt;T_CastFrom&gt;&amp; src);
+<span class="lineNum">      99 </span>                : 
+<span class="lineNum">     100 </span>                :   /// Tests whether the RefPtr&lt;&gt; point to the same underlying instance.
+<span class="lineNum">     101 </span>                :   inline bool operator==(const RefPtr&lt;T_CppObject&gt;&amp; src) const;
+<span class="lineNum">     102 </span>                :   
+<span class="lineNum">     103 </span>                :   /// See operator==().
+<span class="lineNum">     104 </span>                :   inline bool operator!=(const RefPtr&lt;T_CppObject&gt;&amp; src) const;
+<span class="lineNum">     105 </span>                : 
+<span class="lineNum">     106 </span>                :   /** Dereferencing.
+<span class="lineNum">     107 </span>                :    *
+<span class="lineNum">     108 </span>                :    * Use the methods of the underlying instance like so:
+<span class="lineNum">     109 </span>                :    * &lt;code&gt;refptr-&gt;memberfun()&lt;/code&gt;.
+<span class="lineNum">     110 </span>                :    */
+<span class="lineNum">     111 </span>                :   inline T_CppObject* operator-&gt;() const;
+<span class="lineNum">     112 </span>                : 
+<span class="lineNum">     113 </span>                :   /** Test whether the RefPtr&lt;&gt; points to any underlying instance.
+<span class="lineNum">     114 </span>                :    *
+<span class="lineNum">     115 </span>                :    * Mimics usage of ordinary pointers:
+<span class="lineNum">     116 </span>                :    * @code
+<span class="lineNum">     117 </span>                :    *   if (ptr)
+<span class="lineNum">     118 </span>                :    *     do_something();
+<span class="lineNum">     119 </span>                :    * @endcode
+<span class="lineNum">     120 </span>                :    */
+<span class="lineNum">     121 </span>                :   inline operator bool() const;
+<span class="lineNum">     122 </span>                : 
+<span class="lineNum">     123 </span>                :   /// Set underlying instance to 0, decrementing reference count of existing instance appropriately.
+<span class="lineNum">     124 </span>                :   inline void clear();
+<span class="lineNum">     125 </span>                : 
+<span class="lineNum">     126 </span>                : 
+<span class="lineNum">     127 </span>                :   /** Dynamic cast to derived class.
+<span class="lineNum">     128 </span>                :    *
+<span class="lineNum">     129 </span>                :    * The RefPtr can't be cast with the usual notation so instead you can use
+<span class="lineNum">     130 </span>                :    * @code
+<span class="lineNum">     131 </span>                :    *   ptr_derived = RefPtr&lt;Derived&gt;::cast_dynamic(ptr_base);
+<span class="lineNum">     132 </span>                :    * @endcode
+<span class="lineNum">     133 </span>                :    */
+<span class="lineNum">     134 </span>                :   template &lt;class T_CastFrom&gt;
+<span class="lineNum">     135 </span>                :   static inline RefPtr&lt;T_CppObject&gt; cast_dynamic(const RefPtr&lt;T_CastFrom&gt;&amp; src);
+<span class="lineNum">     136 </span>                : 
+<span class="lineNum">     137 </span>                :   /** Static cast to derived class.
+<span class="lineNum">     138 </span>                :    *
+<span class="lineNum">     139 </span>                :    * Like the dynamic cast; the notation is 
+<span class="lineNum">     140 </span>                :    * @code
+<span class="lineNum">     141 </span>                :    *   ptr_derived = RefPtr&lt;Derived&gt;::cast_static(ptr_base);
+<span class="lineNum">     142 </span>                :    * @endcode
+<span class="lineNum">     143 </span>                :    */
+<span class="lineNum">     144 </span>                :   template &lt;class T_CastFrom&gt;
+<span class="lineNum">     145 </span>                :   static inline RefPtr&lt;T_CppObject&gt; cast_static(const RefPtr&lt;T_CastFrom&gt;&amp; src);
+<span class="lineNum">     146 </span>                : 
+<span class="lineNum">     147 </span>                :   /** Cast to non-const.
+<span class="lineNum">     148 </span>                :    *
+<span class="lineNum">     149 </span>                :    * The RefPtr can't be cast with the usual notation so instead you can use
+<span class="lineNum">     150 </span>                :    * @code
+<span class="lineNum">     151 </span>                :    *   ptr_unconst = RefPtr&lt;UnConstType&gt;::cast_const(ptr_const);
+<span class="lineNum">     152 </span>                :    * @endcode
+<span class="lineNum">     153 </span>                :    */
+<span class="lineNum">     154 </span>                :   template &lt;class T_CastFrom&gt;
+<span class="lineNum">     155 </span>                :   static inline RefPtr&lt;T_CppObject&gt; cast_const(const RefPtr&lt;T_CastFrom&gt;&amp; src);
+<span class="lineNum">     156 </span>                : 
+<span class="lineNum">     157 </span>                : 
+<span class="lineNum">     158 </span>                : #ifndef DOXYGEN_IGNORE_THIS
+<span class="lineNum">     159 </span>                : 
+<span class="lineNum">     160 </span>                :   // Warning: This is for internal use only.  Do not manually modify the
+<span class="lineNum">     161 </span>                :   // reference count with this pointer.
+<span class="lineNum">     162 </span>                :   inline int* refcount_() const { return pCppRefcount_; }
+<span class="lineNum">     163 </span>                : 
+<span class="lineNum">     164 </span>                : #endif // DOXYGEN_IGNORE_THIS
+<span class="lineNum">     165 </span>                : 
+<span class="lineNum">     166 </span>                : private:
+<span class="lineNum">     167 </span>                :   void unref();
+<span class="lineNum">     168 </span>                : 
+<span class="lineNum">     169 </span>                :   T_CppObject* pCppObject_;
+<span class="lineNum">     170 </span>                :   mutable int* pCppRefcount_;
+<span class="lineNum">     171 </span>                : };
+<span class="lineNum">     172 </span>                : 
+<span class="lineNum">     173 </span>                : 
+<span class="lineNum">     174 </span>                : #ifndef DOXYGEN_IGNORE_THIS
+<span class="lineNum">     175 </span>                : 
+<span class="lineNum">     176 </span>                : // RefPtr&lt;&gt;::operator-&gt;() comes first here since it's used by other methods.
+<span class="lineNum">     177 </span>                : // If it would come after them it wouldn't be inlined.
+<a name="178"><span class="lineNum">     178 </span>                : </a>
+<span class="lineNum">     179 </span>                : template &lt;class T_CppObject&gt; inline
+<span class="lineNum">     180 </span><span class="lineNoCov">              0 : T_CppObject* RefPtr&lt;T_CppObject&gt;::operator-&gt;() const</span>
+<span class="lineNum">     181 </span>                : {
+<span class="lineNum">     182 </span><span class="lineNoCov">              0 :   return pCppObject_;</span>
+<span class="lineNum">     183 </span>                : }
+<span class="lineNum">     184 </span>                : 
+<span class="lineNum">     185 </span>                : template &lt;class T_CppObject&gt; inline
+<span class="lineNum">     186 </span>                : RefPtr&lt;T_CppObject&gt;::RefPtr()
+<span class="lineNum">     187 </span>                : :
+<span class="lineNum">     188 </span>                :   pCppObject_(0),
+<span class="lineNum">     189 </span>                :   pCppRefcount_(0)
+<span class="lineNum">     190 </span>                : {}
+<a name="191"><span class="lineNum">     191 </span>                : </a>
+<span class="lineNum">     192 </span>                : template &lt;class T_CppObject&gt; inline
+<span class="lineNum">     193 </span><span class="lineNoCov">              0 : RefPtr&lt;T_CppObject&gt;::~RefPtr()</span>
+<span class="lineNum">     194 </span>                : {
+<span class="lineNum">     195 </span><span class="lineNoCov">              0 :   unref();</span>
+<span class="lineNum">     196 </span><span class="lineNoCov">              0 : }</span>
+<a name="197"><span class="lineNum">     197 </span>                : </a>
+<span class="lineNum">     198 </span>                : template &lt;class T_CppObject&gt; inline
+<span class="lineNum">     199 </span><span class="lineNoCov">              0 : void RefPtr&lt;T_CppObject&gt;::unref()</span>
+<span class="lineNum">     200 </span>                : {
+<span class="lineNum">     201 </span><span class="lineNoCov">              0 :   if(pCppRefcount_)</span>
+<span class="lineNum">     202 </span>                :   {
+<span class="lineNum">     203 </span><span class="lineNoCov">              0 :     --(*pCppRefcount_);</span>
+<span class="lineNum">     204 </span>                : 
+<span class="lineNum">     205 </span><span class="lineNoCov">              0 :     if(*pCppRefcount_ == 0)</span>
+<span class="lineNum">     206 </span>                :     {
+<span class="lineNum">     207 </span><span class="lineNoCov">              0 :       if(pCppObject_)</span>
+<span class="lineNum">     208 </span>                :       {
+<span class="lineNum">     209 </span><span class="lineNoCov">              0 :         delete pCppObject_;</span>
+<span class="lineNum">     210 </span><span class="lineNoCov">              0 :         pCppObject_ = 0;</span>
+<span class="lineNum">     211 </span>                :       }
+<span class="lineNum">     212 </span>                : 
+<span class="lineNum">     213 </span><span class="lineNoCov">              0 :       delete pCppRefcount_;</span>
+<span class="lineNum">     214 </span><span class="lineNoCov">              0 :       pCppRefcount_ = 0;</span>
+<span class="lineNum">     215 </span>                :     }
+<span class="lineNum">     216 </span>                :   }
+<span class="lineNum">     217 </span><span class="lineNoCov">              0 : }</span>
+<span class="lineNum">     218 </span>                : 
+<span class="lineNum">     219 </span>                : 
+<span class="lineNum">     220 </span>                : template &lt;class T_CppObject&gt; inline
+<span class="lineNum">     221 </span>                : RefPtr&lt;T_CppObject&gt;::RefPtr(T_CppObject* pCppObject)
+<span class="lineNum">     222 </span>                : :
+<span class="lineNum">     223 </span>                :   pCppObject_(pCppObject),
+<span class="lineNum">     224 </span>                :   pCppRefcount_(0)
+<span class="lineNum">     225 </span>                : {
+<span class="lineNum">     226 </span>                :   if(pCppObject)
+<span class="lineNum">     227 </span>                :   {
+<span class="lineNum">     228 </span>                :     pCppRefcount_ = new int;
+<span class="lineNum">     229 </span>                :     *pCppRefcount_ = 1; //This will be decremented in the destructor.
+<span class="lineNum">     230 </span>                :   }
+<span class="lineNum">     231 </span>                : }
+<span class="lineNum">     232 </span>                : 
+<span class="lineNum">     233 </span>                : //Used by cast_*() implementations:
+<span class="lineNum">     234 </span>                : template &lt;class T_CppObject&gt; inline
+<span class="lineNum">     235 </span>                : RefPtr&lt;T_CppObject&gt;::RefPtr(T_CppObject* pCppObject, int* refcount)
+<span class="lineNum">     236 </span>                : :
+<span class="lineNum">     237 </span>                :   pCppObject_(pCppObject),
+<span class="lineNum">     238 </span>                :   pCppRefcount_(refcount)
+<span class="lineNum">     239 </span>                : {
+<span class="lineNum">     240 </span>                :   if(pCppObject_ &amp;&amp; pCppRefcount_)
+<span class="lineNum">     241 </span>                :     ++(*pCppRefcount_);
+<span class="lineNum">     242 </span>                : }
+<span class="lineNum">     243 </span>                : 
+<span class="lineNum">     244 </span>                : template &lt;class T_CppObject&gt; inline
+<span class="lineNum">     245 </span>                : RefPtr&lt;T_CppObject&gt;::RefPtr(const RefPtr&lt;T_CppObject&gt;&amp; src)
+<span class="lineNum">     246 </span>                : :
+<span class="lineNum">     247 </span>                :   pCppObject_ (src.pCppObject_),
+<span class="lineNum">     248 </span>                :   pCppRefcount_(src.pCppRefcount_)
+<span class="lineNum">     249 </span>                : {
+<span class="lineNum">     250 </span>                :   if(pCppObject_ &amp;&amp; pCppRefcount_)
+<span class="lineNum">     251 </span>                :     ++(*pCppRefcount_);
+<span class="lineNum">     252 </span>                : }
+<span class="lineNum">     253 </span>                : 
+<span class="lineNum">     254 </span>                : // The templated ctor allows copy construction from any object that's
+<span class="lineNum">     255 </span>                : // castable.  Thus, it does downcasts:
+<span class="lineNum">     256 </span>                : //   base_ref = derived_ref
+<span class="lineNum">     257 </span>                : template &lt;class T_CppObject&gt;
+<span class="lineNum">     258 </span>                :   template &lt;class T_CastFrom&gt;
+<span class="lineNum">     259 </span>                : inline
+<span class="lineNum">     260 </span>                : RefPtr&lt;T_CppObject&gt;::RefPtr(const RefPtr&lt;T_CastFrom&gt;&amp; src)
+<span class="lineNum">     261 </span>                : :
+<span class="lineNum">     262 </span>                :   // A different RefPtr&lt;&gt; will not allow us access to pCppObject_.  We need
+<span class="lineNum">     263 </span>                :   // to add a get_underlying() for this, but that would encourage incorrect
+<span class="lineNum">     264 </span>                :   // use, so we use the less well-known operator-&gt;() accessor:
+<span class="lineNum">     265 </span>                :   pCppObject_ (src.operator-&gt;()),
+<span class="lineNum">     266 </span>                :   pCppRefcount_(src.refcount_())
+<span class="lineNum">     267 </span>                : {
+<span class="lineNum">     268 </span>                :   if(pCppObject_ &amp;&amp; pCppRefcount_)
+<span class="lineNum">     269 </span>                :     ++(*pCppRefcount_);
+<span class="lineNum">     270 </span>                : }
+<span class="lineNum">     271 </span>                : 
+<span class="lineNum">     272 </span>                : template &lt;class T_CppObject&gt; inline
+<span class="lineNum">     273 </span>                : void RefPtr&lt;T_CppObject&gt;::swap(RefPtr&lt;T_CppObject&gt;&amp; other)
+<span class="lineNum">     274 </span>                : {
+<span class="lineNum">     275 </span>                :   T_CppObject *const temp = pCppObject_;
+<span class="lineNum">     276 </span>                :   int* temp_count = pCppRefcount_; 
+<span class="lineNum">     277 </span>                : 
+<span class="lineNum">     278 </span>                :   pCppObject_ = other.pCppObject_;
+<span class="lineNum">     279 </span>                :   pCppRefcount_ = other.pCppRefcount_;
+<span class="lineNum">     280 </span>                : 
+<span class="lineNum">     281 </span>                :   other.pCppObject_ = temp;
+<span class="lineNum">     282 </span>                :   other.pCppRefcount_ = temp_count;
+<span class="lineNum">     283 </span>                : }
+<span class="lineNum">     284 </span>                : 
+<span class="lineNum">     285 </span>                : template &lt;class T_CppObject&gt; inline
+<span class="lineNum">     286 </span>                : RefPtr&lt;T_CppObject&gt;&amp; RefPtr&lt;T_CppObject&gt;::operator=(const RefPtr&lt;T_CppObject&gt;&amp; src)
+<span class="lineNum">     287 </span>                : {
+<span class="lineNum">     288 </span>                :   // In case you haven't seen the swap() technique to implement copy
+<span class="lineNum">     289 </span>                :   // assignment before, here's what it does:
+<span class="lineNum">     290 </span>                :   //
+<span class="lineNum">     291 </span>                :   // 1) Create a temporary RefPtr&lt;&gt; instance via the copy ctor, thereby
+<span class="lineNum">     292 </span>                :   //    increasing the reference count of the source object.
+<span class="lineNum">     293 </span>                :   //
+<span class="lineNum">     294 </span>                :   // 2) Swap the internal object pointers of *this and the temporary
+<span class="lineNum">     295 </span>                :   //    RefPtr&lt;&gt;.  After this step, *this already contains the new pointer,
+<span class="lineNum">     296 </span>                :   //    and the old pointer is now managed by temp.
+<span class="lineNum">     297 </span>                :   //
+<span class="lineNum">     298 </span>                :   // 3) The destructor of temp is executed, thereby unreferencing the
+<span class="lineNum">     299 </span>                :   //    old object pointer.
+<span class="lineNum">     300 </span>                :   //
+<span class="lineNum">     301 </span>                :   // This technique is described in Herb Sutter's &quot;Exceptional C++&quot;, and
+<span class="lineNum">     302 </span>                :   // has a number of advantages over conventional approaches:
+<span class="lineNum">     303 </span>                :   //
+<span class="lineNum">     304 </span>                :   // - Code reuse by calling the copy ctor.
+<span class="lineNum">     305 </span>                :   // - Strong exception safety for free.
+<span class="lineNum">     306 </span>                :   // - Self assignment is handled implicitely.
+<span class="lineNum">     307 </span>                :   // - Simplicity.
+<span class="lineNum">     308 </span>                :   // - It just works and is hard to get wrong; i.e. you can use it without
+<span class="lineNum">     309 </span>                :   //   even thinking about it to implement copy assignment whereever the
+<span class="lineNum">     310 </span>                :   //   object data is managed indirectly via a pointer, which is very common.
+<span class="lineNum">     311 </span>                : 
+<span class="lineNum">     312 </span>                :   RefPtr&lt;T_CppObject&gt; temp (src);
+<span class="lineNum">     313 </span>                :   this-&gt;swap(temp);
+<span class="lineNum">     314 </span>                :   return *this;
+<span class="lineNum">     315 </span>                : }
+<span class="lineNum">     316 </span>                : 
+<span class="lineNum">     317 </span>                : template &lt;class T_CppObject&gt;
+<span class="lineNum">     318 </span>                :   template &lt;class T_CastFrom&gt;
+<span class="lineNum">     319 </span>                : inline
+<span class="lineNum">     320 </span>                : RefPtr&lt;T_CppObject&gt;&amp; RefPtr&lt;T_CppObject&gt;::operator=(const RefPtr&lt;T_CastFrom&gt;&amp; src)
+<span class="lineNum">     321 </span>                : {
+<span class="lineNum">     322 </span>                :   RefPtr&lt;T_CppObject&gt; temp (src);
+<span class="lineNum">     323 </span>                :   this-&gt;swap(temp);
+<span class="lineNum">     324 </span>                :   return *this;
+<span class="lineNum">     325 </span>                : }
+<span class="lineNum">     326 </span>                : 
+<span class="lineNum">     327 </span>                : template &lt;class T_CppObject&gt; inline
+<span class="lineNum">     328 </span>                : bool RefPtr&lt;T_CppObject&gt;::operator==(const RefPtr&lt;T_CppObject&gt;&amp; src) const
+<span class="lineNum">     329 </span>                : {
+<span class="lineNum">     330 </span>                :   return (pCppObject_ == src.pCppObject_);
+<span class="lineNum">     331 </span>                : }
+<span class="lineNum">     332 </span>                : 
+<span class="lineNum">     333 </span>                : template &lt;class T_CppObject&gt; inline
+<span class="lineNum">     334 </span>                : bool RefPtr&lt;T_CppObject&gt;::operator!=(const RefPtr&lt;T_CppObject&gt;&amp; src) const
+<span class="lineNum">     335 </span>                : {
+<span class="lineNum">     336 </span>                :   return (pCppObject_ != src.pCppObject_);
+<span class="lineNum">     337 </span>                : }
+<span class="lineNum">     338 </span>                : 
+<span class="lineNum">     339 </span>                : template &lt;class T_CppObject&gt; inline
+<span class="lineNum">     340 </span>                : RefPtr&lt;T_CppObject&gt;::operator bool() const
+<span class="lineNum">     341 </span>                : {
+<span class="lineNum">     342 </span>                :   return (pCppObject_ != 0);
+<span class="lineNum">     343 </span>                : }
+<span class="lineNum">     344 </span>                : 
+<span class="lineNum">     345 </span>                : template &lt;class T_CppObject&gt; inline
+<span class="lineNum">     346 </span>                : void RefPtr&lt;T_CppObject&gt;::clear()
+<span class="lineNum">     347 </span>                : {
+<span class="lineNum">     348 </span>                :   RefPtr&lt;T_CppObject&gt; temp; // swap with an empty RefPtr&lt;&gt; to clear *this
+<span class="lineNum">     349 </span>                :   this-&gt;swap(temp);
+<span class="lineNum">     350 </span>                : }
+<span class="lineNum">     351 </span>                : 
+<span class="lineNum">     352 </span>                : template &lt;class T_CppObject&gt;
+<span class="lineNum">     353 </span>                :   template &lt;class T_CastFrom&gt;
+<span class="lineNum">     354 </span>                : inline
+<span class="lineNum">     355 </span>                : RefPtr&lt;T_CppObject&gt; RefPtr&lt;T_CppObject&gt;::cast_dynamic(const RefPtr&lt;T_CastFrom&gt;&amp; src)
+<span class="lineNum">     356 </span>                : {
+<span class="lineNum">     357 </span>                :   T_CppObject *const pCppObject = dynamic_cast&lt;T_CppObject*&gt;(src.operator-&gt;());
+<span class="lineNum">     358 </span>                : 
+<span class="lineNum">     359 </span>                :   if(pCppObject) //Check whether dynamic_cast&lt;&gt; succeeded so we don't pass a null object with a used refcount:
+<span class="lineNum">     360 </span>                :     return RefPtr&lt;T_CppObject&gt;(pCppObject, src.refcount_());
+<span class="lineNum">     361 </span>                :   else
+<span class="lineNum">     362 </span>                :     return RefPtr&lt;T_CppObject&gt;();
+<span class="lineNum">     363 </span>                : }
+<span class="lineNum">     364 </span>                : 
+<span class="lineNum">     365 </span>                : template &lt;class T_CppObject&gt;
+<span class="lineNum">     366 </span>                :   template &lt;class T_CastFrom&gt;
+<span class="lineNum">     367 </span>                : inline
+<span class="lineNum">     368 </span>                : RefPtr&lt;T_CppObject&gt; RefPtr&lt;T_CppObject&gt;::cast_static(const RefPtr&lt;T_CastFrom&gt;&amp; src)
+<span class="lineNum">     369 </span>                : {
+<span class="lineNum">     370 </span>                :   T_CppObject *const pCppObject = static_cast&lt;T_CppObject*&gt;(src.operator-&gt;());
+<span class="lineNum">     371 </span>                : 
+<span class="lineNum">     372 </span>                :   return RefPtr&lt;T_CppObject&gt;(pCppObject, src.refcount_());
+<span class="lineNum">     373 </span>                : }
+<span class="lineNum">     374 </span>                : 
+<span class="lineNum">     375 </span>                : template &lt;class T_CppObject&gt;
+<span class="lineNum">     376 </span>                :   template &lt;class T_CastFrom&gt;
+<span class="lineNum">     377 </span>                : inline
+<span class="lineNum">     378 </span>                : RefPtr&lt;T_CppObject&gt; RefPtr&lt;T_CppObject&gt;::cast_const(const RefPtr&lt;T_CastFrom&gt;&amp; src)
+<span class="lineNum">     379 </span>                : {
+<span class="lineNum">     380 </span>                :   T_CppObject *const pCppObject = const_cast&lt;T_CppObject*&gt;(src.operator-&gt;());
+<span class="lineNum">     381 </span>                : 
+<span class="lineNum">     382 </span>                :   return RefPtr&lt;T_CppObject&gt;(pCppObject, src.refcount_());
+<span class="lineNum">     383 </span>                : }
+<span class="lineNum">     384 </span>                : 
+<span class="lineNum">     385 </span>                : #endif /* DOXYGEN_IGNORE_THIS */
+<span class="lineNum">     386 </span>                : 
+<span class="lineNum">     387 </span>                : /** @relates Glib::RefPtr */
+<span class="lineNum">     388 </span>                : template &lt;class T_CppObject&gt; inline
+<span class="lineNum">     389 </span>                : void swap(RefPtr&lt;T_CppObject&gt;&amp; lhs, RefPtr&lt;T_CppObject&gt;&amp; rhs)
+<span class="lineNum">     390 </span>                : {
+<span class="lineNum">     391 </span>                :   lhs.swap(rhs);
+<span class="lineNum">     392 </span>                : }
+<span class="lineNum">     393 </span>                : 
+<span class="lineNum">     394 </span>                : } // namespace Cairo
+<span class="lineNum">     395 </span>                : 
+<span class="lineNum">     396 </span>                : 
+<span class="lineNum">     397 </span>                : #endif /* _cairo_REFPTR_H */
+<span class="lineNum">     398 </span>                : 
+<span class="lineNum">     399 </span>                : // vim: ts=2 sw=2 et
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+  <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.7</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

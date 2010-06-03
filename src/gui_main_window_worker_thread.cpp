@@ -322,7 +322,7 @@ void* MainWindowWorkerThread::ThreadRoutine(void *a_ThreadParam)
             }
 
         } while ( (resultPiece.GetType() != e_noPiece) &&
-                  (Rules::CanPlayerGo(thisThread->m_localGame.GetBoard(),
+                  (rules::CanPlayerGo(thisThread->m_localGame.GetBoard(),
                                       opponent) == false) );
 
     } // while (thisThread->m_threadStatus != PROCESSING_DIE)

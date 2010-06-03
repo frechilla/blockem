@@ -63,7 +63,7 @@ void Game1v1Test::TestBitwiseCheckConfiguration(
     // check if piece is deployable using the legacy old way and bitwise way
     // assert both ways gives same result
     isDeployableLegacy =
-        Rules::IsPieceDeployable(
+        rules::IsPieceDeployable(
                 m_board,
                 piece,
                 thisCoord,

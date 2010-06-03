@@ -237,7 +237,7 @@ void Game1v1::RemovePiece(
 
         // (a_coordX + pieceX, a_coordY + pieceY) is now empty
         // is it now a nucleation point for the opponent? (it couldn't be before, as it was occupied by 'me')
-        if (Rules::IsNucleationPointCompute(
+        if (rules::IsNucleationPointCompute(
                 a_theBoard,
         		a_playerOpponent,
         		thisCoord))
@@ -247,7 +247,7 @@ void Game1v1::RemovePiece(
     }
 
     // recalculate all the nk points around the piece we just removed (player 'me')
-    Rules::RecalculateNKAroundCoord(a_theBoard, a_coord, a_pieceRadius + 1, a_playerMe);
+    rules::RecalculateNKAroundCoord(a_theBoard, a_coord, a_pieceRadius + 1, a_playerMe);
 }
 
 void Game1v1::PutDownPiece(
@@ -330,7 +330,7 @@ void Game1v1::PutDownPiece(
     }
 
     // recalculate all the nk points around the piece we just put down (player 'me')
-    Rules::RecalculateNKAroundCoord(a_theBoard, a_coord, a_pieceRadius + 1, a_playerMe);
+    rules::RecalculateNKAroundCoord(a_theBoard, a_coord, a_pieceRadius + 1, a_playerMe);
 }
 
 int32_t Game1v1::MinMax(
@@ -489,7 +489,7 @@ int32_t Game1v1::MinMax(
             while(nkExists)
             {
                 // retrieve the valid coords of this piece in the current nk point
-                int32_t nValidCoords = Rules::CalculateValidCoordsInNucleationPoint(
+                int32_t nValidCoords = rules::CalculateValidCoordsInNucleationPoint(
                                             m_board,
                                             *playerMe,
                                             thisNkPoint,
@@ -644,7 +644,7 @@ int32_t Game1v1::ComputeFirstPiece(
     }
 
     // check out now if the move calculated in the previous step is valid
-    if (!Rules::IsPieceDeployableInStartingPoint(
+    if (!rules::IsPieceDeployableInStartingPoint(
             a_board,
             out_resultPiece.GetCurrentConfiguration(),
             out_coord,
@@ -677,7 +677,7 @@ int32_t Game1v1::ComputeFirstPiece(
                  pieceCoordIt != coordConfList.end();
                  pieceCoordIt++)
             {
-                int32_t nValidCoords = Rules::CalculateValidCoordsInStartingPoint(
+                int32_t nValidCoords = rules::CalculateValidCoordsInStartingPoint(
                                             a_board,
                                             a_playerMe,
                                             a_playerMe.GetStartingCoordinate(),
@@ -723,7 +723,7 @@ int32_t Game1v1::ComputeFirstPiece(
                 } // for (uint8_t k = 0 ; k < nValidCoords ; k++)
             } // for (pieceCoordIt = coordConfList.begin()
         } // for (int8_t i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
-    } // if (!Rules::IsPieceDeployableInStartingPoint(
+    } // if (!rules::IsPieceDeployableInStartingPoint(
 
 	return 0;
 }
@@ -846,7 +846,7 @@ int32_t Game1v1::MinMaxAlphaBetaCompute(
                 }
 
                 // retrieve the valid coords of this piece in the current nk point
-                int32_t nValidCoords = Rules::CalculateValidCoordsInNucleationPoint(
+                int32_t nValidCoords = rules::CalculateValidCoordsInNucleationPoint(
                                             a_board,
                                             a_playerMe,
                                             thisNkPoint,
@@ -995,7 +995,7 @@ void Game1v1::RecalculateNKInAllBoard(
              thisCoord.m_col < a_board.GetNColumns();
              thisCoord.m_col++)
         {
-            if (Rules::IsNucleationPointCompute(a_board, a_playerMe, thisCoord))
+            if (rules::IsNucleationPointCompute(a_board, a_playerMe, thisCoord))
             {
                 a_playerMe.SetNucleationPoint(thisCoord);
             }
@@ -1004,7 +1004,7 @@ void Game1v1::RecalculateNKInAllBoard(
                 a_playerMe.UnsetNucleationPoint(thisCoord);
             }
 
-            if (Rules::IsNucleationPointCompute(a_board, a_playerOpponent, thisCoord))
+            if (rules::IsNucleationPointCompute(a_board, a_playerOpponent, thisCoord))
             {
                 a_playerOpponent.SetNucleationPoint(thisCoord);
             }

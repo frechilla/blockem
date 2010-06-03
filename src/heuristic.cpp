@@ -158,7 +158,7 @@ int32_t Heuristic::CalculateCentreFocused(
                     if (!opponentNKPoint)
                     {
                         weightedValue = CalculateCircularWeight(a_board, thisCoord);
-                    	if (Rules::IsCoordTouchingPlayer(a_board, thisCoord, a_playerOpponent))
+                    	if (rules::IsCoordTouchingPlayer(a_board, thisCoord, a_playerOpponent))
                     	{
                     	    // an nk point that is touching the other player is unblockable by the opponent
                     	    // (it might get bloked, but not directly)
@@ -234,7 +234,7 @@ int32_t Heuristic::CalculateNKWeightedv1(
                     {
                         valueNkMe += 1;
 
-                        if (Rules::IsCoordTouchingPlayer(a_board, thisCoord, a_playerOpponent))
+                        if (rules::IsCoordTouchingPlayer(a_board, thisCoord, a_playerOpponent))
                         {
                             // an nk point that is touching the other player is unblockable by the opponent
                             // (it might get blocked, but not directly)
@@ -304,7 +304,7 @@ int32_t Heuristic::CalculateNKWeightedv3(
                     valueNkOpponent += BiggestPieceDeployableInNKPointSize(a_board, a_playerOpponent, thisCoord);
                     opponentNKPoint = true;
 
-                    if (Rules::IsCoordTouchingPlayer(a_board, thisCoord, a_playerMe))
+                    if (rules::IsCoordTouchingPlayer(a_board, thisCoord, a_playerMe))
                     {
                         // an nk point that is touching the other player is unblockable by the opponent
                         // (it might get blocked, but not directly)
@@ -318,7 +318,7 @@ int32_t Heuristic::CalculateNKWeightedv3(
 
                     if (!opponentNKPoint)
                     {
-                        if (Rules::IsCoordTouchingPlayer(a_board, thisCoord, a_playerOpponent))
+                        if (rules::IsCoordTouchingPlayer(a_board, thisCoord, a_playerOpponent))
                         {
                             // an nk point that is touching the other player is unblockable by the opponent
                             // (it might get blocked, but not directly)
@@ -527,7 +527,7 @@ int32_t Heuristic::NKBasedHeuristicThisCoord(
             if (valueNkOpponent == 0)
             {
                 valueNkMe = 2;
-                if (Rules::IsCoordTouchingPlayer(a_board, thisCoord, a_playerOpponent))
+                if (rules::IsCoordTouchingPlayer(a_board, thisCoord, a_playerOpponent))
                 {
                     // an nk point that is touching the other player is unblockable by the opponent
                     // (it might get blocked, but not directly)
@@ -657,7 +657,7 @@ int32_t Heuristic::BiggestPieceDeployableInNKPointSize(
                  pieceConfIt != coordConfList.end();
                  pieceConfIt++)
             {
-                if (Rules::HasValidCoordInNucleationPoint(
+                if (rules::HasValidCoordInNucleationPoint(
                         a_board,
                         a_player,
                         a_NKPointCoord,
