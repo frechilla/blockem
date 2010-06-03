@@ -706,6 +706,7 @@ enable_dependency_tracking
 enable_debug
 enable_debug_printing
 enable_gprof
+enable_gcov
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1349,6 +1350,9 @@ Optional Features:
   --enable-debug-printing Enable debugging printing to standard out
   --enable-gprof          Enable code profiling. You might get better results
                           enabling debugging code too
+  --enable-gcov           Enable code coverage support. You'll get better code
+                          coverage results enabling debugging code too. gprof
+                          and gcov can't be activated at the same time
 
 Some influential environment variables:
   CXX         C++ compiler command
@@ -2761,7 +2765,7 @@ am__tar='${AMTAR} chof - "$$tardir"'; am__untar='${AMTAR} xf -'
 ac_config_headers="$ac_config_headers config.h"
 
 
-$as_echo "#define SVN_REVISION \"168:173M\"" >>confdefs.h
+$as_echo "#define SVN_REVISION \"168:174M\"" >>confdefs.h
 
 
 # Checks for programs.
@@ -5449,6 +5453,7 @@ _ACEOF
 
 USER_CFLAGS=
 CXXFLAGS="-Wall -O3 -g3 -DNDEBUG"
+LDFLAGS=
 
 # if in win32 debug symbols won't be added to executable to decrease its size
 if test "$os_win32" = "yes"; then
@@ -5483,7 +5488,22 @@ if test "${enable_gprof+set}" = set; then :
   enableval=$enable_gprof;  if test x$enableval = xyes; then
         debugprof=yes
         CXXFLAGS+=" -pg"
-        LDFLAGS=" -lc"
+        LDFLAGS+=" -lc"
+    fi
+fi
+
+
+# prevent gcov and grpof from being activated at the same time
+# Check whether --enable-gcov was given.
+if test "${enable_gcov+set}" = set; then :
+  enableval=$enable_gcov;  if test x$enableval = xyes; then
+        if test "$debugprof" = "yes"; then
+            as_fn_error "Invalid options: gprof and gcov can't be activated at the same time. Use --help to see good help stuff" "$LINENO" 5
+        else
+            debugcov=yes
+            CXXFLAGS+=" -ftest-coverage -fprofile-arcs"
+            LDFLAGS=" -lgcov"
+        fi
     fi
 fi
 

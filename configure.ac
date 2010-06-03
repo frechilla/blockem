@@ -74,6 +74,7 @@ AC_TYPE_UINT64_T
 
 USER_CFLAGS=
 CXXFLAGS="-Wall -O3 -g3 -DNDEBUG"
+LDFLAGS=
 
 # if in win32 debug symbols won't be added to executable to decrease its size
 if test "$os_win32" = "yes"; then
@@ -104,7 +105,20 @@ AC_ARG_ENABLE(gprof,
     [ if test x$enableval = xyes; then
         debugprof=yes
         CXXFLAGS+=" -pg"
-        LDFLAGS=" -lc"
+        LDFLAGS+=" -lc"
+    fi])
+
+# prevent gcov and grpof from being activated at the same time
+AC_ARG_ENABLE(gcov,
+    AC_HELP_STRING([--enable-gcov], [Enable code coverage support. You'll get better code coverage results enabling debugging code too. gprof and gcov can't be activated at the same time]),
+    [ if test x$enableval = xyes; then
+        if test "$debugprof" = "yes"; then
+            AC_MSG_ERROR([Invalid options: gprof and gcov can't be activated at the same time. Use --help to see good help stuff])
+        else
+            debugcov=yes
+            CXXFLAGS+=" -ftest-coverage -fprofile-arcs"
+            LDFLAGS=" -lgcov"
+        fi
     fi])
 
 # if in win32 add these flags to remove the extra terminal window and avoid strange errors

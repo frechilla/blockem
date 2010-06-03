@@ -5,7 +5,7 @@ DEPTH=3
 
 if [ ! -f ../../blockem ] 
 then
-	echo "You must compile blockem before packaging it man..."
+	echo "You must compile blockem before trying to profile it man..."
 	exit
 fi
 

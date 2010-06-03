@@ -1,0 +1,253 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <title>LCOV - Blockem Tests Code Coverage - src/heuristic.h</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+        <tr>
+          <td width="5%"></td>
+          <td width="10%" class="headerItem">Current view:</td>
+          <td width="35%" class="headerValue"><a href="../index.html">directory</a> - <a href="index.html">src</a> - heuristic.h (source / <a href="heuristic.h.func.html">functions</a>)</td>
+          <td width="10%"></td>
+          <td width="10%" class="headerCovTableHead">Found</td>
+          <td width="10%" class="headerCovTableHead">Hit</td>
+          <td width="15%" class="headerCovTableHead">Coverage</td>
+          <td width="5%"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="headerItem">Test:</td>
+          <td class="headerValue">Blockem Tests Code Coverage</td>
+          <td class="headerItem">Lines:</td>
+          <td class="headerCovTableEntry">1</td>
+          <td class="headerCovTableEntry">1</td>
+          <td class="headerCovTableEntryHi">100.0 %</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="headerItem">Date:</td>
+          <td class="headerValue">2010-06-03</td>
+          <td class="headerItem">Functions:</td>
+          <td class="headerCovTableEntry">1</td>
+          <td class="headerCovTableEntry">1</td>
+          <td class="headerCovTableEntryHi">100.0 %</td>
+        </tr>
+                <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td><pre class="source">
+<a name="1"><span class="lineNum">       1 </span>                : // ============================================================================</a>
+<span class="lineNum">       2 </span>                : // Copyright 2009 Faustino Frechilla
+<span class="lineNum">       3 </span>                : //
+<span class="lineNum">       4 </span>                : // This file is part of Blockem.
+<span class="lineNum">       5 </span>                : //
+<span class="lineNum">       6 </span>                : // Blockem is free software: you can redistribute it and/or modify it under the
+<span class="lineNum">       7 </span>                : // terms of the GNU General Public License as published by the Free Software
+<span class="lineNum">       8 </span>                : // Foundation, either version 3 of the License, or (at your option) any later
+<span class="lineNum">       9 </span>                : // version.
+<span class="lineNum">      10 </span>                : //
+<span class="lineNum">      11 </span>                : // Blockem is distributed in the hope that it will be useful, but WITHOUT ANY
+<span class="lineNum">      12 </span>                : // WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      13 </span>                : // FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+<span class="lineNum">      14 </span>                : // details.
+<span class="lineNum">      15 </span>                : //
+<span class="lineNum">      16 </span>                : // You should have received a copy of the GNU General Public License along
+<span class="lineNum">      17 </span>                : // with Blockem. If not, see http://www.gnu.org/licenses/.
+<span class="lineNum">      18 </span>                : //
+<span class="lineNum">      19 </span>                : /// @file  heuristic.h
+<span class="lineNum">      20 </span>                : /// @brief
+<span class="lineNum">      21 </span>                : ///
+<span class="lineNum">      22 </span>                : /// @author Faustino Frechilla
+<span class="lineNum">      23 </span>                : /// @history
+<span class="lineNum">      24 </span>                : /// Ref       Who                When         What
+<span class="lineNum">      25 </span>                : ///           Faustino Frechilla 31-Mar-2009  Original development
+<span class="lineNum">      26 </span>                : /// @endhistory
+<span class="lineNum">      27 </span>                : ///
+<span class="lineNum">      28 </span>                : // ============================================================================
+<span class="lineNum">      29 </span>                : 
+<span class="lineNum">      30 </span>                : #ifndef HEURISTIC_H_
+<span class="lineNum">      31 </span>                : #define HEURISTIC_H_
+<span class="lineNum">      32 </span>                : 
+<span class="lineNum">      33 </span>                : #include &quot;board.h&quot;
+<span class="lineNum">      34 </span>                : #include &quot;player.h&quot;
+<span class="lineNum">      35 </span>                : 
+<span class="lineNum">      36 </span>                : /// @brief class used as a container of methods to calculate the heuristic.
+<span class="lineNum">      37 </span>                : /// All those methods have to have the following prototype:
+<span class="lineNum">      38 </span>                : ///   static int32_t Calculate(
+<span class="lineNum">      39 </span>                : ///          const Board &amp;a_board,
+<span class="lineNum">      40 </span>                : ///          const Player &amp;a_playerMe,
+<span class="lineNum">      41 </span>                : ///          const Player &amp;a_playerOpponent)
+<span class="lineNum">      42 </span>                : ///
+<span class="lineNum">      43 </span>                : /// Note that all of this is a kind of inheritance without virtual functions
+<span class="lineNum">      44 </span>                : /// Abstract classes + inheritance is easier to understand, but virtual functions
+<span class="lineNum">      45 </span>                : /// are more expensive for calculations, and the heuristic function has to be
+<span class="lineNum">      46 </span>                : /// run lots of times. That is why the model changed into pointers to static functions
+<span class="lineNum">      47 </span>                : /// instead of typical parent + children classes.
+<span class="lineNum">      48 </span>                : class Heuristic
+<span class="lineNum">      49 </span>                : {
+<span class="lineNum">      50 </span>                : public:
+<span class="lineNum">      51 </span>                :     /// pointer to the heuristic calculator function
+<span class="lineNum">      52 </span>                :     typedef int32_t (*EvalFunction_t)(const Board &amp;, const Player &amp;, const Player &amp;);
+<span class="lineNum">      53 </span>                : 
+<span class="lineNum">      54 </span>                :     /// types of heuristic. If you add a heuristic here you MUST add a proper description
+<span class="lineNum">      55 </span>                :     /// to Game1v1Config in the constructor using a Game1v1Config::sHeuristicConfig_t
+<span class="lineNum">      56 </span>                :     typedef enum
+<span class="lineNum">      57 </span>                :     {
+<span class="lineNum">      58 </span>                :         e_heuristicStartCount = 0, // this element must be always 0 and must be at the start
+<span class="lineNum">      59 </span>                : 
+<span class="lineNum">      60 </span>                :         e_heuristicNKWeightedv1 = e_heuristicStartCount,
+<span class="lineNum">      61 </span>                :         e_heuristicAdvanced,
+<span class="lineNum">      62 </span>                :         e_heuristicCentreFocused,
+<span class="lineNum">      63 </span>                :         e_heuristicSimple,
+<span class="lineNum">      64 </span>                :         e_heuristicRandom,
+<span class="lineNum">      65 </span>                :         e_heuristicAmountOfPieces,
+<span class="lineNum">      66 </span>                : 
+<span class="lineNum">      67 </span>                :         e_heuristicCount, // stores the amount of heuristics. Must be always at the end
+<span class="lineNum">      68 </span>                :     } eHeuristicType_t;
+<span class="lineNum">      69 </span>                : 
+<span class="lineNum">      70 </span>                :     /// heuristic data to be used in the heuristics config array
+<span class="lineNum">      71 </span>                :     typedef struct
+<span class="lineNum">      72 </span>                :     {
+<span class="lineNum">      73 </span>                :         eHeuristicType_t m_type;
+<span class="lineNum">      74 </span>                :         EvalFunction_t m_evalFunction;
+<a name="75"><span class="lineNum">      75 </span>                :         std::string m_name;</a>
+<span class="lineNum">      76 </span>                :         std::string m_description;
+<span class="lineNum">      77 </span><span class="lineCov">              6 :     } sHeuristicData_t;</span>
+<span class="lineNum">      78 </span>                : 
+<span class="lineNum">      79 </span>                :     static const sHeuristicData_t m_heuristicData[e_heuristicCount];
+<span class="lineNum">      80 </span>                : 
+<span class="lineNum">      81 </span>                :     virtual ~Heuristic();
+<span class="lineNum">      82 </span>                : 
+<span class="lineNum">      83 </span>                :     /// Calculate the heuristic value taking into account only the amount
+<span class="lineNum">      84 </span>                :     /// Of squares of the pieces put down
+<span class="lineNum">      85 </span>                :     static int32_t CalculateSimple(
+<span class="lineNum">      86 </span>                :             const Board  &amp;a_board,
+<span class="lineNum">      87 </span>                :             const Player &amp;a_playerMe,
+<span class="lineNum">      88 </span>                :             const Player &amp;a_playerOpponent);
+<span class="lineNum">      89 </span>                : 
+<span class="lineNum">      90 </span>                :     /// return a random integer value between 0 and RAND_MAX
+<span class="lineNum">      91 </span>                :     static int32_t CalculateRandom(
+<span class="lineNum">      92 </span>                :             const Board  &amp;a_board,
+<span class="lineNum">      93 </span>                :             const Player &amp;a_playerMe,
+<span class="lineNum">      94 </span>                :             const Player &amp;a_playerOpponent);
+<span class="lineNum">      95 </span>                : 
+<span class="lineNum">      96 </span>                :     /// Calculate the heuristic value taking into account the weight nucleation points
+<span class="lineNum">      97 </span>                :     /// The more in the middle in the board a NK point is the more important it is
+<span class="lineNum">      98 </span>                :     static int32_t CalculateCentreFocused(
+<span class="lineNum">      99 </span>                :             const Board  &amp;a_board,
+<span class="lineNum">     100 </span>                :             const Player &amp;a_playerMe,
+<span class="lineNum">     101 </span>                :             const Player &amp;a_playerOpponent);
+<span class="lineNum">     102 </span>                : 
+<span class="lineNum">     103 </span>                :     static int32_t CalculateNKWeightedv1(
+<span class="lineNum">     104 </span>                :             const Board  &amp;a_board,
+<span class="lineNum">     105 </span>                :             const Player &amp;a_playerMe,
+<span class="lineNum">     106 </span>                :             const Player &amp;a_playerOpponent);
+<span class="lineNum">     107 </span>                : 
+<span class="lineNum">     108 </span>                :     static int32_t CalculateNKWeightedv3(
+<span class="lineNum">     109 </span>                :             const Board  &amp;a_board,
+<span class="lineNum">     110 </span>                :             const Player &amp;a_playerMe,
+<span class="lineNum">     111 </span>                :             const Player &amp;a_playerOpponent);
+<span class="lineNum">     112 </span>                : 
+<span class="lineNum">     113 </span>                :     /// Calculate the heurisitc value based on the amount of pieces that can be put down
+<span class="lineNum">     114 </span>                :     /// on the board. It uses bitwise representation of pieces and board to improve
+<span class="lineNum">     115 </span>                :     /// calculation times
+<span class="lineNum">     116 </span>                :     static int32_t CalculateNPieces(
+<span class="lineNum">     117 </span>                :             const Board  &amp;a_board,
+<span class="lineNum">     118 </span>                :             const Player &amp;a_playerMe,
+<span class="lineNum">     119 </span>                :             const Player &amp;a_playerOpponent);
+<span class="lineNum">     120 </span>                : 
+<span class="lineNum">     121 </span>                : 
+<span class="lineNum">     122 </span>                : protected:
+<span class="lineNum">     123 </span>                :     /// @brief calculates the circular weight of a coord in the board
+<span class="lineNum">     124 </span>                :     /// The output in a 14x14 board:
+<span class="lineNum">     125 </span>                :     ///    1 1 1 1 1 1 1 1 1 1 1 1 1 1
+<span class="lineNum">     126 </span>                :     ///    1 2 2 2 2 2 2 2 2 2 2 2 1 1
+<span class="lineNum">     127 </span>                :     ///    1 2 2 2 2 2 2 2 2 2 2 2 1 1
+<span class="lineNum">     128 </span>                :     ///    1 2 2 3 3 3 3 3 3 3 2 2 1 1
+<span class="lineNum">     129 </span>                :     ///    1 2 2 3 3 3 3 3 3 3 2 2 1 1
+<span class="lineNum">     130 </span>                :     ///    1 2 2 3 3 4 4 4 3 3 2 2 1 1
+<span class="lineNum">     131 </span>                :     ///    1 2 2 3 3 4 4 4 3 3 2 2 1 1
+<span class="lineNum">     132 </span>                :     ///    1 2 2 3 3 4 4 4 3 3 2 2 1 1
+<span class="lineNum">     133 </span>                :     ///    1 2 2 3 3 3 3 3 3 3 2 2 1 1
+<span class="lineNum">     134 </span>                :     ///    1 2 2 3 3 3 3 3 3 3 2 2 1 1
+<span class="lineNum">     135 </span>                :     ///    1 2 2 2 2 2 2 2 2 2 2 2 1 1
+<span class="lineNum">     136 </span>                :     ///    1 2 2 2 2 2 2 2 2 2 2 2 1 1
+<span class="lineNum">     137 </span>                :     ///    1 1 1 1 1 1 1 1 1 1 1 1 1 1
+<span class="lineNum">     138 </span>                :     ///    1 1 1 1 1 1 1 1 1 1 1 1 1 1
+<span class="lineNum">     139 </span>                :     static int32_t CalculateCircularWeight(
+<span class="lineNum">     140 </span>                :             const Board &amp;a_board, const Coordinate &amp;a_coord);
+<span class="lineNum">     141 </span>                : 
+<span class="lineNum">     142 </span>                :     /// @returns the amount of squares (the ones that make up the pieces) that can be deployed
+<span class="lineNum">     143 </span>                :     ///          in a specific nk point
+<span class="lineNum">     144 </span>                :     /// @param the board
+<span class="lineNum">     145 </span>                :     /// @param the player whose pieces will be checked
+<span class="lineNum">     146 </span>                :     /// @param bitwise representation of the board (which places are available)
+<span class="lineNum">     147 </span>                :     /// @param bitwise represntation of 'a_player' pieces on the board
+<span class="lineNum">     148 </span>                :     static int32_t CountSquaresCanBeDeployedBitwise(
+<span class="lineNum">     149 </span>                :             const Board  &amp;a_board,
+<span class="lineNum">     150 </span>                :             const Player &amp;a_player,
+<span class="lineNum">     151 </span>                :             uint64_t      a_bitwiseBoard,
+<span class="lineNum">     152 </span>                :             uint64_t      a_bitwisePlayerBoard);
+<span class="lineNum">     153 </span>                : 
+<span class="lineNum">     154 </span>                : 
+<span class="lineNum">     155 </span>                :     /// @calculates a nk based heuristic value of thisCoord
+<span class="lineNum">     156 </span>                :     static int32_t NKBasedHeuristicThisCoord(
+<span class="lineNum">     157 </span>                :             const Board  &amp;a_board,
+<span class="lineNum">     158 </span>                :             const Player &amp;a_playerMe,
+<span class="lineNum">     159 </span>                :             const Player &amp;a_playerOpponent,
+<span class="lineNum">     160 </span>                :             const Coordinate &amp;thisCoord);
+<span class="lineNum">     161 </span>                : 
+<span class="lineNum">     162 </span>                :     /// @return the size of the maximum piece deployable in a particular NK point
+<span class="lineNum">     163 </span>                :     // it assumes pieces are defined in piece.h in reversed order from 5 to 1 squares (and they are)
+<span class="lineNum">     164 </span>                :     static int32_t BiggestPieceDeployableInNKPointSize(
+<span class="lineNum">     165 </span>                :             const Board      &amp;a_board,
+<span class="lineNum">     166 </span>                :             const Player     &amp;a_player,
+<span class="lineNum">     167 </span>                :             const Coordinate &amp;a_NKPointCoord);
+<span class="lineNum">     168 </span>                : 
+<span class="lineNum">     169 </span>                : private:
+<span class="lineNum">     170 </span>                :     /// @brief constructor
+<span class="lineNum">     171 </span>                :     /// The constructor of the class does nothing. This class is used as a container for
+<span class="lineNum">     172 </span>                :     /// static methods
+<span class="lineNum">     173 </span>                :     Heuristic();
+<span class="lineNum">     174 </span>                :     Heuristic(const Heuristic &amp;src);
+<span class="lineNum">     175 </span>                :     Heuristic&amp; operator=(const Heuristic &amp;src);
+<span class="lineNum">     176 </span>                : };
+<span class="lineNum">     177 </span>                : 
+<span class="lineNum">     178 </span>                : #endif /* HEURISTIC_H_ */
+<span class="lineNum">     179 </span>                : 
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+  <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.7</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

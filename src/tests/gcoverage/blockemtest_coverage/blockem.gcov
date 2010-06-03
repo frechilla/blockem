@@ -1,0 +1,164 @@
+File 'player.cpp'
+Lines executed:51.76% of 199
+player.cpp:creating 'player.cpp.gcov'
+
+File 'game1v1.h'
+Lines executed:100.00% of 2
+game1v1.h:creating 'game1v1.h.gcov'
+
+File 'coordinate_set.h'
+Lines executed:0.00% of 22
+coordinate_set.h:creating 'coordinate_set.h.gcov'
+
+File 'game1v1.cpp'
+Lines executed:21.38% of 318
+game1v1.cpp:creating 'game1v1.cpp.gcov'
+
+File 'heuristic.h'
+Lines executed:100.00% of 1
+heuristic.h:creating 'heuristic.h.gcov'
+
+File 'heuristic.cpp'
+Lines executed:1.47% of 204
+heuristic.cpp:creating 'heuristic.cpp.gcov'
+
+File '/usr/include/c++/4.4/bits/stl_algobase.h'
+Lines executed:60.00% of 45
+/usr/include/c++/4.4/bits/stl_algobase.h:creating 'stl_algobase.h.gcov'
+
+File 'bitwise.h'
+Lines executed:0.00% of 6
+bitwise.h:creating 'bitwise.h.gcov'
+
+File '/usr/include/c++/4.4/bits/locale_facets.h'
+Lines executed:0.00% of 5
+/usr/include/c++/4.4/bits/locale_facets.h:creating 'locale_facets.h.gcov'
+
+File '/usr/include/c++/4.4/bits/char_traits.h'
+Lines executed:0.00% of 2
+/usr/include/c++/4.4/bits/char_traits.h:creating 'char_traits.h.gcov'
+
+File '/usr/include/c++/4.4/bits/stl_uninitialized.h'
+Lines executed:70.37% of 27
+/usr/include/c++/4.4/bits/stl_uninitialized.h:creating 'stl_uninitialized.h.gcov'
+
+File '/usr/include/c++/4.4/bits/allocator.h'
+Lines executed:100.00% of 7
+/usr/include/c++/4.4/bits/allocator.h:creating 'allocator.h.gcov'
+
+File '/usr/include/c++/4.4/iostream'
+Lines executed:100.00% of 1
+/usr/include/c++/4.4/iostream:creating 'iostream.gcov'
+
+File 'game_total_allocation.cpp'
+Lines executed:79.59% of 98
+game_total_allocation.cpp:creating 'game_total_allocation.cpp.gcov'
+
+File '/usr/include/c++/4.4/bits/stl_construct.h'
+Lines executed:100.00% of 15
+/usr/include/c++/4.4/bits/stl_construct.h:creating 'stl_construct.h.gcov'
+
+File '/usr/include/c++/4.4/bits/stl_function.h'
+Lines executed:100.00% of 2
+/usr/include/c++/4.4/bits/stl_function.h:creating 'stl_function.h.gcov'
+
+File '/usr/include/c++/4.4/bits/stl_set.h'
+Lines executed:100.00% of 14
+/usr/include/c++/4.4/bits/stl_set.h:creating 'stl_set.h.gcov'
+
+File '/usr/include/c++/4.4/bits/basic_ios.h'
+Lines executed:0.00% of 23
+/usr/include/c++/4.4/bits/basic_ios.h:creating 'basic_ios.h.gcov'
+
+File '/usr/include/c++/4.4/bits/basic_string.h'
+Lines executed:0.00% of 42
+/usr/include/c++/4.4/bits/basic_string.h:creating 'basic_string.h.gcov'
+
+File '/usr/include/c++/4.4/bits/stl_pair.h'
+Lines executed:100.00% of 2
+/usr/include/c++/4.4/bits/stl_pair.h:creating 'stl_pair.h.gcov'
+
+File '/usr/include/c++/4.4/ext/new_allocator.h'
+Lines executed:92.86% of 14
+/usr/include/c++/4.4/ext/new_allocator.h:creating 'new_allocator.h.gcov'
+
+File '/usr/include/c++/4.4/bits/stl_tree.h'
+Lines executed:93.80% of 129
+/usr/include/c++/4.4/bits/stl_tree.h:creating 'stl_tree.h.gcov'
+
+File '/usr/include/c++/4.4/ostream'
+Lines executed:0.00% of 13
+/usr/include/c++/4.4/ostream:creating 'ostream.gcov'
+
+File '/usr/include/c++/4.4/bits/stl_list.h'
+Lines executed:78.76% of 113
+/usr/include/c++/4.4/bits/stl_list.h:creating 'stl_list.h.gcov'
+
+File '/usr/include/c++/4.4/bits/stl_iterator.h'
+Lines executed:90.00% of 20
+/usr/include/c++/4.4/bits/stl_iterator.h:creating 'stl_iterator.h.gcov'
+
+File '/usr/include/c++/4.4/bits/stl_vector.h'
+Lines executed:79.49% of 78
+/usr/include/c++/4.4/bits/stl_vector.h:creating 'stl_vector.h.gcov'
+
+File 'board.h'
+Lines executed:20.00% of 30
+board.h:creating 'board.h.gcov'
+
+File 'player.h'
+Lines executed:29.82% of 57
+player.h:creating 'player.h.gcov'
+
+File 'piece.h'
+Lines executed:52.17% of 23
+piece.h:creating 'piece.h.gcov'
+
+File 'coordinate.h'
+Lines executed:70.59% of 17
+coordinate.h:creating 'coordinate.h.gcov'
+
+File '/usr/include/c++/4.4/bits/ios_base.h'
+Lines executed:0.00% of 8
+/usr/include/c++/4.4/bits/ios_base.h:creating 'ios_base.h.gcov'
+
+File '/usr/include/c++/4.4/new'
+Lines executed:50.00% of 2
+/usr/include/c++/4.4/new:creating 'new.gcov'
+
+File '/usr/include/c++/4.4/ext/atomicity.h'
+Lines executed:0.00% of 10
+/usr/include/c++/4.4/ext/atomicity.h:creating 'atomicity.h.gcov'
+
+File '/usr/include/c++/4.4/i486-linux-gnu/bits/gthr-default.h'
+Lines executed:0.00% of 2
+/usr/include/c++/4.4/i486-linux-gnu/bits/gthr-default.h:creating 'gthr-default.h.gcov'
+
+File '/usr/include/c++/4.4/iomanip'
+Lines executed:0.00% of 10
+/usr/include/c++/4.4/iomanip:creating 'iomanip.gcov'
+
+File 'board.cpp'
+Lines executed:68.75% of 64
+board.cpp:creating 'board.cpp.gcov'
+
+File 'piece.cpp'
+Lines executed:94.33% of 282
+piece.cpp:creating 'piece.cpp.gcov'
+
+File '/usr/include/c++/4.4/bits/list.tcc'
+Lines executed:86.96% of 23
+/usr/include/c++/4.4/bits/list.tcc:creating 'list.tcc.gcov'
+
+File '/usr/include/c++/4.4/bits/vector.tcc'
+Lines executed:25.00% of 52
+/usr/include/c++/4.4/bits/vector.tcc:creating 'vector.tcc.gcov'
+
+File 'rules.cpp'
+Lines executed:69.94% of 173
+rules.cpp:creating 'rules.cpp.gcov'
+
+File 'bitwise.cpp'
+Lines executed:97.80% of 91
+bitwise.cpp:creating 'bitwise.cpp.gcov'
+

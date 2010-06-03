@@ -1,0 +1,380 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <title>LCOV - Blockem Tests Code Coverage - src/player.h</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+        <tr>
+          <td width="5%"></td>
+          <td width="10%" class="headerItem">Current view:</td>
+          <td width="35%" class="headerValue"><a href="../index.html">directory</a> - <a href="index.html">src</a> - player.h (source / <a href="player.h.func.html">functions</a>)</td>
+          <td width="10%"></td>
+          <td width="10%" class="headerCovTableHead">Found</td>
+          <td width="10%" class="headerCovTableHead">Hit</td>
+          <td width="15%" class="headerCovTableHead">Coverage</td>
+          <td width="5%"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="headerItem">Test:</td>
+          <td class="headerValue">Blockem Tests Code Coverage</td>
+          <td class="headerItem">Lines:</td>
+          <td class="headerCovTableEntry">57</td>
+          <td class="headerCovTableEntry">44</td>
+          <td class="headerCovTableEntryHi">77.2 %</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="headerItem">Date:</td>
+          <td class="headerValue">2010-06-03</td>
+          <td class="headerItem">Functions:</td>
+          <td class="headerCovTableEntry">12</td>
+          <td class="headerCovTableEntry">4</td>
+          <td class="headerCovTableEntryLo">33.3 %</td>
+        </tr>
+                <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td><pre class="source">
+<a name="1"><span class="lineNum">       1 </span>                : // ============================================================================</a>
+<span class="lineNum">       2 </span>                : // Copyright 2009 Faustino Frechilla
+<span class="lineNum">       3 </span>                : //
+<span class="lineNum">       4 </span>                : // This file is part of Blockem.
+<span class="lineNum">       5 </span>                : //
+<span class="lineNum">       6 </span>                : // Blockem is free software: you can redistribute it and/or modify it under the
+<span class="lineNum">       7 </span>                : // terms of the GNU General Public License as published by the Free Software
+<span class="lineNum">       8 </span>                : // Foundation, either version 3 of the License, or (at your option) any later
+<span class="lineNum">       9 </span>                : // version.
+<span class="lineNum">      10 </span>                : //
+<span class="lineNum">      11 </span>                : // Blockem is distributed in the hope that it will be useful, but WITHOUT ANY
+<span class="lineNum">      12 </span>                : // WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      13 </span>                : // FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+<span class="lineNum">      14 </span>                : // details.
+<span class="lineNum">      15 </span>                : //
+<span class="lineNum">      16 </span>                : // You should have received a copy of the GNU General Public License along
+<span class="lineNum">      17 </span>                : // with Blockem. If not, see http://www.gnu.org/licenses/.
+<span class="lineNum">      18 </span>                : //
+<span class="lineNum">      19 </span>                : /// @file  player.h
+<span class="lineNum">      20 </span>                : /// @brief
+<span class="lineNum">      21 </span>                : ///
+<span class="lineNum">      22 </span>                : /// @author Faustino Frechilla
+<span class="lineNum">      23 </span>                : /// @history
+<span class="lineNum">      24 </span>                : /// Ref       Who                When         What
+<span class="lineNum">      25 </span>                : ///           Faustino Frechilla 30-Mar-2009  Original development
+<span class="lineNum">      26 </span>                : /// @endhistory
+<span class="lineNum">      27 </span>                : ///
+<span class="lineNum">      28 </span>                : // ============================================================================
+<span class="lineNum">      29 </span>                : 
+<span class="lineNum">      30 </span>                : #ifndef PLAYER_H_
+<span class="lineNum">      31 </span>                : #define PLAYER_H_
+<span class="lineNum">      32 </span>                : 
+<span class="lineNum">      33 </span>                : #include &lt;string&gt;
+<span class="lineNum">      34 </span>                : #include &quot;assert.h&quot;
+<span class="lineNum">      35 </span>                : #include &quot;piece.h&quot;
+<span class="lineNum">      36 </span>                : #include &quot;coordinate.h&quot;
+<span class="lineNum">      37 </span>                : #include &quot;coordinate_set.h&quot;
+<span class="lineNum">      38 </span>                : 
+<span class="lineNum">      39 </span>                : class Player
+<span class="lineNum">      40 </span>                : {
+<span class="lineNum">      41 </span>                : public:
+<span class="lineNum">      42 </span>                :         /// type of the iterator used to retrieve the nk points of this player in a spiral shape
+<span class="lineNum">      43 </span>                :     typedef int32_t SpiralIterator;
+<span class="lineNum">      44 </span>                : 
+<span class="lineNum">      45 </span>                :     /// @param name is the name of the player
+<span class="lineNum">      46 </span>                :     /// @param presenChar is the character that represents the player
+<span class="lineNum">      47 </span>                :         /// @param a_rowsInBoard
+<span class="lineNum">      48 </span>                :         /// @param a_columnsInBoard
+<span class="lineNum">      49 </span>                :     /// @param a_startingCoordinate
+<span class="lineNum">      50 </span>                :     Player(
+<span class="lineNum">      51 </span>                :             std::string a_name,
+<span class="lineNum">      52 </span>                :             char a_presentationChar,
+<span class="lineNum">      53 </span>                :             int32_t a_rowsInBoard,
+<span class="lineNum">      54 </span>                :             int32_t a_columnsInBoard,
+<span class="lineNum">      55 </span>                :             const Coordinate &amp;a_startingCoordinate = Coordinate(0,0));
+<span class="lineNum">      56 </span>                :     virtual ~Player();
+<span class="lineNum">      57 </span>                : 
+<span class="lineNum">      58 </span>                :     /// @brief copy constructor. Needed because there's some dynamic memory
+<span class="lineNum">      59 </span>                :     Player(const Player &amp;a_src);
+<span class="lineNum">      60 </span>                :     /// @brief operator=. Needed because there's some dynamic memory
+<span class="lineNum">      61 </span>                :     Player&amp; operator= (const Player &amp;a_src);
+<span class="lineNum">      62 </span>                : 
+<span class="lineNum">      63 </span>                :     /// array with this player's pieces
+<span class="lineNum">      64 </span>                :     Piece m_pieces[e_numberOfPieces];
+<span class="lineNum">      65 </span>                : 
+<span class="lineNum">      66 </span>                :     /// Reset the player to its original configuration
+<span class="lineNum">      67 </span>                :     /// that is, no nucleation points saved and all the pieces present and reset too
+<span class="lineNum">      68 </span>                :     /// @param player's starting coordinate
+<span class="lineNum">      69 </span>                :     void Reset(const Coordinate &amp;a_startingCoordinate = Coordinate(0,0));
+<span class="lineNum">      70 </span>                : 
+<span class="lineNum">      71 </span>                :     /// Sets the colour which represents this player
+<span class="lineNum">      72 </span>                :     /// values are uint8_t, that is, from 0 to 255
+<span class="lineNum">      73 </span>                :     void SetColour(uint8_t a_colourRed, uint8_t a_colourGreen, uint8_t a_colourBlue);
+<span class="lineNum">      74 </span>                : 
+<span class="lineNum">      75 </span>                :     /// Gets the colour which represents this player
+<span class="lineNum">      76 </span>                :     /// values are uint8_t, that is, from 0 to 255
+<span class="lineNum">      77 </span>                :     void GetColour(uint8_t &amp;out_colourRed, uint8_t &amp;out_colourGreen, uint8_t &amp;out_colourBlue) const;
+<a name="78"><span class="lineNum">      78 </span>                : </a>
+<span class="lineNum">      79 </span>                :     /// Returns the character that represents the player
+<span class="lineNum">      80 </span><span class="lineCov">        6449710 :     inline char PresentationChar() const</span>
+<span class="lineNum">      81 </span>                :     {
+<span class="lineNum">      82 </span><span class="lineCov">        6449710 :         return m_presentationChar;</span>
+<span class="lineNum">      83 </span>                :     }
+<span class="lineNum">      84 </span>                : 
+<span class="lineNum">      85 </span>                :     /// Returns the name of the player
+<span class="lineNum">      86 </span>                :     inline const std::string&amp; GetName() const
+<span class="lineNum">      87 </span>                :         {
+<span class="lineNum">      88 </span>                :         return m_name;
+<span class="lineNum">      89 </span>                :         }
+<span class="lineNum">      90 </span>                : 
+<span class="lineNum">      91 </span>                :     /// modifies the name of the player
+<span class="lineNum">      92 </span>                :     inline void SetName(std::string&amp; a_newName)
+<span class="lineNum">      93 </span>                :     {
+<span class="lineNum">      94 </span>                :         m_name = a_newName;
+<span class="lineNum">      95 </span>                :     }
+<a name="96"><span class="lineNum">      96 </span>                : </a>
+<span class="lineNum">      97 </span>                :     /// Returns the starting coordinate of this player
+<span class="lineNum">      98 </span><span class="lineNoCov">              0 :     inline const Coordinate&amp; GetStartingCoordinate() const</span>
+<span class="lineNum">      99 </span>                :     {
+<span class="lineNum">     100 </span><span class="lineNoCov">              0 :         return m_startingCoordinate;</span>
+<a name="101"><span class="lineNum">     101 </span>                :     }</a>
+<span class="lineNum">     102 </span>                : 
+<span class="lineNum">     103 </span><span class="lineCov">              7 :     inline void SetStartingCoordinate(const Coordinate &amp;a_startingCoordinate)</span>
+<span class="lineNum">     104 </span>                :     {
+<span class="lineNum">     105 </span><span class="lineCov">              7 :         m_startingCoordinate = a_startingCoordinate;</span>
+<span class="lineNum">     106 </span><span class="lineCov">              7 :     }</span>
+<a name="107"><span class="lineNum">     107 </span>                : </a>
+<span class="lineNum">     108 </span>                :     /// returns the number of pieces available
+<span class="lineNum">     109 </span><span class="lineCov">            227 :     inline uint8_t NumberOfPiecesAvailable() const</span>
+<span class="lineNum">     110 </span>                :     {
+<span class="lineNum">     111 </span><span class="lineCov">            227 :         return m_nPiecesAvailable;</span>
+<a name="112"><span class="lineNum">     112 </span>                :     }</a>
+<span class="lineNum">     113 </span>                : 
+<span class="lineNum">     114 </span><span class="lineCov">            182 :     inline int32_t NumberOfNucleationPoints() const</span>
+<span class="lineNum">     115 </span>                :     {
+<span class="lineNum">     116 </span><span class="lineCov">            182 :         return m_nkPointsCount;</span>
+<span class="lineNum">     117 </span>                :     }
+<a name="118"><span class="lineNum">     118 </span>                : </a>
+<span class="lineNum">     119 </span>                :     /// Set the piece as not present
+<span class="lineNum">     120 </span><span class="lineCov">            122 :     inline void UnsetPiece(ePieceType_t a_piece)</span>
+<span class="lineNum">     121 </span>                :     {
+<span class="lineNum">     122 </span>                : #ifdef DEBUG
+<span class="lineNum">     123 </span><span class="lineCov">            122 :         assert((a_piece &gt;= e_minimumPieceIndex) &amp;&amp; (a_piece &lt; e_numberOfPieces));</span>
+<span class="lineNum">     124 </span><span class="lineCov">            122 :         assert(m_piecesPresent[a_piece] == true);</span>
+<span class="lineNum">     125 </span>                : #endif
+<span class="lineNum">     126 </span><span class="lineCov">            122 :         m_piecesPresent[a_piece] = false;</span>
+<span class="lineNum">     127 </span><span class="lineCov">            122 :         m_nPiecesAvailable--;</span>
+<span class="lineNum">     128 </span><span class="lineCov">            122 :     }</span>
+<a name="129"><span class="lineNum">     129 </span>                : </a>
+<span class="lineNum">     130 </span>                :     /// Set the piece as present
+<span class="lineNum">     131 </span><span class="lineCov">             96 :     inline void SetPiece(ePieceType_t a_piece)</span>
+<span class="lineNum">     132 </span>                :     {
+<span class="lineNum">     133 </span>                : #ifdef DEBUG
+<span class="lineNum">     134 </span><span class="lineCov">             96 :         assert((a_piece &gt;= e_minimumPieceIndex) &amp;&amp; (a_piece &lt; e_numberOfPieces));</span>
+<span class="lineNum">     135 </span><span class="lineCov">             96 :         assert(m_piecesPresent[a_piece] == false);</span>
+<span class="lineNum">     136 </span>                : #endif
+<span class="lineNum">     137 </span><span class="lineCov">             96 :         m_piecesPresent[a_piece] = true;</span>
+<span class="lineNum">     138 </span><span class="lineCov">             96 :         m_nPiecesAvailable++;</span>
+<span class="lineNum">     139 </span><span class="lineCov">             96 :     }</span>
+<a name="140"><span class="lineNum">     140 </span>                : </a>
+<span class="lineNum">     141 </span>                :     /// returns true if the player still has the piece
+<span class="lineNum">     142 </span><span class="lineCov">            587 :     inline bool IsPieceAvailable(ePieceType_t a_piece) const</span>
+<span class="lineNum">     143 </span>                :     {
+<span class="lineNum">     144 </span>                : #ifdef DEBUG
+<span class="lineNum">     145 </span><span class="lineCov">            587 :         assert((a_piece &gt;= e_minimumPieceIndex) &amp;&amp; (a_piece &lt; e_numberOfPieces));</span>
+<span class="lineNum">     146 </span>                : #endif
+<span class="lineNum">     147 </span><span class="lineCov">            587 :         return m_piecesPresent[a_piece];</span>
+<span class="lineNum">     148 </span>                :     }
+<a name="149"><span class="lineNum">     149 </span>                : </a>
+<span class="lineNum">     150 </span>                :     /// returns true if this player has a nucleation point in the coords specified
+<span class="lineNum">     151 </span><span class="lineCov">           8541 :     inline bool IsNucleationPoint(const Coordinate &amp;a_coord) const</span>
+<span class="lineNum">     152 </span>                :     {
+<span class="lineNum">     153 </span>                : #ifdef DEBUG
+<span class="lineNum">     154 </span><span class="lineCov">           8541 :         assert((a_coord.m_row &gt;= 0) &amp;&amp; (a_coord.m_row &lt; m_nRowsInBoard));</span>
+<span class="lineNum">     155 </span><span class="lineCov">           8541 :         assert((a_coord.m_col &gt;= 0) &amp;&amp; (a_coord.m_col &lt; m_nColumnsInBoard));</span>
+<span class="lineNum">     156 </span>                : #endif
+<span class="lineNum">     157 </span><span class="lineCov">           8541 :         return static_cast&lt;bool&gt;(m_nkPoints[a_coord.m_row][a_coord.m_col]);</span>
+<span class="lineNum">     158 </span>                :     }
+<a name="159"><span class="lineNum">     159 </span>                : </a>
+<span class="lineNum">     160 </span>                :     /// save a nucleation point in the coords passed as parameters
+<span class="lineNum">     161 </span><span class="lineCov">            602 :     inline void SetNucleationPoint(const Coordinate &amp;a_coord)</span>
+<span class="lineNum">     162 </span>                :     {
+<span class="lineNum">     163 </span>                : #ifdef DEBUG
+<span class="lineNum">     164 </span><span class="lineCov">            602 :         assert((a_coord.m_row &gt;= 0) &amp;&amp; (a_coord.m_row &lt; m_nRowsInBoard));</span>
+<span class="lineNum">     165 </span><span class="lineCov">            602 :         assert((a_coord.m_col &gt;= 0) &amp;&amp; (a_coord.m_col &lt; m_nColumnsInBoard));</span>
+<span class="lineNum">     166 </span>                : #endif
+<span class="lineNum">     167 </span><span class="lineCov">            602 :         if (m_nkPoints[a_coord.m_row][a_coord.m_col] == 0)</span>
+<span class="lineNum">     168 </span>                :         {
+<span class="lineNum">     169 </span>                : #ifdef DEBUG
+<span class="lineNum">     170 </span><span class="lineCov">            588 :             assert(m_nkPointsCount &lt; (m_nRowsInBoard * m_nColumnsInBoard));</span>
+<span class="lineNum">     171 </span>                : #endif
+<span class="lineNum">     172 </span><span class="lineCov">            588 :             m_nkPoints[a_coord.m_row][a_coord.m_col] = 1;</span>
+<span class="lineNum">     173 </span><span class="lineCov">            588 :             m_nkPointsCount++;</span>
+<span class="lineNum">     174 </span>                :         }
+<span class="lineNum">     175 </span><span class="lineCov">            602 :     }</span>
+<a name="176"><span class="lineNum">     176 </span>                : </a>
+<span class="lineNum">     177 </span>                :     /// delete a nucleation point in the coords passed as parameters
+<span class="lineNum">     178 </span><span class="lineCov">           8173 :     inline void UnsetNucleationPoint(const Coordinate &amp;a_coord)</span>
+<span class="lineNum">     179 </span>                :     {
+<span class="lineNum">     180 </span>                : #ifdef DEBUG
+<span class="lineNum">     181 </span><span class="lineCov">           8173 :         assert((a_coord.m_row &gt;= 0) &amp;&amp; (a_coord.m_row &lt; m_nRowsInBoard));</span>
+<span class="lineNum">     182 </span><span class="lineCov">           8173 :         assert((a_coord.m_col &gt;= 0) &amp;&amp; (a_coord.m_col &lt; m_nColumnsInBoard));</span>
+<span class="lineNum">     183 </span>                : #endif
+<span class="lineNum">     184 </span><span class="lineCov">           8173 :         if (m_nkPoints[a_coord.m_row][a_coord.m_col])</span>
+<span class="lineNum">     185 </span>                :         {
+<span class="lineNum">     186 </span>                : #ifdef DEBUG
+<span class="lineNum">     187 </span><span class="lineCov">            566 :              assert(m_nkPointsCount &gt; 0);</span>
+<span class="lineNum">     188 </span>                : #endif
+<span class="lineNum">     189 </span><span class="lineCov">            566 :             m_nkPoints[a_coord.m_row][a_coord.m_col] = 0;</span>
+<span class="lineNum">     190 </span><span class="lineCov">            566 :             m_nkPointsCount--;</span>
+<span class="lineNum">     191 </span>                :         }
+<span class="lineNum">     192 </span><span class="lineCov">           8173 :     }</span>
+<span class="lineNum">     193 </span>                : 
+<span class="lineNum">     194 </span>                :     /// Get all the nucleation points in the board. The user has to ensure the size of the array is big enough (for example
+<span class="lineNum">     195 </span>                :     /// 2/5 the size of the board) If the size of the array wasn't big enough this function will save a_size
+<span class="lineNum">     196 </span>                :     /// into the out_nucleationPoints array and return the total number of nk points (bigger than a_size)
+<span class="lineNum">     197 </span>                :     /// @param array to be declared as 'Coordinate values[size]'. It will save the nucleation points
+<span class="lineNum">     198 </span>                :     /// @param size of the array.
+<span class="lineNum">     199 </span>                :     /// @return the number of nucleation points saved into the output array
+<span class="lineNum">     200 </span>                :     int32_t GetAllNucleationPoints(
+<span class="lineNum">     201 </span>                :             Coordinate out_nucleationPoints[], int32_t a_size) const;
+<span class="lineNum">     202 </span>                : 
+<span class="lineNum">     203 </span>                :     /// Get all the nucleation points in the board.
+<span class="lineNum">     204 </span>                :     /// @param set to save the nucleation points
+<span class="lineNum">     205 </span>                :     /// @return the number of nucleation points saved into the output set
+<span class="lineNum">     206 </span>                :     int32_t GetAllNucleationPoints(
+<span class="lineNum">     207 </span>                :                 STLCoordinateSet_t &amp;a_set) const;
+<span class="lineNum">     208 </span>                : 
+<span class="lineNum">     209 </span>                :     /// Get all the nucleation points in the board. Save the results in a special kind of set
+<span class="lineNum">     210 </span>                :     /// without memory allocation on the heap
+<span class="lineNum">     211 </span>                :     /// @param set to save the nucleation points
+<a name="212"><span class="lineNum">     212 </span>                :     /// @return the number of nucleation points saved into the output set</a>
+<span class="lineNum">     213 </span>                :     template&lt;int32_t ROWS, int32_t COLUMNS&gt;
+<span class="lineNum">     214 </span><span class="lineNoCov">              0 :     int32_t GetAllNucleationPoints(</span>
+<span class="lineNum">     215 </span>                :             CoordinateSet&lt;ROWS, COLUMNS&gt; &amp;a_set) const
+<span class="lineNum">     216 </span>                :     {
+<span class="lineNum">     217 </span>                : #ifdef DEBUG
+<span class="lineNum">     218 </span><span class="lineNoCov">              0 :         assert(ROWS    == m_nRowsInBoard);</span>
+<span class="lineNum">     219 </span><span class="lineNoCov">              0 :         assert(COLUMNS == m_nColumnsInBoard);</span>
+<span class="lineNum">     220 </span>                : #endif
+<span class="lineNum">     221 </span><span class="lineNoCov">              0 :         int32_t nNucleationPoints = 0;</span>
+<span class="lineNum">     222 </span><span class="lineNoCov">              0 :         Coordinate thisCoord;</span>
+<span class="lineNum">     223 </span>                : 
+<span class="lineNum">     224 </span><span class="lineNoCov">              0 :         for (thisCoord.m_row = 0; thisCoord.m_row &lt; m_nRowsInBoard ; thisCoord.m_row++)</span>
+<span class="lineNum">     225 </span>                :         {
+<span class="lineNum">     226 </span><span class="lineNoCov">              0 :             for (thisCoord.m_col = 0; thisCoord.m_col &lt; m_nColumnsInBoard ; thisCoord.m_col++)</span>
+<span class="lineNum">     227 </span>                :             {
+<span class="lineNum">     228 </span><span class="lineNoCov">              0 :                 if (IsNucleationPoint(thisCoord))</span>
+<span class="lineNum">     229 </span>                :                 {
+<span class="lineNum">     230 </span><span class="lineNoCov">              0 :                     a_set.insert(thisCoord);</span>
+<span class="lineNum">     231 </span>                : 
+<span class="lineNum">     232 </span><span class="lineNoCov">              0 :                     nNucleationPoints++;</span>
+<span class="lineNum">     233 </span>                :                 }
+<span class="lineNum">     234 </span>                :             }
+<span class="lineNum">     235 </span>                :         }
+<span class="lineNum">     236 </span>                : 
+<span class="lineNum">     237 </span><span class="lineNoCov">              0 :         return nNucleationPoints;</span>
+<span class="lineNum">     238 </span>                :     }
+<span class="lineNum">     239 </span>                : 
+<span class="lineNum">     240 </span>                :     /// Get the first nucleation point in the board starting from the center of the board
+<span class="lineNum">     241 </span>                :     /// and keep on going on a spiral shape
+<span class="lineNum">     242 </span>                :     /// The result will be saved in the variables out_coordX and out_coordY
+<span class="lineNum">     243 </span>                :     /// @param iterator used to go through the board rotating from the center to the borders. It is reseted in this function
+<span class="lineNum">     244 </span>                :     ///     It is used also in GetNextNucleationPoint
+<span class="lineNum">     245 </span>                :     /// @param out_coord
+<span class="lineNum">     246 </span>                :     /// @return true if a nk was found. False otherwise
+<span class="lineNum">     247 </span>                :     bool GetFirstNucleationPointSpiral(
+<span class="lineNum">     248 </span>                :             SpiralIterator &amp;iterator, Coordinate &amp;out_coord) const;
+<span class="lineNum">     249 </span>                : 
+<span class="lineNum">     250 </span>                :     /// Get Next nucleation point starting from the next point to the one represented by in_out_coord.
+<span class="lineNum">     251 </span>                :     /// if the user wants the function to start from the beginning he/she should use GetFirstNucleationPoint
+<span class="lineNum">     252 </span>                :     /// IT STARTS CHECKING FROM THE NEXT POINT TO THE COORDS SPECIFIED BY in_out_coord
+<span class="lineNum">     253 </span>                :     /// @param iterator used to go through the board rotating from the center to the borders.
+<span class="lineNum">     254 </span>                :     ///     the function GetFirstNucleationPoint must be called first to initialiase the iterator
+<span class="lineNum">     255 </span>                :     ///     if GetNextNucleationPoint is called before GetFirstNucleationPoint the algorithm won't work as expected
+<span class="lineNum">     256 </span>                :     /// @param in_out_coordX
+<span class="lineNum">     257 </span>                :     /// @return true if a nk was found. False otherwise
+<span class="lineNum">     258 </span>                :     bool GetNextNucleationPointSpiral(
+<span class="lineNum">     259 </span>                :             SpiralIterator &amp;iterator, Coordinate &amp;in_out_coord) const;
+<span class="lineNum">     260 </span>                : 
+<span class="lineNum">     261 </span>                :     /// print a list of bits indicating which pieces are present and which not
+<span class="lineNum">     262 </span>                :     void PrintAvailablePieces(std::ostream&amp; a_outStream) const;
+<span class="lineNum">     263 </span>                : 
+<span class="lineNum">     264 </span>                :     /// print the nucleation points of this player in a board
+<span class="lineNum">     265 </span>                :     void PrintNucleationPoints(std::ostream&amp; a_outStream) const;
+<span class="lineNum">     266 </span>                : 
+<span class="lineNum">     267 </span>                : private:
+<span class="lineNum">     268 </span>                :     /// the name of the player
+<span class="lineNum">     269 </span>                :     std::string m_name;
+<span class="lineNum">     270 </span>                :     /// represents the pieces available
+<span class="lineNum">     271 </span>                :     bool m_piecesPresent[e_numberOfPieces];
+<span class="lineNum">     272 </span>                :     /// the character that represents the player
+<span class="lineNum">     273 </span>                :     char m_presentationChar;
+<span class="lineNum">     274 </span>                :     /// amount of pieces available
+<span class="lineNum">     275 </span>                :     uint8_t m_nPiecesAvailable;
+<span class="lineNum">     276 </span>                :     /// number of rows of the board where the player is playing
+<span class="lineNum">     277 </span>                :     int32_t m_nRowsInBoard;
+<span class="lineNum">     278 </span>                :     /// number of columns of the board where the player is playing
+<span class="lineNum">     279 </span>                :     int32_t m_nColumnsInBoard;
+<span class="lineNum">     280 </span>                :     /// Nucleation points in the board corresponding to this player
+<span class="lineNum">     281 </span>                :     uint8_t** m_nkPoints;
+<span class="lineNum">     282 </span>                :     /// Number of nucleation points saved in the nkPoints array
+<span class="lineNum">     283 </span>                :     int32_t m_nkPointsCount;
+<span class="lineNum">     284 </span>                :     /// Starting coordinate of this player
+<span class="lineNum">     285 </span>                :     Coordinate m_startingCoordinate;
+<span class="lineNum">     286 </span>                :     /// Red channel of the Colour representation of the player
+<span class="lineNum">     287 </span>                :     uint8_t m_colourRed;
+<span class="lineNum">     288 </span>                :     /// Green channel of the Colour representation of the player
+<span class="lineNum">     289 </span>                :     uint8_t m_colourGreen;
+<span class="lineNum">     290 </span>                :     /// Blue channel of the Colour representation of the player
+<span class="lineNum">     291 </span>                :     uint8_t m_colourBlue;
+<span class="lineNum">     292 </span>                : 
+<span class="lineNum">     293 </span>                :     /// load all pieces into the m_pieces array
+<span class="lineNum">     294 </span>                :     void LoadPieces();
+<span class="lineNum">     295 </span>                : 
+<span class="lineNum">     296 </span>                :     /// @brief copy the source player argument into the current object
+<span class="lineNum">     297 </span>                :     /// It doesn't delete or allocate any memory, so when used in
+<span class="lineNum">     298 </span>                :     /// operator= or copy constructor that should be taken care of
+<span class="lineNum">     299 </span>                :     /// before calling to the function
+<span class="lineNum">     300 </span>                :     void CopyFromObject(const Player &amp;a_src);
+<span class="lineNum">     301 </span>                : 
+<span class="lineNum">     302 </span>                :     // prevent players to be created without the proper arguments
+<span class="lineNum">     303 </span>                :     Player();
+<span class="lineNum">     304 </span>                : };
+<span class="lineNum">     305 </span>                : 
+<span class="lineNum">     306 </span>                : #endif /* PLAYER_H_ */
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+  <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.7</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>
