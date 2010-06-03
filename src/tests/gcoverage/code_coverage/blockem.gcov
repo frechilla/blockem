@@ -347,7 +347,7 @@ Lines executed:0.00% of 1
 /usr/include/c++/4.4/exception:creating 'exception.gcov'
 
 File 'main.cpp'
-Lines executed:40.24% of 82
+Lines executed:37.80% of 82
 main.cpp:creating 'main.cpp.gcov'
 
 File '/usr/include/c++/4.4/fstream'

@@ -93,7 +93,7 @@
 <span class="lineNum">      33 </span>                : // a piece has to fit in a square (2*2) + 1
 <a name="34"><span class="lineNum">      34 </span>                : static const uint8_t PIECE_MAX_RADIUS = 2;</a>
 <span class="lineNum">      35 </span>                : 
-<span class="lineNum">      36 </span><span class="lineCov">             36 : const std::string Piece::PieceDescription[e_numberOfPieces] =</span>
+<span class="lineNum">      36 </span><span class="lineCov">             32 : const std::string Piece::PieceDescription[e_numberOfPieces] =</span>
 <span class="lineNum">      37 </span>                : {
 <span class="lineNum">      38 </span>                :     &quot;1Piece_BabyPiece&quot;,
 <span class="lineNum">      39 </span>                :     &quot;2Piece_TwoPiece&quot;,
@@ -116,7 +116,7 @@
 <span class="lineNum">      56 </span>                :     &quot;5Piece_SafPiece&quot;,
 <span class="lineNum">      57 </span>                :     &quot;5Piece_WPiece&quot;,
 <span class="lineNum">      58 </span>                :     &quot;5Piece_Cross&quot;
-<span class="lineNum">      59 </span><span class="lineCov">             18 : };</span>
+<span class="lineNum">      59 </span><span class="lineCov">             16 : };</span>
 <span class="lineNum">      60 </span>                : 
 <span class="lineNum">      61 </span>                : // instantiate the load piece map.
 <span class="lineNum">      62 </span>                : Piece::LoadPieceFunction_t Piece::m_loadFunctionMap[] =
@@ -704,7 +704,7 @@
 <span class="lineNum">     644 </span>                : 
 <a name="645"><span class="lineNum">     645 </span>                :     // leave the piece as it was originally described</a>
 <span class="lineNum">     646 </span><span class="lineCov">            736 :     Reset();</span>
-<span class="lineNum">     647 </span><span class="lineCov">            790 : }</span>
+<span class="lineNum">     647 </span><span class="lineCov">            784 : }</span>
 </pre>
       </td>
     </tr>

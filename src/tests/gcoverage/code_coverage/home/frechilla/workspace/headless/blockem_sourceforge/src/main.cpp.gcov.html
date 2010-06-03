@@ -33,8 +33,8 @@
           <td class="headerValue">Blockem Tests Code Coverage</td>
           <td class="headerItem">Lines:</td>
           <td class="headerCovTableEntry">82</td>
-          <td class="headerCovTableEntry">33</td>
-          <td class="headerCovTableEntryMed">40.2 %</td>
+          <td class="headerCovTableEntry">31</td>
+          <td class="headerCovTableEntryMed">37.8 %</td>
         </tr>
         <tr>
           <td></td>
@@ -155,25 +155,25 @@
 <span class="lineNum">      95 </span>                : };
 <a name="96"><span class="lineNum">      96 </span>                : </a>
 <span class="lineNum">      97 </span>                : 
-<span class="lineNum">      98 </span><span class="lineCov">             17 : int main(int argc, char **argv)</span>
+<span class="lineNum">      98 </span><span class="lineCov">             15 : int main(int argc, char **argv)</span>
 <span class="lineNum">      99 </span>                : {
-<span class="lineNum">     100 </span><span class="lineCov">             17 :     GError *error = NULL;</span>
+<span class="lineNum">     100 </span><span class="lineCov">             15 :     GError *error = NULL;</span>
 <span class="lineNum">     101 </span>                :     GOptionContext *cmdContext;
 <span class="lineNum">     102 </span>                : 
-<span class="lineNum">     103 </span><span class="lineCov">             17 :     cmdContext = g_option_context_new (&quot;- The GNU polyominoes board game&quot;);</span>
+<span class="lineNum">     103 </span><span class="lineCov">             15 :     cmdContext = g_option_context_new (&quot;- The GNU polyominoes board game&quot;);</span>
 <span class="lineNum">     104 </span>                :     // to add i18n:
 <span class="lineNum">     105 </span>                :     //   g_option_context_add_main_entries (cmdContext, s_cmdEntries, GETTEXT_PACKAGE);
-<span class="lineNum">     106 </span><span class="lineCov">             17 :     g_option_context_add_main_entries (cmdContext, s_cmdEntries, NULL);</span>
+<span class="lineNum">     106 </span><span class="lineCov">             15 :     g_option_context_add_main_entries (cmdContext, s_cmdEntries, NULL);</span>
 <span class="lineNum">     107 </span>                :     // http://library.gnome.org/devel/glib/unstable/glib-Commandline-option-parser.html#g-option-context-add-group
-<span class="lineNum">     108 </span><span class="lineCov">             17 :     g_option_context_add_group (cmdContext, gtk_get_option_group (TRUE));</span>
-<span class="lineNum">     109 </span><span class="lineCov">             17 :     if (!g_option_context_parse (cmdContext, &amp;argc, &amp;argv, &amp;error))</span>
+<span class="lineNum">     108 </span><span class="lineCov">             15 :     g_option_context_add_group (cmdContext, gtk_get_option_group (TRUE));</span>
+<span class="lineNum">     109 </span><span class="lineCov">             15 :     if (!g_option_context_parse (cmdContext, &amp;argc, &amp;argv, &amp;error))</span>
 <span class="lineNum">     110 </span>                :     {
 <span class="lineNum">     111 </span><span class="lineNoCov">              0 :         std::cout &lt;&lt; argv[0] &lt;&lt; &quot;: Error parsing command line: &quot; &lt;&lt; error-&gt;message &lt;&lt; std::endl;</span>
 <span class="lineNum">     112 </span><span class="lineNoCov">              0 :         std::cout &lt;&lt; argv[0] &lt;&lt; &quot;: Try '&quot; &lt;&lt; argv[0] &lt;&lt;  &quot; --help'&quot; &lt;&lt; std::endl;</span>
 <span class="lineNum">     113 </span><span class="lineNoCov">              0 :         return 1;</span>
 <span class="lineNum">     114 </span>                :     }
 <span class="lineNum">     115 </span>                : 
-<span class="lineNum">     116 </span><span class="lineCov">             17 :     if (s_version)</span>
+<span class="lineNum">     116 </span><span class="lineCov">             15 :     if (s_version)</span>
 <span class="lineNum">     117 </span>                :     {
 <span class="lineNum">     118 </span><span class="lineNoCov">              0 :         std::cout &lt;&lt; &quot;Blockem, version &quot; &lt;&lt; VERSION &lt;&lt; &quot; (r&quot; &lt;&lt; SVN_REVISION &lt;&lt; &quot;)&quot; &lt;&lt; std::endl;</span>
 <span class="lineNum">     119 </span><span class="lineNoCov">              0 :         std::cout &lt;&lt; &quot;  Compiled &quot; &lt;&lt; COMPILETIME &lt;&lt; std::endl &lt;&lt; std::endl;</span>
@@ -184,12 +184,12 @@
 <span class="lineNum">     124 </span><span class="lineNoCov">              0 :         return 0;</span>
 <span class="lineNum">     125 </span>                :     }
 <span class="lineNum">     126 </span>                : 
-<span class="lineNum">     127 </span><span class="lineCov">             17 :     if (s_blockemfilePath != NULL)</span>
+<span class="lineNum">     127 </span><span class="lineCov">             15 :     if (s_blockemfilePath != NULL)</span>
 <span class="lineNum">     128 </span>                :     {
-<span class="lineNum">     129 </span><span class="lineCov">             17 :         if (!g_file_test(s_blockemfilePath, G_FILE_TEST_IS_REGULAR))</span>
+<span class="lineNum">     129 </span><span class="lineCov">             15 :         if (!g_file_test(s_blockemfilePath, G_FILE_TEST_IS_REGULAR))</span>
 <span class="lineNum">     130 </span>                :         {
-<span class="lineNum">     131 </span><span class="lineCov">              2 :             std::cerr &lt;&lt; &quot;Error: &quot; &lt;&lt; s_blockemfilePath &lt;&lt; &quot; doesn't exist. Exiting...&quot; &lt;&lt; std::endl;</span>
-<span class="lineNum">     132 </span><span class="lineCov">              2 :             return 2;</span>
+<span class="lineNum">     131 </span><span class="lineNoCov">              0 :             std::cerr &lt;&lt; &quot;Error: &quot; &lt;&lt; s_blockemfilePath &lt;&lt; &quot; doesn't exist. Exiting...&quot; &lt;&lt; std::endl;</span>
+<span class="lineNum">     132 </span><span class="lineNoCov">              0 :             return 2;</span>
 <span class="lineNum">     133 </span>                :         }
 <span class="lineNum">     134 </span>                : 
 <span class="lineNum">     135 </span><span class="lineCov">             15 :         if (s_depth &lt;= 0)</span>
@@ -274,7 +274,7 @@
 <span class="lineNum">     214 </span>                :             theGame.PutDownPiece(
 <span class="lineNum">     215 </span>                :                     resultPiece,
 <span class="lineNum">     216 </span>                :                     resultCoord,
-<span class="lineNum">     217 </span><span class="lineCov">             15 :                     Game1v1::e_Game1v1Player2);</span>
+<span class="lineNum">     217 </span><span class="lineCov">             15 :                     Game1v1::e_Game1v1Player1);</span>
 <span class="lineNum">     218 </span>                :         }
 <span class="lineNum">     219 </span>                : 
 <span class="lineNum">     220 </span><span class="lineCov">             15 :         theGame.SaveGame(std::cout);</span>
@@ -381,7 +381,7 @@
 <span class="lineNum">     321 </span>                :     //////////////////
 <a name="322"><span class="lineNum">     322 </span>                : </a>
 <span class="lineNum">     323 </span><span class="lineNoCov">              0 :     return 0;</span>
-<span class="lineNum">     324 </span><span class="lineCov">             51 : }</span>
+<span class="lineNum">     324 </span><span class="lineCov">             45 : }</span>
 <span class="lineNum">     325 </span>                : 
 <span class="lineNum">     326 </span>                : 
 <span class="lineNum">     327 </span>                : 
