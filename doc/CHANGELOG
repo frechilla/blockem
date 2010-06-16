@@ -1,5 +1,11 @@
 : Version 0.2.2
+    - Code adapted to be able to run with glib >= 2.24 (included in ubuntu
+      10.4). Earlier versions couldn't run with that library version due to
+      the following error: 
+        "error: gthread_supported call failed when initialising gthreads"
+        "error: App can't start without gthreads support"
     - minimax algorithm improved. 5% performance improvement since 0.2.1.
+    - Influence areas of each player can be shown on the board
 
 24/05/2010: Version 0.2.1
     - Around 8% computing time improvement in the minimax algorithm (tested

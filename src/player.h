@@ -38,6 +38,20 @@
 
 class Player
 {
+private:
+    /// Properties of this player for every coordinate in the board
+    /// each bit says if that specific coordinate is present (0 false, 1 true)
+    // it is for internal use only, but it must be declared on the top of the class
+    // because it is used in this header file
+    typedef enum
+    {
+        e_CoordPropertyNKPoints      = 0x01,
+        e_CoordPropertyInfluenceArea = 0x02,
+
+        // this value is the mask that specifies all the bits used for the properties
+        e_CoordPropertyMask          = 0x03,
+    } eCoordinateProperty_t;
+
 public:
 	/// type of the iterator used to retrieve the nk points of this player in a spiral shape
     typedef int32_t SpiralIterator;
@@ -147,6 +161,55 @@ public:
         return m_piecesPresent[a_piece];
     }
 
+    /// returns true if a_coord is influenced by the player. Definition of "influenced"
+    /// is a bit vague. Have a look at rules::RecalculateInfluenceAreaAroundPiece
+    /// to know what "influence" in blokus
+    inline bool IsCoordInfluencedByPlayer(const Coordinate &a_coord) const
+    {
+#ifdef DEBUG
+        assert((a_coord.m_row >= 0) && (a_coord.m_row < m_nRowsInBoard));
+        assert((a_coord.m_col >= 0) && (a_coord.m_col < m_nColumnsInBoard));
+#endif
+        uint8_t coordProperty = m_coordinateProperties[a_coord.m_row][a_coord.m_col];
+        return static_cast<bool>(coordProperty & e_CoordPropertyInfluenceArea);
+    }
+
+    /// sets a specific coord as "influenced" by this player
+    inline void SetInfluencedCoord(const Coordinate &a_coord)
+    {
+#ifdef DEBUG
+        assert((a_coord.m_row >= 0) && (a_coord.m_row < m_nRowsInBoard));
+        assert((a_coord.m_col >= 0) && (a_coord.m_col < m_nColumnsInBoard));
+#endif
+        uint8_t coordProperty = m_coordinateProperties[a_coord.m_row][a_coord.m_col];
+        if ((coordProperty & e_CoordPropertyInfluenceArea) == 0)
+        {
+#ifdef DEBUG
+            assert(m_influencedCoordsCount < (m_nRowsInBoard * m_nColumnsInBoard));
+#endif
+            m_coordinateProperties[a_coord.m_row][a_coord.m_col] |= e_CoordPropertyInfluenceArea;
+            m_influencedCoordsCount++;
+        }
+    }
+
+    /// set a specific coord as not influenced by this player
+    inline void UnsetInfluencedCoord(const Coordinate &a_coord)
+    {
+#ifdef DEBUG
+        assert((a_coord.m_row >= 0) && (a_coord.m_row < m_nRowsInBoard));
+        assert((a_coord.m_col >= 0) && (a_coord.m_col < m_nColumnsInBoard));
+#endif
+        uint8_t coordProperty = m_coordinateProperties[a_coord.m_row][a_coord.m_col];
+        if ((coordProperty & e_CoordPropertyInfluenceArea) == e_CoordPropertyInfluenceArea)
+        {
+#ifdef DEBUG
+             assert(m_influencedCoordsCount > 0);
+#endif
+             m_coordinateProperties[a_coord.m_row][a_coord.m_col] &= ~e_CoordPropertyInfluenceArea;
+             m_influencedCoordsCount--;
+        }
+    }
+
     /// returns true if this player has a nucleation point in the coords specified
     inline bool IsNucleationPoint(const Coordinate &a_coord) const
     {
@@ -154,7 +217,8 @@ public:
         assert((a_coord.m_row >= 0) && (a_coord.m_row < m_nRowsInBoard));
         assert((a_coord.m_col >= 0) && (a_coord.m_col < m_nColumnsInBoard));
 #endif
-        return static_cast<bool>(m_nkPoints[a_coord.m_row][a_coord.m_col]);
+        uint8_t coordProperty = m_coordinateProperties[a_coord.m_row][a_coord.m_col];
+        return static_cast<bool>(coordProperty & e_CoordPropertyNKPoints);
     }
 
     /// save a nucleation point in the coords passed as parameters
@@ -164,12 +228,13 @@ public:
     	assert((a_coord.m_row >= 0) && (a_coord.m_row < m_nRowsInBoard));
     	assert((a_coord.m_col >= 0) && (a_coord.m_col < m_nColumnsInBoard));
 #endif
-        if (m_nkPoints[a_coord.m_row][a_coord.m_col] == 0)
+    	uint8_t coordProperty = m_coordinateProperties[a_coord.m_row][a_coord.m_col];
+        if ((coordProperty & e_CoordPropertyNKPoints) == 0)
         {
 #ifdef DEBUG
             assert(m_nkPointsCount < (m_nRowsInBoard * m_nColumnsInBoard));
 #endif
-            m_nkPoints[a_coord.m_row][a_coord.m_col] = 1;
+            m_coordinateProperties[a_coord.m_row][a_coord.m_col] |= e_CoordPropertyNKPoints;
             m_nkPointsCount++;
         }
     }
@@ -181,12 +246,13 @@ public:
     	assert((a_coord.m_row >= 0) && (a_coord.m_row < m_nRowsInBoard));
     	assert((a_coord.m_col >= 0) && (a_coord.m_col < m_nColumnsInBoard));
 #endif
-        if (m_nkPoints[a_coord.m_row][a_coord.m_col])
+    	uint8_t coordProperty = m_coordinateProperties[a_coord.m_row][a_coord.m_col];
+        if ((coordProperty & e_CoordPropertyNKPoints) == e_CoordPropertyNKPoints)
         {
 #ifdef DEBUG
              assert(m_nkPointsCount > 0);
 #endif
-            m_nkPoints[a_coord.m_row][a_coord.m_col] = 0;
+             m_coordinateProperties[a_coord.m_row][a_coord.m_col] &= ~e_CoordPropertyNKPoints;
             m_nkPointsCount--;
         }
     }
@@ -228,7 +294,6 @@ public:
                 if (IsNucleationPoint(thisCoord))
                 {
                     a_set.insert(thisCoord);
-
                     nNucleationPoints++;
                 }
             }
@@ -277,10 +342,13 @@ private:
     int32_t m_nRowsInBoard;
     /// number of columns of the board where the player is playing
     int32_t m_nColumnsInBoard;
-    /// Nucleation points in the board corresponding to this player
-    uint8_t** m_nkPoints;
-    /// Number of nucleation points saved in the nkPoints array
+    /// Array with the properties of this player related to every place
+    /// in the board (every coordinate)
+    uint8_t** m_coordinateProperties;
+    /// Number of nucleation points of this player (saved in m_coordinateProperties)
     int32_t m_nkPointsCount;
+    /// Number of coords influenced by this player
+    int32_t m_influencedCoordsCount;
     /// Starting coordinate of this player
     Coordinate m_startingCoordinate;
     /// Red channel of the Colour representation of the player

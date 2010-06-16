@@ -42,6 +42,7 @@ Player::Player(
         m_nRowsInBoard(a_rowsInBoard),
         m_nColumnsInBoard(a_columnsInBoard),
         m_nkPointsCount(0),
+        m_influencedCoordsCount(0),
         m_startingCoordinate(a_startingCoordinate)
 {
     // load the pieces
@@ -55,13 +56,14 @@ Player::Player(
     m_nPiecesAvailable = e_numberOfPieces;
 
 	// allocate memory for the nucleation point array and set all the nk points to 0
-    m_nkPoints   = new uint8_t* [m_nRowsInBoard];
+    m_coordinateProperties = new uint8_t* [m_nRowsInBoard];
 	for (int32_t i = 0 ; i < m_nRowsInBoard; i++)
 	{
-		m_nkPoints[i] = new uint8_t[m_nColumnsInBoard];
-		for (int32_t j = 0 ; j < m_nColumnsInBoard; j++)
+	    m_coordinateProperties[i] = new uint8_t[m_nColumnsInBoard];
+		for (int32_t j = 0; j < m_nColumnsInBoard; j++)
 		{
-			m_nkPoints[i][j] = 0;
+		    // set all the properties to "not present" (false)
+		    m_coordinateProperties[i][j] = ~e_CoordPropertyMask;
 		}
 	}
 }
@@ -71,18 +73,18 @@ Player::~Player()
     // delete the array that saves the nk points of this player
 	for (int32_t i = 0 ; i < m_nRowsInBoard; i++)
 	{
-		delete [] m_nkPoints[i];
+		delete [] m_coordinateProperties[i];
 	}
-	delete [] m_nkPoints;
+	delete [] m_coordinateProperties;
 }
 
 Player::Player(const Player &a_src)
 {
     // allocate the memory needed before copying from object
-    this->m_nkPoints   = new uint8_t* [a_src.m_nRowsInBoard];
+    this->m_coordinateProperties = new uint8_t* [a_src.m_nRowsInBoard];
     for (int32_t i = 0; i < a_src.m_nRowsInBoard; i++)
     {
-        this->m_nkPoints[i] = new uint8_t[a_src.m_nColumnsInBoard];
+        this->m_coordinateProperties[i] = new uint8_t[a_src.m_nColumnsInBoard];
     }
 
     CopyFromObject(a_src);
@@ -100,16 +102,16 @@ Player& Player::operator= (const Player &a_src)
             // delete the array that saves the nk points of this player
             for (int32_t i = 0 ; i < this->m_nRowsInBoard; i++)
             {
-                delete [] this->m_nkPoints[i];
+                delete [] this->m_coordinateProperties[i];
             }
-            delete [] m_nkPoints;
+            delete [] m_coordinateProperties;
 
             // once the old memory is deleted allocate the new memory
             // needed for the new size before copying from object
-            this->m_nkPoints   = new uint8_t* [a_src.m_nRowsInBoard];
+            this->m_coordinateProperties   = new uint8_t* [a_src.m_nRowsInBoard];
             for (int32_t i = 0; i < a_src.m_nRowsInBoard; i++)
             {
-                m_nkPoints[i] = new uint8_t[a_src.m_nColumnsInBoard];
+                m_coordinateProperties[i] = new uint8_t[a_src.m_nColumnsInBoard];
             }
         }
 
@@ -122,16 +124,17 @@ Player& Player::operator= (const Player &a_src)
 
 void Player::CopyFromObject(const Player &a_src)
 {
-    this->m_name               = a_src.m_name;
-    this->m_presentationChar   = a_src.m_presentationChar;
-    this->m_nPiecesAvailable   = a_src.m_nPiecesAvailable;
-    this->m_nRowsInBoard       = a_src.m_nRowsInBoard;
-    this->m_nColumnsInBoard    = a_src.m_nColumnsInBoard;
-    this->m_nkPointsCount      = a_src.m_nkPointsCount;
-    this->m_startingCoordinate = a_src.m_startingCoordinate;
-    this->m_colourRed          = a_src.m_colourRed;
-    this->m_colourGreen        = a_src.m_colourGreen;
-    this->m_colourBlue         = a_src.m_colourBlue;
+    this->m_name                  = a_src.m_name;
+    this->m_presentationChar      = a_src.m_presentationChar;
+    this->m_nPiecesAvailable      = a_src.m_nPiecesAvailable;
+    this->m_nRowsInBoard          = a_src.m_nRowsInBoard;
+    this->m_nColumnsInBoard       = a_src.m_nColumnsInBoard;
+    this->m_nkPointsCount         = a_src.m_nkPointsCount;
+    this->m_influencedCoordsCount = a_src.m_influencedCoordsCount;
+    this->m_startingCoordinate    = a_src.m_startingCoordinate;
+    this->m_colourRed             = a_src.m_colourRed;
+    this->m_colourGreen           = a_src.m_colourGreen;
+    this->m_colourBlue            = a_src.m_colourBlue;
 
     // copy the state of the pieces
     for (int8_t i = e_minimumPieceIndex; i < e_numberOfPieces ; i++)
@@ -145,7 +148,7 @@ void Player::CopyFromObject(const Player &a_src)
     {
         for (int32_t j = 0 ; j < a_src.m_nColumnsInBoard; j++)
         {
-            m_nkPoints[i][j] = a_src.m_nkPoints[i][j];
+            m_coordinateProperties[i][j] = a_src.m_coordinateProperties[i][j];
         }
     }
 }
@@ -184,6 +187,7 @@ void Player::Reset(const Coordinate &a_startingCoordinate)
 		for (thisCoord.m_col = 0 ; thisCoord.m_col < m_nColumnsInBoard; thisCoord.m_col++)
 		{
 			UnsetNucleationPoint(thisCoord);
+			UnsetInfluencedCoord(thisCoord);
 		}
 	}
 
@@ -191,6 +195,7 @@ void Player::Reset(const Coordinate &a_startingCoordinate)
 
 #ifdef DEBUG
 	assert(m_nkPointsCount == 0);
+	assert(m_influencedCoordsCount == 0);
 	assert(m_nPiecesAvailable == e_numberOfPieces);
 
 	for (int8_t i = e_minimumPieceIndex; i < e_numberOfPieces; i++)
@@ -203,6 +208,7 @@ void Player::Reset(const Coordinate &a_startingCoordinate)
         for (thisCoord.m_col = 0 ; thisCoord.m_col < m_nColumnsInBoard; thisCoord.m_col++)
         {
             assert(IsNucleationPoint(thisCoord) == false);
+            assert(IsCoordInfluencedByPlayer(thisCoord) == false);
         }
     }
 #endif
@@ -258,20 +264,21 @@ void Player::PrintNucleationPoints(std::ostream& a_outStream) const
     }
     a_outStream << std::endl;
 
-    for (int32_t i = 0; i < m_nRowsInBoard; i++)
+    Coordinate thisCoord;
+    for (thisCoord.m_row = 0; thisCoord.m_row < m_nRowsInBoard; thisCoord.m_row++)
     {
         a_outStream << "   +";
-        for (int32_t j = 0; j < m_nColumnsInBoard; j++)
+        for (thisCoord.m_col = 0; thisCoord.m_col < m_nColumnsInBoard; thisCoord.m_col++)
         {
             a_outStream << "---+";
         }
         a_outStream << std::endl;
 
-        a_outStream << std::setfill(' ') << std::setw(2) << i << " |";
-        for (int32_t j = 0; j < m_nColumnsInBoard; j++)
+        a_outStream << std::setfill(' ') << std::setw(2) << thisCoord.m_row << " |";
+        for (thisCoord.m_col = 0; thisCoord.m_col < m_nColumnsInBoard; thisCoord.m_col++)
         {
             a_outStream << " ";
-            if (m_nkPoints[i][j])
+            if (IsNucleationPoint(thisCoord))
             {
                 a_outStream << m_presentationChar;
             }
@@ -285,7 +292,7 @@ void Player::PrintNucleationPoints(std::ostream& a_outStream) const
     }
 
     a_outStream << "   +";
-    for (int32_t j = 0; j < m_nColumnsInBoard; j++)
+    for (thisCoord.m_col = 0; thisCoord.m_col < m_nColumnsInBoard; thisCoord.m_col++)
     {
         a_outStream << "---+";
     }

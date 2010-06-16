@@ -219,6 +219,19 @@ namespace rules
             int32_t           a_radiusToCheck,
             Player           &a_player);
 
+    /// recalculate the change influence area of a player caused by a piece been deployed
+    /// on a specific coordinate
+    /// @param the board
+    /// @param the coord
+    /// @param configuration of the piece deployed
+    /// @param reference to the player whose indluence area will be changed
+    void RecalculateInfluenceAreaAroundPiece(
+            const Board                &a_board,
+            const Coordinate           &a_coord,
+            const pieceConfiguration_t &a_pieceConf,
+            Player                     &a_player);
+
+
     /// @return true if the 'a_player' can put down at least one piece on the board
     bool CanPlayerGo(const Board &a_board, const Player &a_player);
 };

@@ -47,7 +47,7 @@
 
 
 // the following code is needed to load the gui into the application.
-// (See big comment in gui.h)
+// (See big comment in src/gui_glade.h)
 // objdump in windows and linux is different and they create
 // the following variables different from one another.
 // Windows hasn't got any underscore at the start, while the object in linux
@@ -126,6 +126,9 @@ int main(int argc, char **argv)
 
     if (s_blockemfilePath != NULL)
     {
+        // console mode. a file will be loaded into a gam1v1 and the next move will be calculated
+        // and printed on the screen. App will finish without running any GUI code (see return 0
+        // at the end of this if block)
         if (!g_file_test(s_blockemfilePath, G_FILE_TEST_IS_REGULAR))
         {
             std::cerr << "Error: " << s_blockemfilePath << " doesn't exist. Exiting..." << std::endl;
@@ -217,6 +220,7 @@ int main(int argc, char **argv)
                     Game1v1::e_Game1v1Player1);
         }
 
+        // print the game on the screen
         theGame.SaveGame(std::cout);
 
         //theGame.GetMe().PrintNucleationPoints(std::cout);
@@ -229,12 +233,23 @@ int main(int argc, char **argv)
     //////////////////
     // GUI
 
+    // gtkmm can do strange stuff if its internals are not initialised early enough
     Gtk::Main::init_gtkmm_internals();
 
-    // Initialise gthreads even before gtk_init
+    // g_thread_supported returns TRUE if the thread system is initialised, 
+    // and FALSE if it is not. Initiliase gthreads only if they haven't been
+    // initialised already. Since glib 2.24.0 (from its changelog):
+    // "the requirements for g_thread_init() have been relaxed slightly, it
+    // can be called multiple times, and does not have to be the first call.
+    // GObject now links to GThread and threads are enabled automatically
+    // when g_type_init() is called"
+    // for backwards compatibility call to g_thread_init only if it hasn't been
+    // called already
     if(!g_thread_supported())
     {
+        // Initialise gthreads even before gtk_init
         g_thread_init(NULL);
+
         // This call is needed only if extra threads (not the main thread)
         // updates directly the GUI widgets using gdk_threads_enter
         // and gdk_threads_leave
@@ -244,14 +259,8 @@ int main(int argc, char **argv)
         // in MainWindow::WorkerThread_computingFinished)
         //gdk_threads_init();
     }
-    else
-    {
-        std::cerr << "error: gthread_supported call failed when initialising gthreads" << std::endl;
-        std::cerr << "error: App can't start without gthreads support" << std::endl;
-        return -1;
-    }
 
-    // this should eb called before starting manipulating GUI stuff
+    // this should be called before starting manipulating GUI stuff
     Gtk::Main kit(argc, argv);
 
     // create a new gtk builder. add_from_string will load the definitions
@@ -261,7 +270,8 @@ int main(int argc, char **argv)
     try
     {
 #endif // GLIBMM_EXCEPTIONS_ENABLED
-
+        // Load the GUI from the xml code embedded in the executable file
+        // see src/gui_glade.h for more information
         if (!gtkBuilder->add_from_string(
                 reinterpret_cast<const char *>(__BIN_GUI_GLADE_START__),
                 reinterpret_cast<long int>(__BIN_GUI_GLADE_SIZE__)))
@@ -314,6 +324,7 @@ int main(int argc, char **argv)
 
     if (pMainWindow)
     {
+        // valgrind won't be happy if all this memory is not freed
         delete (pMainWindow);
     }
 

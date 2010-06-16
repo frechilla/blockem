@@ -485,6 +485,16 @@ void rules::RecalculateNKAroundCoord(
     }
 }
 
+
+void rules::RecalculateInfluenceAreaAroundPiece(
+        const Board                &a_board,
+        const Coordinate           &a_coord,
+        const pieceConfiguration_t &a_pieceConf,
+        Player                     &a_player)
+{
+
+}
+
 bool rules::CanPlayerGo(const Board &a_board, const Player &a_player)
 {
     if (a_player.NumberOfPiecesAvailable() == 0)
