@@ -87,8 +87,14 @@ public:
     /// @brief  callback to be called when the menuitem Settings->view nk points is toggled
     void MenuItemSettingsViewNKPoints_Toggled();
 
-    /// @brief  callback to be called when the menuitem Settings->show forbidden area is toggled
-    void MenuItemSettingsShowForbiddenArea_Toggled();
+    /// @brief  callback to be called when the menuitem Settings->areas->show current's forbidden area is toggled
+    void MenuItemSettingsShowCurrentForbiddenArea_Toggled();
+
+    /// @brief  callback to be called when the menuitem Settings->areas->show opponent's forbidden area is toggled
+    void MenuItemSettingsShowOpponentForbiddenArea_Toggled();
+
+    /// @brief  callback to be called when the menuitem Settings->areas->do not show forbidden area is toggled
+    void MenuItemSettingsShowNoneForbiddenArea_Toggled();
 
     /// @brief callback to be called when a button is pressed inside the board
     void BoardDrawingArea_BoardClicked(const Coordinate &, const Piece &, const Player &);
@@ -161,7 +167,9 @@ private:
     Glib::RefPtr<Gtk::MenuItem> m_helpAboutMenuItem;
     Glib::RefPtr<Gtk::MenuItem> m_settingsPrefsMenuItem;
     Glib::RefPtr<Gtk::CheckMenuItem> m_settingsNKPointsMenuItem;
-    Glib::RefPtr<Gtk::CheckMenuItem> m_settingsForbiddenAreaMenuItem;
+    Glib::RefPtr<Gtk::RadioMenuItem> m_settingsCurrentForbiddenAreaMenuItem;
+    Glib::RefPtr<Gtk::RadioMenuItem> m_settingsOpponentForbiddenAreaMenuItem;
+    Glib::RefPtr<Gtk::RadioMenuItem> m_settingsNoShowForbiddenAreaMenuItem;
 
     /// @brief the vertical box that keeps the board + pieces
     Gtk::VBox* m_vBoxDrawing;

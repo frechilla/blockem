@@ -82,10 +82,42 @@
                   <object class="GtkMenu" id="menu2">
                     <property name="visible">True</property>
                     <child>
-                      <object class="GtkCheckMenuItem" id="checkmenuitem_settings_forbidden">
+                      <object class="GtkMenuItem" id="menuitem_forbidden_areas">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">Show _forbidden area</property>
+                        <property name="label" translatable="yes">_Forbidden areas</property>
                         <property name="use_underline">True</property>
+                        <child type="submenu">
+                          <object class="GtkMenu" id="menu4">
+                            <property name="visible">True</property>
+                            <child>
+                              <object class="GtkRadioMenuItem" id="radiomenuitem_settings_forbidden_noshow">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Do _not show forbidden area</property>
+                                <property name="use_underline">True</property>
+                                <property name="active">True</property>
+                                <property name="draw_as_radio">True</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkRadioMenuItem" id="radiomenuitem_settings_forbidden_current">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Show _current player's forbidden area</property>
+                                <property name="use_underline">True</property>
+                                <property name="draw_as_radio">True</property>
+                                <property name="group">radiomenuitem_settings_forbidden_noshow</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkRadioMenuItem" id="radiomenuitem_settings_forbidden_opponent">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Show _opponent's forbidden area</property>
+                                <property name="use_underline">True</property>
+                                <property name="draw_as_radio">True</property>
+                                <property name="group">radiomenuitem_settings_forbidden_noshow</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
                       </object>
                     </child>
                     <child>

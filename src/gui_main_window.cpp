@@ -196,11 +196,32 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
         throw new GUIException(std::string("view nk points menu item retrieval failed"));
     }
 
-    m_settingsForbiddenAreaMenuItem = Glib::RefPtr<Gtk::CheckMenuItem>::cast_dynamic(
-            m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_FORBIDDENAREA));
-    if (!m_settingsForbiddenAreaMenuItem)
+    m_settingsCurrentForbiddenAreaMenuItem = Glib::RefPtr<Gtk::RadioMenuItem>::cast_dynamic(
+            m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_FORBIDDENAREA_CURRENT));
+    if (!m_settingsCurrentForbiddenAreaMenuItem)
     {
         throw new GUIException(std::string("show forbidden area menu item retrieval failed"));
+    }
+
+    m_settingsCurrentForbiddenAreaMenuItem = Glib::RefPtr<Gtk::RadioMenuItem>::cast_dynamic(
+            m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_FORBIDDENAREA_CURRENT));
+    if (!m_settingsCurrentForbiddenAreaMenuItem)
+    {
+        throw new GUIException(std::string("show current player's forbidden area menu item retrieval failed"));
+    }
+
+    m_settingsOpponentForbiddenAreaMenuItem = Glib::RefPtr<Gtk::RadioMenuItem>::cast_dynamic(
+            m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_FORBIDDENAREA_OPPONENT));
+    if (!m_settingsOpponentForbiddenAreaMenuItem)
+    {
+        throw new GUIException(std::string("show opponent's forbidden area menu item retrieval failed"));
+    }
+
+    m_settingsNoShowForbiddenAreaMenuItem = Glib::RefPtr<Gtk::RadioMenuItem>::cast_dynamic(
+            m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_FORBIDDENAREA_NOSHOW));
+    if (!m_settingsNoShowForbiddenAreaMenuItem)
+    {
+        throw new GUIException(std::string("do not show any forbidden area menu item retrieval failed"));
     }
 
     m_settingsPrefsMenuItem = Glib::RefPtr<Gtk::MenuItem>::cast_dynamic(
@@ -333,8 +354,12 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
             sigc::mem_fun(*this, &MainWindow::MenuItemSettingsPreferences_Activate));
     m_settingsNKPointsMenuItem->signal_toggled().connect(
             sigc::mem_fun(*this, &MainWindow::MenuItemSettingsViewNKPoints_Toggled));
-    m_settingsForbiddenAreaMenuItem->signal_toggled().connect(
-            sigc::mem_fun(*this, &MainWindow::MenuItemSettingsShowForbiddenArea_Toggled));
+    m_settingsCurrentForbiddenAreaMenuItem->signal_toggled().connect(
+            sigc::mem_fun(*this, &MainWindow::MenuItemSettingsShowCurrentForbiddenArea_Toggled));
+    m_settingsOpponentForbiddenAreaMenuItem->signal_toggled().connect(
+            sigc::mem_fun(*this, &MainWindow::MenuItemSettingsShowOpponentForbiddenArea_Toggled));
+    m_settingsNoShowForbiddenAreaMenuItem->signal_toggled().connect(
+            sigc::mem_fun(*this, &MainWindow::MenuItemSettingsShowNoneForbiddenArea_Toggled));
 
     // retrieve the default colour from the config class to apply it to the players
     uint8_t red, green, blue;
@@ -471,9 +496,9 @@ void MainWindow::MenuItemSettingsViewNKPoints_Toggled()
     }
 }
 
-void MainWindow::MenuItemSettingsShowForbiddenArea_Toggled()
+void MainWindow::MenuItemSettingsShowCurrentForbiddenArea_Toggled()
 {
-    if (m_settingsForbiddenAreaMenuItem->property_active())
+    if (m_settingsCurrentForbiddenAreaMenuItem->property_active())
     {
         m_boardDrawingArea.ShowCurrentPlayerForbiddenArea();
     }
@@ -481,6 +506,14 @@ void MainWindow::MenuItemSettingsShowForbiddenArea_Toggled()
     {
         m_boardDrawingArea.HideCurrentPlayerForbiddenArea();
     }
+}
+
+void MainWindow::MenuItemSettingsShowOpponentForbiddenArea_Toggled()
+{
+}
+
+void MainWindow::MenuItemSettingsShowNoneForbiddenArea_Toggled()
+{
 }
 
 void MainWindow::MenuItemSettingsPreferences_Activate()
