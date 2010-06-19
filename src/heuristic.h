@@ -57,12 +57,14 @@ public:
     {
         e_heuristicStartCount = 0, // this element must be always 0 and must be at the start
 
-        e_heuristicNKWeightedv1 = e_heuristicStartCount,
-        e_heuristicAdvanced,
+        e_heuristicInfluenceArea = e_heuristicStartCount,
+        e_heuristicInfluenceAreaEastwood,
+        e_heuristicNKWeightedv1,
+//        e_heuristicNKWeightedv2,
         e_heuristicCentreFocused,
         e_heuristicSimple,
         e_heuristicRandom,
-        e_heuristicAmountOfPieces,
+//        e_heuristicAmountOfPieces,
 
         e_heuristicCount, // stores the amount of heuristics. Must be always at the end
     } eHeuristicType_t;
@@ -105,7 +107,17 @@ public:
             const Player &a_playerMe,
             const Player &a_playerOpponent);
 
-    static int32_t CalculateNKWeightedv3(
+//    static int32_t CalculateNKWeightedv2(
+//            const Board  &a_board,
+//            const Player &a_playerMe,
+//            const Player &a_playerOpponent);
+
+    static int32_t CalculateInfluenceAreaWeighted(
+            const Board  &a_board,
+            const Player &a_playerMe,
+            const Player &a_playerOpponent);
+
+    static int32_t CalculateInfluenceAreaWeightedEastwood(
             const Board  &a_board,
             const Player &a_playerMe,
             const Player &a_playerOpponent);
@@ -113,10 +125,10 @@ public:
     /// Calculate the heurisitc value based on the amount of pieces that can be put down
     /// on the board. It uses bitwise representation of pieces and board to improve
     /// calculation times
-    static int32_t CalculateNPieces(
-            const Board  &a_board,
-            const Player &a_playerMe,
-            const Player &a_playerOpponent);
+//    static int32_t CalculateNPieces(
+//            const Board  &a_board,
+//            const Player &a_playerMe,
+//            const Player &a_playerOpponent);
 
 
 protected:

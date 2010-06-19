@@ -221,6 +221,33 @@ namespace rules
 
     /// recalculate the change influence area of a player caused by a piece been deployed
     /// on a specific coordinate
+    /// "influence area" of a player "John" is the set of coordinates of the board
+    /// that are empty, valid for a possible deployment and are "at reach" of  "John".
+    /// The proper way to calculate this should be going through every nucleation point
+    /// of the player and try to allocate all his pieces left. This is too slow for what
+    /// we need (the influence area was born as a way to improve heuristics), so it
+    /// is calculated taking the constant INFLUENCE_AREA_AROUND_SQUARE_SIZE which defines
+    /// how many squares of the board  are under the influence of a specific coordinate
+    /// (which is supposed to have been taken by out beloved player "John")
+    ///
+    /// Let's say we deploy the saf piece and the const INFLUENCE_AREA_AROUND_SQUARE_SIZE
+    /// is 2. The influece area would be: ('X' is the piece. '#' the influence area)
+    ///
+    /// +---+---+---+---+---+---+---+
+    /// | # | # | # | # | # |   |   |
+    /// +---+---+---+---+---+---+---+
+    /// | # | # |   | # | # | # | # |
+    /// +---+---+---+---+---+---+---+
+    /// | # |   | X |   |   | # | # |
+    /// +---+---+---+---+---+---+---+
+    /// | # |   | X | X | X |   | # |
+    /// +---+---+---+---+---+---+---+
+    /// | # | # |   | X |   | # | # |
+    /// +---+---+---+---+---+---+---+
+    /// | # | # | # |   | # | # | # |
+    /// +---+---+---+---+---+---+---+
+    /// |   | # | # | # | # | # |   |
+    /// +---+---+---+---+---+---+---+
     /// @param the board
     /// @param the coord
     /// @param configuration of the piece deployed
@@ -230,6 +257,13 @@ namespace rules
             const Coordinate           &a_coord,
             const pieceConfiguration_t &a_pieceConf,
             Player                     &a_player);
+
+    /// computes if a_coord belongs to the influence area of a_player
+    /// @return true if a_coord belongs to the influence area of a_player
+    bool IsCoordInfluencedByPlayerCompute(
+            const Board       &a_board,
+            const Coordinate  &a_coord,
+            const Player      &a_player);
 
 
     /// @return true if the 'a_player' can put down at least one piece on the board

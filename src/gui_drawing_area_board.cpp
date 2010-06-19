@@ -219,7 +219,10 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
         }
         else
         {
-            // this player already put some pieces on the board. Draw them all!
+            // this player already put some pieces on the board.
+            // go through all the squares of the board drawing them all +
+            // some information that the board drawing area has been requested
+            // to draw too
             cr->set_source_rgb(
                     static_cast<float>(red)  / 255,
                     static_cast<float>(green)/ 255,
@@ -246,42 +249,42 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
 
                         cr->fill();
                     }
+                    else if (m_currentPlayer == thisPlayer)
+                    {
+                        // save current cairo context in an internal stack
+                        cr->save();
+
+                        if (m_showForbiddenArea)
+                        {
+                            cr->set_source_rgba(
+                                    static_cast<float>(red)  / 255,
+                                    static_cast<float>(green)/ 255,
+                                    static_cast<float>(blue) / 255,
+                                    FORBIDDEN_AREA_ALPHA);
+
+                            // mark the coords in the board where the current player can't go
+                            // if a coordinate belongs to the influenced area it can't belong
+                            // to the forbidden area (see definition of influenced area in rules.h)
+                            // it can save a few cycles cos IsCoordTouchingPlayer is not a trivial function
+                            if ( m_theBoard.IsCoordEmpty(thisCoord) &&
+                                 (thisPlayer->IsCoordInfluencedByPlayer(thisCoord) == false) &&
+                                 rules::IsCoordTouchingPlayer(m_theBoard, thisCoord, *thisPlayer) )
+                            {
+                                cr->rectangle(
+                                        (xc - squareWidth/2) +  (littleSquare * thisCoord.m_col) + 1,
+                                        (yc - squareHeight/2) + (littleSquare * thisCoord.m_row) + 1,
+                                        littleSquare - 1,
+                                        littleSquare - 1);
+
+                                cr->fill();
+                            }
+                        } // if (m_showForbiddenArea)
+
+                        // restore the cairo context from the internal stack
+                        cr->restore();
+                    }
                 } // for (int32_t columnCount
             } // for (int32_t rowCount
-
-            // show forbidden area if we are supposed to do so
-            if ((m_currentPlayer == thisPlayer) && m_showForbiddenArea)
-            {
-                cr->set_source_rgba(
-                        static_cast<float>(red)  / 255,
-                        static_cast<float>(green)/ 255,
-                        static_cast<float>(blue) / 255,
-                        FORBIDDEN_AREA_ALPHA);
-
-                Coordinate thisCoord(0, 0);
-                for (thisCoord.m_row = 0;
-                     thisCoord.m_row < m_theBoard.GetNRows() ;
-                     thisCoord.m_row++)
-                {
-                    for (thisCoord.m_col = 0;
-                         thisCoord.m_col <  m_theBoard.GetNColumns() ;
-                         thisCoord.m_col++)
-                    {
-                        // mark the coords in the board where the current player can't go
-                        if ( m_theBoard.IsCoordEmpty(thisCoord) &&
-                             rules::IsCoordTouchingPlayer(m_theBoard, thisCoord, *thisPlayer) )
-                        {
-                            cr->rectangle(
-                                    (xc - squareWidth/2) +  (littleSquare * thisCoord.m_col) + 1,
-                                    (yc - squareHeight/2) + (littleSquare * thisCoord.m_row) + 1,
-                                    littleSquare - 1,
-                                    littleSquare - 1);
-
-                            cr->fill();
-                        }
-                    } // for (int32_t columnCount
-                } // for (int32_t rowCount
-            } // if((m_currentPlayer == thisPlayer) && m_showForbiddenArea)
 
             // draw a small little circle where nk points are (with a bit of transparency)
             if (m_showNKPoints)

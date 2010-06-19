@@ -23,6 +23,7 @@
 /// @history
 /// Ref       Who                When         What
 ///           Faustino Frechilla 30-Mar-2009  Original development
+///           Faustino Frechilla 16-Jun-2010  Influence area support
 /// @endhistory
 ///
 // ============================================================================
@@ -36,22 +37,14 @@
 #include "coordinate.h"
 #include "coordinate_set.h"
 
+// masks for the coordinate properties saved in Player::m_coordinateProperties
+// each bit says if that specific property is present (0 false, 1 true)
+#define COORD_PROPERTY_NKPOINTS       0x01  // bit 1 (lowest significant bit)
+#define COORD_PROPERTY_INFLUENCE_AREA 0x02  // bit 2
+#define COORD_PROPERTY_MASK           0x03  // 2 lowest significant bits
+
 class Player
 {
-private:
-    /// Properties of this player for every coordinate in the board
-    /// each bit says if that specific coordinate is present (0 false, 1 true)
-    // it is for internal use only, but it must be declared on the top of the class
-    // because it is used in this header file
-    typedef enum
-    {
-        e_CoordPropertyNKPoints      = 0x01,
-        e_CoordPropertyInfluenceArea = 0x02,
-
-        // this value is the mask that specifies all the bits used for the properties
-        e_CoordPropertyMask          = 0x03,
-    } eCoordinateProperty_t;
-
 public:
 	/// type of the iterator used to retrieve the nk points of this player in a spiral shape
     typedef int32_t SpiralIterator;
@@ -119,15 +112,22 @@ public:
         m_startingCoordinate = a_startingCoordinate;
     }
 
-    /// returns the number of pieces available
+    /// @return the number of pieces available
     inline uint8_t NumberOfPiecesAvailable() const
     {
         return m_nPiecesAvailable;
     }
 
+    /// @return number of nucleation points of this player
     inline int32_t NumberOfNucleationPoints() const
     {
     	return m_nkPointsCount;
+    }
+
+    /// @return size of the influence area (in squares)
+    inline int32_t InfluenceAreaSize() const
+    {
+        return m_influencedCoordsCount;
     }
 
     /// Set the piece as not present
@@ -171,7 +171,7 @@ public:
         assert((a_coord.m_col >= 0) && (a_coord.m_col < m_nColumnsInBoard));
 #endif
         uint8_t coordProperty = m_coordinateProperties[a_coord.m_row][a_coord.m_col];
-        return static_cast<bool>(coordProperty & e_CoordPropertyInfluenceArea);
+        return static_cast<bool>(coordProperty & COORD_PROPERTY_INFLUENCE_AREA);
     }
 
     /// sets a specific coord as "influenced" by this player
@@ -182,12 +182,12 @@ public:
         assert((a_coord.m_col >= 0) && (a_coord.m_col < m_nColumnsInBoard));
 #endif
         uint8_t coordProperty = m_coordinateProperties[a_coord.m_row][a_coord.m_col];
-        if ((coordProperty & e_CoordPropertyInfluenceArea) == 0)
+        if ((coordProperty & COORD_PROPERTY_INFLUENCE_AREA) == 0)
         {
 #ifdef DEBUG
             assert(m_influencedCoordsCount < (m_nRowsInBoard * m_nColumnsInBoard));
 #endif
-            m_coordinateProperties[a_coord.m_row][a_coord.m_col] |= e_CoordPropertyInfluenceArea;
+            m_coordinateProperties[a_coord.m_row][a_coord.m_col] |= COORD_PROPERTY_INFLUENCE_AREA;
             m_influencedCoordsCount++;
         }
     }
@@ -200,12 +200,12 @@ public:
         assert((a_coord.m_col >= 0) && (a_coord.m_col < m_nColumnsInBoard));
 #endif
         uint8_t coordProperty = m_coordinateProperties[a_coord.m_row][a_coord.m_col];
-        if ((coordProperty & e_CoordPropertyInfluenceArea) == e_CoordPropertyInfluenceArea)
+        if ((coordProperty & COORD_PROPERTY_INFLUENCE_AREA) == COORD_PROPERTY_INFLUENCE_AREA)
         {
 #ifdef DEBUG
              assert(m_influencedCoordsCount > 0);
 #endif
-             m_coordinateProperties[a_coord.m_row][a_coord.m_col] &= ~e_CoordPropertyInfluenceArea;
+             m_coordinateProperties[a_coord.m_row][a_coord.m_col] &= ~COORD_PROPERTY_INFLUENCE_AREA;
              m_influencedCoordsCount--;
         }
     }
@@ -218,7 +218,7 @@ public:
         assert((a_coord.m_col >= 0) && (a_coord.m_col < m_nColumnsInBoard));
 #endif
         uint8_t coordProperty = m_coordinateProperties[a_coord.m_row][a_coord.m_col];
-        return static_cast<bool>(coordProperty & e_CoordPropertyNKPoints);
+        return static_cast<bool>(coordProperty & COORD_PROPERTY_NKPOINTS);
     }
 
     /// save a nucleation point in the coords passed as parameters
@@ -229,12 +229,12 @@ public:
     	assert((a_coord.m_col >= 0) && (a_coord.m_col < m_nColumnsInBoard));
 #endif
     	uint8_t coordProperty = m_coordinateProperties[a_coord.m_row][a_coord.m_col];
-        if ((coordProperty & e_CoordPropertyNKPoints) == 0)
+        if ((coordProperty & COORD_PROPERTY_NKPOINTS) == 0)
         {
 #ifdef DEBUG
             assert(m_nkPointsCount < (m_nRowsInBoard * m_nColumnsInBoard));
 #endif
-            m_coordinateProperties[a_coord.m_row][a_coord.m_col] |= e_CoordPropertyNKPoints;
+            m_coordinateProperties[a_coord.m_row][a_coord.m_col] |= COORD_PROPERTY_NKPOINTS;
             m_nkPointsCount++;
         }
     }
@@ -247,12 +247,12 @@ public:
     	assert((a_coord.m_col >= 0) && (a_coord.m_col < m_nColumnsInBoard));
 #endif
     	uint8_t coordProperty = m_coordinateProperties[a_coord.m_row][a_coord.m_col];
-        if ((coordProperty & e_CoordPropertyNKPoints) == e_CoordPropertyNKPoints)
+        if ((coordProperty & COORD_PROPERTY_NKPOINTS) == COORD_PROPERTY_NKPOINTS)
         {
 #ifdef DEBUG
              assert(m_nkPointsCount > 0);
 #endif
-             m_coordinateProperties[a_coord.m_row][a_coord.m_col] &= ~e_CoordPropertyNKPoints;
+             m_coordinateProperties[a_coord.m_row][a_coord.m_col] &= ~COORD_PROPERTY_NKPOINTS;
             m_nkPointsCount--;
         }
     }

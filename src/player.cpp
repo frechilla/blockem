@@ -63,7 +63,7 @@ Player::Player(
 		for (int32_t j = 0; j < m_nColumnsInBoard; j++)
 		{
 		    // set all the properties to "not present" (false)
-		    m_coordinateProperties[i][j] = ~e_CoordPropertyMask;
+		    m_coordinateProperties[i][j] = ~COORD_PROPERTY_MASK;
 		}
 	}
 }
@@ -180,14 +180,15 @@ void Player::Reset(const Coordinate &a_startingCoordinate)
 		}
 	}
 
-	// Player will have no nucleation points at all
+	// Player will have all properties unset (false)
 	Coordinate thisCoord(0, 0);
 	for (thisCoord.m_row = 0 ; thisCoord.m_row < m_nRowsInBoard; thisCoord.m_row++)
 	{
 		for (thisCoord.m_col = 0 ; thisCoord.m_col < m_nColumnsInBoard; thisCoord.m_col++)
 		{
-			UnsetNucleationPoint(thisCoord);
-			UnsetInfluencedCoord(thisCoord);
+		    //m_coordinateProperties[thisCoord.m_row][thisCoord.m_col] = ~COORD_PROPERTY_MASK;
+		    UnsetInfluencedCoord(thisCoord);
+		    UnsetNucleationPoint(thisCoord);
 		}
 	}
 

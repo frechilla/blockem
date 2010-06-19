@@ -60,8 +60,6 @@ Game1v1::Game1v1(
     m_player2(std::string(PLAYER_2_NAME), CHAR_PLAYER2, BOARD_1VS1_ROWS, BOARD_1VS1_COLUMNS, a_player2StartingCoord),
     m_progressFunctor(NULL)
 {
-	// initialise the players' nk according to the current state of the blokus board
-    Game1v1::RecalculateNKInAllBoard(m_board, m_player1, m_player2);
 }
 
 Game1v1::~Game1v1()
@@ -200,56 +198,6 @@ void Game1v1::RemovePiece(
     } // switch (a_player)
 }
 
-void Game1v1::RemovePiece(
-        Board                      &a_theBoard,
-        const Coordinate           &a_coord,
-        const pieceConfiguration_t &a_pieceConf,
-        int32_t                     a_pieceRadius,
-        Player                     &a_playerMe,
-        Player                     &a_playerOpponent)
-{
-#ifdef DEBUG
-    assert(a_coord.m_row >= 0);
-    assert(a_coord.m_row < a_theBoard.GetNRows());
-
-    assert(a_coord.m_col >= 0);
-    assert(a_coord.m_col < a_theBoard.GetNColumns());
-#endif
-
-    for (pieceConfiguration_t::const_iterator it = a_pieceConf.begin();
-         it != a_pieceConf.end();
-         it++)
-    {
-        Coordinate thisCoord(a_coord.m_row + it->m_row,
-                             a_coord.m_col + it->m_col);
-#ifdef DEBUG
-        assert( ((a_coord.m_row + it->m_row) >= 0) &&
-        		((a_coord.m_row + it->m_row) < a_theBoard.GetNRows()) );
-        assert( ((a_coord.m_col + it->m_col) >= 0) &&
-        		((a_coord.m_col + it->m_col) < a_theBoard.GetNColumns()) );
-
-        assert(a_theBoard.IsPlayerInCoord(
-                thisCoord,
-        		a_playerMe));
-#endif
-
-        a_theBoard.BlankCoord(thisCoord);
-
-        // (a_coordX + pieceX, a_coordY + pieceY) is now empty
-        // is it now a nucleation point for the opponent? (it couldn't be before, as it was occupied by 'me')
-        if (rules::IsNucleationPointCompute(
-                a_theBoard,
-        		a_playerOpponent,
-        		thisCoord))
-        {
-        	a_playerOpponent.SetNucleationPoint(thisCoord);
-        }
-    }
-
-    // recalculate all the nk points around the piece we just removed (player 'me')
-    rules::RecalculateNKAroundCoord(a_theBoard, a_coord, a_pieceRadius + 1, a_playerMe);
-}
-
 void Game1v1::PutDownPiece(
             const Piece      &a_piece,
             const Coordinate &a_coord,
@@ -288,6 +236,68 @@ void Game1v1::PutDownPiece(
     } // switch (a_player)
 }
 
+void Game1v1::RemovePiece(
+        Board                      &a_theBoard,
+        const Coordinate           &a_coord,
+        const pieceConfiguration_t &a_pieceConf,
+        int32_t                     a_pieceRadius,
+        Player                     &a_playerMe,
+        Player                     &a_playerOpponent)
+{
+#ifdef DEBUG
+    assert(a_coord.m_row >= 0);
+    assert(a_coord.m_row < a_theBoard.GetNRows());
+
+    assert(a_coord.m_col >= 0);
+    assert(a_coord.m_col < a_theBoard.GetNColumns());
+#endif
+
+    for (pieceConfiguration_t::const_iterator it = a_pieceConf.begin();
+         it != a_pieceConf.end();
+         it++)
+    {
+        Coordinate thisCoord(a_coord.m_row + it->m_row,
+                             a_coord.m_col + it->m_col);
+#ifdef DEBUG
+        assert( ((a_coord.m_row + it->m_row) >= 0) &&
+        		((a_coord.m_row + it->m_row) < a_theBoard.GetNRows()) );
+        assert( ((a_coord.m_col + it->m_col) >= 0) &&
+        		((a_coord.m_col + it->m_col) < a_theBoard.GetNColumns()) );
+
+        assert(a_theBoard.IsPlayerInCoord(
+                thisCoord,
+        		a_playerMe));
+#endif
+
+        // remove the current square of the piece from the board
+        a_theBoard.BlankCoord(thisCoord);
+
+        // (a_coordX + pieceX, a_coordY + pieceY) is now empty
+        // is it now a nucleation point for the opponent? (it couldn't be before, as it was occupied by 'me')
+        if (rules::IsNucleationPointCompute(
+                a_theBoard,
+        		a_playerOpponent,
+        		thisCoord))
+        {
+        	a_playerOpponent.SetNucleationPoint(thisCoord);
+        }
+
+        if (rules::IsCoordInfluencedByPlayerCompute(
+                a_theBoard,
+                thisCoord,
+                a_playerOpponent))
+        {
+            a_playerOpponent.SetInfluencedCoord(thisCoord);
+        }
+    }
+
+    // recalculate all the nk points around the piece we just removed (player 'me')
+    rules::RecalculateNKAroundCoord(a_theBoard, a_coord, a_pieceRadius + 1, a_playerMe);
+
+    // recalculate the influence area around the piece that was just removed
+    rules::RecalculateInfluenceAreaAroundPiece(a_theBoard, a_coord, a_pieceConf, a_playerMe);
+}
+
 void Game1v1::PutDownPiece(
         Board                      &a_theBoard,
         const Coordinate           &a_coord,
@@ -319,18 +329,22 @@ void Game1v1::PutDownPiece(
 
         assert(a_theBoard.IsCoordEmpty(thisCoord));
 #endif
-
+        // put down this square of the piece
         a_theBoard.SetPlayerInCoord(
                 thisCoord,
         		a_playerMe);
 
         // this new point is being occupied by the player 'me'. It can't be a nucleation point
-        // for the opponent any more
+        // or belong to the influence area of the opponent any more
         a_playerOpponent.UnsetNucleationPoint(thisCoord);
+        a_playerOpponent.UnsetInfluencedCoord(thisCoord);
     }
 
     // recalculate all the nk points around the piece we just put down (player 'me')
     rules::RecalculateNKAroundCoord(a_theBoard, a_coord, a_pieceRadius + 1, a_playerMe);
+
+    // recalculate the influence area around the piece that was just put down
+    rules::RecalculateInfluenceAreaAroundPiece(a_theBoard, a_coord, a_pieceConf, a_playerMe);
 }
 
 int32_t Game1v1::MinMax(
@@ -981,37 +995,71 @@ int32_t Game1v1::MinMaxAlphaBetaCompute(
 }
 
 
-void Game1v1::RecalculateNKInAllBoard(
-        const Board &a_board,
-        Player      &a_playerMe,
-        Player      &a_playerOpponent)
+void Game1v1::RecalculateNKInAllBoard()
 {
     Coordinate thisCoord(0, 0);
     for (thisCoord.m_row = 0 ;
-         thisCoord.m_row < a_board.GetNRows();
+         thisCoord.m_row < m_board.GetNRows();
          thisCoord.m_row++)
     {
         for (thisCoord.m_col = 0 ;
-             thisCoord.m_col < a_board.GetNColumns();
+             thisCoord.m_col < m_board.GetNColumns();
              thisCoord.m_col++)
         {
-            if (rules::IsNucleationPointCompute(a_board, a_playerMe, thisCoord))
+            if (rules::IsNucleationPointCompute(m_board, m_player1, thisCoord))
             {
-                a_playerMe.SetNucleationPoint(thisCoord);
+                m_player1.SetNucleationPoint(thisCoord);
             }
             else
             {
-                a_playerMe.UnsetNucleationPoint(thisCoord);
+                m_player1.UnsetNucleationPoint(thisCoord);
             }
 
-            if (rules::IsNucleationPointCompute(a_board, a_playerOpponent, thisCoord))
+            if (rules::IsNucleationPointCompute(m_board, m_player2, thisCoord))
             {
-                a_playerOpponent.SetNucleationPoint(thisCoord);
+                m_player2.SetNucleationPoint(thisCoord);
             }
             else
             {
-                a_playerOpponent.UnsetNucleationPoint(thisCoord);
+                m_player2.UnsetNucleationPoint(thisCoord);
             }
+        }
+    }
+}
+
+void Game1v1::RecalculateInflueceAreasInAllBoard()
+{
+    //TODO to be honest, this code is far from quick
+    // (have a look to rules::RecalculateInfluenceAreaAroundPiece)
+    // basically this function goes through the whole board recalculating
+    // the influence areausing a fake baby piece for both players. It cheats
+    // the existing rules::RecalculateInfluenceAreaAroundPiece function
+    // to do its job though. It's quite ugly, but it works and it's not
+    // supposed to be called many times
+
+    // tmp baby Piece
+    Piece babyPiece(e_1Piece_BabyPiece);
+
+    Coordinate thisCoord(0, 0);
+    for (thisCoord.m_row = 0 ;
+         thisCoord.m_row < m_board.GetNRows();
+         thisCoord.m_row++)
+    {
+        for (thisCoord.m_col = 0 ;
+             thisCoord.m_col < m_board.GetNColumns();
+             thisCoord.m_col++)
+        {
+            rules::RecalculateInfluenceAreaAroundPiece(
+                    m_board,
+                    thisCoord,
+                    babyPiece.GetCurrentConfiguration(),
+                    m_player1);
+
+            rules::RecalculateInfluenceAreaAroundPiece(
+                    m_board,
+                    thisCoord,
+                    babyPiece.GetCurrentConfiguration(),
+                    m_player2);
         }
     }
 }
@@ -1082,7 +1130,9 @@ bool Game1v1::LoadGame(std::istream& a_inStream)
         }
     }
 
-    Game1v1::RecalculateNKInAllBoard(m_board, m_player1, m_player2);
+    // reload player's properties (nk points and influence areas)
+    RecalculateNKInAllBoard();
+    RecalculateInflueceAreasInAllBoard();
 
     return true;
 }

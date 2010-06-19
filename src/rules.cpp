@@ -23,11 +23,14 @@
 /// @history
 /// Ref       Who                When         What
 ///           Faustino Frechilla 08-Sept-2009 Original development
+///           Faustino Frechilla 16-Jun-2010  Influence area support
 /// @endhistory
 ///
 // ============================================================================
 
 #include "rules.h"
+
+static const int32_t INFLUENCE_AREA_AROUND_SQUARE_SIZE = 2;
 
 bool rules::IsCoordTouchingPlayer(
             const Board      &a_board,
@@ -485,14 +488,217 @@ void rules::RecalculateNKAroundCoord(
     }
 }
 
-
 void rules::RecalculateInfluenceAreaAroundPiece(
         const Board                &a_board,
         const Coordinate           &a_coord,
         const pieceConfiguration_t &a_pieceConf,
         Player                     &a_player)
 {
+    int32_t startCol, endCol, startRow, endRow;
 
+    // pieces are described in such a way that the 1st coordinate
+    // that describes them is right in the middle, that is,
+    // relative (0, 0). Calculate the influence area around
+    // a_coord because, which will always be occupied by the relative
+    // (0, 0) square of a_pieceConf
+
+    startRow = std::max(0, a_coord.m_row - INFLUENCE_AREA_AROUND_SQUARE_SIZE);
+    startCol = std::max(0, a_coord.m_col - INFLUENCE_AREA_AROUND_SQUARE_SIZE);
+    endRow = std::min(a_board.GetNRows() - 1,    a_coord.m_row + INFLUENCE_AREA_AROUND_SQUARE_SIZE);
+    endCol = std::min(a_board.GetNColumns() - 1, a_coord.m_col + INFLUENCE_AREA_AROUND_SQUARE_SIZE);
+
+    Coordinate tmpCoord;
+    for (tmpCoord.m_row  = startRow; tmpCoord.m_row <= endRow; tmpCoord.m_row++)
+    {
+        for (tmpCoord.m_col  = startCol; tmpCoord.m_col <= endCol; tmpCoord.m_col++)
+        {
+            if (a_board.IsCoordEmpty(tmpCoord) &&
+                (IsCoordTouchingPlayer(a_board, tmpCoord, a_player) == false) )
+            {
+                a_player.SetInfluencedCoord(tmpCoord);
+            }
+            else
+            {
+                a_player.UnsetInfluencedCoord(tmpCoord);
+            }
+        }
+    } // for (tmpCoord.m_row  = a_coord.m_row - INFLUENCE_AREA_AROUND_SQUARE_SIZE
+
+    // now go through the borders of the influence area per each one
+    // of squares that make up the piece configuration to check if
+    // this influence area should be bigger
+    pieceConfiguration_t::const_iterator it = a_pieceConf.begin();
+    // 1st square is always relative (0, 0) - read comment above -
+    // it has been checked in the previous loop. Also note that
+    // incrementing this iterator is always correct because all
+    // piece must have at least one coordinate
+    it++;
+    while (it != a_pieceConf.end())
+    {
+        // go for the borders on the top and bottom of the influence area
+        startCol = std::max(0, a_coord.m_col - INFLUENCE_AREA_AROUND_SQUARE_SIZE + it->m_col);
+        endCol   = std::min(a_board.GetNColumns() - 1,
+                            a_coord.m_col + INFLUENCE_AREA_AROUND_SQUARE_SIZE + it->m_col);
+
+        // upper most row of the influence area. Check it only if the squares to be
+        // checked are expected to be outside the "main" influence area checked
+        // in the 1st loop of the function
+        if (it->m_row < 0)
+        {
+            tmpCoord.m_row = a_coord.m_row - INFLUENCE_AREA_AROUND_SQUARE_SIZE + it->m_row;
+            if ( (tmpCoord.m_row >= 0) && (tmpCoord.m_row < a_board.GetNRows()) )
+            {
+                for (tmpCoord.m_col  = startCol;
+                     tmpCoord.m_col <= endCol;
+                     tmpCoord.m_col++)
+                {
+                    if ( (tmpCoord.m_row >= 0) && (tmpCoord.m_row < a_board.GetNRows()) )
+                    {
+                        if (a_board.IsCoordEmpty(tmpCoord) &&
+                            (IsCoordTouchingPlayer(a_board, tmpCoord, a_player) == false) )
+                        {
+                            a_player.SetInfluencedCoord(tmpCoord);
+                        }
+                        else
+                        {
+                            a_player.UnsetInfluencedCoord(tmpCoord);
+                        }
+                    } // if ( (tmpCoord.m_row >= 0) && (tmpCoord.m_row < a_board.GetNRows()) )
+                }
+            } // if ( (tmpCoord.m_row >= 0) && (tmpCoord.m_row < a_board.GetNRows()) )
+        } // if (it->m_row < 0)
+
+        // lowest most row of the influence area
+        if (it->m_row > 0)
+        {
+            tmpCoord.m_row = a_coord.m_row + INFLUENCE_AREA_AROUND_SQUARE_SIZE + it->m_row;
+            if ( (tmpCoord.m_row >= 0) && (tmpCoord.m_row < a_board.GetNRows()) )
+            {
+                for (tmpCoord.m_col  = startCol;
+                     tmpCoord.m_col <= endCol;
+                     tmpCoord.m_col++)
+                {
+                    if ( (tmpCoord.m_row >= 0) && (tmpCoord.m_row < a_board.GetNRows()) )
+                    {
+                        if (a_board.IsCoordEmpty(tmpCoord) &&
+                            (IsCoordTouchingPlayer(a_board, tmpCoord, a_player) == false) )
+                        {
+                            a_player.SetInfluencedCoord(tmpCoord);
+                        }
+                        else
+                        {
+                            a_player.UnsetInfluencedCoord(tmpCoord);
+                        }
+                    } // if ( (tmpCoord.m_row >= 0) && (tmpCoord.m_row < a_board.GetNRows()) )
+                }
+            } // if ( (tmpCoord.m_row >= 0) && (tmpCoord.m_row < a_board.GetNRows()) )
+        } // if (it->m_row > 0)
+
+        // go for the borders on the sides (thay haven't been checked yet)
+        // upper and down most rows have already been checked, but some coordinates
+        // could have been discarded because they weren't expected to go outside the
+        // the influence area checked in the 1st loop of the function
+        startRow = std::max(0, a_coord.m_row - INFLUENCE_AREA_AROUND_SQUARE_SIZE + it->m_row);
+        endRow   = std::min(a_board.GetNRows() - 1,
+                            a_coord.m_row + INFLUENCE_AREA_AROUND_SQUARE_SIZE + it->m_row);
+
+        // left side
+        if (it->m_col < 0)
+        {
+            tmpCoord.m_col = a_coord.m_col - INFLUENCE_AREA_AROUND_SQUARE_SIZE + it->m_col;
+            if ( (tmpCoord.m_col >= 0) && (tmpCoord.m_col < a_board.GetNColumns()) )
+            {
+                for (tmpCoord.m_row  = startRow;
+                     tmpCoord.m_row <= endRow;
+                     tmpCoord.m_row++)
+                {
+                    if ( (tmpCoord.m_row >= 0) && (tmpCoord.m_row < a_board.GetNRows()) )
+                    {
+                        if (a_board.IsCoordEmpty(tmpCoord) &&
+                            (IsCoordTouchingPlayer(a_board, tmpCoord, a_player) == false) )
+                        {
+                            a_player.SetInfluencedCoord(tmpCoord);
+                        }
+                        else
+                        {
+                            a_player.UnsetInfluencedCoord(tmpCoord);
+                        }
+                    } // if ( (tmpCoord.m_row >= 0) && (tmpCoord.m_row < a_board.GetNRows()) )
+                }
+            } // if ( (tmpCoord.m_col >= 0) && (tmpCoord.m_col < a_board.GetNColumns()) )
+        } // if (it->m_col < 0)
+
+        // right side
+        if (it->m_col > 0)
+        {
+            tmpCoord.m_col = a_coord.m_col + INFLUENCE_AREA_AROUND_SQUARE_SIZE + it->m_col;
+            if ( (tmpCoord.m_col >= 0) && (tmpCoord.m_col < a_board.GetNColumns()) )
+            {
+                for (tmpCoord.m_row  = startRow;
+                     tmpCoord.m_row <= endRow;
+                     tmpCoord.m_row++)
+                {
+                    if ( (tmpCoord.m_row >= 0) && (tmpCoord.m_row < a_board.GetNRows()) )
+                    {
+                        if (a_board.IsCoordEmpty(tmpCoord) &&
+                            (IsCoordTouchingPlayer(a_board, tmpCoord, a_player) == false) )
+                        {
+                            a_player.SetInfluencedCoord(tmpCoord);
+                        }
+                        else
+                        {
+                            a_player.UnsetInfluencedCoord(tmpCoord);
+                        }
+                    } // if ( (tmpCoord.m_row >= 0) && (tmpCoord.m_row < a_board.GetNRows()) )
+                }
+            } // if ( (tmpCoord.m_col >= 0) && (tmpCoord.m_col < a_board.GetNColumns()) )
+        }// if (it->m_col > 0)
+
+        // go for the next square of the piece!
+        it++;
+    } // while (it != a_pieceConf.end())
+
+}
+
+bool rules::IsCoordInfluencedByPlayerCompute(
+        const Board       &a_board,
+        const Coordinate  &a_coord,
+        const Player      &a_player)
+{
+#ifdef DEBUG
+    assert(a_coord.m_row >= 0 && a_coord.m_col >= 0);
+    assert(a_coord.m_row < a_board.GetNRows());
+    assert(a_coord.m_col < a_board.GetNColumns());
+
+#endif
+
+    if ( (a_board.IsCoordEmpty(a_coord) == false) ||
+         IsCoordTouchingPlayer(a_board, a_coord, a_player))
+    {
+        return false;
+    }
+
+    int32_t startRow = std::max(0, a_coord.m_row - INFLUENCE_AREA_AROUND_SQUARE_SIZE);
+    int32_t startCol = std::max(0, a_coord.m_col - INFLUENCE_AREA_AROUND_SQUARE_SIZE);
+    int32_t endRow = std::min(a_board.GetNRows() - 1,    a_coord.m_row + INFLUENCE_AREA_AROUND_SQUARE_SIZE);
+    int32_t endCol = std::min(a_board.GetNColumns() - 1, a_coord.m_col + INFLUENCE_AREA_AROUND_SQUARE_SIZE);
+
+    Coordinate tmpCoord;
+    for (tmpCoord.m_row  = startRow; tmpCoord.m_row <= endRow; tmpCoord.m_row++)
+    {
+        for (tmpCoord.m_col  = startCol; tmpCoord.m_col <= endCol; tmpCoord.m_col++)
+        {
+            if (a_board.IsPlayerInCoord(tmpCoord, a_player))
+            {
+                // there is another square taken over by this player
+                // inside INFLUENCE_AREA_AROUND_SQUARE_SIZE, so this
+                // point belongs to his/her influence area
+                return true;
+            }
+        }
+    } // for (tmpCoord.m_row  = a_coord.m_row - INFLUENCE_AREA_AROUND_SQUARE_SIZE
+
+    return false;
 }
 
 bool rules::CanPlayerGo(const Board &a_board, const Player &a_player)

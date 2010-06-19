@@ -30,7 +30,7 @@
 #include "gui_game1v1_config.h"
 #include "game1v1.h" // DEFAULT_STARTING_COORD_PLAYER1 and 2
 
-static const Heuristic::eHeuristicType_t  DEFAULT_CURRENT_HEURISTIC = Heuristic::e_heuristicNKWeightedv1;
+static const Heuristic::eHeuristicType_t  DEFAULT_CURRENT_HEURISTIC = Heuristic::e_heuristicInfluenceArea;
 static const Game1v1Config::ePlayerType_t DEFAULT_PLAYER1_TYPE      = Game1v1Config::e_playerHuman;
 static const Game1v1Config::ePlayerType_t DEFAULT_PLAYER2_TYPE      = Game1v1Config::e_playerComputer;
 static const int32_t                      DEFAULT_MINIMAX_DEPTH     = GAME1V1CONFIG_DEPTH_AUTOADJUST;

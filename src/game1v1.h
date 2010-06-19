@@ -201,10 +201,10 @@ protected:
 	ProgressFunctor_t m_progressFunctor;
 
     /// @brief recalculate the nucleation points using the whole blokus board and save them into the players
-    static void RecalculateNKInAllBoard(
-            const Board &a_board,
-            Player      &a_playerMe,
-            Player      &a_playerOpponent);
+    void RecalculateNKInAllBoard();
+
+    /// @brief recalculate the influence area (for both player1 and 2) in the wholse board
+    void RecalculateInflueceAreasInAllBoard();
 
     /// remove a piece from the board. The user is supposed to check if the piece was there
     /// before calling this function since it just will set to empty the squares

@@ -150,14 +150,7 @@ int main(int argc, char **argv)
             std::cerr << "Warning: For better results you might want to set the depth to an odd number" << std::endl;
         }
 
-        Heuristic::EvalFunction_t heuristicNKWeighted = Heuristic::CalculateNKWeightedv1;
-        //Heuristic::EvalFunction_t heuristicSimple = Heuristic::CalculateSimple;
-        //Heuristic::EvalFunction_t heuristicPiecePerNKPoint = Heuristic::CalculatePiecesPerNKPoint;
-
-        Heuristic::EvalFunction_t heuristic = heuristicNKWeighted;
-        //Heuristic::EvalFunction_t heuristic = heuristicSimple;
-        //Heuristic::EvalFunction_t heuristic = heuristicPiecePerNKPoint;
-
+        Heuristic::EvalFunction_t heuristic = Heuristic::CalculateInfluenceAreaWeighted;
         std::ifstream cin;
 
         cin.open(s_blockemfilePath);
@@ -236,7 +229,7 @@ int main(int argc, char **argv)
     // gtkmm can do strange stuff if its internals are not initialised early enough
     Gtk::Main::init_gtkmm_internals();
 
-    // g_thread_supported returns TRUE if the thread system is initialised, 
+    // g_thread_supported returns TRUE if the thread system is initialised,
     // and FALSE if it is not. Initiliase gthreads only if they haven't been
     // initialised already. Since glib 2.24.0 (from its changelog):
     // "the requirements for g_thread_init() have been relaxed slightly, it
