@@ -31,7 +31,7 @@
 #include <iomanip> // setw
 #include "gui_stop_watch_label.h"
 
-StopWatchLabel::StopWatchLabel(uint32_t a_periodMillis, std::string a_prefix) :
+StopWatchLabel::StopWatchLabel(uint32_t a_periodMillis, const std::string &a_prefix) :
     Gtk::Label(),
     m_timerRunning(false),
     m_periodMillis(a_periodMillis),
@@ -82,6 +82,11 @@ void StopWatchLabel::Stop()
     }
 }
 
+void StopWatchLabel::SetPrefix(const std::string &a_prefix)
+{
+    m_prefix = a_prefix;
+}
+
 void StopWatchLabel::UpdateWidget(bool a_stopped)
 {
     gulong microsecs;
@@ -112,12 +117,9 @@ void StopWatchLabel::UpdateWidget(bool a_stopped)
     if (m_timerRunning)
     {
         theMessage << "</b>";
-        set_markup(theMessage.str().c_str());
     }
-    else
-    {
-        set_text(theMessage.str().c_str());
-    }
+
+    set_markup(theMessage.str().c_str());
 }
 
 gboolean StopWatchLabel::timerCallback(void* param)

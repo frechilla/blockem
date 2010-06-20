@@ -670,14 +670,18 @@ bool rules::IsCoordInfluencedByPlayerCompute(
     assert(a_coord.m_row < a_board.GetNRows());
     assert(a_coord.m_col < a_board.GetNColumns());
 
-#endif
+#endif // DEBUG
 
+    // if a_coord is not empty or is touching a_player cannot be part
+    // of the influence area
     if ( (a_board.IsCoordEmpty(a_coord) == false) ||
          IsCoordTouchingPlayer(a_board, a_coord, a_player))
     {
         return false;
     }
 
+    // go through the influence area around a_coord to check if there
+    // at least one square taken over by a_player
     int32_t startRow = std::max(0, a_coord.m_row - INFLUENCE_AREA_AROUND_SQUARE_SIZE);
     int32_t startCol = std::max(0, a_coord.m_col - INFLUENCE_AREA_AROUND_SQUARE_SIZE);
     int32_t endRow = std::min(a_board.GetNRows() - 1,    a_coord.m_row + INFLUENCE_AREA_AROUND_SQUARE_SIZE);

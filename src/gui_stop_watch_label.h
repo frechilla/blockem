@@ -44,7 +44,7 @@ public:
     /// @brief constructor of the class
     /// the label widget will be updated every a_periodMillis milliseconds
     /// a_prefix will be added in front of the elapsed time when the label is updated
-    StopWatchLabel(uint32_t a_periodMillis, std::string a_prefix);
+    StopWatchLabel(uint32_t a_periodMillis, const std::string &a_prefix = std::string());
     ~StopWatchLabel();
 
     /// @brief resets the timer to when the world was created (0)
@@ -56,6 +56,11 @@ public:
 
     /// @brief pauses the timer
     void Stop();
+
+    /// @brief sets the prefix to be shown before the timestamp in the label
+    /// the widget will be updated with the prefix next time timer is up
+    /// and widget is updated automatically
+    void SetPrefix(const std::string &a_prefix);
 
 private:
     /// @brief contains the time elapsed so far

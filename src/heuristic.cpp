@@ -36,7 +36,6 @@
 #include "bitwise.h"
 
 static const int32_t N_PIECES_TO_TAKE_OVER_THE_CENTRE = 3;
-static const int32_t N_PIECES_INFLUECE_AREA_TAKE_OVER_THE_CENTRE = 2;
 
 // instantiate the const heuristic data array. Heuristics must be defined here
 // in the same order they are described in Heuristic::eHeuristicType_t in heuristic.h
@@ -371,12 +370,6 @@ int32_t Heuristic::CalculateInfluenceAreaWeighted(
         const Player &a_playerMe,
         const Player &a_playerOpponent)
 {
-    if (a_playerOpponent.NumberOfPiecesAvailable() >=
-           (e_numberOfPieces - N_PIECES_INFLUECE_AREA_TAKE_OVER_THE_CENTRE))
-    {
-        return CalculateCentreFocused(a_board, a_playerMe, a_playerOpponent);
-    }
-
     int32_t rv = 0;
 
     int32_t valueNkMe = 0;
@@ -446,12 +439,6 @@ int32_t Heuristic::CalculateInfluenceAreaWeightedEastwood(
         const Player &a_playerMe,
         const Player &a_playerOpponent)
 {
-    if (a_playerOpponent.NumberOfPiecesAvailable() >=
-           (e_numberOfPieces - N_PIECES_INFLUECE_AREA_TAKE_OVER_THE_CENTRE))
-    {
-        return CalculateCentreFocused(a_board, a_playerMe, a_playerOpponent);
-    }
-
     int32_t rv = 0;
 
     int32_t valueNkMe = 0;

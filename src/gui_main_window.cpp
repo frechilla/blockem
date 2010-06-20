@@ -99,11 +99,9 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     m_boardDrawingArea(m_the1v1Game.GetBoard()),
     m_editPieceTable(NULL),
     m_stopWatchLabelPlayer1(
-        STOPWATCH_UPDATE_PERIOD_MILLIS,
-        m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1).GetName() + std::string(" elapsed time ")),
+        STOPWATCH_UPDATE_PERIOD_MILLIS, std::string("Player1: elapsed time ")),
     m_stopWatchLabelPlayer2(
-        STOPWATCH_UPDATE_PERIOD_MILLIS,
-        m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2).GetName() + std::string(" elapsed time "))
+        STOPWATCH_UPDATE_PERIOD_MILLIS, std::string("Player2: elapsed time "))
 {
     //TODO this is dirty (even though it works) the way MainWindow::ProgressUpdate
     // access the MainWindow Instance should be fixed in some way
@@ -382,11 +380,33 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
             sigc::mem_fun(*this, &MainWindow::MenuItemSettingsShowNoneInfluenceArea_Toggled));
 
     // retrieve the default colour from the config class to apply it to the players
+    // and set the prefix to the stopwatch labels
     uint8_t red, green, blue;
+    std::stringstream theMessage;
     Game1v1Config::Instance().GetPlayer1Colour(red, green, blue);
     m_the1v1Game.SetPlayerColour(Game1v1::e_Game1v1Player1, red, green, blue);
+    theMessage << "<span color=\"#"
+               << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(red)
+               << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(green)
+               << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(blue)
+               << "\">"
+               << m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1).GetName()
+               << "</span>"
+               << ": elapsed time ";
+    m_stopWatchLabelPlayer1.SetPrefix(theMessage.str());
+
     Game1v1Config::Instance().GetPlayer2Colour(red, green, blue);
     m_the1v1Game.SetPlayerColour(Game1v1::e_Game1v1Player2, red, green, blue);
+    theMessage.str("");
+    theMessage << "<span color=\"#"
+               << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(red)
+               << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(green)
+               << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(blue)
+               << "\">"
+               << m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2).GetName()
+               << "</span>"
+               << ": elapsed time ";
+    m_stopWatchLabelPlayer2.SetPrefix(theMessage.str());
 
     // initialise the list of players of the board drawing area
     m_boardDrawingArea.AddPlayerToList(m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1));
@@ -1260,34 +1280,89 @@ void MainWindow::GameFinished()
         }
     }
 
+    uint8_t red1, green1, blue1;
+    uint8_t red2, green2, blue2;
+    player1.GetColour(red1, green1, blue1);
+    player2.GetColour(red2, green2, blue2);
+
     std::stringstream theMessage;
     if (squaresLeftPlayer1 == squaresLeftPlayer2)
     {
-        theMessage << "That was a <b>DRAW</b>!"
-                   << std::endl
-                   << "    Both "
-                   << player1.GetName()
-                   << " and "
-                   << player2.GetName()
-                   << " have <b>"
-                   << squaresLeftPlayer1
-                   << "</b> squares left";
+        theMessage
+            << "That was a <b>DRAW</b>!"
+            << std::endl
+            << "    Both "
+            << "<span color=\"#"
+            << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(red1)
+            << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(green1)
+            << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(blue1)
+            << "\">"
+            << player1.GetName()
+            << "</span>"
+            << " and "
+            << "<span color=\"#"
+            << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(red2)
+            << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(green2)
+            << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(blue2)
+            << "\">"
+            << player2.GetName()
+            << "</span>"
+            << " have <b>"
+            << std::setbase(10) << squaresLeftPlayer1
+            << "</b> squares left";
     }
     else //(squaresLeftPlayer1 != squaresLeftPlayer2)
     {
-        theMessage << "<b>"
-                   << ((squaresLeftPlayer1 < squaresLeftPlayer2) ? player1.GetName() : player2.GetName())
-                   << "</b> won!"
-                   << std::endl
-                   << "    "
-                   << player1.GetName()
-                   << " has <b>"
-                   << squaresLeftPlayer1
-                   << "</b> squares left and "
-                   << player2.GetName()
-                   << " <b>"
-                   << squaresLeftPlayer2
-                   << "</b>";
+        if (squaresLeftPlayer1 < squaresLeftPlayer2)
+        {
+            theMessage
+                << "<b>"
+                << "<span color=\"#"
+                << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(red1)
+                << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(green1)
+                << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(blue1)
+                << "\">"
+                << player1.GetName()
+                << "</span>"
+                << "</b> won!"
+                << std::endl;
+        }
+        else
+        {
+            theMessage
+                << "<b>"
+                << "<span color=\"#"
+                << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(red2)
+                << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(green2)
+                << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(blue2)
+                << "\">"
+                << player2.GetName()
+                << "</span>"
+                << "</b> won!"
+                << std::endl;
+        }
+        theMessage
+            << "    "
+            << "<span color=\"#"
+            << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(red1)
+            << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(green1)
+            << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(blue1)
+            << "\">"
+            << player1.GetName()
+            << "</span>"
+            << " has <b>"
+            << std::setbase(10) << squaresLeftPlayer1
+            << "</b> squares left and "
+            << "<span color=\"#"
+            << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(red2)
+            << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(green2)
+            << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(blue2)
+            << "\">"
+            << player2.GetName()
+            << "</span>"
+            << " <b>"
+            << std::setbase(10) << squaresLeftPlayer2
+            << "</b>";
     }
 
     //MessageDialog (
