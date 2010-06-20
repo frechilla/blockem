@@ -5,9 +5,7 @@
         "error: gthread_supported call failed when initialising gthreads"
         "error: App can't start without gthreads support"
     - Minimax algorithm improved. 5% performance improvement since 0.2.1 
-      without taking into account calculation of influence areas
-    - User can show either Player1 or player2's forbidden, instead of just
-      showing current player's 
+      (without taking into account calculation of influence areas)
     - New concept of influence areas added to blockem. influence area is the
       set of coordinates of the board that are empty, valid for a possible 
       deployment and are "at reach" of any piece. These influece areas of
@@ -22,7 +20,9 @@
       done on heuristics, but this topic looks like and endless one
     - Player1 and player2's names are shown with the corresponding colour on
       the status bar
-
+    - User can show either Player1 or player2's forbidden areas, instead of
+      just showing current player's 
+      
 24/05/2010: Version 0.2.1
     - Around 8% computing time improvement in the minimax algorithm (tested
       in a 32-bit centrino duo processor)
