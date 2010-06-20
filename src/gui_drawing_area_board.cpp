@@ -49,7 +49,8 @@ static const float COLOUR_BLACK_CHANNEL_BLUE  = 0.0;
 static const float STARTING_COORD_ALPHA    = 0.6;
 static const float GHOST_PIECE_ALPHA_RIGHT = 0.8;
 static const float GHOST_PIECE_ALPHA_WRONG = 0.2;
-static const float FORBIDDEN_AREA_ALPHA    = 0.3;
+static const float INFLUENCE_AREA_ALPHA    = 0.3;
+static const float FORBIDDEN_AREA_ALPHA    = 0.5;
 
 // 1000 = 1 second
 static const uint32_t LAST_PIECE_EFFECT_MILLIS = 300;
@@ -70,8 +71,9 @@ DrawingAreaBoard::DrawingAreaBoard(const Board &a_board) :
     m_latestPieceDeployedCoord(COORD_UNINITIALISED, COORD_UNINITIALISED),
     m_latestPieceDeployedPlayer(NULL),
     m_latestPieceDeployedTransparency(LAST_PIECE_EFFECT_INITIAL_ALPHA),
-    m_showNKPoints(false),     // nk points won't be shown by default
-    m_showForbiddenArea(false) // forbidden area of current player won't be shown by default
+    m_showNKPoints(false),       // nk points won't be shown by default
+    m_forbiddenAreaPlayer(NULL), // no forbidden area will be shown by default
+    m_influenceAreaPlayer(NULL)  // no influence area will be shown by default
 {
     // these events are going to be handled by the drawing area (apart from the usual expose event)
     this->add_events(Gdk::BUTTON_PRESS_MASK);
@@ -83,9 +85,9 @@ DrawingAreaBoard::~DrawingAreaBoard()
 {
 }
 
-void DrawingAreaBoard::AddPlayerToList(const Player* a_player)
+void DrawingAreaBoard::AddPlayerToList(const Player &a_player)
 {
-    m_playerList.push_back(a_player);
+    m_playerList.push_back(&a_player);
 }
 
 void DrawingAreaBoard::ResetPlayerList()
@@ -128,23 +130,40 @@ void DrawingAreaBoard::HideNucleationPoints()
     }
 }
 
-
-void DrawingAreaBoard::ShowCurrentPlayerForbiddenArea()
+void DrawingAreaBoard::ShowPlayerForbiddenArea(const Player &a_player)
 {
-    if (m_showForbiddenArea == false)
+    if (m_forbiddenAreaPlayer != &a_player)
     {
-        // Invalidating is expensive. Do it only if it is needed
-        m_showForbiddenArea = true;
+        m_forbiddenAreaPlayer = &a_player;
         Invalidate();
     }
 }
 
-void DrawingAreaBoard::HideCurrentPlayerForbiddenArea()
+void DrawingAreaBoard::HidePlayerForbiddenArea()
 {
-    if (m_showForbiddenArea == true)
+    if (m_forbiddenAreaPlayer != NULL)
     {
         // Invalidating is expensive. Do it only if it is needed
-        m_showForbiddenArea = false;
+        m_forbiddenAreaPlayer = NULL;
+        Invalidate();
+    }
+}
+
+void DrawingAreaBoard::ShowPlayerInfluenceArea(const Player &a_player)
+{
+    if (m_influenceAreaPlayer != &a_player)
+    {
+        m_influenceAreaPlayer = &a_player;
+        Invalidate();
+    }
+}
+
+void DrawingAreaBoard::HidePlayerInfluenceArea()
+{
+    if (m_influenceAreaPlayer != NULL)
+    {
+        // Invalidating is expensive. Do it only if it is needed
+        m_influenceAreaPlayer = NULL;
         Invalidate();
     }
 }
@@ -249,36 +268,57 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
 
                         cr->fill();
                     }
-                    else if (m_currentPlayer == thisPlayer)
+                    else if ( m_theBoard.IsCoordEmpty(thisCoord) &&
+                              ( (m_forbiddenAreaPlayer != NULL) ||
+                                (m_influenceAreaPlayer != NULL) ) )
+
                     {
-                        // save current cairo context in an internal stack
+                        // save current cairo context in an internal stack. This coord
+                        // might belong to current player's forbidden or influence area
                         cr->save();
 
-                        if (m_showForbiddenArea)
+                        // draw the influence area
+                        if ( (thisPlayer == m_influenceAreaPlayer) &&
+                             thisPlayer->IsCoordInfluencedByPlayer(thisCoord) )
                         {
                             cr->set_source_rgba(
                                     static_cast<float>(red)  / 255,
                                     static_cast<float>(green)/ 255,
                                     static_cast<float>(blue) / 255,
+                                    INFLUENCE_AREA_ALPHA);
+
+                            cr->rectangle(
+                                    (xc - squareWidth/2) +  (littleSquare * thisCoord.m_col) + 1,
+                                    (yc - squareHeight/2) + (littleSquare * thisCoord.m_row) + 1,
+                                    littleSquare - 1,
+                                    littleSquare - 1);
+
+                            cr->fill();
+                        }
+
+                        // mark the coords in the board where the current player can't go
+                        // if a coordinate belongs to the influenced area it can't belong
+                        // to the forbidden area (see definition of influenced area in rules.h)
+                        // it can save a few cycles cos IsCoordTouchingPlayer is not a trivial function
+                        if ( (thisPlayer == m_forbiddenAreaPlayer) &&
+                             (thisPlayer->IsCoordInfluencedByPlayer(thisCoord) == false) &&
+                             rules::IsCoordTouchingPlayer(m_theBoard, thisCoord, *thisPlayer) )
+                        {
+                            // forbidden areas are drawn with exactly the inverse colour
+                            cr->set_source_rgba(
+                                    1 - (static_cast<float>(red)  / 255),
+                                    1 - (static_cast<float>(green)/ 255),
+                                    1 - (static_cast<float>(blue) / 255),
                                     FORBIDDEN_AREA_ALPHA);
 
-                            // mark the coords in the board where the current player can't go
-                            // if a coordinate belongs to the influenced area it can't belong
-                            // to the forbidden area (see definition of influenced area in rules.h)
-                            // it can save a few cycles cos IsCoordTouchingPlayer is not a trivial function
-                            if ( m_theBoard.IsCoordEmpty(thisCoord) &&
-                                 (thisPlayer->IsCoordInfluencedByPlayer(thisCoord) == false) &&
-                                 rules::IsCoordTouchingPlayer(m_theBoard, thisCoord, *thisPlayer) )
-                            {
-                                cr->rectangle(
-                                        (xc - squareWidth/2) +  (littleSquare * thisCoord.m_col) + 1,
-                                        (yc - squareHeight/2) + (littleSquare * thisCoord.m_row) + 1,
-                                        littleSquare - 1,
-                                        littleSquare - 1);
+                            cr->rectangle(
+                                    (xc - squareWidth/2) +  (littleSquare * thisCoord.m_col) + 1,
+                                    (yc - squareHeight/2) + (littleSquare * thisCoord.m_row) + 1,
+                                    littleSquare - 1,
+                                    littleSquare - 1);
 
-                                cr->fill();
-                            }
-                        } // if (m_showForbiddenArea)
+                            cr->fill();
+                        }
 
                         // restore the cairo context from the internal stack
                         cr->restore();

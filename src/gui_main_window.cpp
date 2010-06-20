@@ -196,32 +196,46 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
         throw new GUIException(std::string("view nk points menu item retrieval failed"));
     }
 
-    m_settingsCurrentForbiddenAreaMenuItem = Glib::RefPtr<Gtk::RadioMenuItem>::cast_dynamic(
-            m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_FORBIDDENAREA_CURRENT));
-    if (!m_settingsCurrentForbiddenAreaMenuItem)
+    m_settingsForbiddenAreaPlayer1MenuItem = Glib::RefPtr<Gtk::RadioMenuItem>::cast_dynamic(
+            m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_FORBIDDENAREA_PLAYER1));
+    if (!m_settingsForbiddenAreaPlayer1MenuItem)
     {
-        throw new GUIException(std::string("show forbidden area menu item retrieval failed"));
+        throw new GUIException(std::string("show player1's forbidden area menu item retrieval failed"));
     }
 
-    m_settingsCurrentForbiddenAreaMenuItem = Glib::RefPtr<Gtk::RadioMenuItem>::cast_dynamic(
-            m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_FORBIDDENAREA_CURRENT));
-    if (!m_settingsCurrentForbiddenAreaMenuItem)
+    m_settingsForbiddenAreaPlayer2MenuItem = Glib::RefPtr<Gtk::RadioMenuItem>::cast_dynamic(
+            m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_FORBIDDENAREA_PLAYER2));
+    if (!m_settingsForbiddenAreaPlayer2MenuItem)
     {
-        throw new GUIException(std::string("show current player's forbidden area menu item retrieval failed"));
+        throw new GUIException(std::string("show player2's forbidden area menu item retrieval failed"));
     }
 
-    m_settingsOpponentForbiddenAreaMenuItem = Glib::RefPtr<Gtk::RadioMenuItem>::cast_dynamic(
-            m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_FORBIDDENAREA_OPPONENT));
-    if (!m_settingsOpponentForbiddenAreaMenuItem)
-    {
-        throw new GUIException(std::string("show opponent's forbidden area menu item retrieval failed"));
-    }
-
-    m_settingsNoShowForbiddenAreaMenuItem = Glib::RefPtr<Gtk::RadioMenuItem>::cast_dynamic(
+    m_settingsForbiddenAreaNoShowMenuItem = Glib::RefPtr<Gtk::RadioMenuItem>::cast_dynamic(
             m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_FORBIDDENAREA_NOSHOW));
-    if (!m_settingsNoShowForbiddenAreaMenuItem)
+    if (!m_settingsForbiddenAreaNoShowMenuItem)
     {
         throw new GUIException(std::string("do not show any forbidden area menu item retrieval failed"));
+    }
+
+    m_settingsInfluenceAreaPlayer1MenuItem = Glib::RefPtr<Gtk::RadioMenuItem>::cast_dynamic(
+            m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_INFLUENCEAREA_PLAYER1));
+    if (!m_settingsInfluenceAreaPlayer1MenuItem)
+    {
+        throw new GUIException(std::string("show player1's influence area menu item retrieval failed"));
+    }
+
+    m_settingsInfluenceAreaPlayer2MenuItem = Glib::RefPtr<Gtk::RadioMenuItem>::cast_dynamic(
+            m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_INFLUENCEAREA_PLAYER2));
+    if (!m_settingsInfluenceAreaPlayer2MenuItem)
+    {
+        throw new GUIException(std::string("show player2's influence area menu item retrieval failed"));
+    }
+
+    m_settingsInfluenceAreaNoShowMenuItem = Glib::RefPtr<Gtk::RadioMenuItem>::cast_dynamic(
+            m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_INFLUENCEAREA_NOSHOW));
+    if (!m_settingsInfluenceAreaNoShowMenuItem)
+    {
+        throw new GUIException(std::string("do not show any influence area menu item retrieval failed"));
     }
 
     m_settingsPrefsMenuItem = Glib::RefPtr<Gtk::MenuItem>::cast_dynamic(
@@ -354,12 +368,18 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
             sigc::mem_fun(*this, &MainWindow::MenuItemSettingsPreferences_Activate));
     m_settingsNKPointsMenuItem->signal_toggled().connect(
             sigc::mem_fun(*this, &MainWindow::MenuItemSettingsViewNKPoints_Toggled));
-    m_settingsCurrentForbiddenAreaMenuItem->signal_toggled().connect(
-            sigc::mem_fun(*this, &MainWindow::MenuItemSettingsShowCurrentForbiddenArea_Toggled));
-    m_settingsOpponentForbiddenAreaMenuItem->signal_toggled().connect(
-            sigc::mem_fun(*this, &MainWindow::MenuItemSettingsShowOpponentForbiddenArea_Toggled));
-    m_settingsNoShowForbiddenAreaMenuItem->signal_toggled().connect(
+    m_settingsForbiddenAreaPlayer1MenuItem->signal_toggled().connect(
+            sigc::mem_fun(*this, &MainWindow::MenuItemSettingsShowPlayer1ForbiddenArea_Toggled));
+    m_settingsForbiddenAreaPlayer2MenuItem->signal_toggled().connect(
+            sigc::mem_fun(*this, &MainWindow::MenuItemSettingsShowPlayer2ForbiddenArea_Toggled));
+    m_settingsForbiddenAreaNoShowMenuItem->signal_toggled().connect(
             sigc::mem_fun(*this, &MainWindow::MenuItemSettingsShowNoneForbiddenArea_Toggled));
+    m_settingsInfluenceAreaPlayer1MenuItem->signal_toggled().connect(
+            sigc::mem_fun(*this, &MainWindow::MenuItemSettingsShowPlayer1InfluenceArea_Toggled));
+    m_settingsInfluenceAreaPlayer2MenuItem->signal_toggled().connect(
+            sigc::mem_fun(*this, &MainWindow::MenuItemSettingsShowPlayer2InfluenceArea_Toggled));
+    m_settingsInfluenceAreaNoShowMenuItem->signal_toggled().connect(
+            sigc::mem_fun(*this, &MainWindow::MenuItemSettingsShowNoneInfluenceArea_Toggled));
 
     // retrieve the default colour from the config class to apply it to the players
     uint8_t red, green, blue;
@@ -369,8 +389,8 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     m_the1v1Game.SetPlayerColour(Game1v1::e_Game1v1Player2, red, green, blue);
 
     // initialise the list of players of the board drawing area
-    m_boardDrawingArea.AddPlayerToList(&(m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1)));
-    m_boardDrawingArea.AddPlayerToList(&(m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2)));
+    m_boardDrawingArea.AddPlayerToList(m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1));
+    m_boardDrawingArea.AddPlayerToList(m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2));
 
     // launch the game!!
     LaunchNewGame();
@@ -463,14 +483,14 @@ void MainWindow::MenuItemGameNew_Activate()
         // go for the brand new game!!
         LaunchNewGame();
     }
-#if defined(DEBUG_PRINTING) || defined (DEBUG)
+#if defined(DEBUG_PRINT) || defined (DEBUG)
     else if ( (result == Gtk::RESPONSE_CANCEL) || (result == Gtk::RESPONSE_DELETE_EVENT))
     {
         // config dialog cancelled
         ;
-#ifdef DEBUG_PRINTING
+#ifdef DEBUG_PRINT
         std::cout << "Config Dialog cancelled" << std::endl;
-#endif // DEBUG_PRINTING
+#endif // DEBUG_PRINT
     }
 #ifdef DEBUG
     else
@@ -479,7 +499,7 @@ void MainWindow::MenuItemGameNew_Activate()
         assert(0);
     }
 #endif // DEBUG
-#endif // defined(DEBUG_PRINTING) || defined (DEBUG)
+#endif // defined(DEBUG_PRINT) || defined (DEBUG)
 
     m_configDialog->hide();
 }
@@ -496,24 +516,52 @@ void MainWindow::MenuItemSettingsViewNKPoints_Toggled()
     }
 }
 
-void MainWindow::MenuItemSettingsShowCurrentForbiddenArea_Toggled()
+void MainWindow::MenuItemSettingsShowPlayer1ForbiddenArea_Toggled()
 {
-    if (m_settingsCurrentForbiddenAreaMenuItem->property_active())
+    if (m_settingsForbiddenAreaPlayer1MenuItem->property_active())
     {
-        m_boardDrawingArea.ShowCurrentPlayerForbiddenArea();
-    }
-    else
-    {
-        m_boardDrawingArea.HideCurrentPlayerForbiddenArea();
+        m_boardDrawingArea.ShowPlayerForbiddenArea(m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1));
     }
 }
 
-void MainWindow::MenuItemSettingsShowOpponentForbiddenArea_Toggled()
+void MainWindow::MenuItemSettingsShowPlayer2ForbiddenArea_Toggled()
 {
+    if (m_settingsForbiddenAreaPlayer2MenuItem->property_active())
+    {
+        m_boardDrawingArea.ShowPlayerForbiddenArea(m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2));
+    }
 }
 
 void MainWindow::MenuItemSettingsShowNoneForbiddenArea_Toggled()
 {
+    if (m_settingsForbiddenAreaNoShowMenuItem->property_active())
+    {
+        m_boardDrawingArea.HidePlayerForbiddenArea();
+    }
+}
+
+void MainWindow::MenuItemSettingsShowPlayer1InfluenceArea_Toggled()
+{
+    if (m_settingsInfluenceAreaPlayer1MenuItem->property_active())
+    {
+        m_boardDrawingArea.ShowPlayerInfluenceArea(m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1));
+    }
+}
+
+void MainWindow::MenuItemSettingsShowPlayer2InfluenceArea_Toggled()
+{
+    if (m_settingsInfluenceAreaPlayer2MenuItem->property_active())
+    {
+        m_boardDrawingArea.ShowPlayerInfluenceArea(m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2));
+    }
+}
+
+void MainWindow::MenuItemSettingsShowNoneInfluenceArea_Toggled()
+{
+    if (m_settingsInfluenceAreaNoShowMenuItem->property_active())
+    {
+        m_boardDrawingArea.HidePlayerInfluenceArea();
+    }
 }
 
 void MainWindow::MenuItemSettingsPreferences_Activate()
@@ -1300,24 +1348,40 @@ void MainWindow::UpdateScoreStatus()
         }
     }
 
+    uint8_t red, green, blue;
+    player2.GetColour(red, green, blue);
+
     // update the GUI widgets
     std::stringstream theMessage;
-    theMessage << player2.GetName()
+    theMessage << "<span color=\"#"
+               << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(red)
+               << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(green)
+               << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(blue)
+               << "\">"
+               << player2.GetName()
+               << "</span>"
                << ": "
-               << std::setfill(' ') << std::setw(2)
+               << std::setfill(' ') << std::setw(2) << std::setbase(10)
                << static_cast<int32_t>(squaresLeftPlayer2)
                << " left";
 
-    m_player2ScoreLabel.set_text(theMessage.str().c_str());
+    m_player2ScoreLabel.set_markup(theMessage.str().c_str());
 
+    player1.GetColour(red, green, blue);
     theMessage.str("");
-    theMessage << player1.GetName()
+    theMessage << "<span color=\"#"
+               << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(red)
+               << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(green)
+               << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(blue)
+               << "\">"
+               << player1.GetName()
+               << "</span>"
                << ": "
-               << std::setfill(' ') << std::setw(2)
+               << std::setfill(' ') << std::setw(2)  << std::setbase(10)
                << static_cast<int32_t>(squaresLeftPLayer1)
                << " left";
 
-    m_player1ScoreLabel.set_text(theMessage.str().c_str());
+    m_player1ScoreLabel.set_markup(theMessage.str().c_str());
 }
 
 void MainWindow::SetWaitCursor()

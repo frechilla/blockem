@@ -87,14 +87,23 @@ public:
     /// @brief  callback to be called when the menuitem Settings->view nk points is toggled
     void MenuItemSettingsViewNKPoints_Toggled();
 
-    /// @brief  callback to be called when the menuitem Settings->areas->show current's forbidden area is toggled
-    void MenuItemSettingsShowCurrentForbiddenArea_Toggled();
+    /// @brief  callback to be called when the menuitem Settings->areas->show player1's forbidden area is toggled
+    void MenuItemSettingsShowPlayer1ForbiddenArea_Toggled();
 
-    /// @brief  callback to be called when the menuitem Settings->areas->show opponent's forbidden area is toggled
-    void MenuItemSettingsShowOpponentForbiddenArea_Toggled();
+    /// @brief  callback to be called when the menuitem Settings->areas->show player2 forbidden area is toggled
+    void MenuItemSettingsShowPlayer2ForbiddenArea_Toggled();
 
     /// @brief  callback to be called when the menuitem Settings->areas->do not show forbidden area is toggled
     void MenuItemSettingsShowNoneForbiddenArea_Toggled();
+
+    /// @brief  callback to be called when the menuitem Settings->areas->show player1's influence area is toggled
+    void MenuItemSettingsShowPlayer1InfluenceArea_Toggled();
+
+    /// @brief  callback to be called when the menuitem Settings->areas->show player2 influence area is toggled
+    void MenuItemSettingsShowPlayer2InfluenceArea_Toggled();
+
+    /// @brief  callback to be called when the menuitem Settings->areas->do not show influence area is toggled
+    void MenuItemSettingsShowNoneInfluenceArea_Toggled();
 
     /// @brief callback to be called when a button is pressed inside the board
     void BoardDrawingArea_BoardClicked(const Coordinate &, const Piece &, const Player &);
@@ -167,9 +176,12 @@ private:
     Glib::RefPtr<Gtk::MenuItem> m_helpAboutMenuItem;
     Glib::RefPtr<Gtk::MenuItem> m_settingsPrefsMenuItem;
     Glib::RefPtr<Gtk::CheckMenuItem> m_settingsNKPointsMenuItem;
-    Glib::RefPtr<Gtk::RadioMenuItem> m_settingsCurrentForbiddenAreaMenuItem;
-    Glib::RefPtr<Gtk::RadioMenuItem> m_settingsOpponentForbiddenAreaMenuItem;
-    Glib::RefPtr<Gtk::RadioMenuItem> m_settingsNoShowForbiddenAreaMenuItem;
+    Glib::RefPtr<Gtk::RadioMenuItem> m_settingsForbiddenAreaPlayer1MenuItem;
+    Glib::RefPtr<Gtk::RadioMenuItem> m_settingsForbiddenAreaPlayer2MenuItem;
+    Glib::RefPtr<Gtk::RadioMenuItem> m_settingsForbiddenAreaNoShowMenuItem;
+    Glib::RefPtr<Gtk::RadioMenuItem> m_settingsInfluenceAreaPlayer1MenuItem;
+    Glib::RefPtr<Gtk::RadioMenuItem> m_settingsInfluenceAreaPlayer2MenuItem;
+    Glib::RefPtr<Gtk::RadioMenuItem> m_settingsInfluenceAreaNoShowMenuItem;
 
     /// @brief the vertical box that keeps the board + pieces
     Gtk::VBox* m_vBoxDrawing;

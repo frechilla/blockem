@@ -475,7 +475,7 @@ int32_t Heuristic::CalculateInfluenceAreaWeightedEastwood(
                 }
                 else if(a_playerOpponent.IsCoordInfluencedByPlayer(thisCoord))
                 {
-                    rv -= 1;
+                    rv -= 2;
                 }
 
                 if (a_playerMe.IsNucleationPoint(thisCoord))
@@ -491,6 +491,10 @@ int32_t Heuristic::CalculateInfluenceAreaWeightedEastwood(
                             valueNkMe += 1;
                         }
                     }
+                }
+                else if(a_playerMe.IsCoordInfluencedByPlayer(thisCoord))
+                {
+                    rv += 1;
                 }
             }
             else if (a_board.IsPlayerInCoord(thisCoord, a_playerMe))

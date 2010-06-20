@@ -99,21 +99,60 @@
                               </object>
                             </child>
                             <child>
-                              <object class="GtkRadioMenuItem" id="radiomenuitem_settings_forbidden_current">
+                              <object class="GtkRadioMenuItem" id="radiomenuitem_settings_forbidden_player1">
                                 <property name="visible">True</property>
-                                <property name="label" translatable="yes">Show _current player's forbidden area</property>
+                                <property name="label" translatable="yes">Show player_1's forbidden area</property>
                                 <property name="use_underline">True</property>
                                 <property name="draw_as_radio">True</property>
                                 <property name="group">radiomenuitem_settings_forbidden_noshow</property>
                               </object>
                             </child>
                             <child>
-                              <object class="GtkRadioMenuItem" id="radiomenuitem_settings_forbidden_opponent">
+                              <object class="GtkRadioMenuItem" id="radiomenuitem_settings_forbidden_player2">
                                 <property name="visible">True</property>
-                                <property name="label" translatable="yes">Show _opponent's forbidden area</property>
+                                <property name="label" translatable="yes">Show player_2's forbidden area</property>
                                 <property name="use_underline">True</property>
                                 <property name="draw_as_radio">True</property>
                                 <property name="group">radiomenuitem_settings_forbidden_noshow</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="menuitem_influence_areas">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">_Influence areas</property>
+                        <property name="use_underline">True</property>
+                        <child type="submenu">
+                          <object class="GtkMenu" id="menu5">
+                            <property name="visible">True</property>
+                            <child>
+                              <object class="GtkRadioMenuItem" id="radiomenuitem_settings_influence_noshow">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Do _not show influence area</property>
+                                <property name="use_underline">True</property>
+                                <property name="active">True</property>
+                                <property name="draw_as_radio">True</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkRadioMenuItem" id="radiomenuitem_settings_influence_player1">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Show player_1's influence area</property>
+                                <property name="use_underline">True</property>
+                                <property name="draw_as_radio">True</property>
+                                <property name="group">radiomenuitem_settings_influence_noshow</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkRadioMenuItem" id="radiomenuitem_settings_influence_player2">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Show player_2's influence area</property>
+                                <property name="use_underline">True</property>
+                                <property name="draw_as_radio">True</property>
+                                <property name="group">radiomenuitem_settings_influence_noshow</property>
                               </object>
                             </child>
                           </object>

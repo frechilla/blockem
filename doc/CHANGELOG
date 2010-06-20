@@ -6,15 +6,22 @@
         "error: App can't start without gthreads support"
     - Minimax algorithm improved. 5% performance improvement since 0.2.1 
       without taking into account calculation of influence areas
-    - Influence areas of each player can be shown on the board. They are
-      mainly used to improve heuristic behaviour (though they add around 20%
-      overhead to the minimax algorithm)
+    - User can show either Player1 or player2's forbidden, instead of just
+      showing current player's 
+    - New concept of influence areas added to blockem. influence area is the
+      set of coordinates of the board that are empty, valid for a possible 
+      deployment and are "at reach" of any piece. These influece areas of
+      either player1 or player2 can be shown on the board. They are mainly
+      used to improve heuristic behaviour (though they add around 20% overhead
+      to the minimax algorithm)
     - Two new heuristics have been added: "Influence area", and "Mr. Eastwood"
       which are both based on the influence area calculation. They are much
       harder to beat than older heuristics
     - "NK weighted v1" has been renamed to "Centre focused", while "NK 
       weighted v2" is now "NK weighted". There is still a lot of work to be
       done on heuristics, but this topic looks like and endless one
+    - Player1 and player2's names are shown with the corresponding colour on
+      the status bar
 
 24/05/2010: Version 0.2.1
     - Around 8% computing time improvement in the minimax algorithm (tested

@@ -43,7 +43,7 @@ public:
     ~DrawingAreaBoard();
 
     /// @brief adds a player whose pieces on the board must be represented accordingly
-    void AddPlayerToList(const Player* a_player);
+    void AddPlayerToList(const Player &a_player);
 
     /// @brief removes all the players from the list
     void ResetPlayerList();
@@ -82,14 +82,27 @@ public:
     /// it invalidates the drawing area to show the new configuration
     void HideNucleationPoints();
 
-    /// forbidden area of current player will be shown on the board filling
+    /// forbidden area of a_player will be shown on the board filling
     /// squares with a small hint of current player's colour
     /// it invalidates the drawing area to show the new configuration
-    void ShowCurrentPlayerForbiddenArea();
+    /// if a_player has not be added to the list using AddPlayerToList
+    /// nothing will be shown
+    void ShowPlayerForbiddenArea(const Player &a_player);
 
-    /// forbidden area of current player won't be shown
+    /// forbidden area of whatever player was set by ShowPlayerForbiddenArea won't be shown
     /// it invalidates the drawing area to show the new configuration
-    void HideCurrentPlayerForbiddenArea();
+    void HidePlayerForbiddenArea();
+
+    /// influence area of a_player will be shown on the board filling
+    /// squares with a small hint of current player's colour
+    /// it invalidates the drawing area to show the new configuration
+    /// if a_player has not be added to the list using AddPlayerToList
+    /// nothing will be shown
+    void ShowPlayerInfluenceArea(const Player &a_player);
+
+    /// influence area of whatever player was set by ShowPlayerInfluenceArea won't be shown
+    /// it invalidates the drawing area to show the new configuration
+    void HidePlayerInfluenceArea();
 
     /// Access to the m_signalBoardClicked signal private member, which is sent
     /// when a the user clicked on the board and there is a current player and piece selected
@@ -139,8 +152,14 @@ private:
     /// are nucleation points shown on the board?
     bool m_showNKPoints;
 
-    /// mark the coords in the board where the current player can't go
-    bool m_showForbiddenArea;
+    /// pointer to the player whose forbidden area (coords in the board
+    /// where the he/she can't go) are to be shown on the board. NULL
+    /// if nothing is to be shown
+    const Player* m_forbiddenAreaPlayer;
+
+    /// pointer to the player whose influence area is to be shown on the board
+    /// set to NULL if nothing is to be shown
+    const Player* m_influenceAreaPlayer;
 
     /// signal to be sent when a the user clicked on the board and there is a current player and piece
     /// selected
