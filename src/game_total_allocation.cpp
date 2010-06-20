@@ -207,6 +207,10 @@ bool GameTotalAllocation::AllocateAllPieces(
     // the current level will be 1
     a_oldNkPoints[e_numberOfPieces - m_player.NumberOfPiecesAvailable()] = &nkPointSet;
 
+    // reset the value of last pieces deployed in this level (they might have been set by
+    // previous iterations of this very same function)
+    a_lastPieces[e_numberOfPieces - m_player.NumberOfPiecesAvailable()] = e_noPiece;
+
 	for (int32_t i = e_numberOfPieces - 1; i >= e_minimumPieceIndex; i--)
 	{
 		if (!m_player.IsPieceAvailable(static_cast<ePieceType_t>(i)))

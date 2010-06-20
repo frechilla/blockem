@@ -413,16 +413,16 @@ int32_t Game1v1::MinMax(
 
     // declare the array of last pieces and old NK points for me and opponent
     // and clear them out
-    Piece* lastPiecesMe[e_numberOfPieces];
-    Piece* lastPiecesOpponent[e_numberOfPieces];
+    ePieceType_t lastPiecesMe[e_numberOfPieces];
+    ePieceType_t lastPiecesOpponent[e_numberOfPieces];
     CoordSetGame1v1_t* oldNkPointsMe[e_numberOfPieces];
     CoordSetGame1v1_t* oldNkPointsOpponent[e_numberOfPieces];
 
     for (int32_t i = e_minimumPieceIndex ; i < e_numberOfPieces ; i++)
     {
-        lastPiecesMe[i]  = NULL;
+        lastPiecesMe[i]  = e_noPiece;
         oldNkPointsMe[i] = NULL;
-        lastPiecesOpponent[i]  = NULL;
+        lastPiecesOpponent[i]  = e_noPiece;
         oldNkPointsOpponent[i] = NULL;
     }
 
@@ -432,13 +432,12 @@ int32_t Game1v1::MinMax(
 
     // lastPiecesOpponent[0] needs to be set to an empty piece for the algorithm
     // to work even if the depth is set to an even number
-    // it will affect the performance because adding an extra if check per
+    // it will affect the performance because it adds an extra "if" check per
     // calling to the MinMaxAlphaBetaCompute function, which is completely
     // insignificant compared to the heuristic function weight
-    // in the case of calling the function with an odd depth, it won't affect
-    // performance at all
-    Piece noPiece(e_noPiece);
-    lastPiecesOpponent[0] = &noPiece;
+    // in the case of calling the function with an odd depth, therefore
+    // performance impact is insignifanct
+    lastPiecesOpponent[0] = e_noPiece;
 
     // no pieces available. Return the current value of the heuristic
     if (playerMe->NumberOfPiecesAvailable() == 0)
@@ -526,7 +525,7 @@ int32_t Game1v1::MinMax(
                                 *playerOpponent);
 
                         // save a pointer to this piece in the place (index) reserved for it
-                        lastPiecesMe[0] = &(playerMe->m_pieces[i]);
+                        lastPiecesMe[0] = playerMe->m_pieces[i].GetType();
 
                         // number of branches searched at this level of the tree
                         nBranchesSearchTree++;
@@ -746,10 +745,10 @@ int32_t Game1v1::MinMaxAlphaBetaCompute(
         Board                        &a_board,
         Player                       &a_playerMe,
         CoordSetGame1v1_t*           a_oldNkPointsMe[e_numberOfPieces],
-        Piece*                       a_lastPiecesMe[e_numberOfPieces],
+        ePieceType_t                 a_lastPiecesMe[e_numberOfPieces],
         Player                       &a_playerOpponent,
         CoordSetGame1v1_t*           a_oldNkPointsOpponent[e_numberOfPieces],
-        Piece*                       a_lastPiecesOpponent[e_numberOfPieces],
+        ePieceType_t                 a_lastPiecesOpponent[e_numberOfPieces],
         Heuristic::EvalFunction_t    a_heuristicMethod,
         int32_t                      originalDepth,
         int32_t                      depth,
@@ -790,6 +789,10 @@ int32_t Game1v1::MinMaxAlphaBetaCompute(
     // (originalDepth / 2) - (depth / 2) represents this level of relative depth
     // to the pieces put by 'me'
     a_oldNkPointsMe[(originalDepth / 2) - (depth / 2)] = &nkPointSetMe;
+
+    // reset the value of last pieces deployed in this level (they might have been set by
+    // previous iterations of this very same function)
+    a_lastPiecesMe[(originalDepth / 2) - (depth / 2)] = e_noPiece;
 
     // number of pieces successfully put down
     // if no pieces could be put down the recursive function wasn't called even once,
@@ -842,8 +845,7 @@ int32_t Game1v1::MinMaxAlphaBetaCompute(
                     // old nucleation point's set
                     // both old piece and old nk points set correspond to this particular
                     // level of the backtrack tree
-                    if ( (a_lastPiecesMe[thisLevel] != NULL) &&
-                         (i >= a_lastPiecesMe[thisLevel]->GetType()) )
+                    if (i >= a_lastPiecesMe[thisLevel])
                     {
                         if (a_oldNkPointsMe[thisLevel]->isPresent(thisNkPoint))
                         {
@@ -883,7 +885,7 @@ int32_t Game1v1::MinMaxAlphaBetaCompute(
                                 a_playerOpponent);
 
                         // save a pointer to this piece in the place (index) reserved for it
-                        a_lastPiecesMe[(originalDepth / 2) - (depth / 2)] = &(a_playerMe.m_pieces[i]);
+                        a_lastPiecesMe[(originalDepth / 2) - (depth / 2)] = a_playerMe.m_pieces[i].GetType();
 
                         // number of branches searched at this level of the tree
                         nBranchesSearchTree++;
@@ -954,7 +956,7 @@ int32_t Game1v1::MinMaxAlphaBetaCompute(
 	{
 	    // no pieces were put down (the player can't put down any piece at this level
 	    // of the search tree). Call the algorithm with no piece put down
-	    a_lastPiecesMe[(originalDepth / 2) - (depth / 2)] = NULL;
+	    a_lastPiecesMe[(originalDepth / 2) - (depth / 2)] = e_noPiece;
         int32_t maxValue = -Game1v1::MinMaxAlphaBetaCompute(
                                 a_board,
                                 a_playerOpponent,
