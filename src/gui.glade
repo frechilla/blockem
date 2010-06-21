@@ -83,7 +83,6 @@
                     <property name="visible">True</property>
                     <child>
                       <object class="GtkMenuItem" id="menuitem_forbidden_areas">
-                        <property name="visible">True</property>
                         <property name="label" translatable="yes">_Forbidden areas</property>
                         <property name="use_underline">True</property>
                         <child type="submenu">
