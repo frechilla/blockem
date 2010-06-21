@@ -39,7 +39,7 @@
         <tr>
           <td></td>
           <td class="headerItem">Date:</td>
-          <td class="headerValue">2010-06-03</td>
+          <td class="headerValue">2010-06-21</td>
           <td class="headerItem">Functions:</td>
           <td class="headerCovTableEntry">2</td>
           <td class="headerCovTableEntry">0</td>
@@ -261,10 +261,10 @@
 <span class="lineNum">     201 </span>                :         ProgressFunctor_t m_progressFunctor;
 <span class="lineNum">     202 </span>                : 
 <span class="lineNum">     203 </span>                :     /// @brief recalculate the nucleation points using the whole blokus board and save them into the players
-<span class="lineNum">     204 </span>                :     static void RecalculateNKInAllBoard(
-<span class="lineNum">     205 </span>                :             const Board &amp;a_board,
-<span class="lineNum">     206 </span>                :             Player      &amp;a_playerMe,
-<span class="lineNum">     207 </span>                :             Player      &amp;a_playerOpponent);
+<span class="lineNum">     204 </span>                :     void RecalculateNKInAllBoard();
+<span class="lineNum">     205 </span>                : 
+<span class="lineNum">     206 </span>                :     /// @brief recalculate the influence area (for both player1 and 2) in the wholse board
+<span class="lineNum">     207 </span>                :     void RecalculateInflueceAreasInAllBoard();
 <span class="lineNum">     208 </span>                : 
 <span class="lineNum">     209 </span>                :     /// remove a piece from the board. The user is supposed to check if the piece was there
 <span class="lineNum">     210 </span>                :     /// before calling this function since it just will set to empty the squares
@@ -325,10 +325,10 @@
 <span class="lineNum">     265 </span>                :             Board                        &amp;a_board,
 <span class="lineNum">     266 </span>                :             Player                       &amp;a_playerMe,
 <span class="lineNum">     267 </span>                :             CoordSetGame1v1_t*           a_oldNkPointsMe[e_numberOfPieces],
-<span class="lineNum">     268 </span>                :             Piece*                       a_lastPiecesMe[e_numberOfPieces],
+<span class="lineNum">     268 </span>                :             ePieceType_t                 a_lastPiecesMe[e_numberOfPieces],
 <span class="lineNum">     269 </span>                :             Player                       &amp;a_playerOpponent,
 <span class="lineNum">     270 </span>                :             CoordSetGame1v1_t*           a_oldNkPointsOpponent[e_numberOfPieces],
-<span class="lineNum">     271 </span>                :             Piece*                       a_lastPiecesOpponent[e_numberOfPieces],
+<span class="lineNum">     271 </span>                :             ePieceType_t                 a_lastPiecesOpponent[e_numberOfPieces],
 <span class="lineNum">     272 </span>                :             Heuristic::EvalFunction_t    a_heuristicMethod,
 <span class="lineNum">     273 </span>                :             int32_t                      originalDepth,
 <span class="lineNum">     274 </span>                :             int32_t                      depth,

@@ -39,7 +39,7 @@
         <tr>
           <td></td>
           <td class="headerItem">Date:</td>
-          <td class="headerValue">2010-06-03</td>
+          <td class="headerValue">2010-06-21</td>
           <td class="headerItem">Functions:</td>
           <td class="headerCovTableEntry">0</td>
           <td class="headerCovTableEntry">0</td>
@@ -167,38 +167,43 @@
 <span class="lineNum">     107 </span>                : const char GUI_MENU_ITEM_GAME_NEW[]        = &quot;imagemenuitem_game_new&quot;;
 <span class="lineNum">     108 </span>                : const char GUI_MENU_ITEM_GAME_QUIT[]       = &quot;imagemenuitem_game_quit&quot;;
 <span class="lineNum">     109 </span>                : const char GUI_MENU_ITEM_SETTINGS_NKPOINTS[] = &quot;checkmenuitem_settings_nkpoints&quot;;
-<span class="lineNum">     110 </span>                : const char GUI_MENU_ITEM_SETTINGS_FORBIDDENAREA[] = &quot;checkmenuitem_settings_forbidden&quot;;
-<span class="lineNum">     111 </span>                : const char GUI_MENU_ITEM_SETTINGS_PREFS[]  = &quot;imagemenuitem_settings_preferences&quot;;
-<span class="lineNum">     112 </span>                : const char GUI_MENU_ITEM_HELP_ABOUT[]      = &quot;imagemenuitem_help_about&quot;;
-<span class="lineNum">     113 </span>                : const char GUI_VBOX_DRAWING_NAME[]         = &quot;vbox_drawing&quot;;
-<span class="lineNum">     114 </span>                : const char GUI_HBOX_GAME_STATUS_NAME[]     = &quot;hbox_gamestatus&quot;;
-<span class="lineNum">     115 </span>                : const char GUI_HBOX_COMPUTER_PIECES_NAME[] = &quot;hbox_computerpieces&quot;;
-<span class="lineNum">     116 </span>                : const char GUI_HBOX_PIECES_AREA_NAME[]     = &quot;hbox_editpieces&quot;;
-<span class="lineNum">     117 </span>                : const char GUI_TABLE_EDITING_PIECE_NAME[]  = &quot;table_editing_piece&quot;;
-<span class="lineNum">     118 </span>                : const char GUI_LABEL_ROTATE_NAME[]         = &quot;label_rotate&quot;;
-<span class="lineNum">     119 </span>                : const char GUI_LABEL_MIRROR_NAME[]         = &quot;label_mirror&quot;;
-<span class="lineNum">     120 </span>                : const char GUI_BUTTON_ROTATE_LEFT_NAME[]   = &quot;button_rotate_left&quot;;
-<span class="lineNum">     121 </span>                : const char GUI_BUTTON_ROTATE_RIGHT_NAME[]  = &quot;button_rotate_right&quot;;
-<span class="lineNum">     122 </span>                : const char GUI_BUTTON_MIRROR_XAXIS_NAME[]  = &quot;button_mirror_xaxis&quot;;
-<span class="lineNum">     123 </span>                : const char GUI_BUTTON_MIRROR_YAXIS_NAME[]  = &quot;button_mirror_yaxis&quot;;
-<span class="lineNum">     124 </span>                : const char GUI_DRAWINGAREA_EDITING_PIECE[] = &quot;drawingarea_editing_piece&quot;;
-<span class="lineNum">     125 </span>                : const char GUI_HBOX_STATUSBAR_NAME[]       = &quot;hbox_statusbar&quot;;
-<span class="lineNum">     126 </span>                : const char GUI_CONFIG_TABLE_PLAYER1[]      = &quot;config_table_player1&quot;;
-<span class="lineNum">     127 </span>                : const char GUI_CONFIG_TABLE_PLAYER2[]      = &quot;config_table_player2&quot;;
-<span class="lineNum">     128 </span>                : const char GUI_CONFIG_SPINBUTTON_STARTROW1[] = &quot;spinbutton_startingrow1&quot;;
-<span class="lineNum">     129 </span>                : const char GUI_CONFIG_SPINBUTTON_STARTCOL1[] = &quot;spinbutton_startingcol1&quot;;
-<span class="lineNum">     130 </span>                : const char GUI_CONFIG_SPINBUTTON_STARTROW2[] = &quot;spinbutton_startingrow2&quot;;
-<span class="lineNum">     131 </span>                : const char GUI_CONFIG_SPINBUTTON_STARTCOL2[] = &quot;spinbutton_startingcol2&quot;;
-<span class="lineNum">     132 </span>                : const char GUI_CONFIG_AI_FRAME_PLAYER1[]   = &quot;config_frame_ai_player1&quot;;
-<span class="lineNum">     133 </span>                : const char GUI_CONFIG_AI_FRAME_PLAYER2[]   = &quot;config_frame_ai_player2&quot;;
-<span class="lineNum">     134 </span>                : const char GUI_CONFIG_AI_TABLE_PLAYER1[]   = &quot;config_table_ai_player1&quot;;
-<span class="lineNum">     135 </span>                : const char GUI_CONFIG_AI_TABLE_PLAYER2[]   = &quot;config_table_ai_player2&quot;;
-<span class="lineNum">     136 </span>                : const char GUI_CONFIG_AI_SPINBUTTON_DEPTH1[] = &quot;spinbutton_depth1&quot;;
-<span class="lineNum">     137 </span>                : const char GUI_CONFIG_AI_SPINBUTTON_DEPTH2[] = &quot;spinbutton_depth2&quot;;
-<span class="lineNum">     138 </span>                : const char GUI_CONFIG_AI_TEXTVIEW_HEURISTIC1[] = &quot;textview_heuristic_player1&quot;;
-<span class="lineNum">     139 </span>                : const char GUI_CONFIG_AI_TEXTVIEW_HEURISTIC2[] = &quot;textview_heuristic_player2&quot;;
-<span class="lineNum">     140 </span>                : 
-<span class="lineNum">     141 </span>                : #endif /* GUI_GLADE_H_ */
+<span class="lineNum">     110 </span>                : const char GUI_MENU_ITEM_SETTINGS_FORBIDDENAREA_NOSHOW[]  = &quot;radiomenuitem_settings_forbidden_noshow&quot;;
+<span class="lineNum">     111 </span>                : const char GUI_MENU_ITEM_SETTINGS_FORBIDDENAREA_PLAYER1[] = &quot;radiomenuitem_settings_forbidden_player1&quot;;
+<span class="lineNum">     112 </span>                : const char GUI_MENU_ITEM_SETTINGS_FORBIDDENAREA_PLAYER2[] = &quot;radiomenuitem_settings_forbidden_player2&quot;;
+<span class="lineNum">     113 </span>                : const char GUI_MENU_ITEM_SETTINGS_INFLUENCEAREA_NOSHOW[]  = &quot;radiomenuitem_settings_influence_noshow&quot;;
+<span class="lineNum">     114 </span>                : const char GUI_MENU_ITEM_SETTINGS_INFLUENCEAREA_PLAYER1[] = &quot;radiomenuitem_settings_influence_player1&quot;;
+<span class="lineNum">     115 </span>                : const char GUI_MENU_ITEM_SETTINGS_INFLUENCEAREA_PLAYER2[] = &quot;radiomenuitem_settings_influence_player2&quot;;
+<span class="lineNum">     116 </span>                : const char GUI_MENU_ITEM_SETTINGS_PREFS[]  = &quot;imagemenuitem_settings_preferences&quot;;
+<span class="lineNum">     117 </span>                : const char GUI_MENU_ITEM_HELP_ABOUT[]      = &quot;imagemenuitem_help_about&quot;;
+<span class="lineNum">     118 </span>                : const char GUI_VBOX_DRAWING_NAME[]         = &quot;vbox_drawing&quot;;
+<span class="lineNum">     119 </span>                : const char GUI_HBOX_GAME_STATUS_NAME[]     = &quot;hbox_gamestatus&quot;;
+<span class="lineNum">     120 </span>                : const char GUI_HBOX_COMPUTER_PIECES_NAME[] = &quot;hbox_computerpieces&quot;;
+<span class="lineNum">     121 </span>                : const char GUI_HBOX_PIECES_AREA_NAME[]     = &quot;hbox_editpieces&quot;;
+<span class="lineNum">     122 </span>                : const char GUI_TABLE_EDITING_PIECE_NAME[]  = &quot;table_editing_piece&quot;;
+<span class="lineNum">     123 </span>                : const char GUI_LABEL_ROTATE_NAME[]         = &quot;label_rotate&quot;;
+<span class="lineNum">     124 </span>                : const char GUI_LABEL_MIRROR_NAME[]         = &quot;label_mirror&quot;;
+<span class="lineNum">     125 </span>                : const char GUI_BUTTON_ROTATE_LEFT_NAME[]   = &quot;button_rotate_left&quot;;
+<span class="lineNum">     126 </span>                : const char GUI_BUTTON_ROTATE_RIGHT_NAME[]  = &quot;button_rotate_right&quot;;
+<span class="lineNum">     127 </span>                : const char GUI_BUTTON_MIRROR_XAXIS_NAME[]  = &quot;button_mirror_xaxis&quot;;
+<span class="lineNum">     128 </span>                : const char GUI_BUTTON_MIRROR_YAXIS_NAME[]  = &quot;button_mirror_yaxis&quot;;
+<span class="lineNum">     129 </span>                : const char GUI_DRAWINGAREA_EDITING_PIECE[] = &quot;drawingarea_editing_piece&quot;;
+<span class="lineNum">     130 </span>                : const char GUI_HBOX_STATUSBAR_NAME[]       = &quot;hbox_statusbar&quot;;
+<span class="lineNum">     131 </span>                : const char GUI_CONFIG_TABLE_PLAYER1[]      = &quot;config_table_player1&quot;;
+<span class="lineNum">     132 </span>                : const char GUI_CONFIG_TABLE_PLAYER2[]      = &quot;config_table_player2&quot;;
+<span class="lineNum">     133 </span>                : const char GUI_CONFIG_SPINBUTTON_STARTROW1[] = &quot;spinbutton_startingrow1&quot;;
+<span class="lineNum">     134 </span>                : const char GUI_CONFIG_SPINBUTTON_STARTCOL1[] = &quot;spinbutton_startingcol1&quot;;
+<span class="lineNum">     135 </span>                : const char GUI_CONFIG_SPINBUTTON_STARTROW2[] = &quot;spinbutton_startingrow2&quot;;
+<span class="lineNum">     136 </span>                : const char GUI_CONFIG_SPINBUTTON_STARTCOL2[] = &quot;spinbutton_startingcol2&quot;;
+<span class="lineNum">     137 </span>                : const char GUI_CONFIG_AI_FRAME_PLAYER1[]   = &quot;config_frame_ai_player1&quot;;
+<span class="lineNum">     138 </span>                : const char GUI_CONFIG_AI_FRAME_PLAYER2[]   = &quot;config_frame_ai_player2&quot;;
+<span class="lineNum">     139 </span>                : const char GUI_CONFIG_AI_TABLE_PLAYER1[]   = &quot;config_table_ai_player1&quot;;
+<span class="lineNum">     140 </span>                : const char GUI_CONFIG_AI_TABLE_PLAYER2[]   = &quot;config_table_ai_player2&quot;;
+<span class="lineNum">     141 </span>                : const char GUI_CONFIG_AI_SPINBUTTON_DEPTH1[] = &quot;spinbutton_depth1&quot;;
+<span class="lineNum">     142 </span>                : const char GUI_CONFIG_AI_SPINBUTTON_DEPTH2[] = &quot;spinbutton_depth2&quot;;
+<span class="lineNum">     143 </span>                : const char GUI_CONFIG_AI_TEXTVIEW_HEURISTIC1[] = &quot;textview_heuristic_player1&quot;;
+<span class="lineNum">     144 </span>                : const char GUI_CONFIG_AI_TEXTVIEW_HEURISTIC2[] = &quot;textview_heuristic_player2&quot;;
+<span class="lineNum">     145 </span>                : 
+<span class="lineNum">     146 </span>                : #endif /* GUI_GLADE_H_ */
 </pre>
       </td>
     </tr>

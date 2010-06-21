@@ -39,7 +39,7 @@
         <tr>
           <td></td>
           <td class="headerItem">Date:</td>
-          <td class="headerValue">2010-06-03</td>
+          <td class="headerValue">2010-06-21</td>
           <td class="headerItem">Functions:</td>
           <td class="headerCovTableEntry">14</td>
           <td class="headerCovTableEntry">8</td>
@@ -127,31 +127,31 @@
 <span class="lineNum">      67 </span>                :    */
 <a name="68"><span class="lineNum">      68 </span>                :   template&lt;typename _T1, typename _T2&gt;</a>
 <span class="lineNum">      69 </span>                :     inline void
-<span class="lineNum">      70 </span><span class="lineCov">         143130 :     _Construct(_T1* __p, const _T2&amp; __value)</span>
+<span class="lineNum">      70 </span><span class="lineCov">         421575 :     _Construct(_T1* __p, const _T2&amp; __value)</span>
 <span class="lineNum">      71 </span>                :     {
 <span class="lineNum">      72 </span>                :       // _GLIBCXX_RESOLVE_LIB_DEFECTS
 <span class="lineNum">      73 </span>                :       // 402. wrong new expression in [some_]allocator::construct
-<span class="lineNum">      74 </span><span class="lineCov">         143130 :       ::new(static_cast&lt;void*&gt;(__p)) _T1(__value);</span>
-<span class="lineNum">      75 </span><span class="lineCov">         143130 :     }</span>
+<span class="lineNum">      74 </span><span class="lineCov">         421575 :       ::new(static_cast&lt;void*&gt;(__p)) _T1(__value);</span>
+<span class="lineNum">      75 </span><span class="lineCov">         421575 :     }</span>
 <span class="lineNum">      76 </span>                : 
 <span class="lineNum">      77 </span>                :   /**
 <span class="lineNum">      78 </span>                :    * Destroy the object pointed to by a pointer type.
 <span class="lineNum">      79 </span>                :    */
 <a name="80"><span class="lineNum">      80 </span>                :   template&lt;typename _Tp&gt;</a>
 <span class="lineNum">      81 </span>                :     inline void
-<span class="lineNum">      82 </span><span class="lineCov">         179437 :     _Destroy(_Tp* __pointer)</span>
-<span class="lineNum">      83 </span><span class="lineCov">         179437 :     { __pointer-&gt;~_Tp(); }</span>
+<span class="lineNum">      82 </span><span class="lineCov">         458092 :     _Destroy(_Tp* __pointer)</span>
+<span class="lineNum">      83 </span><span class="lineCov">         458092 :     { __pointer-&gt;~_Tp(); }</span>
 <span class="lineNum">      84 </span>                : 
 <span class="lineNum">      85 </span>                :   template&lt;bool&gt;
 <span class="lineNum">      86 </span>                :     struct _Destroy_aux
 <span class="lineNum">      87 </span>                :     {
 <a name="88"><span class="lineNum">      88 </span>                :       template&lt;typename _ForwardIterator&gt;</a>
 <span class="lineNum">      89 </span>                :         static void
-<span class="lineNum">      90 </span><span class="lineCov">          37735 :         __destroy(_ForwardIterator __first, _ForwardIterator __last)</span>
+<span class="lineNum">      90 </span><span class="lineCov">          93589 :         __destroy(_ForwardIterator __first, _ForwardIterator __last)</span>
 <span class="lineNum">      91 </span>                :         {
-<span class="lineNum">      92 </span><span class="lineCov">         217172 :           for (; __first != __last; ++__first)</span>
-<span class="lineNum">      93 </span><span class="lineCov">         179437 :             std::_Destroy(&amp;*__first);</span>
-<span class="lineNum">      94 </span><span class="lineCov">          37735 :         }</span>
+<span class="lineNum">      92 </span><span class="lineCov">         551681 :           for (; __first != __last; ++__first)</span>
+<span class="lineNum">      93 </span><span class="lineCov">         458092 :             std::_Destroy(&amp;*__first);</span>
+<span class="lineNum">      94 </span><span class="lineCov">          93589 :         }</span>
 <span class="lineNum">      95 </span>                :     };
 <span class="lineNum">      96 </span>                : 
 <span class="lineNum">      97 </span>                :   template&lt;&gt;
@@ -169,13 +169,13 @@
 <span class="lineNum">     109 </span>                :    */
 <a name="110"><span class="lineNum">     110 </span>                :   template&lt;typename _ForwardIterator&gt;</a>
 <span class="lineNum">     111 </span>                :     inline void
-<span class="lineNum">     112 </span><span class="lineCov">          37735 :     _Destroy(_ForwardIterator __first, _ForwardIterator __last)</span>
+<span class="lineNum">     112 </span><span class="lineCov">          93589 :     _Destroy(_ForwardIterator __first, _ForwardIterator __last)</span>
 <span class="lineNum">     113 </span>                :     {
 <span class="lineNum">     114 </span>                :       typedef typename iterator_traits&lt;_ForwardIterator&gt;::value_type
 <span class="lineNum">     115 </span>                :                        _Value_type;
-<span class="lineNum">     116 </span><span class="lineCov">          37735 :       std::_Destroy_aux&lt;__has_trivial_destructor(_Value_type)&gt;::</span>
+<span class="lineNum">     116 </span><span class="lineCov">          93589 :       std::_Destroy_aux&lt;__has_trivial_destructor(_Value_type)&gt;::</span>
 <span class="lineNum">     117 </span>                :         __destroy(__first, __last);
-<span class="lineNum">     118 </span><span class="lineCov">          37735 :     }</span>
+<span class="lineNum">     118 </span><span class="lineCov">          93589 :     }</span>
 <span class="lineNum">     119 </span>                : 
 <span class="lineNum">     120 </span>                :   /**
 <span class="lineNum">     121 </span>                :    * Destroy a range of objects using the supplied allocator.  For
@@ -196,11 +196,11 @@
 <span class="lineNum">     136 </span>                : 
 <a name="137"><span class="lineNum">     137 </span>                :   template&lt;typename _ForwardIterator, typename _Tp&gt;</a>
 <span class="lineNum">     138 </span>                :     inline void
-<span class="lineNum">     139 </span><span class="lineCov">          37735 :     _Destroy(_ForwardIterator __first, _ForwardIterator __last,</span>
+<span class="lineNum">     139 </span><span class="lineCov">          93589 :     _Destroy(_ForwardIterator __first, _ForwardIterator __last,</span>
 <span class="lineNum">     140 </span>                :              allocator&lt;_Tp&gt;&amp;)
 <span class="lineNum">     141 </span>                :     {
-<span class="lineNum">     142 </span><span class="lineCov">          37735 :       _Destroy(__first, __last);</span>
-<span class="lineNum">     143 </span><span class="lineCov">          37735 :     }</span>
+<span class="lineNum">     142 </span><span class="lineCov">          93589 :       _Destroy(__first, __last);</span>
+<span class="lineNum">     143 </span><span class="lineCov">          93589 :     }</span>
 <span class="lineNum">     144 </span>                : 
 <span class="lineNum">     145 </span>                : _GLIBCXX_END_NAMESPACE
 <span class="lineNum">     146 </span>                : 

@@ -32,14 +32,14 @@
           <td class="headerItem">Test:</td>
           <td class="headerValue">Blockem Tests Code Coverage</td>
           <td class="headerItem">Lines:</td>
-          <td class="headerCovTableEntry">98</td>
-          <td class="headerCovTableEntry">78</td>
-          <td class="headerCovTableEntryHi">79.6 %</td>
+          <td class="headerCovTableEntry">99</td>
+          <td class="headerCovTableEntry">79</td>
+          <td class="headerCovTableEntryHi">79.8 %</td>
         </tr>
         <tr>
           <td></td>
           <td class="headerItem">Date:</td>
-          <td class="headerValue">2010-06-03</td>
+          <td class="headerValue">2010-06-21</td>
           <td class="headerItem">Functions:</td>
           <td class="headerCovTableEntry">11</td>
           <td class="headerCovTableEntry">7</td>
@@ -267,107 +267,111 @@
 <span class="lineNum">     207 </span>                :     // the current level will be 1
 <span class="lineNum">     208 </span><span class="lineCov">             20 :     a_oldNkPoints[e_numberOfPieces - m_player.NumberOfPiecesAvailable()] = &amp;nkPointSet;</span>
 <span class="lineNum">     209 </span>                : 
-<span class="lineNum">     210 </span><span class="lineCov">             20 :         for (int32_t i = e_numberOfPieces - 1; i &gt;= e_minimumPieceIndex; i--)</span>
-<span class="lineNum">     211 </span>                :         {
-<span class="lineNum">     212 </span><span class="lineCov">            230 :                 if (!m_player.IsPieceAvailable(static_cast&lt;ePieceType_t&gt;(i)))</span>
-<span class="lineNum">     213 </span>                :                 {
-<span class="lineNum">     214 </span><span class="lineCov">            209 :                     continue;</span>
-<span class="lineNum">     215 </span>                :                 }
-<span class="lineNum">     216 </span>                : 
-<span class="lineNum">     217 </span><span class="lineCov">             21 :                 m_player.UnsetPiece(static_cast&lt;ePieceType_t&gt;(i));</span>
-<span class="lineNum">     218 </span>                : 
-<span class="lineNum">     219 </span><span class="lineCov">             21 :                 std::vector&lt;Coordinate&gt; validCoords(PIECE_MAX_SQUARES);</span>
+<span class="lineNum">     210 </span>                :     // reset the value of last pieces deployed in this level (they might have been set by
+<span class="lineNum">     211 </span>                :     // previous iterations of this very same function)
+<span class="lineNum">     212 </span><span class="lineCov">             20 :     a_lastPieces[e_numberOfPieces - m_player.NumberOfPiecesAvailable()] = e_noPiece;</span>
+<span class="lineNum">     213 </span>                : 
+<span class="lineNum">     214 </span><span class="lineCov">             20 :         for (int32_t i = e_numberOfPieces - 1; i &gt;= e_minimumPieceIndex; i--)</span>
+<span class="lineNum">     215 </span>                :         {
+<span class="lineNum">     216 </span><span class="lineCov">            230 :                 if (!m_player.IsPieceAvailable(static_cast&lt;ePieceType_t&gt;(i)))</span>
+<span class="lineNum">     217 </span>                :                 {
+<span class="lineNum">     218 </span><span class="lineCov">            209 :                     continue;</span>
+<span class="lineNum">     219 </span>                :                 }
 <span class="lineNum">     220 </span>                : 
-<span class="lineNum">     221 </span>                :         const std::list&lt;pieceConfiguration_t&gt; &amp;coordConfList =
-<span class="lineNum">     222 </span><span class="lineCov">             21 :             m_player.m_pieces[i].GetPrecalculatedConfs();</span>
-<span class="lineNum">     223 </span><span class="lineCov">             21 :         std::list&lt;pieceConfiguration_t&gt;::const_iterator pieceCoordIt;</span>
+<span class="lineNum">     221 </span><span class="lineCov">             21 :                 m_player.UnsetPiece(static_cast&lt;ePieceType_t&gt;(i));</span>
+<span class="lineNum">     222 </span>                : 
+<span class="lineNum">     223 </span><span class="lineCov">             21 :                 std::vector&lt;Coordinate&gt; validCoords(PIECE_MAX_SQUARES);</span>
 <span class="lineNum">     224 </span>                : 
-<span class="lineNum">     225 </span><span class="lineCov">             24 :         for (pieceCoordIt = coordConfList.begin();</span>
-<span class="lineNum">     226 </span>                :              pieceCoordIt != coordConfList.end();
-<span class="lineNum">     227 </span>                :              pieceCoordIt++)
-<span class="lineNum">     228 </span>                :         {
-<span class="lineNum">     229 </span><span class="lineCov">             23 :             STLCoordinateSet_t::iterator nkIterator = nkPointSet.begin();</span>
-<span class="lineNum">     230 </span><span class="lineCov">            192 :             while(nkIterator != nkPointSet.end())</span>
-<span class="lineNum">     231 </span>                :             {
-<span class="lineNum">     232 </span>                :                 // before putting down the piece test if the future configuration
-<span class="lineNum">     233 </span>                :                 // could be tested by some other level in the backtrack tree
-<span class="lineNum">     234 </span>                :                 // using (e_numberOfPieces - m_player.NumberOfPiecesAvailable() - 2)
-<span class="lineNum">     235 </span>                :                 // because m_player.NumberOfPiecesAvailable() - 1 is this current level in the tree
-<span class="lineNum">     236 </span>                :                 // and we don't want to use it. No need for using the level 0 either, because
-<span class="lineNum">     237 </span>                :                 // a_lastPieces[0] and  a_oldNkPoints[0] is set to NULL
-<span class="lineNum">     238 </span>                :                 int32_t thisLevel;
-<span class="lineNum">     239 </span><span class="lineCov">           1885 :                 for (thisLevel = e_numberOfPieces - m_player.NumberOfPiecesAvailable() - 2;</span>
-<span class="lineNum">     240 </span>                :                      thisLevel &gt; 0;
-<span class="lineNum">     241 </span>                :                      thisLevel--)
-<span class="lineNum">     242 </span>                :                 {
-<span class="lineNum">     243 </span>                :                     // if the current piece's index is bigger than the old piece deployed on
-<span class="lineNum">     244 </span>                :                     // the board, put down the piece only if this nucleation doesn't belong to the
-<span class="lineNum">     245 </span>                :                     // old nucleation point's set
-<span class="lineNum">     246 </span>                :                     // both old piece and old nk points set correspond to this particular
-<span class="lineNum">     247 </span>                :                     // level of the backtrack tree
-<span class="lineNum">     248 </span><span class="lineCov">           1730 :                     if (i &gt;= a_lastPieces[thisLevel])</span>
-<span class="lineNum">     249 </span>                :                     {
-<span class="lineNum">     250 </span><span class="lineCov">             12 :                         STLCoordinateSet_t::iterator it;</span>
-<span class="lineNum">     251 </span><span class="lineCov">             12 :                         it = a_oldNkPoints[thisLevel]-&gt;find(*nkIterator);</span>
-<span class="lineNum">     252 </span><span class="lineCov">             12 :                         if (it != a_oldNkPoints[thisLevel]-&gt;end())</span>
-<span class="lineNum">     253 </span>                :                         {
-<span class="lineNum">     254 </span><span class="lineCov">             11 :                             nkIterator++;</span>
-<span class="lineNum">     255 </span><span class="lineCov">             11 :                             break;</span>
-<span class="lineNum">     256 </span>                :                         }
-<span class="lineNum">     257 </span>                :                     }
-<span class="lineNum">     258 </span>                :                 }
-<span class="lineNum">     259 </span>                : 
-<span class="lineNum">     260 </span><span class="lineCov">            166 :                 if (thisLevel &gt; 0)</span>
-<span class="lineNum">     261 </span>                :                 {
-<span class="lineNum">     262 </span>                :                     // the previous loop called break before the end
-<span class="lineNum">     263 </span><span class="lineCov">             11 :                     continue;</span>
-<span class="lineNum">     264 </span>                :                 }
-<span class="lineNum">     265 </span>                : 
-<span class="lineNum">     266 </span>                :                 // retrieve the valid coords of this piece in the current nk point
-<span class="lineNum">     267 </span>                :                 int32_t nValidCoords = rules::CalculateValidCoordsInNucleationPoint(
-<span class="lineNum">     268 </span>                :                                                                           m_board,
-<span class="lineNum">     269 </span>                :                                                                           m_player,
-<span class="lineNum">     270 </span>                :                                                                           *nkIterator,
-<span class="lineNum">     271 </span>                :                                                                           *pieceCoordIt,
-<span class="lineNum">     272 </span><span class="lineCov">            155 :                                                                           m_player.m_pieces[i].GetRadius(),</span>
-<span class="lineNum">     273 </span><span class="lineCov">            155 :                                                                           validCoords);</span>
-<span class="lineNum">     274 </span>                : 
-<span class="lineNum">     275 </span><span class="lineCov">            155 :                 for (int32_t k = 0; k &lt; nValidCoords; k++)</span>
-<span class="lineNum">     276 </span>                :                 {
-<span class="lineNum">     277 </span>                :                     STLCoordinateSet_t::iterator it =
-<span class="lineNum">     278 </span><span class="lineCov">             20 :                         testedCoords.find(validCoords[k]);</span>
-<span class="lineNum">     279 </span><span class="lineCov">             20 :                     if (it == testedCoords.end())</span>
-<span class="lineNum">     280 </span>                :                     {
-<span class="lineNum">     281 </span><span class="lineCov">             20 :                         testedCoords.insert(validCoords[k]);</span>
-<span class="lineNum">     282 </span>                : 
-<span class="lineNum">     283 </span><span class="lineCov">             20 :                         PutDownPiece(validCoords[k], *pieceCoordIt, m_player.m_pieces[i].GetRadius());</span>
-<span class="lineNum">     284 </span>                : 
-<span class="lineNum">     285 </span>                :                         // it's m_player.NumberOfPiecesAvailable()-1 because current piece
-<span class="lineNum">     286 </span>                :                         // has already being removed from the player
-<span class="lineNum">     287 </span><span class="lineCov">             20 :                         a_lastPieces[e_numberOfPieces - m_player.NumberOfPiecesAvailable() - 1]  =</span>
-<span class="lineNum">     288 </span><span class="lineCov">             20 :                             m_player.m_pieces[i].GetType();</span>
-<span class="lineNum">     289 </span>                : 
-<span class="lineNum">     290 </span><span class="lineCov">             20 :                         if (AllocateAllPieces(a_lastPieces, a_oldNkPoints))</span>
-<span class="lineNum">     291 </span>                :                         {
-<span class="lineNum">     292 </span><span class="lineCov">             20 :                             return true;</span>
-<span class="lineNum">     293 </span>                :                         }
-<span class="lineNum">     294 </span>                : 
-<span class="lineNum">     295 </span><span class="lineNoCov">              0 :                         RemovePiece(validCoords[k], *pieceCoordIt, m_player.m_pieces[i].GetRadius());</span>
-<span class="lineNum">     296 </span>                :                     }
-<span class="lineNum">     297 </span>                :                 } // for (int32_t k = 0; k &lt; nValidCoords; k++)
+<span class="lineNum">     225 </span>                :         const std::list&lt;pieceConfiguration_t&gt; &amp;coordConfList =
+<span class="lineNum">     226 </span><span class="lineCov">             21 :             m_player.m_pieces[i].GetPrecalculatedConfs();</span>
+<span class="lineNum">     227 </span><span class="lineCov">             21 :         std::list&lt;pieceConfiguration_t&gt;::const_iterator pieceCoordIt;</span>
+<span class="lineNum">     228 </span>                : 
+<span class="lineNum">     229 </span><span class="lineCov">             24 :         for (pieceCoordIt = coordConfList.begin();</span>
+<span class="lineNum">     230 </span>                :              pieceCoordIt != coordConfList.end();
+<span class="lineNum">     231 </span>                :              pieceCoordIt++)
+<span class="lineNum">     232 </span>                :         {
+<span class="lineNum">     233 </span><span class="lineCov">             23 :             STLCoordinateSet_t::iterator nkIterator = nkPointSet.begin();</span>
+<span class="lineNum">     234 </span><span class="lineCov">            192 :             while(nkIterator != nkPointSet.end())</span>
+<span class="lineNum">     235 </span>                :             {
+<span class="lineNum">     236 </span>                :                 // before putting down the piece test if the future configuration
+<span class="lineNum">     237 </span>                :                 // could be tested by some other level in the backtrack tree
+<span class="lineNum">     238 </span>                :                 // using (e_numberOfPieces - m_player.NumberOfPiecesAvailable() - 2)
+<span class="lineNum">     239 </span>                :                 // because m_player.NumberOfPiecesAvailable() - 1 is this current level in the tree
+<span class="lineNum">     240 </span>                :                 // and we don't want to use it. No need for using the level 0 either, because
+<span class="lineNum">     241 </span>                :                 // a_lastPieces[0] and  a_oldNkPoints[0] is set to NULL
+<span class="lineNum">     242 </span>                :                 int32_t thisLevel;
+<span class="lineNum">     243 </span><span class="lineCov">           1885 :                 for (thisLevel = e_numberOfPieces - m_player.NumberOfPiecesAvailable() - 2;</span>
+<span class="lineNum">     244 </span>                :                      thisLevel &gt; 0;
+<span class="lineNum">     245 </span>                :                      thisLevel--)
+<span class="lineNum">     246 </span>                :                 {
+<span class="lineNum">     247 </span>                :                     // if the current piece's index is bigger than the old piece deployed on
+<span class="lineNum">     248 </span>                :                     // the board, put down the piece only if this nucleation doesn't belong to the
+<span class="lineNum">     249 </span>                :                     // old nucleation point's set
+<span class="lineNum">     250 </span>                :                     // both old piece and old nk points set correspond to this particular
+<span class="lineNum">     251 </span>                :                     // level of the backtrack tree
+<span class="lineNum">     252 </span><span class="lineCov">           1730 :                     if (i &gt;= a_lastPieces[thisLevel])</span>
+<span class="lineNum">     253 </span>                :                     {
+<span class="lineNum">     254 </span><span class="lineCov">             12 :                         STLCoordinateSet_t::iterator it;</span>
+<span class="lineNum">     255 </span><span class="lineCov">             12 :                         it = a_oldNkPoints[thisLevel]-&gt;find(*nkIterator);</span>
+<span class="lineNum">     256 </span><span class="lineCov">             12 :                         if (it != a_oldNkPoints[thisLevel]-&gt;end())</span>
+<span class="lineNum">     257 </span>                :                         {
+<span class="lineNum">     258 </span><span class="lineCov">             11 :                             nkIterator++;</span>
+<span class="lineNum">     259 </span><span class="lineCov">             11 :                             break;</span>
+<span class="lineNum">     260 </span>                :                         }
+<span class="lineNum">     261 </span>                :                     }
+<span class="lineNum">     262 </span>                :                 }
+<span class="lineNum">     263 </span>                : 
+<span class="lineNum">     264 </span><span class="lineCov">            166 :                 if (thisLevel &gt; 0)</span>
+<span class="lineNum">     265 </span>                :                 {
+<span class="lineNum">     266 </span>                :                     // the previous loop called break before the end
+<span class="lineNum">     267 </span><span class="lineCov">             11 :                     continue;</span>
+<span class="lineNum">     268 </span>                :                 }
+<span class="lineNum">     269 </span>                : 
+<span class="lineNum">     270 </span>                :                 // retrieve the valid coords of this piece in the current nk point
+<span class="lineNum">     271 </span>                :                 int32_t nValidCoords = rules::CalculateValidCoordsInNucleationPoint(
+<span class="lineNum">     272 </span>                :                                                                           m_board,
+<span class="lineNum">     273 </span>                :                                                                           m_player,
+<span class="lineNum">     274 </span>                :                                                                           *nkIterator,
+<span class="lineNum">     275 </span>                :                                                                           *pieceCoordIt,
+<span class="lineNum">     276 </span><span class="lineCov">            155 :                                                                           m_player.m_pieces[i].GetRadius(),</span>
+<span class="lineNum">     277 </span><span class="lineCov">            155 :                                                                           validCoords);</span>
+<span class="lineNum">     278 </span>                : 
+<span class="lineNum">     279 </span><span class="lineCov">            155 :                 for (int32_t k = 0; k &lt; nValidCoords; k++)</span>
+<span class="lineNum">     280 </span>                :                 {
+<span class="lineNum">     281 </span>                :                     STLCoordinateSet_t::iterator it =
+<span class="lineNum">     282 </span><span class="lineCov">             20 :                         testedCoords.find(validCoords[k]);</span>
+<span class="lineNum">     283 </span><span class="lineCov">             20 :                     if (it == testedCoords.end())</span>
+<span class="lineNum">     284 </span>                :                     {
+<span class="lineNum">     285 </span><span class="lineCov">             20 :                         testedCoords.insert(validCoords[k]);</span>
+<span class="lineNum">     286 </span>                : 
+<span class="lineNum">     287 </span><span class="lineCov">             20 :                         PutDownPiece(validCoords[k], *pieceCoordIt, m_player.m_pieces[i].GetRadius());</span>
+<span class="lineNum">     288 </span>                : 
+<span class="lineNum">     289 </span>                :                         // it's m_player.NumberOfPiecesAvailable()-1 because current piece
+<span class="lineNum">     290 </span>                :                         // has already being removed from the player
+<span class="lineNum">     291 </span><span class="lineCov">             20 :                         a_lastPieces[e_numberOfPieces - m_player.NumberOfPiecesAvailable() - 1]  =</span>
+<span class="lineNum">     292 </span><span class="lineCov">             20 :                             m_player.m_pieces[i].GetType();</span>
+<span class="lineNum">     293 </span>                : 
+<span class="lineNum">     294 </span><span class="lineCov">             20 :                         if (AllocateAllPieces(a_lastPieces, a_oldNkPoints))</span>
+<span class="lineNum">     295 </span>                :                         {
+<span class="lineNum">     296 </span><span class="lineCov">             20 :                             return true;</span>
+<span class="lineNum">     297 </span>                :                         }
 <span class="lineNum">     298 </span>                : 
-<span class="lineNum">     299 </span><span class="lineCov">            135 :                 nkIterator++;</span>
-<span class="lineNum">     300 </span>                :             } // while(nkIterator != nkPointSet.end())
-<span class="lineNum">     301 </span>                : 
-<span class="lineNum">     302 </span><span class="lineCov">              3 :             testedCoords.clear();</span>
-<span class="lineNum">     303 </span>                :         } // for (pieceCoordIt = coordConfList.begin()
-<span class="lineNum">     304 </span>                : 
-<span class="lineNum">     305 </span><span class="lineCov">              1 :         m_player.SetPiece(static_cast&lt;ePieceType_t&gt;(i));</span>
-<span class="lineNum">     306 </span>                : 
-<span class="lineNum">     307 </span>                :         } // for (int i = e_numberOfPieces - 1 ; i &gt;= e_minimumPieceIndex ; i--)
-<a name="308"><span class="lineNum">     308 </span>                : </a>
-<span class="lineNum">     309 </span><span class="lineNoCov">              0 :     return false;</span>
-<span class="lineNum">     310 </span><span class="lineCov">             48 : }</span>
+<span class="lineNum">     299 </span><span class="lineNoCov">              0 :                         RemovePiece(validCoords[k], *pieceCoordIt, m_player.m_pieces[i].GetRadius());</span>
+<span class="lineNum">     300 </span>                :                     }
+<span class="lineNum">     301 </span>                :                 } // for (int32_t k = 0; k &lt; nValidCoords; k++)
+<span class="lineNum">     302 </span>                : 
+<span class="lineNum">     303 </span><span class="lineCov">            135 :                 nkIterator++;</span>
+<span class="lineNum">     304 </span>                :             } // while(nkIterator != nkPointSet.end())
+<span class="lineNum">     305 </span>                : 
+<span class="lineNum">     306 </span><span class="lineCov">              3 :             testedCoords.clear();</span>
+<span class="lineNum">     307 </span>                :         } // for (pieceCoordIt = coordConfList.begin()
+<span class="lineNum">     308 </span>                : 
+<span class="lineNum">     309 </span><span class="lineCov">              1 :         m_player.SetPiece(static_cast&lt;ePieceType_t&gt;(i));</span>
+<span class="lineNum">     310 </span>                : 
+<span class="lineNum">     311 </span>                :         } // for (int i = e_numberOfPieces - 1 ; i &gt;= e_minimumPieceIndex ; i--)
+<a name="312"><span class="lineNum">     312 </span>                : </a>
+<span class="lineNum">     313 </span><span class="lineNoCov">              0 :     return false;</span>
+<span class="lineNum">     314 </span><span class="lineCov">             48 : }</span>
 </pre>
       </td>
     </tr>

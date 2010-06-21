@@ -39,7 +39,7 @@
         <tr>
           <td></td>
           <td class="headerItem">Date:</td>
-          <td class="headerValue">2010-06-03</td>
+          <td class="headerValue">2010-06-21</td>
           <td class="headerItem">Functions:</td>
           <td class="headerCovTableEntry">5</td>
           <td class="headerCovTableEntry">5</td>
@@ -109,51 +109,51 @@
 <span class="lineNum">      49 </span>                : class CoordinateSet
 <a name="50"><span class="lineNum">      50 </span>                : {</a>
 <span class="lineNum">      51 </span>                : public:
-<span class="lineNum">      52 </span><span class="lineCov">          51008 :     CoordinateSet()</span>
+<span class="lineNum">      52 </span><span class="lineCov">         162382 :     CoordinateSet()</span>
 <span class="lineNum">      53 </span>                :     {
-<a name="54"><span class="lineNum">      54 </span><span class="lineCov">          51008 :         clear();</span></a>
-<span class="lineNum">      55 </span><span class="lineCov">          51008 :     };</span>
-<span class="lineNum">      56 </span><span class="lineCov">          51008 :     ~CoordinateSet()</span>
+<a name="54"><span class="lineNum">      54 </span><span class="lineCov">         162382 :         clear();</span></a>
+<span class="lineNum">      55 </span><span class="lineCov">         162382 :     };</span>
+<span class="lineNum">      56 </span><span class="lineCov">         162382 :     ~CoordinateSet()</span>
 <span class="lineNum">      57 </span>                :     {
-<span class="lineNum">      58 </span><span class="lineCov">          51008 :     };</span>
+<span class="lineNum">      58 </span><span class="lineCov">         162382 :     };</span>
 <a name="59"><span class="lineNum">      59 </span>                : </a>
 <span class="lineNum">      60 </span>                :     /// returns true if the coordinate exists in the CoordinateSet
-<span class="lineNum">      61 </span><span class="lineCov">        4181119 :     inline bool isPresent(const Coordinate &amp;a_coord) const</span>
+<span class="lineNum">      61 </span><span class="lineCov">       15222862 :     inline bool isPresent(const Coordinate &amp;a_coord) const</span>
 <span class="lineNum">      62 </span>                :     {
 <span class="lineNum">      63 </span>                : #ifdef DEBUG
-<span class="lineNum">      64 </span><span class="lineCov">        4181119 :         assert( (a_coord.m_row &gt;= 0) &amp;&amp; (a_coord.m_row &lt; ROWS));</span>
-<span class="lineNum">      65 </span><span class="lineCov">        4181119 :         assert( (a_coord.m_col &gt;= 0) &amp;&amp; (a_coord.m_col &lt; COLUMNS));</span>
+<span class="lineNum">      64 </span><span class="lineCov">       15222862 :         assert( (a_coord.m_row &gt;= 0) &amp;&amp; (a_coord.m_row &lt; ROWS));</span>
+<span class="lineNum">      65 </span><span class="lineCov">       15222862 :         assert( (a_coord.m_col &gt;= 0) &amp;&amp; (a_coord.m_col &lt; COLUMNS));</span>
 <span class="lineNum">      66 </span>                : #endif
-<span class="lineNum">      67 </span><span class="lineCov">        4181119 :         return (m_theSet[a_coord.m_row][a_coord.m_col] == COORD_SET_PRESENT);</span>
+<span class="lineNum">      67 </span><span class="lineCov">       15222862 :         return (m_theSet[a_coord.m_row][a_coord.m_col] == COORD_SET_PRESENT);</span>
 <span class="lineNum">      68 </span>                :     }
 <a name="69"><span class="lineNum">      69 </span>                : </a>
 <span class="lineNum">      70 </span>                :     /// insert items into a set
-<span class="lineNum">      71 </span><span class="lineCov">        2252452 :     inline void insert(const Coordinate &amp;a_coord)</span>
+<span class="lineNum">      71 </span><span class="lineCov">        7582548 :     inline void insert(const Coordinate &amp;a_coord)</span>
 <span class="lineNum">      72 </span>                :     {
 <span class="lineNum">      73 </span>                : #ifdef DEBUG
-<span class="lineNum">      74 </span><span class="lineCov">        2252452 :         assert( (a_coord.m_row &gt;= 0) &amp;&amp; (a_coord.m_row &lt; ROWS));</span>
-<span class="lineNum">      75 </span><span class="lineCov">        2252452 :         assert( (a_coord.m_col &gt;= 0) &amp;&amp; (a_coord.m_col &lt; COLUMNS));</span>
+<span class="lineNum">      74 </span><span class="lineCov">        7582548 :         assert( (a_coord.m_row &gt;= 0) &amp;&amp; (a_coord.m_row &lt; ROWS));</span>
+<span class="lineNum">      75 </span><span class="lineCov">        7582548 :         assert( (a_coord.m_col &gt;= 0) &amp;&amp; (a_coord.m_col &lt; COLUMNS));</span>
 <span class="lineNum">      76 </span>                : #endif
-<span class="lineNum">      77 </span><span class="lineCov">        2252452 :         if (m_theSet[a_coord.m_row][a_coord.m_col] == COORD_SET_NOT_PRESENT)</span>
+<span class="lineNum">      77 </span><span class="lineCov">        7582548 :         if (m_theSet[a_coord.m_row][a_coord.m_col] == COORD_SET_NOT_PRESENT)</span>
 <span class="lineNum">      78 </span>                :         {
-<span class="lineNum">      79 </span><span class="lineCov">        2252452 :             m_theSet[a_coord.m_row][a_coord.m_col] = COORD_SET_PRESENT;</span>
-<span class="lineNum">      80 </span><span class="lineCov">        2252452 :             m_nElems++;</span>
+<span class="lineNum">      79 </span><span class="lineCov">        7582548 :             m_theSet[a_coord.m_row][a_coord.m_col] = COORD_SET_PRESENT;</span>
+<span class="lineNum">      80 </span><span class="lineCov">        7582548 :             m_nElems++;</span>
 <span class="lineNum">      81 </span>                :         }
-<span class="lineNum">      82 </span><span class="lineCov">        2252452 :     }</span>
+<span class="lineNum">      82 </span><span class="lineCov">        7582548 :     }</span>
 <a name="83"><span class="lineNum">      83 </span>                : </a>
 <span class="lineNum">      84 </span>                :     /// removes all elements from the set
-<span class="lineNum">      85 </span><span class="lineCov">         444587 :     void clear()</span>
+<span class="lineNum">      85 </span><span class="lineCov">        1530298 :     void clear()</span>
 <span class="lineNum">      86 </span>                :     {
-<span class="lineNum">      87 </span><span class="lineCov">        6668805 :         for (int32_t i = 0; i &lt; ROWS; i++)</span>
+<span class="lineNum">      87 </span><span class="lineCov">       22954470 :         for (int32_t i = 0; i &lt; ROWS; i++)</span>
 <span class="lineNum">      88 </span>                :         {
-<span class="lineNum">      89 </span><span class="lineCov">       93363270 :             for (int32_t j = 0; j &lt; COLUMNS; j++)</span>
+<span class="lineNum">      89 </span><span class="lineCov">      321362580 :             for (int32_t j = 0; j &lt; COLUMNS; j++)</span>
 <span class="lineNum">      90 </span>                :             {
-<span class="lineNum">      91 </span><span class="lineCov">       87139052 :                 m_theSet[i][j] = COORD_SET_NOT_PRESENT;</span>
+<span class="lineNum">      91 </span><span class="lineCov">      299938408 :                 m_theSet[i][j] = COORD_SET_NOT_PRESENT;</span>
 <span class="lineNum">      92 </span>                :             }
 <span class="lineNum">      93 </span>                :         }
 <span class="lineNum">      94 </span>                : 
-<span class="lineNum">      95 </span><span class="lineCov">         444587 :         m_nElems = 0;</span>
-<span class="lineNum">      96 </span><span class="lineCov">         444587 :     }</span>
+<span class="lineNum">      95 </span><span class="lineCov">        1530298 :         m_nElems = 0;</span>
+<span class="lineNum">      96 </span><span class="lineCov">        1530298 :     }</span>
 <span class="lineNum">      97 </span>                : 
 <span class="lineNum">      98 </span>                :     /// returns the number of items in the set
 <span class="lineNum">      99 </span>                :     int32_t size()

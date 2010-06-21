@@ -1,4 +1,4 @@
-Mon May 31 21:24:04 CEST 2010
+Mon Jun 21 19:11:34 CEST 2010
 ./blockem -d 3 -c ../examples/games/game.txt.2b
 
 Flat profile:
@@ -6,74 +6,78 @@ Flat profile:
 Each sample counts as 0.01 seconds.
   %   cumulative   self              self     total           
  time   seconds   seconds    calls  ms/call  ms/call  name    
- 31.25      0.10     0.10    39581     0.00     0.00  Heuristic::CalculateNKWeightedv1(Board const&, Player const&, Player const&)
- 28.12      0.19     0.09   207368     0.00     0.00  Player::GetNextNucleationPointSpiral(int&, Coordinate&) const
- 15.62      0.24     0.05   142907     0.00     0.00  Rules::CalculateValidCoordsInNucleationPoint(Board const&, Player const&, Coordinate const&, std::vector<Coordinate, std::allocator<Coordinate> > const&, int, std::vector<Coordinate, std::allocator<Coordinate> >&)
- 12.50      0.28     0.04      285     0.14     1.12  Game1v1::MinMaxAlphaBetaCompute(Board&, Player&, CoordinateSet<14, 14>**, Piece**, Player&, CoordinateSet<14, 14>**, Piece**, int (*)(Board const&, Player const&, Player const&), int, int, int, int, int const volatile&)
-  9.38      0.31     0.03   513865     0.00     0.00  Rules::IsCoordTouchingPlayer(Board const&, Coordinate const&, Player const&)
-  3.12      0.32     0.01    82909     0.00     0.00  Rules::RecalculateNKAroundCoord(Board const&, Coordinate const&, int, Player&)
-  0.00      0.32     0.00   208029     0.00     0.00  Rules::IsNucleationPointCompute(Board const&, Player const&, Coordinate const&)
-  0.00      0.32     0.00    16476     0.00     0.00  Player::GetFirstNucleationPointSpiral(int&, Coordinate&) const
-  0.00      0.32     0.00    12490     0.00     0.00  Coordinate::~Coordinate()
-  0.00      0.32     0.00       88     0.00     0.00  Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char)
-  0.00      0.32     0.00       88     0.00     0.00  Piece::Piece(ePieceType_t)
-  0.00      0.32     0.00       88     0.00     0.00  Piece::~Piece()
-  0.00      0.32     0.00       88     0.00     0.00  std::vector<Coordinate, std::allocator<Coordinate> >::operator=(std::vector<Coordinate, std::allocator<Coordinate> > const&)
-  0.00      0.32     0.00       48     0.00     0.00  std::vector<Coordinate, std::allocator<Coordinate> >::_M_fill_insert(__gnu_cxx::__normal_iterator<Coordinate*, std::vector<Coordinate, std::allocator<Coordinate> > >, unsigned int, Coordinate const&)
-  0.00      0.32     0.00       44     0.00     0.00  std::list<std::vector<Coordinate, std::allocator<Coordinate> >, std::allocator<std::vector<Coordinate, std::allocator<Coordinate> > > >::operator=(std::list<std::vector<Coordinate, std::allocator<Coordinate> >, std::allocator<std::vector<Coordinate, std::allocator<Coordinate> > > > const&)
-  0.00      0.32     0.00       44     0.00     0.00  std::list<unsigned long long, std::allocator<unsigned long long> >::operator=(std::list<unsigned long long, std::allocator<unsigned long long> > const&)
-  0.00      0.32     0.00       42     0.00     0.00  Piece::BuildUpPrecalculatedRepresentations()
-  0.00      0.32     0.00       20     0.00     0.00  std::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)
-  0.00      0.32     0.00        4     0.00     0.00  Player::PrintAvailablePieces(std::ostream&) const
-  0.00      0.32     0.00        2     0.00     0.00  Piece::LoadPiece_5MrT(Piece&)
-  0.00      0.32     0.00        2     0.00     0.00  Piece::LoadPiece_5BigL(Piece&)
-  0.00      0.32     0.00        2     0.00     0.00  Piece::LoadPiece_5BigS(Piece&)
-  0.00      0.32     0.00        2     0.00     0.00  Piece::LoadPiece_5Cross(Piece&)
-  0.00      0.32     0.00        2     0.00     0.00  Piece::LoadPiece_5WPiece(Piece&)
-  0.00      0.32     0.00        2     0.00     0.00  Piece::LoadPiece_4LittleS(Piece&)
-  0.00      0.32     0.00        2     0.00     0.00  Piece::LoadPiece_4LittleT(Piece&)
-  0.00      0.32     0.00        2     0.00     0.00  Piece::LoadPiece_4littleL(Piece&)
-  0.00      0.32     0.00        2     0.00     0.00  Piece::LoadPiece_2TwoPiece(Piece&)
-  0.00      0.32     0.00        2     0.00     0.00  Piece::LoadPiece_3Triangle(Piece&)
-  0.00      0.32     0.00        2     0.00     0.00  Piece::LoadPiece_5BigPenis(Piece&)
-  0.00      0.32     0.00        2     0.00     0.00  Piece::LoadPiece_5SafPiece(Piece&)
-  0.00      0.32     0.00        2     0.00     0.00  Piece::LoadPiece_1BabyPiece(Piece&)
-  0.00      0.32     0.00        2     0.00     0.00  Piece::LoadPiece_3LongPiece(Piece&)
-  0.00      0.32     0.00        2     0.00     0.00  Piece::LoadPiece_4LongPiece(Piece&)
-  0.00      0.32     0.00        2     0.00     0.00  Piece::LoadPiece_5CuntPiece(Piece&)
-  0.00      0.32     0.00        2     0.00     0.00  Piece::LoadPiece_4FullSquare(Piece&)
-  0.00      0.32     0.00        2     0.00     0.00  Piece::LoadPiece_5HalfSquare(Piece&)
-  0.00      0.32     0.00        2     0.00     0.00  Piece::LoadPiece_5BoringPiece(Piece&)
-  0.00      0.32     0.00        2     0.00     0.00  Piece::LoadPiece_5SquareAppen(Piece&)
-  0.00      0.32     0.00        2     0.00     0.00  Piece::LoadPiece_5TheUltimate(Piece&)
-  0.00      0.32     0.00        2     0.00     0.00  Player::LoadPieces()
-  0.00      0.32     0.00        2     0.00     0.00  Player::Player(std::string, char, int, int, Coordinate const&)
-  0.00      0.32     0.00        2     0.00     0.00  Player::~Player()
-  0.00      0.32     0.00        2     0.00     0.00  Game1v1::RecalculateNKInAllBoard(Board const&, Player&, Player&)
-  0.00      0.32     0.00        2     0.00     0.00  Game1v1::SaveGame(std::ostream&)
-  0.00      0.32     0.00        2     0.00     0.00  Board::PrintBoard(std::ostream&) const
-  0.00      0.32     0.00        1     0.00     0.00  global constructors keyed to _ZN10MainWindow14ProgressUpdateEf
-  0.00      0.32     0.00        1     0.00     0.00  global constructors keyed to _ZN11AboutDialogC2EP15_GtkAboutDialogRKN4Glib6RefPtrIN3Gtk7BuilderEEE
-  0.00      0.32     0.00        1     0.00     0.00  global constructors keyed to _ZN12ConfigDialogC2EP10_GtkDialogRKN4Glib6RefPtrIN3Gtk7BuilderEEE
-  0.00      0.32     0.00        1     0.00     0.00  global constructors keyed to _ZN13Game1v1ConfigC2Ev
-  0.00      0.32     0.00        1     0.00     0.00  global constructors keyed to _ZN14StopWatchLabelC2EjSs
-  0.00      0.32     0.00        1     0.00     0.00  global constructors keyed to _ZN14TableEditPieceC2EP9_GtkTableRKN4Glib6RefPtrIN3Gtk7BuilderEEE
-  0.00      0.32     0.00        1     0.00     0.00  global constructors keyed to _ZN16DrawingAreaBoardC2ERK5Board
-  0.00      0.32     0.00        1     0.00     0.00  global constructors keyed to _ZN19GameTotalAllocationC2Eii
-  0.00      0.32     0.00        1     0.00     0.00  global constructors keyed to _ZN21DrawingAreaShowPiecesC2ERK6PlayerNS_14eOrientation_tE
-  0.00      0.32     0.00        1     0.00     0.00  global constructors keyed to _ZN22MainWindowWorkerThreadC2Ev
-  0.00      0.32     0.00        1     0.00     0.00  global constructors keyed to _ZN5BoardC2EiicPPc
-  0.00      0.32     0.00        1     0.00     0.00  global constructors keyed to _ZN5Piece16PieceDescriptionE
-  0.00      0.32     0.00        1     0.00     0.00  global constructors keyed to _ZN7Game1v1C2ERK10CoordinateS2_
-  0.00      0.32     0.00        1     0.00     0.00  global constructors keyed to _ZN9Heuristic15m_heuristicDataE
-  0.00      0.32     0.00        1     0.00     0.00  global constructors keyed to main
-  0.00      0.32     0.00        1     0.00     0.00  Board::Board(int, int, char, char**)
-  0.00      0.32     0.00        1     0.00     0.00  Board::~Board()
-  0.00      0.32     0.00        1     0.00     0.00  Game1v1::PutDownPiece(Piece const&, Coordinate const&, Game1v1::eGame1v1Player_t)
-  0.00      0.32     0.00        1     0.00   320.00  Game1v1::MinMax(int (*)(Board const&, Player const&, Player const&), int, Game1v1::eGame1v1Player_t, Piece&, Coordinate&, int const volatile&, Coordinate const&, Piece const&)
-  0.00      0.32     0.00        1     0.00     0.00  Game1v1::LoadGame(std::istream&)
-  0.00      0.32     0.00        1     0.00     0.00  Game1v1::Game1v1(Coordinate const&, Coordinate const&)
-  0.00      0.32     0.00        1     0.00     0.00  Game1v1::~Game1v1()
+ 23.08      0.18     0.18    77129     0.00     0.00  Heuristic::CalculateInfluenceAreaWeighted(Board const&, Player const&, Player const&)
+ 21.79      0.35     0.17   249680     0.00     0.00  rules::CalculateValidCoordsInNucleationPoint(Board const&, Player const&, Coordinate const&, std::vector<Coordinate, std::allocator<Coordinate> > const&, int, std::vector<Coordinate, std::allocator<Coordinate> >&)
+ 16.67      0.48     0.13   159569     0.00     0.00  rules::RecalculateInfluenceAreaAroundPiece(Board const&, Coordinate const&, std::vector<Coordinate, std::allocator<Coordinate> > const&, Player&)
+ 16.67      0.61     0.13   159177     0.00     0.00  rules::RecalculateNKAroundCoord(Board const&, Coordinate const&, int, Player&)
+ 10.26      0.69     0.08   460678     0.00     0.00  Player::GetNextNucleationPointSpiral(int&, Coordinate&) const
+  3.85      0.72     0.03   397915     0.00     0.00  rules::IsCoordInfluencedByPlayerCompute(Board const&, Coordinate const&, Player const&)
+  3.85      0.75     0.03      285     0.11     2.73  Game1v1::MinMaxAlphaBetaCompute(Board&, Player&, CoordinateSet<14, 14>**, ePieceType_t*, Player&, CoordinateSet<14, 14>**, ePieceType_t*, int (*)(Board const&, Player const&, Player const&), int, int, int, int, int const volatile&)
+  1.28      0.76     0.01  1057665     0.00     0.00  rules::IsCoordTouchingPlayer(Board const&, Coordinate const&, Player const&)
+  1.28      0.77     0.01   398307     0.00     0.00  rules::IsNucleationPointCompute(Board const&, Player const&, Coordinate const&)
+  1.28      0.78     0.01    79588     0.00     0.00  Game1v1::RemovePiece(Board&, Coordinate const&, std::vector<Coordinate, std::allocator<Coordinate> > const&, int, Player&, Player&)
+  0.00      0.78     0.00    34104     0.00     0.00  Player::GetFirstNucleationPointSpiral(int&, Coordinate&) const
+  0.00      0.78     0.00    15422     0.00     0.00  Coordinate::~Coordinate()
+  0.00      0.78     0.00      100     0.00     0.00  std::vector<Coordinate, std::allocator<Coordinate> >::operator=(std::vector<Coordinate, std::allocator<Coordinate> > const&)
+  0.00      0.78     0.00       88     0.00     0.00  Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char)
+  0.00      0.78     0.00       88     0.00     0.00  Piece::Piece(ePieceType_t)
+  0.00      0.78     0.00       88     0.00     0.00  Piece::~Piece()
+  0.00      0.78     0.00       48     0.00     0.00  std::vector<Coordinate, std::allocator<Coordinate> >::_M_fill_insert(__gnu_cxx::__normal_iterator<Coordinate*, std::vector<Coordinate, std::allocator<Coordinate> > >, unsigned int, Coordinate const&)
+  0.00      0.78     0.00       46     0.00     0.00  std::list<std::vector<Coordinate, std::allocator<Coordinate> >, std::allocator<std::vector<Coordinate, std::allocator<Coordinate> > > >::operator=(std::list<std::vector<Coordinate, std::allocator<Coordinate> >, std::allocator<std::vector<Coordinate, std::allocator<Coordinate> > > > const&)
+  0.00      0.78     0.00       46     0.00     0.00  std::list<unsigned long long, std::allocator<unsigned long long> >::operator=(std::list<unsigned long long, std::allocator<unsigned long long> > const&)
+  0.00      0.78     0.00       43     0.00     0.00  Piece::BuildUpPrecalculatedRepresentations()
+  0.00      0.78     0.00       20     0.00     0.00  std::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)
+  0.00      0.78     0.00        4     0.00     0.00  Player::PrintAvailablePieces(std::ostream&) const
+  0.00      0.78     0.00        3     0.00     0.00  Piece::LoadPiece_1BabyPiece(Piece&)
+  0.00      0.78     0.00        2     0.00     0.00  Piece::LoadPiece_5MrT(Piece&)
+  0.00      0.78     0.00        2     0.00     0.00  Piece::LoadPiece_5BigL(Piece&)
+  0.00      0.78     0.00        2     0.00     0.00  Piece::LoadPiece_5BigS(Piece&)
+  0.00      0.78     0.00        2     0.00     0.00  Piece::LoadPiece_5Cross(Piece&)
+  0.00      0.78     0.00        2     0.00     0.00  Piece::LoadPiece_5WPiece(Piece&)
+  0.00      0.78     0.00        2     0.00     0.00  Piece::LoadPiece_4LittleS(Piece&)
+  0.00      0.78     0.00        2     0.00     0.00  Piece::LoadPiece_4LittleT(Piece&)
+  0.00      0.78     0.00        2     0.00     0.00  Piece::LoadPiece_4littleL(Piece&)
+  0.00      0.78     0.00        2     0.00     0.00  Piece::LoadPiece_2TwoPiece(Piece&)
+  0.00      0.78     0.00        2     0.00     0.00  Piece::LoadPiece_3Triangle(Piece&)
+  0.00      0.78     0.00        2     0.00     0.00  Piece::LoadPiece_5BigPenis(Piece&)
+  0.00      0.78     0.00        2     0.00     0.00  Piece::LoadPiece_5SafPiece(Piece&)
+  0.00      0.78     0.00        2     0.00     0.00  Piece::LoadPiece_3LongPiece(Piece&)
+  0.00      0.78     0.00        2     0.00     0.00  Piece::LoadPiece_4LongPiece(Piece&)
+  0.00      0.78     0.00        2     0.00     0.00  Piece::LoadPiece_5CuntPiece(Piece&)
+  0.00      0.78     0.00        2     0.00     0.00  Piece::LoadPiece_4FullSquare(Piece&)
+  0.00      0.78     0.00        2     0.00     0.00  Piece::LoadPiece_5HalfSquare(Piece&)
+  0.00      0.78     0.00        2     0.00     0.00  Piece::LoadPiece_5BoringPiece(Piece&)
+  0.00      0.78     0.00        2     0.00     0.00  Piece::LoadPiece_5SquareAppen(Piece&)
+  0.00      0.78     0.00        2     0.00     0.00  Piece::LoadPiece_5TheUltimate(Piece&)
+  0.00      0.78     0.00        2     0.00     0.00  Player::LoadPieces()
+  0.00      0.78     0.00        2     0.00     0.00  Player::Player(std::string, char, int, int, Coordinate const&)
+  0.00      0.78     0.00        2     0.00     0.00  Player::~Player()
+  0.00      0.78     0.00        2     0.00     0.00  Game1v1::SaveGame(std::ostream&)
+  0.00      0.78     0.00        2     0.00     0.00  Board::PrintBoard(std::ostream&) const
+  0.00      0.78     0.00        1     0.00     0.00  global constructors keyed to _ZN10MainWindow14ProgressUpdateEf
+  0.00      0.78     0.00        1     0.00     0.00  global constructors keyed to _ZN11AboutDialogC2EP15_GtkAboutDialogRKN4Glib6RefPtrIN3Gtk7BuilderEEE
+  0.00      0.78     0.00        1     0.00     0.00  global constructors keyed to _ZN12ConfigDialogC2EP10_GtkDialogRKN4Glib6RefPtrIN3Gtk7BuilderEEE
+  0.00      0.78     0.00        1     0.00     0.00  global constructors keyed to _ZN13Game1v1ConfigC2Ev
+  0.00      0.78     0.00        1     0.00     0.00  global constructors keyed to _ZN14StopWatchLabelC2EjRKSs
+  0.00      0.78     0.00        1     0.00     0.00  global constructors keyed to _ZN14TableEditPieceC2EP9_GtkTableRKN4Glib6RefPtrIN3Gtk7BuilderEEE
+  0.00      0.78     0.00        1     0.00     0.00  global constructors keyed to _ZN16DrawingAreaBoardC2ERK5Board
+  0.00      0.78     0.00        1     0.00     0.00  global constructors keyed to _ZN19GameTotalAllocationC2Eii
+  0.00      0.78     0.00        1     0.00     0.00  global constructors keyed to _ZN21DrawingAreaShowPiecesC2ERK6PlayerNS_14eOrientation_tE
+  0.00      0.78     0.00        1     0.00     0.00  global constructors keyed to _ZN22MainWindowWorkerThreadC2Ev
+  0.00      0.78     0.00        1     0.00     0.00  global constructors keyed to _ZN5BoardC2EiicPPc
+  0.00      0.78     0.00        1     0.00     0.00  global constructors keyed to _ZN5Piece16PieceDescriptionE
+  0.00      0.78     0.00        1     0.00     0.00  global constructors keyed to _ZN7Game1v1C2ERK10CoordinateS2_
+  0.00      0.78     0.00        1     0.00     0.00  global constructors keyed to _ZN9Heuristic15m_heuristicDataE
+  0.00      0.78     0.00        1     0.00     0.00  global constructors keyed to main
+  0.00      0.78     0.00        1     0.00     0.00  Board::Board(int, int, char, char**)
+  0.00      0.78     0.00        1     0.00     0.00  Board::~Board()
+  0.00      0.78     0.00        1     0.00     0.00  Game1v1::PutDownPiece(Piece const&, Coordinate const&, Game1v1::eGame1v1Player_t)
+  0.00      0.78     0.00        1     0.00     0.01  Game1v1::RecalculateNKInAllBoard()
+  0.00      0.78     0.00        1     0.00     0.32  Game1v1::RecalculateInflueceAreasInAllBoard()
+  0.00      0.78     0.00        1     0.00   779.67  Game1v1::MinMax(int (*)(Board const&, Player const&, Player const&), int, Game1v1::eGame1v1Player_t, Piece&, Coordinate&, int const volatile&, Coordinate const&, Piece const&)
+  0.00      0.78     0.00        1     0.00     0.33  Game1v1::LoadGame(std::istream&)
+  0.00      0.78     0.00        1     0.00     0.00  Game1v1::Game1v1(Coordinate const&, Coordinate const&)
+  0.00      0.78     0.00        1     0.00     0.00  Game1v1::~Game1v1()
 
  %         the percentage of the total running time of the
 time       program used by this function.
@@ -105,402 +109,434 @@ name       the name of the function.  This is the minor sort
 		     Call graph (explanation follows)
 
 
-granularity: each sample hit covers 4 byte(s) for 3.12% of 0.32 seconds
+granularity: each sample hit covers 4 byte(s) for 1.28% of 0.78 seconds
 
 index % time    self  children    called     name
                                                  <spontaneous>
-[1]    100.0    0.00    0.32                 main [1]
-                0.00    0.32       1/1           Game1v1::MinMax(int (*)(Board const&, Player const&, Player const&), int, Game1v1::eGame1v1Player_t, Piece&, Coordinate&, int const volatile&, Coordinate const&, Piece const&) [2]
-                0.00    0.00       1/1           Game1v1::PutDownPiece(Piece const&, Coordinate const&, Game1v1::eGame1v1Player_t) [9]
-                0.00    0.00       2/2           Game1v1::SaveGame(std::ostream&) [53]
-                0.00    0.00       2/88          Piece::Piece(ePieceType_t) [19]
-                0.00    0.00       2/88          Piece::~Piece() [20]
-                0.00    0.00       1/1           Game1v1::Game1v1(Coordinate const&, Coordinate const&) [73]
-                0.00    0.00       1/1           Game1v1::LoadGame(std::istream&) [72]
-                0.00    0.00       1/1           Board::~Board() [71]
-                0.00    0.00       1/1           Game1v1::~Game1v1() [74]
+[1]    100.0    0.00    0.78                 main [1]
+                0.00    0.78       1/1           Game1v1::MinMax(int (*)(Board const&, Player const&, Player const&), int, Game1v1::eGame1v1Player_t, Piece&, Coordinate&, int const volatile&, Coordinate const&, Piece const&) [2]
+                0.00    0.00       1/1           Game1v1::LoadGame(std::istream&) [13]
+                0.00    0.00       1/1           Game1v1::PutDownPiece(Piece const&, Coordinate const&, Game1v1::eGame1v1Player_t) [16]
+                0.00    0.00       2/2           Game1v1::SaveGame(std::ostream&) [59]
+                0.00    0.00       2/88          Piece::Piece(ePieceType_t) [27]
+                0.00    0.00       2/88          Piece::~Piece() [28]
+                0.00    0.00       1/1           Game1v1::Game1v1(Coordinate const&, Coordinate const&) [78]
+                0.00    0.00       1/1           Board::~Board() [77]
+                0.00    0.00       1/1           Game1v1::~Game1v1() [79]
 -----------------------------------------------
-                0.00    0.32       1/1           main [1]
-[2]    100.0    0.00    0.32       1         Game1v1::MinMax(int (*)(Board const&, Player const&, Player const&), int, Game1v1::eGame1v1Player_t, Piece&, Coordinate&, int const volatile&, Coordinate const&, Piece const&) [2]
-                0.04    0.28     285/285         Game1v1::MinMaxAlphaBetaCompute(Board&, Player&, CoordinateSet<14, 14>**, Piece**, Player&, CoordinateSet<14, 14>**, Piece**, int (*)(Board const&, Player const&, Player const&), int, int, int, int, int const volatile&) [3]
-                0.00    0.00     650/207368      Player::GetNextNucleationPointSpiral(int&, Coordinate&) const [5]
-                0.00    0.00     650/142907      Rules::CalculateValidCoordsInNucleationPoint(Board const&, Player const&, Coordinate const&, std::vector<Coordinate, std::allocator<Coordinate> > const&, int, std::vector<Coordinate, std::allocator<Coordinate> >&) [6]
-                0.00    0.00     570/82909       Rules::RecalculateNKAroundCoord(Board const&, Coordinate const&, int, Player&) [8]
-                0.00    0.00    1425/208029      Rules::IsNucleationPointCompute(Board const&, Player const&, Coordinate const&) [15]
-                0.00    0.00      50/16476       Player::GetFirstNucleationPointSpiral(int&, Coordinate&) const [16]
-                0.00    0.00       5/12490       Coordinate::~Coordinate() [17]
-                0.00    0.00       4/88          std::vector<Coordinate, std::allocator<Coordinate> >::operator=(std::vector<Coordinate, std::allocator<Coordinate> > const&) [21]
-                0.00    0.00       2/88          Piece::Piece(ePieceType_t) [19]
-                0.00    0.00       2/44          std::list<std::vector<Coordinate, std::allocator<Coordinate> >, std::allocator<std::vector<Coordinate, std::allocator<Coordinate> > > >::operator=(std::list<std::vector<Coordinate, std::allocator<Coordinate> >, std::allocator<std::vector<Coordinate, std::allocator<Coordinate> > > > const&) [23]
-                0.00    0.00       2/44          std::list<unsigned long long, std::allocator<unsigned long long> >::operator=(std::list<unsigned long long, std::allocator<unsigned long long> > const&) [24]
-                0.00    0.00       2/88          Piece::~Piece() [20]
+                0.00    0.78       1/1           main [1]
+[2]    100.0    0.00    0.78       1         Game1v1::MinMax(int (*)(Board const&, Player const&, Player const&), int, Game1v1::eGame1v1Player_t, Piece&, Coordinate&, int const volatile&, Coordinate const&, Piece const&) [2]
+                0.03    0.75     285/285         Game1v1::MinMaxAlphaBetaCompute(Board&, Player&, CoordinateSet<14, 14>**, ePieceType_t*, Player&, CoordinateSet<14, 14>**, ePieceType_t*, int (*)(Board const&, Player const&, Player const&), int, int, int, int, int const volatile&) [3]
+                0.00    0.00     285/79588       Game1v1::RemovePiece(Board&, Coordinate const&, std::vector<Coordinate, std::allocator<Coordinate> > const&, int, Player&, Player&) [5]
+                0.00    0.00     650/249680      rules::CalculateValidCoordsInNucleationPoint(Board const&, Player const&, Coordinate const&, std::vector<Coordinate, std::allocator<Coordinate> > const&, int, std::vector<Coordinate, std::allocator<Coordinate> >&) [6]
+                0.00    0.00     285/159177      rules::RecalculateNKAroundCoord(Board const&, Coordinate const&, int, Player&) [7]
+                0.00    0.00     285/159569      rules::RecalculateInfluenceAreaAroundPiece(Board const&, Coordinate const&, std::vector<Coordinate, std::allocator<Coordinate> > const&, Player&) [8]
+                0.00    0.00     650/460678      Player::GetNextNucleationPointSpiral(int&, Coordinate&) const [9]
+                0.00    0.00      50/34104       Player::GetFirstNucleationPointSpiral(int&, Coordinate&) const [23]
+                0.00    0.00       8/100         std::vector<Coordinate, std::allocator<Coordinate> >::operator=(std::vector<Coordinate, std::allocator<Coordinate> > const&) [25]
+                0.00    0.00       5/15422       Coordinate::~Coordinate() [24]
+                0.00    0.00       4/46          std::list<std::vector<Coordinate, std::allocator<Coordinate> >, std::allocator<std::vector<Coordinate, std::allocator<Coordinate> > > >::operator=(std::list<std::vector<Coordinate, std::allocator<Coordinate> >, std::allocator<std::vector<Coordinate, std::allocator<Coordinate> > > > const&) [30]
+                0.00    0.00       4/46          std::list<unsigned long long, std::allocator<unsigned long long> >::operator=(std::list<unsigned long long, std::allocator<unsigned long long> > const&) [31]
+                0.00    0.00       1/88          Piece::Piece(ePieceType_t) [27]
+                0.00    0.00       1/88          Piece::~Piece() [28]
 -----------------------------------------------
-                               41169             Game1v1::MinMaxAlphaBetaCompute(Board&, Player&, CoordinateSet<14, 14>**, Piece**, Player&, CoordinateSet<14, 14>**, Piece**, int (*)(Board const&, Player const&, Player const&), int, int, int, int, int const volatile&) [3]
-                0.04    0.28     285/285         Game1v1::MinMax(int (*)(Board const&, Player const&, Player const&), int, Game1v1::eGame1v1Player_t, Piece&, Coordinate&, int const volatile&, Coordinate const&, Piece const&) [2]
-[3]     99.8    0.04    0.28     285+41169   Game1v1::MinMaxAlphaBetaCompute(Board&, Player&, CoordinateSet<14, 14>**, Piece**, Player&, CoordinateSet<14, 14>**, Piece**, int (*)(Board const&, Player const&, Player const&), int, int, int, int, int const volatile&) [3]
-                0.10    0.03   39581/39581       Heuristic::CalculateNKWeightedv1(Board const&, Player const&, Player const&) [4]
-                0.09    0.00  206718/207368      Player::GetNextNucleationPointSpiral(int&, Coordinate&) const [5]
-                0.05    0.00  142257/142907      Rules::CalculateValidCoordsInNucleationPoint(Board const&, Player const&, Coordinate const&, std::vector<Coordinate, std::allocator<Coordinate> > const&, int, std::vector<Coordinate, std::allocator<Coordinate> >&) [6]
-                0.01    0.00   82338/82909       Rules::RecalculateNKAroundCoord(Board const&, Coordinate const&, int, Player&) [8]
-                0.00    0.00  205820/208029      Rules::IsNucleationPointCompute(Board const&, Player const&, Coordinate const&) [15]
-                0.00    0.00   16426/16476       Player::GetFirstNucleationPointSpiral(int&, Coordinate&) const [16]
-                0.00    0.00    9365/12490       Coordinate::~Coordinate() [17]
-                               41169             Game1v1::MinMaxAlphaBetaCompute(Board&, Player&, CoordinateSet<14, 14>**, Piece**, Player&, CoordinateSet<14, 14>**, Piece**, int (*)(Board const&, Player const&, Player const&), int, int, int, int, int const volatile&) [3]
+                               79303             Game1v1::MinMaxAlphaBetaCompute(Board&, Player&, CoordinateSet<14, 14>**, ePieceType_t*, Player&, CoordinateSet<14, 14>**, ePieceType_t*, int (*)(Board const&, Player const&, Player const&), int, int, int, int, int const volatile&) [3]
+                0.03    0.75     285/285         Game1v1::MinMax(int (*)(Board const&, Player const&, Player const&), int, Game1v1::eGame1v1Player_t, Piece&, Coordinate&, int const volatile&, Coordinate const&, Piece const&) [2]
+[3]     99.7    0.03    0.75     285+79303   Game1v1::MinMaxAlphaBetaCompute(Board&, Player&, CoordinateSet<14, 14>**, ePieceType_t*, Player&, CoordinateSet<14, 14>**, ePieceType_t*, int (*)(Board const&, Player const&, Player const&), int, int, int, int, int const volatile&) [3]
+                0.18    0.01   77129/77129       Heuristic::CalculateInfluenceAreaWeighted(Board const&, Player const&, Player const&) [4]
+                0.01    0.17   79303/79588       Game1v1::RemovePiece(Board&, Coordinate const&, std::vector<Coordinate, std::allocator<Coordinate> > const&, int, Player&, Player&) [5]
+                0.17    0.00  249030/249680      rules::CalculateValidCoordsInNucleationPoint(Board const&, Player const&, Coordinate const&, std::vector<Coordinate, std::allocator<Coordinate> > const&, int, std::vector<Coordinate, std::allocator<Coordinate> >&) [6]
+                0.08    0.00  460028/460678      Player::GetNextNucleationPointSpiral(int&, Coordinate&) const [9]
+                0.06    0.00   79303/159177      rules::RecalculateNKAroundCoord(Board const&, Coordinate const&, int, Player&) [7]
+                0.06    0.00   79303/159569      rules::RecalculateInfluenceAreaAroundPiece(Board const&, Coordinate const&, std::vector<Coordinate, std::allocator<Coordinate> > const&, Player&) [8]
+                0.00    0.00   34054/34104       Player::GetFirstNucleationPointSpiral(int&, Coordinate&) const [23]
+                0.00    0.00   12295/15422       Coordinate::~Coordinate() [24]
+                               79303             Game1v1::MinMaxAlphaBetaCompute(Board&, Player&, CoordinateSet<14, 14>**, ePieceType_t*, Player&, CoordinateSet<14, 14>**, ePieceType_t*, int (*)(Board const&, Player const&, Player const&), int, int, int, int, int const volatile&) [3]
 -----------------------------------------------
-                0.10    0.03   39581/39581       Game1v1::MinMaxAlphaBetaCompute(Board&, Player&, CoordinateSet<14, 14>**, Piece**, Player&, CoordinateSet<14, 14>**, Piece**, int (*)(Board const&, Player const&, Player const&), int, int, int, int, int const volatile&) [3]
-[4]     40.6    0.10    0.03   39581         Heuristic::CalculateNKWeightedv1(Board const&, Player const&, Player const&) [4]
-                0.03    0.00  513865/513865      Rules::IsCoordTouchingPlayer(Board const&, Coordinate const&, Player const&) [7]
+                0.18    0.01   77129/77129       Game1v1::MinMaxAlphaBetaCompute(Board&, Player&, CoordinateSet<14, 14>**, ePieceType_t*, Player&, CoordinateSet<14, 14>**, ePieceType_t*, int (*)(Board const&, Player const&, Player const&), int, int, int, int, int const volatile&) [3]
+[4]     24.4    0.18    0.01   77129         Heuristic::CalculateInfluenceAreaWeighted(Board const&, Player const&, Player const&) [4]
+                0.01    0.00 1057665/1057665     rules::IsCoordTouchingPlayer(Board const&, Coordinate const&, Player const&) [11]
 -----------------------------------------------
-                0.00    0.00     650/207368      Game1v1::MinMax(int (*)(Board const&, Player const&, Player const&), int, Game1v1::eGame1v1Player_t, Piece&, Coordinate&, int const volatile&, Coordinate const&, Piece const&) [2]
-                0.09    0.00  206718/207368      Game1v1::MinMaxAlphaBetaCompute(Board&, Player&, CoordinateSet<14, 14>**, Piece**, Player&, CoordinateSet<14, 14>**, Piece**, int (*)(Board const&, Player const&, Player const&), int, int, int, int, int const volatile&) [3]
-[5]     28.1    0.09    0.00  207368         Player::GetNextNucleationPointSpiral(int&, Coordinate&) const [5]
+                0.00    0.00     285/79588       Game1v1::MinMax(int (*)(Board const&, Player const&, Player const&), int, Game1v1::eGame1v1Player_t, Piece&, Coordinate&, int const volatile&, Coordinate const&, Piece const&) [2]
+                0.01    0.17   79303/79588       Game1v1::MinMaxAlphaBetaCompute(Board&, Player&, CoordinateSet<14, 14>**, ePieceType_t*, Player&, CoordinateSet<14, 14>**, ePieceType_t*, int (*)(Board const&, Player const&, Player const&), int, int, int, int, int const volatile&) [3]
+[5]     23.1    0.01    0.17   79588         Game1v1::RemovePiece(Board&, Coordinate const&, std::vector<Coordinate, std::allocator<Coordinate> > const&, int, Player&, Player&) [5]
+                0.06    0.00   79588/159177      rules::RecalculateNKAroundCoord(Board const&, Coordinate const&, int, Player&) [7]
+                0.06    0.00   79588/159569      rules::RecalculateInfluenceAreaAroundPiece(Board const&, Coordinate const&, std::vector<Coordinate, std::allocator<Coordinate> > const&, Player&) [8]
+                0.03    0.00  397915/397915      rules::IsCoordInfluencedByPlayerCompute(Board const&, Coordinate const&, Player const&) [10]
+                0.01    0.00  397915/398307      rules::IsNucleationPointCompute(Board const&, Player const&, Coordinate const&) [12]
 -----------------------------------------------
-                0.00    0.00     650/142907      Game1v1::MinMax(int (*)(Board const&, Player const&, Player const&), int, Game1v1::eGame1v1Player_t, Piece&, Coordinate&, int const volatile&, Coordinate const&, Piece const&) [2]
-                0.05    0.00  142257/142907      Game1v1::MinMaxAlphaBetaCompute(Board&, Player&, CoordinateSet<14, 14>**, Piece**, Player&, CoordinateSet<14, 14>**, Piece**, int (*)(Board const&, Player const&, Player const&), int, int, int, int, int const volatile&) [3]
-[6]     15.6    0.05    0.00  142907         Rules::CalculateValidCoordsInNucleationPoint(Board const&, Player const&, Coordinate const&, std::vector<Coordinate, std::allocator<Coordinate> > const&, int, std::vector<Coordinate, std::allocator<Coordinate> >&) [6]
+                0.00    0.00     650/249680      Game1v1::MinMax(int (*)(Board const&, Player const&, Player const&), int, Game1v1::eGame1v1Player_t, Piece&, Coordinate&, int const volatile&, Coordinate const&, Piece const&) [2]
+                0.17    0.00  249030/249680      Game1v1::MinMaxAlphaBetaCompute(Board&, Player&, CoordinateSet<14, 14>**, ePieceType_t*, Player&, CoordinateSet<14, 14>**, ePieceType_t*, int (*)(Board const&, Player const&, Player const&), int, int, int, int, int const volatile&) [3]
+[6]     21.8    0.17    0.00  249680         rules::CalculateValidCoordsInNucleationPoint(Board const&, Player const&, Coordinate const&, std::vector<Coordinate, std::allocator<Coordinate> > const&, int, std::vector<Coordinate, std::allocator<Coordinate> >&) [6]
 -----------------------------------------------
-                0.03    0.00  513865/513865      Heuristic::CalculateNKWeightedv1(Board const&, Player const&, Player const&) [4]
-[7]      9.4    0.03    0.00  513865         Rules::IsCoordTouchingPlayer(Board const&, Coordinate const&, Player const&) [7]
+                0.00    0.00       1/159177      Game1v1::PutDownPiece(Piece const&, Coordinate const&, Game1v1::eGame1v1Player_t) [16]
+                0.00    0.00     285/159177      Game1v1::MinMax(int (*)(Board const&, Player const&, Player const&), int, Game1v1::eGame1v1Player_t, Piece&, Coordinate&, int const volatile&, Coordinate const&, Piece const&) [2]
+                0.06    0.00   79303/159177      Game1v1::MinMaxAlphaBetaCompute(Board&, Player&, CoordinateSet<14, 14>**, ePieceType_t*, Player&, CoordinateSet<14, 14>**, ePieceType_t*, int (*)(Board const&, Player const&, Player const&), int, int, int, int, int const volatile&) [3]
+                0.06    0.00   79588/159177      Game1v1::RemovePiece(Board&, Coordinate const&, std::vector<Coordinate, std::allocator<Coordinate> > const&, int, Player&, Player&) [5]
+[7]     16.7    0.13    0.00  159177         rules::RecalculateNKAroundCoord(Board const&, Coordinate const&, int, Player&) [7]
 -----------------------------------------------
-                0.00    0.00       1/82909       Game1v1::PutDownPiece(Piece const&, Coordinate const&, Game1v1::eGame1v1Player_t) [9]
-                0.00    0.00     570/82909       Game1v1::MinMax(int (*)(Board const&, Player const&, Player const&), int, Game1v1::eGame1v1Player_t, Piece&, Coordinate&, int const volatile&, Coordinate const&, Piece const&) [2]
-                0.01    0.00   82338/82909       Game1v1::MinMaxAlphaBetaCompute(Board&, Player&, CoordinateSet<14, 14>**, Piece**, Player&, CoordinateSet<14, 14>**, Piece**, int (*)(Board const&, Player const&, Player const&), int, int, int, int, int const volatile&) [3]
-[8]      3.1    0.01    0.00   82909         Rules::RecalculateNKAroundCoord(Board const&, Coordinate const&, int, Player&) [8]
+                0.00    0.00       1/159569      Game1v1::PutDownPiece(Piece const&, Coordinate const&, Game1v1::eGame1v1Player_t) [16]
+                0.00    0.00     285/159569      Game1v1::MinMax(int (*)(Board const&, Player const&, Player const&), int, Game1v1::eGame1v1Player_t, Piece&, Coordinate&, int const volatile&, Coordinate const&, Piece const&) [2]
+                0.00    0.00     392/159569      Game1v1::RecalculateInflueceAreasInAllBoard() [14]
+                0.06    0.00   79303/159569      Game1v1::MinMaxAlphaBetaCompute(Board&, Player&, CoordinateSet<14, 14>**, ePieceType_t*, Player&, CoordinateSet<14, 14>**, ePieceType_t*, int (*)(Board const&, Player const&, Player const&), int, int, int, int, int const volatile&) [3]
+                0.06    0.00   79588/159569      Game1v1::RemovePiece(Board&, Coordinate const&, std::vector<Coordinate, std::allocator<Coordinate> > const&, int, Player&, Player&) [5]
+[8]     16.7    0.13    0.00  159569         rules::RecalculateInfluenceAreaAroundPiece(Board const&, Coordinate const&, std::vector<Coordinate, std::allocator<Coordinate> > const&, Player&) [8]
+-----------------------------------------------
+                0.00    0.00     650/460678      Game1v1::MinMax(int (*)(Board const&, Player const&, Player const&), int, Game1v1::eGame1v1Player_t, Piece&, Coordinate&, int const volatile&, Coordinate const&, Piece const&) [2]
+                0.08    0.00  460028/460678      Game1v1::MinMaxAlphaBetaCompute(Board&, Player&, CoordinateSet<14, 14>**, ePieceType_t*, Player&, CoordinateSet<14, 14>**, ePieceType_t*, int (*)(Board const&, Player const&, Player const&), int, int, int, int, int const volatile&) [3]
+[9]     10.3    0.08    0.00  460678         Player::GetNextNucleationPointSpiral(int&, Coordinate&) const [9]
+-----------------------------------------------
+                0.03    0.00  397915/397915      Game1v1::RemovePiece(Board&, Coordinate const&, std::vector<Coordinate, std::allocator<Coordinate> > const&, int, Player&, Player&) [5]
+[10]     3.8    0.03    0.00  397915         rules::IsCoordInfluencedByPlayerCompute(Board const&, Coordinate const&, Player const&) [10]
+-----------------------------------------------
+                0.01    0.00 1057665/1057665     Heuristic::CalculateInfluenceAreaWeighted(Board const&, Player const&, Player const&) [4]
+[11]     1.3    0.01    0.00 1057665         rules::IsCoordTouchingPlayer(Board const&, Coordinate const&, Player const&) [11]
+-----------------------------------------------
+                0.00    0.00     392/398307      Game1v1::RecalculateNKInAllBoard() [15]
+                0.01    0.00  397915/398307      Game1v1::RemovePiece(Board&, Coordinate const&, std::vector<Coordinate, std::allocator<Coordinate> > const&, int, Player&, Player&) [5]
+[12]     1.3    0.01    0.00  398307         rules::IsNucleationPointCompute(Board const&, Player const&, Coordinate const&) [12]
 -----------------------------------------------
                 0.00    0.00       1/1           main [1]
-[9]      0.0    0.00    0.00       1         Game1v1::PutDownPiece(Piece const&, Coordinate const&, Game1v1::eGame1v1Player_t) [9]
-                0.00    0.00       1/82909       Rules::RecalculateNKAroundCoord(Board const&, Coordinate const&, int, Player&) [8]
+[13]     0.0    0.00    0.00       1         Game1v1::LoadGame(std::istream&) [13]
+                0.00    0.00       1/1           Game1v1::RecalculateInflueceAreasInAllBoard() [14]
+                0.00    0.00       1/1           Game1v1::RecalculateNKInAllBoard() [15]
 -----------------------------------------------
-                0.00    0.00     784/208029      Game1v1::RecalculateNKInAllBoard(Board const&, Player&, Player&) [52]
-                0.00    0.00    1425/208029      Game1v1::MinMax(int (*)(Board const&, Player const&, Player const&), int, Game1v1::eGame1v1Player_t, Piece&, Coordinate&, int const volatile&, Coordinate const&, Piece const&) [2]
-                0.00    0.00  205820/208029      Game1v1::MinMaxAlphaBetaCompute(Board&, Player&, CoordinateSet<14, 14>**, Piece**, Player&, CoordinateSet<14, 14>**, Piece**, int (*)(Board const&, Player const&, Player const&), int, int, int, int, int const volatile&) [3]
-[15]     0.0    0.00    0.00  208029         Rules::IsNucleationPointCompute(Board const&, Player const&, Coordinate const&) [15]
+                0.00    0.00       1/1           Game1v1::LoadGame(std::istream&) [13]
+[14]     0.0    0.00    0.00       1         Game1v1::RecalculateInflueceAreasInAllBoard() [14]
+                0.00    0.00     392/159569      rules::RecalculateInfluenceAreaAroundPiece(Board const&, Coordinate const&, std::vector<Coordinate, std::allocator<Coordinate> > const&, Player&) [8]
+                0.00    0.00       1/88          Piece::Piece(ePieceType_t) [27]
+                0.00    0.00       1/88          Piece::~Piece() [28]
 -----------------------------------------------
-                0.00    0.00      50/16476       Game1v1::MinMax(int (*)(Board const&, Player const&, Player const&), int, Game1v1::eGame1v1Player_t, Piece&, Coordinate&, int const volatile&, Coordinate const&, Piece const&) [2]
-                0.00    0.00   16426/16476       Game1v1::MinMaxAlphaBetaCompute(Board&, Player&, CoordinateSet<14, 14>**, Piece**, Player&, CoordinateSet<14, 14>**, Piece**, int (*)(Board const&, Player const&, Player const&), int, int, int, int, int const volatile&) [3]
-[16]     0.0    0.00    0.00   16476         Player::GetFirstNucleationPointSpiral(int&, Coordinate&) const [16]
+                0.00    0.00       1/1           Game1v1::LoadGame(std::istream&) [13]
+[15]     0.0    0.00    0.00       1         Game1v1::RecalculateNKInAllBoard() [15]
+                0.00    0.00     392/398307      rules::IsNucleationPointCompute(Board const&, Player const&, Coordinate const&) [12]
 -----------------------------------------------
-                0.00    0.00       2/12490       Piece::LoadPiece_1BabyPiece(Piece&) [40]
-                0.00    0.00       4/12490       Piece::LoadPiece_2TwoPiece(Piece&) [36]
-                0.00    0.00       5/12490       Game1v1::MinMax(int (*)(Board const&, Player const&, Player const&), int, Game1v1::eGame1v1Player_t, Piece&, Coordinate&, int const volatile&, Coordinate const&, Piece const&) [2]
-                0.00    0.00       6/12490       Piece::LoadPiece_3Triangle(Piece&) [37]
-                0.00    0.00       6/12490       Piece::LoadPiece_3LongPiece(Piece&) [41]
-                0.00    0.00       8/12490       Piece::LoadPiece_4FullSquare(Piece&) [44]
-                0.00    0.00       8/12490       Piece::LoadPiece_4littleL(Piece&) [35]
-                0.00    0.00       8/12490       Piece::LoadPiece_4LittleT(Piece&) [34]
-                0.00    0.00       8/12490       Piece::LoadPiece_4LittleS(Piece&) [33]
-                0.00    0.00       8/12490       Piece::LoadPiece_4LongPiece(Piece&) [42]
-                0.00    0.00      10/12490       Piece::LoadPiece_5TheUltimate(Piece&) [48]
-                0.00    0.00      10/12490       Piece::LoadPiece_5BoringPiece(Piece&) [46]
-                0.00    0.00      10/12490       Piece::LoadPiece_5SquareAppen(Piece&) [47]
-                0.00    0.00      10/12490       Piece::LoadPiece_5MrT(Piece&) [28]
-                0.00    0.00      10/12490       Piece::LoadPiece_5BigL(Piece&) [29]
-                0.00    0.00      10/12490       Piece::LoadPiece_5HalfSquare(Piece&) [45]
-                0.00    0.00      10/12490       Piece::LoadPiece_5Cross(Piece&) [31]
-                0.00    0.00      10/12490       Piece::LoadPiece_5BigPenis(Piece&) [38]
-                0.00    0.00      10/12490       Piece::LoadPiece_5CuntPiece(Piece&) [43]
-                0.00    0.00      10/12490       Piece::LoadPiece_5WPiece(Piece&) [32]
-                0.00    0.00      10/12490       Piece::LoadPiece_5SafPiece(Piece&) [39]
-                0.00    0.00      10/12490       Piece::LoadPiece_5BigS(Piece&) [30]
-                0.00    0.00     524/12490       Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [18]
-                0.00    0.00    2418/12490       Piece::~Piece() [20]
-                0.00    0.00    9365/12490       Game1v1::MinMaxAlphaBetaCompute(Board&, Player&, CoordinateSet<14, 14>**, Piece**, Player&, CoordinateSet<14, 14>**, Piece**, int (*)(Board const&, Player const&, Player const&), int, int, int, int, int const volatile&) [3]
-[17]     0.0    0.00    0.00   12490         Coordinate::~Coordinate() [17]
+                0.00    0.00       1/1           main [1]
+[16]     0.0    0.00    0.00       1         Game1v1::PutDownPiece(Piece const&, Coordinate const&, Game1v1::eGame1v1Player_t) [16]
+                0.00    0.00       1/159177      rules::RecalculateNKAroundCoord(Board const&, Coordinate const&, int, Player&) [7]
+                0.00    0.00       1/159569      rules::RecalculateInfluenceAreaAroundPiece(Board const&, Coordinate const&, std::vector<Coordinate, std::allocator<Coordinate> > const&, Player&) [8]
 -----------------------------------------------
-                0.00    0.00       2/88          Piece::LoadPiece_5TheUltimate(Piece&) [48]
-                0.00    0.00       2/88          Piece::LoadPiece_5BoringPiece(Piece&) [46]
-                0.00    0.00       2/88          Piece::LoadPiece_5SquareAppen(Piece&) [47]
-                0.00    0.00       2/88          Piece::LoadPiece_5MrT(Piece&) [28]
-                0.00    0.00       2/88          Piece::LoadPiece_5BigL(Piece&) [29]
-                0.00    0.00       2/88          Piece::LoadPiece_5HalfSquare(Piece&) [45]
-                0.00    0.00       2/88          Piece::LoadPiece_5Cross(Piece&) [31]
-                0.00    0.00       2/88          Piece::LoadPiece_5BigPenis(Piece&) [38]
-                0.00    0.00       2/88          Piece::LoadPiece_5CuntPiece(Piece&) [43]
-                0.00    0.00       2/88          Piece::LoadPiece_5WPiece(Piece&) [32]
-                0.00    0.00       2/88          Piece::LoadPiece_5SafPiece(Piece&) [39]
-                0.00    0.00       2/88          Piece::LoadPiece_5BigS(Piece&) [30]
-                0.00    0.00       2/88          Piece::LoadPiece_4FullSquare(Piece&) [44]
-                0.00    0.00       2/88          Piece::LoadPiece_4littleL(Piece&) [35]
-                0.00    0.00       2/88          Piece::LoadPiece_4LittleT(Piece&) [34]
-                0.00    0.00       2/88          Piece::LoadPiece_4LittleS(Piece&) [33]
-                0.00    0.00       2/88          Piece::LoadPiece_4LongPiece(Piece&) [42]
-                0.00    0.00       2/88          Piece::LoadPiece_3Triangle(Piece&) [37]
-                0.00    0.00       2/88          Piece::LoadPiece_3LongPiece(Piece&) [41]
-                0.00    0.00       2/88          Piece::LoadPiece_2TwoPiece(Piece&) [36]
-                0.00    0.00       2/88          Piece::LoadPiece_1BabyPiece(Piece&) [40]
-                0.00    0.00      46/88          Piece::Piece(ePieceType_t) [19]
-[18]     0.0    0.00    0.00      88         Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [18]
-                0.00    0.00     524/12490       Coordinate::~Coordinate() [17]
-                0.00    0.00      48/48          std::vector<Coordinate, std::allocator<Coordinate> >::_M_fill_insert(__gnu_cxx::__normal_iterator<Coordinate*, std::vector<Coordinate, std::allocator<Coordinate> > >, unsigned int, Coordinate const&) [22]
+                0.00    0.00      50/34104       Game1v1::MinMax(int (*)(Board const&, Player const&, Player const&), int, Game1v1::eGame1v1Player_t, Piece&, Coordinate&, int const volatile&, Coordinate const&, Piece const&) [2]
+                0.00    0.00   34054/34104       Game1v1::MinMaxAlphaBetaCompute(Board&, Player&, CoordinateSet<14, 14>**, ePieceType_t*, Player&, CoordinateSet<14, 14>**, ePieceType_t*, int (*)(Board const&, Player const&, Player const&), int, int, int, int, int const volatile&) [3]
+[23]     0.0    0.00    0.00   34104         Player::GetFirstNucleationPointSpiral(int&, Coordinate&) const [23]
 -----------------------------------------------
-                0.00    0.00       2/88          Game1v1::MinMax(int (*)(Board const&, Player const&, Player const&), int, Game1v1::eGame1v1Player_t, Piece&, Coordinate&, int const volatile&, Coordinate const&, Piece const&) [2]
+                0.00    0.00       3/15422       Piece::LoadPiece_1BabyPiece(Piece&) [35]
+                0.00    0.00       4/15422       Piece::LoadPiece_2TwoPiece(Piece&) [44]
+                0.00    0.00       5/15422       Game1v1::MinMax(int (*)(Board const&, Player const&, Player const&), int, Game1v1::eGame1v1Player_t, Piece&, Coordinate&, int const volatile&, Coordinate const&, Piece const&) [2]
+                0.00    0.00       6/15422       Piece::LoadPiece_3Triangle(Piece&) [45]
+                0.00    0.00       6/15422       Piece::LoadPiece_3LongPiece(Piece&) [48]
+                0.00    0.00       8/15422       Piece::LoadPiece_4FullSquare(Piece&) [51]
+                0.00    0.00       8/15422       Piece::LoadPiece_4littleL(Piece&) [43]
+                0.00    0.00       8/15422       Piece::LoadPiece_4LittleT(Piece&) [42]
+                0.00    0.00       8/15422       Piece::LoadPiece_4LittleS(Piece&) [41]
+                0.00    0.00       8/15422       Piece::LoadPiece_4LongPiece(Piece&) [49]
+                0.00    0.00      10/15422       Piece::LoadPiece_5TheUltimate(Piece&) [55]
+                0.00    0.00      10/15422       Piece::LoadPiece_5BoringPiece(Piece&) [53]
+                0.00    0.00      10/15422       Piece::LoadPiece_5SquareAppen(Piece&) [54]
+                0.00    0.00      10/15422       Piece::LoadPiece_5MrT(Piece&) [36]
+                0.00    0.00      10/15422       Piece::LoadPiece_5BigL(Piece&) [37]
+                0.00    0.00      10/15422       Piece::LoadPiece_5HalfSquare(Piece&) [52]
+                0.00    0.00      10/15422       Piece::LoadPiece_5Cross(Piece&) [39]
+                0.00    0.00      10/15422       Piece::LoadPiece_5BigPenis(Piece&) [46]
+                0.00    0.00      10/15422       Piece::LoadPiece_5CuntPiece(Piece&) [50]
+                0.00    0.00      10/15422       Piece::LoadPiece_5WPiece(Piece&) [40]
+                0.00    0.00      10/15422       Piece::LoadPiece_5SafPiece(Piece&) [47]
+                0.00    0.00      10/15422       Piece::LoadPiece_5BigS(Piece&) [38]
+                0.00    0.00      20/15422       std::list<std::vector<Coordinate, std::allocator<Coordinate> >, std::allocator<std::vector<Coordinate, std::allocator<Coordinate> > > >::operator=(std::list<std::vector<Coordinate, std::allocator<Coordinate> >, std::allocator<std::vector<Coordinate, std::allocator<Coordinate> > > > const&) [30]
+                0.00    0.00     522/15422       Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [26]
+                0.00    0.00    2401/15422       Piece::~Piece() [28]
+                0.00    0.00   12295/15422       Game1v1::MinMaxAlphaBetaCompute(Board&, Player&, CoordinateSet<14, 14>**, ePieceType_t*, Player&, CoordinateSet<14, 14>**, ePieceType_t*, int (*)(Board const&, Player const&, Player const&), int, int, int, int, int const volatile&) [3]
+[24]     0.0    0.00    0.00   15422         Coordinate::~Coordinate() [24]
+-----------------------------------------------
+                0.00    0.00       8/100         Game1v1::MinMax(int (*)(Board const&, Player const&, Player const&), int, Game1v1::eGame1v1Player_t, Piece&, Coordinate&, int const volatile&, Coordinate const&, Piece const&) [2]
+                0.00    0.00       8/100         std::list<std::vector<Coordinate, std::allocator<Coordinate> >, std::allocator<std::vector<Coordinate, std::allocator<Coordinate> > > >::operator=(std::list<std::vector<Coordinate, std::allocator<Coordinate> >, std::allocator<std::vector<Coordinate, std::allocator<Coordinate> > > > const&) [30]
+                0.00    0.00      84/100         Player::LoadPieces() [56]
+[25]     0.0    0.00    0.00     100         std::vector<Coordinate, std::allocator<Coordinate> >::operator=(std::vector<Coordinate, std::allocator<Coordinate> > const&) [25]
+-----------------------------------------------
+                0.00    0.00       2/88          Piece::LoadPiece_5TheUltimate(Piece&) [55]
+                0.00    0.00       2/88          Piece::LoadPiece_5BoringPiece(Piece&) [53]
+                0.00    0.00       2/88          Piece::LoadPiece_5SquareAppen(Piece&) [54]
+                0.00    0.00       2/88          Piece::LoadPiece_5MrT(Piece&) [36]
+                0.00    0.00       2/88          Piece::LoadPiece_5BigL(Piece&) [37]
+                0.00    0.00       2/88          Piece::LoadPiece_5HalfSquare(Piece&) [52]
+                0.00    0.00       2/88          Piece::LoadPiece_5Cross(Piece&) [39]
+                0.00    0.00       2/88          Piece::LoadPiece_5BigPenis(Piece&) [46]
+                0.00    0.00       2/88          Piece::LoadPiece_5CuntPiece(Piece&) [50]
+                0.00    0.00       2/88          Piece::LoadPiece_5WPiece(Piece&) [40]
+                0.00    0.00       2/88          Piece::LoadPiece_5SafPiece(Piece&) [47]
+                0.00    0.00       2/88          Piece::LoadPiece_5BigS(Piece&) [38]
+                0.00    0.00       2/88          Piece::LoadPiece_4FullSquare(Piece&) [51]
+                0.00    0.00       2/88          Piece::LoadPiece_4littleL(Piece&) [43]
+                0.00    0.00       2/88          Piece::LoadPiece_4LittleT(Piece&) [42]
+                0.00    0.00       2/88          Piece::LoadPiece_4LittleS(Piece&) [41]
+                0.00    0.00       2/88          Piece::LoadPiece_4LongPiece(Piece&) [49]
+                0.00    0.00       2/88          Piece::LoadPiece_3Triangle(Piece&) [45]
+                0.00    0.00       2/88          Piece::LoadPiece_3LongPiece(Piece&) [48]
+                0.00    0.00       2/88          Piece::LoadPiece_2TwoPiece(Piece&) [44]
+                0.00    0.00       3/88          Piece::LoadPiece_1BabyPiece(Piece&) [35]
+                0.00    0.00      45/88          Piece::Piece(ePieceType_t) [27]
+[26]     0.0    0.00    0.00      88         Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [26]
+                0.00    0.00     522/15422       Coordinate::~Coordinate() [24]
+                0.00    0.00      48/48          std::vector<Coordinate, std::allocator<Coordinate> >::_M_fill_insert(__gnu_cxx::__normal_iterator<Coordinate*, std::vector<Coordinate, std::allocator<Coordinate> > >, unsigned int, Coordinate const&) [29]
+-----------------------------------------------
+                0.00    0.00       1/88          Game1v1::RecalculateInflueceAreasInAllBoard() [14]
+                0.00    0.00       1/88          Game1v1::MinMax(int (*)(Board const&, Player const&, Player const&), int, Game1v1::eGame1v1Player_t, Piece&, Coordinate&, int const volatile&, Coordinate const&, Piece const&) [2]
                 0.00    0.00       2/88          main [1]
-                0.00    0.00      42/88          Player::LoadPieces() [49]
-                0.00    0.00      42/88          Player::Player(std::string, char, int, int, Coordinate const&) [50]
-[19]     0.0    0.00    0.00      88         Piece::Piece(ePieceType_t) [19]
-                0.00    0.00      46/88          Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [18]
-                0.00    0.00      42/42          Piece::BuildUpPrecalculatedRepresentations() [25]
-                0.00    0.00       2/2           Piece::LoadPiece_5TheUltimate(Piece&) [48]
-                0.00    0.00       2/2           Piece::LoadPiece_5BoringPiece(Piece&) [46]
-                0.00    0.00       2/2           Piece::LoadPiece_5SquareAppen(Piece&) [47]
-                0.00    0.00       2/2           Piece::LoadPiece_5MrT(Piece&) [28]
-                0.00    0.00       2/2           Piece::LoadPiece_5BigL(Piece&) [29]
-                0.00    0.00       2/2           Piece::LoadPiece_5HalfSquare(Piece&) [45]
-                0.00    0.00       2/2           Piece::LoadPiece_5Cross(Piece&) [31]
-                0.00    0.00       2/2           Piece::LoadPiece_5BigPenis(Piece&) [38]
-                0.00    0.00       2/2           Piece::LoadPiece_5CuntPiece(Piece&) [43]
-                0.00    0.00       2/2           Piece::LoadPiece_5WPiece(Piece&) [32]
-                0.00    0.00       2/2           Piece::LoadPiece_5SafPiece(Piece&) [39]
-                0.00    0.00       2/2           Piece::LoadPiece_5BigS(Piece&) [30]
-                0.00    0.00       2/2           Piece::LoadPiece_4FullSquare(Piece&) [44]
-                0.00    0.00       2/2           Piece::LoadPiece_4littleL(Piece&) [35]
-                0.00    0.00       2/2           Piece::LoadPiece_4LittleT(Piece&) [34]
-                0.00    0.00       2/2           Piece::LoadPiece_4LittleS(Piece&) [33]
-                0.00    0.00       2/2           Piece::LoadPiece_4LongPiece(Piece&) [42]
-                0.00    0.00       2/2           Piece::LoadPiece_3Triangle(Piece&) [37]
-                0.00    0.00       2/2           Piece::LoadPiece_3LongPiece(Piece&) [41]
-                0.00    0.00       2/2           Piece::LoadPiece_2TwoPiece(Piece&) [36]
-                0.00    0.00       2/2           Piece::LoadPiece_1BabyPiece(Piece&) [40]
+                0.00    0.00      42/88          Player::LoadPieces() [56]
+                0.00    0.00      42/88          Player::Player(std::string, char, int, int, Coordinate const&) [57]
+[27]     0.0    0.00    0.00      88         Piece::Piece(ePieceType_t) [27]
+                0.00    0.00      45/88          Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [26]
+                0.00    0.00      43/43          Piece::BuildUpPrecalculatedRepresentations() [32]
+                0.00    0.00       3/3           Piece::LoadPiece_1BabyPiece(Piece&) [35]
+                0.00    0.00       2/2           Piece::LoadPiece_5TheUltimate(Piece&) [55]
+                0.00    0.00       2/2           Piece::LoadPiece_5BoringPiece(Piece&) [53]
+                0.00    0.00       2/2           Piece::LoadPiece_5SquareAppen(Piece&) [54]
+                0.00    0.00       2/2           Piece::LoadPiece_5MrT(Piece&) [36]
+                0.00    0.00       2/2           Piece::LoadPiece_5BigL(Piece&) [37]
+                0.00    0.00       2/2           Piece::LoadPiece_5HalfSquare(Piece&) [52]
+                0.00    0.00       2/2           Piece::LoadPiece_5Cross(Piece&) [39]
+                0.00    0.00       2/2           Piece::LoadPiece_5BigPenis(Piece&) [46]
+                0.00    0.00       2/2           Piece::LoadPiece_5CuntPiece(Piece&) [50]
+                0.00    0.00       2/2           Piece::LoadPiece_5WPiece(Piece&) [40]
+                0.00    0.00       2/2           Piece::LoadPiece_5SafPiece(Piece&) [47]
+                0.00    0.00       2/2           Piece::LoadPiece_5BigS(Piece&) [38]
+                0.00    0.00       2/2           Piece::LoadPiece_4FullSquare(Piece&) [51]
+                0.00    0.00       2/2           Piece::LoadPiece_4littleL(Piece&) [43]
+                0.00    0.00       2/2           Piece::LoadPiece_4LittleT(Piece&) [42]
+                0.00    0.00       2/2           Piece::LoadPiece_4LittleS(Piece&) [41]
+                0.00    0.00       2/2           Piece::LoadPiece_4LongPiece(Piece&) [49]
+                0.00    0.00       2/2           Piece::LoadPiece_3Triangle(Piece&) [45]
+                0.00    0.00       2/2           Piece::LoadPiece_3LongPiece(Piece&) [48]
+                0.00    0.00       2/2           Piece::LoadPiece_2TwoPiece(Piece&) [44]
 -----------------------------------------------
-                0.00    0.00       2/88          Game1v1::MinMax(int (*)(Board const&, Player const&, Player const&), int, Game1v1::eGame1v1Player_t, Piece&, Coordinate&, int const volatile&, Coordinate const&, Piece const&) [2]
+                0.00    0.00       1/88          Game1v1::RecalculateInflueceAreasInAllBoard() [14]
+                0.00    0.00       1/88          Game1v1::MinMax(int (*)(Board const&, Player const&, Player const&), int, Game1v1::eGame1v1Player_t, Piece&, Coordinate&, int const volatile&, Coordinate const&, Piece const&) [2]
                 0.00    0.00       2/88          main [1]
-                0.00    0.00      42/88          Player::~Player() [51]
-                0.00    0.00      42/88          Player::LoadPieces() [49]
-[20]     0.0    0.00    0.00      88         Piece::~Piece() [20]
-                0.00    0.00    2418/12490       Coordinate::~Coordinate() [17]
+                0.00    0.00      42/88          Player::~Player() [58]
+                0.00    0.00      42/88          Player::LoadPieces() [56]
+[28]     0.0    0.00    0.00      88         Piece::~Piece() [28]
+                0.00    0.00    2401/15422       Coordinate::~Coordinate() [24]
 -----------------------------------------------
-                0.00    0.00       4/88          Game1v1::MinMax(int (*)(Board const&, Player const&, Player const&), int, Game1v1::eGame1v1Player_t, Piece&, Coordinate&, int const volatile&, Coordinate const&, Piece const&) [2]
-                0.00    0.00      84/88          Player::LoadPieces() [49]
-[21]     0.0    0.00    0.00      88         std::vector<Coordinate, std::allocator<Coordinate> >::operator=(std::vector<Coordinate, std::allocator<Coordinate> > const&) [21]
+                0.00    0.00      48/48          Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [26]
+[29]     0.0    0.00    0.00      48         std::vector<Coordinate, std::allocator<Coordinate> >::_M_fill_insert(__gnu_cxx::__normal_iterator<Coordinate*, std::vector<Coordinate, std::allocator<Coordinate> > >, unsigned int, Coordinate const&) [29]
 -----------------------------------------------
-                0.00    0.00      48/48          Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [18]
-[22]     0.0    0.00    0.00      48         std::vector<Coordinate, std::allocator<Coordinate> >::_M_fill_insert(__gnu_cxx::__normal_iterator<Coordinate*, std::vector<Coordinate, std::allocator<Coordinate> > >, unsigned int, Coordinate const&) [22]
+                0.00    0.00       4/46          Game1v1::MinMax(int (*)(Board const&, Player const&, Player const&), int, Game1v1::eGame1v1Player_t, Piece&, Coordinate&, int const volatile&, Coordinate const&, Piece const&) [2]
+                0.00    0.00      42/46          Player::LoadPieces() [56]
+[30]     0.0    0.00    0.00      46         std::list<std::vector<Coordinate, std::allocator<Coordinate> >, std::allocator<std::vector<Coordinate, std::allocator<Coordinate> > > >::operator=(std::list<std::vector<Coordinate, std::allocator<Coordinate> >, std::allocator<std::vector<Coordinate, std::allocator<Coordinate> > > > const&) [30]
+                0.00    0.00      20/15422       Coordinate::~Coordinate() [24]
+                0.00    0.00       8/100         std::vector<Coordinate, std::allocator<Coordinate> >::operator=(std::vector<Coordinate, std::allocator<Coordinate> > const&) [25]
 -----------------------------------------------
-                0.00    0.00       2/44          Game1v1::MinMax(int (*)(Board const&, Player const&, Player const&), int, Game1v1::eGame1v1Player_t, Piece&, Coordinate&, int const volatile&, Coordinate const&, Piece const&) [2]
-                0.00    0.00      42/44          Player::LoadPieces() [49]
-[23]     0.0    0.00    0.00      44         std::list<std::vector<Coordinate, std::allocator<Coordinate> >, std::allocator<std::vector<Coordinate, std::allocator<Coordinate> > > >::operator=(std::list<std::vector<Coordinate, std::allocator<Coordinate> >, std::allocator<std::vector<Coordinate, std::allocator<Coordinate> > > > const&) [23]
+                0.00    0.00       4/46          Game1v1::MinMax(int (*)(Board const&, Player const&, Player const&), int, Game1v1::eGame1v1Player_t, Piece&, Coordinate&, int const volatile&, Coordinate const&, Piece const&) [2]
+                0.00    0.00      42/46          Player::LoadPieces() [56]
+[31]     0.0    0.00    0.00      46         std::list<unsigned long long, std::allocator<unsigned long long> >::operator=(std::list<unsigned long long, std::allocator<unsigned long long> > const&) [31]
 -----------------------------------------------
-                0.00    0.00       2/44          Game1v1::MinMax(int (*)(Board const&, Player const&, Player const&), int, Game1v1::eGame1v1Player_t, Piece&, Coordinate&, int const volatile&, Coordinate const&, Piece const&) [2]
-                0.00    0.00      42/44          Player::LoadPieces() [49]
-[24]     0.0    0.00    0.00      44         std::list<unsigned long long, std::allocator<unsigned long long> >::operator=(std::list<unsigned long long, std::allocator<unsigned long long> > const&) [24]
+                0.00    0.00      43/43          Piece::Piece(ePieceType_t) [27]
+[32]     0.0    0.00    0.00      43         Piece::BuildUpPrecalculatedRepresentations() [32]
 -----------------------------------------------
-                0.00    0.00      42/42          Piece::Piece(ePieceType_t) [19]
-[25]     0.0    0.00    0.00      42         Piece::BuildUpPrecalculatedRepresentations() [25]
+                0.00    0.00       4/20          global constructors keyed to _ZN11AboutDialogC2EP15_GtkAboutDialogRKN4Glib6RefPtrIN3Gtk7BuilderEEE [62]
+                0.00    0.00       4/20          global constructors keyed to _ZN12ConfigDialogC2EP10_GtkDialogRKN4Glib6RefPtrIN3Gtk7BuilderEEE [63]
+                0.00    0.00       4/20          global constructors keyed to _ZN10MainWindow14ProgressUpdateEf [61]
+                0.00    0.00       4/20          global constructors keyed to _ZN14TableEditPieceC2EP9_GtkTableRKN4Glib6RefPtrIN3Gtk7BuilderEEE [66]
+                0.00    0.00       4/20          global constructors keyed to main [75]
+[33]     0.0    0.00    0.00      20         std::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [33]
 -----------------------------------------------
-                0.00    0.00       4/20          global constructors keyed to _ZN11AboutDialogC2EP15_GtkAboutDialogRKN4Glib6RefPtrIN3Gtk7BuilderEEE [56]
-                0.00    0.00       4/20          global constructors keyed to _ZN12ConfigDialogC2EP10_GtkDialogRKN4Glib6RefPtrIN3Gtk7BuilderEEE [57]
-                0.00    0.00       4/20          global constructors keyed to _ZN10MainWindow14ProgressUpdateEf [55]
-                0.00    0.00       4/20          global constructors keyed to _ZN14TableEditPieceC2EP9_GtkTableRKN4Glib6RefPtrIN3Gtk7BuilderEEE [60]
-                0.00    0.00       4/20          global constructors keyed to main [69]
-[26]     0.0    0.00    0.00      20         std::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [26]
+                0.00    0.00       4/4           Game1v1::SaveGame(std::ostream&) [59]
+[34]     0.0    0.00    0.00       4         Player::PrintAvailablePieces(std::ostream&) const [34]
 -----------------------------------------------
-                0.00    0.00       4/4           Game1v1::SaveGame(std::ostream&) [53]
-[27]     0.0    0.00    0.00       4         Player::PrintAvailablePieces(std::ostream&) const [27]
+                0.00    0.00       3/3           Piece::Piece(ePieceType_t) [27]
+[35]     0.0    0.00    0.00       3         Piece::LoadPiece_1BabyPiece(Piece&) [35]
+                0.00    0.00       3/88          Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [26]
+                0.00    0.00       3/15422       Coordinate::~Coordinate() [24]
 -----------------------------------------------
-                0.00    0.00       2/2           Piece::Piece(ePieceType_t) [19]
-[28]     0.0    0.00    0.00       2         Piece::LoadPiece_5MrT(Piece&) [28]
-                0.00    0.00      10/12490       Coordinate::~Coordinate() [17]
-                0.00    0.00       2/88          Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [18]
+                0.00    0.00       2/2           Piece::Piece(ePieceType_t) [27]
+[36]     0.0    0.00    0.00       2         Piece::LoadPiece_5MrT(Piece&) [36]
+                0.00    0.00      10/15422       Coordinate::~Coordinate() [24]
+                0.00    0.00       2/88          Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [26]
 -----------------------------------------------
-                0.00    0.00       2/2           Piece::Piece(ePieceType_t) [19]
-[29]     0.0    0.00    0.00       2         Piece::LoadPiece_5BigL(Piece&) [29]
-                0.00    0.00      10/12490       Coordinate::~Coordinate() [17]
-                0.00    0.00       2/88          Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [18]
+                0.00    0.00       2/2           Piece::Piece(ePieceType_t) [27]
+[37]     0.0    0.00    0.00       2         Piece::LoadPiece_5BigL(Piece&) [37]
+                0.00    0.00      10/15422       Coordinate::~Coordinate() [24]
+                0.00    0.00       2/88          Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [26]
 -----------------------------------------------
-                0.00    0.00       2/2           Piece::Piece(ePieceType_t) [19]
-[30]     0.0    0.00    0.00       2         Piece::LoadPiece_5BigS(Piece&) [30]
-                0.00    0.00      10/12490       Coordinate::~Coordinate() [17]
-                0.00    0.00       2/88          Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [18]
+                0.00    0.00       2/2           Piece::Piece(ePieceType_t) [27]
+[38]     0.0    0.00    0.00       2         Piece::LoadPiece_5BigS(Piece&) [38]
+                0.00    0.00      10/15422       Coordinate::~Coordinate() [24]
+                0.00    0.00       2/88          Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [26]
 -----------------------------------------------
-                0.00    0.00       2/2           Piece::Piece(ePieceType_t) [19]
-[31]     0.0    0.00    0.00       2         Piece::LoadPiece_5Cross(Piece&) [31]
-                0.00    0.00      10/12490       Coordinate::~Coordinate() [17]
-                0.00    0.00       2/88          Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [18]
+                0.00    0.00       2/2           Piece::Piece(ePieceType_t) [27]
+[39]     0.0    0.00    0.00       2         Piece::LoadPiece_5Cross(Piece&) [39]
+                0.00    0.00      10/15422       Coordinate::~Coordinate() [24]
+                0.00    0.00       2/88          Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [26]
 -----------------------------------------------
-                0.00    0.00       2/2           Piece::Piece(ePieceType_t) [19]
-[32]     0.0    0.00    0.00       2         Piece::LoadPiece_5WPiece(Piece&) [32]
-                0.00    0.00      10/12490       Coordinate::~Coordinate() [17]
-                0.00    0.00       2/88          Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [18]
+                0.00    0.00       2/2           Piece::Piece(ePieceType_t) [27]
+[40]     0.0    0.00    0.00       2         Piece::LoadPiece_5WPiece(Piece&) [40]
+                0.00    0.00      10/15422       Coordinate::~Coordinate() [24]
+                0.00    0.00       2/88          Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [26]
 -----------------------------------------------
-                0.00    0.00       2/2           Piece::Piece(ePieceType_t) [19]
-[33]     0.0    0.00    0.00       2         Piece::LoadPiece_4LittleS(Piece&) [33]
-                0.00    0.00       8/12490       Coordinate::~Coordinate() [17]
-                0.00    0.00       2/88          Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [18]
+                0.00    0.00       2/2           Piece::Piece(ePieceType_t) [27]
+[41]     0.0    0.00    0.00       2         Piece::LoadPiece_4LittleS(Piece&) [41]
+                0.00    0.00       8/15422       Coordinate::~Coordinate() [24]
+                0.00    0.00       2/88          Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [26]
 -----------------------------------------------
-                0.00    0.00       2/2           Piece::Piece(ePieceType_t) [19]
-[34]     0.0    0.00    0.00       2         Piece::LoadPiece_4LittleT(Piece&) [34]
-                0.00    0.00       8/12490       Coordinate::~Coordinate() [17]
-                0.00    0.00       2/88          Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [18]
+                0.00    0.00       2/2           Piece::Piece(ePieceType_t) [27]
+[42]     0.0    0.00    0.00       2         Piece::LoadPiece_4LittleT(Piece&) [42]
+                0.00    0.00       8/15422       Coordinate::~Coordinate() [24]
+                0.00    0.00       2/88          Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [26]
 -----------------------------------------------
-                0.00    0.00       2/2           Piece::Piece(ePieceType_t) [19]
-[35]     0.0    0.00    0.00       2         Piece::LoadPiece_4littleL(Piece&) [35]
-                0.00    0.00       8/12490       Coordinate::~Coordinate() [17]
-                0.00    0.00       2/88          Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [18]
+                0.00    0.00       2/2           Piece::Piece(ePieceType_t) [27]
+[43]     0.0    0.00    0.00       2         Piece::LoadPiece_4littleL(Piece&) [43]
+                0.00    0.00       8/15422       Coordinate::~Coordinate() [24]
+                0.00    0.00       2/88          Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [26]
 -----------------------------------------------
-                0.00    0.00       2/2           Piece::Piece(ePieceType_t) [19]
-[36]     0.0    0.00    0.00       2         Piece::LoadPiece_2TwoPiece(Piece&) [36]
-                0.00    0.00       4/12490       Coordinate::~Coordinate() [17]
-                0.00    0.00       2/88          Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [18]
+                0.00    0.00       2/2           Piece::Piece(ePieceType_t) [27]
+[44]     0.0    0.00    0.00       2         Piece::LoadPiece_2TwoPiece(Piece&) [44]
+                0.00    0.00       4/15422       Coordinate::~Coordinate() [24]
+                0.00    0.00       2/88          Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [26]
 -----------------------------------------------
-                0.00    0.00       2/2           Piece::Piece(ePieceType_t) [19]
-[37]     0.0    0.00    0.00       2         Piece::LoadPiece_3Triangle(Piece&) [37]
-                0.00    0.00       6/12490       Coordinate::~Coordinate() [17]
-                0.00    0.00       2/88          Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [18]
+                0.00    0.00       2/2           Piece::Piece(ePieceType_t) [27]
+[45]     0.0    0.00    0.00       2         Piece::LoadPiece_3Triangle(Piece&) [45]
+                0.00    0.00       6/15422       Coordinate::~Coordinate() [24]
+                0.00    0.00       2/88          Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [26]
 -----------------------------------------------
-                0.00    0.00       2/2           Piece::Piece(ePieceType_t) [19]
-[38]     0.0    0.00    0.00       2         Piece::LoadPiece_5BigPenis(Piece&) [38]
-                0.00    0.00      10/12490       Coordinate::~Coordinate() [17]
-                0.00    0.00       2/88          Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [18]
+                0.00    0.00       2/2           Piece::Piece(ePieceType_t) [27]
+[46]     0.0    0.00    0.00       2         Piece::LoadPiece_5BigPenis(Piece&) [46]
+                0.00    0.00      10/15422       Coordinate::~Coordinate() [24]
+                0.00    0.00       2/88          Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [26]
 -----------------------------------------------
-                0.00    0.00       2/2           Piece::Piece(ePieceType_t) [19]
-[39]     0.0    0.00    0.00       2         Piece::LoadPiece_5SafPiece(Piece&) [39]
-                0.00    0.00      10/12490       Coordinate::~Coordinate() [17]
-                0.00    0.00       2/88          Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [18]
+                0.00    0.00       2/2           Piece::Piece(ePieceType_t) [27]
+[47]     0.0    0.00    0.00       2         Piece::LoadPiece_5SafPiece(Piece&) [47]
+                0.00    0.00      10/15422       Coordinate::~Coordinate() [24]
+                0.00    0.00       2/88          Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [26]
 -----------------------------------------------
-                0.00    0.00       2/2           Piece::Piece(ePieceType_t) [19]
-[40]     0.0    0.00    0.00       2         Piece::LoadPiece_1BabyPiece(Piece&) [40]
-                0.00    0.00       2/88          Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [18]
-                0.00    0.00       2/12490       Coordinate::~Coordinate() [17]
+                0.00    0.00       2/2           Piece::Piece(ePieceType_t) [27]
+[48]     0.0    0.00    0.00       2         Piece::LoadPiece_3LongPiece(Piece&) [48]
+                0.00    0.00       6/15422       Coordinate::~Coordinate() [24]
+                0.00    0.00       2/88          Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [26]
 -----------------------------------------------
-                0.00    0.00       2/2           Piece::Piece(ePieceType_t) [19]
-[41]     0.0    0.00    0.00       2         Piece::LoadPiece_3LongPiece(Piece&) [41]
-                0.00    0.00       6/12490       Coordinate::~Coordinate() [17]
-                0.00    0.00       2/88          Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [18]
+                0.00    0.00       2/2           Piece::Piece(ePieceType_t) [27]
+[49]     0.0    0.00    0.00       2         Piece::LoadPiece_4LongPiece(Piece&) [49]
+                0.00    0.00       8/15422       Coordinate::~Coordinate() [24]
+                0.00    0.00       2/88          Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [26]
 -----------------------------------------------
-                0.00    0.00       2/2           Piece::Piece(ePieceType_t) [19]
-[42]     0.0    0.00    0.00       2         Piece::LoadPiece_4LongPiece(Piece&) [42]
-                0.00    0.00       8/12490       Coordinate::~Coordinate() [17]
-                0.00    0.00       2/88          Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [18]
+                0.00    0.00       2/2           Piece::Piece(ePieceType_t) [27]
+[50]     0.0    0.00    0.00       2         Piece::LoadPiece_5CuntPiece(Piece&) [50]
+                0.00    0.00      10/15422       Coordinate::~Coordinate() [24]
+                0.00    0.00       2/88          Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [26]
 -----------------------------------------------
-                0.00    0.00       2/2           Piece::Piece(ePieceType_t) [19]
-[43]     0.0    0.00    0.00       2         Piece::LoadPiece_5CuntPiece(Piece&) [43]
-                0.00    0.00      10/12490       Coordinate::~Coordinate() [17]
-                0.00    0.00       2/88          Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [18]
+                0.00    0.00       2/2           Piece::Piece(ePieceType_t) [27]
+[51]     0.0    0.00    0.00       2         Piece::LoadPiece_4FullSquare(Piece&) [51]
+                0.00    0.00       8/15422       Coordinate::~Coordinate() [24]
+                0.00    0.00       2/88          Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [26]
 -----------------------------------------------
-                0.00    0.00       2/2           Piece::Piece(ePieceType_t) [19]
-[44]     0.0    0.00    0.00       2         Piece::LoadPiece_4FullSquare(Piece&) [44]
-                0.00    0.00       8/12490       Coordinate::~Coordinate() [17]
-                0.00    0.00       2/88          Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [18]
+                0.00    0.00       2/2           Piece::Piece(ePieceType_t) [27]
+[52]     0.0    0.00    0.00       2         Piece::LoadPiece_5HalfSquare(Piece&) [52]
+                0.00    0.00      10/15422       Coordinate::~Coordinate() [24]
+                0.00    0.00       2/88          Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [26]
 -----------------------------------------------
-                0.00    0.00       2/2           Piece::Piece(ePieceType_t) [19]
-[45]     0.0    0.00    0.00       2         Piece::LoadPiece_5HalfSquare(Piece&) [45]
-                0.00    0.00      10/12490       Coordinate::~Coordinate() [17]
-                0.00    0.00       2/88          Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [18]
+                0.00    0.00       2/2           Piece::Piece(ePieceType_t) [27]
+[53]     0.0    0.00    0.00       2         Piece::LoadPiece_5BoringPiece(Piece&) [53]
+                0.00    0.00      10/15422       Coordinate::~Coordinate() [24]
+                0.00    0.00       2/88          Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [26]
 -----------------------------------------------
-                0.00    0.00       2/2           Piece::Piece(ePieceType_t) [19]
-[46]     0.0    0.00    0.00       2         Piece::LoadPiece_5BoringPiece(Piece&) [46]
-                0.00    0.00      10/12490       Coordinate::~Coordinate() [17]
-                0.00    0.00       2/88          Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [18]
+                0.00    0.00       2/2           Piece::Piece(ePieceType_t) [27]
+[54]     0.0    0.00    0.00       2         Piece::LoadPiece_5SquareAppen(Piece&) [54]
+                0.00    0.00      10/15422       Coordinate::~Coordinate() [24]
+                0.00    0.00       2/88          Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [26]
 -----------------------------------------------
-                0.00    0.00       2/2           Piece::Piece(ePieceType_t) [19]
-[47]     0.0    0.00    0.00       2         Piece::LoadPiece_5SquareAppen(Piece&) [47]
-                0.00    0.00      10/12490       Coordinate::~Coordinate() [17]
-                0.00    0.00       2/88          Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [18]
+                0.00    0.00       2/2           Piece::Piece(ePieceType_t) [27]
+[55]     0.0    0.00    0.00       2         Piece::LoadPiece_5TheUltimate(Piece&) [55]
+                0.00    0.00      10/15422       Coordinate::~Coordinate() [24]
+                0.00    0.00       2/88          Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [26]
 -----------------------------------------------
-                0.00    0.00       2/2           Piece::Piece(ePieceType_t) [19]
-[48]     0.0    0.00    0.00       2         Piece::LoadPiece_5TheUltimate(Piece&) [48]
-                0.00    0.00      10/12490       Coordinate::~Coordinate() [17]
-                0.00    0.00       2/88          Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [18]
+                0.00    0.00       2/2           Player::Player(std::string, char, int, int, Coordinate const&) [57]
+[56]     0.0    0.00    0.00       2         Player::LoadPieces() [56]
+                0.00    0.00      84/100         std::vector<Coordinate, std::allocator<Coordinate> >::operator=(std::vector<Coordinate, std::allocator<Coordinate> > const&) [25]
+                0.00    0.00      42/88          Piece::Piece(ePieceType_t) [27]
+                0.00    0.00      42/46          std::list<std::vector<Coordinate, std::allocator<Coordinate> >, std::allocator<std::vector<Coordinate, std::allocator<Coordinate> > > >::operator=(std::list<std::vector<Coordinate, std::allocator<Coordinate> >, std::allocator<std::vector<Coordinate, std::allocator<Coordinate> > > > const&) [30]
+                0.00    0.00      42/46          std::list<unsigned long long, std::allocator<unsigned long long> >::operator=(std::list<unsigned long long, std::allocator<unsigned long long> > const&) [31]
+                0.00    0.00      42/88          Piece::~Piece() [28]
 -----------------------------------------------
-                0.00    0.00       2/2           Player::Player(std::string, char, int, int, Coordinate const&) [50]
-[49]     0.0    0.00    0.00       2         Player::LoadPieces() [49]
-                0.00    0.00      84/88          std::vector<Coordinate, std::allocator<Coordinate> >::operator=(std::vector<Coordinate, std::allocator<Coordinate> > const&) [21]
-                0.00    0.00      42/88          Piece::Piece(ePieceType_t) [19]
-                0.00    0.00      42/44          std::list<std::vector<Coordinate, std::allocator<Coordinate> >, std::allocator<std::vector<Coordinate, std::allocator<Coordinate> > > >::operator=(std::list<std::vector<Coordinate, std::allocator<Coordinate> >, std::allocator<std::vector<Coordinate, std::allocator<Coordinate> > > > const&) [23]
-                0.00    0.00      42/44          std::list<unsigned long long, std::allocator<unsigned long long> >::operator=(std::list<unsigned long long, std::allocator<unsigned long long> > const&) [24]
-                0.00    0.00      42/88          Piece::~Piece() [20]
+                0.00    0.00       2/2           Game1v1::Game1v1(Coordinate const&, Coordinate const&) [78]
+[57]     0.0    0.00    0.00       2         Player::Player(std::string, char, int, int, Coordinate const&) [57]
+                0.00    0.00      42/88          Piece::Piece(ePieceType_t) [27]
+                0.00    0.00       2/2           Player::LoadPieces() [56]
 -----------------------------------------------
-                0.00    0.00       2/2           Game1v1::Game1v1(Coordinate const&, Coordinate const&) [73]
-[50]     0.0    0.00    0.00       2         Player::Player(std::string, char, int, int, Coordinate const&) [50]
-                0.00    0.00      42/88          Piece::Piece(ePieceType_t) [19]
-                0.00    0.00       2/2           Player::LoadPieces() [49]
------------------------------------------------
-                0.00    0.00       2/2           Game1v1::~Game1v1() [74]
-[51]     0.0    0.00    0.00       2         Player::~Player() [51]
-                0.00    0.00      42/88          Piece::~Piece() [20]
------------------------------------------------
-                0.00    0.00       1/2           Game1v1::LoadGame(std::istream&) [72]
-                0.00    0.00       1/2           Game1v1::Game1v1(Coordinate const&, Coordinate const&) [73]
-[52]     0.0    0.00    0.00       2         Game1v1::RecalculateNKInAllBoard(Board const&, Player&, Player&) [52]
-                0.00    0.00     784/208029      Rules::IsNucleationPointCompute(Board const&, Player const&, Coordinate const&) [15]
+                0.00    0.00       2/2           Game1v1::~Game1v1() [79]
+[58]     0.0    0.00    0.00       2         Player::~Player() [58]
+                0.00    0.00      42/88          Piece::~Piece() [28]
 -----------------------------------------------
                 0.00    0.00       2/2           main [1]
-[53]     0.0    0.00    0.00       2         Game1v1::SaveGame(std::ostream&) [53]
-                0.00    0.00       4/4           Player::PrintAvailablePieces(std::ostream&) const [27]
-                0.00    0.00       2/2           Board::PrintBoard(std::ostream&) const [54]
+[59]     0.0    0.00    0.00       2         Game1v1::SaveGame(std::ostream&) [59]
+                0.00    0.00       4/4           Player::PrintAvailablePieces(std::ostream&) const [34]
+                0.00    0.00       2/2           Board::PrintBoard(std::ostream&) const [60]
 -----------------------------------------------
-                0.00    0.00       2/2           Game1v1::SaveGame(std::ostream&) [53]
-[54]     0.0    0.00    0.00       2         Board::PrintBoard(std::ostream&) const [54]
+                0.00    0.00       2/2           Game1v1::SaveGame(std::ostream&) [59]
+[60]     0.0    0.00    0.00       2         Board::PrintBoard(std::ostream&) const [60]
 -----------------------------------------------
-                0.00    0.00       1/1           __do_global_ctors_aux [402]
-[55]     0.0    0.00    0.00       1         global constructors keyed to _ZN10MainWindow14ProgressUpdateEf [55]
-                0.00    0.00       4/20          std::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [26]
+                0.00    0.00       1/1           __do_global_ctors_aux [414]
+[61]     0.0    0.00    0.00       1         global constructors keyed to _ZN10MainWindow14ProgressUpdateEf [61]
+                0.00    0.00       4/20          std::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [33]
 -----------------------------------------------
-                0.00    0.00       1/1           __do_global_ctors_aux [402]
-[56]     0.0    0.00    0.00       1         global constructors keyed to _ZN11AboutDialogC2EP15_GtkAboutDialogRKN4Glib6RefPtrIN3Gtk7BuilderEEE [56]
-                0.00    0.00       4/20          std::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [26]
+                0.00    0.00       1/1           __do_global_ctors_aux [414]
+[62]     0.0    0.00    0.00       1         global constructors keyed to _ZN11AboutDialogC2EP15_GtkAboutDialogRKN4Glib6RefPtrIN3Gtk7BuilderEEE [62]
+                0.00    0.00       4/20          std::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [33]
 -----------------------------------------------
-                0.00    0.00       1/1           __do_global_ctors_aux [402]
-[57]     0.0    0.00    0.00       1         global constructors keyed to _ZN12ConfigDialogC2EP10_GtkDialogRKN4Glib6RefPtrIN3Gtk7BuilderEEE [57]
-                0.00    0.00       4/20          std::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [26]
+                0.00    0.00       1/1           __do_global_ctors_aux [414]
+[63]     0.0    0.00    0.00       1         global constructors keyed to _ZN12ConfigDialogC2EP10_GtkDialogRKN4Glib6RefPtrIN3Gtk7BuilderEEE [63]
+                0.00    0.00       4/20          std::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [33]
 -----------------------------------------------
-                0.00    0.00       1/1           __do_global_ctors_aux [402]
-[58]     0.0    0.00    0.00       1         global constructors keyed to _ZN13Game1v1ConfigC2Ev [58]
+                0.00    0.00       1/1           __do_global_ctors_aux [414]
+[64]     0.0    0.00    0.00       1         global constructors keyed to _ZN13Game1v1ConfigC2Ev [64]
 -----------------------------------------------
-                0.00    0.00       1/1           __do_global_ctors_aux [402]
-[59]     0.0    0.00    0.00       1         global constructors keyed to _ZN14StopWatchLabelC2EjSs [59]
+                0.00    0.00       1/1           __do_global_ctors_aux [414]
+[65]     0.0    0.00    0.00       1         global constructors keyed to _ZN14StopWatchLabelC2EjRKSs [65]
 -----------------------------------------------
-                0.00    0.00       1/1           __do_global_ctors_aux [402]
-[60]     0.0    0.00    0.00       1         global constructors keyed to _ZN14TableEditPieceC2EP9_GtkTableRKN4Glib6RefPtrIN3Gtk7BuilderEEE [60]
-                0.00    0.00       4/20          std::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [26]
+                0.00    0.00       1/1           __do_global_ctors_aux [414]
+[66]     0.0    0.00    0.00       1         global constructors keyed to _ZN14TableEditPieceC2EP9_GtkTableRKN4Glib6RefPtrIN3Gtk7BuilderEEE [66]
+                0.00    0.00       4/20          std::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [33]
 -----------------------------------------------
-                0.00    0.00       1/1           __do_global_ctors_aux [402]
-[61]     0.0    0.00    0.00       1         global constructors keyed to _ZN16DrawingAreaBoardC2ERK5Board [61]
+                0.00    0.00       1/1           __do_global_ctors_aux [414]
+[67]     0.0    0.00    0.00       1         global constructors keyed to _ZN16DrawingAreaBoardC2ERK5Board [67]
 -----------------------------------------------
-                0.00    0.00       1/1           __do_global_ctors_aux [402]
-[62]     0.0    0.00    0.00       1         global constructors keyed to _ZN19GameTotalAllocationC2Eii [62]
+                0.00    0.00       1/1           __do_global_ctors_aux [414]
+[68]     0.0    0.00    0.00       1         global constructors keyed to _ZN19GameTotalAllocationC2Eii [68]
 -----------------------------------------------
-                0.00    0.00       1/1           __do_global_ctors_aux [402]
-[63]     0.0    0.00    0.00       1         global constructors keyed to _ZN21DrawingAreaShowPiecesC2ERK6PlayerNS_14eOrientation_tE [63]
+                0.00    0.00       1/1           __do_global_ctors_aux [414]
+[69]     0.0    0.00    0.00       1         global constructors keyed to _ZN21DrawingAreaShowPiecesC2ERK6PlayerNS_14eOrientation_tE [69]
 -----------------------------------------------
-                0.00    0.00       1/1           __do_global_ctors_aux [402]
-[64]     0.0    0.00    0.00       1         global constructors keyed to _ZN22MainWindowWorkerThreadC2Ev [64]
+                0.00    0.00       1/1           __do_global_ctors_aux [414]
+[70]     0.0    0.00    0.00       1         global constructors keyed to _ZN22MainWindowWorkerThreadC2Ev [70]
 -----------------------------------------------
-                0.00    0.00       1/1           __do_global_ctors_aux [402]
-[65]     0.0    0.00    0.00       1         global constructors keyed to _ZN5BoardC2EiicPPc [65]
+                0.00    0.00       1/1           __do_global_ctors_aux [414]
+[71]     0.0    0.00    0.00       1         global constructors keyed to _ZN5BoardC2EiicPPc [71]
 -----------------------------------------------
-                0.00    0.00       1/1           __do_global_ctors_aux [402]
-[66]     0.0    0.00    0.00       1         global constructors keyed to _ZN5Piece16PieceDescriptionE [66]
+                0.00    0.00       1/1           __do_global_ctors_aux [414]
+[72]     0.0    0.00    0.00       1         global constructors keyed to _ZN5Piece16PieceDescriptionE [72]
 -----------------------------------------------
-                0.00    0.00       1/1           __do_global_ctors_aux [402]
-[67]     0.0    0.00    0.00       1         global constructors keyed to _ZN7Game1v1C2ERK10CoordinateS2_ [67]
+                0.00    0.00       1/1           __do_global_ctors_aux [414]
+[73]     0.0    0.00    0.00       1         global constructors keyed to _ZN7Game1v1C2ERK10CoordinateS2_ [73]
 -----------------------------------------------
-                0.00    0.00       1/1           __do_global_ctors_aux [402]
-[68]     0.0    0.00    0.00       1         global constructors keyed to _ZN9Heuristic15m_heuristicDataE [68]
+                0.00    0.00       1/1           __do_global_ctors_aux [414]
+[74]     0.0    0.00    0.00       1         global constructors keyed to _ZN9Heuristic15m_heuristicDataE [74]
 -----------------------------------------------
-                0.00    0.00       1/1           __do_global_ctors_aux [402]
-[69]     0.0    0.00    0.00       1         global constructors keyed to main [69]
-                0.00    0.00       4/20          std::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [26]
+                0.00    0.00       1/1           __do_global_ctors_aux [414]
+[75]     0.0    0.00    0.00       1         global constructors keyed to main [75]
+                0.00    0.00       4/20          std::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [33]
 -----------------------------------------------
-                0.00    0.00       1/1           Game1v1::Game1v1(Coordinate const&, Coordinate const&) [73]
-[70]     0.0    0.00    0.00       1         Board::Board(int, int, char, char**) [70]
------------------------------------------------
-                0.00    0.00       1/1           main [1]
-[71]     0.0    0.00    0.00       1         Board::~Board() [71]
+                0.00    0.00       1/1           Game1v1::Game1v1(Coordinate const&, Coordinate const&) [78]
+[76]     0.0    0.00    0.00       1         Board::Board(int, int, char, char**) [76]
 -----------------------------------------------
                 0.00    0.00       1/1           main [1]
-[72]     0.0    0.00    0.00       1         Game1v1::LoadGame(std::istream&) [72]
-                0.00    0.00       1/2           Game1v1::RecalculateNKInAllBoard(Board const&, Player&, Player&) [52]
+[77]     0.0    0.00    0.00       1         Board::~Board() [77]
 -----------------------------------------------
                 0.00    0.00       1/1           main [1]
-[73]     0.0    0.00    0.00       1         Game1v1::Game1v1(Coordinate const&, Coordinate const&) [73]
-                0.00    0.00       2/2           Player::Player(std::string, char, int, int, Coordinate const&) [50]
-                0.00    0.00       1/1           Board::Board(int, int, char, char**) [70]
-                0.00    0.00       1/2           Game1v1::RecalculateNKInAllBoard(Board const&, Player&, Player&) [52]
+[78]     0.0    0.00    0.00       1         Game1v1::Game1v1(Coordinate const&, Coordinate const&) [78]
+                0.00    0.00       2/2           Player::Player(std::string, char, int, int, Coordinate const&) [57]
+                0.00    0.00       1/1           Board::Board(int, int, char, char**) [76]
 -----------------------------------------------
                 0.00    0.00       1/1           main [1]
-[74]     0.0    0.00    0.00       1         Game1v1::~Game1v1() [74]
-                0.00    0.00       2/2           Player::~Player() [51]
+[79]     0.0    0.00    0.00       1         Game1v1::~Game1v1() [79]
+                0.00    0.00       2/2           Player::~Player() [58]
 -----------------------------------------------
 
  This table describes the call tree of the program, and was sorted by
@@ -588,26 +624,27 @@ index % time    self  children    called     name
 
 Index by function name
 
-  [55] global constructors keyed to _ZN10MainWindow14ProgressUpdateEf (gui_main_window.cpp) [33] Piece::LoadPiece_4LittleS(Piece&) [6] Rules::CalculateValidCoordsInNucleationPoint(Board const&, Player const&, Coordinate const&, std::vector<Coordinate, std::allocator<Coordinate> > const&, int, std::vector<Coordinate, std::allocator<Coordinate> >&)
-  [56] global constructors keyed to _ZN11AboutDialogC2EP15_GtkAboutDialogRKN4Glib6RefPtrIN3Gtk7BuilderEEE (gui_about_dialog.cpp) [34] Piece::LoadPiece_4LittleT(Piece&) [49] Player::LoadPieces()
-  [57] global constructors keyed to _ZN12ConfigDialogC2EP10_GtkDialogRKN4Glib6RefPtrIN3Gtk7BuilderEEE (gui_config_dialog.cpp) [35] Piece::LoadPiece_4littleL(Piece&) [50] Player::Player(std::string, char, int, int, Coordinate const&)
-  [58] global constructors keyed to _ZN13Game1v1ConfigC2Ev (gui_game1v1_config.cpp) [36] Piece::LoadPiece_2TwoPiece(Piece&) [51] Player::~Player()
-  [59] global constructors keyed to _ZN14StopWatchLabelC2EjSs (gui_stop_watch_label.cpp) [37] Piece::LoadPiece_3Triangle(Piece&) [9] Game1v1::PutDownPiece(Piece const&, Coordinate const&, Game1v1::eGame1v1Player_t)
-  [60] global constructors keyed to _ZN14TableEditPieceC2EP9_GtkTableRKN4Glib6RefPtrIN3Gtk7BuilderEEE (gui_table_edit_piece.cpp) [38] Piece::LoadPiece_5BigPenis(Piece&) [3] Game1v1::MinMaxAlphaBetaCompute(Board&, Player&, CoordinateSet<14, 14>**, Piece**, Player&, CoordinateSet<14, 14>**, Piece**, int (*)(Board const&, Player const&, Player const&), int, int, int, int, int const volatile&)
-  [61] global constructors keyed to _ZN16DrawingAreaBoardC2ERK5Board (gui_drawing_area_board.cpp) [39] Piece::LoadPiece_5SafPiece(Piece&) [52] Game1v1::RecalculateNKInAllBoard(Board const&, Player&, Player&)
-  [62] global constructors keyed to _ZN19GameTotalAllocationC2Eii (game_total_allocation.cpp) [40] Piece::LoadPiece_1BabyPiece(Piece&) [2] Game1v1::MinMax(int (*)(Board const&, Player const&, Player const&), int, Game1v1::eGame1v1Player_t, Piece&, Coordinate&, int const volatile&, Coordinate const&, Piece const&)
-  [63] global constructors keyed to _ZN21DrawingAreaShowPiecesC2ERK6PlayerNS_14eOrientation_tE (gui_drawing_area_show_pieces.cpp) [41] Piece::LoadPiece_3LongPiece(Piece&) [72] Game1v1::LoadGame(std::istream&)
-  [64] global constructors keyed to _ZN22MainWindowWorkerThreadC2Ev (gui_main_window_worker_thread.cpp) [42] Piece::LoadPiece_4LongPiece(Piece&) [53] Game1v1::SaveGame(std::ostream&)
-  [65] global constructors keyed to _ZN5BoardC2EiicPPc (board.cpp) [43] Piece::LoadPiece_5CuntPiece(Piece&) [73] Game1v1::Game1v1(Coordinate const&, Coordinate const&)
-  [66] global constructors keyed to _ZN5Piece16PieceDescriptionE (piece.cpp) [44] Piece::LoadPiece_4FullSquare(Piece&) [74] Game1v1::~Game1v1()
-  [67] global constructors keyed to _ZN7Game1v1C2ERK10CoordinateS2_ (game1v1.cpp) [45] Piece::LoadPiece_5HalfSquare(Piece&) [4] Heuristic::CalculateNKWeightedv1(Board const&, Player const&, Player const&)
-  [68] global constructors keyed to _ZN9Heuristic15m_heuristicDataE (heuristic.cpp) [46] Piece::LoadPiece_5BoringPiece(Piece&) [54] Board::PrintBoard(std::ostream&) const
-  [69] global constructors keyed to main (main.cpp) [47] Piece::LoadPiece_5SquareAppen(Piece&) [27] Player::PrintAvailablePieces(std::ostream&) const
-  [17] Coordinate::~Coordinate() [48] Piece::LoadPiece_5TheUltimate(Piece&) [5] Player::GetNextNucleationPointSpiral(int&, Coordinate&) const
-  [70] Board::Board(int, int, char, char**) [25] Piece::BuildUpPrecalculatedRepresentations() [16] Player::GetFirstNucleationPointSpiral(int&, Coordinate&) const
-  [71] Board::~Board()        [18] Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [23] std::list<std::vector<Coordinate, std::allocator<Coordinate> >, std::allocator<std::vector<Coordinate, std::allocator<Coordinate> > > >::operator=(std::list<std::vector<Coordinate, std::allocator<Coordinate> >, std::allocator<std::vector<Coordinate, std::allocator<Coordinate> > > > const&)
-  [28] Piece::LoadPiece_5MrT(Piece&) [19] Piece::Piece(ePieceType_t) [24] std::list<unsigned long long, std::allocator<unsigned long long> >::operator=(std::list<unsigned long long, std::allocator<unsigned long long> > const&)
-  [29] Piece::LoadPiece_5BigL(Piece&) [20] Piece::~Piece() [22] std::vector<Coordinate, std::allocator<Coordinate> >::_M_fill_insert(__gnu_cxx::__normal_iterator<Coordinate*, std::vector<Coordinate, std::allocator<Coordinate> > >, unsigned int, Coordinate const&)
-  [30] Piece::LoadPiece_5BigS(Piece&) [7] Rules::IsCoordTouchingPlayer(Board const&, Coordinate const&, Player const&) [21] std::vector<Coordinate, std::allocator<Coordinate> >::operator=(std::vector<Coordinate, std::allocator<Coordinate> > const&)
-  [31] Piece::LoadPiece_5Cross(Piece&) [15] Rules::IsNucleationPointCompute(Board const&, Player const&, Coordinate const&) [26] std::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)
-  [32] Piece::LoadPiece_5WPiece(Piece&) [8] Rules::RecalculateNKAroundCoord(Board const&, Coordinate const&, int, Player&)
+  [61] global constructors keyed to _ZN10MainWindow14ProgressUpdateEf (gui_main_window.cpp) [42] Piece::LoadPiece_4LittleT(Piece&) [6] rules::CalculateValidCoordsInNucleationPoint(Board const&, Player const&, Coordinate const&, std::vector<Coordinate, std::allocator<Coordinate> > const&, int, std::vector<Coordinate, std::allocator<Coordinate> >&)
+  [62] global constructors keyed to _ZN11AboutDialogC2EP15_GtkAboutDialogRKN4Glib6RefPtrIN3Gtk7BuilderEEE (gui_about_dialog.cpp) [43] Piece::LoadPiece_4littleL(Piece&) [56] Player::LoadPieces()
+  [63] global constructors keyed to _ZN12ConfigDialogC2EP10_GtkDialogRKN4Glib6RefPtrIN3Gtk7BuilderEEE (gui_config_dialog.cpp) [44] Piece::LoadPiece_2TwoPiece(Piece&) [57] Player::Player(std::string, char, int, int, Coordinate const&)
+  [64] global constructors keyed to _ZN13Game1v1ConfigC2Ev (gui_game1v1_config.cpp) [45] Piece::LoadPiece_3Triangle(Piece&) [58] Player::~Player()
+  [65] global constructors keyed to _ZN14StopWatchLabelC2EjRKSs (gui_stop_watch_label.cpp) [46] Piece::LoadPiece_5BigPenis(Piece&) [5] Game1v1::RemovePiece(Board&, Coordinate const&, std::vector<Coordinate, std::allocator<Coordinate> > const&, int, Player&, Player&)
+  [66] global constructors keyed to _ZN14TableEditPieceC2EP9_GtkTableRKN4Glib6RefPtrIN3Gtk7BuilderEEE (gui_table_edit_piece.cpp) [47] Piece::LoadPiece_5SafPiece(Piece&) [16] Game1v1::PutDownPiece(Piece const&, Coordinate const&, Game1v1::eGame1v1Player_t)
+  [67] global constructors keyed to _ZN16DrawingAreaBoardC2ERK5Board (gui_drawing_area_board.cpp) [35] Piece::LoadPiece_1BabyPiece(Piece&) [3] Game1v1::MinMaxAlphaBetaCompute(Board&, Player&, CoordinateSet<14, 14>**, ePieceType_t*, Player&, CoordinateSet<14, 14>**, ePieceType_t*, int (*)(Board const&, Player const&, Player const&), int, int, int, int, int const volatile&)
+  [68] global constructors keyed to _ZN19GameTotalAllocationC2Eii (game_total_allocation.cpp) [48] Piece::LoadPiece_3LongPiece(Piece&) [15] Game1v1::RecalculateNKInAllBoard()
+  [69] global constructors keyed to _ZN21DrawingAreaShowPiecesC2ERK6PlayerNS_14eOrientation_tE (gui_drawing_area_show_pieces.cpp) [49] Piece::LoadPiece_4LongPiece(Piece&) [14] Game1v1::RecalculateInflueceAreasInAllBoard()
+  [70] global constructors keyed to _ZN22MainWindowWorkerThreadC2Ev (gui_main_window_worker_thread.cpp) [50] Piece::LoadPiece_5CuntPiece(Piece&) [2] Game1v1::MinMax(int (*)(Board const&, Player const&, Player const&), int, Game1v1::eGame1v1Player_t, Piece&, Coordinate&, int const volatile&, Coordinate const&, Piece const&)
+  [71] global constructors keyed to _ZN5BoardC2EiicPPc (board.cpp) [51] Piece::LoadPiece_4FullSquare(Piece&) [13] Game1v1::LoadGame(std::istream&)
+  [72] global constructors keyed to _ZN5Piece16PieceDescriptionE (piece.cpp) [52] Piece::LoadPiece_5HalfSquare(Piece&) [59] Game1v1::SaveGame(std::ostream&)
+  [73] global constructors keyed to _ZN7Game1v1C2ERK10CoordinateS2_ (game1v1.cpp) [53] Piece::LoadPiece_5BoringPiece(Piece&) [78] Game1v1::Game1v1(Coordinate const&, Coordinate const&)
+  [74] global constructors keyed to _ZN9Heuristic15m_heuristicDataE (heuristic.cpp) [54] Piece::LoadPiece_5SquareAppen(Piece&) [79] Game1v1::~Game1v1()
+  [75] global constructors keyed to main (main.cpp) [55] Piece::LoadPiece_5TheUltimate(Piece&) [4] Heuristic::CalculateInfluenceAreaWeighted(Board const&, Player const&, Player const&)
+  [24] Coordinate::~Coordinate() [32] Piece::BuildUpPrecalculatedRepresentations() [60] Board::PrintBoard(std::ostream&) const
+  [76] Board::Board(int, int, char, char**) [26] Piece::SetPiece(Coordinate*, unsigned char, bool, signed char, unsigned char) [34] Player::PrintAvailablePieces(std::ostream&) const
+  [77] Board::~Board()        [27] Piece::Piece(ePieceType_t) [9] Player::GetNextNucleationPointSpiral(int&, Coordinate&) const
+  [36] Piece::LoadPiece_5MrT(Piece&) [28] Piece::~Piece() [23] Player::GetFirstNucleationPointSpiral(int&, Coordinate&) const
+  [37] Piece::LoadPiece_5BigL(Piece&) [11] rules::IsCoordTouchingPlayer(Board const&, Coordinate const&, Player const&) [30] std::list<std::vector<Coordinate, std::allocator<Coordinate> >, std::allocator<std::vector<Coordinate, std::allocator<Coordinate> > > >::operator=(std::list<std::vector<Coordinate, std::allocator<Coordinate> >, std::allocator<std::vector<Coordinate, std::allocator<Coordinate> > > > const&)
+  [38] Piece::LoadPiece_5BigS(Piece&) [12] rules::IsNucleationPointCompute(Board const&, Player const&, Coordinate const&) [31] std::list<unsigned long long, std::allocator<unsigned long long> >::operator=(std::list<unsigned long long, std::allocator<unsigned long long> > const&)
+  [39] Piece::LoadPiece_5Cross(Piece&) [7] rules::RecalculateNKAroundCoord(Board const&, Coordinate const&, int, Player&) [29] std::vector<Coordinate, std::allocator<Coordinate> >::_M_fill_insert(__gnu_cxx::__normal_iterator<Coordinate*, std::vector<Coordinate, std::allocator<Coordinate> > >, unsigned int, Coordinate const&)
+  [40] Piece::LoadPiece_5WPiece(Piece&) [10] rules::IsCoordInfluencedByPlayerCompute(Board const&, Coordinate const&, Player const&) [25] std::vector<Coordinate, std::allocator<Coordinate> >::operator=(std::vector<Coordinate, std::allocator<Coordinate> > const&)
+  [41] Piece::LoadPiece_4LittleS(Piece&) [8] rules::RecalculateInfluenceAreaAroundPiece(Board const&, Coordinate const&, std::vector<Coordinate, std::allocator<Coordinate> > const&, Player&) [33] std::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)

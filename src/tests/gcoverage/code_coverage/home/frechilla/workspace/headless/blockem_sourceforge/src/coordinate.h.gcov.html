@@ -39,7 +39,7 @@
         <tr>
           <td></td>
           <td class="headerItem">Date:</td>
-          <td class="headerValue">2010-06-03</td>
+          <td class="headerValue">2010-06-21</td>
           <td class="headerItem">Functions:</td>
           <td class="headerCovTableEntry">8</td>
           <td class="headerCovTableEntry">7</td>
@@ -104,25 +104,25 @@
 <span class="lineNum">      44 </span>                : 
 <a name="45"><span class="lineNum">      45 </span>                : /// @brief represents a coordinate in the board</a>
 <span class="lineNum">      46 </span>                : class Coordinate
-<a name="47"><span class="lineNum">      47 </span><span class="lineCov">        7792796 : {</span></a>
+<a name="47"><span class="lineNum">      47 </span><span class="lineCov">       26227181 : {</span></a>
 <span class="lineNum">      48 </span>                : public:
-<span class="lineNum">      49 </span><span class="lineCov">        2351165 :         Coordinate():</span>
+<span class="lineNum">      49 </span><span class="lineCov">       49139597 :         Coordinate():</span>
 <span class="lineNum">      50 </span>                :             m_row(COORD_UNINITIALISED),
-<a name="51"><span class="lineNum">      51 </span><span class="lineCov">        2351165 :             m_col(COORD_UNINITIALISED)</span></a>
-<span class="lineNum">      52 </span><span class="lineCov">        2351165 :         {};</span>
-<span class="lineNum">      53 </span><span class="lineCov">      376473521 :         Coordinate(int32_t a_row, int32_t a_column):</span>
+<a name="51"><span class="lineNum">      51 </span><span class="lineCov">       49139597 :             m_col(COORD_UNINITIALISED)</span></a>
+<span class="lineNum">      52 </span><span class="lineCov">       49139597 :         {};</span>
+<span class="lineNum">      53 </span><span class="lineCov">     1733776302 :         Coordinate(int32_t a_row, int32_t a_column):</span>
 <span class="lineNum">      54 </span>                :             m_row(a_row),
-<a name="55"><span class="lineNum">      55 </span><span class="lineCov">      376473521 :             m_col(a_column)</span></a>
-<span class="lineNum">      56 </span><span class="lineCov">      376473521 :         {};</span>
-<span class="lineNum">      57 </span><span class="lineCov">      379004471 :         virtual ~Coordinate()</span>
-<span class="lineNum">      58 </span><span class="lineCov">      379004471 :         {}</span>
+<a name="55"><span class="lineNum">      55 </span><span class="lineCov">     1733776302 :             m_col(a_column)</span></a>
+<span class="lineNum">      56 </span><span class="lineCov">     1733776302 :         {};</span>
+<span class="lineNum">      57 </span><span class="lineCov">     1783374339 :         virtual ~Coordinate()</span>
+<span class="lineNum">      58 </span><span class="lineCov">     1783374339 :         {}</span>
 <a name="59"><span class="lineNum">      59 </span>                : </a>
 <span class="lineNum">      60 </span>                :         /// @brief sets the value of the coordinate
-<span class="lineNum">      61 </span><span class="lineCov">           3120 :         void Set(int32_t a_row, int32_t a_column)</span>
+<span class="lineNum">      61 </span><span class="lineCov">           3135 :         void Set(int32_t a_row, int32_t a_column)</span>
 <span class="lineNum">      62 </span>                :         {
-<span class="lineNum">      63 </span><span class="lineCov">           3120 :             m_row = a_row;</span>
-<span class="lineNum">      64 </span><span class="lineCov">           3120 :             m_col = a_column;</span>
-<span class="lineNum">      65 </span><span class="lineCov">           3120 :         };</span>
+<span class="lineNum">      63 </span><span class="lineCov">           3135 :             m_row = a_row;</span>
+<span class="lineNum">      64 </span><span class="lineCov">           3135 :             m_col = a_column;</span>
+<span class="lineNum">      65 </span><span class="lineCov">           3135 :         };</span>
 <span class="lineNum">      66 </span>                : 
 <span class="lineNum">      67 </span>                :         ///@brief struct to be used as a comparator.
 <span class="lineNum">      68 </span>                :         /// Implements an operator() which returns true if its first argument is less than its second argument,

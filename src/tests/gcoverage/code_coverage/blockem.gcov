@@ -3,7 +3,7 @@ Lines executed:97.80% of 91
 bitwise.cpp:creating 'bitwise.cpp.gcov'
 
 File 'rules.cpp'
-Lines executed:76.33% of 169
+Lines executed:83.19% of 238
 rules.cpp:creating 'rules.cpp.gcov'
 
 File 'gui_table_edit_piece.cpp'
@@ -11,7 +11,7 @@ Lines executed:0.80% of 125
 gui_table_edit_piece.cpp:creating 'gui_table_edit_piece.cpp.gcov'
 
 File 'gui_drawing_area_board.cpp'
-Lines executed:0.41% of 243
+Lines executed:0.39% of 255
 gui_drawing_area_board.cpp:creating 'gui_drawing_area_board.cpp.gcov'
 
 File 'gui_drawing_area_show_pieces.cpp'
@@ -47,11 +47,11 @@ Lines executed:0.00% of 1
 gui_main_window.h:creating 'gui_main_window.h.gcov'
 
 File 'gui_main_window.cpp'
-Lines executed:0.24% of 422
+Lines executed:0.21% of 475
 gui_main_window.cpp:creating 'gui_main_window.cpp.gcov'
 
 File '/usr/include/c++/4.4/bits/list.tcc'
-Lines executed:74.07% of 27
+Lines executed:85.19% of 27
 /usr/include/c++/4.4/bits/list.tcc:creating 'list.tcc.gcov'
 
 File 'g_blocking_queue_impl.h'
@@ -155,7 +155,7 @@ Lines executed:98.44% of 64
 board.cpp:creating 'board.cpp.gcov'
 
 File '/usr/include/c++/4.4/iomanip'
-Lines executed:40.00% of 10
+Lines executed:26.67% of 15
 /usr/include/c++/4.4/iomanip:creating 'iomanip.gcov'
 
 File '/usr/include/c++/4.4/bits/locale_facets.h'
@@ -199,7 +199,7 @@ Lines executed:92.86% of 14
 /usr/include/c++/4.4/ext/new_allocator.h:creating 'new_allocator.h.gcov'
 
 File '/usr/include/c++/4.4/ostream'
-Lines executed:0.00% of 20
+Lines executed:0.00% of 23
 /usr/include/c++/4.4/ostream:creating 'ostream.gcov'
 
 File '/usr/include/glibmm-2.4/glibmm/refptr.h'
@@ -207,7 +207,7 @@ Lines executed:0.00% of 37
 /usr/include/glibmm-2.4/glibmm/refptr.h:creating 'refptr.h.gcov'
 
 File '/usr/include/c++/4.4/bits/ios_base.h'
-Lines executed:0.00% of 12
+Lines executed:0.00% of 37
 /usr/include/c++/4.4/bits/ios_base.h:creating 'ios_base.h.gcov'
 
 File '/usr/include/c++/4.4/ext/atomicity.h'
@@ -231,7 +231,7 @@ Lines executed:72.41% of 29
 piece.h:creating 'piece.h.gcov'
 
 File 'player.h'
-Lines executed:96.61% of 59
+Lines executed:97.65% of 85
 player.h:creating 'player.h.gcov'
 
 File 'board.h'
@@ -247,7 +247,7 @@ Lines executed:90.00% of 20
 /usr/include/c++/4.4/bits/stl_iterator.h:creating 'stl_iterator.h.gcov'
 
 File '/usr/include/c++/4.4/bits/stl_list.h'
-Lines executed:80.95% of 126
+Lines executed:86.51% of 126
 /usr/include/c++/4.4/bits/stl_list.h:creating 'stl_list.h.gcov'
 
 File '/usr/include/c++/4.4/bits/stl_tree.h'
@@ -271,7 +271,7 @@ Lines executed:100.00% of 15
 /usr/include/c++/4.4/bits/stl_construct.h:creating 'stl_construct.h.gcov'
 
 File 'game_total_allocation.cpp'
-Lines executed:79.59% of 98
+Lines executed:79.80% of 99
 game_total_allocation.cpp:creating 'game_total_allocation.cpp.gcov'
 
 File '/usr/include/c++/4.4/bits/stl_uninitialized.h'
@@ -307,7 +307,7 @@ Lines executed:0.00% of 4
 /usr/include/c++/4.4/bits/stl_iterator_base_funcs.h:creating 'stl_iterator_base_funcs.h.gcov'
 
 File 'gui_stop_watch_label.cpp'
-Lines executed:1.89% of 53
+Lines executed:1.85% of 54
 gui_stop_watch_label.cpp:creating 'gui_stop_watch_label.cpp.gcov'
 
 File '/usr/include/c++/4.4/istream'
@@ -331,7 +331,7 @@ Lines executed:0.00% of 6
 bitwise.h:creating 'bitwise.h.gcov'
 
 File 'heuristic.cpp'
-Lines executed:32.84% of 204
+Lines executed:17.44% of 195
 heuristic.cpp:creating 'heuristic.cpp.gcov'
 
 File 'heuristic.h'
@@ -347,7 +347,7 @@ Lines executed:0.00% of 1
 /usr/include/c++/4.4/exception:creating 'exception.gcov'
 
 File 'main.cpp'
-Lines executed:37.80% of 82
+Lines executed:38.46% of 78
 main.cpp:creating 'main.cpp.gcov'
 
 File '/usr/include/c++/4.4/fstream'
@@ -359,7 +359,7 @@ Lines executed:0.00% of 1
 /usr/include/c++/4.4/stdexcept:creating 'stdexcept.gcov'
 
 File 'game1v1.cpp'
-Lines executed:75.79% of 318
+Lines executed:76.74% of 331
 game1v1.cpp:creating 'game1v1.cpp.gcov'
 
 File 'coordinate_set.h'
@@ -367,7 +367,7 @@ Lines executed:100.00% of 22
 coordinate_set.h:creating 'coordinate_set.h.gcov'
 
 File 'player.cpp'
-Lines executed:77.89% of 199
+Lines executed:77.94% of 204
 player.cpp:creating 'player.cpp.gcov'
 
 File 'gui_main_window_worker_thread.cpp'

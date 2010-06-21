@@ -33,17 +33,17 @@
           <td class="headerValue">Blockem Tests Code Coverage</td>
           <td class="headerItem">Lines:</td>
           <td class="headerCovTableEntry">27</td>
-          <td class="headerCovTableEntry">20</td>
-          <td class="headerCovTableEntryHi">74.1 %</td>
+          <td class="headerCovTableEntry">23</td>
+          <td class="headerCovTableEntryHi">85.2 %</td>
         </tr>
         <tr>
           <td></td>
           <td class="headerItem">Date:</td>
-          <td class="headerValue">2010-06-03</td>
+          <td class="headerValue">2010-06-21</td>
           <td class="headerItem">Functions:</td>
           <td class="headerCovTableEntry">10</td>
-          <td class="headerCovTableEntry">4</td>
-          <td class="headerCovTableEntryLo">40.0 %</td>
+          <td class="headerCovTableEntry">6</td>
+          <td class="headerCovTableEntryLo">60.0 %</td>
         </tr>
                 <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -121,23 +121,23 @@
 <span class="lineNum">      61 </span>                : 
 <a name="62"><span class="lineNum">      62 </span>                :   template&lt;typename _Tp, typename _Alloc&gt;</a>
 <span class="lineNum">      63 </span>                :     void
-<span class="lineNum">      64 </span><span class="lineCov">           4648 :     _List_base&lt;_Tp, _Alloc&gt;::</span>
+<span class="lineNum">      64 </span><span class="lineCov">           4670 :     _List_base&lt;_Tp, _Alloc&gt;::</span>
 <span class="lineNum">      65 </span>                :     _M_clear()
 <span class="lineNum">      66 </span>                :     {
 <span class="lineNum">      67 </span>                :       typedef _List_node&lt;_Tp&gt;  _Node;
-<span class="lineNum">      68 </span><span class="lineCov">           4648 :       _Node* __cur = static_cast&lt;_Node*&gt;(this-&gt;_M_impl._M_node._M_next);</span>
-<span class="lineNum">      69 </span><span class="lineCov">          22360 :       while (__cur != &amp;this-&gt;_M_impl._M_node)</span>
+<span class="lineNum">      68 </span><span class="lineCov">           4670 :       _Node* __cur = static_cast&lt;_Node*&gt;(this-&gt;_M_impl._M_node._M_next);</span>
+<span class="lineNum">      69 </span><span class="lineCov">          22504 :       while (__cur != &amp;this-&gt;_M_impl._M_node)</span>
 <span class="lineNum">      70 </span>                :         {
-<span class="lineNum">      71 </span><span class="lineCov">          13064 :           _Node* __tmp = __cur;</span>
-<span class="lineNum">      72 </span><span class="lineCov">          13064 :           __cur = static_cast&lt;_Node*&gt;(__cur-&gt;_M_next);</span>
+<span class="lineNum">      71 </span><span class="lineCov">          13164 :           _Node* __tmp = __cur;</span>
+<span class="lineNum">      72 </span><span class="lineCov">          13164 :           __cur = static_cast&lt;_Node*&gt;(__cur-&gt;_M_next);</span>
 <span class="lineNum">      73 </span>                : #ifdef __GXX_EXPERIMENTAL_CXX0X__
 <span class="lineNum">      74 </span>                :           _M_get_Node_allocator().destroy(__tmp);
 <span class="lineNum">      75 </span>                : #else
-<span class="lineNum">      76 </span><span class="lineCov">          13064 :           _M_get_Tp_allocator().destroy(&amp;__tmp-&gt;_M_data);</span>
+<span class="lineNum">      76 </span><span class="lineCov">          13164 :           _M_get_Tp_allocator().destroy(&amp;__tmp-&gt;_M_data);</span>
 <span class="lineNum">      77 </span>                : #endif
-<span class="lineNum">      78 </span><span class="lineCov">          13064 :           _M_put_node(__tmp);</span>
+<span class="lineNum">      78 </span><span class="lineCov">          13164 :           _M_put_node(__tmp);</span>
 <span class="lineNum">      79 </span>                :         }
-<span class="lineNum">      80 </span><span class="lineCov">           4648 :     }</span>
+<span class="lineNum">      80 </span><span class="lineCov">           4670 :     }</span>
 <span class="lineNum">      81 </span>                : 
 <span class="lineNum">      82 </span>                : #ifdef __GXX_EXPERIMENTAL_CXX0X__
 <span class="lineNum">      83 </span>                :   template&lt;typename _Tp, typename _Alloc&gt;
@@ -164,11 +164,11 @@
 <span class="lineNum">     104 </span>                : 
 <a name="105"><span class="lineNum">     105 </span>                :   template&lt;typename _Tp, typename _Alloc&gt;</a>
 <span class="lineNum">     106 </span>                :     typename list&lt;_Tp, _Alloc&gt;::iterator
-<span class="lineNum">     107 </span><span class="lineNoCov">              0 :     list&lt;_Tp, _Alloc&gt;::</span>
+<span class="lineNum">     107 </span><span class="lineCov">              8 :     list&lt;_Tp, _Alloc&gt;::</span>
 <span class="lineNum">     108 </span>                :     erase(iterator __position)
 <span class="lineNum">     109 </span>                :     {
-<span class="lineNum">     110 </span><span class="lineNoCov">              0 :       iterator __ret = iterator(__position._M_node-&gt;_M_next);</span>
-<span class="lineNum">     111 </span><span class="lineNoCov">              0 :       _M_erase(__position);</span>
+<span class="lineNum">     110 </span><span class="lineCov">              8 :       iterator __ret = iterator(__position._M_node-&gt;_M_next);</span>
+<span class="lineNum">     111 </span><span class="lineCov">              8 :       _M_erase(__position);</span>
 <span class="lineNum">     112 </span>                :       return __ret;
 <span class="lineNum">     113 </span>                :     }
 <span class="lineNum">     114 </span>                : 
@@ -189,24 +189,24 @@
 <span class="lineNum">     129 </span>                : 
 <a name="130"><span class="lineNum">     130 </span>                :   template&lt;typename _Tp, typename _Alloc&gt;</a>
 <span class="lineNum">     131 </span>                :     list&lt;_Tp, _Alloc&gt;&amp;
-<span class="lineNum">     132 </span><span class="lineCov">           1662 :     list&lt;_Tp, _Alloc&gt;::</span>
+<span class="lineNum">     132 </span><span class="lineCov">           1694 :     list&lt;_Tp, _Alloc&gt;::</span>
 <span class="lineNum">     133 </span>                :     operator=(const list&amp; __x)
 <span class="lineNum">     134 </span>                :     {
-<span class="lineNum">     135 </span><span class="lineCov">           1662 :       if (this != &amp;__x)</span>
+<span class="lineNum">     135 </span><span class="lineCov">           1694 :       if (this != &amp;__x)</span>
 <span class="lineNum">     136 </span>                :         {
-<span class="lineNum">     137 </span><span class="lineCov">           1662 :           iterator __first1 = begin();</span>
-<span class="lineNum">     138 </span><span class="lineCov">           1662 :           iterator __last1 = end();</span>
-<span class="lineNum">     139 </span><span class="lineCov">           1662 :           const_iterator __first2 = __x.begin();</span>
-<span class="lineNum">     140 </span><span class="lineCov">           1662 :           const_iterator __last2 = __x.end();</span>
-<span class="lineNum">     141 </span><span class="lineCov">           2060 :           for (; __first1 != __last1 &amp;&amp; __first2 != __last2;</span>
+<span class="lineNum">     137 </span><span class="lineCov">           1694 :           iterator __first1 = begin();</span>
+<span class="lineNum">     138 </span><span class="lineCov">           1694 :           iterator __last1 = end();</span>
+<span class="lineNum">     139 </span><span class="lineCov">           1694 :           const_iterator __first2 = __x.begin();</span>
+<span class="lineNum">     140 </span><span class="lineCov">           1694 :           const_iterator __last2 = __x.end();</span>
+<span class="lineNum">     141 </span><span class="lineCov">           2246 :           for (; __first1 != __last1 &amp;&amp; __first2 != __last2;</span>
 <span class="lineNum">     142 </span>                :                ++__first1, ++__first2)
-<span class="lineNum">     143 </span><span class="lineCov">            398 :             *__first1 = *__first2;</span>
-<span class="lineNum">     144 </span><span class="lineCov">           1662 :           if (__first2 == __last2)</span>
-<span class="lineNum">     145 </span><span class="lineCov">            114 :             erase(__first1, __last1);</span>
+<span class="lineNum">     143 </span><span class="lineCov">            552 :             *__first1 = *__first2;</span>
+<span class="lineNum">     144 </span><span class="lineCov">           1694 :           if (__first2 == __last2)</span>
+<span class="lineNum">     145 </span><span class="lineCov">            126 :             erase(__first1, __last1);</span>
 <span class="lineNum">     146 </span>                :           else
-<span class="lineNum">     147 </span><span class="lineCov">           1548 :             insert(__last1, __first2, __last2);</span>
+<span class="lineNum">     147 </span><span class="lineCov">           1568 :             insert(__last1, __first2, __last2);</span>
 <span class="lineNum">     148 </span>                :         }
-<span class="lineNum">     149 </span><span class="lineCov">           1662 :       return *this;</span>
+<span class="lineNum">     149 </span><span class="lineCov">           1694 :       return *this;</span>
 <span class="lineNum">     150 </span>                :     }
 <span class="lineNum">     151 </span>                : 
 <span class="lineNum">     152 </span>                :   template&lt;typename _Tp, typename _Alloc&gt;

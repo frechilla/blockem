@@ -39,7 +39,7 @@
         <tr>
           <td></td>
           <td class="headerItem">Date:</td>
-          <td class="headerValue">2010-06-03</td>
+          <td class="headerValue">2010-06-21</td>
           <td class="headerItem">Functions:</td>
           <td class="headerCovTableEntry">36</td>
           <td class="headerCovTableEntry">32</td>
@@ -144,40 +144,40 @@
 <span class="lineNum">      84 </span>                :     Piece::LoadPiece_5Cross         // e_5Piece_Cross
 <a name="85"><span class="lineNum">      85 </span>                : };</a>
 <span class="lineNum">      86 </span>                : 
-<span class="lineNum">      87 </span><span class="lineCov">           1550 : Piece::Piece(ePieceType_t a_type):</span>
+<span class="lineNum">      87 </span><span class="lineCov">           1551 : Piece::Piece(ePieceType_t a_type):</span>
 <span class="lineNum">      88 </span>                :         m_type(a_type),
 <span class="lineNum">      89 </span>                :     m_coords(PIECE_MAX_SQUARES),
 <span class="lineNum">      90 </span>                :     m_origCoords(PIECE_MAX_SQUARES)
 <span class="lineNum">      91 </span>                : #ifdef DEBUG
-<span class="lineNum">      92 </span><span class="lineCov">           1550 :     ,m_initialised(false)</span>
+<span class="lineNum">      92 </span><span class="lineCov">           1551 :     ,m_initialised(false)</span>
 <span class="lineNum">      93 </span>                : #endif
 <span class="lineNum">      94 </span>                : {
-<span class="lineNum">      95 </span><span class="lineCov">           1550 :         if (a_type != e_noPiece)</span>
+<span class="lineNum">      95 </span><span class="lineCov">           1551 :         if (a_type != e_noPiece)</span>
 <span class="lineNum">      96 </span>                :         {
 <span class="lineNum">      97 </span>                : #ifdef DEBUG
-<span class="lineNum">      98 </span><span class="lineCov">            736 :             assert(a_type &gt;= e_minimumPieceIndex);</span>
-<span class="lineNum">      99 </span><span class="lineCov">            736 :             assert(a_type &lt; e_numberOfPieces);</span>
-<span class="lineNum">     100 </span><span class="lineCov">            736 :             assert(a_type != e_noPiece);</span>
+<span class="lineNum">      98 </span><span class="lineCov">            751 :             assert(a_type &gt;= e_minimumPieceIndex);</span>
+<span class="lineNum">      99 </span><span class="lineCov">            751 :             assert(a_type &lt; e_numberOfPieces);</span>
+<span class="lineNum">     100 </span><span class="lineCov">            751 :             assert(a_type != e_noPiece);</span>
 <span class="lineNum">     101 </span>                : #endif
 <span class="lineNum">     102 </span>                :             // load the legacy piece representation
-<span class="lineNum">     103 </span><span class="lineCov">            736 :         (m_loadFunctionMap[a_type])(*this);</span>
+<span class="lineNum">     103 </span><span class="lineCov">            751 :         (m_loadFunctionMap[a_type])(*this);</span>
 <span class="lineNum">     104 </span>                : 
 <span class="lineNum">     105 </span>                :         // build up the precalculated configuration too
-<span class="lineNum">     106 </span><span class="lineCov">            736 :         BuildUpPrecalculatedRepresentations();</span>
+<span class="lineNum">     106 </span><span class="lineCov">            751 :         BuildUpPrecalculatedRepresentations();</span>
 <span class="lineNum">     107 </span>                :         }
 <span class="lineNum">     108 </span>                :         else
 <span class="lineNum">     109 </span>                :         {
 <span class="lineNum">     110 </span>                :                 // no piece loaded
-<span class="lineNum">     111 </span><span class="lineCov">            814 :             Coordinate coords[0];</span>
-<span class="lineNum">     112 </span><span class="lineCov">            814 :             SetPiece(coords, 0, false, 0, 0);</span>
+<span class="lineNum">     111 </span><span class="lineCov">            800 :             Coordinate coords[0];</span>
+<span class="lineNum">     112 </span><span class="lineCov">            800 :             SetPiece(coords, 0, false, 0, 0);</span>
 <span class="lineNum">     113 </span>                :         }
-<a name="114"><span class="lineNum">     114 </span><span class="lineCov">           1550 : }</span></a>
+<a name="114"><span class="lineNum">     114 </span><span class="lineCov">           1551 : }</span></a>
 <span class="lineNum">     115 </span>                : 
-<span class="lineNum">     116 </span><span class="lineCov">           1550 : Piece::~Piece()</span>
+<span class="lineNum">     116 </span><span class="lineCov">           1551 : Piece::~Piece()</span>
 <span class="lineNum">     117 </span>                : {
-<a name="118"><span class="lineNum">     118 </span><span class="lineCov">           1550 : }</span></a>
+<a name="118"><span class="lineNum">     118 </span><span class="lineCov">           1551 : }</span></a>
 <span class="lineNum">     119 </span>                : 
-<span class="lineNum">     120 </span><span class="lineCov">           1550 : void Piece::SetPiece(</span>
+<span class="lineNum">     120 </span><span class="lineCov">           1551 : void Piece::SetPiece(</span>
 <span class="lineNum">     121 </span>                :     Coordinate a_coords[PIECE_MAX_SQUARES],
 <span class="lineNum">     122 </span>                :     uint8_t a_nSquares,
 <span class="lineNum">     123 </span>                :     bool a_mirror,
@@ -185,57 +185,57 @@
 <span class="lineNum">     125 </span>                :     uint8_t a_radius)
 <span class="lineNum">     126 </span>                : {
 <span class="lineNum">     127 </span>                : #ifdef DEBUG
-<span class="lineNum">     128 </span><span class="lineCov">           1550 :     assert(a_nSquares &lt;= PIECE_MAX_SQUARES);</span>
-<span class="lineNum">     129 </span><span class="lineCov">           1550 :     assert(a_radius &lt;= PIECE_MAX_RADIUS);</span>
+<span class="lineNum">     128 </span><span class="lineCov">           1551 :     assert(a_nSquares &lt;= PIECE_MAX_SQUARES);</span>
+<span class="lineNum">     129 </span><span class="lineCov">           1551 :     assert(a_radius &lt;= PIECE_MAX_RADIUS);</span>
 <span class="lineNum">     130 </span>                : #endif
 <span class="lineNum">     131 </span>                : 
-<span class="lineNum">     132 </span><span class="lineCov">           1550 :     m_origMirror    = a_mirror;</span>
-<span class="lineNum">     133 </span><span class="lineCov">           1550 :     m_origRotations = a_nRotations;</span>
-<span class="lineNum">     134 </span><span class="lineCov">           1550 :     m_radius        = a_radius;</span>
+<span class="lineNum">     132 </span><span class="lineCov">           1551 :     m_origMirror    = a_mirror;</span>
+<span class="lineNum">     133 </span><span class="lineCov">           1551 :     m_origRotations = a_nRotations;</span>
+<span class="lineNum">     134 </span><span class="lineCov">           1551 :     m_radius        = a_radius;</span>
 <span class="lineNum">     135 </span>                : 
-<span class="lineNum">     136 </span><span class="lineCov">           1550 :     m_nMirrors = 0;</span>
+<span class="lineNum">     136 </span><span class="lineCov">           1551 :     m_nMirrors = 0;</span>
 <span class="lineNum">     137 </span>                : 
-<span class="lineNum">     138 </span><span class="lineCov">           1550 :     m_coords.resize(a_nSquares);</span>
-<span class="lineNum">     139 </span><span class="lineCov">           3100 :     m_origCoords.resize(a_nSquares);</span>
+<span class="lineNum">     138 </span><span class="lineCov">           1551 :     m_coords.resize(a_nSquares);</span>
+<span class="lineNum">     139 </span><span class="lineCov">           3102 :     m_origCoords.resize(a_nSquares);</span>
 <span class="lineNum">     140 </span>                : 
 <span class="lineNum">     141 </span>                :     uint8_t i;
-<span class="lineNum">     142 </span><span class="lineCov">           4670 :     for (i = 0; i &lt; a_nSquares; i++)</span>
+<span class="lineNum">     142 </span><span class="lineCov">           4686 :     for (i = 0; i &lt; a_nSquares; i++)</span>
 <span class="lineNum">     143 </span>                :     {
-<span class="lineNum">     144 </span><span class="lineCov">           3120 :         m_coords[i].m_row = m_origCoords[i].m_row = a_coords[i].m_row;</span>
-<span class="lineNum">     145 </span><span class="lineCov">           3120 :         m_coords[i].m_col = m_origCoords[i].m_col = a_coords[i].m_col;</span>
+<span class="lineNum">     144 </span><span class="lineCov">           3135 :         m_coords[i].m_row = m_origCoords[i].m_row = a_coords[i].m_row;</span>
+<span class="lineNum">     145 </span><span class="lineCov">           3135 :         m_coords[i].m_col = m_origCoords[i].m_col = a_coords[i].m_col;</span>
 <span class="lineNum">     146 </span>                :     }
 <span class="lineNum">     147 </span>                : 
 <span class="lineNum">     148 </span>                : #ifdef DEBUG
-<span class="lineNum">     149 </span><span class="lineCov">           1550 :     m_initialised = true;</span>
+<span class="lineNum">     149 </span><span class="lineCov">           1551 :     m_initialised = true;</span>
 <span class="lineNum">     150 </span>                : #endif
-<a name="151"><span class="lineNum">     151 </span><span class="lineCov">           1550 : }</span></a>
+<a name="151"><span class="lineNum">     151 </span><span class="lineCov">           1551 : }</span></a>
 <span class="lineNum">     152 </span>                : 
-<span class="lineNum">     153 </span><span class="lineCov">            940 : void Piece::Reset()</span>
+<span class="lineNum">     153 </span><span class="lineCov">            955 : void Piece::Reset()</span>
 <span class="lineNum">     154 </span>                : {
 <span class="lineNum">     155 </span>                : #ifdef DEBUG
-<span class="lineNum">     156 </span><span class="lineCov">            940 :     assert(m_initialised);</span>
+<span class="lineNum">     156 </span><span class="lineCov">            955 :     assert(m_initialised);</span>
 <span class="lineNum">     157 </span>                : #endif
 <span class="lineNum">     158 </span>                : 
 <span class="lineNum">     159 </span>                :     uint8_t i;
-<span class="lineNum">     160 </span><span class="lineCov">           4916 :     for (i = 0; i &lt; GetNSquares(); i++)</span>
+<span class="lineNum">     160 </span><span class="lineCov">           4946 :     for (i = 0; i &lt; GetNSquares(); i++)</span>
 <span class="lineNum">     161 </span>                :     {
-<span class="lineNum">     162 </span><span class="lineCov">           3976 :         m_coords[i].m_row = m_origCoords[i].m_row;</span>
-<span class="lineNum">     163 </span><span class="lineCov">           3976 :         m_coords[i].m_col = m_origCoords[i].m_col;</span>
+<span class="lineNum">     162 </span><span class="lineCov">           3991 :         m_coords[i].m_row = m_origCoords[i].m_row;</span>
+<span class="lineNum">     163 </span><span class="lineCov">           3991 :         m_coords[i].m_col = m_origCoords[i].m_col;</span>
 <span class="lineNum">     164 </span>                :     }
 <span class="lineNum">     165 </span>                : 
-<span class="lineNum">     166 </span><span class="lineCov">            940 :     m_nMirrors   = 0;</span>
-<a name="167"><span class="lineNum">     167 </span><span class="lineCov">            940 : }</span></a>
+<span class="lineNum">     166 </span><span class="lineCov">            955 :     m_nMirrors   = 0;</span>
+<a name="167"><span class="lineNum">     167 </span><span class="lineCov">            955 : }</span></a>
 <span class="lineNum">     168 </span>                : 
-<span class="lineNum">     169 </span><span class="lineCov">           3371 : void Piece::RotateRight()</span>
+<span class="lineNum">     169 </span><span class="lineCov">           3386 : void Piece::RotateRight()</span>
 <span class="lineNum">     170 </span>                : {
 <span class="lineNum">     171 </span>                : #ifdef DEBUG
-<span class="lineNum">     172 </span><span class="lineCov">           3371 :     assert(m_initialised);</span>
+<span class="lineNum">     172 </span><span class="lineCov">           3386 :     assert(m_initialised);</span>
 <span class="lineNum">     173 </span>                : #endif
 <span class="lineNum">     174 </span>                : 
-<span class="lineNum">     175 </span><span class="lineCov">           3371 :     if (m_origRotations &lt;= 1)</span>
+<span class="lineNum">     175 </span><span class="lineCov">           3386 :     if (m_origRotations &lt;= 1)</span>
 <span class="lineNum">     176 </span>                :     {
 <span class="lineNum">     177 </span>                :         // the piece can't be rotated. Do nothing and return
-<span class="lineNum">     178 </span><span class="lineCov">            112 :         return;</span>
+<span class="lineNum">     178 </span><span class="lineCov">            127 :         return;</span>
 <span class="lineNum">     179 </span>                :     }
 <span class="lineNum">     180 </span>                : 
 <span class="lineNum">     181 </span><span class="lineCov">          18220 :     for (pieceConfiguration_t::iterator it = m_coords.begin();</span>
@@ -326,23 +326,23 @@
 <span class="lineNum">     266 </span><span class="lineCov">              1 :     return;</span>
 <a name="267"><span class="lineNum">     267 </span>                : }</a>
 <span class="lineNum">     268 </span>                : 
-<span class="lineNum">     269 </span><span class="lineCov">           1073 : bool Piece::MirrorYAxis()</span>
+<span class="lineNum">     269 </span><span class="lineCov">           1088 : bool Piece::MirrorYAxis()</span>
 <span class="lineNum">     270 </span>                : {
 <span class="lineNum">     271 </span>                : #ifdef DEBUG
-<span class="lineNum">     272 </span><span class="lineCov">           1073 :     assert(m_initialised);</span>
+<span class="lineNum">     272 </span><span class="lineCov">           1088 :     assert(m_initialised);</span>
 <span class="lineNum">     273 </span>                : #endif
 <span class="lineNum">     274 </span>                : 
-<span class="lineNum">     275 </span><span class="lineCov">           5772 :     for (pieceConfiguration_t::iterator it = m_coords.begin();</span>
+<span class="lineNum">     275 </span><span class="lineCov">           5802 :     for (pieceConfiguration_t::iterator it = m_coords.begin();</span>
 <span class="lineNum">     276 </span>                :         it != m_coords.end();
 <span class="lineNum">     277 </span>                :         it++)
 <span class="lineNum">     278 </span>                :     {
-<span class="lineNum">     279 </span><span class="lineCov">           4699 :         it-&gt;m_col = -it-&gt;m_col;</span>
+<span class="lineNum">     279 </span><span class="lineCov">           4714 :         it-&gt;m_col = -it-&gt;m_col;</span>
 <span class="lineNum">     280 </span>                :     }
 <span class="lineNum">     281 </span>                : 
-<span class="lineNum">     282 </span><span class="lineCov">           1073 :     if (!m_origMirror)</span>
+<span class="lineNum">     282 </span><span class="lineCov">           1088 :     if (!m_origMirror)</span>
 <span class="lineNum">     283 </span>                :     {
 <span class="lineNum">     284 </span>                :         // if it can't be mirrored. Don't increment m_nMirrors
-<span class="lineNum">     285 </span><span class="lineCov">            481 :         return false;</span>
+<span class="lineNum">     285 </span><span class="lineCov">            496 :         return false;</span>
 <span class="lineNum">     286 </span>                :     }
 <span class="lineNum">     287 </span>                : 
 <span class="lineNum">     288 </span><span class="lineCov">            592 :         m_nMirrors++;</span>
@@ -372,15 +372,15 @@
 <span class="lineNum">     312 </span><span class="lineNoCov">              0 :     return IsMirrored();</span>
 <a name="313"><span class="lineNum">     313 </span>                : }</a>
 <span class="lineNum">     314 </span>                : 
-<span class="lineNum">     315 </span><span class="lineCov">             35 : void Piece::LoadPiece_1BabyPiece(Piece &amp;thisPiece)</span>
+<span class="lineNum">     315 </span><span class="lineCov">             50 : void Piece::LoadPiece_1BabyPiece(Piece &amp;thisPiece)</span>
 <span class="lineNum">     316 </span>                : {
 <span class="lineNum">     317 </span>                :     // X
-<span class="lineNum">     318 </span><span class="lineCov">             70 :     Coordinate coords[1];</span>
+<span class="lineNum">     318 </span><span class="lineCov">            100 :     Coordinate coords[1];</span>
 <span class="lineNum">     319 </span>                : 
-<span class="lineNum">     320 </span><span class="lineCov">             35 :     coords[0].Set(0, 0);</span>
+<span class="lineNum">     320 </span><span class="lineCov">             50 :     coords[0].Set(0, 0);</span>
 <span class="lineNum">     321 </span>                : 
-<a name="322"><span class="lineNum">     322 </span><span class="lineCov">             70 :     thisPiece.SetPiece(coords, 1, false, 1, 0);</span></a>
-<span class="lineNum">     323 </span><span class="lineCov">             35 : }</span>
+<a name="322"><span class="lineNum">     322 </span><span class="lineCov">            100 :     thisPiece.SetPiece(coords, 1, false, 1, 0);</span></a>
+<span class="lineNum">     323 </span><span class="lineCov">             50 : }</span>
 <span class="lineNum">     324 </span><span class="lineCov">             35 : void Piece::LoadPiece_2TwoPiece(Piece &amp;thisPiece)</span>
 <span class="lineNum">     325 </span>                : {
 <span class="lineNum">     326 </span>                :     // X X
@@ -661,32 +661,32 @@
 <span class="lineNum">     601 </span><span class="lineCov">            210 :     thisPiece.SetPiece(coords, 5, true,  4, 2);</span>
 <a name="602"><span class="lineNum">     602 </span><span class="lineCov">             35 : }</span></a>
 <span class="lineNum">     603 </span>                : 
-<span class="lineNum">     604 </span><span class="lineCov">           1016 : void Piece::BuildUpPrecalculatedRepresentations()</span>
+<span class="lineNum">     604 </span><span class="lineCov">           1031 : void Piece::BuildUpPrecalculatedRepresentations()</span>
 <span class="lineNum">     605 </span>                : {
-<span class="lineNum">     606 </span><span class="lineCov">           1016 :     do</span>
+<span class="lineNum">     606 </span><span class="lineCov">           1031 :     do</span>
 <span class="lineNum">     607 </span>                :     {
-<span class="lineNum">     608 </span><span class="lineCov">           1016 :         int8_t nRotations = 0;</span>
-<span class="lineNum">     609 </span><span class="lineCov">           5218 :         while(nRotations &lt; GetNRotations())</span>
+<span class="lineNum">     608 </span><span class="lineCov">           1031 :         int8_t nRotations = 0;</span>
+<span class="lineNum">     609 </span><span class="lineCov">           5263 :         while(nRotations &lt; GetNRotations())</span>
 <span class="lineNum">     610 </span>                :         {
 <span class="lineNum">     611 </span>                :             // save current configuration into precalculated list of coords
-<span class="lineNum">     612 </span><span class="lineCov">           3186 :             m_precalculatedConfsList.push_back(m_coords);</span>
+<span class="lineNum">     612 </span><span class="lineCov">           3201 :             m_precalculatedConfsList.push_back(m_coords);</span>
 <span class="lineNum">     613 </span>                : 
 <span class="lineNum">     614 </span>                :             // calculate and save bitwise representation of this configuration
-<span class="lineNum">     615 </span><span class="lineCov">           3186 :             uint64_t bitwisePiece = 0x0000000000000000ull;</span>
-<span class="lineNum">     616 </span><span class="lineCov">          17681 :             for (pieceConfiguration_t::const_iterator it = m_coords.begin();</span>
+<span class="lineNum">     615 </span><span class="lineCov">           3201 :             uint64_t bitwisePiece = 0x0000000000000000ull;</span>
+<span class="lineNum">     616 </span><span class="lineCov">          17711 :             for (pieceConfiguration_t::const_iterator it = m_coords.begin();</span>
 <span class="lineNum">     617 </span>                :                 it != m_coords.end();
 <span class="lineNum">     618 </span>                :                 it++)
 <span class="lineNum">     619 </span>                :             {
 <span class="lineNum">     620 </span>                :                 // this piece of magic converts a piece into a string of bits
-<span class="lineNum">     621 </span><span class="lineCov">          14495 :                 bitwisePiece |= static_cast&lt;uint64_t&gt;(1) &lt;&lt; ( ((3 - it-&gt;m_row) * 7) + (3 - it-&gt;m_col) );</span>
+<span class="lineNum">     621 </span><span class="lineCov">          14510 :                 bitwisePiece |= static_cast&lt;uint64_t&gt;(1) &lt;&lt; ( ((3 - it-&gt;m_row) * 7) + (3 - it-&gt;m_col) );</span>
 <span class="lineNum">     622 </span>                :             }
-<span class="lineNum">     623 </span><span class="lineCov">           3186 :             m_bitwiseRepresentationList.push_back(bitwisePiece);</span>
+<span class="lineNum">     623 </span><span class="lineCov">           3201 :             m_bitwiseRepresentationList.push_back(bitwisePiece);</span>
 <span class="lineNum">     624 </span>                : 
-<span class="lineNum">     625 </span><span class="lineCov">           3186 :             RotateRight();</span>
-<span class="lineNum">     626 </span><span class="lineCov">           3186 :             nRotations++;</span>
+<span class="lineNum">     625 </span><span class="lineCov">           3201 :             RotateRight();</span>
+<span class="lineNum">     626 </span><span class="lineCov">           3201 :             nRotations++;</span>
 <span class="lineNum">     627 </span>                :         }
 <span class="lineNum">     628 </span>                : 
-<span class="lineNum">     629 </span><span class="lineCov">           1016 :         if ( (GetType() == e_4Piece_LittleS) &amp;&amp;</span>
+<span class="lineNum">     629 </span><span class="lineCov">           1031 :         if ( (GetType() == e_4Piece_LittleS) &amp;&amp;</span>
 <span class="lineNum">     630 </span>                :              (IsMirrored() == false) )
 <span class="lineNum">     631 </span>                :         {
 <span class="lineNum">     632 </span>                :             // For this piece the maximum number or rotations is 2
@@ -703,8 +703,8 @@
 <span class="lineNum">     643 </span>                :     } while (MirrorYAxis());
 <span class="lineNum">     644 </span>                : 
 <a name="645"><span class="lineNum">     645 </span>                :     // leave the piece as it was originally described</a>
-<span class="lineNum">     646 </span><span class="lineCov">            736 :     Reset();</span>
-<span class="lineNum">     647 </span><span class="lineCov">            784 : }</span>
+<span class="lineNum">     646 </span><span class="lineCov">            751 :     Reset();</span>
+<span class="lineNum">     647 </span><span class="lineCov">            799 : }</span>
 </pre>
       </td>
     </tr>

@@ -32,14 +32,14 @@
           <td class="headerItem">Test:</td>
           <td class="headerValue">Blockem Tests Code Coverage</td>
           <td class="headerItem">Lines:</td>
-          <td class="headerCovTableEntry">199</td>
-          <td class="headerCovTableEntry">155</td>
+          <td class="headerCovTableEntry">204</td>
+          <td class="headerCovTableEntry">159</td>
           <td class="headerCovTableEntryHi">77.9 %</td>
         </tr>
         <tr>
           <td></td>
           <td class="headerItem">Date:</td>
-          <td class="headerValue">2010-06-03</td>
+          <td class="headerValue">2010-06-21</td>
           <td class="headerItem">Functions:</td>
           <td class="headerCovTableEntry">19</td>
           <td class="headerCovTableEntry">11</td>
@@ -102,431 +102,439 @@
 <span class="lineNum">      42 </span>                :         m_nRowsInBoard(a_rowsInBoard),
 <span class="lineNum">      43 </span>                :         m_nColumnsInBoard(a_columnsInBoard),
 <span class="lineNum">      44 </span>                :         m_nkPointsCount(0),
-<span class="lineNum">      45 </span><span class="lineCov">             35 :         m_startingCoordinate(a_startingCoordinate)</span>
-<span class="lineNum">      46 </span>                : {
-<span class="lineNum">      47 </span>                :     // load the pieces
-<span class="lineNum">      48 </span><span class="lineCov">             35 :     LoadPieces();</span>
-<span class="lineNum">      49 </span>                : 
-<span class="lineNum">      50 </span>                :     // all the pieces are available
-<span class="lineNum">      51 </span><span class="lineCov">            770 :     for (int8_t i = e_minimumPieceIndex; i &lt; e_numberOfPieces ; i++)</span>
-<span class="lineNum">      52 </span>                :     {
-<span class="lineNum">      53 </span><span class="lineCov">            735 :         m_piecesPresent[i] = true;</span>
-<span class="lineNum">      54 </span>                :     }
-<span class="lineNum">      55 </span><span class="lineCov">             35 :     m_nPiecesAvailable = e_numberOfPieces;</span>
-<span class="lineNum">      56 </span>                : 
-<span class="lineNum">      57 </span>                :         // allocate memory for the nucleation point array and set all the nk points to 0
-<span class="lineNum">      58 </span><span class="lineCov">             35 :     m_nkPoints   = new uint8_t* [m_nRowsInBoard];</span>
-<span class="lineNum">      59 </span><span class="lineCov">            508 :         for (int32_t i = 0 ; i &lt; m_nRowsInBoard; i++)</span>
-<span class="lineNum">      60 </span>                :         {
-<span class="lineNum">      61 </span><span class="lineCov">            473 :                 m_nkPoints[i] = new uint8_t[m_nColumnsInBoard];</span>
-<span class="lineNum">      62 </span><span class="lineCov">           7002 :                 for (int32_t j = 0 ; j &lt; m_nColumnsInBoard; j++)</span>
-<span class="lineNum">      63 </span>                :                 {
-<span class="lineNum">      64 </span><span class="lineCov">           6529 :                         m_nkPoints[i][j] = 0;</span>
-<span class="lineNum">      65 </span>                :                 }
-<span class="lineNum">      66 </span>                :         }
-<a name="67"><span class="lineNum">      67 </span><span class="lineCov">             35 : }</span></a>
-<span class="lineNum">      68 </span>                : 
-<span class="lineNum">      69 </span><span class="lineCov">            792 : Player::~Player()</span>
-<span class="lineNum">      70 </span>                : {
-<span class="lineNum">      71 </span>                :     // delete the array that saves the nk points of this player
-<span class="lineNum">      72 </span><span class="lineCov">            513 :         for (int32_t i = 0 ; i &lt; m_nRowsInBoard; i++)</span>
-<span class="lineNum">      73 </span>                :         {
-<span class="lineNum">      74 </span><span class="lineCov">            477 :                 delete [] m_nkPoints[i];</span>
-<span class="lineNum">      75 </span>                :         }
-<span class="lineNum">      76 </span><span class="lineCov">             36 :         delete [] m_nkPoints;</span>
-<a name="77"><span class="lineNum">      77 </span><span class="lineCov">            792 : }</span></a>
-<span class="lineNum">      78 </span>                : 
-<span class="lineNum">      79 </span><span class="lineCov">              1 : Player::Player(const Player &amp;a_src)</span>
-<span class="lineNum">      80 </span>                : {
-<span class="lineNum">      81 </span>                :     // allocate the memory needed before copying from object
-<span class="lineNum">      82 </span><span class="lineCov">              1 :     this-&gt;m_nkPoints   = new uint8_t* [a_src.m_nRowsInBoard];</span>
-<span class="lineNum">      83 </span><span class="lineCov">              6 :     for (int32_t i = 0; i &lt; a_src.m_nRowsInBoard; i++)</span>
-<span class="lineNum">      84 </span>                :     {
-<span class="lineNum">      85 </span><span class="lineCov">              5 :         this-&gt;m_nkPoints[i] = new uint8_t[a_src.m_nColumnsInBoard];</span>
-<span class="lineNum">      86 </span>                :     }
-<span class="lineNum">      87 </span>                : 
-<span class="lineNum">      88 </span><span class="lineCov">              1 :     CopyFromObject(a_src);</span>
-<a name="89"><span class="lineNum">      89 </span><span class="lineCov">              1 : }</span></a>
-<span class="lineNum">      90 </span>                : 
-<span class="lineNum">      91 </span><span class="lineCov">              2 : Player&amp; Player::operator= (const Player &amp;a_src)</span>
-<span class="lineNum">      92 </span>                : {
-<span class="lineNum">      93 </span><span class="lineCov">              2 :     if (this != &amp;a_src)</span>
-<span class="lineNum">      94 </span>                :     {
-<span class="lineNum">      95 </span>                :         // only delete the memory already allocated if the size of the
-<span class="lineNum">      96 </span>                :         // new board is different from &quot;this&quot;
-<span class="lineNum">      97 </span><span class="lineCov">              2 :         if ( (this-&gt;m_nRowsInBoard    != a_src.m_nRowsInBoard)  ||</span>
-<span class="lineNum">      98 </span>                :              (this-&gt;m_nColumnsInBoard != a_src.m_nColumnsInBoard) )
-<span class="lineNum">      99 </span>                :         {
-<span class="lineNum">     100 </span>                :             // delete the array that saves the nk points of this player
-<span class="lineNum">     101 </span><span class="lineCov">              7 :             for (int32_t i = 0 ; i &lt; this-&gt;m_nRowsInBoard; i++)</span>
-<span class="lineNum">     102 </span>                :             {
-<span class="lineNum">     103 </span><span class="lineCov">              6 :                 delete [] this-&gt;m_nkPoints[i];</span>
-<span class="lineNum">     104 </span>                :             }
-<span class="lineNum">     105 </span><span class="lineCov">              1 :             delete [] m_nkPoints;</span>
-<span class="lineNum">     106 </span>                : 
-<span class="lineNum">     107 </span>                :             // once the old memory is deleted allocate the new memory
-<span class="lineNum">     108 </span>                :             // needed for the new size before copying from object
-<span class="lineNum">     109 </span><span class="lineCov">              1 :             this-&gt;m_nkPoints   = new uint8_t* [a_src.m_nRowsInBoard];</span>
-<span class="lineNum">     110 </span><span class="lineCov">              6 :             for (int32_t i = 0; i &lt; a_src.m_nRowsInBoard; i++)</span>
-<span class="lineNum">     111 </span>                :             {
-<span class="lineNum">     112 </span><span class="lineCov">              5 :                 m_nkPoints[i] = new uint8_t[a_src.m_nColumnsInBoard];</span>
-<span class="lineNum">     113 </span>                :             }
-<span class="lineNum">     114 </span>                :         }
-<span class="lineNum">     115 </span>                : 
-<span class="lineNum">     116 </span>                :         // copy the new info from the source object
-<span class="lineNum">     117 </span><span class="lineCov">              2 :         CopyFromObject(a_src);</span>
-<span class="lineNum">     118 </span>                :     }
-<span class="lineNum">     119 </span>                : 
-<span class="lineNum">     120 </span><span class="lineCov">              2 :     return *this;</span>
-<a name="121"><span class="lineNum">     121 </span>                : }</a>
-<span class="lineNum">     122 </span>                : 
-<span class="lineNum">     123 </span><span class="lineCov">              3 : void Player::CopyFromObject(const Player &amp;a_src)</span>
-<span class="lineNum">     124 </span>                : {
-<span class="lineNum">     125 </span><span class="lineCov">              3 :     this-&gt;m_name               = a_src.m_name;</span>
-<span class="lineNum">     126 </span><span class="lineCov">              3 :     this-&gt;m_presentationChar   = a_src.m_presentationChar;</span>
-<span class="lineNum">     127 </span><span class="lineCov">              3 :     this-&gt;m_nPiecesAvailable   = a_src.m_nPiecesAvailable;</span>
-<span class="lineNum">     128 </span><span class="lineCov">              3 :     this-&gt;m_nRowsInBoard       = a_src.m_nRowsInBoard;</span>
-<span class="lineNum">     129 </span><span class="lineCov">              3 :     this-&gt;m_nColumnsInBoard    = a_src.m_nColumnsInBoard;</span>
-<span class="lineNum">     130 </span><span class="lineCov">              3 :     this-&gt;m_nkPointsCount      = a_src.m_nkPointsCount;</span>
-<span class="lineNum">     131 </span><span class="lineCov">              3 :     this-&gt;m_startingCoordinate = a_src.m_startingCoordinate;</span>
-<span class="lineNum">     132 </span><span class="lineCov">              3 :     this-&gt;m_colourRed          = a_src.m_colourRed;</span>
-<span class="lineNum">     133 </span><span class="lineCov">              3 :     this-&gt;m_colourGreen        = a_src.m_colourGreen;</span>
-<span class="lineNum">     134 </span><span class="lineCov">              3 :     this-&gt;m_colourBlue         = a_src.m_colourBlue;</span>
-<span class="lineNum">     135 </span>                : 
-<span class="lineNum">     136 </span>                :     // copy the state of the pieces
-<span class="lineNum">     137 </span><span class="lineCov">             66 :     for (int8_t i = e_minimumPieceIndex; i &lt; e_numberOfPieces ; i++)</span>
-<span class="lineNum">     138 </span>                :     {
-<span class="lineNum">     139 </span><span class="lineCov">             63 :         this-&gt;m_pieces[i] = a_src.m_pieces[i];</span>
-<span class="lineNum">     140 </span><span class="lineCov">             63 :         this-&gt;m_piecesPresent[i] = a_src.m_piecesPresent[i];</span>
-<span class="lineNum">     141 </span>                :     }
-<span class="lineNum">     142 </span>                : 
-<span class="lineNum">     143 </span>                :     // set all the nk points to the src's
-<span class="lineNum">     144 </span><span class="lineCov">             18 :     for (int32_t i = 0; i &lt; a_src.m_nRowsInBoard; i++)</span>
-<span class="lineNum">     145 </span>                :     {
-<span class="lineNum">     146 </span><span class="lineCov">             90 :         for (int32_t j = 0 ; j &lt; a_src.m_nColumnsInBoard; j++)</span>
-<span class="lineNum">     147 </span>                :         {
-<span class="lineNum">     148 </span><span class="lineCov">             75 :             m_nkPoints[i][j] = a_src.m_nkPoints[i][j];</span>
-<span class="lineNum">     149 </span>                :         }
-<span class="lineNum">     150 </span>                :     }
-<a name="151"><span class="lineNum">     151 </span><span class="lineCov">              3 : }</span></a>
-<span class="lineNum">     152 </span>                : 
-<span class="lineNum">     153 </span><span class="lineNoCov">              0 : void Player::SetColour(uint8_t a_colourRed, uint8_t a_colourGreen, uint8_t a_colourBlue)</span>
-<span class="lineNum">     154 </span>                : {
-<span class="lineNum">     155 </span><span class="lineNoCov">              0 :     m_colourRed   = a_colourRed;</span>
-<span class="lineNum">     156 </span><span class="lineNoCov">              0 :     m_colourGreen = a_colourGreen;</span>
-<span class="lineNum">     157 </span><span class="lineNoCov">              0 :     m_colourBlue  = a_colourBlue;</span>
-<a name="158"><span class="lineNum">     158 </span><span class="lineNoCov">              0 : }</span></a>
-<span class="lineNum">     159 </span>                : 
-<span class="lineNum">     160 </span><span class="lineNoCov">              0 : void Player::GetColour(uint8_t &amp;out_colourRed, uint8_t &amp;out_colourGreen, uint8_t &amp;out_colourBlue) const</span>
-<span class="lineNum">     161 </span>                : {
-<span class="lineNum">     162 </span><span class="lineNoCov">              0 :     out_colourRed   = m_colourRed;</span>
-<span class="lineNum">     163 </span><span class="lineNoCov">              0 :     out_colourGreen = m_colourGreen;</span>
-<span class="lineNum">     164 </span><span class="lineNoCov">              0 :     out_colourBlue  = m_colourBlue;</span>
-<a name="165"><span class="lineNum">     165 </span><span class="lineNoCov">              0 : }</span></a>
-<span class="lineNum">     166 </span>                : 
-<span class="lineNum">     167 </span><span class="lineCov">              6 : void Player::Reset(const Coordinate &amp;a_startingCoordinate)</span>
-<span class="lineNum">     168 </span>                : {
-<span class="lineNum">     169 </span>                :         // reset all the pieces owned by the player
-<span class="lineNum">     170 </span><span class="lineCov">            132 :         for (int8_t i = e_minimumPieceIndex; i &lt; e_numberOfPieces; i++)</span>
-<span class="lineNum">     171 </span>                :         {
-<span class="lineNum">     172 </span><span class="lineCov">            126 :                 m_pieces[i].Reset();</span>
-<span class="lineNum">     173 </span>                : 
-<span class="lineNum">     174 </span><span class="lineCov">            126 :                 if (IsPieceAvailable(static_cast&lt;ePieceType_t&gt;(i)) == false)</span>
-<span class="lineNum">     175 </span>                :                 {
-<span class="lineNum">     176 </span><span class="lineCov">              4 :                         SetPiece(static_cast&lt;ePieceType_t&gt;(i));</span>
-<span class="lineNum">     177 </span>                :                 }
-<span class="lineNum">     178 </span>                :         }
-<span class="lineNum">     179 </span>                : 
-<span class="lineNum">     180 </span>                :         // Player will have no nucleation points at all
-<span class="lineNum">     181 </span><span class="lineCov">              6 :         Coordinate thisCoord(0, 0);</span>
-<span class="lineNum">     182 </span><span class="lineCov">             90 :         for (thisCoord.m_row = 0 ; thisCoord.m_row &lt; m_nRowsInBoard; thisCoord.m_row++)</span>
-<span class="lineNum">     183 </span>                :         {
-<span class="lineNum">     184 </span><span class="lineCov">           1260 :                 for (thisCoord.m_col = 0 ; thisCoord.m_col &lt; m_nColumnsInBoard; thisCoord.m_col++)</span>
-<span class="lineNum">     185 </span>                :                 {
-<span class="lineNum">     186 </span><span class="lineCov">           1176 :                         UnsetNucleationPoint(thisCoord);</span>
-<span class="lineNum">     187 </span>                :                 }
-<span class="lineNum">     188 </span>                :         }
-<span class="lineNum">     189 </span>                : 
-<span class="lineNum">     190 </span><span class="lineCov">              6 :     SetStartingCoordinate(a_startingCoordinate);</span>
-<span class="lineNum">     191 </span>                : 
-<span class="lineNum">     192 </span>                : #ifdef DEBUG
-<span class="lineNum">     193 </span><span class="lineCov">              6 :         assert(m_nkPointsCount == 0);</span>
-<span class="lineNum">     194 </span><span class="lineCov">              6 :         assert(m_nPiecesAvailable == e_numberOfPieces);</span>
-<span class="lineNum">     195 </span>                : 
-<span class="lineNum">     196 </span><span class="lineCov">            264 :         for (int8_t i = e_minimumPieceIndex; i &lt; e_numberOfPieces; i++)</span>
-<span class="lineNum">     197 </span>                :         {
-<span class="lineNum">     198 </span><span class="lineCov">            126 :                 assert(IsPieceAvailable(static_cast&lt;ePieceType_t&gt;(i)));</span>
-<span class="lineNum">     199 </span>                :         }
-<span class="lineNum">     200 </span>                : 
-<span class="lineNum">     201 </span><span class="lineCov">             90 :     for (thisCoord.m_row = 0 ; thisCoord.m_row &lt; m_nRowsInBoard; thisCoord.m_row++)</span>
-<span class="lineNum">     202 </span>                :     {
-<span class="lineNum">     203 </span><span class="lineCov">           1260 :         for (thisCoord.m_col = 0 ; thisCoord.m_col &lt; m_nColumnsInBoard; thisCoord.m_col++)</span>
-<span class="lineNum">     204 </span>                :         {
-<span class="lineNum">     205 </span><span class="lineCov">           1176 :             assert(IsNucleationPoint(thisCoord) == false);</span>
-<span class="lineNum">     206 </span>                :         }
-<span class="lineNum">     207 </span><span class="lineCov">              6 :     }</span>
-<span class="lineNum">     208 </span>                : #endif
-<a name="209"><span class="lineNum">     209 </span><span class="lineCov">              6 : }</span></a>
-<span class="lineNum">     210 </span>                : 
-<span class="lineNum">     211 </span><span class="lineCov">             35 : void Player::LoadPieces()</span>
-<span class="lineNum">     212 </span>                : {
-<span class="lineNum">     213 </span><span class="lineCov">             35 :     m_pieces[e_1Piece_BabyPiece]    = Piece(e_1Piece_BabyPiece);</span>
-<span class="lineNum">     214 </span><span class="lineCov">             70 :     m_pieces[e_2Piece_TwoPiece]     = Piece(e_2Piece_TwoPiece);</span>
-<span class="lineNum">     215 </span><span class="lineCov">             70 :     m_pieces[e_3Piece_LongPiece]    = Piece(e_3Piece_LongPiece);</span>
-<span class="lineNum">     216 </span><span class="lineCov">             70 :     m_pieces[e_3Piece_Triangle]     = Piece(e_3Piece_Triangle);</span>
-<span class="lineNum">     217 </span><span class="lineCov">             70 :     m_pieces[e_4Piece_LongPiece]    = Piece(e_4Piece_LongPiece);</span>
-<span class="lineNum">     218 </span><span class="lineCov">             70 :     m_pieces[e_4Piece_LittleS]      = Piece(e_4Piece_LittleS);</span>
-<span class="lineNum">     219 </span><span class="lineCov">             70 :     m_pieces[e_4Piece_LittleT]      = Piece(e_4Piece_LittleT);</span>
-<span class="lineNum">     220 </span><span class="lineCov">             70 :     m_pieces[e_4Piece_LittleL]      = Piece(e_4Piece_LittleL);</span>
-<span class="lineNum">     221 </span><span class="lineCov">             70 :     m_pieces[e_4Piece_FullSquare]   = Piece(e_4Piece_FullSquare);</span>
-<span class="lineNum">     222 </span><span class="lineCov">             70 :     m_pieces[e_5Piece_BigS]         = Piece(e_5Piece_BigS);</span>
-<span class="lineNum">     223 </span><span class="lineCov">             70 :     m_pieces[e_5Piece_SafPiece]     = Piece(e_5Piece_SafPiece);</span>
-<span class="lineNum">     224 </span><span class="lineCov">             70 :     m_pieces[e_5Piece_WPiece]       = Piece(e_5Piece_WPiece);</span>
-<span class="lineNum">     225 </span><span class="lineCov">             70 :     m_pieces[e_5Piece_CuntPiece]    = Piece(e_5Piece_CuntPiece);</span>
-<span class="lineNum">     226 </span><span class="lineCov">             70 :     m_pieces[e_5Piece_BigPenis]     = Piece(e_5Piece_BigPenis);</span>
-<span class="lineNum">     227 </span><span class="lineCov">             70 :     m_pieces[e_5Piece_Cross]        = Piece(e_5Piece_Cross);</span>
-<span class="lineNum">     228 </span><span class="lineCov">             70 :     m_pieces[e_5Piece_HalfSquare]   = Piece(e_5Piece_HalfSquare);</span>
-<span class="lineNum">     229 </span><span class="lineCov">             70 :     m_pieces[e_5Piece_BigL]         = Piece(e_5Piece_BigL);</span>
-<span class="lineNum">     230 </span><span class="lineCov">             70 :     m_pieces[e_5Piece_MrT]          = Piece(e_5Piece_MrT);</span>
-<span class="lineNum">     231 </span><span class="lineCov">             70 :     m_pieces[e_5Piece_SquarePlus]   = Piece(e_5Piece_SquarePlus);</span>
-<span class="lineNum">     232 </span><span class="lineCov">             70 :     m_pieces[e_5Piece_BoringPiece]  = Piece(e_5Piece_BoringPiece);</span>
-<span class="lineNum">     233 </span><span class="lineCov">             70 :     m_pieces[e_5Piece_TheUltimate]  = Piece(e_5Piece_TheUltimate);</span>
-<a name="234"><span class="lineNum">     234 </span><span class="lineCov">             35 : }</span></a>
-<span class="lineNum">     235 </span>                : 
-<span class="lineNum">     236 </span><span class="lineCov">             60 : void Player::PrintAvailablePieces(std::ostream&amp; a_outStream) const</span>
-<span class="lineNum">     237 </span>                : {
-<span class="lineNum">     238 </span><span class="lineCov">           1320 :     for (uint32_t i = e_minimumPieceIndex; i &lt; e_numberOfPieces ; i++)</span>
-<span class="lineNum">     239 </span>                :     {
-<span class="lineNum">     240 </span><span class="lineCov">           1260 :         if (m_piecesPresent[i])</span>
-<span class="lineNum">     241 </span>                :         {
-<span class="lineNum">     242 </span><span class="lineCov">           1055 :             a_outStream &lt;&lt; &quot;1&quot;;</span>
-<span class="lineNum">     243 </span>                :         }
-<span class="lineNum">     244 </span>                :         else
-<span class="lineNum">     245 </span>                :         {
-<span class="lineNum">     246 </span><span class="lineCov">            205 :             a_outStream &lt;&lt; &quot;0&quot;;</span>
-<span class="lineNum">     247 </span>                :         }
-<span class="lineNum">     248 </span>                :     }
-<span class="lineNum">     249 </span><span class="lineCov">             60 :     a_outStream &lt;&lt; std::endl;</span>
-<a name="250"><span class="lineNum">     250 </span><span class="lineCov">             60 : }</span></a>
-<span class="lineNum">     251 </span>                : 
-<span class="lineNum">     252 </span><span class="lineNoCov">              0 : void Player::PrintNucleationPoints(std::ostream&amp; a_outStream) const</span>
-<span class="lineNum">     253 </span>                : {
-<span class="lineNum">     254 </span><span class="lineNoCov">              0 :     a_outStream &lt;&lt; &quot;  &quot;;</span>
-<span class="lineNum">     255 </span><span class="lineNoCov">              0 :     for (int32_t j = 0; j &lt; m_nColumnsInBoard; j++)</span>
-<span class="lineNum">     256 </span>                :     {
-<span class="lineNum">     257 </span><span class="lineNoCov">              0 :         a_outStream &lt;&lt; &quot; &quot; &lt;&lt; std::setfill(' ') &lt;&lt; std::setw(3) &lt;&lt; j;</span>
-<span class="lineNum">     258 </span>                :     }
-<span class="lineNum">     259 </span><span class="lineNoCov">              0 :     a_outStream &lt;&lt; std::endl;</span>
-<span class="lineNum">     260 </span>                : 
-<span class="lineNum">     261 </span><span class="lineNoCov">              0 :     for (int32_t i = 0; i &lt; m_nRowsInBoard; i++)</span>
-<span class="lineNum">     262 </span>                :     {
-<span class="lineNum">     263 </span><span class="lineNoCov">              0 :         a_outStream &lt;&lt; &quot;   +&quot;;</span>
-<span class="lineNum">     264 </span><span class="lineNoCov">              0 :         for (int32_t j = 0; j &lt; m_nColumnsInBoard; j++)</span>
-<span class="lineNum">     265 </span>                :         {
-<span class="lineNum">     266 </span><span class="lineNoCov">              0 :             a_outStream &lt;&lt; &quot;---+&quot;;</span>
-<span class="lineNum">     267 </span>                :         }
-<span class="lineNum">     268 </span><span class="lineNoCov">              0 :         a_outStream &lt;&lt; std::endl;</span>
-<span class="lineNum">     269 </span>                : 
-<span class="lineNum">     270 </span><span class="lineNoCov">              0 :         a_outStream &lt;&lt; std::setfill(' ') &lt;&lt; std::setw(2) &lt;&lt; i &lt;&lt; &quot; |&quot;;</span>
-<span class="lineNum">     271 </span><span class="lineNoCov">              0 :         for (int32_t j = 0; j &lt; m_nColumnsInBoard; j++)</span>
-<span class="lineNum">     272 </span>                :         {
-<span class="lineNum">     273 </span><span class="lineNoCov">              0 :             a_outStream &lt;&lt; &quot; &quot;;</span>
-<span class="lineNum">     274 </span><span class="lineNoCov">              0 :             if (m_nkPoints[i][j])</span>
-<span class="lineNum">     275 </span>                :             {
-<span class="lineNum">     276 </span><span class="lineNoCov">              0 :                 a_outStream &lt;&lt; m_presentationChar;</span>
-<span class="lineNum">     277 </span>                :             }
-<span class="lineNum">     278 </span>                :             else
-<span class="lineNum">     279 </span>                :             {
-<span class="lineNum">     280 </span><span class="lineNoCov">              0 :                 a_outStream &lt;&lt; &quot; &quot;;</span>
-<span class="lineNum">     281 </span>                :             }
-<span class="lineNum">     282 </span><span class="lineNoCov">              0 :             a_outStream &lt;&lt; &quot; |&quot;;</span>
-<span class="lineNum">     283 </span>                :         }
-<span class="lineNum">     284 </span><span class="lineNoCov">              0 :         a_outStream &lt;&lt; std::endl;</span>
-<span class="lineNum">     285 </span>                :     }
-<span class="lineNum">     286 </span>                : 
-<span class="lineNum">     287 </span><span class="lineNoCov">              0 :     a_outStream &lt;&lt; &quot;   +&quot;;</span>
-<span class="lineNum">     288 </span><span class="lineNoCov">              0 :     for (int32_t j = 0; j &lt; m_nColumnsInBoard; j++)</span>
-<span class="lineNum">     289 </span>                :     {
-<span class="lineNum">     290 </span><span class="lineNoCov">              0 :         a_outStream &lt;&lt; &quot;---+&quot;;</span>
-<span class="lineNum">     291 </span>                :     }
-<span class="lineNum">     292 </span><span class="lineNoCov">              0 :     a_outStream &lt;&lt; std::endl;</span>
-<a name="293"><span class="lineNum">     293 </span><span class="lineNoCov">              0 : }</span></a>
+<span class="lineNum">      45 </span>                :         m_influencedCoordsCount(0),
+<span class="lineNum">      46 </span><span class="lineCov">             35 :         m_startingCoordinate(a_startingCoordinate)</span>
+<span class="lineNum">      47 </span>                : {
+<span class="lineNum">      48 </span>                :     // load the pieces
+<span class="lineNum">      49 </span><span class="lineCov">             35 :     LoadPieces();</span>
+<span class="lineNum">      50 </span>                : 
+<span class="lineNum">      51 </span>                :     // all the pieces are available
+<span class="lineNum">      52 </span><span class="lineCov">            770 :     for (int8_t i = e_minimumPieceIndex; i &lt; e_numberOfPieces ; i++)</span>
+<span class="lineNum">      53 </span>                :     {
+<span class="lineNum">      54 </span><span class="lineCov">            735 :         m_piecesPresent[i] = true;</span>
+<span class="lineNum">      55 </span>                :     }
+<span class="lineNum">      56 </span><span class="lineCov">             35 :     m_nPiecesAvailable = e_numberOfPieces;</span>
+<span class="lineNum">      57 </span>                : 
+<span class="lineNum">      58 </span>                :         // allocate memory for the nucleation point array and set all the nk points to 0
+<span class="lineNum">      59 </span><span class="lineCov">             35 :     m_coordinateProperties = new uint8_t* [m_nRowsInBoard];</span>
+<span class="lineNum">      60 </span><span class="lineCov">            508 :         for (int32_t i = 0 ; i &lt; m_nRowsInBoard; i++)</span>
+<span class="lineNum">      61 </span>                :         {
+<span class="lineNum">      62 </span><span class="lineCov">            473 :             m_coordinateProperties[i] = new uint8_t[m_nColumnsInBoard];</span>
+<span class="lineNum">      63 </span><span class="lineCov">           7002 :                 for (int32_t j = 0; j &lt; m_nColumnsInBoard; j++)</span>
+<span class="lineNum">      64 </span>                :                 {
+<span class="lineNum">      65 </span>                :                     // set all the properties to &quot;not present&quot; (false)
+<span class="lineNum">      66 </span><span class="lineCov">           6529 :                     m_coordinateProperties[i][j] = ~COORD_PROPERTY_MASK;</span>
+<span class="lineNum">      67 </span>                :                 }
+<span class="lineNum">      68 </span>                :         }
+<a name="69"><span class="lineNum">      69 </span><span class="lineCov">             35 : }</span></a>
+<span class="lineNum">      70 </span>                : 
+<span class="lineNum">      71 </span><span class="lineCov">            792 : Player::~Player()</span>
+<span class="lineNum">      72 </span>                : {
+<span class="lineNum">      73 </span>                :     // delete the array that saves the nk points of this player
+<span class="lineNum">      74 </span><span class="lineCov">            513 :         for (int32_t i = 0 ; i &lt; m_nRowsInBoard; i++)</span>
+<span class="lineNum">      75 </span>                :         {
+<span class="lineNum">      76 </span><span class="lineCov">            477 :                 delete [] m_coordinateProperties[i];</span>
+<span class="lineNum">      77 </span>                :         }
+<span class="lineNum">      78 </span><span class="lineCov">             36 :         delete [] m_coordinateProperties;</span>
+<a name="79"><span class="lineNum">      79 </span><span class="lineCov">            792 : }</span></a>
+<span class="lineNum">      80 </span>                : 
+<span class="lineNum">      81 </span><span class="lineCov">              1 : Player::Player(const Player &amp;a_src)</span>
+<span class="lineNum">      82 </span>                : {
+<span class="lineNum">      83 </span>                :     // allocate the memory needed before copying from object
+<span class="lineNum">      84 </span><span class="lineCov">              1 :     this-&gt;m_coordinateProperties = new uint8_t* [a_src.m_nRowsInBoard];</span>
+<span class="lineNum">      85 </span><span class="lineCov">              6 :     for (int32_t i = 0; i &lt; a_src.m_nRowsInBoard; i++)</span>
+<span class="lineNum">      86 </span>                :     {
+<span class="lineNum">      87 </span><span class="lineCov">              5 :         this-&gt;m_coordinateProperties[i] = new uint8_t[a_src.m_nColumnsInBoard];</span>
+<span class="lineNum">      88 </span>                :     }
+<span class="lineNum">      89 </span>                : 
+<span class="lineNum">      90 </span><span class="lineCov">              1 :     CopyFromObject(a_src);</span>
+<a name="91"><span class="lineNum">      91 </span><span class="lineCov">              1 : }</span></a>
+<span class="lineNum">      92 </span>                : 
+<span class="lineNum">      93 </span><span class="lineCov">              2 : Player&amp; Player::operator= (const Player &amp;a_src)</span>
+<span class="lineNum">      94 </span>                : {
+<span class="lineNum">      95 </span><span class="lineCov">              2 :     if (this != &amp;a_src)</span>
+<span class="lineNum">      96 </span>                :     {
+<span class="lineNum">      97 </span>                :         // only delete the memory already allocated if the size of the
+<span class="lineNum">      98 </span>                :         // new board is different from &quot;this&quot;
+<span class="lineNum">      99 </span><span class="lineCov">              2 :         if ( (this-&gt;m_nRowsInBoard    != a_src.m_nRowsInBoard)  ||</span>
+<span class="lineNum">     100 </span>                :              (this-&gt;m_nColumnsInBoard != a_src.m_nColumnsInBoard) )
+<span class="lineNum">     101 </span>                :         {
+<span class="lineNum">     102 </span>                :             // delete the array that saves the nk points of this player
+<span class="lineNum">     103 </span><span class="lineCov">              7 :             for (int32_t i = 0 ; i &lt; this-&gt;m_nRowsInBoard; i++)</span>
+<span class="lineNum">     104 </span>                :             {
+<span class="lineNum">     105 </span><span class="lineCov">              6 :                 delete [] this-&gt;m_coordinateProperties[i];</span>
+<span class="lineNum">     106 </span>                :             }
+<span class="lineNum">     107 </span><span class="lineCov">              1 :             delete [] m_coordinateProperties;</span>
+<span class="lineNum">     108 </span>                : 
+<span class="lineNum">     109 </span>                :             // once the old memory is deleted allocate the new memory
+<span class="lineNum">     110 </span>                :             // needed for the new size before copying from object
+<span class="lineNum">     111 </span><span class="lineCov">              1 :             this-&gt;m_coordinateProperties   = new uint8_t* [a_src.m_nRowsInBoard];</span>
+<span class="lineNum">     112 </span><span class="lineCov">              6 :             for (int32_t i = 0; i &lt; a_src.m_nRowsInBoard; i++)</span>
+<span class="lineNum">     113 </span>                :             {
+<span class="lineNum">     114 </span><span class="lineCov">              5 :                 m_coordinateProperties[i] = new uint8_t[a_src.m_nColumnsInBoard];</span>
+<span class="lineNum">     115 </span>                :             }
+<span class="lineNum">     116 </span>                :         }
+<span class="lineNum">     117 </span>                : 
+<span class="lineNum">     118 </span>                :         // copy the new info from the source object
+<span class="lineNum">     119 </span><span class="lineCov">              2 :         CopyFromObject(a_src);</span>
+<span class="lineNum">     120 </span>                :     }
+<span class="lineNum">     121 </span>                : 
+<span class="lineNum">     122 </span><span class="lineCov">              2 :     return *this;</span>
+<a name="123"><span class="lineNum">     123 </span>                : }</a>
+<span class="lineNum">     124 </span>                : 
+<span class="lineNum">     125 </span><span class="lineCov">              3 : void Player::CopyFromObject(const Player &amp;a_src)</span>
+<span class="lineNum">     126 </span>                : {
+<span class="lineNum">     127 </span><span class="lineCov">              3 :     this-&gt;m_name                  = a_src.m_name;</span>
+<span class="lineNum">     128 </span><span class="lineCov">              3 :     this-&gt;m_presentationChar      = a_src.m_presentationChar;</span>
+<span class="lineNum">     129 </span><span class="lineCov">              3 :     this-&gt;m_nPiecesAvailable      = a_src.m_nPiecesAvailable;</span>
+<span class="lineNum">     130 </span><span class="lineCov">              3 :     this-&gt;m_nRowsInBoard          = a_src.m_nRowsInBoard;</span>
+<span class="lineNum">     131 </span><span class="lineCov">              3 :     this-&gt;m_nColumnsInBoard       = a_src.m_nColumnsInBoard;</span>
+<span class="lineNum">     132 </span><span class="lineCov">              3 :     this-&gt;m_nkPointsCount         = a_src.m_nkPointsCount;</span>
+<span class="lineNum">     133 </span><span class="lineCov">              3 :     this-&gt;m_influencedCoordsCount = a_src.m_influencedCoordsCount;</span>
+<span class="lineNum">     134 </span><span class="lineCov">              3 :     this-&gt;m_startingCoordinate    = a_src.m_startingCoordinate;</span>
+<span class="lineNum">     135 </span><span class="lineCov">              3 :     this-&gt;m_colourRed             = a_src.m_colourRed;</span>
+<span class="lineNum">     136 </span><span class="lineCov">              3 :     this-&gt;m_colourGreen           = a_src.m_colourGreen;</span>
+<span class="lineNum">     137 </span><span class="lineCov">              3 :     this-&gt;m_colourBlue            = a_src.m_colourBlue;</span>
+<span class="lineNum">     138 </span>                : 
+<span class="lineNum">     139 </span>                :     // copy the state of the pieces
+<span class="lineNum">     140 </span><span class="lineCov">             66 :     for (int8_t i = e_minimumPieceIndex; i &lt; e_numberOfPieces ; i++)</span>
+<span class="lineNum">     141 </span>                :     {
+<span class="lineNum">     142 </span><span class="lineCov">             63 :         this-&gt;m_pieces[i] = a_src.m_pieces[i];</span>
+<span class="lineNum">     143 </span><span class="lineCov">             63 :         this-&gt;m_piecesPresent[i] = a_src.m_piecesPresent[i];</span>
+<span class="lineNum">     144 </span>                :     }
+<span class="lineNum">     145 </span>                : 
+<span class="lineNum">     146 </span>                :     // set all the nk points to the src's
+<span class="lineNum">     147 </span><span class="lineCov">             18 :     for (int32_t i = 0; i &lt; a_src.m_nRowsInBoard; i++)</span>
+<span class="lineNum">     148 </span>                :     {
+<span class="lineNum">     149 </span><span class="lineCov">             90 :         for (int32_t j = 0 ; j &lt; a_src.m_nColumnsInBoard; j++)</span>
+<span class="lineNum">     150 </span>                :         {
+<span class="lineNum">     151 </span><span class="lineCov">             75 :             m_coordinateProperties[i][j] = a_src.m_coordinateProperties[i][j];</span>
+<span class="lineNum">     152 </span>                :         }
+<span class="lineNum">     153 </span>                :     }
+<a name="154"><span class="lineNum">     154 </span><span class="lineCov">              3 : }</span></a>
+<span class="lineNum">     155 </span>                : 
+<span class="lineNum">     156 </span><span class="lineNoCov">              0 : void Player::SetColour(uint8_t a_colourRed, uint8_t a_colourGreen, uint8_t a_colourBlue)</span>
+<span class="lineNum">     157 </span>                : {
+<span class="lineNum">     158 </span><span class="lineNoCov">              0 :     m_colourRed   = a_colourRed;</span>
+<span class="lineNum">     159 </span><span class="lineNoCov">              0 :     m_colourGreen = a_colourGreen;</span>
+<span class="lineNum">     160 </span><span class="lineNoCov">              0 :     m_colourBlue  = a_colourBlue;</span>
+<a name="161"><span class="lineNum">     161 </span><span class="lineNoCov">              0 : }</span></a>
+<span class="lineNum">     162 </span>                : 
+<span class="lineNum">     163 </span><span class="lineNoCov">              0 : void Player::GetColour(uint8_t &amp;out_colourRed, uint8_t &amp;out_colourGreen, uint8_t &amp;out_colourBlue) const</span>
+<span class="lineNum">     164 </span>                : {
+<span class="lineNum">     165 </span><span class="lineNoCov">              0 :     out_colourRed   = m_colourRed;</span>
+<span class="lineNum">     166 </span><span class="lineNoCov">              0 :     out_colourGreen = m_colourGreen;</span>
+<span class="lineNum">     167 </span><span class="lineNoCov">              0 :     out_colourBlue  = m_colourBlue;</span>
+<a name="168"><span class="lineNum">     168 </span><span class="lineNoCov">              0 : }</span></a>
+<span class="lineNum">     169 </span>                : 
+<span class="lineNum">     170 </span><span class="lineCov">              6 : void Player::Reset(const Coordinate &amp;a_startingCoordinate)</span>
+<span class="lineNum">     171 </span>                : {
+<span class="lineNum">     172 </span>                :         // reset all the pieces owned by the player
+<span class="lineNum">     173 </span><span class="lineCov">            132 :         for (int8_t i = e_minimumPieceIndex; i &lt; e_numberOfPieces; i++)</span>
+<span class="lineNum">     174 </span>                :         {
+<span class="lineNum">     175 </span><span class="lineCov">            126 :                 m_pieces[i].Reset();</span>
+<span class="lineNum">     176 </span>                : 
+<span class="lineNum">     177 </span><span class="lineCov">            126 :                 if (IsPieceAvailable(static_cast&lt;ePieceType_t&gt;(i)) == false)</span>
+<span class="lineNum">     178 </span>                :                 {
+<span class="lineNum">     179 </span><span class="lineCov">              4 :                         SetPiece(static_cast&lt;ePieceType_t&gt;(i));</span>
+<span class="lineNum">     180 </span>                :                 }
+<span class="lineNum">     181 </span>                :         }
+<span class="lineNum">     182 </span>                : 
+<span class="lineNum">     183 </span>                :         // Player will have all properties unset (false)
+<span class="lineNum">     184 </span><span class="lineCov">              6 :         Coordinate thisCoord(0, 0);</span>
+<span class="lineNum">     185 </span><span class="lineCov">             90 :         for (thisCoord.m_row = 0 ; thisCoord.m_row &lt; m_nRowsInBoard; thisCoord.m_row++)</span>
+<span class="lineNum">     186 </span>                :         {
+<span class="lineNum">     187 </span><span class="lineCov">           1260 :                 for (thisCoord.m_col = 0 ; thisCoord.m_col &lt; m_nColumnsInBoard; thisCoord.m_col++)</span>
+<span class="lineNum">     188 </span>                :                 {
+<span class="lineNum">     189 </span>                :                     //m_coordinateProperties[thisCoord.m_row][thisCoord.m_col] = ~COORD_PROPERTY_MASK;
+<span class="lineNum">     190 </span><span class="lineCov">           1176 :                     UnsetInfluencedCoord(thisCoord);</span>
+<span class="lineNum">     191 </span><span class="lineCov">           1176 :                     UnsetNucleationPoint(thisCoord);</span>
+<span class="lineNum">     192 </span>                :                 }
+<span class="lineNum">     193 </span>                :         }
+<span class="lineNum">     194 </span>                : 
+<span class="lineNum">     195 </span><span class="lineCov">              6 :     SetStartingCoordinate(a_startingCoordinate);</span>
+<span class="lineNum">     196 </span>                : 
+<span class="lineNum">     197 </span>                : #ifdef DEBUG
+<span class="lineNum">     198 </span><span class="lineCov">              6 :         assert(m_nkPointsCount == 0);</span>
+<span class="lineNum">     199 </span><span class="lineCov">              6 :         assert(m_influencedCoordsCount == 0);</span>
+<span class="lineNum">     200 </span><span class="lineCov">              6 :         assert(m_nPiecesAvailable == e_numberOfPieces);</span>
+<span class="lineNum">     201 </span>                : 
+<span class="lineNum">     202 </span><span class="lineCov">            264 :         for (int8_t i = e_minimumPieceIndex; i &lt; e_numberOfPieces; i++)</span>
+<span class="lineNum">     203 </span>                :         {
+<span class="lineNum">     204 </span><span class="lineCov">            126 :                 assert(IsPieceAvailable(static_cast&lt;ePieceType_t&gt;(i)));</span>
+<span class="lineNum">     205 </span>                :         }
+<span class="lineNum">     206 </span>                : 
+<span class="lineNum">     207 </span><span class="lineCov">             90 :     for (thisCoord.m_row = 0 ; thisCoord.m_row &lt; m_nRowsInBoard; thisCoord.m_row++)</span>
+<span class="lineNum">     208 </span>                :     {
+<span class="lineNum">     209 </span><span class="lineCov">           1260 :         for (thisCoord.m_col = 0 ; thisCoord.m_col &lt; m_nColumnsInBoard; thisCoord.m_col++)</span>
+<span class="lineNum">     210 </span>                :         {
+<span class="lineNum">     211 </span><span class="lineCov">           1176 :             assert(IsNucleationPoint(thisCoord) == false);</span>
+<span class="lineNum">     212 </span><span class="lineCov">           1176 :             assert(IsCoordInfluencedByPlayer(thisCoord) == false);</span>
+<span class="lineNum">     213 </span>                :         }
+<span class="lineNum">     214 </span><span class="lineCov">              6 :     }</span>
+<span class="lineNum">     215 </span>                : #endif
+<a name="216"><span class="lineNum">     216 </span><span class="lineCov">              6 : }</span></a>
+<span class="lineNum">     217 </span>                : 
+<span class="lineNum">     218 </span><span class="lineCov">             35 : void Player::LoadPieces()</span>
+<span class="lineNum">     219 </span>                : {
+<span class="lineNum">     220 </span><span class="lineCov">             35 :     m_pieces[e_1Piece_BabyPiece]    = Piece(e_1Piece_BabyPiece);</span>
+<span class="lineNum">     221 </span><span class="lineCov">             70 :     m_pieces[e_2Piece_TwoPiece]     = Piece(e_2Piece_TwoPiece);</span>
+<span class="lineNum">     222 </span><span class="lineCov">             70 :     m_pieces[e_3Piece_LongPiece]    = Piece(e_3Piece_LongPiece);</span>
+<span class="lineNum">     223 </span><span class="lineCov">             70 :     m_pieces[e_3Piece_Triangle]     = Piece(e_3Piece_Triangle);</span>
+<span class="lineNum">     224 </span><span class="lineCov">             70 :     m_pieces[e_4Piece_LongPiece]    = Piece(e_4Piece_LongPiece);</span>
+<span class="lineNum">     225 </span><span class="lineCov">             70 :     m_pieces[e_4Piece_LittleS]      = Piece(e_4Piece_LittleS);</span>
+<span class="lineNum">     226 </span><span class="lineCov">             70 :     m_pieces[e_4Piece_LittleT]      = Piece(e_4Piece_LittleT);</span>
+<span class="lineNum">     227 </span><span class="lineCov">             70 :     m_pieces[e_4Piece_LittleL]      = Piece(e_4Piece_LittleL);</span>
+<span class="lineNum">     228 </span><span class="lineCov">             70 :     m_pieces[e_4Piece_FullSquare]   = Piece(e_4Piece_FullSquare);</span>
+<span class="lineNum">     229 </span><span class="lineCov">             70 :     m_pieces[e_5Piece_BigS]         = Piece(e_5Piece_BigS);</span>
+<span class="lineNum">     230 </span><span class="lineCov">             70 :     m_pieces[e_5Piece_SafPiece]     = Piece(e_5Piece_SafPiece);</span>
+<span class="lineNum">     231 </span><span class="lineCov">             70 :     m_pieces[e_5Piece_WPiece]       = Piece(e_5Piece_WPiece);</span>
+<span class="lineNum">     232 </span><span class="lineCov">             70 :     m_pieces[e_5Piece_CuntPiece]    = Piece(e_5Piece_CuntPiece);</span>
+<span class="lineNum">     233 </span><span class="lineCov">             70 :     m_pieces[e_5Piece_BigPenis]     = Piece(e_5Piece_BigPenis);</span>
+<span class="lineNum">     234 </span><span class="lineCov">             70 :     m_pieces[e_5Piece_Cross]        = Piece(e_5Piece_Cross);</span>
+<span class="lineNum">     235 </span><span class="lineCov">             70 :     m_pieces[e_5Piece_HalfSquare]   = Piece(e_5Piece_HalfSquare);</span>
+<span class="lineNum">     236 </span><span class="lineCov">             70 :     m_pieces[e_5Piece_BigL]         = Piece(e_5Piece_BigL);</span>
+<span class="lineNum">     237 </span><span class="lineCov">             70 :     m_pieces[e_5Piece_MrT]          = Piece(e_5Piece_MrT);</span>
+<span class="lineNum">     238 </span><span class="lineCov">             70 :     m_pieces[e_5Piece_SquarePlus]   = Piece(e_5Piece_SquarePlus);</span>
+<span class="lineNum">     239 </span><span class="lineCov">             70 :     m_pieces[e_5Piece_BoringPiece]  = Piece(e_5Piece_BoringPiece);</span>
+<span class="lineNum">     240 </span><span class="lineCov">             70 :     m_pieces[e_5Piece_TheUltimate]  = Piece(e_5Piece_TheUltimate);</span>
+<a name="241"><span class="lineNum">     241 </span><span class="lineCov">             35 : }</span></a>
+<span class="lineNum">     242 </span>                : 
+<span class="lineNum">     243 </span><span class="lineCov">             60 : void Player::PrintAvailablePieces(std::ostream&amp; a_outStream) const</span>
+<span class="lineNum">     244 </span>                : {
+<span class="lineNum">     245 </span><span class="lineCov">           1320 :     for (uint32_t i = e_minimumPieceIndex; i &lt; e_numberOfPieces ; i++)</span>
+<span class="lineNum">     246 </span>                :     {
+<span class="lineNum">     247 </span><span class="lineCov">           1260 :         if (m_piecesPresent[i])</span>
+<span class="lineNum">     248 </span>                :         {
+<span class="lineNum">     249 </span><span class="lineCov">           1055 :             a_outStream &lt;&lt; &quot;1&quot;;</span>
+<span class="lineNum">     250 </span>                :         }
+<span class="lineNum">     251 </span>                :         else
+<span class="lineNum">     252 </span>                :         {
+<span class="lineNum">     253 </span><span class="lineCov">            205 :             a_outStream &lt;&lt; &quot;0&quot;;</span>
+<span class="lineNum">     254 </span>                :         }
+<span class="lineNum">     255 </span>                :     }
+<span class="lineNum">     256 </span><span class="lineCov">             60 :     a_outStream &lt;&lt; std::endl;</span>
+<a name="257"><span class="lineNum">     257 </span><span class="lineCov">             60 : }</span></a>
+<span class="lineNum">     258 </span>                : 
+<span class="lineNum">     259 </span><span class="lineNoCov">              0 : void Player::PrintNucleationPoints(std::ostream&amp; a_outStream) const</span>
+<span class="lineNum">     260 </span>                : {
+<span class="lineNum">     261 </span><span class="lineNoCov">              0 :     a_outStream &lt;&lt; &quot;  &quot;;</span>
+<span class="lineNum">     262 </span><span class="lineNoCov">              0 :     for (int32_t j = 0; j &lt; m_nColumnsInBoard; j++)</span>
+<span class="lineNum">     263 </span>                :     {
+<span class="lineNum">     264 </span><span class="lineNoCov">              0 :         a_outStream &lt;&lt; &quot; &quot; &lt;&lt; std::setfill(' ') &lt;&lt; std::setw(3) &lt;&lt; j;</span>
+<span class="lineNum">     265 </span>                :     }
+<span class="lineNum">     266 </span><span class="lineNoCov">              0 :     a_outStream &lt;&lt; std::endl;</span>
+<span class="lineNum">     267 </span>                : 
+<span class="lineNum">     268 </span><span class="lineNoCov">              0 :     Coordinate thisCoord;</span>
+<span class="lineNum">     269 </span><span class="lineNoCov">              0 :     for (thisCoord.m_row = 0; thisCoord.m_row &lt; m_nRowsInBoard; thisCoord.m_row++)</span>
+<span class="lineNum">     270 </span>                :     {
+<span class="lineNum">     271 </span><span class="lineNoCov">              0 :         a_outStream &lt;&lt; &quot;   +&quot;;</span>
+<span class="lineNum">     272 </span><span class="lineNoCov">              0 :         for (thisCoord.m_col = 0; thisCoord.m_col &lt; m_nColumnsInBoard; thisCoord.m_col++)</span>
+<span class="lineNum">     273 </span>                :         {
+<span class="lineNum">     274 </span><span class="lineNoCov">              0 :             a_outStream &lt;&lt; &quot;---+&quot;;</span>
+<span class="lineNum">     275 </span>                :         }
+<span class="lineNum">     276 </span><span class="lineNoCov">              0 :         a_outStream &lt;&lt; std::endl;</span>
+<span class="lineNum">     277 </span>                : 
+<span class="lineNum">     278 </span><span class="lineNoCov">              0 :         a_outStream &lt;&lt; std::setfill(' ') &lt;&lt; std::setw(2) &lt;&lt; thisCoord.m_row &lt;&lt; &quot; |&quot;;</span>
+<span class="lineNum">     279 </span><span class="lineNoCov">              0 :         for (thisCoord.m_col = 0; thisCoord.m_col &lt; m_nColumnsInBoard; thisCoord.m_col++)</span>
+<span class="lineNum">     280 </span>                :         {
+<span class="lineNum">     281 </span><span class="lineNoCov">              0 :             a_outStream &lt;&lt; &quot; &quot;;</span>
+<span class="lineNum">     282 </span><span class="lineNoCov">              0 :             if (IsNucleationPoint(thisCoord))</span>
+<span class="lineNum">     283 </span>                :             {
+<span class="lineNum">     284 </span><span class="lineNoCov">              0 :                 a_outStream &lt;&lt; m_presentationChar;</span>
+<span class="lineNum">     285 </span>                :             }
+<span class="lineNum">     286 </span>                :             else
+<span class="lineNum">     287 </span>                :             {
+<span class="lineNum">     288 </span><span class="lineNoCov">              0 :                 a_outStream &lt;&lt; &quot; &quot;;</span>
+<span class="lineNum">     289 </span>                :             }
+<span class="lineNum">     290 </span><span class="lineNoCov">              0 :             a_outStream &lt;&lt; &quot; |&quot;;</span>
+<span class="lineNum">     291 </span>                :         }
+<span class="lineNum">     292 </span><span class="lineNoCov">              0 :         a_outStream &lt;&lt; std::endl;</span>
+<span class="lineNum">     293 </span>                :     }
 <span class="lineNum">     294 </span>                : 
-<span class="lineNum">     295 </span><span class="lineNoCov">              0 : int32_t Player::GetAllNucleationPoints(</span>
-<span class="lineNum">     296 </span>                :                 Coordinate out_nucleationPoints[], int32_t a_size) const
-<span class="lineNum">     297 </span>                : {
-<span class="lineNum">     298 </span><span class="lineNoCov">              0 :         int32_t nNucleationPoints = 0;</span>
-<span class="lineNum">     299 </span>                : 
-<span class="lineNum">     300 </span><span class="lineNoCov">              0 :         Coordinate thisCoord(0, 0);</span>
-<span class="lineNum">     301 </span><span class="lineNoCov">              0 :     for (thisCoord.m_row = 0; thisCoord.m_row &lt; m_nRowsInBoard ; thisCoord.m_row++)</span>
-<span class="lineNum">     302 </span>                :     {
-<span class="lineNum">     303 </span><span class="lineNoCov">              0 :         for (thisCoord.m_col = 0; thisCoord.m_col &lt; m_nColumnsInBoard ; thisCoord.m_col++)</span>
-<span class="lineNum">     304 </span>                :         {
-<span class="lineNum">     305 </span><span class="lineNoCov">              0 :                 if (IsNucleationPoint(thisCoord))</span>
-<span class="lineNum">     306 </span>                :             {
-<span class="lineNum">     307 </span><span class="lineNoCov">              0 :                 if (nNucleationPoints &lt; a_size)</span>
-<span class="lineNum">     308 </span>                :                 {
-<span class="lineNum">     309 </span><span class="lineNoCov">              0 :                     out_nucleationPoints[nNucleationPoints] = thisCoord;</span>
-<span class="lineNum">     310 </span>                :                 }
-<span class="lineNum">     311 </span><span class="lineNoCov">              0 :                 nNucleationPoints++;</span>
-<span class="lineNum">     312 </span>                :             }
-<span class="lineNum">     313 </span>                :         }
-<span class="lineNum">     314 </span>                :     }
-<span class="lineNum">     315 </span>                : 
-<span class="lineNum">     316 </span><span class="lineNoCov">              0 :     return nNucleationPoints;</span>
-<a name="317"><span class="lineNum">     317 </span>                : }</a>
-<span class="lineNum">     318 </span>                : 
-<span class="lineNum">     319 </span><span class="lineCov">             20 : int32_t Player::GetAllNucleationPoints(</span>
-<span class="lineNum">     320 </span>                :         STLCoordinateSet_t &amp;a_set) const
-<span class="lineNum">     321 </span>                : {
-<span class="lineNum">     322 </span><span class="lineCov">             20 :     int32_t nNucleationPoints = 0;</span>
+<span class="lineNum">     295 </span><span class="lineNoCov">              0 :     a_outStream &lt;&lt; &quot;   +&quot;;</span>
+<span class="lineNum">     296 </span><span class="lineNoCov">              0 :     for (thisCoord.m_col = 0; thisCoord.m_col &lt; m_nColumnsInBoard; thisCoord.m_col++)</span>
+<span class="lineNum">     297 </span>                :     {
+<span class="lineNum">     298 </span><span class="lineNoCov">              0 :         a_outStream &lt;&lt; &quot;---+&quot;;</span>
+<span class="lineNum">     299 </span>                :     }
+<span class="lineNum">     300 </span><span class="lineNoCov">              0 :     a_outStream &lt;&lt; std::endl;</span>
+<a name="301"><span class="lineNum">     301 </span><span class="lineNoCov">              0 : }</span></a>
+<span class="lineNum">     302 </span>                : 
+<span class="lineNum">     303 </span><span class="lineNoCov">              0 : int32_t Player::GetAllNucleationPoints(</span>
+<span class="lineNum">     304 </span>                :                 Coordinate out_nucleationPoints[], int32_t a_size) const
+<span class="lineNum">     305 </span>                : {
+<span class="lineNum">     306 </span><span class="lineNoCov">              0 :         int32_t nNucleationPoints = 0;</span>
+<span class="lineNum">     307 </span>                : 
+<span class="lineNum">     308 </span><span class="lineNoCov">              0 :         Coordinate thisCoord(0, 0);</span>
+<span class="lineNum">     309 </span><span class="lineNoCov">              0 :     for (thisCoord.m_row = 0; thisCoord.m_row &lt; m_nRowsInBoard ; thisCoord.m_row++)</span>
+<span class="lineNum">     310 </span>                :     {
+<span class="lineNum">     311 </span><span class="lineNoCov">              0 :         for (thisCoord.m_col = 0; thisCoord.m_col &lt; m_nColumnsInBoard ; thisCoord.m_col++)</span>
+<span class="lineNum">     312 </span>                :         {
+<span class="lineNum">     313 </span><span class="lineNoCov">              0 :                 if (IsNucleationPoint(thisCoord))</span>
+<span class="lineNum">     314 </span>                :             {
+<span class="lineNum">     315 </span><span class="lineNoCov">              0 :                 if (nNucleationPoints &lt; a_size)</span>
+<span class="lineNum">     316 </span>                :                 {
+<span class="lineNum">     317 </span><span class="lineNoCov">              0 :                     out_nucleationPoints[nNucleationPoints] = thisCoord;</span>
+<span class="lineNum">     318 </span>                :                 }
+<span class="lineNum">     319 </span><span class="lineNoCov">              0 :                 nNucleationPoints++;</span>
+<span class="lineNum">     320 </span>                :             }
+<span class="lineNum">     321 </span>                :         }
+<span class="lineNum">     322 </span>                :     }
 <span class="lineNum">     323 </span>                : 
-<span class="lineNum">     324 </span><span class="lineCov">             20 :     Coordinate thisCoord(0, 0);</span>
-<span class="lineNum">     325 </span><span class="lineCov">            300 :     for (thisCoord.m_row = 0; thisCoord.m_row &lt; m_nRowsInBoard ; thisCoord.m_row++)</span>
-<span class="lineNum">     326 </span>                :     {
-<span class="lineNum">     327 </span><span class="lineCov">           4200 :         for (thisCoord.m_col = 0; thisCoord.m_col &lt; m_nColumnsInBoard ; thisCoord.m_col++)</span>
-<span class="lineNum">     328 </span>                :         {
-<span class="lineNum">     329 </span><span class="lineCov">           3920 :             if (IsNucleationPoint(thisCoord))</span>
-<span class="lineNum">     330 </span>                :             {
-<span class="lineNum">     331 </span><span class="lineCov">            262 :                 a_set.insert(thisCoord);</span>
-<span class="lineNum">     332 </span><span class="lineCov">            262 :                 nNucleationPoints++;</span>
-<span class="lineNum">     333 </span>                :             }
-<span class="lineNum">     334 </span>                :         }
-<span class="lineNum">     335 </span>                :     }
-<span class="lineNum">     336 </span>                : 
-<span class="lineNum">     337 </span><span class="lineCov">             20 :     return nNucleationPoints;</span>
-<a name="338"><span class="lineNum">     338 </span>                : }</a>
-<span class="lineNum">     339 </span>                : 
-<span class="lineNum">     340 </span><span class="lineCov">         412131 : bool Player::GetFirstNucleationPointSpiral(</span>
-<span class="lineNum">     341 </span>                :         SpiralIterator &amp;iterator, Coordinate &amp;out_coord) const
-<span class="lineNum">     342 </span>                : {
-<span class="lineNum">     343 </span><span class="lineCov">         412131 :         int32_t rowCount    = m_nRowsInBoard / 2;</span>
-<span class="lineNum">     344 </span><span class="lineCov">         412131 :         int32_t columnCount = m_nColumnsInBoard / 2;</span>
-<span class="lineNum">     345 </span><span class="lineCov">         412131 :         Coordinate thisCoord(0, 0);</span>
-<span class="lineNum">     346 </span><span class="lineCov">         412131 :     iterator = 0;</span>
+<span class="lineNum">     324 </span><span class="lineNoCov">              0 :     return nNucleationPoints;</span>
+<a name="325"><span class="lineNum">     325 </span>                : }</a>
+<span class="lineNum">     326 </span>                : 
+<span class="lineNum">     327 </span><span class="lineCov">             20 : int32_t Player::GetAllNucleationPoints(</span>
+<span class="lineNum">     328 </span>                :         STLCoordinateSet_t &amp;a_set) const
+<span class="lineNum">     329 </span>                : {
+<span class="lineNum">     330 </span><span class="lineCov">             20 :     int32_t nNucleationPoints = 0;</span>
+<span class="lineNum">     331 </span>                : 
+<span class="lineNum">     332 </span><span class="lineCov">             20 :     Coordinate thisCoord(0, 0);</span>
+<span class="lineNum">     333 </span><span class="lineCov">            300 :     for (thisCoord.m_row = 0; thisCoord.m_row &lt; m_nRowsInBoard ; thisCoord.m_row++)</span>
+<span class="lineNum">     334 </span>                :     {
+<span class="lineNum">     335 </span><span class="lineCov">           4200 :         for (thisCoord.m_col = 0; thisCoord.m_col &lt; m_nColumnsInBoard ; thisCoord.m_col++)</span>
+<span class="lineNum">     336 </span>                :         {
+<span class="lineNum">     337 </span><span class="lineCov">           3920 :             if (IsNucleationPoint(thisCoord))</span>
+<span class="lineNum">     338 </span>                :             {
+<span class="lineNum">     339 </span><span class="lineCov">            262 :                 a_set.insert(thisCoord);</span>
+<span class="lineNum">     340 </span><span class="lineCov">            262 :                 nNucleationPoints++;</span>
+<span class="lineNum">     341 </span>                :             }
+<span class="lineNum">     342 </span>                :         }
+<span class="lineNum">     343 </span>                :     }
+<span class="lineNum">     344 </span>                : 
+<span class="lineNum">     345 </span><span class="lineCov">             20 :     return nNucleationPoints;</span>
+<a name="346"><span class="lineNum">     346 </span>                : }</a>
 <span class="lineNum">     347 </span>                : 
-<span class="lineNum">     348 </span><span class="lineCov">         412131 :     int32_t maxRotationalIndex = 1 + std::max(m_nRowsInBoard / 2, m_nColumnsInBoard / 2);</span>
-<span class="lineNum">     349 </span><span class="lineCov">        1205782 :     while (iterator &lt;= maxRotationalIndex)</span>
-<span class="lineNum">     350 </span>                :     {
-<span class="lineNum">     351 </span><span class="lineCov">        2175834 :         for (thisCoord.m_row = (rowCount - iterator) ;</span>
-<span class="lineNum">     352 </span>                :              thisCoord.m_row &lt;= (rowCount + iterator) ;
-<span class="lineNum">     353 </span>                :              thisCoord.m_row++)
-<span class="lineNum">     354 </span>                :         {
-<span class="lineNum">     355 </span><span class="lineCov">        7100837 :             for (thisCoord.m_col = (columnCount - iterator) ;</span>
-<span class="lineNum">     356 </span>                :                  thisCoord.m_col &lt;= (columnCount + iterator) ;
-<span class="lineNum">     357 </span>                :                  thisCoord.m_col++)
-<span class="lineNum">     358 </span>                :             {
-<span class="lineNum">     359 </span><span class="lineCov">        5718654 :                 if ( (thisCoord.m_row &gt;= 0) &amp;&amp; (thisCoord.m_row &lt; m_nRowsInBoard) &amp;&amp;</span>
-<span class="lineNum">     360 </span>                :                      (thisCoord.m_col &gt;= 0) &amp;&amp; (thisCoord.m_col &lt; m_nColumnsInBoard) )
-<span class="lineNum">     361 </span>                :                 {
-<span class="lineNum">     362 </span><span class="lineCov">        5718654 :                     if ( (thisCoord.m_col == (columnCount - iterator)) ||</span>
-<span class="lineNum">     363 </span>                :                          (thisCoord.m_col == (columnCount + iterator)) ||
-<span class="lineNum">     364 </span>                :                          (thisCoord.m_row == (rowCount - iterator))    ||
-<span class="lineNum">     365 </span>                :                          (thisCoord.m_row == (rowCount + iterator))    )
-<span class="lineNum">     366 </span>                :                     {
-<span class="lineNum">     367 </span><span class="lineCov">        4086521 :                         if (IsNucleationPoint(thisCoord))</span>
-<span class="lineNum">     368 </span>                :                         {
-<span class="lineNum">     369 </span><span class="lineCov">         412131 :                             out_coord = thisCoord;</span>
-<span class="lineNum">     370 </span><span class="lineCov">         412131 :                             return true;</span>
-<span class="lineNum">     371 </span>                :                         }
-<span class="lineNum">     372 </span>                :                     }
-<span class="lineNum">     373 </span>                :                 }
-<span class="lineNum">     374 </span>                :             } // for (thisCoord.m_col = (columnCount - iterator) ;
-<span class="lineNum">     375 </span>                :         } // for (thisCoord.m_row = (rowCount - iterator) ;
-<span class="lineNum">     376 </span>                : 
-<span class="lineNum">     377 </span><span class="lineCov">         381520 :         iterator++;</span>
-<span class="lineNum">     378 </span>                :     } // while (iterator &lt;= maxRotationalIndex)
-<span class="lineNum">     379 </span>                : 
-<span class="lineNum">     380 </span><span class="lineNoCov">              0 :     return false;</span>
-<a name="381"><span class="lineNum">     381 </span>                : }</a>
-<span class="lineNum">     382 </span>                : 
-<span class="lineNum">     383 </span><span class="lineCov">        5536679 : bool Player::GetNextNucleationPointSpiral(</span>
-<span class="lineNum">     384 </span>                :         SpiralIterator &amp;iterator, Coordinate &amp;in_out_coord) const
-<span class="lineNum">     385 </span>                : {
-<span class="lineNum">     386 </span><span class="lineCov">        5536679 :         int32_t rowCount    = m_nRowsInBoard / 2;</span>
-<span class="lineNum">     387 </span><span class="lineCov">        5536679 :         int32_t columnCount = m_nColumnsInBoard / 2;</span>
-<span class="lineNum">     388 </span><span class="lineCov">        5536679 :         Coordinate thisCoord(0, 0);</span>
-<span class="lineNum">     389 </span>                : 
-<span class="lineNum">     390 </span>                :     // check the current line before incrementing this row
-<span class="lineNum">     391 </span><span class="lineCov">        5536679 :         thisCoord.m_row = in_out_coord.m_row;</span>
-<span class="lineNum">     392 </span><span class="lineCov">       21372426 :     for (thisCoord.m_col = (in_out_coord.m_col + 1) ;</span>
-<span class="lineNum">     393 </span>                :          thisCoord.m_col &lt;= (columnCount + iterator) ;
-<span class="lineNum">     394 </span>                :          thisCoord.m_col++)
-<span class="lineNum">     395 </span>                :     {
-<span class="lineNum">     396 </span><span class="lineCov">       16964455 :         if ( (thisCoord.m_row &gt;= 0) &amp;&amp; (thisCoord.m_row &lt; m_nRowsInBoard) &amp;&amp;</span>
-<span class="lineNum">     397 </span>                :              (thisCoord.m_col &gt;= 0) &amp;&amp; (thisCoord.m_col &lt; m_nColumnsInBoard) )
-<span class="lineNum">     398 </span>                :         {
-<span class="lineNum">     399 </span><span class="lineCov">       16655127 :             if ( (thisCoord.m_col== (columnCount - iterator)) || (thisCoord.m_col== (columnCount + iterator)) ||</span>
-<span class="lineNum">     400 </span>                :                  (thisCoord.m_row== (rowCount - iterator))    || (thisCoord.m_row== (rowCount + iterator)) )
-<span class="lineNum">     401 </span>                :             {
-<span class="lineNum">     402 </span><span class="lineCov">       11241987 :                 if (IsNucleationPoint(thisCoord))</span>
-<span class="lineNum">     403 </span>                :                 {
-<span class="lineNum">     404 </span><span class="lineCov">        1128708 :                         in_out_coord = thisCoord;</span>
-<span class="lineNum">     405 </span><span class="lineCov">        1128708 :                     return true;</span>
-<span class="lineNum">     406 </span>                :                 }
-<span class="lineNum">     407 </span>                :             }
-<span class="lineNum">     408 </span>                :         }
-<span class="lineNum">     409 </span>                :     }// for (thisCoord.m_col = (in_out_coord.m_col + 1) ;
-<span class="lineNum">     410 </span>                : 
-<span class="lineNum">     411 </span>                :     // check all the possibilities for this particular 'i' before incrementing the rotational index
-<span class="lineNum">     412 </span><span class="lineCov">       17297814 :     for (thisCoord.m_row= (in_out_coord.m_row + 1) ;</span>
-<span class="lineNum">     413 </span>                :          thisCoord.m_row&lt;= (rowCount + iterator) ;
-<span class="lineNum">     414 </span>                :          thisCoord.m_row++)
-<span class="lineNum">     415 </span>                :     {
-<span class="lineNum">     416 </span><span class="lineCov">      174298109 :         for (thisCoord.m_col= (columnCount - iterator) ;</span>
-<span class="lineNum">     417 </span>                :              thisCoord.m_col&lt;= (columnCount + iterator);
-<span class="lineNum">     418 </span>                :              thisCoord.m_col++)
-<span class="lineNum">     419 </span>                :         {
-<span class="lineNum">     420 </span><span class="lineCov">      161408266 :             if ( (thisCoord.m_row&gt;= 0) &amp;&amp; (thisCoord.m_row&lt; m_nRowsInBoard) &amp;&amp;</span>
-<span class="lineNum">     421 </span>                :                  (thisCoord.m_col&gt;= 0) &amp;&amp; (thisCoord.m_col&lt; m_nColumnsInBoard) )
-<span class="lineNum">     422 </span>                :             {
-<span class="lineNum">     423 </span><span class="lineCov">      154103092 :                 if ( (thisCoord.m_col == (columnCount - iterator)) || (thisCoord.m_col == (columnCount + iterator)) ||</span>
-<span class="lineNum">     424 </span>                :                      (thisCoord.m_row == (rowCount - iterator))    || (thisCoord.m_row == (rowCount + iterator)) )
-<span class="lineNum">     425 </span>                :                 {
-<span class="lineNum">     426 </span><span class="lineCov">       32686461 :                     if (IsNucleationPoint(thisCoord))</span>
-<span class="lineNum">     427 </span>                :                     {
-<span class="lineNum">     428 </span><span class="lineCov">        2053390 :                         in_out_coord = thisCoord;</span>
-<span class="lineNum">     429 </span><span class="lineCov">        2053390 :                         return true;</span>
-<span class="lineNum">     430 </span>                :                     }
-<span class="lineNum">     431 </span>                :                 }
-<span class="lineNum">     432 </span>                :             }
-<span class="lineNum">     433 </span>                :         } // for (thisCoord.m_col= (columnCount - iterator) ;
-<span class="lineNum">     434 </span>                :     } // for (thisCoord.m_row= (in_out_coord.m_row + 1) ;
-<span class="lineNum">     435 </span>                : 
-<span class="lineNum">     436 </span>                :     // go on with the next rotational index
-<span class="lineNum">     437 </span><span class="lineCov">        2354581 :     iterator++;</span>
-<span class="lineNum">     438 </span>                : 
-<span class="lineNum">     439 </span><span class="lineCov">        2354581 :     int maxRotationalIndex = 1 + std::max(m_nRowsInBoard / 2, m_nColumnsInBoard / 2);</span>
-<span class="lineNum">     440 </span><span class="lineCov">        5566946 :     while (iterator &lt;= maxRotationalIndex)</span>
-<span class="lineNum">     441 </span>                :     {
-<span class="lineNum">     442 </span><span class="lineCov">       16250764 :         for (thisCoord.m_row= (rowCount - iterator) ;</span>
-<span class="lineNum">     443 </span>                :              thisCoord.m_row&lt;= (rowCount + iterator) ;
-<span class="lineNum">     444 </span>                :              thisCoord.m_row++)
-<span class="lineNum">     445 </span>                :         {
-<span class="lineNum">     446 </span><span class="lineCov">      212032358 :             for (thisCoord.m_col= (columnCount - iterator) ;</span>
-<span class="lineNum">     447 </span>                :                  thisCoord.m_col&lt;= (columnCount + iterator);
-<span class="lineNum">     448 </span>                :                  thisCoord.m_col++)
-<span class="lineNum">     449 </span>                :             {
-<span class="lineNum">     450 </span><span class="lineCov">      198600380 :                 if ( (thisCoord.m_row &gt;= 0) &amp;&amp; (thisCoord.m_row &lt; m_nRowsInBoard) &amp;&amp;</span>
-<span class="lineNum">     451 </span>                :                      (thisCoord.m_col &gt;= 0) &amp;&amp; (thisCoord.m_col &lt; m_nColumnsInBoard) )
-<span class="lineNum">     452 </span>                :                 {
-<span class="lineNum">     453 </span><span class="lineCov">      158198207 :                     if ( (thisCoord.m_col == (columnCount - iterator)) || (thisCoord.m_col == (columnCount + iterator)) ||</span>
-<span class="lineNum">     454 </span>                :                          (thisCoord.m_row == (rowCount - iterator))    || (thisCoord.m_row == (rowCount + iterator)) )
-<span class="lineNum">     455 </span>                :                     {
-<span class="lineNum">     456 </span><span class="lineCov">       29854843 :                         if (IsNucleationPoint(thisCoord))</span>
-<span class="lineNum">     457 </span>                :                         {
-<span class="lineNum">     458 </span><span class="lineCov">        1961002 :                                 in_out_coord = thisCoord;</span>
-<span class="lineNum">     459 </span><span class="lineCov">        1961002 :                             return true;</span>
-<span class="lineNum">     460 </span>                :                         }
-<span class="lineNum">     461 </span>                :                     }
-<span class="lineNum">     462 </span>                :                 }
-<span class="lineNum">     463 </span>                :             } // for (thisCoord.m_col= (columnCount - iterator) ;
-<span class="lineNum">     464 </span>                :         } // for (thisCoord.m_row= (rowCount - iterator) ;
-<span class="lineNum">     465 </span><span class="lineCov">         857784 :         iterator++;</span>
-<span class="lineNum">     466 </span>                :     } // while (iterator &lt;= maxRotationalIndex)
-<span class="lineNum">     467 </span>                : 
-<span class="lineNum">     468 </span><span class="lineCov">         393579 :     return false;</span>
-<span class="lineNum">     469 </span>                : }
+<span class="lineNum">     348 </span><span class="lineCov">        1435566 : bool Player::GetFirstNucleationPointSpiral(</span>
+<span class="lineNum">     349 </span>                :         SpiralIterator &amp;iterator, Coordinate &amp;out_coord) const
+<span class="lineNum">     350 </span>                : {
+<span class="lineNum">     351 </span><span class="lineCov">        1435566 :         int32_t rowCount    = m_nRowsInBoard / 2;</span>
+<span class="lineNum">     352 </span><span class="lineCov">        1435566 :         int32_t columnCount = m_nColumnsInBoard / 2;</span>
+<span class="lineNum">     353 </span><span class="lineCov">        1435566 :         Coordinate thisCoord(0, 0);</span>
+<span class="lineNum">     354 </span><span class="lineCov">        1435566 :     iterator = 0;</span>
+<span class="lineNum">     355 </span>                : 
+<span class="lineNum">     356 </span><span class="lineCov">        1435566 :     int32_t maxRotationalIndex = 1 + std::max(m_nRowsInBoard / 2, m_nColumnsInBoard / 2);</span>
+<span class="lineNum">     357 </span><span class="lineCov">        4341470 :     while (iterator &lt;= maxRotationalIndex)</span>
+<span class="lineNum">     358 </span>                :     {
+<span class="lineNum">     359 </span><span class="lineCov">        8315536 :         for (thisCoord.m_row = (rowCount - iterator) ;</span>
+<span class="lineNum">     360 </span>                :              thisCoord.m_row &lt;= (rowCount + iterator) ;
+<span class="lineNum">     361 </span>                :              thisCoord.m_row++)
+<span class="lineNum">     362 </span>                :         {
+<span class="lineNum">     363 </span><span class="lineCov">       27451149 :             for (thisCoord.m_col = (columnCount - iterator) ;</span>
+<span class="lineNum">     364 </span>                :                  thisCoord.m_col &lt;= (columnCount + iterator) ;
+<span class="lineNum">     365 </span>                :                  thisCoord.m_col++)
+<span class="lineNum">     366 </span>                :             {
+<span class="lineNum">     367 </span><span class="lineCov">       22041517 :                 if ( (thisCoord.m_row &gt;= 0) &amp;&amp; (thisCoord.m_row &lt; m_nRowsInBoard) &amp;&amp;</span>
+<span class="lineNum">     368 </span>                :                      (thisCoord.m_col &gt;= 0) &amp;&amp; (thisCoord.m_col &lt; m_nColumnsInBoard) )
+<span class="lineNum">     369 </span>                :                 {
+<span class="lineNum">     370 </span><span class="lineCov">       22041517 :                     if ( (thisCoord.m_col == (columnCount - iterator)) ||</span>
+<span class="lineNum">     371 </span>                :                          (thisCoord.m_col == (columnCount + iterator)) ||
+<span class="lineNum">     372 </span>                :                          (thisCoord.m_row == (rowCount - iterator))    ||
+<span class="lineNum">     373 </span>                :                          (thisCoord.m_row == (rowCount + iterator))    )
+<span class="lineNum">     374 </span>                :                     {
+<span class="lineNum">     375 </span><span class="lineCov">       15599342 :                         if (IsNucleationPoint(thisCoord))</span>
+<span class="lineNum">     376 </span>                :                         {
+<span class="lineNum">     377 </span><span class="lineCov">        1435566 :                             out_coord = thisCoord;</span>
+<span class="lineNum">     378 </span><span class="lineCov">        1435566 :                             return true;</span>
+<span class="lineNum">     379 </span>                :                         }
+<span class="lineNum">     380 </span>                :                     }
+<span class="lineNum">     381 </span>                :                 }
+<span class="lineNum">     382 </span>                :             } // for (thisCoord.m_col = (columnCount - iterator) ;
+<span class="lineNum">     383 </span>                :         } // for (thisCoord.m_row = (rowCount - iterator) ;
+<span class="lineNum">     384 </span>                : 
+<span class="lineNum">     385 </span><span class="lineCov">        1470338 :         iterator++;</span>
+<span class="lineNum">     386 </span>                :     } // while (iterator &lt;= maxRotationalIndex)
+<span class="lineNum">     387 </span>                : 
+<span class="lineNum">     388 </span><span class="lineNoCov">              0 :     return false;</span>
+<a name="389"><span class="lineNum">     389 </span>                : }</a>
+<span class="lineNum">     390 </span>                : 
+<span class="lineNum">     391 </span><span class="lineCov">       18666562 : bool Player::GetNextNucleationPointSpiral(</span>
+<span class="lineNum">     392 </span>                :         SpiralIterator &amp;iterator, Coordinate &amp;in_out_coord) const
+<span class="lineNum">     393 </span>                : {
+<span class="lineNum">     394 </span><span class="lineCov">       18666562 :         int32_t rowCount    = m_nRowsInBoard / 2;</span>
+<span class="lineNum">     395 </span><span class="lineCov">       18666562 :         int32_t columnCount = m_nColumnsInBoard / 2;</span>
+<span class="lineNum">     396 </span><span class="lineCov">       18666562 :         Coordinate thisCoord(0, 0);</span>
+<span class="lineNum">     397 </span>                : 
+<span class="lineNum">     398 </span>                :     // check the current line before incrementing this row
+<span class="lineNum">     399 </span><span class="lineCov">       18666562 :         thisCoord.m_row = in_out_coord.m_row;</span>
+<span class="lineNum">     400 </span><span class="lineCov">       78434809 :     for (thisCoord.m_col = (in_out_coord.m_col + 1) ;</span>
+<span class="lineNum">     401 </span>                :          thisCoord.m_col &lt;= (columnCount + iterator) ;
+<span class="lineNum">     402 </span>                :          thisCoord.m_col++)
+<span class="lineNum">     403 </span>                :     {
+<span class="lineNum">     404 </span><span class="lineCov">       63545139 :         if ( (thisCoord.m_row &gt;= 0) &amp;&amp; (thisCoord.m_row &lt; m_nRowsInBoard) &amp;&amp;</span>
+<span class="lineNum">     405 </span>                :              (thisCoord.m_col &gt;= 0) &amp;&amp; (thisCoord.m_col &lt; m_nColumnsInBoard) )
+<span class="lineNum">     406 </span>                :         {
+<span class="lineNum">     407 </span><span class="lineCov">       62467978 :             if ( (thisCoord.m_col== (columnCount - iterator)) || (thisCoord.m_col== (columnCount + iterator)) ||</span>
+<span class="lineNum">     408 </span>                :                  (thisCoord.m_row== (rowCount - iterator))    || (thisCoord.m_row== (rowCount + iterator)) )
+<span class="lineNum">     409 </span>                :             {
+<span class="lineNum">     410 </span><span class="lineCov">       38740860 :                 if (IsNucleationPoint(thisCoord))</span>
+<span class="lineNum">     411 </span>                :                 {
+<span class="lineNum">     412 </span><span class="lineCov">        3776892 :                         in_out_coord = thisCoord;</span>
+<span class="lineNum">     413 </span><span class="lineCov">        3776892 :                     return true;</span>
+<span class="lineNum">     414 </span>                :                 }
+<span class="lineNum">     415 </span>                :             }
+<span class="lineNum">     416 </span>                :         }
+<span class="lineNum">     417 </span>                :     }// for (thisCoord.m_col = (in_out_coord.m_col + 1) ;
+<span class="lineNum">     418 </span>                : 
+<span class="lineNum">     419 </span>                :     // check all the possibilities for this particular 'i' before incrementing the rotational index
+<span class="lineNum">     420 </span><span class="lineCov">       58879800 :     for (thisCoord.m_row= (in_out_coord.m_row + 1) ;</span>
+<span class="lineNum">     421 </span>                :          thisCoord.m_row&lt;= (rowCount + iterator) ;
+<span class="lineNum">     422 </span>                :          thisCoord.m_row++)
+<span class="lineNum">     423 </span>                :     {
+<span class="lineNum">     424 </span><span class="lineCov">      584775144 :         for (thisCoord.m_col= (columnCount - iterator) ;</span>
+<span class="lineNum">     425 </span>                :              thisCoord.m_col&lt;= (columnCount + iterator);
+<span class="lineNum">     426 </span>                :              thisCoord.m_col++)
+<span class="lineNum">     427 </span>                :         {
+<span class="lineNum">     428 </span><span class="lineCov">      540785014 :             if ( (thisCoord.m_row&gt;= 0) &amp;&amp; (thisCoord.m_row&lt; m_nRowsInBoard) &amp;&amp;</span>
+<span class="lineNum">     429 </span>                :                  (thisCoord.m_col&gt;= 0) &amp;&amp; (thisCoord.m_col&lt; m_nColumnsInBoard) )
+<span class="lineNum">     430 </span>                :             {
+<span class="lineNum">     431 </span><span class="lineCov">      517147094 :                 if ( (thisCoord.m_col == (columnCount - iterator)) || (thisCoord.m_col == (columnCount + iterator)) ||</span>
+<span class="lineNum">     432 </span>                :                      (thisCoord.m_row == (rowCount - iterator))    || (thisCoord.m_row == (rowCount + iterator)) )
+<span class="lineNum">     433 </span>                :                 {
+<span class="lineNum">     434 </span><span class="lineCov">      113658777 :                     if (IsNucleationPoint(thisCoord))</span>
+<span class="lineNum">     435 </span>                :                     {
+<span class="lineNum">     436 </span><span class="lineCov">        7002481 :                         in_out_coord = thisCoord;</span>
+<span class="lineNum">     437 </span><span class="lineCov">        7002481 :                         return true;</span>
+<span class="lineNum">     438 </span>                :                     }
+<span class="lineNum">     439 </span>                :                 }
+<span class="lineNum">     440 </span>                :             }
+<span class="lineNum">     441 </span>                :         } // for (thisCoord.m_col= (columnCount - iterator) ;
+<span class="lineNum">     442 </span>                :     } // for (thisCoord.m_row= (in_out_coord.m_row + 1) ;
+<span class="lineNum">     443 </span>                : 
+<span class="lineNum">     444 </span>                :     // go on with the next rotational index
+<span class="lineNum">     445 </span><span class="lineCov">        7887189 :     iterator++;</span>
+<span class="lineNum">     446 </span>                : 
+<span class="lineNum">     447 </span><span class="lineCov">        7887189 :     int maxRotationalIndex = 1 + std::max(m_nRowsInBoard / 2, m_nColumnsInBoard / 2);</span>
+<span class="lineNum">     448 </span><span class="lineCov">       18992634 :     while (iterator &lt;= maxRotationalIndex)</span>
+<span class="lineNum">     449 </span>                :     {
+<span class="lineNum">     450 </span><span class="lineCov">       57642551 :         for (thisCoord.m_row= (rowCount - iterator) ;</span>
+<span class="lineNum">     451 </span>                :              thisCoord.m_row&lt;= (rowCount + iterator) ;
+<span class="lineNum">     452 </span>                :              thisCoord.m_row++)
+<span class="lineNum">     453 </span>                :         {
+<span class="lineNum">     454 </span><span class="lineCov">      756785456 :             for (thisCoord.m_col= (columnCount - iterator) ;</span>
+<span class="lineNum">     455 </span>                :                  thisCoord.m_col&lt;= (columnCount + iterator);
+<span class="lineNum">     456 </span>                :                  thisCoord.m_col++)
+<span class="lineNum">     457 </span>                :             {
+<span class="lineNum">     458 </span><span class="lineCov">      708880434 :                 if ( (thisCoord.m_row &gt;= 0) &amp;&amp; (thisCoord.m_row &lt; m_nRowsInBoard) &amp;&amp;</span>
+<span class="lineNum">     459 </span>                :                      (thisCoord.m_col &gt;= 0) &amp;&amp; (thisCoord.m_col &lt; m_nColumnsInBoard) )
+<span class="lineNum">     460 </span>                :                 {
+<span class="lineNum">     461 </span><span class="lineCov">      566705052 :                     if ( (thisCoord.m_col == (columnCount - iterator)) || (thisCoord.m_col == (columnCount + iterator)) ||</span>
+<span class="lineNum">     462 </span>                :                          (thisCoord.m_row == (rowCount - iterator))    || (thisCoord.m_row == (rowCount + iterator)) )
+<span class="lineNum">     463 </span>                :                     {
+<span class="lineNum">     464 </span><span class="lineCov">      104769422 :                         if (IsNucleationPoint(thisCoord))</span>
+<span class="lineNum">     465 </span>                :                         {
+<span class="lineNum">     466 </span><span class="lineCov">        6519273 :                                 in_out_coord = thisCoord;</span>
+<span class="lineNum">     467 </span><span class="lineCov">        6519273 :                             return true;</span>
+<span class="lineNum">     468 </span>                :                         }
+<span class="lineNum">     469 </span>                :                     }
+<span class="lineNum">     470 </span>                :                 }
+<span class="lineNum">     471 </span>                :             } // for (thisCoord.m_col= (columnCount - iterator) ;
+<span class="lineNum">     472 </span>                :         } // for (thisCoord.m_row= (rowCount - iterator) ;
+<span class="lineNum">     473 </span><span class="lineCov">        3218256 :         iterator++;</span>
+<span class="lineNum">     474 </span>                :     } // while (iterator &lt;= maxRotationalIndex)
+<span class="lineNum">     475 </span>                : 
+<span class="lineNum">     476 </span><span class="lineCov">        1367916 :     return false;</span>
+<span class="lineNum">     477 </span>                : }
 </pre>
       </td>
     </tr>
