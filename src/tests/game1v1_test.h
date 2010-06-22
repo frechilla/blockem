@@ -70,6 +70,13 @@ private:
     ///        iot can be set to e_noPiece to prevent the assertion from being run
     void TestBoardAndPiecesBitwise(int32_t a_nUsedPieces, ePieceType_t a_pieceMissing = e_noPiece);
 
+    /// Tests if Get[First|Next]NucleationPointSpiral works properly
+    void TestNKSpiralAlgorithm(eGame1v1Player_t who);
+
+    /// Tests if CalculateNextValidCoordInNucleationPoint works as well as
+    /// CalculateValidCoordsInNucleationPoint does
+    void TestCalculateValidCoordsInNKPoint(eGame1v1Player_t who, const Coordinate &where);
+
     void PutDownPiece(Piece &a_piece)
     {
         Game1v1::PutDownPiece(

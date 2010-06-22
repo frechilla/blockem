@@ -350,33 +350,31 @@ bool Player::GetFirstNucleationPointSpiral(
 {
 	int32_t rowCount    = m_nRowsInBoard / 2;
 	int32_t columnCount = m_nColumnsInBoard / 2;
+    int32_t startRow, startCol, endRow, endCol;
 	Coordinate thisCoord(0, 0);
     iterator = 0;
 
     int32_t maxRotationalIndex = 1 + std::max(m_nRowsInBoard / 2, m_nColumnsInBoard / 2);
     while (iterator <= maxRotationalIndex)
     {
-        for (thisCoord.m_row = (rowCount - iterator) ;
-             thisCoord.m_row <= (rowCount + iterator) ;
-             thisCoord.m_row++)
+        startRow = std::max(0, rowCount - iterator);
+        startCol = std::max(0, columnCount - iterator);
+        endRow   = std::min(m_nRowsInBoard - 1, rowCount + iterator);
+        endCol   = std::min(m_nColumnsInBoard - 1, columnCount + iterator);
+
+        for (thisCoord.m_row = startRow; thisCoord.m_row <= endRow; thisCoord.m_row++)
         {
-            for (thisCoord.m_col = (columnCount - iterator) ;
-                 thisCoord.m_col <= (columnCount + iterator) ;
-                 thisCoord.m_col++)
+            for (thisCoord.m_col = startCol; thisCoord.m_col <= endCol; thisCoord.m_col++)
             {
-                if ( (thisCoord.m_row >= 0) && (thisCoord.m_row < m_nRowsInBoard) &&
-                     (thisCoord.m_col >= 0) && (thisCoord.m_col < m_nColumnsInBoard) )
+                if ( (thisCoord.m_col == (columnCount - iterator)) ||
+                     (thisCoord.m_col == (columnCount + iterator)) ||
+                     (thisCoord.m_row == (rowCount - iterator))    ||
+                     (thisCoord.m_row == (rowCount + iterator))    )
                 {
-                    if ( (thisCoord.m_col == (columnCount - iterator)) ||
-                         (thisCoord.m_col == (columnCount + iterator)) ||
-                         (thisCoord.m_row == (rowCount - iterator))    ||
-                         (thisCoord.m_row == (rowCount + iterator))    )
+                    if (IsNucleationPoint(thisCoord))
                     {
-                        if (IsNucleationPoint(thisCoord))
-                        {
-                            out_coord = thisCoord;
-                            return true;
-                        }
+                        out_coord = thisCoord;
+                        return true;
                     }
                 }
             } // for (thisCoord.m_col = (columnCount - iterator) ;
@@ -391,51 +389,53 @@ bool Player::GetFirstNucleationPointSpiral(
 bool Player::GetNextNucleationPointSpiral(
         SpiralIterator &iterator, Coordinate &in_out_coord) const
 {
+#ifdef DEBUG
+    assert(in_out_coord.m_row >= 0);
+    assert(in_out_coord.m_row <  m_nRowsInBoard);
+    assert(in_out_coord.m_col >= 0);
+    assert(in_out_coord.m_col <  m_nColumnsInBoard);
+#endif
+
 	int32_t rowCount    = m_nRowsInBoard / 2;
 	int32_t columnCount = m_nColumnsInBoard / 2;
+    int32_t startRow, startCol, endRow, endCol;
 	Coordinate thisCoord(0, 0);
 
     // check the current line before incrementing this row
 	thisCoord.m_row = in_out_coord.m_row;
-    for (thisCoord.m_col = (in_out_coord.m_col + 1) ;
-         thisCoord.m_col <= (columnCount + iterator) ;
+    endCol = std::min(m_nColumnsInBoard - 1, columnCount + iterator);
+    for (thisCoord.m_col = (in_out_coord.m_col + 1);
+         thisCoord.m_col <= endCol;
          thisCoord.m_col++)
     {
-        if ( (thisCoord.m_row >= 0) && (thisCoord.m_row < m_nRowsInBoard) &&
-             (thisCoord.m_col >= 0) && (thisCoord.m_col < m_nColumnsInBoard) )
+        if ( (thisCoord.m_col == (columnCount - iterator)) || (thisCoord.m_col == (columnCount + iterator)) ||
+             (thisCoord.m_row == (rowCount - iterator))    || (thisCoord.m_row == (rowCount + iterator)) )
         {
-            if ( (thisCoord.m_col== (columnCount - iterator)) || (thisCoord.m_col== (columnCount + iterator)) ||
-                 (thisCoord.m_row== (rowCount - iterator))    || (thisCoord.m_row== (rowCount + iterator)) )
+            if (IsNucleationPoint(thisCoord))
+            {
+                in_out_coord = thisCoord;
+                return true;
+            }
+        }
+    }// for (thisCoord.m_col = (in_out_coord.m_col + 1);
+
+    // check all the possibilities for next row before incrementing the rotational index
+    startCol = std::max(0, columnCount - iterator);
+    endRow   = std::min(m_nRowsInBoard - 1, rowCount + iterator);
+    endCol   = std::min(m_nColumnsInBoard - 1, columnCount + iterator);
+    for (thisCoord.m_row  = (in_out_coord.m_row + 1) ;
+         thisCoord.m_row <= endRow;
+         thisCoord.m_row++)
+    {
+        for (thisCoord.m_col = startCol; thisCoord.m_col <= endCol; thisCoord.m_col++)
+        {
+            if ( (thisCoord.m_col == (columnCount - iterator)) || (thisCoord.m_col == (columnCount + iterator)) ||
+                 (thisCoord.m_row == (rowCount - iterator))    || (thisCoord.m_row == (rowCount + iterator)) )
             {
                 if (IsNucleationPoint(thisCoord))
                 {
-                	in_out_coord = thisCoord;
+                    in_out_coord = thisCoord;
                     return true;
-                }
-            }
-        }
-    }// for (thisCoord.m_col = (in_out_coord.m_col + 1) ;
-
-    // check all the possibilities for this particular 'i' before incrementing the rotational index
-    for (thisCoord.m_row= (in_out_coord.m_row + 1) ;
-         thisCoord.m_row<= (rowCount + iterator) ;
-         thisCoord.m_row++)
-    {
-        for (thisCoord.m_col= (columnCount - iterator) ;
-             thisCoord.m_col<= (columnCount + iterator);
-             thisCoord.m_col++)
-        {
-            if ( (thisCoord.m_row>= 0) && (thisCoord.m_row< m_nRowsInBoard) &&
-                 (thisCoord.m_col>= 0) && (thisCoord.m_col< m_nColumnsInBoard) )
-            {
-                if ( (thisCoord.m_col == (columnCount - iterator)) || (thisCoord.m_col == (columnCount + iterator)) ||
-                     (thisCoord.m_row == (rowCount - iterator))    || (thisCoord.m_row == (rowCount + iterator)) )
-                {
-                    if (IsNucleationPoint(thisCoord))
-                    {
-                    	in_out_coord = thisCoord;
-                        return true;
-                    }
                 }
             }
         } // for (thisCoord.m_col= (columnCount - iterator) ;
@@ -447,25 +447,22 @@ bool Player::GetNextNucleationPointSpiral(
     int maxRotationalIndex = 1 + std::max(m_nRowsInBoard / 2, m_nColumnsInBoard / 2);
     while (iterator <= maxRotationalIndex)
     {
-        for (thisCoord.m_row= (rowCount - iterator) ;
-             thisCoord.m_row<= (rowCount + iterator) ;
-             thisCoord.m_row++)
+        startRow = std::max(0, rowCount - iterator);
+        startCol = std::max(0, columnCount - iterator);
+        endRow   = std::min(m_nRowsInBoard - 1, rowCount + iterator);
+        endCol   = std::min(m_nColumnsInBoard - 1, columnCount + iterator);
+
+        for (thisCoord.m_row = startRow; thisCoord.m_row <= endRow; thisCoord.m_row++)
         {
-            for (thisCoord.m_col= (columnCount - iterator) ;
-                 thisCoord.m_col<= (columnCount + iterator);
-                 thisCoord.m_col++)
+            for (thisCoord.m_col = startCol; thisCoord.m_col <= endCol; thisCoord.m_col++)
             {
-                if ( (thisCoord.m_row >= 0) && (thisCoord.m_row < m_nRowsInBoard) &&
-                     (thisCoord.m_col >= 0) && (thisCoord.m_col < m_nColumnsInBoard) )
+                if ( (thisCoord.m_col == (columnCount - iterator)) || (thisCoord.m_col == (columnCount + iterator)) ||
+                     (thisCoord.m_row == (rowCount - iterator))    || (thisCoord.m_row == (rowCount + iterator)) )
                 {
-                    if ( (thisCoord.m_col == (columnCount - iterator)) || (thisCoord.m_col == (columnCount + iterator)) ||
-                         (thisCoord.m_row == (rowCount - iterator))    || (thisCoord.m_row == (rowCount + iterator)) )
+                    if (IsNucleationPoint(thisCoord))
                     {
-                        if (IsNucleationPoint(thisCoord))
-                        {
-                        	in_out_coord = thisCoord;
-                            return true;
-                        }
+                        in_out_coord = thisCoord;
+                        return true;
                     }
                 }
             } // for (thisCoord.m_col= (columnCount - iterator) ;

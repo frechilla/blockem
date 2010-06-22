@@ -30,6 +30,9 @@
 
 #include "game1v1_test.h"
 #include "bitwise.h"
+#ifdef DEBUG_PRINT
+#include <iostream>
+#endif
 
 Game1v1Test::Game1v1Test() :
     Game1v1()
@@ -82,6 +85,10 @@ void Game1v1Test::TestBitwiseCheckConfiguration(
 
 void Game1v1Test::TestBoardAndPiecesBitwise(int32_t a_nUsedPieces, ePieceType_t a_pieceMissing)
 {
+#ifdef DEBUG_PRINT
+    std::cout << __FUNCTION__ << std::endl;
+#endif
+
     // assert params are correct
     if (a_pieceMissing != e_noPiece)
     {
@@ -214,6 +221,10 @@ void Game1v1Test::TestBoardAndPiecesBitwise(int32_t a_nUsedPieces, ePieceType_t 
 }
 void Game1v1Test::TestBitwise()
 {
+#ifdef DEBUG_PRINT
+    std::cout << __FUNCTION__ << std::endl;
+#endif
+
     // ensure the game1v1 hasn't been modified
     Reset();
 
@@ -235,7 +246,11 @@ void Game1v1Test::TestBitwise()
     // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
     // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
     Game1v1::PutDownPiece(m_player1.m_pieces[e_5Piece_Cross], Coordinate(6, 6), Game1v1::e_Game1v1Player1);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player2);
     Game1v1::PutDownPiece(m_player2.m_pieces[e_5Piece_Cross], Coordinate(4, 4), Game1v1::e_Game1v1Player2);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player2);
 
     // neither player1 nor player2 have the cross piece now, it won't be tested in this first stage
     // of the test, but they will be tested a bit later, in the 2 following tests
@@ -262,7 +277,11 @@ void Game1v1Test::TestBitwise()
     // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
     // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
     Game1v1::PutDownPiece(m_player1.m_pieces[e_1Piece_BabyPiece], Coordinate(6, 6), Game1v1::e_Game1v1Player1);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player2);
     Game1v1::PutDownPiece(m_player2.m_pieces[e_1Piece_BabyPiece], Coordinate(4, 4), Game1v1::e_Game1v1Player2);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player2);
 
     // go for the test!
     TestBoardAndPiecesBitwise(1, e_1Piece_BabyPiece);
@@ -293,8 +312,12 @@ void Game1v1Test::TestBitwise()
     //    X
     m_player1.m_pieces[e_3Piece_Triangle].RotateLeft();
     Game1v1::PutDownPiece(m_player1.m_pieces[e_3Piece_Triangle], Coordinate(6, 6), Game1v1::e_Game1v1Player1);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player2);
     m_player2.m_pieces[e_3Piece_Triangle].RotateRight();
     Game1v1::PutDownPiece(m_player2.m_pieces[e_3Piece_Triangle], Coordinate(4, 4), Game1v1::e_Game1v1Player2);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player2);
 
     // go for the test!
     TestBoardAndPiecesBitwise(1, e_3Piece_Triangle);
@@ -323,9 +346,13 @@ void Game1v1Test::TestBitwise()
     // X(X)X
     //     X
     Game1v1::PutDownPiece(m_player1.m_pieces[e_5Piece_MrT], Coordinate(4, 7), Game1v1::e_Game1v1Player1);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player2);
     m_player2.m_pieces[e_5Piece_MrT].RotateRight();
     m_player2.m_pieces[e_5Piece_MrT].RotateRight();
     Game1v1::PutDownPiece(m_player2.m_pieces[e_5Piece_MrT], Coordinate(6, 3), Game1v1::e_Game1v1Player2);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player2);
 
     // go for the test! (2 pieces were deployed on the board before launching the test)
     TestBoardAndPiecesBitwise(2);
@@ -354,6 +381,8 @@ void Game1v1Test::TestBitwise()
     //  (X)
     // X X
     Game1v1::PutDownPiece(m_player1.m_pieces[e_5Piece_BigS], Coordinate(1, 10), Game1v1::e_Game1v1Player1);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player2);
 
     // go for the test! (3 pieces were deployed on the board by m_player1 before launching the test)
     TestBoardAndPiecesBitwise(3);
@@ -361,6 +390,10 @@ void Game1v1Test::TestBitwise()
 
 void Game1v1Test::TestPieces()
 {
+#ifdef DEBUG_PRINT
+    std::cout << __FUNCTION__ << std::endl;
+#endif
+
     int32_t possibleConfigurations = 0;
 
     for (int32_t i = e_minimumPieceIndex; i < e_numberOfPieces ; i++)
@@ -404,27 +437,177 @@ void Game1v1Test::TestPieces()
     // this is a magic number, but you've got to trust me it is right
     assert(possibleConfigurations == 91);
 
+#ifdef DEBUG_PRINT
+    std::cout << __FUNCTION__ << ": TestPiece_1BabyPiece" << std::endl;
+#endif
     TestPiece_1BabyPiece();
+#ifdef DEBUG_PRINT
+    std::cout << __FUNCTION__ << ": TestPiece_2TwoPiece" << std::endl;
+#endif
     TestPiece_2TwoPiece();
+#ifdef DEBUG_PRINT
+    std::cout << __FUNCTION__ << ": TestPiece_3LongPiece" << std::endl;
+#endif
     TestPiece_3LongPiece();
+#ifdef DEBUG_PRINT
+    std::cout << __FUNCTION__ << ": TestPiece_3Triangle" << std::endl;
+#endif
     TestPiece_3Triangle();
+#ifdef DEBUG_PRINT
+    std::cout << __FUNCTION__ << ": TestPiece_4LongPiece" << std::endl;
+#endif
     TestPiece_4LongPiece();
+#ifdef DEBUG_PRINT
+    std::cout << __FUNCTION__ << ": TestPiece_4LittleS" << std::endl;
+#endif
     TestPiece_4LittleS();
+#ifdef DEBUG_PRINT
+    std::cout << __FUNCTION__ << ": TestPiece_4LittleT" << std::endl;
+#endif
     TestPiece_4LittleT();
+#ifdef DEBUG_PRINT
+    std::cout << __FUNCTION__ << ": TestPiece_4littleL" << std::endl;
+#endif
     TestPiece_4littleL();
+#ifdef DEBUG_PRINT
+    std::cout << __FUNCTION__ << ": TestPiece_4FullSquare" << std::endl;
+#endif
     TestPiece_4FullSquare();
+#ifdef DEBUG_PRINT
+    std::cout << __FUNCTION__ << ": TestPiece_5BigS" << std::endl;
+#endif
     TestPiece_5BigS();
+#ifdef DEBUG_PRINT
+    std::cout << __FUNCTION__ << ": TestPiece_5SafPiece" << std::endl;
+#endif
     TestPiece_5SafPiece();
+#ifdef DEBUG_PRINT
+    std::cout << __FUNCTION__ << ": TestPiece_5WPiece" << std::endl;
+#endif
     TestPiece_5WPiece();
+#ifdef DEBUG_PRINT
+    std::cout << __FUNCTION__ << ": TestPiece_5CuntPiece" << std::endl;
+#endif
     TestPiece_5CuntPiece();
+#ifdef DEBUG_PRINT
+    std::cout << __FUNCTION__ << ": TestPiece_5BigPenis" << std::endl;
+#endif
     TestPiece_5BigPenis();
+#ifdef DEBUG_PRINT
+    std::cout << __FUNCTION__ << ": TestPiece_5Cross" << std::endl;
+#endif
     TestPiece_5Cross();
+#ifdef DEBUG_PRINT
+    std::cout << __FUNCTION__ << ": TestPiece_5HalfSquare" << std::endl;
+#endif
     TestPiece_5HalfSquare();
+#ifdef DEBUG_PRINT
+    std::cout << __FUNCTION__ << ": TestPiece_5BigL" << std::endl;
+#endif
     TestPiece_5BigL();
+#ifdef DEBUG_PRINT
+    std::cout << __FUNCTION__ << ": TestPiece_5MrT" << std::endl;
+#endif
     TestPiece_5MrT();
+#ifdef DEBUG_PRINT
+    std::cout << __FUNCTION__ << ": TestPiece_5SquareAppen" << std::endl;
+#endif
     TestPiece_5SquareAppen();
+#ifdef DEBUG_PRINT
+    std::cout << __FUNCTION__ << ": TestPiece_5BoringPiece" << std::endl;
+#endif
     TestPiece_5BoringPiece();
+#ifdef DEBUG_PRINT
+    std::cout << __FUNCTION__ << ": TestPiece_5TheUltimate" << std::endl;
+#endif
     TestPiece_5TheUltimate();
+}
+
+void Game1v1Test::TestNKSpiralAlgorithm(eGame1v1Player_t who)
+{
+// this ifdef is needed to avoid warnings about things not being used because
+// they are used inside asserts (which do nothing if NDEBUG is defined)
+#ifndef NDEBUG
+    // variables to test Get[First|Next]NucleationPointSpiral
+    Player::SpiralIterator iterator;
+    Coordinate tmpCoord;
+
+    if (GetPlayer(who).NumberOfNucleationPoints() > 0)
+    {
+        // check GetFirstNucleationPointSpiral works fine
+        assert(
+            GetPlayer(who).GetFirstNucleationPointSpiral(iterator, tmpCoord));
+
+        // easy to check now if CalculateNextValidCoordInNucleationPoint works as
+        // CalculateValidCoordsInNucleationPoint does
+        TestCalculateValidCoordsInNKPoint(who, tmpCoord);
+
+        // assert any other nk point is found by the spiral algorithm
+        for (int32_t i = 1; i < GetPlayer(who).NumberOfNucleationPoints(); i++)
+        {
+            assert(
+                GetPlayer(who).GetNextNucleationPointSpiral(iterator, tmpCoord));
+
+            // easy to check now if CalculateNextValidCoordInNucleationPoint works as
+            // CalculateValidCoordsInNucleationPoint does
+            TestCalculateValidCoordsInNKPoint(who, tmpCoord);
+        }
+
+        // assert there is no more nk points left
+        assert(
+            GetPlayer(who).GetNextNucleationPointSpiral(iterator, tmpCoord) == false);
+    }
+    else
+    {
+        // assert spiral algorithm also says there is no nk points
+        assert(
+            GetPlayer(who).GetFirstNucleationPointSpiral(iterator, tmpCoord) == false);
+    }
+#endif // NDEBUG
+}
+
+void Game1v1Test::TestCalculateValidCoordsInNKPoint(eGame1v1Player_t who, const Coordinate &where)
+{
+    assert(GetPlayer(who).IsNucleationPoint(where));
+
+    std::vector<Coordinate> validCoordVector(PIECE_MAX_SQUARES);
+    Coordinate validCoord;
+    int32_t nNKPointsSecondMethod;
+    int32_t nNKPoints;
+
+    // test is done using a baby piece, a 3square triangle, a 4squares S piece and a saf piece
+    Piece pieceArray[4];
+    pieceArray[0] = Piece(e_1Piece_BabyPiece); // baby piece
+    pieceArray[1] = Piece(e_3Piece_Triangle); // 3 squares triangle
+    pieceArray[2] = Piece(e_4Piece_LittleS); // 4 squares S Piece
+    pieceArray[3] = Piece(e_5Piece_SafPiece); // 5 squares safPiece
+
+    for (int32_t i = 0; i < 4; i++)
+    {
+        nNKPoints = rules::CalculateValidCoordsInNucleationPoint(
+                                    GetBoard(),
+                                    GetPlayer(who),
+                                    where,
+                                    pieceArray[i].GetCurrentConfiguration(),
+                                    pieceArray[i].GetRadius(),
+                                    validCoordVector);
+
+        validCoord.m_row = validCoord.m_col = COORD_UNINITIALISED;
+        nNKPointsSecondMethod = 0;
+        while(rules::CalculateNextValidCoordInNucleationPoint(
+                                    GetBoard(),
+                                    GetPlayer(who),
+                                    where,
+                                    pieceArray[i].GetCurrentConfiguration(),
+                                    pieceArray[i].GetRadius(),
+                                    validCoord))
+        {
+            nNKPointsSecondMethod++;
+        }
+
+        // assert both methods found the same amount of valid coords
+        assert(nNKPoints == nNKPointsSecondMethod);
+    }
 }
 
 void Game1v1Test::TestPiece_1BabyPiece()
@@ -434,6 +617,7 @@ void Game1v1Test::TestPiece_1BabyPiece()
     int8_t nRotations = 0;
 
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetPlayer(Game1v1::e_Game1v1Player1).NumberOfNucleationPoints() == 4);
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(6, 6)));
@@ -442,13 +626,13 @@ void Game1v1Test::TestPiece_1BabyPiece()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(8, 8)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetPlayer(Game1v1::e_Game1v1Player1).NumberOfNucleationPoints() == 0);
     assert(!GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(6, 6)));
     assert(!GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(6, 8)));
     assert(!GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(8, 6)));
     assert(!GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(8, 8)));
-
 
     nRotations++;
     thisPiece.RotateRight();
@@ -465,6 +649,7 @@ void Game1v1Test::TestPiece_2TwoPiece()
     int8_t nRotations = 0;
 
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 8)));
     assert(GetPlayer(Game1v1::e_Game1v1Player1).NumberOfNucleationPoints() == 4);
@@ -474,6 +659,7 @@ void Game1v1Test::TestPiece_2TwoPiece()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(8, 9)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 8)));
     assert(GetPlayer(Game1v1::e_Game1v1Player1).NumberOfNucleationPoints() == 0);
@@ -489,6 +675,7 @@ void Game1v1Test::TestPiece_2TwoPiece()
     // X
     // X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(8, 7)));
     assert(GetPlayer(Game1v1::e_Game1v1Player1).NumberOfNucleationPoints() == 4);
@@ -498,6 +685,7 @@ void Game1v1Test::TestPiece_2TwoPiece()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 8)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(8, 7)));
     assert(GetPlayer(Game1v1::e_Game1v1Player1).NumberOfNucleationPoints() == 0);
@@ -521,6 +709,7 @@ void Game1v1Test::TestPiece_3LongPiece()
     int8_t nRotations = 0;
 
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 8)));
@@ -531,6 +720,7 @@ void Game1v1Test::TestPiece_3LongPiece()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(8, 9)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 8)));
@@ -548,6 +738,7 @@ void Game1v1Test::TestPiece_3LongPiece()
     // X
     // X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(8, 7)));
@@ -558,6 +749,7 @@ void Game1v1Test::TestPiece_3LongPiece()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 8)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(8, 7)));
@@ -582,6 +774,7 @@ void Game1v1Test::TestPiece_3Triangle()
     // X X
     //   X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(8, 7)));
@@ -593,6 +786,7 @@ void Game1v1Test::TestPiece_3Triangle()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 8)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(GetBoard().IsCoordEmpty(Coordinate(8, 7)));
@@ -610,6 +804,7 @@ void Game1v1Test::TestPiece_3Triangle()
     //   X
     // X X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(6, 7)));
@@ -621,6 +816,7 @@ void Game1v1Test::TestPiece_3Triangle()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(8, 8)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(GetBoard().IsCoordEmpty(Coordinate(6, 7)));
@@ -638,6 +834,7 @@ void Game1v1Test::TestPiece_3Triangle()
     // X
     // X X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 8)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(6, 7)));
@@ -649,6 +846,7 @@ void Game1v1Test::TestPiece_3Triangle()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(8, 9)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 8)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(6, 7)));
@@ -666,6 +864,7 @@ void Game1v1Test::TestPiece_3Triangle()
     // X X
     // X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 8)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(8, 7)));
@@ -677,6 +876,7 @@ void Game1v1Test::TestPiece_3Triangle()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 8)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 8)));
     assert(GetBoard().IsCoordEmpty(Coordinate(8, 7)));
@@ -701,6 +901,7 @@ void Game1v1Test::TestPiece_4LongPiece()
     int8_t nRotations = 0;
 
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 8)));
@@ -712,6 +913,7 @@ void Game1v1Test::TestPiece_4LongPiece()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(8, 10)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 8)));
@@ -730,6 +932,7 @@ void Game1v1Test::TestPiece_4LongPiece()
     // X
     // X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(8, 7)));
@@ -741,6 +944,7 @@ void Game1v1Test::TestPiece_4LongPiece()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(10, 8)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(8, 7)));
@@ -765,6 +969,7 @@ void Game1v1Test::TestPiece_4LittleS()
     //   X X
     // X X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 8)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(8, 7)));
@@ -778,6 +983,7 @@ void Game1v1Test::TestPiece_4LittleS()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 5)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 8)));
     assert(GetBoard().IsCoordEmpty(Coordinate(8, 7)));
@@ -797,6 +1003,7 @@ void Game1v1Test::TestPiece_4LittleS()
     // X X
     //   X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(8, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 6)));
@@ -810,6 +1017,7 @@ void Game1v1Test::TestPiece_4LittleS()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 8)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(8, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 6)));
@@ -833,6 +1041,7 @@ void Game1v1Test::TestPiece_4LittleS()
     // X X
     //   X X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(8, 7)));
@@ -846,6 +1055,7 @@ void Game1v1Test::TestPiece_4LittleS()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 9)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(GetBoard().IsCoordEmpty(Coordinate(8, 7)));
@@ -866,6 +1076,7 @@ void Game1v1Test::TestPiece_4LittleS()
     // X X
     // X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 6)));
@@ -879,6 +1090,7 @@ void Game1v1Test::TestPiece_4LittleS()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 7)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 6)));
@@ -905,6 +1117,7 @@ void Game1v1Test::TestPiece_4LittleT()
     int8_t nRotations = 0;
 
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(6, 7)));
@@ -918,6 +1131,7 @@ void Game1v1Test::TestPiece_4LittleT()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(8, 9)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(GetBoard().IsCoordEmpty(Coordinate(6, 7)));
@@ -937,6 +1151,7 @@ void Game1v1Test::TestPiece_4LittleT()
     // X X
     // X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(8, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(6, 7)));
@@ -950,6 +1165,7 @@ void Game1v1Test::TestPiece_4LittleT()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 8)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(8, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(6, 7)));
@@ -968,6 +1184,7 @@ void Game1v1Test::TestPiece_4LittleT()
     // X X X
     //   X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 8)));
@@ -981,6 +1198,7 @@ void Game1v1Test::TestPiece_4LittleT()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 8)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 8)));
@@ -1000,6 +1218,7 @@ void Game1v1Test::TestPiece_4LittleT()
     // X X
     //   X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(6, 7)));
@@ -1013,6 +1232,7 @@ void Game1v1Test::TestPiece_4LittleT()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 8)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(GetBoard().IsCoordEmpty(Coordinate(6, 7)));
@@ -1039,6 +1259,7 @@ void Game1v1Test::TestPiece_4littleL()
     int8_t nRotations = 0;
 
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 8)));
@@ -1051,6 +1272,7 @@ void Game1v1Test::TestPiece_4littleL()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 9)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 8)));
@@ -1069,6 +1291,7 @@ void Game1v1Test::TestPiece_4littleL()
     //   X
     // X X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(8, 7)));
@@ -1081,6 +1304,7 @@ void Game1v1Test::TestPiece_4littleL()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 8)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(8, 7)));
@@ -1098,6 +1322,7 @@ void Game1v1Test::TestPiece_4littleL()
     // X
     // X X X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(6, 6)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 8)));
@@ -1110,6 +1335,7 @@ void Game1v1Test::TestPiece_4littleL()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(8, 9)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(6, 6)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 8)));
@@ -1128,6 +1354,7 @@ void Game1v1Test::TestPiece_4littleL()
     // X
     // X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(6, 8)));
@@ -1140,6 +1367,7 @@ void Game1v1Test::TestPiece_4littleL()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 8)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(6, 8)));
@@ -1160,6 +1388,7 @@ void Game1v1Test::TestPiece_4littleL()
     // X X X
     // X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(8, 6)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 8)));
@@ -1172,6 +1401,7 @@ void Game1v1Test::TestPiece_4littleL()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 7)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(8, 6)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 8)));
@@ -1190,6 +1420,7 @@ void Game1v1Test::TestPiece_4littleL()
 	//   X
 	//   X
 	PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
 	assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
 	assert(!GetBoard().IsCoordEmpty(Coordinate(6, 7)));
 	assert(!GetBoard().IsCoordEmpty(Coordinate(6, 6)));
@@ -1202,6 +1433,7 @@ void Game1v1Test::TestPiece_4littleL()
 	assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 8)));
 
 	RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
 	assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
 	assert(GetBoard().IsCoordEmpty(Coordinate(6, 7)));
 	assert(GetBoard().IsCoordEmpty(Coordinate(6, 6)));
@@ -1219,6 +1451,7 @@ void Game1v1Test::TestPiece_4littleL()
     //     X
     // X X X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 8)));
@@ -1231,6 +1464,7 @@ void Game1v1Test::TestPiece_4littleL()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(8, 9)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 8)));
@@ -1249,6 +1483,7 @@ void Game1v1Test::TestPiece_4littleL()
     // X
     // X X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(8, 7)));
@@ -1261,6 +1496,7 @@ void Game1v1Test::TestPiece_4littleL()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 9)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(8, 7)));
@@ -1286,6 +1522,7 @@ void Game1v1Test::TestPiece_4FullSquare()
     int8_t nRotations = 0;
 
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 8)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(8, 7)));
@@ -1297,6 +1534,7 @@ void Game1v1Test::TestPiece_4FullSquare()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 9)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 8)));
     assert(GetBoard().IsCoordEmpty(Coordinate(8, 7)));
@@ -1322,6 +1560,7 @@ void Game1v1Test::TestPiece_5BigS()
     int8_t nRotations = 0;
 
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(8, 7)));
@@ -1336,6 +1575,7 @@ void Game1v1Test::TestPiece_5BigS()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 8)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(8, 7)));
@@ -1356,6 +1596,7 @@ void Game1v1Test::TestPiece_5BigS()
     // X X X
     //     X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 8)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 6)));
@@ -1370,6 +1611,7 @@ void Game1v1Test::TestPiece_5BigS()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 9)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 8)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 6)));
@@ -1393,6 +1635,7 @@ void Game1v1Test::TestPiece_5BigS()
     //   X
     //   X X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(6, 6)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(8, 8)));
@@ -1407,6 +1650,7 @@ void Game1v1Test::TestPiece_5BigS()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 9)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(6, 6)));
     assert(GetBoard().IsCoordEmpty(Coordinate(8, 8)));
@@ -1427,6 +1671,7 @@ void Game1v1Test::TestPiece_5BigS()
     // X X X
     // X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 8)));
@@ -1441,6 +1686,7 @@ void Game1v1Test::TestPiece_5BigS()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 7)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 8)));
@@ -1469,6 +1715,7 @@ void Game1v1Test::TestPiece_5SafPiece()
     int8_t nRotations = 0;
 
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(8, 6)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 8)));
@@ -1484,6 +1731,7 @@ void Game1v1Test::TestPiece_5SafPiece()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 8)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(8, 6)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 8)));
@@ -1505,6 +1753,7 @@ void Game1v1Test::TestPiece_5SafPiece()
     // X X X
     //   X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(8, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 6)));
@@ -1520,6 +1769,7 @@ void Game1v1Test::TestPiece_5SafPiece()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 8)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(8, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 6)));
@@ -1541,6 +1791,7 @@ void Game1v1Test::TestPiece_5SafPiece()
     // X X
     //   X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(8, 7)));
@@ -1556,6 +1807,7 @@ void Game1v1Test::TestPiece_5SafPiece()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 8)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(GetBoard().IsCoordEmpty(Coordinate(8, 7)));
@@ -1577,6 +1829,7 @@ void Game1v1Test::TestPiece_5SafPiece()
     // X X X
     //     X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 8)));
@@ -1592,6 +1845,7 @@ void Game1v1Test::TestPiece_5SafPiece()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 9)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 8)));
@@ -1617,6 +1871,7 @@ void Game1v1Test::TestPiece_5SafPiece()
     // X X
     //   X X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(6, 7)));
@@ -1632,6 +1887,7 @@ void Game1v1Test::TestPiece_5SafPiece()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 9)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(GetBoard().IsCoordEmpty(Coordinate(6, 7)));
@@ -1653,6 +1909,7 @@ void Game1v1Test::TestPiece_5SafPiece()
     // X X X
     // X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 8)));
@@ -1668,6 +1925,7 @@ void Game1v1Test::TestPiece_5SafPiece()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 7)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 8)));
@@ -1689,6 +1947,7 @@ void Game1v1Test::TestPiece_5SafPiece()
     //   X X
     //   X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 8)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(6, 6)));
@@ -1704,6 +1963,7 @@ void Game1v1Test::TestPiece_5SafPiece()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 8)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 8)));
     assert(GetBoard().IsCoordEmpty(Coordinate(6, 6)));
@@ -1725,6 +1985,7 @@ void Game1v1Test::TestPiece_5SafPiece()
     // X X X
     //   X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 8)));
@@ -1740,6 +2001,7 @@ void Game1v1Test::TestPiece_5SafPiece()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 8)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 8)));
@@ -1769,6 +2031,7 @@ void Game1v1Test::TestPiece_5WPiece()
     int8_t nRotations = 0;
 
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(6, 6)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(6, 7)));
@@ -1784,6 +2047,7 @@ void Game1v1Test::TestPiece_5WPiece()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 9)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(6, 6)));
     assert(GetBoard().IsCoordEmpty(Coordinate(6, 7)));
@@ -1805,6 +2069,7 @@ void Game1v1Test::TestPiece_5WPiece()
     //   X X
     // X X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 8)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
@@ -1820,6 +2085,7 @@ void Game1v1Test::TestPiece_5WPiece()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 8)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 8)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
@@ -1841,6 +2107,7 @@ void Game1v1Test::TestPiece_5WPiece()
     // X X
     //   X X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(6, 6)));
@@ -1856,6 +2123,7 @@ void Game1v1Test::TestPiece_5WPiece()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 9)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(GetBoard().IsCoordEmpty(Coordinate(6, 6)));
@@ -1877,6 +2145,7 @@ void Game1v1Test::TestPiece_5WPiece()
     // X X
     // X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(6, 8)));
@@ -1892,6 +2161,7 @@ void Game1v1Test::TestPiece_5WPiece()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 7)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(6, 8)));
@@ -1922,6 +2192,7 @@ void Game1v1Test::TestPiece_5CuntPiece()
     int8_t nRotations = 0;
 
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 8)));
@@ -1935,6 +2206,7 @@ void Game1v1Test::TestPiece_5CuntPiece()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(6, 9)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 8)));
@@ -1954,6 +2226,7 @@ void Game1v1Test::TestPiece_5CuntPiece()
     //   X
     // X X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(8, 7)));
@@ -1967,6 +2240,7 @@ void Game1v1Test::TestPiece_5CuntPiece()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 8)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(8, 7)));
@@ -1985,6 +2259,7 @@ void Game1v1Test::TestPiece_5CuntPiece()
     // X   X
     // X X X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 8)));
@@ -1998,6 +2273,7 @@ void Game1v1Test::TestPiece_5CuntPiece()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(8, 9)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 8)));
@@ -2017,6 +2293,7 @@ void Game1v1Test::TestPiece_5CuntPiece()
     // X
     // X X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(8, 7)));
@@ -2030,6 +2307,7 @@ void Game1v1Test::TestPiece_5CuntPiece()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 9)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(8, 7)));
@@ -2058,6 +2336,7 @@ void Game1v1Test::TestPiece_5BigPenis()
     int8_t nRotations = 0;
 
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(5, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
@@ -2070,6 +2349,7 @@ void Game1v1Test::TestPiece_5BigPenis()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(10, 8)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(5, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
@@ -2086,6 +2366,7 @@ void Game1v1Test::TestPiece_5BigPenis()
 
     // X X X X X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 5)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
@@ -2098,6 +2379,7 @@ void Game1v1Test::TestPiece_5BigPenis()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(8, 10)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 5)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
@@ -2124,6 +2406,7 @@ void Game1v1Test::TestPiece_5Cross()
     int8_t nRotations = 0;
 
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 8)));
@@ -2140,6 +2423,7 @@ void Game1v1Test::TestPiece_5Cross()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 8)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 8)));
@@ -2170,6 +2454,7 @@ void Game1v1Test::TestPiece_5HalfSquare()
     int8_t nRotations = 0;
 
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(5, 7)));
@@ -2183,6 +2468,7 @@ void Game1v1Test::TestPiece_5HalfSquare()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(8, 6)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(5, 7)));
@@ -2202,6 +2488,7 @@ void Game1v1Test::TestPiece_5HalfSquare()
     // X
     // X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(8, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(9, 7)));
@@ -2215,6 +2502,7 @@ void Game1v1Test::TestPiece_5HalfSquare()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(6, 6)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(8, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(9, 7)));
@@ -2234,6 +2522,7 @@ void Game1v1Test::TestPiece_5HalfSquare()
     //     X
     //     X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 5)));
@@ -2247,6 +2536,7 @@ void Game1v1Test::TestPiece_5HalfSquare()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(6, 8)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 5)));
@@ -2266,6 +2556,7 @@ void Game1v1Test::TestPiece_5HalfSquare()
     //     X
     // X X X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 5)));
@@ -2279,6 +2570,7 @@ void Game1v1Test::TestPiece_5HalfSquare()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(8, 8)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 5)));
@@ -2307,6 +2599,7 @@ void Game1v1Test::TestPiece_5BigL()
     int8_t nRotations = 0;
 
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(5, 7)));
@@ -2320,6 +2613,7 @@ void Game1v1Test::TestPiece_5BigL()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 9)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(5, 7)));
@@ -2338,6 +2632,7 @@ void Game1v1Test::TestPiece_5BigL()
     // X X X X
     // X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(8, 6)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 9)));
@@ -2351,6 +2646,7 @@ void Game1v1Test::TestPiece_5BigL()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 7)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(8, 6)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 9)));
@@ -2371,6 +2667,7 @@ void Game1v1Test::TestPiece_5BigL()
 	//   X
     //   X
 	PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
 	assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
 	assert(!GetBoard().IsCoordEmpty(Coordinate(6, 7)));
 	assert(!GetBoard().IsCoordEmpty(Coordinate(6, 6)));
@@ -2384,6 +2681,7 @@ void Game1v1Test::TestPiece_5BigL()
 	assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(10, 8)));
 
 	RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
 	assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
 	assert(GetBoard().IsCoordEmpty(Coordinate(6, 7)));
 	assert(GetBoard().IsCoordEmpty(Coordinate(6, 6)));
@@ -2402,6 +2700,7 @@ void Game1v1Test::TestPiece_5BigL()
     //       X
     // X X X X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 5)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 6)));
@@ -2415,6 +2714,7 @@ void Game1v1Test::TestPiece_5BigL()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(8, 9)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 5)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 6)));
@@ -2439,6 +2739,7 @@ void Game1v1Test::TestPiece_5BigL()
     //   X
     // X X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(5, 7)));
@@ -2452,6 +2753,7 @@ void Game1v1Test::TestPiece_5BigL()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 8)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(5, 7)));
@@ -2470,6 +2772,7 @@ void Game1v1Test::TestPiece_5BigL()
     // X
     // X X X X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(6, 6)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 8)));
@@ -2483,6 +2786,7 @@ void Game1v1Test::TestPiece_5BigL()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(8, 10)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(6, 6)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 8)));
@@ -2503,6 +2807,7 @@ void Game1v1Test::TestPiece_5BigL()
     // X
     // X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(6, 8)));
@@ -2516,6 +2821,7 @@ void Game1v1Test::TestPiece_5BigL()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(10, 8)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(6, 8)));
@@ -2534,6 +2840,7 @@ void Game1v1Test::TestPiece_5BigL()
     // X X X X
     //       X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 5)));
@@ -2547,6 +2854,7 @@ void Game1v1Test::TestPiece_5BigL()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 9)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 5)));
@@ -2574,6 +2882,7 @@ void Game1v1Test::TestPiece_5MrT()
     int8_t nRotations = 0;
 
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 8)));
@@ -2588,6 +2897,7 @@ void Game1v1Test::TestPiece_5MrT()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 9)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 8)));
@@ -2608,6 +2918,7 @@ void Game1v1Test::TestPiece_5MrT()
     //   X
     // X X X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(8, 6)));
@@ -2622,6 +2933,7 @@ void Game1v1Test::TestPiece_5MrT()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 9)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(8, 6)));
@@ -2642,6 +2954,7 @@ void Game1v1Test::TestPiece_5MrT()
     // X X X
     // X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 8)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 6)));
@@ -2656,6 +2969,7 @@ void Game1v1Test::TestPiece_5MrT()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 7)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 8)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 6)));
@@ -2676,6 +2990,7 @@ void Game1v1Test::TestPiece_5MrT()
     //   X
     //   X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(8, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(6, 7)));
@@ -2690,6 +3005,7 @@ void Game1v1Test::TestPiece_5MrT()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(5, 9)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(8, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(6, 7)));
@@ -2718,6 +3034,7 @@ void Game1v1Test::TestPiece_5SquareAppen()
     int8_t nRotations = 0;
 
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(8, 7)));
@@ -2731,6 +3048,7 @@ void Game1v1Test::TestPiece_5SquareAppen()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 8)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(8, 7)));
@@ -2749,6 +3067,7 @@ void Game1v1Test::TestPiece_5SquareAppen()
     // X X X
     //   X X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 8)));
@@ -2762,6 +3081,7 @@ void Game1v1Test::TestPiece_5SquareAppen()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 9)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 8)));
@@ -2781,6 +3101,7 @@ void Game1v1Test::TestPiece_5SquareAppen()
     // X X
     // X X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(8, 7)));
@@ -2794,6 +3115,7 @@ void Game1v1Test::TestPiece_5SquareAppen()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 8)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(8, 7)));
@@ -2812,6 +3134,7 @@ void Game1v1Test::TestPiece_5SquareAppen()
     // X X
     // X X X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(6, 6)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(6, 7)));
@@ -2825,6 +3148,7 @@ void Game1v1Test::TestPiece_5SquareAppen()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(8, 9)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(6, 6)));
     assert(GetBoard().IsCoordEmpty(Coordinate(6, 7)));
@@ -2848,6 +3172,7 @@ void Game1v1Test::TestPiece_5SquareAppen()
 	// X X
 	//   X
 	PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
 	assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
 	assert(!GetBoard().IsCoordEmpty(Coordinate(7, 6)));
 	assert(!GetBoard().IsCoordEmpty(Coordinate(6, 7)));
@@ -2861,6 +3186,7 @@ void Game1v1Test::TestPiece_5SquareAppen()
 	assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 8)));
 
 	RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
 	assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
 	assert(GetBoard().IsCoordEmpty(Coordinate(7, 6)));
 	assert(GetBoard().IsCoordEmpty(Coordinate(6, 7)));
@@ -2879,6 +3205,7 @@ void Game1v1Test::TestPiece_5SquareAppen()
     //   X X
     // X X X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 8)));
@@ -2892,6 +3219,7 @@ void Game1v1Test::TestPiece_5SquareAppen()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(8, 9)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 8)));
@@ -2911,6 +3239,7 @@ void Game1v1Test::TestPiece_5SquareAppen()
     // X X
     // X X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 8)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(6, 7)));
@@ -2924,6 +3253,7 @@ void Game1v1Test::TestPiece_5SquareAppen()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 9)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 8)));
     assert(GetBoard().IsCoordEmpty(Coordinate(6, 7)));
@@ -2942,6 +3272,7 @@ void Game1v1Test::TestPiece_5SquareAppen()
     // X X X
     // X X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(8, 6)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(8, 7)));
@@ -2955,6 +3286,7 @@ void Game1v1Test::TestPiece_5SquareAppen()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 8)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(8, 6)));
     assert(GetBoard().IsCoordEmpty(Coordinate(8, 7)));
@@ -2982,6 +3314,7 @@ void Game1v1Test::TestPiece_5BoringPiece()
     int8_t nRotations = 0;
 
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 8)));
@@ -2996,6 +3329,7 @@ void Game1v1Test::TestPiece_5BoringPiece()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(8, 10)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 8)));
@@ -3017,6 +3351,7 @@ void Game1v1Test::TestPiece_5BoringPiece()
     // X X
     // X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(8, 7)));
@@ -3031,6 +3366,7 @@ void Game1v1Test::TestPiece_5BoringPiece()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(10, 8)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(8, 7)));
@@ -3050,6 +3386,7 @@ void Game1v1Test::TestPiece_5BoringPiece()
     // X X X X
     //   X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 5)));
@@ -3064,6 +3401,7 @@ void Game1v1Test::TestPiece_5BoringPiece()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 7)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 5)));
@@ -3085,6 +3423,7 @@ void Game1v1Test::TestPiece_5BoringPiece()
     //   X
     //   X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(5, 7)));
@@ -3099,6 +3438,7 @@ void Game1v1Test::TestPiece_5BoringPiece()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(4, 8)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(5, 7)));
@@ -3122,6 +3462,7 @@ void Game1v1Test::TestPiece_5BoringPiece()
     //   X
     // X X X X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 5)));
@@ -3136,6 +3477,7 @@ void Game1v1Test::TestPiece_5BoringPiece()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(8, 9)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 5)));
@@ -3157,6 +3499,7 @@ void Game1v1Test::TestPiece_5BoringPiece()
 	// X
     // X
 	PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
 	assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
 	assert(!GetBoard().IsCoordEmpty(Coordinate(8, 7)));
 	assert(!GetBoard().IsCoordEmpty(Coordinate(6, 7)));
@@ -3171,6 +3514,7 @@ void Game1v1Test::TestPiece_5BoringPiece()
 	assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 8)));
 
 	RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
 	assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
 	assert(GetBoard().IsCoordEmpty(Coordinate(8, 7)));
 	assert(GetBoard().IsCoordEmpty(Coordinate(6, 7)));
@@ -3190,6 +3534,7 @@ void Game1v1Test::TestPiece_5BoringPiece()
     // X X X X
     //     X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 8)));
@@ -3204,6 +3549,7 @@ void Game1v1Test::TestPiece_5BoringPiece()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 9)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 8)));
@@ -3225,6 +3571,7 @@ void Game1v1Test::TestPiece_5BoringPiece()
     // X X
     //   X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(8, 7)));
@@ -3239,6 +3586,7 @@ void Game1v1Test::TestPiece_5BoringPiece()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(10, 8)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(8, 7)));
@@ -3268,6 +3616,7 @@ void Game1v1Test::TestPiece_5TheUltimate()
     int8_t nRotations = 0;
 
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(9, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(6, 8)));
@@ -3282,6 +3631,7 @@ void Game1v1Test::TestPiece_5TheUltimate()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(10, 8)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(9, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(6, 8)));
@@ -3301,6 +3651,7 @@ void Game1v1Test::TestPiece_5TheUltimate()
     // X X X
     //     X X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(8, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(8, 8)));
@@ -3315,6 +3666,7 @@ void Game1v1Test::TestPiece_5TheUltimate()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 9)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(8, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(8, 8)));
@@ -3336,6 +3688,7 @@ void Game1v1Test::TestPiece_5TheUltimate()
     // X X
     // X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(5, 7)));
@@ -3350,6 +3703,7 @@ void Game1v1Test::TestPiece_5TheUltimate()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 5)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(5, 7)));
@@ -3369,6 +3723,7 @@ void Game1v1Test::TestPiece_5TheUltimate()
     // X X
     //   X X X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 8)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 9)));
@@ -3383,6 +3738,7 @@ void Game1v1Test::TestPiece_5TheUltimate()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(8, 10)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 8)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 9)));
@@ -3407,6 +3763,7 @@ void Game1v1Test::TestPiece_5TheUltimate()
     //   X
     //   X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(8, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(9, 7)));
@@ -3421,6 +3778,7 @@ void Game1v1Test::TestPiece_5TheUltimate()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(10, 8)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(8, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(9, 7)));
@@ -3440,6 +3798,7 @@ void Game1v1Test::TestPiece_5TheUltimate()
     //     X X
     // X X X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
@@ -3454,6 +3813,7 @@ void Game1v1Test::TestPiece_5TheUltimate()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(8, 8)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 6)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
@@ -3475,6 +3835,7 @@ void Game1v1Test::TestPiece_5TheUltimate()
     // X X
     //   X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(5, 7)));
@@ -3489,6 +3850,7 @@ void Game1v1Test::TestPiece_5TheUltimate()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 9)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(6, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(5, 7)));
@@ -3508,6 +3870,7 @@ void Game1v1Test::TestPiece_5TheUltimate()
     //   X X X
     // X X
     PutDownPiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 8)));
     assert(!GetBoard().IsCoordEmpty(Coordinate(7, 9)));
@@ -3522,6 +3885,7 @@ void Game1v1Test::TestPiece_5TheUltimate()
     assert(GetPlayer(Game1v1::e_Game1v1Player1).IsNucleationPoint(Coordinate(9, 8)));
 
     RemovePiece(thisPiece);
+    TestNKSpiralAlgorithm(Game1v1::e_Game1v1Player1);
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 7)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 8)));
     assert(GetBoard().IsCoordEmpty(Coordinate(7, 9)));

@@ -170,6 +170,21 @@ namespace rules
             int32_t                     a_pieceRadius,
             std::vector<Coordinate>    &out_validCoords);
 
+    /// @brief Retrieve next valid coord to deploy a_pieceConf in a_nkPointCoord
+    /// It is based on CalculateValidCoordsInNucleationPoint (have a look at it)
+    /// It starts from the next position that the one indicated by in_out_validCoord
+    /// if in_out_validCoord is uninitialised it will start searching from coordinate
+    /// (0, 0). it doesn't rotate or mirror the piece configuration.
+    /// If the function returns true the next valid coord is saved into in_out_validCoord
+    /// @return true if the function found a valid nk point. False otherwise
+    bool CalculateNextValidCoordInNucleationPoint(
+            const Board                &a_board,
+            const Player               &a_player,
+            const Coordinate           &a_nkPointCoord,
+            const pieceConfiguration_t &a_pieceConf,
+            int32_t                     a_pieceRadius,
+            Coordinate                 &in_out_validCoord);
+
     /// @brief returns true if there's a way to deploy the piece in this coord, even if the piece has to be moved around
     ///        it doesn't rotate or mirror the piece
     ///        it is based on CalculateValidCoordsInNucleationPoint, but it doesn't save the valid coords, it just

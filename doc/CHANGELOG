@@ -1,3 +1,6 @@
+: Version 0.2.3
+    - 6-7% performance improvement of Minimax algorithm since 0.2.2
+
 21/06/2010: Version 0.2.2
     - Code adapted to be able to run with glib >= 2.24 (included in ubuntu
       10.4). Earlier versions couldn't run with that library version due to

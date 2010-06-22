@@ -297,6 +297,101 @@ bool rules::IsNucleationPointCompute(
     return isNucleationPoint;
 }
 
+bool rules::CalculateNextValidCoordInNucleationPoint(
+        const Board                &a_board,
+        const Player               &a_player,
+        const Coordinate           &a_nkPointCoord,
+        const pieceConfiguration_t &a_pieceConf,
+        int32_t                     a_pieceRadius,
+        Coordinate                 &in_out_validCoord)
+{
+#ifdef DEBUG
+    assert(a_player.IsNucleationPoint(a_nkPointCoord));
+#endif
+
+    if (a_pieceRadius > 0)
+    {
+        // the baby piece is a special case. This is code for the rest of pieces
+        int32_t endRow = std::min(a_nkPointCoord.m_row + a_pieceRadius, a_board.GetNRows() - 1);
+        int32_t endCol = std::min(a_nkPointCoord.m_col + a_pieceRadius, a_board.GetNColumns() - 1);
+        int32_t startRow = std::max(0, a_nkPointCoord.m_row - a_pieceRadius);
+        int32_t startCol = std::max(0, a_nkPointCoord.m_col - a_pieceRadius);
+
+        // thisCoord will point to the first place that will be checked out for valid coords
+        // to deploy the piece in a_nkPointCoord
+        Coordinate thisCoord(startRow, startCol);
+        if ( (in_out_validCoord.m_row != COORD_UNINITIALISED) &&
+             (in_out_validCoord.m_col != COORD_UNINITIALISED) )
+        {
+            // we don't have to start from (0, 0)
+            // try to start from next column
+            thisCoord.m_row = in_out_validCoord.m_row;
+            thisCoord.m_col = in_out_validCoord.m_col + 1;
+            if (thisCoord.m_col > endCol)
+            {
+                // we were on the last column. must start from next row
+                thisCoord.m_row = in_out_validCoord.m_row + 1;
+                thisCoord.m_col = startCol;
+
+                if (thisCoord.m_row > endRow)
+                {
+                    // got to the end of the board
+                    return false;
+                }
+            }
+        }
+
+        // check the actual row saved in thisCoord.m_row first
+        while(thisCoord.m_col <= endCol)
+        {
+            if (IsPieceDeployableInNKPoint(
+                    a_board, a_pieceConf, thisCoord, a_nkPointCoord, a_player))
+            {
+                in_out_validCoord.m_row = thisCoord.m_row;
+                in_out_validCoord.m_col = thisCoord.m_col;
+                return true;
+            }
+
+            thisCoord.m_col++;
+        }
+
+        // now continue with the rest of the loop, starting off the next row
+        for (thisCoord.m_row++; thisCoord.m_row <= endRow; thisCoord.m_row++)
+        {
+            for (thisCoord.m_col = startCol; thisCoord.m_col <= endCol; thisCoord.m_col++)
+            {
+				if (IsPieceDeployableInNKPoint(
+						a_board, a_pieceConf, thisCoord, a_nkPointCoord, a_player))
+				{
+                    in_out_validCoord.m_row = thisCoord.m_row;
+                    in_out_validCoord.m_col = thisCoord.m_col;
+                    return true;
+				}
+            }
+        }
+    }
+    else
+    {
+        // Baby piece!. No need to use IsDeployableInNKPoint because the piece
+    	// only has one square. It will only fit in 1 known nucleation point
+        // we must ensure in_out_validCoord is not initialised or is smaller
+        // than a_nkPointCoord because this might be the 2nd time this function
+        // is called to retrieve the valid coords of this baby piece
+        if ( (in_out_validCoord.m_row == COORD_UNINITIALISED) ||
+             (in_out_validCoord.m_col == COORD_UNINITIALISED) ||
+             (in_out_validCoord.m_row < a_nkPointCoord.m_row) ||
+             ( (in_out_validCoord.m_row == a_nkPointCoord.m_row) &&
+                 (in_out_validCoord.m_col <  a_nkPointCoord.m_col) ) )
+        {
+            in_out_validCoord.m_row = a_nkPointCoord.m_row;
+            in_out_validCoord.m_col = a_nkPointCoord.m_col;
+            return true;
+        }
+    }
+
+    return false;
+}
+
 int32_t rules::CalculateValidCoordsInNucleationPoint(
         const Board                &a_board,
         const Player               &a_player,
@@ -305,6 +400,10 @@ int32_t rules::CalculateValidCoordsInNucleationPoint(
         int32_t                     a_pieceRadius,
         std::vector<Coordinate>    &out_validCoords)
 {
+#ifdef DEBUG
+    assert(a_player.IsNucleationPoint(a_nkPointCoord));
+#endif
+
     // It is true that every piece fits in a square 5x5 pieces.
     // But most of the pieces need a smaller square (3x3). The baby piece only needs 1 little square
     // the increment variable will save the amount of squares to be checked. The size of the square
@@ -314,14 +413,16 @@ int32_t rules::CalculateValidCoordsInNucleationPoint(
 
     if (a_pieceRadius > 0)
     {
-        for (int32_t i = -a_pieceRadius ; i <= a_pieceRadius ; i++)
-        {
-            for (int32_t j = -a_pieceRadius ; j <= a_pieceRadius ; j++)
-            {
-            	Coordinate thisCoord(
-            			a_nkPointCoord.m_row + i,
-            			a_nkPointCoord.m_col + j);
+        int32_t endRow = std::min(a_nkPointCoord.m_row + a_pieceRadius, a_board.GetNRows() - 1);
+        int32_t endCol = std::min(a_nkPointCoord.m_col + a_pieceRadius, a_board.GetNColumns() - 1);
+        int32_t startRow = std::max(0, a_nkPointCoord.m_row - a_pieceRadius);
+        int32_t startCol = std::max(0, a_nkPointCoord.m_col - a_pieceRadius);
 
+        Coordinate thisCoord;
+        for (thisCoord.m_row = startRow; thisCoord.m_row <= endRow; thisCoord.m_row++)
+        {
+            for (thisCoord.m_col = startCol; thisCoord.m_col <= endCol; thisCoord.m_col++)
+            {
 				if (IsPieceDeployableInNKPoint(
 						a_board, a_pieceConf, thisCoord, a_nkPointCoord, a_player))
 				{
@@ -339,7 +440,6 @@ int32_t rules::CalculateValidCoordsInNucleationPoint(
         // the baby piece. No need to use IsDeployableInNKPoint because the piece
     	// only has one square. It will only fit in a known nucleation point
 #ifdef DEBUG
-        assert(a_player.IsNucleationPoint(a_nkPointCoord));
         assert(static_cast<int32_t>(out_validCoords.size()) > nValidCoords);
 #endif
         out_validCoords[nValidCoords] = a_nkPointCoord;
@@ -356,35 +456,18 @@ bool rules::HasValidCoordInNucleationPoint(
         const pieceConfiguration_t &a_pieceConf,
         int32_t                     a_pieceRadius)
 {
-    if (a_pieceRadius > 0)
-    {
-        for (int32_t i = -a_pieceRadius ; i <= a_pieceRadius ; i++)
-        {
-            for (int32_t j = -a_pieceRadius ; j <= a_pieceRadius ; j++)
-            {
-                Coordinate thisCoord(
-                        a_nkPointCoord.m_row + i,
-                        a_nkPointCoord.m_col + j);
-
-                if (IsPieceDeployableInNKPoint(
-                        a_board, a_pieceConf, thisCoord, a_nkPointCoord, a_player))
-                {
-                    return true;
-                }
-            }
-        }
-    }
-    else
-    {
-        // the baby piece. No need to use IsDeployableInNKPoint because the piece
-        // only has one square. It will fit in a known nucleation point
-#ifdef DEBUG
-        assert(a_player.IsNucleationPoint(a_nkPointCoord));
-#endif
-        return true;
-    }
-
-    return false;
+    // create an uninitialised tmp coordinate.
+    // If CalculateNextValidCoordInNucleationPoint finds a valid coord
+    // (returns true) there is at least a valid coord in this nucleation
+    // point
+    Coordinate tmpCoord;
+    return rules::CalculateNextValidCoordInNucleationPoint(
+                    a_board,
+                    a_player,
+                    a_nkPointCoord,
+                    a_pieceConf,
+                    a_pieceRadius,
+                    tmpCoord);
 }
 
 int32_t rules::CalculateValidCoordsInStartingPoint(
@@ -466,15 +549,13 @@ void rules::RecalculateNKAroundCoord(
 {
     int32_t endRow = std::min(a_coord.m_row + a_radiusToCheck, a_board.GetNRows() - 1);
     int32_t endCol = std::min(a_coord.m_col + a_radiusToCheck, a_board.GetNColumns() - 1);
+    int32_t startRow = std::max(0, a_coord.m_row - a_radiusToCheck);
+    int32_t startCol = std::max(0, a_coord.m_col - a_radiusToCheck);
 
     Coordinate thisCoord(0, 0);
-    for (thisCoord.m_row  = std::max(0, (a_coord.m_row - a_radiusToCheck)) ;
-         thisCoord.m_row <= endRow;
-         thisCoord.m_row++)
+    for (thisCoord.m_row  = startRow; thisCoord.m_row <= endRow; thisCoord.m_row++)
     {
-		for (thisCoord.m_col  = std::max(0, (a_coord.m_col - a_radiusToCheck));
-		     thisCoord.m_col <= endCol;
-		     thisCoord.m_col++)
+		for (thisCoord.m_col  = startCol; thisCoord.m_col <= endCol; thisCoord.m_col++)
 		{
 			if (rules::IsNucleationPointCompute(a_board, a_player, thisCoord))
 			{
@@ -504,8 +585,8 @@ void rules::RecalculateInfluenceAreaAroundPiece(
 
     startRow = std::max(0, a_coord.m_row - INFLUENCE_AREA_AROUND_SQUARE_SIZE);
     startCol = std::max(0, a_coord.m_col - INFLUENCE_AREA_AROUND_SQUARE_SIZE);
-    endRow = std::min(a_board.GetNRows() - 1,    a_coord.m_row + INFLUENCE_AREA_AROUND_SQUARE_SIZE);
-    endCol = std::min(a_board.GetNColumns() - 1, a_coord.m_col + INFLUENCE_AREA_AROUND_SQUARE_SIZE);
+    endRow   = std::min(a_board.GetNRows() - 1,    a_coord.m_row + INFLUENCE_AREA_AROUND_SQUARE_SIZE);
+    endCol   = std::min(a_board.GetNColumns() - 1, a_coord.m_col + INFLUENCE_AREA_AROUND_SQUARE_SIZE);
 
     Coordinate tmpCoord;
     for (tmpCoord.m_row  = startRow; tmpCoord.m_row <= endRow; tmpCoord.m_row++)
@@ -540,11 +621,11 @@ void rules::RecalculateInfluenceAreaAroundPiece(
         endCol   = std::min(a_board.GetNColumns() - 1,
                             a_coord.m_col + INFLUENCE_AREA_AROUND_SQUARE_SIZE + it->m_col);
 
-        // upper most row of the influence area. Check it only if the squares to be
-        // checked are expected to be outside the "main" influence area checked
-        // in the 1st loop of the function
         if (it->m_row < 0)
         {
+            // upper most row of the influence area. Check it only if the squares to be
+            // checked are expected to be outside the "main" influence area checked
+            // in the 1st loop of the function
             tmpCoord.m_row = a_coord.m_row - INFLUENCE_AREA_AROUND_SQUARE_SIZE + it->m_row;
             if ( (tmpCoord.m_row >= 0) && (tmpCoord.m_row < a_board.GetNRows()) )
             {
@@ -552,25 +633,21 @@ void rules::RecalculateInfluenceAreaAroundPiece(
                      tmpCoord.m_col <= endCol;
                      tmpCoord.m_col++)
                 {
-                    if ( (tmpCoord.m_row >= 0) && (tmpCoord.m_row < a_board.GetNRows()) )
+                    if (a_board.IsCoordEmpty(tmpCoord) &&
+                        (IsCoordTouchingPlayer(a_board, tmpCoord, a_player) == false) )
                     {
-                        if (a_board.IsCoordEmpty(tmpCoord) &&
-                            (IsCoordTouchingPlayer(a_board, tmpCoord, a_player) == false) )
-                        {
-                            a_player.SetInfluencedCoord(tmpCoord);
-                        }
-                        else
-                        {
-                            a_player.UnsetInfluencedCoord(tmpCoord);
-                        }
-                    } // if ( (tmpCoord.m_row >= 0) && (tmpCoord.m_row < a_board.GetNRows()) )
+                        a_player.SetInfluencedCoord(tmpCoord);
+                    }
+                    else
+                    {
+                        a_player.UnsetInfluencedCoord(tmpCoord);
+                    }
                 }
             } // if ( (tmpCoord.m_row >= 0) && (tmpCoord.m_row < a_board.GetNRows()) )
         } // if (it->m_row < 0)
-
-        // lowest most row of the influence area
-        if (it->m_row > 0)
+        else if (it->m_row > 0)
         {
+            // lowest most row of the influence area
             tmpCoord.m_row = a_coord.m_row + INFLUENCE_AREA_AROUND_SQUARE_SIZE + it->m_row;
             if ( (tmpCoord.m_row >= 0) && (tmpCoord.m_row < a_board.GetNRows()) )
             {
@@ -578,18 +655,15 @@ void rules::RecalculateInfluenceAreaAroundPiece(
                      tmpCoord.m_col <= endCol;
                      tmpCoord.m_col++)
                 {
-                    if ( (tmpCoord.m_row >= 0) && (tmpCoord.m_row < a_board.GetNRows()) )
+                    if (a_board.IsCoordEmpty(tmpCoord) &&
+                        (IsCoordTouchingPlayer(a_board, tmpCoord, a_player) == false) )
                     {
-                        if (a_board.IsCoordEmpty(tmpCoord) &&
-                            (IsCoordTouchingPlayer(a_board, tmpCoord, a_player) == false) )
-                        {
-                            a_player.SetInfluencedCoord(tmpCoord);
-                        }
-                        else
-                        {
-                            a_player.UnsetInfluencedCoord(tmpCoord);
-                        }
-                    } // if ( (tmpCoord.m_row >= 0) && (tmpCoord.m_row < a_board.GetNRows()) )
+                        a_player.SetInfluencedCoord(tmpCoord);
+                    }
+                    else
+                    {
+                        a_player.UnsetInfluencedCoord(tmpCoord);
+                    }
                 }
             } // if ( (tmpCoord.m_row >= 0) && (tmpCoord.m_row < a_board.GetNRows()) )
         } // if (it->m_row > 0)
@@ -602,9 +676,9 @@ void rules::RecalculateInfluenceAreaAroundPiece(
         endRow   = std::min(a_board.GetNRows() - 1,
                             a_coord.m_row + INFLUENCE_AREA_AROUND_SQUARE_SIZE + it->m_row);
 
-        // left side
         if (it->m_col < 0)
         {
+            // left side
             tmpCoord.m_col = a_coord.m_col - INFLUENCE_AREA_AROUND_SQUARE_SIZE + it->m_col;
             if ( (tmpCoord.m_col >= 0) && (tmpCoord.m_col < a_board.GetNColumns()) )
             {
@@ -612,25 +686,21 @@ void rules::RecalculateInfluenceAreaAroundPiece(
                      tmpCoord.m_row <= endRow;
                      tmpCoord.m_row++)
                 {
-                    if ( (tmpCoord.m_row >= 0) && (tmpCoord.m_row < a_board.GetNRows()) )
+                    if (a_board.IsCoordEmpty(tmpCoord) &&
+                        (IsCoordTouchingPlayer(a_board, tmpCoord, a_player) == false) )
                     {
-                        if (a_board.IsCoordEmpty(tmpCoord) &&
-                            (IsCoordTouchingPlayer(a_board, tmpCoord, a_player) == false) )
-                        {
-                            a_player.SetInfluencedCoord(tmpCoord);
-                        }
-                        else
-                        {
-                            a_player.UnsetInfluencedCoord(tmpCoord);
-                        }
-                    } // if ( (tmpCoord.m_row >= 0) && (tmpCoord.m_row < a_board.GetNRows()) )
+                        a_player.SetInfluencedCoord(tmpCoord);
+                    }
+                    else
+                    {
+                        a_player.UnsetInfluencedCoord(tmpCoord);
+                    }
                 }
             } // if ( (tmpCoord.m_col >= 0) && (tmpCoord.m_col < a_board.GetNColumns()) )
         } // if (it->m_col < 0)
-
-        // right side
-        if (it->m_col > 0)
+        else if (it->m_col > 0)
         {
+            // right side
             tmpCoord.m_col = a_coord.m_col + INFLUENCE_AREA_AROUND_SQUARE_SIZE + it->m_col;
             if ( (tmpCoord.m_col >= 0) && (tmpCoord.m_col < a_board.GetNColumns()) )
             {
@@ -638,18 +708,15 @@ void rules::RecalculateInfluenceAreaAroundPiece(
                      tmpCoord.m_row <= endRow;
                      tmpCoord.m_row++)
                 {
-                    if ( (tmpCoord.m_row >= 0) && (tmpCoord.m_row < a_board.GetNRows()) )
+                    if (a_board.IsCoordEmpty(tmpCoord) &&
+                        (IsCoordTouchingPlayer(a_board, tmpCoord, a_player) == false) )
                     {
-                        if (a_board.IsCoordEmpty(tmpCoord) &&
-                            (IsCoordTouchingPlayer(a_board, tmpCoord, a_player) == false) )
-                        {
-                            a_player.SetInfluencedCoord(tmpCoord);
-                        }
-                        else
-                        {
-                            a_player.UnsetInfluencedCoord(tmpCoord);
-                        }
-                    } // if ( (tmpCoord.m_row >= 0) && (tmpCoord.m_row < a_board.GetNRows()) )
+                        a_player.SetInfluencedCoord(tmpCoord);
+                    }
+                    else
+                    {
+                        a_player.UnsetInfluencedCoord(tmpCoord);
+                    }
                 }
             } // if ( (tmpCoord.m_col >= 0) && (tmpCoord.m_col < a_board.GetNColumns()) )
         }// if (it->m_col > 0)
@@ -684,8 +751,8 @@ bool rules::IsCoordInfluencedByPlayerCompute(
     // at least one square taken over by a_player
     int32_t startRow = std::max(0, a_coord.m_row - INFLUENCE_AREA_AROUND_SQUARE_SIZE);
     int32_t startCol = std::max(0, a_coord.m_col - INFLUENCE_AREA_AROUND_SQUARE_SIZE);
-    int32_t endRow = std::min(a_board.GetNRows() - 1,    a_coord.m_row + INFLUENCE_AREA_AROUND_SQUARE_SIZE);
-    int32_t endCol = std::min(a_board.GetNColumns() - 1, a_coord.m_col + INFLUENCE_AREA_AROUND_SQUARE_SIZE);
+    int32_t endRow   = std::min(a_board.GetNRows() - 1, a_coord.m_row + INFLUENCE_AREA_AROUND_SQUARE_SIZE);
+    int32_t endCol   = std::min(a_board.GetNColumns() - 1, a_coord.m_col + INFLUENCE_AREA_AROUND_SQUARE_SIZE);
 
     Coordinate tmpCoord;
     for (tmpCoord.m_row  = startRow; tmpCoord.m_row <= endRow; tmpCoord.m_row++)
