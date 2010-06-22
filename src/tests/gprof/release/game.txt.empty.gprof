@@ -1,4 +1,4 @@
-Mon Jun 21 19:11:47 CEST 2010
+Wed Jun 23 00:44:39 CEST 2010
 ./blockem -d 3 -c ../examples/games/game.txt.empty
 
 Flat profile:
@@ -362,53 +362,53 @@ index % time    self  children    called     name
                 0.00    0.00       2/2           Game1v1::SaveGame(std::ostream&) [45]
 [46]     0.0    0.00    0.00       2         Board::PrintBoard(std::ostream&) const [46]
 -----------------------------------------------
-                0.00    0.00       1/1           __do_global_ctors_aux [414]
+                0.00    0.00       1/1           __do_global_ctors_aux [415]
 [47]     0.0    0.00    0.00       1         global constructors keyed to _ZN10MainWindow14ProgressUpdateEf [47]
                 0.00    0.00       4/20          std::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [19]
 -----------------------------------------------
-                0.00    0.00       1/1           __do_global_ctors_aux [414]
+                0.00    0.00       1/1           __do_global_ctors_aux [415]
 [48]     0.0    0.00    0.00       1         global constructors keyed to _ZN11AboutDialogC2EP15_GtkAboutDialogRKN4Glib6RefPtrIN3Gtk7BuilderEEE [48]
                 0.00    0.00       4/20          std::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [19]
 -----------------------------------------------
-                0.00    0.00       1/1           __do_global_ctors_aux [414]
+                0.00    0.00       1/1           __do_global_ctors_aux [415]
 [49]     0.0    0.00    0.00       1         global constructors keyed to _ZN12ConfigDialogC2EP10_GtkDialogRKN4Glib6RefPtrIN3Gtk7BuilderEEE [49]
                 0.00    0.00       4/20          std::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [19]
 -----------------------------------------------
-                0.00    0.00       1/1           __do_global_ctors_aux [414]
+                0.00    0.00       1/1           __do_global_ctors_aux [415]
 [50]     0.0    0.00    0.00       1         global constructors keyed to _ZN13Game1v1ConfigC2Ev [50]
 -----------------------------------------------
-                0.00    0.00       1/1           __do_global_ctors_aux [414]
+                0.00    0.00       1/1           __do_global_ctors_aux [415]
 [51]     0.0    0.00    0.00       1         global constructors keyed to _ZN14StopWatchLabelC2EjRKSs [51]
 -----------------------------------------------
-                0.00    0.00       1/1           __do_global_ctors_aux [414]
+                0.00    0.00       1/1           __do_global_ctors_aux [415]
 [52]     0.0    0.00    0.00       1         global constructors keyed to _ZN14TableEditPieceC2EP9_GtkTableRKN4Glib6RefPtrIN3Gtk7BuilderEEE [52]
                 0.00    0.00       4/20          std::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [19]
 -----------------------------------------------
-                0.00    0.00       1/1           __do_global_ctors_aux [414]
+                0.00    0.00       1/1           __do_global_ctors_aux [415]
 [53]     0.0    0.00    0.00       1         global constructors keyed to _ZN16DrawingAreaBoardC2ERK5Board [53]
 -----------------------------------------------
-                0.00    0.00       1/1           __do_global_ctors_aux [414]
+                0.00    0.00       1/1           __do_global_ctors_aux [415]
 [54]     0.0    0.00    0.00       1         global constructors keyed to _ZN19GameTotalAllocationC2Eii [54]
 -----------------------------------------------
-                0.00    0.00       1/1           __do_global_ctors_aux [414]
+                0.00    0.00       1/1           __do_global_ctors_aux [415]
 [55]     0.0    0.00    0.00       1         global constructors keyed to _ZN21DrawingAreaShowPiecesC2ERK6PlayerNS_14eOrientation_tE [55]
 -----------------------------------------------
-                0.00    0.00       1/1           __do_global_ctors_aux [414]
+                0.00    0.00       1/1           __do_global_ctors_aux [415]
 [56]     0.0    0.00    0.00       1         global constructors keyed to _ZN22MainWindowWorkerThreadC2Ev [56]
 -----------------------------------------------
-                0.00    0.00       1/1           __do_global_ctors_aux [414]
+                0.00    0.00       1/1           __do_global_ctors_aux [415]
 [57]     0.0    0.00    0.00       1         global constructors keyed to _ZN5BoardC2EiicPPc [57]
 -----------------------------------------------
-                0.00    0.00       1/1           __do_global_ctors_aux [414]
+                0.00    0.00       1/1           __do_global_ctors_aux [415]
 [58]     0.0    0.00    0.00       1         global constructors keyed to _ZN5Piece16PieceDescriptionE [58]
 -----------------------------------------------
-                0.00    0.00       1/1           __do_global_ctors_aux [414]
+                0.00    0.00       1/1           __do_global_ctors_aux [415]
 [59]     0.0    0.00    0.00       1         global constructors keyed to _ZN7Game1v1C2ERK10CoordinateS2_ [59]
 -----------------------------------------------
-                0.00    0.00       1/1           __do_global_ctors_aux [414]
+                0.00    0.00       1/1           __do_global_ctors_aux [415]
 [60]     0.0    0.00    0.00       1         global constructors keyed to _ZN9Heuristic15m_heuristicDataE [60]
 -----------------------------------------------
-                0.00    0.00       1/1           __do_global_ctors_aux [414]
+                0.00    0.00       1/1           __do_global_ctors_aux [415]
 [61]     0.0    0.00    0.00       1         global constructors keyed to main [61]
                 0.00    0.00       4/20          std::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [19]
 -----------------------------------------------
