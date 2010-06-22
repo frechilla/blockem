@@ -570,26 +570,23 @@ void Game1v1Test::TestCalculateValidCoordsInNKPoint(eGame1v1Player_t who, const 
 {
     assert(GetPlayer(who).IsNucleationPoint(where));
 
+    // no need to instantiate a bigger vector
     std::vector<Coordinate> validCoordVector(PIECE_MAX_SQUARES);
     Coordinate validCoord;
     int32_t nNKPointsSecondMethod;
     int32_t nNKPoints;
 
-    // test is done using a baby piece, a 3square triangle, a 4squares S piece and a saf piece
-    Piece pieceArray[4];
-    pieceArray[0] = Piece(e_1Piece_BabyPiece); // baby piece
-    pieceArray[1] = Piece(e_3Piece_Triangle); // 3 squares triangle
-    pieceArray[2] = Piece(e_4Piece_LittleS); // 4 squares S Piece
-    pieceArray[3] = Piece(e_5Piece_SafPiece); // 5 squares safPiece
-
-    for (int32_t i = 0; i < 4; i++)
+    // test is done using all pieces available (no rotate or mirror though)
+    for (int32_t i = e_minimumPieceIndex; i < e_numberOfPieces; i++)
     {
+        Piece tmpPiece(static_cast<ePieceType_t>(i));
+
         nNKPoints = rules::CalculateValidCoordsInNucleationPoint(
                                     GetBoard(),
                                     GetPlayer(who),
                                     where,
-                                    pieceArray[i].GetCurrentConfiguration(),
-                                    pieceArray[i].GetRadius(),
+                                    tmpPiece.GetCurrentConfiguration(),
+                                    tmpPiece.GetRadius(),
                                     validCoordVector);
 
         validCoord.m_row = validCoord.m_col = COORD_UNINITIALISED;
@@ -598,8 +595,8 @@ void Game1v1Test::TestCalculateValidCoordsInNKPoint(eGame1v1Player_t who, const 
                                     GetBoard(),
                                     GetPlayer(who),
                                     where,
-                                    pieceArray[i].GetCurrentConfiguration(),
-                                    pieceArray[i].GetRadius(),
+                                    tmpPiece.GetCurrentConfiguration(),
+                                    tmpPiece.GetRadius(),
                                     validCoord))
         {
             nNKPointsSecondMethod++;
