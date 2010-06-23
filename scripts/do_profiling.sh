@@ -45,12 +45,12 @@ chmod u+x ./blockem
 
 for THIS_FILE in `find $GAME_INPUT_DIR -maxdepth 1 -type f -not -iname "*error*"`; do
     BASENAME=`basename $THIS_FILE`
-    echo "processing ./blockem -d $DEPTH -c $THIS_FILE"
+    echo "processing ./blockem --mode=2 -d $DEPTH $THIS_FILE"
     rm -f gmon.out
-    ./blockem -d $DEPTH -c $THIS_FILE
+    ./blockem --mode=2 -d $DEPTH $THIS_FILE
 
     date > $BASENAME.gprof
-    echo "./blockem -d $DEPTH -c $THIS_FILE" >> $BASENAME.gprof
+    echo "./blockem --mode=2 -d $DEPTH $THIS_FILE" >> $BASENAME.gprof
     echo "" >> $BASENAME.gprof
     if [ -f gmon.out ]; then
         gprof ./blockem gmon.out >> $BASENAME.gprof

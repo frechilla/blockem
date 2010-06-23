@@ -54,10 +54,27 @@ echo "running blockem test application in src/tests"
 # run blockem in console mode against the game examples. cd into src/ since blockem
 # must be run from there
 cd ../
-for THIS_FILE in `find tests/examples/games -maxdepth 1 -type f -not -iname "*error*"`; do
-    echo "running ./blockem -d $DEPTH -c $THIS_FILE"
-    ./blockem -d $DEPTH -c $THIS_FILE 
-done
+LIST_OF_FILES=`find tests/examples/games -maxdepth 1 -type f -not -iname "*error*"`
+echo "running ./blockem -d $DEPTH $LIST_OF_FILES"
+./blockem --mode=2 -d $DEPTH $LIST_OF_FILES 
+
+# now test the command line options
+# help & version message
+./blockem --help
+./blockem --version
+# parsing command line error
+./blockem --force-parsing-error
+# bad mode option
+./blockem --mode=3
+# several errors due to incompatible command line options
+./blockem --mode=1 -r 0 -c 0
+./blockem --mode=1 -r 0 -c 0 -x 4 -y 4
+./blockem --mode=1 -r 14 -c 14 -x 15 -y 4
+./blockem --mode=1 -r 14 -c 14 -x 4 -y 14
+# computer solves this
+./blockem --mode=1 -r 14 -c 14 -x 4 -y 4
+# impossible to solve
+./blockem --mode=1 -r 1 -c 1 -x 0 -y 0
 
 
 # run gcov through all the files generated when running the apps

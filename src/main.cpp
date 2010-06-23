@@ -23,6 +23,7 @@
 /// @history
 /// Ref       Who                When         What
 ///           Faustino Frechilla 30-Mar-2009  Original development
+///           Faustino Frechilla 23-Jun-2010  Nice handling of command line parameters
 /// @endhistory
 ///
 // ============================================================================
@@ -43,6 +44,7 @@
 #include "gui_main_window.h"
 #include "gui_glade_defs.h"
 #include "game1v1.h"
+#include "game_total_allocation.h"
 #include "gui_game1v1_config.h" // initialise singleton
 
 
@@ -77,16 +79,61 @@ extern int        _binary_gui_glade_size[];
 // http://library.gnome.org/devel/glib/unstable/glib-Commandline-option-parser.html
 // there was also the option of popt (http://directory.fsf.org/project/popt) but it would have added
 // an extra dependency
-static gboolean s_version = 0;
-static gint s_depth = 0;
-static gchar *s_blockemfilePath = NULL;
+static gint GOPTION_INT_NOT_SET = -1;
 
-static GOptionEntry s_cmdEntries[] =
+static gboolean g_version    = FALSE; // default is not to show --version message
+static gint g_mode           = 0;     // default is --mode=0
+static gint g_rows           = GOPTION_INT_NOT_SET;
+static gint g_columns        = GOPTION_INT_NOT_SET;
+static gint g_startingRow    = GOPTION_INT_NOT_SET;
+static gint g_startingColumn = GOPTION_INT_NOT_SET;
+static gint g_depth          = GOPTION_INT_NOT_SET;
+static gchar** g_blockemfilePath = NULL;
+
+// typedef struct {
+//   const gchar *long_name;
+//   gchar        short_name;
+//   gint         flags;
+//
+//   GOptionArg   arg;
+//   gpointer     arg_data;
+//
+//   const gchar *description;
+//   const gchar *arg_description;
+// } GOptionEntry;
+static GOptionEntry g_cmdEntries[] =
 {
-    { "version",   0, 0, G_OPTION_ARG_NONE,   &s_version, "Prints the current version of the software and exists", NULL },
-    { "compute", 'c', 0, G_OPTION_ARG_STRING, &s_blockemfilePath, "Loads game saved in FILE, calculates next move and prints out the result in console", "FILE"},
-    { "depth"  , 'd', 0, G_OPTION_ARG_INT,    &s_depth, "sets the maximum depth of search tree to N when using \"--compute\"", "N"},
-//    {G_OPTION_REMAINING, 0, G_OPTION_ARG_FILENAME_ARRAY, &s_fileArray, "Blockem game file to load. The app will calculate next move and print out the result in console. GUI won't be started", "[FILE]"},
+    { "version", 0, 0, G_OPTION_ARG_NONE, &g_version,
+        "Prints current version of the software and exists", NULL },
+    { "mode", 'm', 0, G_OPTION_ARG_INT, &g_mode,
+        "Mandatory parameter which specifies the mode blockem runs. Valid options:\n"\
+        "                                  + 0 (GUI is shown. Default operation)\n"\
+        "                                  + 1 (1 player total-allocation)\n"\
+        "                                  + 2 (1vs1 Game)", "M" },
+    { "rows", 'r', 0, G_OPTION_ARG_INT, &g_rows,
+        "1 player total allocation game's board will have N rows.\n"\
+        "                              This is a MANDATORY parameter for --mode=1", "N"},
+    { "columns", 'c', 0, G_OPTION_ARG_INT, &g_columns,
+        "1 player total allocation game's board will have N columns.\n"\
+        "                              This is a MANDATORY parameter for --mode=1", "N"},
+    { "starting-row", 'x', 0, G_OPTION_ARG_INT, &g_startingRow,
+        "Computer will start to allocate pieces in row X (when running with --mode=1).\n"\
+        "                              First valid row is 0 (so maximum allowed row will be (number_of_rows - 1).\n"\
+        "                              This is a MANDATORY parameter for --mode=1", "X"},
+    { "starting-column", 'y', 0, G_OPTION_ARG_INT, &g_startingColumn,
+        "Computer will start to allocate pieces in column Y (when running with --mode=1).\n"\
+        "                              First valid column is 0 (so maximum allowed column will be (number_of_columns - 1).\n"\
+        "                              This is a MANDATORY parameter for --mode=1", "Y"},
+    { "depth"  , 'd', 0, G_OPTION_ARG_INT, &g_depth,
+        "sets the maximum depth of search tree to N when 1vs1 Game is selected.\n"\
+        "                              This is a MANDATORY parameter for --mode=2", "N"},
+
+    { G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_FILENAME_ARRAY, &g_blockemfilePath,
+        "Paths to 1vs1game files (mode 2). Blockem will calculate next move per each one of them\n"\
+        "                              and print out the result in console.\n"\
+        "                              Specifying at least 1 file is MANDATORY for --mode=2", "[FILE(S)]"},
+
+//    {G_OPTION_REMAINING, 0, G_OPTION_ARG_FILENAME_ARRAY, &g_fileArray, "Blockem game file to load. The app will calculate next move and print out the result in console. GUI won't be started", "[FILE]"},
 //    { "max-size", 'm', 0, G_OPTION_ARG_INT, &max_size, "Test up to 2^M items", "M" },
 //    { "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose, "Be verbose", NULL },
 //    { "beep", 'b', 0, G_OPTION_ARG_NONE, &beep, "Beep when done", NULL },
@@ -94,7 +141,7 @@ static GOptionEntry s_cmdEntries[] =
     { NULL }
 };
 
-
+/// @brief what can I say? This is the main function!
 int main(int argc, char **argv)
 {
     GError *error = NULL;
@@ -102,18 +149,18 @@ int main(int argc, char **argv)
 
     cmdContext = g_option_context_new ("- The GNU polyominoes board game");
     // to add i18n:
-    //   g_option_context_add_main_entries (cmdContext, s_cmdEntries, GETTEXT_PACKAGE);
-    g_option_context_add_main_entries (cmdContext, s_cmdEntries, NULL);
+    //   g_option_context_add_main_entries (cmdContext, g_cmdEntries, GETTEXT_PACKAGE);
+    g_option_context_add_main_entries (cmdContext, g_cmdEntries, NULL);
     // http://library.gnome.org/devel/glib/unstable/glib-Commandline-option-parser.html#g-option-context-add-group
     g_option_context_add_group (cmdContext, gtk_get_option_group (TRUE));
     if (!g_option_context_parse (cmdContext, &argc, &argv, &error))
     {
-        std::cout << argv[0] << ": Error parsing command line: " << error->message << std::endl;
-        std::cout << argv[0] << ": Try '" << argv[0] <<  " --help'" << std::endl;
+        std::cerr << argv[0] << ": Error parsing command line: " << error->message << std::endl;
+        std::cerr << argv[0] << ": Try '" << argv[0] <<  " --help'" << std::endl;
         return 1;
     }
 
-    if (s_version)
+    if (g_version)
     {
         std::cout << "Blockem, version " << VERSION << " (r" << SVN_REVISION << ")" << std::endl;
         std::cout << "  Compiled " << COMPILETIME << std::endl << std::endl;
@@ -124,205 +171,302 @@ int main(int argc, char **argv)
         return 0;
     }
 
-    if (s_blockemfilePath != NULL)
+    if (g_mode == 0)
     {
-        // console mode. a file will be loaded into a gam1v1 and the next move will be calculated
-        // and printed on the screen. App will finish without running any GUI code (see return 0
-        // at the end of this if block)
-        if (!g_file_test(s_blockemfilePath, G_FILE_TEST_IS_REGULAR))
+        //////////////////
+        // GUI MODE
+
+        // gtkmm can do strange stuff if its internals are not initialised early enough
+        Gtk::Main::init_gtkmm_internals();
+
+        // g_thread_supported returns TRUE if the thread system is initialised,
+        // and FALSE if it is not. Initiliase gthreads only if they haven't been
+        // initialised already. Since glib 2.24.0 (from its changelog):
+        // "the requirements for g_thread_init() have been relaxed slightly, it
+        // can be called multiple times, and does not have to be the first call.
+        // GObject now links to GThread and threads are enabled automatically
+        // when g_type_init() is called"
+        // for backwards compatibility call to g_thread_init only if it hasn't been
+        // called already
+        if(!g_thread_supported())
         {
-            std::cerr << "Error: " << s_blockemfilePath << " doesn't exist. Exiting..." << std::endl;
+            // Initialise gthreads even before gtk_init
+            g_thread_init(NULL);
+
+            // This call is needed only if extra threads (not the main thread)
+            // updates directly the GUI widgets using gdk_threads_enter
+            // and gdk_threads_leave
+            // It's not really needed since there's only 1 extra thread
+            // (apart from the main one) and it doesn't update the GUI
+            // straight away. It uses signals for that matter (see comment
+            // in MainWindow::WorkerThread_computingFinished)
+            //gdk_threads_init();
+        }
+
+        // this should be called before starting manipulating GUI stuff
+        Gtk::Main kit(argc, argv);
+
+        // create a new gtk builder. add_from_string will load the definitions
+        Glib::RefPtr<Gtk::Builder> gtkBuilder = Gtk::Builder::create();
+
+#ifdef GLIBMM_EXCEPTIONS_ENABLED
+        try
+        {
+#endif // GLIBMM_EXCEPTIONS_ENABLED
+            // Load the GUI from the xml code embedded in the executable file
+            // see src/gui_glade.h for more information
+            if (!gtkBuilder->add_from_string(
+                    reinterpret_cast<const char *>(__BIN_GUI_GLADE_START__),
+                    reinterpret_cast<long int>(__BIN_GUI_GLADE_SIZE__)))
+            {
+                std::cerr << "Couldn't load Gtkbuilder definitions. Exiting..." << std::endl;
+                return 1;
+            }
+
+#ifdef GLIBMM_EXCEPTIONS_ENABLED
+        }
+        catch(const Glib::MarkupError& ex)
+        {
+            std::cerr << ex.what() << std::endl;
+            return 1;
+        }
+        catch(const Gtk::BuilderError& ex)
+        {
+            std::cerr << ex.what() << std::endl;
+            return -1;
+        }
+#endif // GLIBMM_EXCEPTIONS_ENABLED
+
+
+        MainWindow *pMainWindow = NULL;
+        try
+        {
+            // initialise singletons before extra threads are created.
+            // Singleton creation is not thread safe
+            Game1v1Config::Instance();
+
+            // first of all retrieve the Gtk::window object
+            gtkBuilder->get_widget_derived(GUI_MAIN_WINDOW_NAME, pMainWindow);
+            if (pMainWindow == NULL)
+            {
+                throw new GUIException(std::string("couldn't retrieve the MainWindow from the .glade file"));
+            }
+
+            // if gdk_threads_enter and gdk_threads_leave were to be used
+            // the Gtk::Main::run loop should be surrounded by
+            // gdk_threads_enter and gdk_threads_leave
+            // http://tadeboro.blogspot.com/2009/06/multi-threaded-gtk-applications.html
+
+            kit.run(*pMainWindow);
+        }
+        catch (GUIException ex)
+        {
+            std::cerr << ex.what() << std::endl;
+            exit(-1);
+        }
+
+        if (pMainWindow)
+        {
+            // valgrind won't be happy if all this memory is not freed
+            delete (pMainWindow);
+        }
+
+        // GUI MODE
+        //////////////////
+    }
+    else // (g_mode != 0)
+    {
+        //////////////////
+        // CONSOLE mode
+
+        // do whatever we are requested to do per file passed as parameter to the
+        // application. App will finish without running any GUI code
+
+        if (g_mode == 1)
+        {
+            // 1 player total allocation (--mode=1)
+
+            if ( (g_rows == GOPTION_INT_NOT_SET)        ||
+                 (g_columns == GOPTION_INT_NOT_SET)     ||
+                 (g_startingRow == GOPTION_INT_NOT_SET) ||
+                 (g_startingColumn == GOPTION_INT_NOT_SET) )
+            {
+                std::cerr << argv[0] << ": Error in 1 player game. The following parameters are mandatory:" << std::endl;
+                std::cerr << argv[0] << ": \"--rows\", \"--columns\", \"--starting-row\" and \"--starting-column\"" << std::endl;
+                std::cerr << argv[0] << ": Try '" << argv[0] <<  " --help'" << std::endl;
+                return 3;
+            }
+
+            if ( (g_rows <= 0) || (g_columns <= 0) )
+            {
+                std::cerr << argv[0] << ": Error: Size (rows and columns) of the board in 1player (total allocation) "
+                          << "game must be a greater than 1" << std::endl;
+                std::cerr << argv[0] << ": Try '" << argv[0] <<  " --help'" << std::endl;
+                return 4;
+            }
+
+            if (g_startingRow >= g_rows)
+            {
+                std::cerr << argv[0] << ": Error: App was told to start outside of the board "
+                          << "(starting row is greater or equal than number of rows)"
+                          << std::endl;
+                std::cerr << argv[0] << ": Try '" << argv[0] <<  " --help'" << std::endl;
+                return 5;
+            }
+
+            if (g_startingColumn >= g_columns)
+            {
+                std::cerr << argv[0] << ": Error: App was told to start outside of the board "
+                          << "(starting column is greater or equal than number of columns)"
+                          << std::endl;
+                std::cerr << argv[0] << ": Try '" << argv[0] <<  " --help'" << std::endl;
+                return 6;
+            }
+
+            GameTotalAllocation theGame(g_rows, g_columns);
+
+            Coordinate startingCoord(g_startingRow, g_startingColumn);
+            if (theGame.Solve(startingCoord))
+            {
+                std::cout << std::endl;
+                std::cout << "SOLVED!" << std::endl;
+
+                // print solved board on the screen
+                theGame.GetBoard().PrintBoard(std::cout);
+            }
+            else
+            {
+                std::cout << std::endl;
+                std::cout << "Could not allocate all the pieces in this "
+                          << g_rows << "x" << g_columns << " board starting from row "
+                          << g_startingRow << ", column " << g_startingColumn << std::endl;
+            }
+        }
+        else if (g_mode == 2)
+        {
+            // 1vs1 Game (--mode=2)
+
+            if ( (g_blockemfilePath == NULL) || (g_blockemfilePath[0] == NULL) )
+            {
+                std::cerr << argv[0] << ": Error: At least one file with a 1vs1Game saved must be specified";
+                std::cerr << argv[0] << ": Try '" << argv[0] <<  " --help'" << std::endl;
+                return 3;
+            }
+
+            if (g_depth <= 0)
+            {
+                std::cerr << argv[0] << "Error: Depth in 1vs1Game mode must be set to a positive value. Exiting..." << std::endl;
+                std::cerr << argv[0] << ": Try '" << argv[0] <<  " --help'" << std::endl;
+                return 4;
+            }
+            else if ( (g_depth & 0x01) == 0)
+            {
+                std::cerr << argv[0] << " Warning: For better results you might want to set the depth to an odd number" << std::endl;
+            }
+
+            // go through all the filenames array. Each file will be loaded into a gam1v1 and the next
+            // move will be calculated and printed in the screen
+            Game1v1 theGame;
+            for (int32_t fileIndex = 0; g_blockemfilePath[fileIndex] != NULL; fileIndex++)
+            {
+                if (!g_file_test(g_blockemfilePath[fileIndex], G_FILE_TEST_IS_REGULAR))
+                {
+                    std::cerr << argv[0] << ": Error: " << g_blockemfilePath[fileIndex] << " doesn't exist. Trying next one..." << std::endl;
+                    continue;
+                }
+
+                std::cout << "Loading game from " << g_blockemfilePath[fileIndex]
+                          << " and calculating next move (search tree depth is "
+                          << g_depth << ")" << std::endl;
+
+                std::ifstream cin;
+                cin.open(g_blockemfilePath[fileIndex]);
+                if(!cin)
+                {
+                    std::cerr << argv[0] << ": Error: "
+                              << g_blockemfilePath[fileIndex]
+                              << " could not be opened. Trying next one..." << std::endl;
+                    continue;
+                }
+
+                theGame.Reset();
+                if (theGame.LoadGame(cin) == false)
+                {
+                    std::cerr << argv[0] << ": Error while loading the game from "
+                              << g_blockemfilePath[fileIndex]
+                              << ". Trying next one..." << std::endl;
+                    cin.close();
+
+                    continue;
+                }
+                cin.close();
+
+                // print current game on the screen
+                theGame.SaveGame(std::cout);
+
+                //test(&theGame, theGame.GetMe(), theGame.GetOpponent());
+                //exit(0);
+
+                //std::cout << std::endl << std::endl;
+                //theGame.GetMe().PrintNucleationPoints(std::cout);
+
+                //std::cout << std::endl << std::endl;
+                //theGame.GetOpponent().PrintNucleationPoints(std::cout);
+
+                Heuristic::EvalFunction_t heuristic = Heuristic::CalculateInfluenceAreaWeighted;
+                Piece resultPiece(e_noPiece);
+                Coordinate resultCoord;
+
+                // it is dummy because no one is expected to change it
+                volatile sig_atomic_t dummyAtomic = 0;
+                int32_t minimaxWinner =
+                    theGame.MinMax(
+                            heuristic,
+                            g_depth,
+                            Game1v1::e_Game1v1Player1,
+                            resultPiece,
+                            resultCoord,
+                            dummyAtomic);
+
+                std::cout << "Winning evaluation function value: " << minimaxWinner << std::endl;
+
+                if (resultPiece.GetType() == e_noPiece)
+                {
+                    std::cout << std::endl;
+                    std::cout << "\t===================================================" << std::endl;
+                    std::cout << "\t=== END OF THE GAME. NO PIECE COULD BE PUT DOWN ===" << std::endl;
+                    std::cout << "\t===================================================" << std::endl;
+                }
+                else
+                {
+                    // out down the result piece on the board
+                    theGame.PutDownPiece(
+                            resultPiece,
+                            resultCoord,
+                            Game1v1::e_Game1v1Player1);
+
+                    // print the final game on the screen
+                    theGame.SaveGame(std::cout);
+                }
+
+                //theGame.GetMe().PrintNucleationPoints(std::cout);
+                //theGame.GetOpponent().PrintNucleationPoints(std::cout);
+
+            } // for (int32_t fileIndex = 0; g_blockemfilePath[fileIndex] != NULL; fileIndex++)
+        }
+        else // (g_mode != 1 && g_mode != 2)
+        {
+            std::cerr << argv[0] << ": Error Bad --mode option (" << g_mode << ")" << std::endl;
+            std::cerr << argv[0] << ": Try '" << argv[0] <<  " --help'" << std::endl;
             return 2;
         }
 
-        if (s_depth <= 0)
-        {
-            std::cerr << "Error: depth must be set to a positive value. Exiting..." << std::endl;
-            return 3;
-        }
-
-        std::cout << "Loading game from " << s_blockemfilePath << " and calculating next move..." << std::endl
-                  << "    (search tree depth set to: " << s_depth << ")" << std::endl << std::endl;
-
-
-        if ( (s_depth & 0x01) == 0)
-        {
-            std::cerr << "Warning: For better results you might want to set the depth to an odd number" << std::endl;
-        }
-
-        Heuristic::EvalFunction_t heuristic = Heuristic::CalculateInfluenceAreaWeighted;
-        std::ifstream cin;
-
-        cin.open(s_blockemfilePath);
-        if(!cin)
-        {
-            std::cerr << "Error: file could not be opened" << std::endl;
-            return 4;
-        }
-
-        Game1v1 theGame;
-        if (theGame.LoadGame(cin) == false)
-        {
-            std::cerr << "Error while loading the game from " << s_blockemfilePath << std::endl;
-            cin.close();
-
-            return 4;
-        }
-
-        cin.close();
-
-        theGame.SaveGame(std::cout);
-
-        //test(&theGame, theGame.GetMe(), theGame.GetOpponent());
-        //exit(0);
-
-        //std::cout << std::endl << std::endl;
-        //theGame.GetMe().PrintNucleationPoints(std::cout);
-
-        //std::cout << std::endl << std::endl;
-        //theGame.GetOpponent().PrintNucleationPoints(std::cout);
-
-
-        Piece resultPiece(e_noPiece);
-        Coordinate resultCoord;
-
-        volatile sig_atomic_t dummyAtomic = 0;
-        int32_t minimaxWinner =
-            theGame.MinMax(
-                    heuristic,
-                    s_depth,
-                    Game1v1::e_Game1v1Player1,
-                    resultPiece,
-                    resultCoord,
-                    dummyAtomic);
-
-        std::cout << "Winning evaluation function value: " << minimaxWinner << std::endl;
-
-        if (resultPiece.GetType() == e_noPiece)
-        {
-            std::cout << std::endl;
-            std::cout << "\t===================================================" << std::endl;
-            std::cout << "\t=== END OF THE GAME. NO PIECE COULD BE PUT DOWN ===" << std::endl;
-            std::cout << "\t===================================================" << std::endl;
-        }
-        else
-        {
-            theGame.PutDownPiece(
-                    resultPiece,
-                    resultCoord,
-                    Game1v1::e_Game1v1Player1);
-        }
-
-        // print the game on the screen
-        theGame.SaveGame(std::cout);
-
-        //theGame.GetMe().PrintNucleationPoints(std::cout);
-        //theGame.GetOpponent().PrintNucleationPoints(std::cout);
-
-        return 0;
-    } // if (s_blockemfilePath != NULL)
-
-
-    //////////////////
-    // GUI
-
-    // gtkmm can do strange stuff if its internals are not initialised early enough
-    Gtk::Main::init_gtkmm_internals();
-
-    // g_thread_supported returns TRUE if the thread system is initialised,
-    // and FALSE if it is not. Initiliase gthreads only if they haven't been
-    // initialised already. Since glib 2.24.0 (from its changelog):
-    // "the requirements for g_thread_init() have been relaxed slightly, it
-    // can be called multiple times, and does not have to be the first call.
-    // GObject now links to GThread and threads are enabled automatically
-    // when g_type_init() is called"
-    // for backwards compatibility call to g_thread_init only if it hasn't been
-    // called already
-    if(!g_thread_supported())
-    {
-        // Initialise gthreads even before gtk_init
-        g_thread_init(NULL);
-
-        // This call is needed only if extra threads (not the main thread)
-        // updates directly the GUI widgets using gdk_threads_enter
-        // and gdk_threads_leave
-        // It's not really needed since there's only 1 extra thread
-        // (apart from the main one) and it doesn't update the GUI
-        // straight away. It uses signals for that matter (see comment
-        // in MainWindow::WorkerThread_computingFinished)
-        //gdk_threads_init();
+        // CONSOLE mode
+        //////////////////
     }
 
-    // this should be called before starting manipulating GUI stuff
-    Gtk::Main kit(argc, argv);
-
-    // create a new gtk builder. add_from_string will load the definitions
-    Glib::RefPtr<Gtk::Builder> gtkBuilder = Gtk::Builder::create();
-
-#ifdef GLIBMM_EXCEPTIONS_ENABLED
-    try
-    {
-#endif // GLIBMM_EXCEPTIONS_ENABLED
-        // Load the GUI from the xml code embedded in the executable file
-        // see src/gui_glade.h for more information
-        if (!gtkBuilder->add_from_string(
-                reinterpret_cast<const char *>(__BIN_GUI_GLADE_START__),
-                reinterpret_cast<long int>(__BIN_GUI_GLADE_SIZE__)))
-        {
-            std::cerr << "Couldn't load Gtkbuilder definitions. Exiting..." << std::endl;
-            return 1;
-        }
-
-#ifdef GLIBMM_EXCEPTIONS_ENABLED
-    }
-    catch(const Glib::MarkupError& ex)
-    {
-        std::cerr << ex.what() << std::endl;
-        return 1;
-    }
-    catch(const Gtk::BuilderError& ex)
-    {
-        std::cerr << ex.what() << std::endl;
-        return -1;
-    }
-#endif // GLIBMM_EXCEPTIONS_ENABLED
-
-
-    MainWindow *pMainWindow = NULL;
-    try
-    {
-        // initialise singletons before extra threads are created.
-        // Singleton creation is not thread safe
-        Game1v1Config::Instance();
-
-        // first of all retrieve the Gtk::window object
-        gtkBuilder->get_widget_derived(GUI_MAIN_WINDOW_NAME, pMainWindow);
-        if (pMainWindow == NULL)
-        {
-            throw new GUIException(std::string("couldn't retrieve the MainWindow from the .glade file"));
-        }
-
-        // if gdk_threads_enter and gdk_threads_leave were to be used
-        // the Gtk::Main::run loop should be surrounded by
-        // gdk_threads_enter and gdk_threads_leave
-        // http://tadeboro.blogspot.com/2009/06/multi-threaded-gtk-applications.html
-
-        kit.run(*pMainWindow);
-    }
-    catch (GUIException ex)
-    {
-        std::cerr << ex.what() << std::endl;
-        exit(-1);
-    }
-
-    if (pMainWindow)
-    {
-        // valgrind won't be happy if all this memory is not freed
-        delete (pMainWindow);
-    }
-
-    // GUI
-    //////////////////
+    // free command line parsing resources
+    g_option_context_free(cmdContext);
 
     return 0;
 }

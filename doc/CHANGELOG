@@ -1,5 +1,9 @@
 : Version 0.2.3
     - 6-7% performance improvement of Minimax algorithm since 0.2.2
+    - Improved command line options. backtracking algorithm to deploy all
+      pieces in an empty board (1 player total allocation game) can be tested
+      through command line, for example with this command:
+          ./blockem --mode=1 -r 14 -c 14 -x 4 -y 4
 
 21/06/2010: Version 0.2.2
     - Code adapted to be able to run with glib >= 2.24 (included in ubuntu
