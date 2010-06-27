@@ -85,9 +85,7 @@ Piece::LoadPieceFunction_t Piece::m_loadFunctionMap[] =
 };
 
 Piece::Piece(ePieceType_t a_type):
-	m_type(a_type),
-    m_coords(PIECE_MAX_SQUARES),
-    m_origCoords(PIECE_MAX_SQUARES)
+	m_type(a_type)
 #ifdef DEBUG
     ,m_initialised(false)
 #endif
@@ -108,8 +106,8 @@ Piece::Piece(ePieceType_t a_type):
 	else
 	{
 		// no piece loaded
-	    Coordinate coords[0];
-	    SetPiece(coords, 0, false, 0, 0);
+	    std::vector<Coordinate> dummyVector(0);
+	    SetPiece(dummyVector, dummyVector, dummyVector, false, 0, 0);
 	}
 }
 
@@ -118,11 +116,12 @@ Piece::~Piece()
 }
 
 void Piece::SetPiece(
-    Coordinate a_coords[PIECE_MAX_SQUARES],
-    uint8_t a_nSquares,
-    bool a_mirror,
-    int8_t a_nRotations,
-    uint8_t a_radius)
+    const std::vector<Coordinate> &a_pieceCoords,
+    const std::vector<Coordinate> &a_nkPoints,
+    const std::vector<Coordinate> &a_forbiddenArea,
+    bool                           a_mirror,
+    int8_t                         a_nRotations,
+    uint8_t                        a_radius)
 {
 #ifdef DEBUG
     assert(a_nSquares <= PIECE_MAX_SQUARES);
@@ -135,14 +134,46 @@ void Piece::SetPiece(
 
     m_nMirrors = 0;
 
-    m_coords.resize(a_nSquares);
-    m_origCoords.resize(a_nSquares);
+    m_originalConf.m_pieceSquares.resize(a_pieceCoords.size());
+    m_currentConf.m_pieceSquares.resize(a_pieceCoords.size());
 
-    uint8_t i;
-    for (i = 0; i < a_nSquares; i++)
+    m_originalConf.m_nkPoints.resize(a_nkPoints.size());
+    m_currentConf.m_nkPoints.resize(a_nkPoints.size());
+
+    m_originalConf.m_forbiddenArea.resize(a_forbiddenArea.size());
+    m_currentConf.m_forbiddenArea.resize(a_forbiddenArea.size());
+
+    for (std::size_t i = 0; i < a_pieceCoords.size(); i++)
     {
-        m_coords[i].m_row = m_origCoords[i].m_row = a_coords[i].m_row;
-        m_coords[i].m_col = m_origCoords[i].m_col = a_coords[i].m_col;
+        m_currentConf.m_pieceSquares[i].Set(
+                a_pieceCoords[i].m_row,
+                a_pieceCoords[i].m_col);
+
+        m_originalConf.m_pieceSquares[i].Set(
+                a_pieceCoords[i].m_row,
+                a_pieceCoords[i].m_col);
+    }
+
+    for (std::size_t i = 0; i < a_nkPoints.size(); i++)
+    {
+        m_currentConf.m_nkPoints[i].Set(
+                a_nkPoints[i].m_row,
+                a_nkPoints[i].m_col);
+
+        m_originalConf.m_nkPoints[i].Set(
+                a_nkPoints[i].m_row,
+                a_nkPoints[i].m_col);
+    }
+
+    for (std::size_t i = 0; i < a_forbiddenArea.size(); i++)
+    {
+        m_currentConf.m_forbiddenArea[i].Set(
+                a_forbiddenArea[i].m_row,
+                a_forbiddenArea[i].m_col);
+
+        m_originalConf.m_forbiddenArea[i].Set(
+                a_forbiddenArea[i].m_row,
+                a_forbiddenArea[i].m_col);
     }
 
 #ifdef DEBUG
@@ -156,11 +187,25 @@ void Piece::Reset()
     assert(m_initialised);
 #endif
 
-    uint8_t i;
-    for (i = 0; i < GetNSquares(); i++)
+    for (std::size_t i = 0; i < m_originalConf.m_pieceSquares.size(); i++)
     {
-        m_coords[i].m_row = m_origCoords[i].m_row;
-        m_coords[i].m_col = m_origCoords[i].m_col;
+        m_currentConf.m_pieceSquares[i].Set(
+            m_originalConf.m_pieceSquares[i].m_row,
+            m_originalConf.m_pieceSquares[i].m_col);
+    }
+
+    for (std::size_t i = 0; i < m_originalConf.m_nkPoints.size(); i++)
+    {
+        m_currentConf.m_nkPoints[i].Set(
+            m_originalConf.m_nkPoints[i].m_row,
+            m_originalConf.m_nkPoints[i].m_col);
+    }
+
+    for (std::size_t i = 0; i < m_originalConf.m_forbiddenArea.size(); i++)
+    {
+        m_currentConf.m_forbiddenArea[i].Set(
+            m_originalConf.m_forbiddenArea[i].m_row,
+            m_originalConf.m_forbiddenArea[i].m_col);
     }
 
     m_nMirrors   = 0;
@@ -178,39 +223,29 @@ void Piece::RotateRight()
     	return;
     }
 
-    for (pieceConfiguration_t::iterator it = m_coords.begin();
-        it != m_coords.end();
-        it++)
+    std::vector<Coordinate>::iterator it;
+
+    // change all the properties saved into the current configuration
+    // (squares, nk points and forbidden areas)
+    for (it  = m_currentConf.m_pieceSquares.begin();
+         it != m_currentConf.m_pieceSquares.end();
+         it++)
     {
-    	int8_t aux;
-        if ((it->m_row >= 0) && (it->m_col >= 0))
-        {
-            // X will be positive. Y negative
-            aux = it->m_row;
-            it->m_row = it->m_col;
-            it->m_col = -aux;
-        }
-        else if ((it->m_row >= 0) && (it->m_col < 0))
-        {
-            // both will be negative
-            aux = it->m_row;
-            it->m_row = it->m_col;
-            it->m_col = -aux;
-        }
-        else if ((it->m_row < 0) && (it->m_col < 0))
-        {
-            // X will be negative. Y positive
-            aux = it->m_row;
-            it->m_row = it->m_col;
-            it->m_col = -aux;
-        }
-        else // ((it->m_row < 0) && (it->m_col >= 0))
-        {
-            // both will be positive
-            aux = it->m_row;
-            it->m_row = it->m_col;
-            it->m_col = -aux;
-        }
+        RotateCoordRight(*it);
+    }
+
+    for (it  = m_currentConf.m_nkPoints.begin();
+         it != m_currentConf.m_nkPoints.end();
+         it++)
+    {
+        RotateCoordRight(*it);
+    }
+
+    for (it  = m_currentConf.m_forbiddenArea.begin();
+         it != m_currentConf.m_forbiddenArea.end();
+         it++)
+    {
+        RotateCoordRight(*it);
     }
 
     return;
@@ -228,39 +263,29 @@ void Piece::RotateLeft()
         return;
     }
 
-    for (pieceConfiguration_t::iterator it = m_coords.begin();
-        it != m_coords.end();
-        it++)
+    std::vector<Coordinate>::iterator it;
+
+    // change all the properties saved into the current configuration
+    // (squares, nk points and forbidden areas)
+    for (it  = m_currentConf.m_pieceSquares.begin();
+         it != m_currentConf.m_pieceSquares.end();
+         it++)
     {
-        int8_t aux;
-        if ((it->m_row >= 0) && (it->m_col >= 0))
-        {
-            // X will be negative. Y positive
-            aux = it->m_row;
-            it->m_row = -it->m_col;
-            it->m_col = aux;
-        }
-        else if ((it->m_row >= 0) && (it->m_col < 0))
-        {
-            // both will be positive
-            aux = it->m_row;
-            it->m_row = -it->m_col;
-            it->m_col = aux;
-        }
-        else if ((it->m_row < 0) && (it->m_col < 0))
-        {
-            // X will be positive. Y negative
-            aux = it->m_row;
-            it->m_row = -it->m_col;
-            it->m_col = aux;
-        }
-        else // ((it->m_row < 0) && (it->m_col >= 0))
-        {
-            // both will be negative
-            aux = it->m_row;
-            it->m_row = -it->m_col;
-            it->m_col = aux;
-        }
+        RotateCoordLeft(*it);
+    }
+
+    for (it  = m_currentConf.m_nkPoints.begin();
+         it != m_currentConf.m_nkPoints.end();
+         it++)
+    {
+        RotateCoordLeft(*it);
+    }
+
+    for (it  = m_currentConf.m_forbiddenArea.begin();
+         it != m_currentConf.m_forbiddenArea.end();
+         it++)
+    {
+        RotateCoordLeft(*it);
     }
 
     return;
@@ -272,11 +297,29 @@ bool Piece::MirrorYAxis()
     assert(m_initialised);
 #endif
 
-    for (pieceConfiguration_t::iterator it = m_coords.begin();
-        it != m_coords.end();
-        it++)
+    std::vector<Coordinate>::iterator it;
+
+    // change all the properties saved into the current configuration
+    // (squares, nk points and forbidden areas)
+    for (it  = m_currentConf.m_pieceSquares.begin();
+         it != m_currentConf.m_pieceSquares.end();
+         it++)
     {
-        it->m_col = -it->m_col;
+        MirrorCoordYAxis(*it);
+    }
+
+    for (it  = m_currentConf.m_nkPoints.begin();
+         it != m_currentConf.m_nkPoints.end();
+         it++)
+    {
+        MirrorCoordYAxis(*it);
+    }
+
+    for (it  = m_currentConf.m_forbiddenArea.begin();
+         it != m_currentConf.m_forbiddenArea.end();
+         it++)
+    {
+        MirrorCoordYAxis(*it);
     }
 
     if (!m_origMirror)
@@ -295,11 +338,29 @@ bool Piece::MirrorXAxis()
     assert(m_initialised);
 #endif
 
-    for (pieceConfiguration_t::iterator it = m_coords.begin();
-        it != m_coords.end();
-        it++)
+    std::vector<Coordinate>::iterator it;
+
+    // change all the properties saved into the current configuration
+    // (squares, nk points and forbidden areas)
+    for (it  = m_currentConf.m_pieceSquares.begin();
+         it != m_currentConf.m_pieceSquares.end();
+         it++)
     {
-        it->m_row = -it->m_row;
+        MirrorCoordXAxis(*it);
+    }
+
+    for (it  = m_currentConf.m_nkPoints.begin();
+         it != m_currentConf.m_nkPoints.end();
+         it++)
+    {
+        MirrorCoordXAxis(*it);
+    }
+
+    for (it  = m_currentConf.m_forbiddenArea.begin();
+         it != m_currentConf.m_forbiddenArea.end();
+         it++)
+    {
+        MirrorCoordXAxis(*it);
     }
 
     if (!m_origMirror)
@@ -312,293 +373,773 @@ bool Piece::MirrorXAxis()
     return IsMirrored();
 }
 
+void Piece::RotateCoordRight(Coordinate &in_out_coord)
+{
+    int32_t aux;
+    if ((in_out_coord.m_row >= 0) && (in_out_coord.m_col >= 0))
+    {
+        // X will be positive. Y negative
+        aux = in_out_coord.m_row;
+        in_out_coord.m_row = in_out_coord.m_col;
+        in_out_coord.m_col = -aux;
+    }
+    else if ((in_out_coord.m_row >= 0) && (in_out_coord.m_col < 0))
+    {
+        // both will be negative
+        aux = in_out_coord.m_row;
+        in_out_coord.m_row = in_out_coord.m_col;
+        in_out_coord.m_col = -aux;
+    }
+    else if ((in_out_coord.m_row < 0) && (in_out_coord.m_col < 0))
+    {
+        // X will be negative. Y positive
+        aux = in_out_coord.m_row;
+        in_out_coord.m_row = in_out_coord.m_col;
+        in_out_coord.m_col = -aux;
+    }
+    else // ((in_out_coord.m_row < 0) && (in_out_coord.m_col >= 0))
+    {
+        // both will be positive
+        aux = in_out_coord.m_row;
+        in_out_coord.m_row = in_out_coord.m_col;
+        in_out_coord.m_col = -aux;
+    }
+}
+
+void Piece::RotateCoordLeft(Coordinate &in_out_coord)
+{
+    int32_t aux;
+    if ((in_out_coord.m_row >= 0) && (in_out_coord.m_col >= 0))
+    {
+        // X will be negative. Y positive
+        aux = in_out_coord.m_row;
+        in_out_coord.m_row = -in_out_coord.m_col;
+        in_out_coord.m_col = aux;
+    }
+    else if ((in_out_coord.m_row >= 0) && (in_out_coord.m_col < 0))
+    {
+        // both will be positive
+        aux = in_out_coord.m_row;
+        in_out_coord.m_row = -in_out_coord.m_col;
+        in_out_coord.m_col = aux;
+    }
+    else if ((in_out_coord.m_row < 0) && (in_out_coord.m_col < 0))
+    {
+        // X will be positive. Y negative
+        aux = in_out_coord.m_row;
+        in_out_coord.m_row = -in_out_coord.m_col;
+        in_out_coord.m_col = aux;
+    }
+    else // ((in_out_coord.m_row < 0) && (in_out_coord.m_col >= 0))
+    {
+        // both will be negative
+        aux = in_out_coord.m_row;
+        in_out_coord.m_row = -in_out_coord.m_col;
+        in_out_coord.m_col = aux;
+    }
+}
+
+void Piece::MirrorCoordXAxis(Coordinate &in_out_coord)
+{
+    in_out_coord.m_row = -in_out_coord.m_row;
+}
+
+void Piece::MirrorCoordYAxis(Coordinate &in_out_coord)
+{
+    in_out_coord.m_col = -in_out_coord.m_col;
+}
+
 void Piece::LoadPiece_1BabyPiece(Piece &thisPiece)
 {
-    // X
-    Coordinate coords[1];
+    // + . +
+    // . X .
+    // + . +
+    std::vector<Coordinate> coords(1);
+    coords[0] = Coordinate(0, 0);
 
-    coords[0].Set(0, 0);
+    std::vector<Coordinate> nkPoints(4);
+    nkPoints[0] = Coordinate(-1, -1);
+    nkPoints[1] = Coordinate(-1,  1);
+    nkPoints[2] = Coordinate( 1, -1);
+    nkPoints[3] = Coordinate( 1,  1);
 
-    thisPiece.SetPiece(coords, 1, false, 1, 0);
+    std::vector<Coordinate> forbiddenArea(4);
+    forbiddenArea[0] = Coordinate(-1,  0);
+    forbiddenArea[1] = Coordinate( 0,  1);
+    forbiddenArea[2] = Coordinate( 0, -1);
+    forbiddenArea[3] = Coordinate( 1,  0);
+
+    thisPiece.SetPiece(coords, nkPoints, forbiddenArea, false, 1, 0);
 }
 void Piece::LoadPiece_2TwoPiece(Piece &thisPiece)
 {
-    // X X
-    Coordinate coords[2];
+    // + . . +
+    // . X X .
+    // + . . +
+    std::vector<Coordinate> coords(2);
+    coords[0] = Coordinate(0, 0);
+    coords[1] = Coordinate(0, 1);
 
-	coords[0].Set(0, 0);
-	coords[1].Set(0, 1);
+    std::vector<Coordinate> nkPoints(4);
+    nkPoints[0] = Coordinate(-1, -1);
+    nkPoints[1] = Coordinate(-1,  2);
+    nkPoints[2] = Coordinate( 1, -1);
+    nkPoints[3] = Coordinate( 1,  2);
 
-    thisPiece.SetPiece(coords, 2, false, 2, 1);
+    std::vector<Coordinate> forbiddenArea(6);
+    forbiddenArea[0] = Coordinate(-1,  0);
+    forbiddenArea[1] = Coordinate(-1,  1);
+    forbiddenArea[2] = Coordinate( 0, -1);
+    forbiddenArea[3] = Coordinate( 0,  2);
+    forbiddenArea[4] = Coordinate( 1,  0);
+    forbiddenArea[5] = Coordinate( 1,  1);
+
+    thisPiece.SetPiece(coords, nkPoints, forbiddenArea, false, 2, 1);
 }
 void Piece::LoadPiece_3LongPiece(Piece &thisPiece)
 {
-    // X X X
-    Coordinate coords[3];
+    // + . . . +
+    // . X X X .
+    // + . . . +
+    std::vector<Coordinate> coords(3);
+    coords[0] = Coordinate(0,  0);
+    coords[1] = Coordinate(0, -1);
+    coords[2] = Coordinate(0,  1);
 
-	coords[0].Set(0, 0);
-	coords[1].Set(0, -1);
-	coords[2].Set(0, 1);
+    std::vector<Coordinate> nkPoints(4);
+    nkPoints[0] = Coordinate(-1, -2);
+    nkPoints[1] = Coordinate(-1,  2);
+    nkPoints[2] = Coordinate( 1, -2);
+    nkPoints[3] = Coordinate( 1,  2);
 
-    thisPiece.SetPiece(coords, 3, false, 2, 1);
+    std::vector<Coordinate> forbiddenArea(8);
+    forbiddenArea[0] = Coordinate(-1, -1);
+    forbiddenArea[1] = Coordinate(-1,  0);
+    forbiddenArea[2] = Coordinate(-1,  1);
+    forbiddenArea[3] = Coordinate( 0, -2);
+    forbiddenArea[4] = Coordinate( 0,  2);
+    forbiddenArea[5] = Coordinate( 1, -1);
+    forbiddenArea[6] = Coordinate( 1,  0);
+    forbiddenArea[7] = Coordinate( 1,  1);
+
+    thisPiece.SetPiece(coords, nkPoints, forbiddenArea, false, 2, 1);
 }
 void Piece::LoadPiece_3Triangle(Piece &thisPiece)
 {
-    // X X
-    //   X
-    Coordinate coords[3];
+    // + . . +
+    // . X X .
+    // + . X .
+    //   + . +
+    std::vector<Coordinate> coords(3);
+    coords[0] = Coordinate(0,  0);
+    coords[1] = Coordinate(0, -1);
+    coords[2] = Coordinate(1,  0);
 
-	coords[0].Set(0, 0);
-	coords[1].Set(0, -1);
-	coords[2].Set(1, 0);
+    std::vector<Coordinate> nkPoints(5);
+    nkPoints[0] = Coordinate(-1, -2);
+    nkPoints[1] = Coordinate(-1,  1);
+    nkPoints[2] = Coordinate( 1, -2);
+    nkPoints[3] = Coordinate( 2, -1);
+    nkPoints[4] = Coordinate( 2,  1);
 
-    thisPiece.SetPiece(coords, 3, false, 4, 1);
+    std::vector<Coordinate> forbiddenArea(7);
+    forbiddenArea[0] = Coordinate(-1, -1);
+    forbiddenArea[1] = Coordinate(-1,  0);
+    forbiddenArea[2] = Coordinate( 0, -2);
+    forbiddenArea[3] = Coordinate( 0,  1);
+    forbiddenArea[4] = Coordinate( 1, -1);
+    forbiddenArea[5] = Coordinate( 1,  1);
+    forbiddenArea[6] = Coordinate( 2,  0);
+
+    thisPiece.SetPiece(coords, nkPoints, forbiddenArea, false, 4, 1);
 }
 void Piece::LoadPiece_4LongPiece(Piece &thisPiece)
 {
-    // X X X X
-    Coordinate coords[4];
+    // + . . . . +
+    // . X X X X .
+    // + . . . . +
+    std::vector<Coordinate> coords(4);
+    coords[0] = Coordinate(0,  0);
+    coords[1] = Coordinate(0, -1);
+    coords[2] = Coordinate(0,  2);
+    coords[3] = Coordinate(0,  1);
 
-	coords[0].Set(0, 0);
-	coords[1].Set(0, -1);
-	coords[2].Set(0, 2);
-	coords[3].Set(0, 1);
+    std::vector<Coordinate> nkPoints(4);
+    nkPoints[0] = Coordinate(-1, -2);
+    nkPoints[1] = Coordinate(-1,  3);
+    nkPoints[2] = Coordinate( 1, -2);
+    nkPoints[3] = Coordinate( 1,  3);
 
-    thisPiece.SetPiece(coords, 4, false, 2, 2);
+    std::vector<Coordinate> forbiddenArea(10);
+    forbiddenArea[0] = Coordinate(-1, -1);
+    forbiddenArea[1] = Coordinate(-1,  0);
+    forbiddenArea[2] = Coordinate(-1,  1);
+    forbiddenArea[3] = Coordinate(-1,  2);
+    forbiddenArea[4] = Coordinate( 0, -2);
+    forbiddenArea[5] = Coordinate( 0,  3);
+    forbiddenArea[6] = Coordinate( 1, -1);
+    forbiddenArea[7] = Coordinate( 1,  0);
+    forbiddenArea[8] = Coordinate( 1,  1);
+    forbiddenArea[9] = Coordinate( 1,  2);
+
+    thisPiece.SetPiece(coords, nkPoints, forbiddenArea, false, 2, 2);
 }
 void Piece::LoadPiece_4LittleS(Piece &thisPiece)
 {
-    //   X X
-    // X X
-    Coordinate coords[4];
+    //   + . . +
+    // + . X X .
+    // . X X . +
+    // + . . +
+    std::vector<Coordinate> coords(4);
+    coords[0] = Coordinate(0,  0);
+    coords[1] = Coordinate(1, -1);
+    coords[2] = Coordinate(1,  0);
+    coords[3] = Coordinate(0,  1);
 
-	coords[0].Set(0, 0);
-	coords[1].Set(1, -1);
-	coords[2].Set(1, 0);
-	coords[3].Set(0, 1);
+    std::vector<Coordinate> nkPoints(6);
+    nkPoints[0] = Coordinate(-1, -1);
+    nkPoints[1] = Coordinate(-1,  2);
+    nkPoints[2] = Coordinate( 0, -2);
+    nkPoints[3] = Coordinate( 1,  2);
+    nkPoints[4] = Coordinate( 2, -2);
+    nkPoints[5] = Coordinate( 2,  1);
 
-    thisPiece.SetPiece(coords, 4, true, 2, 1);
+    std::vector<Coordinate> forbiddenArea(8);
+    forbiddenArea[0] = Coordinate(-1,  0);
+    forbiddenArea[1] = Coordinate(-1,  1);
+    forbiddenArea[2] = Coordinate( 0, -1);
+    forbiddenArea[3] = Coordinate( 0,  2);
+    forbiddenArea[4] = Coordinate( 1, -2);
+    forbiddenArea[5] = Coordinate( 1,  1);
+    forbiddenArea[6] = Coordinate( 2, -1);
+    forbiddenArea[7] = Coordinate( 2,  0);
+
+    thisPiece.SetPiece(coords, nkPoints, forbiddenArea, true, 2, 1);
 }
 void Piece::LoadPiece_4LittleT(Piece &thisPiece)
 {
-    //   X
-    // X X X
-    Coordinate coords[4];
+    //   + . +
+    // + . X . +
+    // . X X X .
+    // + . . . +
+    std::vector<Coordinate> coords(4);
+    coords[0] = Coordinate( 0,  0);
+    coords[1] = Coordinate( 0, -1);
+    coords[2] = Coordinate( 0,  1);
+    coords[3] = Coordinate(-1,  0);
 
-	coords[0].Set(0, 0);
-	coords[1].Set(0, -1);
-	coords[2].Set(0, 1);
-	coords[3].Set(-1, 0);
+    std::vector<Coordinate> nkPoints(6);
+    nkPoints[0] = Coordinate(-2, -1);
+    nkPoints[1] = Coordinate(-2,  1);
+    nkPoints[2] = Coordinate(-1, -2);
+    nkPoints[3] = Coordinate(-1,  2);
+    nkPoints[4] = Coordinate( 1, -2);
+    nkPoints[5] = Coordinate( 1,  2);
 
-    thisPiece.SetPiece(coords, 4, false, 4, 1);
+    std::vector<Coordinate> forbiddenArea(8);
+    forbiddenArea[0] = Coordinate(-1, -1);
+    forbiddenArea[1] = Coordinate(-2,  0);
+    forbiddenArea[2] = Coordinate(-1,  1);
+    forbiddenArea[3] = Coordinate( 0, -2);
+    forbiddenArea[4] = Coordinate( 0,  2);
+    forbiddenArea[5] = Coordinate( 1, -1);
+    forbiddenArea[6] = Coordinate( 1,  0);
+    forbiddenArea[7] = Coordinate( 1,  1);
+
+    thisPiece.SetPiece(coords, nkPoints, forbiddenArea, false, 4, 1);
 }
 void Piece::LoadPiece_4littleL(Piece &thisPiece)
 {
-    // X X X
-    //     X
-    Coordinate coords[4];
+    // + . . . +
+    // . X X X .
+    // + . . X .
+    //     + . +
+    std::vector<Coordinate> coords(4);
+    coords[0] = Coordinate(0,  0);
+    coords[1] = Coordinate(1,  1);
+    coords[2] = Coordinate(0, -1);
+    coords[3] = Coordinate(0,  1);
 
-	coords[0].Set(0, 0);
-	coords[1].Set(1, 1);
-	coords[2].Set(0, -1);
-	coords[3].Set(0, 1);
+    std::vector<Coordinate> nkPoints(5);
+    nkPoints[0] = Coordinate(-1, -2);
+    nkPoints[1] = Coordinate(-1,  2);
+    nkPoints[2] = Coordinate( 1, -2);
+    nkPoints[3] = Coordinate( 2,  0);
+    nkPoints[4] = Coordinate( 2,  2);
 
-    thisPiece.SetPiece(coords, 4, true, 4, 1);
+    std::vector<Coordinate> forbiddenArea(9);
+    forbiddenArea[0] = Coordinate(-1, -1);
+    forbiddenArea[1] = Coordinate(-1,  0);
+    forbiddenArea[2] = Coordinate(-1,  1);
+    forbiddenArea[3] = Coordinate( 0, -2);
+    forbiddenArea[4] = Coordinate( 0,  2);
+    forbiddenArea[5] = Coordinate( 1, -1);
+    forbiddenArea[6] = Coordinate( 1,  0);
+    forbiddenArea[7] = Coordinate( 1,  2);
+    forbiddenArea[8] = Coordinate( 2,  1);
+
+    thisPiece.SetPiece(coords, nkPoints, forbiddenArea, true, 4, 1);
 }
 void Piece::LoadPiece_4FullSquare(Piece &thisPiece)
 {
-    // X X
-    // X X
-    Coordinate coords[4];
+    // + . . +
+    // . X X .
+    // . X X .
+    // + . . +
+    std::vector<Coordinate> coords(4);
+    coords[0] = Coordinate(0, 0);
+    coords[1] = Coordinate(0, 1);
+    coords[2] = Coordinate(1, 0);
+    coords[3] = Coordinate(1, 1);
 
-	coords[0].Set(0, 0);
-	coords[1].Set(0, 1);
-	coords[2].Set(1, 0);
-	coords[3].Set(1, 1);
+    std::vector<Coordinate> nkPoints(4);
+    nkPoints[0] = Coordinate(-1, -1);
+    nkPoints[1] = Coordinate(-1,  2);
+    nkPoints[2] = Coordinate( 2, -1);
+    nkPoints[3] = Coordinate( 2,  2);
 
-    thisPiece.SetPiece(coords, 4, false, 1, 1);
+    std::vector<Coordinate> forbiddenArea(8);
+    forbiddenArea[0] = Coordinate(-1,  0);
+    forbiddenArea[1] = Coordinate(-1,  1);
+    forbiddenArea[2] = Coordinate( 0, -1);
+    forbiddenArea[3] = Coordinate( 0,  2);
+    forbiddenArea[4] = Coordinate( 1, -1);
+    forbiddenArea[5] = Coordinate( 1,  2);
+    forbiddenArea[6] = Coordinate( 2,  0);
+    forbiddenArea[7] = Coordinate( 2,  1);
+
+    thisPiece.SetPiece(coords, nkPoints, forbiddenArea, false, 1, 1);
 }
 void Piece::LoadPiece_5BigS(Piece &thisPiece)
 {
-    //   X X
-    //   X
-    // X X
-    Coordinate coords[5];
+    //   + . . +
+    //   . X X .
+    // + . X . +
+    // . X X .
+    // + . . +
+    std::vector<Coordinate> coords(5);
+    coords[0] = Coordinate( 0,  0);
+    coords[1] = Coordinate(-1,  1);
+    coords[2] = Coordinate( 1, -1);
+    coords[3] = Coordinate(-1,  0);
+    coords[4] = Coordinate( 1,  0);
 
-	coords[0].Set(0, 0);
-	coords[1].Set(-1, 1);
-	coords[2].Set(1, -1);
-	coords[3].Set(-1, 0);
-	coords[4].Set(1, 0);
+    std::vector<Coordinate> nkPoints(6);
+    nkPoints[0] = Coordinate(-2, -1);
+    nkPoints[1] = Coordinate(-2,  2);
+    nkPoints[2] = Coordinate( 0, -2);
+    nkPoints[3] = Coordinate( 2,  2);
+    nkPoints[4] = Coordinate( 2, -2);
+    nkPoints[5] = Coordinate( 2,  1);
 
-    thisPiece.SetPiece(coords, 5, true, 2, 1);
+    std::vector<Coordinate> forbiddenArea(10);
+    forbiddenArea[0] = Coordinate(-2,  0);
+    forbiddenArea[1] = Coordinate(-2,  1);
+    forbiddenArea[2] = Coordinate(-1, -1);
+    forbiddenArea[3] = Coordinate(-1,  2);
+    forbiddenArea[4] = Coordinate( 0, -1);
+    forbiddenArea[5] = Coordinate( 0,  1);
+    forbiddenArea[6] = Coordinate( 1, -2);
+    forbiddenArea[7] = Coordinate( 1,  1);
+    forbiddenArea[8] = Coordinate( 2, -1);
+    forbiddenArea[9] = Coordinate( 2,  0);
+
+    thisPiece.SetPiece(coords, nkPoints, forbiddenArea, true, 2, 1);
 }
 void Piece::LoadPiece_5SafPiece(Piece &thisPiece)
 {
-    //   X
-    //   X X
-    // X X
-    Coordinate coords[5];
+    //   + . +
+    //   . X . +
+    // + . X X .
+    // . X X . +
+    // + . . +
+    std::vector<Coordinate> coords(5);
+    coords[0] = Coordinate( 0,  0);
+    coords[1] = Coordinate( 1, -1);
+    coords[2] = Coordinate( 0,  1);
+    coords[3] = Coordinate( 1,  0);
+    coords[4] = Coordinate(-1,  0);
 
-	coords[0].Set(0, 0);
-	coords[1].Set(1, -1);
-	coords[2].Set(0, 1);
-	coords[3].Set(1, 0);
-	coords[4].Set(-1, 0);
+    std::vector<Coordinate> nkPoints(7);
+    nkPoints[0] = Coordinate(-2, -1);
+    nkPoints[1] = Coordinate(-2,  1);
+    nkPoints[2] = Coordinate(-1,  2);
+    nkPoints[3] = Coordinate( 0, -2);
+    nkPoints[4] = Coordinate( 1,  2);
+    nkPoints[5] = Coordinate( 2, -2);
+    nkPoints[6] = Coordinate( 2,  1);
 
-    thisPiece.SetPiece(coords, 5, true, 4, 1);
+    std::vector<Coordinate> forbiddenArea(9);
+    forbiddenArea[0] = Coordinate(-2,  0);
+    forbiddenArea[1] = Coordinate(-1, -1);
+    forbiddenArea[2] = Coordinate(-1,  1);
+    forbiddenArea[3] = Coordinate( 0, -1);
+    forbiddenArea[4] = Coordinate( 0,  2);
+    forbiddenArea[5] = Coordinate( 1, -2);
+    forbiddenArea[6] = Coordinate( 1,  1);
+    forbiddenArea[7] = Coordinate( 2,  0);
+    forbiddenArea[8] = Coordinate( 2, -1);
+
+    thisPiece.SetPiece(coords, nkPoints, forbiddenArea, true, 4, 1);
 }
 void Piece::LoadPiece_5WPiece(Piece &thisPiece)
 {
-    // X X
-    //   X X
-    //     X
-    Coordinate coords[5];
+    // + . . +
+    // . X X . +
+    // + . X X .
+    //   + . X .
+    //     + . +
+    std::vector<Coordinate> coords(5);
+    coords[0] = Coordinate( 0,  0);
+    coords[1] = Coordinate(-1, -1);
+    coords[2] = Coordinate( 1,  1);
+    coords[3] = Coordinate(-1,  0);
+    coords[4] = Coordinate( 0,  1);
 
-	coords[0].Set(0, 0);
-	coords[1].Set(-1, -1);
-	coords[2].Set(1, 1);
-	coords[3].Set(-1, 0);
-	coords[4].Set(0, 1);
+    std::vector<Coordinate> nkPoints(7);
+    nkPoints[0] = Coordinate(-2, -2);
+    nkPoints[1] = Coordinate(-2,  1);
+    nkPoints[2] = Coordinate(-1,  2);
+    nkPoints[3] = Coordinate( 0, -2);
+    nkPoints[4] = Coordinate( 1, -1);
+    nkPoints[5] = Coordinate( 2,  0);
+    nkPoints[6] = Coordinate( 2,  2);
 
-    thisPiece.SetPiece(coords, 5, false, 4, 1);
+    std::vector<Coordinate> forbiddenArea(9);
+    forbiddenArea[0] = Coordinate(-2,  0);
+    forbiddenArea[1] = Coordinate(-2, -1);
+    forbiddenArea[2] = Coordinate(-1, -2);
+    forbiddenArea[3] = Coordinate(-1,  1);
+    forbiddenArea[4] = Coordinate( 0, -1);
+    forbiddenArea[5] = Coordinate( 0,  2);
+    forbiddenArea[6] = Coordinate( 1,  0);
+    forbiddenArea[7] = Coordinate( 1,  2);
+    forbiddenArea[8] = Coordinate( 2,  1);
+
+    thisPiece.SetPiece(coords, nkPoints, forbiddenArea, false, 4, 1);
 }
 void Piece::LoadPiece_5CuntPiece(Piece &thisPiece)
 {
-    // X X X
-    // X   X
-    Coordinate coords[5];
+    // + . . . +
+    // . X X X .
+    // . X . X .
+    // + . + . +
+    std::vector<Coordinate> coords(5);
+    coords[0] = Coordinate(0,  0);
+    coords[1] = Coordinate(1, -1);
+    coords[2] = Coordinate(1,  1);
+    coords[3] = Coordinate(0, -1);
+    coords[4] = Coordinate(0,  1);
 
-	coords[0].Set(0, 0);
-	coords[1].Set(1, -1);
-	coords[2].Set(1, 1);
-	coords[3].Set(0, -1);
-	coords[4].Set(0, 1);
+    std::vector<Coordinate> nkPoints(5);
+    nkPoints[0] = Coordinate(-1, -2);
+    nkPoints[1] = Coordinate(-1,  2);
+    nkPoints[2] = Coordinate( 2, -2);
+    nkPoints[3] = Coordinate( 2,  0);
+    nkPoints[3] = Coordinate( 2,  2);
 
-    thisPiece.SetPiece(coords, 5, false, 4, 1);
+    std::vector<Coordinate> forbiddenArea(10);
+    forbiddenArea[0] = Coordinate(-1, -1);
+    forbiddenArea[1] = Coordinate(-1,  0);
+    forbiddenArea[2] = Coordinate(-1,  1);
+    forbiddenArea[3] = Coordinate( 0, -2);
+    forbiddenArea[4] = Coordinate( 0,  2);
+    forbiddenArea[5] = Coordinate( 1, -2);
+    forbiddenArea[6] = Coordinate( 1,  0);
+    forbiddenArea[7] = Coordinate( 1,  2);
+    forbiddenArea[8] = Coordinate( 2, -1);
+    forbiddenArea[9] = Coordinate( 2,  1);
+
+    thisPiece.SetPiece(coords, nkPoints, forbiddenArea, false, 4, 1);
 }
 void Piece::LoadPiece_5BigPenis(Piece &thisPiece)
 {
-    // X
-    // X
-    // X
-    // X
-    // X
-    Coordinate coords[5];
+    // + . +
+    // . X .
+    // . X .
+    // . X .
+    // . X .
+    // . X .
+    // + . +
+    std::vector<Coordinate> coords(5);
+    coords[0] = Coordinate( 0, 0);
+    coords[1] = Coordinate(-2, 0);
+    coords[2] = Coordinate( 2, 0);
+    coords[3] = Coordinate(-1, 0);
+    coords[4] = Coordinate( 1, 0);
 
-	coords[0].Set(0, 0);
-	coords[1].Set(-2, 0);
-	coords[2].Set(2, 0);
-	coords[3].Set(-1, 0);
-	coords[4].Set(1, 0);
+    std::vector<Coordinate> nkPoints(4);
+    nkPoints[0] = Coordinate(-3, -1);
+    nkPoints[1] = Coordinate(-3,  1);
+    nkPoints[2] = Coordinate( 3, -1);
+    nkPoints[3] = Coordinate( 3,  1);
 
-    thisPiece.SetPiece(coords, 5, false, 2, 2);
+    std::vector<Coordinate> forbiddenArea(12);
+    forbiddenArea[0] = Coordinate(-3,  0);
+    forbiddenArea[1] = Coordinate(-2, -1);
+    forbiddenArea[2] = Coordinate(-2,  1);
+    forbiddenArea[3] = Coordinate(-1, -1);
+    forbiddenArea[4] = Coordinate(-1,  1);
+    forbiddenArea[5] = Coordinate( 0, -1);
+    forbiddenArea[6] = Coordinate( 0,  1);
+    forbiddenArea[7] = Coordinate( 1, -1);
+    forbiddenArea[8] = Coordinate( 1,  1);
+    forbiddenArea[9] = Coordinate( 2, -1);
+    forbiddenArea[10]= Coordinate( 2,  1);
+    forbiddenArea[11]= Coordinate(-3,  0);
+
+    thisPiece.SetPiece(coords, nkPoints, forbiddenArea, false, 2, 2);
 }
 void Piece::LoadPiece_5Cross(Piece &thisPiece)
 {
-    //   X
-    // X X X
-    //   X
-    Coordinate coords[5];
+    //   + . +
+    // + . X . +
+    // . X X X .
+    // + . X . +
+    //   + . +
+    std::vector<Coordinate> coords(5);
+    coords[0] = Coordinate( 0,  0);
+    coords[1] = Coordinate(-1,  0);
+    coords[2] = Coordinate( 0,  1);
+    coords[3] = Coordinate( 0, -1);
+    coords[4] = Coordinate( 1,  0);
 
-	coords[0].Set(0, 0);
-	coords[1].Set(-1, 0);
-	coords[2].Set(0, 1);
-	coords[3].Set(0, -1);
-	coords[4].Set(1, 0);
+    std::vector<Coordinate> nkPoints(8);
+    nkPoints[0] = Coordinate(-2, -1);
+    nkPoints[1] = Coordinate(-2,  1);
+    nkPoints[2] = Coordinate(-1, -2);
+    nkPoints[3] = Coordinate(-1,  2);
+    nkPoints[4] = Coordinate( 1, -2);
+    nkPoints[5] = Coordinate( 1,  2);
+    nkPoints[6] = Coordinate( 2, -1);
+    nkPoints[7] = Coordinate( 2,  1);
 
-    thisPiece.SetPiece(coords, 5, false, 1, 1);
+    std::vector<Coordinate> forbiddenArea(8);
+    forbiddenArea[0] = Coordinate(-2,  0);
+    forbiddenArea[1] = Coordinate(-1, -1);
+    forbiddenArea[2] = Coordinate(-1,  1);
+    forbiddenArea[3] = Coordinate( 0, -2);
+    forbiddenArea[4] = Coordinate( 0,  2);
+    forbiddenArea[5] = Coordinate( 1, -1);
+    forbiddenArea[6] = Coordinate( 1,  1);
+    forbiddenArea[7] = Coordinate( 2,  0);
+
+    thisPiece.SetPiece(coords, nkPoints, forbiddenArea, false, 1, 1);
 }
 void Piece::LoadPiece_5HalfSquare(Piece &thisPiece)
 {
-    // X
-    // X
-    // X X X
-    Coordinate coords[5];
+    // + . +
+    // . X .
+    // . X . . +
+    // . X X X .
+    // + . . . +
+    std::vector<Coordinate> coords(5);
+    coords[0] = Coordinate( 0, 0);
+    coords[1] = Coordinate( 0, 2);
+    coords[2] = Coordinate(-2, 0);
+    coords[3] = Coordinate(-1, 0);
+    coords[4] = Coordinate( 0, 1);
 
-	coords[0].Set(0, 0);
-	coords[1].Set(0, 2);
-	coords[2].Set(-2, 0);
-	coords[3].Set(-1, 0);
-	coords[4].Set(0, 1);
+    std::vector<Coordinate> nkPoints(5);
+    nkPoints[0] = Coordinate(-3, -1);
+    nkPoints[1] = Coordinate(-3,  1);
+    nkPoints[2] = Coordinate(-1,  3);
+    nkPoints[3] = Coordinate( 1, -1);
+    nkPoints[3] = Coordinate( 1,  3);
 
-    thisPiece.SetPiece(coords, 5, false, 4, 2);
+    std::vector<Coordinate> forbiddenArea(11);
+    forbiddenArea[0] = Coordinate(-3,  0);
+    forbiddenArea[1] = Coordinate(-2, -1);
+    forbiddenArea[2] = Coordinate(-2,  1);
+    forbiddenArea[3] = Coordinate(-1, -1);
+    forbiddenArea[4] = Coordinate(-1,  1);
+    forbiddenArea[5] = Coordinate(-1,  2);
+    forbiddenArea[6] = Coordinate( 0, -1);
+    forbiddenArea[7] = Coordinate( 0,  3);
+    forbiddenArea[8] = Coordinate( 1,  0);
+    forbiddenArea[9] = Coordinate( 1,  1);
+    forbiddenArea[10]= Coordinate( 1,  2);
+
+    thisPiece.SetPiece(coords, nkPoints, forbiddenArea, false, 4, 2);
 }
 void Piece::LoadPiece_5BigL(Piece &thisPiece)
 {
-    // X
-    // X
-    // X
-    // X X
-    Coordinate coords[5];
+    // + . +
+    // . X .
+    // . X .
+    // . X . +
+    // . X X .
+    // + . . +
+    std::vector<Coordinate> coords(5);
+    coords[0] = Coordinate( 0, 0);
+    coords[1] = Coordinate(-2, 0);
+    coords[2] = Coordinate( 1, 1);
+    coords[3] = Coordinate(-1, 0);
+    coords[4] = Coordinate( 1, 0);
 
-	coords[0].Set(0, 0);
-	coords[1].Set(-2, 0);
-	coords[2].Set(1, 1);
-	coords[3].Set(-1, 0);
-	coords[4].Set(1, 0);
+    std::vector<Coordinate> nkPoints(5);
+    nkPoints[0] = Coordinate(-3, -1);
+    nkPoints[1] = Coordinate(-3,  1);
+    nkPoints[2] = Coordinate( 0,  2);
+    nkPoints[3] = Coordinate( 2, -1);
+    nkPoints[3] = Coordinate( 2,  2);
 
-    thisPiece.SetPiece(coords, 5, true,  4, 2);
+    std::vector<Coordinate> forbiddenArea(11);
+    forbiddenArea[0] = Coordinate(-3,  0);
+    forbiddenArea[1] = Coordinate(-2, -1);
+    forbiddenArea[2] = Coordinate(-2,  1);
+    forbiddenArea[3] = Coordinate(-1, -1);
+    forbiddenArea[4] = Coordinate(-1,  1);
+    forbiddenArea[5] = Coordinate( 0, -1);
+    forbiddenArea[6] = Coordinate( 0,  1);
+    forbiddenArea[7] = Coordinate( 1, -1);
+    forbiddenArea[8] = Coordinate( 1,  2);
+    forbiddenArea[9] = Coordinate( 2,  0);
+    forbiddenArea[10]= Coordinate( 2,  1);
+
+    thisPiece.SetPiece(coords, nkPoints, forbiddenArea, true,  4, 2);
 }
 void Piece::LoadPiece_5MrT(Piece &thisPiece)
 {
-    //     X
-    // X X X
-    //     X
-    Coordinate coords[5];
+    //     + . +
+    // + . . X .
+    // . X X X .
+    // + . . X .
+    //     + . +
+    std::vector<Coordinate> coords(5);
+    coords[0] = Coordinate( 0,  0);
+    coords[1] = Coordinate(-1,  1);
+    coords[2] = Coordinate( 1,  1);
+    coords[3] = Coordinate( 0, -1);
+    coords[4] = Coordinate( 0,  1);
 
-	coords[0].Set(0, 0);
-	coords[1].Set(-1, 1);
-	coords[2].Set(1, 1);
-	coords[3].Set(0, -1);
-	coords[4].Set(0, 1);
+    std::vector<Coordinate> nkPoints(6);
+    nkPoints[0] = Coordinate(-2,  0);
+    nkPoints[1] = Coordinate(-2,  2);
+    nkPoints[2] = Coordinate(-1, -2);
+    nkPoints[3] = Coordinate( 1, -2);
+    nkPoints[4] = Coordinate( 2,  0);
+    nkPoints[5] = Coordinate( 2,  2);
 
-    thisPiece.SetPiece(coords, 5, false, 4, 1);
+    std::vector<Coordinate> forbiddenArea(10);
+    forbiddenArea[0] = Coordinate(-2,  1);
+    forbiddenArea[1] = Coordinate(-1, -1);
+    forbiddenArea[2] = Coordinate(-1,  0);
+    forbiddenArea[3] = Coordinate(-1,  2);
+    forbiddenArea[4] = Coordinate( 0, -2);
+    forbiddenArea[5] = Coordinate( 0,  2);
+    forbiddenArea[6] = Coordinate( 1, -1);
+    forbiddenArea[7] = Coordinate( 1,  0);
+    forbiddenArea[8] = Coordinate( 1,  2);
+    forbiddenArea[9] = Coordinate( 2,  1);
+
+    thisPiece.SetPiece(coords, nkPoints, forbiddenArea, false, 4, 1);
 }
 void Piece::LoadPiece_5SquareAppen(Piece &thisPiece)
 {
-    // X X
-    // X X
-    // X
-    Coordinate coords[5];
+    // + . . +
+    // . X X .
+    // . X X .
+    // . X . +
+    // + . +
+    std::vector<Coordinate> coords(5);
+    coords[0] = Coordinate( 0, 0);
+    coords[1] = Coordinate(-1, 1);
+    coords[2] = Coordinate( 1, 0);
+    coords[3] = Coordinate(-1, 0);
+    coords[4] = Coordinate( 0, 1);
 
-	coords[0].Set(0, 0);
-	coords[1].Set(-1, 1);
-	coords[2].Set(1, 0);
-	coords[3].Set(-1, 0);
-	coords[4].Set(0, 1);
+    std::vector<Coordinate> nkPoints(5);
+    nkPoints[0] = Coordinate(-2, -1);
+    nkPoints[1] = Coordinate(-2,  2);
+    nkPoints[2] = Coordinate( 1,  2);
+    nkPoints[3] = Coordinate( 2, -1);
+    nkPoints[4] = Coordinate( 2,  1);
 
-    thisPiece.SetPiece(coords, 5, true,  4, 1);
+    std::vector<Coordinate> forbiddenArea(9);
+    forbiddenArea[0] = Coordinate(-2,  0);
+    forbiddenArea[1] = Coordinate(-2,  1);
+    forbiddenArea[2] = Coordinate(-1, -1);
+    forbiddenArea[3] = Coordinate(-1,  2);
+    forbiddenArea[4] = Coordinate( 0, -1);
+    forbiddenArea[5] = Coordinate( 0,  2);
+    forbiddenArea[6] = Coordinate( 1, -1);
+    forbiddenArea[7] = Coordinate( 1,  1);
+    forbiddenArea[8] = Coordinate( 2,  0);
+
+    thisPiece.SetPiece(coords, nkPoints, forbiddenArea, true,  4, 1);
 }
 void Piece::LoadPiece_5BoringPiece(Piece &thisPiece)
 {
-    //     X
-    // X X X X
-    Coordinate coords[5];
+    //     + . +
+    // + . . X . +
+    // . X X X X .
+    // + . . . . +
+    std::vector<Coordinate> coords(5);
+    coords[0] = Coordinate( 0,  0);
+    coords[1] = Coordinate( 0,  2);
+    coords[2] = Coordinate(-1,  1);
+    coords[3] = Coordinate( 0, -1);
+    coords[4] = Coordinate( 0,  1);
 
-	coords[0].Set(0, 0);
-	coords[1].Set(0, 2);
-	coords[2].Set(-1, 1);
-	coords[3].Set(0, -1);
-	coords[4].Set(0, 1);
+    std::vector<Coordinate> nkPoints(6);
+    nkPoints[0] = Coordinate(-2,  0);
+    nkPoints[1] = Coordinate(-2,  2);
+    nkPoints[2] = Coordinate(-1, -2);
+    nkPoints[3] = Coordinate(-1,  3);
+    nkPoints[4] = Coordinate( 1, -2);
+    nkPoints[5] = Coordinate( 1,  3);
 
-    thisPiece.SetPiece(coords, 5, true,  4, 2);
+    std::vector<Coordinate> forbiddenArea(10);
+    forbiddenArea[0] = Coordinate(-2,  1);
+    forbiddenArea[1] = Coordinate(-1, -1);
+    forbiddenArea[2] = Coordinate(-1,  0);
+    forbiddenArea[3] = Coordinate(-1,  2);
+    forbiddenArea[4] = Coordinate( 0, -2);
+    forbiddenArea[5] = Coordinate( 0,  3);
+    forbiddenArea[6] = Coordinate( 1, -1);
+    forbiddenArea[7] = Coordinate( 1,  0);
+    forbiddenArea[8] = Coordinate( 1,  1);
+    forbiddenArea[9] = Coordinate( 1,  2);
+
+    thisPiece.SetPiece(coords, nkPoints, forbiddenArea, true,  4, 2);
 }
 void Piece::LoadPiece_5TheUltimate(Piece &thisPiece)
 {
-    //   X
-    // X X
-    // X
-    // X
-    Coordinate coords[5];
+    //   + . +
+    // + . X .
+    // . X X .
+    // . X . +
+    // . X .
+    // + . +
+    std::vector<Coordinate> coords(5);
+    coords[0] = Coordinate( 0, 0);
+    coords[1] = Coordinate( 2, 0);
+    coords[2] = Coordinate(-1, 1);
+    coords[3] = Coordinate( 0, 1);
+    coords[4] = Coordinate( 1, 0);
 
-	coords[0].Set(0, 0);
-	coords[1].Set(2, 0);
-	coords[2].Set(-1, 1);
-	coords[3].Set(0, 1);
-	coords[4].Set(1, 0);
+    std::vector<Coordinate> nkPoints(6);
+    nkPoints[0] = Coordinate(-2,  0);
+    nkPoints[1] = Coordinate(-2,  2);
+    nkPoints[2] = Coordinate(-1, -1);
+    nkPoints[3] = Coordinate( 1,  2);
+    nkPoints[4] = Coordinate( 3, -1);
+    nkPoints[5] = Coordinate( 3,  1);
 
-    thisPiece.SetPiece(coords, 5, true,  4, 2);
+    std::vector<Coordinate> forbiddenArea(10);
+    forbiddenArea[0] = Coordinate(-2,  1);
+    forbiddenArea[1] = Coordinate(-1,  0);
+    forbiddenArea[2] = Coordinate(-1,  2);
+    forbiddenArea[3] = Coordinate( 0, -1);
+    forbiddenArea[4] = Coordinate( 0,  2);
+    forbiddenArea[5] = Coordinate( 1, -1);
+    forbiddenArea[6] = Coordinate( 1,  1);
+    forbiddenArea[7] = Coordinate( 2, -1);
+    forbiddenArea[8] = Coordinate( 2,  1);
+    forbiddenArea[9] = Coordinate( 3,  0);
+
+    thisPiece.SetPiece(coords, nkPoints, forbiddenArea, true,  4, 2);
 }
 
 void Piece::BuildUpPrecalculatedRepresentations()
@@ -609,13 +1150,14 @@ void Piece::BuildUpPrecalculatedRepresentations()
         while(nRotations < GetNRotations())
         {
             // save current configuration into precalculated list of coords
-            m_precalculatedConfsList.push_back(m_coords);
+            m_precalculatedConfsList.push_back(m_currentConf.m_pieceSquares);
 
             // calculate and save bitwise representation of this configuration
             uint64_t bitwisePiece = 0x0000000000000000ull;
-            for (pieceConfiguration_t::const_iterator it = m_coords.begin();
-                it != m_coords.end();
-                it++)
+            std::vector<Coordinate>::const_iterator it;
+            for (it  = m_currentConf.m_pieceSquares.begin();
+                 it != m_currentConf.m_pieceSquares.end();
+                 it++)
             {
                 // this piece of magic converts a piece into a string of bits
                 bitwisePiece |= static_cast<uint64_t>(1) << ( ((3 - it->m_row) * 7) + (3 - it->m_col) );
