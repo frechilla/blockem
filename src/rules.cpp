@@ -568,6 +568,84 @@ void rules::RecalculateNKAroundCoord(
 		}
     }
 }
+/*
+void rules::RecalculateInflueceAreaInBoard(
+        const Board &a_board,
+        Player      &a_player)
+{
+    // remove current influence area state
+    Coordinate thisCoord;
+    for (thisCoord.m_row = 0; thisCoord.m_row < a_board.GetNRows(); thisCoord.m_row++)
+    {
+        for (thisCoord.m_col = 0; thisCoord.m_col < a_board.GetNColumns(); thisCoord.m_col++)
+        {
+            a_player.UnsetInfluencedCoord(thisCoord);
+        }
+    }
+
+    if (a_player.NumberOfPiecesAvailable() == 0)
+    {
+        return;
+    }
+
+    std::vector<Coordinate> validCoords(PIECE_MAX_SQUARES);
+    for (int8_t i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
+    {
+        if (a_player.IsPieceAvailable(static_cast<ePieceType_t>(i)) == false)
+        {
+            continue;
+        }
+
+        const std::list<pieceConfiguration_t> &coordConfList =
+            a_player.m_pieces[i].GetPrecalculatedConfs();
+        std::list<pieceConfiguration_t>::const_iterator pieceCoordIt;
+        for (pieceCoordIt = coordConfList.begin();
+             pieceCoordIt != coordConfList.end();
+             pieceCoordIt++)
+        {
+            bool nkExists;
+            Coordinate thisNkPoint;
+            Player::SpiralIterator nkIterator;
+
+            nkExists = a_player.GetFirstNucleationPointSpiral(nkIterator, thisNkPoint);
+            while(nkExists)
+            {
+                // retrieve if there is a valid coord of this piece in the current nk point
+                int32_t nValidCoords = rules::CalculateValidCoordsInNucleationPoint(
+                                            a_board,
+                                            a_player,
+                                            thisNkPoint,
+                                            (*pieceCoordIt),
+                                            a_player.m_pieces[i].GetRadius(),
+                                            validCoords);
+
+                for (int32_t k = 0; k < nValidCoords; k++)
+                {
+                    pieceConfiguration_t::const_iterator it;
+                    for (it = pieceCoordIt->begin(); it != pieceCoordIt->end(); it++)
+                    {
+                        Coordinate influeceAreaCoord(
+                            validCoords[k].m_row + it->m_row,
+                            validCoords[k].m_col + it->m_col);
+
+                        if ( (influeceAreaCoord.m_row >= 0) &&
+                             (influeceAreaCoord.m_row <  a_board.GetNRows()) &&
+                             (influeceAreaCoord.m_col >= 0) &&
+                             (influeceAreaCoord.m_col <  a_board.GetNColumns()) )
+                        {
+                            a_player.SetInfluencedCoord(influeceAreaCoord);
+                        }
+                    }
+                }
+
+                nkExists = a_player.GetNextNucleationPointSpiral(nkIterator, thisNkPoint);
+            } // while(nkExists)
+        } // for (pieceCoordIt = coordConfList.begin()
+    } // for (int i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
+
+    return false;
+}
+*/
 
 void rules::RecalculateInfluenceAreaAroundPiece(
         const Board                &a_board,
