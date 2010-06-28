@@ -44,11 +44,11 @@ Game1v1Test::~Game1v1Test()
 }
 
 void Game1v1Test::TestBitwiseCheckConfiguration(
-    const Coordinate           &thisCoord,
-    const pieceConfiguration_t &piece,
-    uint64_t                    bPiece,
-    uint64_t                    bitwiseBoard,
-    uint64_t                    bitwiseBoardPlayer1)
+    const Coordinate         &thisCoord,
+    const PieceConfiguration &piece,
+    uint64_t                  bPiece,
+    uint64_t                  bitwiseBoard,
+    uint64_t                  bitwiseBoardPlayer1)
 {
     bool isDeployableLegacy;          // is piece deployable using the legacy (old) way
     bool isDeployableBitwise;         // is piece deployable using the bitwise way?
@@ -66,7 +66,7 @@ void Game1v1Test::TestBitwiseCheckConfiguration(
     // check if piece is deployable using the legacy old way and bitwise way
     // assert both ways gives same result
     isDeployableLegacy =
-        rules::IsPieceDeployable(
+        rules::IsPieceDeployableCompute(
                 m_board,
                 piece,
                 thisCoord,
@@ -114,13 +114,13 @@ void Game1v1Test::TestBoardAndPiecesBitwise(int32_t a_nUsedPieces, ePieceType_t 
         std::list<uint64_t>::const_iterator it = pieceConfigurations.begin();
 
         // retrieve legacy precalculated coords
-        const std::list<pieceConfiguration_t> &coordConfList =
+        const std::list<PieceConfiguration> &pieceConfList =
             m_player1.m_pieces[i].GetPrecalculatedConfs();
-        std::list<pieceConfiguration_t>::const_iterator pieceCoordIt;
 
-        for (pieceCoordIt  = coordConfList.begin();
-             pieceCoordIt != coordConfList.end();
-             pieceCoordIt++)
+        std::list<PieceConfiguration>::const_iterator pieceConfIt;
+        for (pieceConfIt  = pieceConfList.begin();
+             pieceConfIt != pieceConfList.end();
+             pieceConfIt++)
         {
             // current coordinate being studied
             Coordinate thisCoord(0, 0);
@@ -145,7 +145,7 @@ void Game1v1Test::TestBoardAndPiecesBitwise(int32_t a_nUsedPieces, ePieceType_t 
                     // check
                     TestBitwiseCheckConfiguration(
                         thisCoord,
-                        *pieceCoordIt,
+                        *pieceConfIt,
                         bPiece,
                         bitwiseBoard,
                         bitwiseBoardPlayer1);
@@ -156,7 +156,7 @@ void Game1v1Test::TestBoardAndPiecesBitwise(int32_t a_nUsedPieces, ePieceType_t 
                 // check
                 TestBitwiseCheckConfiguration(
                     thisCoord,
-                    *pieceCoordIt,
+                    *pieceConfIt,
                     bPiece,
                     bitwiseBoard,
                     bitwiseBoardPlayer1);
@@ -178,7 +178,7 @@ void Game1v1Test::TestBoardAndPiecesBitwise(int32_t a_nUsedPieces, ePieceType_t 
                     // check
                     TestBitwiseCheckConfiguration(
                         thisCoord,
-                        *pieceCoordIt,
+                        *pieceConfIt,
                         bPiece,
                         bitwiseBoard,
                         bitwiseBoardPlayer1);
@@ -189,7 +189,7 @@ void Game1v1Test::TestBoardAndPiecesBitwise(int32_t a_nUsedPieces, ePieceType_t 
                 //check
                 TestBitwiseCheckConfiguration(
                     thisCoord,
-                    *pieceCoordIt,
+                    *pieceConfIt,
                     bPiece,
                     bitwiseBoard,
                     bitwiseBoardPlayer1);
@@ -422,13 +422,13 @@ void Game1v1Test::TestPieces()
     for (int32_t i = e_minimumPieceIndex; i < e_numberOfPieces ; i++)
     {
         // retrieve legacy precalculated coords
-        const std::list<pieceConfiguration_t> &coordConfList =
+        const std::list<PieceConfiguration> &pieceConfList =
             m_player1.m_pieces[i].GetPrecalculatedConfs();
-        std::list<pieceConfiguration_t>::const_iterator pieceCoordIt;
 
-        for (pieceCoordIt = coordConfList.begin();
-             pieceCoordIt != coordConfList.end();
-             pieceCoordIt++)
+        std::list<PieceConfiguration>::const_iterator pieceConfIt;
+        for (pieceConfIt  = pieceConfList.begin();
+             pieceConfIt != pieceConfList.end();
+             pieceConfIt++)
         {
             possibleConfigurations++;
         }
@@ -569,6 +569,7 @@ void Game1v1Test::TestNKSpiralAlgorithm(eGame1v1Player_t who)
 void Game1v1Test::TestCalculateValidCoordsInNKPoint(eGame1v1Player_t who, const Coordinate &where)
 {
     assert(GetPlayer(who).IsNucleationPoint(where));
+    assert(GetBoard().IsCoordEmpty(where));
 
     // no need to instantiate a bigger vector
     std::vector<Coordinate> validCoordVector(PIECE_MAX_SQUARES);
@@ -586,7 +587,6 @@ void Game1v1Test::TestCalculateValidCoordsInNKPoint(eGame1v1Player_t who, const 
                                     GetPlayer(who),
                                     where,
                                     tmpPiece.GetCurrentConfiguration(),
-                                    tmpPiece.GetRadius(),
                                     validCoordVector);
 
         validCoord.m_row = validCoord.m_col = COORD_UNINITIALISED;

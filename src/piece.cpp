@@ -124,7 +124,7 @@ void Piece::SetPiece(
     uint8_t                        a_radius)
 {
 #ifdef DEBUG
-    assert(a_nSquares <= PIECE_MAX_SQUARES);
+    assert(a_pieceCoords.size() <= PIECE_MAX_SQUARES);
     assert(a_radius <= PIECE_MAX_RADIUS);
 #endif
 
@@ -728,7 +728,7 @@ void Piece::LoadPiece_5BigS(Piece &thisPiece)
     nkPoints[0] = Coordinate(-2, -1);
     nkPoints[1] = Coordinate(-2,  2);
     nkPoints[2] = Coordinate( 0, -2);
-    nkPoints[3] = Coordinate( 2,  2);
+    nkPoints[3] = Coordinate( 0,  2);
     nkPoints[4] = Coordinate( 2, -2);
     nkPoints[5] = Coordinate( 2,  1);
 
@@ -836,7 +836,7 @@ void Piece::LoadPiece_5CuntPiece(Piece &thisPiece)
     nkPoints[1] = Coordinate(-1,  2);
     nkPoints[2] = Coordinate( 2, -2);
     nkPoints[3] = Coordinate( 2,  0);
-    nkPoints[3] = Coordinate( 2,  2);
+    nkPoints[4] = Coordinate( 2,  2);
 
     std::vector<Coordinate> forbiddenArea(10);
     forbiddenArea[0] = Coordinate(-1, -1);
@@ -945,7 +945,7 @@ void Piece::LoadPiece_5HalfSquare(Piece &thisPiece)
     nkPoints[1] = Coordinate(-3,  1);
     nkPoints[2] = Coordinate(-1,  3);
     nkPoints[3] = Coordinate( 1, -1);
-    nkPoints[3] = Coordinate( 1,  3);
+    nkPoints[4] = Coordinate( 1,  3);
 
     std::vector<Coordinate> forbiddenArea(11);
     forbiddenArea[0] = Coordinate(-3,  0);
@@ -982,7 +982,7 @@ void Piece::LoadPiece_5BigL(Piece &thisPiece)
     nkPoints[1] = Coordinate(-3,  1);
     nkPoints[2] = Coordinate( 0,  2);
     nkPoints[3] = Coordinate( 2, -1);
-    nkPoints[3] = Coordinate( 2,  2);
+    nkPoints[4] = Coordinate( 2,  2);
 
     std::vector<Coordinate> forbiddenArea(11);
     forbiddenArea[0] = Coordinate(-3,  0);
@@ -1150,7 +1150,7 @@ void Piece::BuildUpPrecalculatedRepresentations()
         while(nRotations < GetNRotations())
         {
             // save current configuration into precalculated list of coords
-            m_precalculatedConfsList.push_back(m_currentConf.m_pieceSquares);
+            m_precalculatedConfsList.push_back(m_currentConf);
 
             // calculate and save bitwise representation of this configuration
             uint64_t bitwisePiece = 0x0000000000000000ull;

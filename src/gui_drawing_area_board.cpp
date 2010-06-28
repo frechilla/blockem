@@ -302,7 +302,7 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
                         // it can save a few cycles cos IsCoordTouchingPlayer is not a trivial function
                         if ( (thisPlayer == m_forbiddenAreaPlayer) &&
                              (thisPlayer->IsCoordInfluencedByPlayer(thisCoord) == false) &&
-                             rules::IsCoordTouchingPlayer(m_theBoard, thisCoord, *thisPlayer) )
+                             rules::IsCoordTouchingPlayerCompute(m_theBoard, thisCoord, *thisPlayer) )
                         {
                             // forbidden areas are drawn with exactly the inverse colour
                             cr->set_source_rgba(
@@ -425,7 +425,7 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
                         GHOST_PIECE_ALPHA_WRONG);
             }
         }
-        else if (rules::IsPieceDeployable(
+        else if (rules::IsPieceDeployableCompute(
                 m_theBoard,
                 m_currentPiece.GetCurrentConfiguration(),
                 m_currentCoord,

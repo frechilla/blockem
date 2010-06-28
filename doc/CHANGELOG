@@ -1,5 +1,8 @@
 : Version 0.2.3
-    - 6-7% performance improvement of Minimax algorithm since 0.2.2
+    - Around 20% performance improvement of Minimax algorithm since 0.2.2
+      using precalculated arrays of nucleation points and forbidden areas
+      as well as piece configurations. Loops have been also fine tuned to
+      loop as fewer times as possible
     - Improved command line options. backtracking algorithm to deploy all
       pieces in an empty board (1 player total allocation game) can be tested
       through command line, for example with this command:

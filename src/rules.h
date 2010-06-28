@@ -45,10 +45,12 @@ namespace rules
     /// that coord would be an illegal place to put one of a_player's pieces
     /// as it is touching one of its pieces.
     /// note that touching a corner is not 'touching' for this function
+    /// Note also that it is called "xxxCompute" because it doesn't read the value from a
+    /// variable, it has to calculate it reading from the actual board
     /// @param the blokus board
     /// @param coord (x, y) of the piece
     /// @param the player that owns the pieces
-    bool IsCoordTouchingPlayer(
+    bool IsCoordTouchingPlayerCompute(
             const Board      &a_board,
             const Coordinate &a_coord,
             const Player     &a_player);
@@ -63,50 +65,18 @@ namespace rules
     /// want to try to use IsDeployableInNKPoint, which takes the nk point as parameter
     /// and it doesn't check if every square occupied by the piece is a nk point
     /// it doesn't rotate or mirror the piece
+    /// Note that it is called 'xxxCompute' because it doesn't read any value from any
+    /// variable, it has to calculate it reading from the actual board (it works calling
+    /// to other "xxxCompute" functions)
     /// @param the blokus board
     /// @param the piece configuration
     /// @param coord (x, y) of the piece
     /// @param the player that owns the pieces
-    bool IsPieceDeployable(
-            const Board                &a_board,
-            const pieceConfiguration_t &a_pieceConf,
-            const Coordinate           &a_coord,
-            const Player               &a_player);
-
-    /// return true if the piece can be deployed in the position defined by the 3rdparameter
-    /// it checks:
-    ///   1) if the space that the piece will occupy is empty (and inside the board)
-    ///   2) if the piece is not touching another piece of 'a_player'
-    ///   3) if the piece will be occupying the nucleation point defined by the 4th
-    /// it doesn't rotate or mirror the piece
-    /// @param the blokus board
-    /// @param the piece
-    /// @param coord where the piece is going to be deployed
-    /// @param coord of the nucleation point the piece must make use of
-    /// @param the player that owns the pieces
-    bool IsPieceDeployableInNKPoint(
-            const Board                &a_board,
-            const pieceConfiguration_t &a_pieceConf,
-            const Coordinate           &a_coord,
-            const Coordinate           &a_nkPoint,
-            const Player               &a_player);
-
-    /// return true if the piece can be deployed in the position defined by the 3rdparameter
-    /// it checks:
-    ///   1) if the space that the piece will occupy is empty (and inside the board)
-    ///   2) if the piece will be occupying the starting point defined by the 4th
-    /// it doesn't
-    ///   1) check if the piece is not touching another piece of 'a_player' (board should be empty)
-    ///   2) rotate or mirror the piece
-    /// @param the blokus board
-    /// @param the piece
-    /// @param coord of the piece
-    /// @param coord of the starting point the piece must make use of
-    bool IsPieceDeployableInStartingPoint(
-            const Board                &a_board,
-            const pieceConfiguration_t &a_pieceConf,
-            const Coordinate           &a_coord,
-            const Coordinate           &a_startingPoint);
+    bool IsPieceDeployableCompute(
+            const Board              &a_board,
+            const PieceConfiguration &a_pieceConf,
+            const Coordinate         &a_coord,
+            const Player             &a_player);
 
     /// Calculates using the current state of the board if a point in the board is
     /// a nucleation point for a specific player
@@ -123,11 +93,47 @@ namespace rules
             const Player     &a_player,
             const Coordinate &a_coord);
 
-    /// the pieces are described in such a way that the middle of the piece (0,0) is always a square and
-    /// the maximum number of squares to the left/right or up/down from that point is 2, so every piece
-    /// fits in a square defined in the interval [-2,2] in both x and Y coords
+    /// return true if the piece can be deployed in the position defined by the 3rdparameter
+    /// it checks:
+    ///   1) if the space that the piece will occupy is empty (and inside the board)
+    ///   2) if the piece is not touching another piece of 'a_player'
+    ///   3) if the piece will be occupying the nucleation point defined by the 4th
+    /// it doesn't rotate or mirror the piece
+    /// @param the blokus board
+    /// @param the piece configuration
+    /// @param coord where the piece is going to be deployed
+    /// @param coord of the nucleation point the piece must make use of
+    /// @param the player that owns the pieces
+    bool IsPieceDeployableInNKPoint(
+            const Board              &a_board,
+            const PieceConfiguration &a_pieceConf,
+            const Coordinate         &a_coord,
+            const Coordinate         &a_nkPoint,
+            const Player             &a_player);
+
+    /// return true if the piece can be deployed in the position defined by the 3rdparameter
+    /// it checks:
+    ///   1) if the space that the piece will occupy is empty (and inside the board)
+    ///   2) if the piece will be occupying the starting point defined by the 4th
+    /// it doesn't
+    ///   1) check if the piece is not touching another piece of 'a_player' (board should be empty)
+    ///   2) rotate or mirror the piece
+    /// @param the blokus board
+    /// @param the piece configuration
+    /// @param coord of the piece
+    /// @param coord of the starting point the piece must make use of
+    bool IsPieceDeployableInStartingPoint(
+            const Board              &a_board,
+            const PieceConfiguration &a_pieceConf,
+            const Coordinate         &a_coord,
+            const Coordinate         &a_startingPoint);
+
+
+    /// moves the piece configuration (a_pieceConf) around to retrieve those coords were the piece
+    /// can be deployed. There are as many valid coordinates as squares the piece has, so per each
+    /// square that makes up the piece the piece configuration will be moved to try to fit it into
+    /// the board so it touches the nk point
     ///
-    /// knowing this, if we know a nucleation point the piece must fit (if it does) in that interval
     /// i.e. the little L piece
     ///
     /// X
@@ -152,74 +158,93 @@ namespace rules
     ///
     /// the piece will have to be moved 2 points to the left
     ///
-    /// The result will be saved in the 6th parameter. The user should have initialised the vector to a big enough size
+    /// The result will be saved in the 5th parameter. The user should have initialised the vector to a big enough size
     /// so that inserting elements in vector won't step on random memory locations
     /// A size of PIECE_MAX_SQUARES will do it, since a piece can only be deployed in as many ways as squares it has
     /// @param the blokus board
     /// @param the player who needs the valid coords
     /// @param coord of the nucleation point
     /// @param the piece configuration
-    /// @param radius of the piece that will be checked looking for NK points
     /// @param vector where the list of absolute coords where the piece can be deployed in that nucleation point will be saved
     /// @return the number of nucleation points saved into the vector
     int32_t CalculateValidCoordsInNucleationPoint(
-            const Board                &a_board,
-            const Player               &a_player,
-            const Coordinate           &a_nkPointCoord,
-            const pieceConfiguration_t &a_pieceConf,
-            int32_t                     a_pieceRadius,
-            std::vector<Coordinate>    &out_validCoords);
+            const Board              &a_board,
+            const Player             &a_player,
+            const Coordinate         &a_nkPointCoord,
+            const PieceConfiguration &a_pieceConf,
+            std::vector<Coordinate>  &out_validCoords);
 
     /// @brief Retrieve next valid coord to deploy a_pieceConf in a_nkPointCoord
-    /// It is based on CalculateValidCoordsInNucleationPoint (have a look at it)
+    /// It is based on the old CalculateValidCoordsInNucleationPoint:
+    /// Pieces are described in such a way that the middle of the piece (0,0) is always a square and
+    /// the maximum number of squares to the left/right or up/down from that point is 2, so every piece
+    /// fits in a square defined in the interval [-2,2] in both X and Y coords
+    ///
+    /// knowing this, if we know a nucleation point the piece must fit (if it does) in that interval
+    /// we'll have to test if the piece configuration (a_pieceConf) can be deployed in any coordinate
+    /// inside a square whose "radius" is a_pieceRadius (that is a square which side is equal
+    /// a_pieceRadius*2)
     /// It starts from the next position that the one indicated by in_out_validCoord
     /// if in_out_validCoord is uninitialised it will start searching from coordinate
     /// (0, 0). it doesn't rotate or mirror the piece configuration.
     /// If the function returns true the next valid coord is saved into in_out_validCoord
+    /// Though CalculateValidCoordsInNucleationPoint and this function work in a different
+    /// way, the results should be the same
+    /// the use of this function is DISCOURAGED since CalculateValidCoordsInNucleationPoint
+    /// is expected to be faster because it tests much less positions
+    /// @param the board
+    /// @param the player who owns the piece
+    /// @param the nucleation point coordinate
+    /// @param Piece Configuration
+    /// @param radius to be checked around a_nkPointCoord
+    /// @param input/output coordinate who keeps the previous coordinate value (unitialised in the case
+    ///        of the first call to the function) and will contain the next valid coordinate
     /// @return true if the function found a valid nk point. False otherwise
     bool CalculateNextValidCoordInNucleationPoint(
-            const Board                &a_board,
-            const Player               &a_player,
-            const Coordinate           &a_nkPointCoord,
-            const pieceConfiguration_t &a_pieceConf,
-            int32_t                     a_pieceRadius,
-            Coordinate                 &in_out_validCoord);
+            const Board              &a_board,
+            const Player             &a_player,
+            const Coordinate         &a_nkPointCoord,
+            const PieceConfiguration &a_pieceConf,
+            int32_t                   a_pieceRadius,
+            Coordinate               &in_out_validCoord);
 
     /// @brief returns true if there's a way to deploy the piece in this coord, even if the piece has to be moved around
     ///        it doesn't rotate or mirror the piece
-    ///        it is based on CalculateValidCoordsInNucleationPoint, but it doesn't save the valid coords, it just
-    ///        returns once it finds a valid coord for the piece to be deployed
+    /// it is based on CalculateNextValidCoordInNucleationPoint, but it doesn't save the valid coord,
+    /// it just returns once it finds a valid coord for the piece to be deployed
+    /// @param the board
+    /// @param the player who owns the piece
+    /// @param the nucleation point coordinate
+    /// @param Piece Configuration
+    /// @param radius to be checked around a_nkPointCoord
+    /// @return true if there is a valid coordinate to deploy the piece in a_nkPointCoord
     bool HasValidCoordInNucleationPoint(
-            const Board                &a_board,
-            const Player               &a_player,
-            const Coordinate           &a_nkPointCoord,
-            const pieceConfiguration_t &a_pieceConf,
-            int32_t                     a_pieceRadius);
+            const Board              &a_board,
+            const Player             &a_player,
+            const Coordinate         &a_nkPointCoord,
+            const PieceConfiguration &a_pieceConf,
+            int32_t                   a_pieceRadius);
 
     /// see comment in CalculateValidCoordsInNucleationPoint
-    /// The result will be saved in the 6th parameter. The user should have initialised the vector to a big enough size
+    /// The result will be saved in the 5th parameter. The user should have initialised the vector to a big enough size
     /// so that inserting elements in vector won't step on random memory locations
     /// A size of PIECE_MAX_SQUARES will do it, since a piece can only be deployed in as many ways as squares it has
     /// the user must check a_startingPointCoord is empty before calling the function
     /// @param the blokus board
-    /// @param the player who needs the valid coords
     /// @param coord of the starting point
     /// @param the piece
-    /// @param radius of the piece that will be checked looking for NK points
     /// @param vector where the list of absolute coords where the piece can be deployed in that nucleation point will be saved
     /// @return the number of nucleation points saved into the output array
     int32_t CalculateValidCoordsInStartingPoint(
-            const Board                &a_board,
-            const Player               &a_player,
-            const Coordinate           &a_startingPointCoord,
-            const pieceConfiguration_t &a_pieceConf,
-            int32_t                     a_pieceRadius,
-            std::vector<Coordinate>    &out_validCoords);
+            const Board              &a_board,
+            const Coordinate         &a_startingPointCoord,
+            const PieceConfiguration &a_pieceConf,
+            std::vector<Coordinate>  &out_validCoords);
 
     /// recalculate the nucleation points around a specific coord.
     /// If the function is to be used to recalculate the NK points after a piece has been deployed
     /// user must take into account that all the pieces fit in a square of 5x5 pieces, but in the case
-    /// the piece does need a 5x5 square the fucntion should recalculate a 7x7 square around a_coorf
+    /// the piece does need a 5x5 square the fucntion should recalculate a 7x7 square around a_coord
     /// (1 more row and column at each side: up, down, left and right)
     /// It will update the matrix saved in a_player with the nk points with the new configuration
     /// @param the board
@@ -239,11 +264,11 @@ namespace rules
     /// "influence area" of a player "John" is the set of coordinates of the board
     /// that are empty, valid for a possible deployment and are "at reach" of  "John".
     /// The proper way to calculate this should be going through every nucleation point
-    /// of the player and try to allocate all his pieces left. This is too slow for what
-    /// we need (the influence area was born as a way to improve heuristics), so it
-    /// is calculated taking the constant INFLUENCE_AREA_AROUND_SQUARE_SIZE which defines
-    /// how many squares of the board  are under the influence of a specific coordinate
-    /// (which is supposed to have been taken by out beloved player "John")
+    /// of the player and try to allocate all his pieces left (see RecalculateInflueceAreaInBoard).
+    /// This is too slow for what we need (the influence area was born as a way to improve
+    /// heuristics), so it is calculated taking the constant INFLUENCE_AREA_AROUND_SQUARE_SIZE
+    /// which defines how many squares of the board  are under the influence of a specific
+    /// coordinate (which is supposed to have been taken by out beloved player "John")
     ///
     /// Let's say we deploy the saf piece and the const INFLUENCE_AREA_AROUND_SQUARE_SIZE
     /// is 2. The influece area would be: ('X' is the piece. '#' the influence area)
@@ -266,20 +291,33 @@ namespace rules
     /// @param the board
     /// @param the coord
     /// @param configuration of the piece deployed
-    /// @param reference to the player whose indluence area will be changed
-    void RecalculateInfluenceAreaAroundPiece(
-            const Board                &a_board,
-            const Coordinate           &a_coord,
-            const pieceConfiguration_t &a_pieceConf,
-            Player                     &a_player);
+    /// @param reference to the player whose influence area will be changed
+    void RecalculateInfluenceAreaAroundPieceFast(
+            const Board              &a_board,
+            const Coordinate         &a_coord,
+            const PieceConfiguration &a_pieceConf,
+            Player                   &a_player);
 
     /// computes if a_coord belongs to the influence area of a_player
+    /// It uses the "fast" way (see RecalculateInfluenceAreaAroundPieceFast)
     /// @return true if a_coord belongs to the influence area of a_player
-    bool IsCoordInfluencedByPlayerCompute(
+    bool IsCoordInfluencedByPlayerFastCompute(
             const Board       &a_board,
             const Coordinate  &a_coord,
             const Player      &a_player);
 
+    /// @brief calculates the influence area in the whole board
+    /// "influence area" of a player "John" is the set of coordinates of the board
+    /// that are empty, valid for a possible deployment and are "at reach" of  "John".
+    /// This function calculates it in the proper way, that is going through every nucleation
+    /// point of the player trying to allocate all his pieces left. A coordinate will belong
+    /// to the influence area if a piece can be allocated "in" it (that is, a square of any piece
+    /// will be set in that specific coordinate)
+    /// @param the board
+    /// @param reference to the player whose influence area will be changed
+    void RecalculateInfluenceAreaInBoard(
+        const Board &a_board,
+        Player      &a_player);
 
     /// @return true if the 'a_player' can put down at least one piece on the board
     bool CanPlayerGo(const Board &a_board, const Player &a_player);

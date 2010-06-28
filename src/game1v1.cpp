@@ -173,7 +173,6 @@ void Game1v1::RemovePiece(
                 m_board,
                 a_coord,
                 a_piece.GetCurrentConfiguration(),
-                a_piece.GetRadius(),
                 m_player1,
                 m_player2);
         m_player1.SetPiece(a_piece.GetType());
@@ -185,7 +184,6 @@ void Game1v1::RemovePiece(
                 m_board,
                 a_coord,
                 a_piece.GetCurrentConfiguration(),
-                a_piece.GetRadius(),
                 m_player2,
                 m_player1);
         m_player2.SetPiece(a_piece.GetType());
@@ -211,7 +209,6 @@ void Game1v1::PutDownPiece(
                 m_board,
                 a_coord,
                 a_piece.GetCurrentConfiguration(),
-                a_piece.GetRadius(),
                 m_player1,
                 m_player2);
         m_player1.UnsetPiece(a_piece.GetType());
@@ -223,7 +220,6 @@ void Game1v1::PutDownPiece(
                 m_board,
                 a_coord,
                 a_piece.GetCurrentConfiguration(),
-                a_piece.GetRadius(),
                 m_player2,
                 m_player1);
         m_player2.UnsetPiece(a_piece.GetType());
@@ -237,12 +233,11 @@ void Game1v1::PutDownPiece(
 }
 
 void Game1v1::RemovePiece(
-        Board                      &a_theBoard,
-        const Coordinate           &a_coord,
-        const pieceConfiguration_t &a_pieceConf,
-        int32_t                     a_pieceRadius,
-        Player                     &a_playerMe,
-        Player                     &a_playerOpponent)
+        Board                    &a_theBoard,
+        const Coordinate         &a_coord,
+        const PieceConfiguration &a_pieceConf,
+        Player                   &a_playerMe,
+        Player                   &a_playerOpponent)
 {
 #ifdef DEBUG
     assert(a_coord.m_row >= 0);
@@ -252,8 +247,11 @@ void Game1v1::RemovePiece(
     assert(a_coord.m_col < a_theBoard.GetNColumns());
 #endif
 
-    for (pieceConfiguration_t::const_iterator it = a_pieceConf.begin();
-         it != a_pieceConf.end();
+    PieceConfigurationContainer_t::const_iterator it;
+
+    // go through the list of squares of the piece first
+    for (it  = a_pieceConf.m_pieceSquares.begin();
+         it != a_pieceConf.m_pieceSquares.end();
          it++)
     {
         Coordinate thisCoord(a_coord.m_row + it->m_row,
@@ -271,9 +269,25 @@ void Game1v1::RemovePiece(
 
         // remove the current square of the piece from the board
         a_theBoard.BlankCoord(thisCoord);
+    }
 
-        // (a_coordX + pieceX, a_coordY + pieceY) is now empty
-        // is it now a nucleation point for the opponent? (it couldn't be before, as it was occupied by 'me')
+    // go through the list of squares of the piece again now that
+    // the piece has been removed
+    for (it  = a_pieceConf.m_pieceSquares.begin();
+         it != a_pieceConf.m_pieceSquares.end();
+         it++)
+    {
+        Coordinate thisCoord(a_coord.m_row + it->m_row,
+                             a_coord.m_col + it->m_col);
+
+        // is it now a nucleation point for me or the opponent? (it couldn't be before, as it was occupied by 'me')
+        if (rules::IsNucleationPointCompute(
+                a_theBoard,
+        		a_playerMe,
+        		thisCoord))
+        {
+        	a_playerMe.SetNucleationPoint(thisCoord);
+        }
         if (rules::IsNucleationPointCompute(
                 a_theBoard,
         		a_playerOpponent,
@@ -282,29 +296,87 @@ void Game1v1::RemovePiece(
         	a_playerOpponent.SetNucleationPoint(thisCoord);
         }
 
-        if (rules::IsCoordInfluencedByPlayerCompute(
+        // is the current coord influenced by the opponent (it couldn't be before as this square
+        // was occupied by me)
+        if (rules::IsCoordInfluencedByPlayerFastCompute(
                 a_theBoard,
                 thisCoord,
                 a_playerOpponent))
         {
             a_playerOpponent.SetInfluencedCoord(thisCoord);
         }
-    }
+    } // for (it  = a_pieceConf.m_pieceSquares.begin();
 
-    // recalculate all the nk points around the piece we just removed (player 'me')
-    rules::RecalculateNKAroundCoord(a_theBoard, a_coord, a_pieceRadius + 1, a_playerMe);
+    // now check the nk points of the piece. Are they still nk points for player 'me'?
+    for (it  = a_pieceConf.m_nkPoints.begin();
+         it != a_pieceConf.m_nkPoints.end();
+         it++)
+    {
+        Coordinate thisCoord(a_coord.m_row + it->m_row,
+                             a_coord.m_col + it->m_col);
+
+        if ( (thisCoord.m_row < 0) || (thisCoord.m_col < 0)     ||
+             (thisCoord.m_row >= a_theBoard.GetNRows())         ||
+             (thisCoord.m_col >= a_theBoard.GetNColumns())      ||
+             (a_playerMe.IsNucleationPoint(thisCoord) == false) )
+        {
+            // this point is out of the board (or is not an nk
+            // point). Try next one
+            continue;
+        }
+
+        if (!rules::IsNucleationPointCompute(
+                a_theBoard,
+        		a_playerMe,
+        		thisCoord))
+        {
+            // this nk point is not nk point any more since the piece has been
+            // removed
+        	a_playerMe.UnsetNucleationPoint(thisCoord);
+        }
+    } // for (it  = a_pieceConf.m_nkPoints.begin();
+
+    // forbidden areas around the piece that was just removed might also be nk points
+    for (it  = a_pieceConf.m_forbiddenArea.begin();
+         it != a_pieceConf.m_forbiddenArea.end();
+         it++)
+    {
+        Coordinate thisCoord(a_coord.m_row + it->m_row,
+                             a_coord.m_col + it->m_col);
+
+        if ( (thisCoord.m_row < 0) || (thisCoord.m_col < 0) ||
+             (thisCoord.m_row >= a_theBoard.GetNRows())     ||
+             (thisCoord.m_col >= a_theBoard.GetNColumns())  ||
+             (a_theBoard.IsCoordEmpty(thisCoord) == false)  )
+        {
+            // this forbidden coord is out of the board (or occupied). Try next one
+            continue;
+        }
+
+#ifdef DEBUG
+        assert(a_playerMe.IsNucleationPoint(thisCoord) == false);
+#endif
+
+        if (rules::IsNucleationPointCompute(
+                a_theBoard,
+        		a_playerMe,
+        		thisCoord))
+        {
+            // this forbidden coord is now a nk point since the piece was removed
+        	a_playerMe.SetNucleationPoint(thisCoord);
+        }
+    } // for (it  = a_pieceConf.m_forbiddenArea.begin();
 
     // recalculate the influence area around the piece that was just removed
-    rules::RecalculateInfluenceAreaAroundPiece(a_theBoard, a_coord, a_pieceConf, a_playerMe);
+    rules::RecalculateInfluenceAreaAroundPieceFast(a_theBoard, a_coord, a_pieceConf, a_playerMe);
 }
 
 void Game1v1::PutDownPiece(
-        Board                      &a_theBoard,
-        const Coordinate           &a_coord,
-        const pieceConfiguration_t &a_pieceConf,
-        int32_t                     a_pieceRadius,
-        Player                     &a_playerMe,
-        Player                     &a_playerOpponent)
+        Board                    &a_theBoard,
+        const Coordinate         &a_coord,
+        const PieceConfiguration &a_pieceConf,
+        Player                   &a_playerMe,
+        Player                   &a_playerOpponent)
 {
 #ifdef DEBUG
     assert(a_coord.m_row >= 0);
@@ -314,14 +386,16 @@ void Game1v1::PutDownPiece(
     assert(a_coord.m_col < a_theBoard.GetNColumns());
 #endif
 
-    for (pieceConfiguration_t::const_iterator it = a_pieceConf.begin();
-         it != a_pieceConf.end();
+    PieceConfigurationContainer_t::const_iterator it;
+
+    // go through the list of squares of the piece first
+    for (it  = a_pieceConf.m_pieceSquares.begin();
+         it != a_pieceConf.m_pieceSquares.end();
          it++)
     {
         Coordinate thisCoord(a_coord.m_row + it->m_row,
                              a_coord.m_col + it->m_col);
 #ifdef DEBUG
-
         assert( ((a_coord.m_row + it->m_row) >= 0) &&
         		((a_coord.m_row + it->m_row) < a_theBoard.GetNRows()) );
         assert( ((a_coord.m_col + it->m_col) >= 0) &&
@@ -334,17 +408,58 @@ void Game1v1::PutDownPiece(
                 thisCoord,
         		a_playerMe);
 
+        // can't be a nucleation point of player 'me' any more
+        a_playerMe.UnsetNucleationPoint(thisCoord);
+
         // this new point is being occupied by the player 'me'. It can't be a nucleation point
         // or belong to the influence area of the opponent any more
         a_playerOpponent.UnsetNucleationPoint(thisCoord);
         a_playerOpponent.UnsetInfluencedCoord(thisCoord);
-    }
+    } // for (it  = a_pieceConf.m_pieceSquares.begin();
 
-    // recalculate all the nk points around the piece we just put down (player 'me')
-    rules::RecalculateNKAroundCoord(a_theBoard, a_coord, a_pieceRadius + 1, a_playerMe);
+    // now check the nk points of the piece. If they are inside the board they will be set as
+    // nucleation point. No need to compute
+    for (it  = a_pieceConf.m_nkPoints.begin();
+         it != a_pieceConf.m_nkPoints.end();
+         it++)
+    {
+        Coordinate thisCoord(a_coord.m_row + it->m_row,
+                             a_coord.m_col + it->m_col);
+
+        if ( (thisCoord.m_row >= 0)                       &&
+             (thisCoord.m_col >= 0)                       &&
+             (thisCoord.m_row < a_theBoard.GetNRows())    &&
+             (thisCoord.m_col < a_theBoard.GetNColumns()) &&
+             (a_theBoard.IsCoordEmpty(thisCoord))         &&
+             (!rules::IsCoordTouchingPlayerCompute(a_theBoard, thisCoord, a_playerMe)))
+        {
+            // this coord is now a valid nk point (if it already was a nk point
+            // it's ok -and faster- to set it twice
+        	a_playerMe.SetNucleationPoint(thisCoord);
+        }
+    } // for (it  = a_pieceConf.m_nkPoints.begin();
+
+    // forbidden areas around the piece can't be a valid nk point any longer
+    for (it  = a_pieceConf.m_forbiddenArea.begin();
+         it != a_pieceConf.m_forbiddenArea.end();
+         it++)
+    {
+        Coordinate thisCoord(a_coord.m_row + it->m_row,
+                             a_coord.m_col + it->m_col);
+
+        if ( (thisCoord.m_row >= 0) &&
+             (thisCoord.m_col >= 0) &&
+             (thisCoord.m_row < a_theBoard.GetNRows()) &&
+             (thisCoord.m_col < a_theBoard.GetNColumns()) )
+        {
+            // this coord is not a nk point any longer since it belongs
+            // to the forbidden area of the deployed piece
+            a_playerMe.UnsetNucleationPoint(thisCoord);
+        }
+    } // for (it  = a_pieceConf.m_forbiddenArea.begin();
 
     // recalculate the influence area around the piece that was just put down
-    rules::RecalculateInfluenceAreaAroundPiece(a_theBoard, a_coord, a_pieceConf, a_playerMe);
+    rules::RecalculateInfluenceAreaAroundPieceFast(a_theBoard, a_coord, a_pieceConf, a_playerMe);
 }
 
 int32_t Game1v1::MinMax(
@@ -486,13 +601,13 @@ int32_t Game1v1::MinMax(
 
         playerMe->UnsetPiece(static_cast<ePieceType_t>(i));
 
-        const std::list<pieceConfiguration_t> &coordConfList =
+        const std::list<PieceConfiguration> &pieceConfList =
             playerMe->m_pieces[i].GetPrecalculatedConfs();
-        std::list<pieceConfiguration_t>::const_iterator pieceCoordIt;
 
-        for (pieceCoordIt  = coordConfList.begin();
-             pieceCoordIt != coordConfList.end();
-             pieceCoordIt++)
+        std::list<PieceConfiguration>::const_iterator pieceConfIt;
+        for (pieceConfIt  = pieceConfList.begin();
+             pieceConfIt != pieceConfList.end();
+             pieceConfIt++)
         {
             bool nkExists;
             Coordinate thisNkPoint;
@@ -506,8 +621,7 @@ int32_t Game1v1::MinMax(
                                             m_board,
                                             *playerMe,
                                             thisNkPoint,
-                                            *pieceCoordIt,
-                                            playerMe->m_pieces[i].GetRadius(),
+                                            *pieceConfIt,
                                             validCoords);
 
                 for (uint8_t k = 0 ; k < nValidCoords ; k++)
@@ -519,8 +633,7 @@ int32_t Game1v1::MinMax(
                         Game1v1::PutDownPiece(
                                 m_board,
                                 validCoords[k],
-                                *pieceCoordIt,
-                                playerMe->m_pieces[i].GetRadius(),
+                                *pieceConfIt,
                                 *playerMe,
                                 *playerOpponent);
 
@@ -555,7 +668,7 @@ int32_t Game1v1::MinMax(
                             {
                                 out_resultPiece = playerMe->m_pieces[i];
                             }
-                            out_resultPiece.SetCurrentConfiguration(*pieceCoordIt);
+                            out_resultPiece.SetCurrentConfiguration(*pieceConfIt);
 
                             out_coord.m_row = validCoords[k].m_row;
                             out_coord.m_col = validCoords[k].m_col;
@@ -566,8 +679,7 @@ int32_t Game1v1::MinMax(
                         Game1v1::RemovePiece(
                                 m_board,
                                 validCoords[k],
-                                *pieceCoordIt,
-                                playerMe->m_pieces[i].GetRadius(),
+                                *pieceConfIt,
                                 *playerMe,
                                 *playerOpponent);
 
@@ -592,7 +704,7 @@ int32_t Game1v1::MinMax(
             } // while(nkExists)
 
             testedCoords.clear();
-        } // for (pieceCoordIt = coordConfList.begin()
+        } // for (pieceConfIt = pieceConfList.begin()
 
         playerMe->SetPiece(static_cast<ePieceType_t>(i));
     } // for (int i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
@@ -683,19 +795,18 @@ int32_t Game1v1::ComputeFirstPiece(
                 continue;
             }
 
-            const std::list<pieceConfiguration_t> &coordConfList =
+            const std::list<PieceConfiguration> &pieceConfList =
                 a_playerMe.m_pieces[i].GetPrecalculatedConfs();
-            std::list<pieceConfiguration_t>::const_iterator pieceCoordIt;
-            for (pieceCoordIt  = coordConfList.begin();
-                 pieceCoordIt != coordConfList.end();
-                 pieceCoordIt++)
+
+            std::list<PieceConfiguration>::const_iterator pieceConfIt;
+            for (pieceConfIt  = pieceConfList.begin();
+                 pieceConfIt != pieceConfList.end();
+                 pieceConfIt++)
             {
                 int32_t nValidCoords = rules::CalculateValidCoordsInStartingPoint(
                                             a_board,
-                                            a_playerMe,
                                             a_playerMe.GetStartingCoordinate(),
-                                            *pieceCoordIt,
-                                            a_playerMe.m_pieces[i].GetRadius(),
+                                            *pieceConfIt,
                                             validCoords);
 
                 for (uint8_t k = 0 ; k < nValidCoords ; k++)
@@ -703,8 +814,7 @@ int32_t Game1v1::ComputeFirstPiece(
                     Game1v1::PutDownPiece(
                             a_board,
                             validCoords[k],
-                            *pieceCoordIt,
-                            a_playerMe.m_pieces[i].GetRadius(),
+                            *pieceConfIt,
                             a_playerMe,
                             a_playerOpponent);
 
@@ -721,20 +831,19 @@ int32_t Game1v1::ComputeFirstPiece(
                         {
                             out_resultPiece = a_playerMe.m_pieces[i];
                         }
-                        out_resultPiece.SetCurrentConfiguration(*pieceCoordIt);
+                        out_resultPiece.SetCurrentConfiguration(*pieceConfIt);
                         out_coord = validCoords[k];
                     }
 
                     Game1v1::RemovePiece(
                             a_board,
                             validCoords[k],
-                            *pieceCoordIt,
-                            a_playerMe.m_pieces[i].GetRadius(),
+                            *pieceConfIt,
                             a_playerMe,
                             a_playerOpponent);
 
                 } // for (uint8_t k = 0 ; k < nValidCoords ; k++)
-            } // for (pieceCoordIt = coordConfList.begin()
+            } // for (pieceConfIt = pieceConfList.begin()
         } // for (int8_t i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
     } // if (!rules::IsPieceDeployableInStartingPoint(
 
@@ -814,13 +923,13 @@ int32_t Game1v1::MinMaxAlphaBetaCompute(
 
         a_playerMe.UnsetPiece(static_cast<ePieceType_t>(i));
 
-        const std::list<pieceConfiguration_t> &coordConfList =
+        const std::list<PieceConfiguration> &pieceConfList =
             a_playerMe.m_pieces[i].GetPrecalculatedConfs();
-        std::list<pieceConfiguration_t>::const_iterator pieceCoordIt;
 
-        for (pieceCoordIt  = coordConfList.begin();
-             pieceCoordIt != coordConfList.end();
-             pieceCoordIt++)
+        std::list<PieceConfiguration>::const_iterator pieceConfIt;
+        for (pieceConfIt  = pieceConfList.begin();
+             pieceConfIt != pieceConfList.end();
+             pieceConfIt++)
         {
             bool nkExists;
             Coordinate thisNkPoint;
@@ -866,8 +975,7 @@ int32_t Game1v1::MinMaxAlphaBetaCompute(
                                             a_board,
                                             a_playerMe,
                                             thisNkPoint,
-                                            *pieceCoordIt,
-                                            a_playerMe.m_pieces[i].GetRadius(),
+                                            *pieceConfIt,
                                             validCoords);
 
                 for (uint8_t k = 0 ; k < nValidCoords ; k++)
@@ -879,8 +987,7 @@ int32_t Game1v1::MinMaxAlphaBetaCompute(
                         Game1v1::PutDownPiece(
                                 a_board,
                                 validCoords[k],
-                                *pieceCoordIt,
-                                a_playerMe.m_pieces[i].GetRadius(),
+                                *pieceConfIt,
                                 a_playerMe,
                                 a_playerOpponent);
 
@@ -917,8 +1024,7 @@ int32_t Game1v1::MinMaxAlphaBetaCompute(
                         Game1v1::RemovePiece(
                                 a_board,
                                 validCoords[k],
-                                *pieceCoordIt,
-                                a_playerMe.m_pieces[i].GetRadius(),
+                                *pieceConfIt,
                                 a_playerMe,
                                 a_playerOpponent);
 
@@ -947,7 +1053,7 @@ int32_t Game1v1::MinMaxAlphaBetaCompute(
             } // while(nkExists)
 
             testedCoords.clear();
-        } // for (pieceCoordIt = coordConfList.begin()
+        } // for (pieceConfIt = pieceConfList.begin()
 
         a_playerMe.SetPiece(static_cast<ePieceType_t>(i));
 	} // for (int i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
@@ -1051,13 +1157,13 @@ void Game1v1::RecalculateInflueceAreasInAllBoard()
              thisCoord.m_col < m_board.GetNColumns();
              thisCoord.m_col++)
         {
-            rules::RecalculateInfluenceAreaAroundPiece(
+            rules::RecalculateInfluenceAreaAroundPieceFast(
                     m_board,
                     thisCoord,
                     babyPiece.GetCurrentConfiguration(),
                     m_player1);
 
-            rules::RecalculateInfluenceAreaAroundPiece(
+            rules::RecalculateInfluenceAreaAroundPieceFast(
                     m_board,
                     thisCoord,
                     babyPiece.GetCurrentConfiguration(),

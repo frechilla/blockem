@@ -30,9 +30,13 @@
 
 #include "rules.h"
 
+#ifdef DEBUG_PRINT
+#include <iostream>
+#endif
+
 static const int32_t INFLUENCE_AREA_AROUND_SQUARE_SIZE = 2;
 
-bool rules::IsCoordTouchingPlayer(
+bool rules::IsCoordTouchingPlayerCompute(
             const Board      &a_board,
             const Coordinate &a_coord,
             const Player     &a_player)
@@ -80,17 +84,18 @@ bool rules::IsCoordTouchingPlayer(
     return false;
 }
 
-bool rules::IsPieceDeployable(
-        const Board                &a_board,
-        const pieceConfiguration_t &a_pieceConf,
-        const Coordinate           &a_coord,
-        const Player               &a_player)
+bool rules::IsPieceDeployableCompute(
+        const Board              &a_board,
+        const PieceConfiguration &a_pieceConf,
+        const Coordinate         &a_coord,
+        const Player             &a_player)
 {
 	bool touchingNKPoint = false;
 
-    for (pieceConfiguration_t::const_iterator it = a_pieceConf.begin();
-        it != a_pieceConf.end();
-        it++)
+    PieceConfigurationContainer_t::const_iterator it;
+    for (it  = a_pieceConf.m_pieceSquares.begin();
+         it != a_pieceConf.m_pieceSquares.end();
+         it++)
     {
         Coordinate currentCoord(
                 a_coord.m_row + it->m_row,
@@ -104,12 +109,6 @@ bool rules::IsPieceDeployable(
             return false;
         }
 
-        if (IsCoordTouchingPlayer(a_board, currentCoord, a_player))
-        {
-            return false;
-        }
-
-        //TODO IsNucleationPointCompute performs again same checks done by IsCoordTouchingPlayer
         if ( (touchingNKPoint == false) &&
         	 (IsNucleationPointCompute(a_board, a_player, currentCoord)) )
         {
@@ -120,85 +119,37 @@ bool rules::IsPieceDeployable(
         }
     }
 
-    return touchingNKPoint;
-}
+    if (touchingNKPoint == false)
+    {
+        // if no square of the piece is touching any nk point
+        // the piece can't be deployed in a_coord
+        return false;
+    }
 
-bool rules::IsPieceDeployableInNKPoint(
-        const Board                &a_board,
-        const pieceConfiguration_t &a_pieceConf,
-        const Coordinate           &a_coord,
-        const Coordinate           &a_nkPoint,
-        const Player               &a_player)
-{
-#ifdef DEBUG
-    assert(a_player.IsNucleationPoint(a_nkPoint));
-#endif
-
-    bool touchesNKPoint = false;
-
-    for (pieceConfiguration_t::const_iterator it = a_pieceConf.begin();
-        it != a_pieceConf.end();
-        it++)
+    // check if a_player has already deployed a piece which would be touching
+    // the forbidden area of the piece (represented by a_pieceConf)
+    for (it  = a_pieceConf.m_forbiddenArea.begin();
+         it != a_pieceConf.m_forbiddenArea.end();
+         it++)
     {
         Coordinate currentCoord(
                 a_coord.m_row + it->m_row,
                 a_coord.m_col + it->m_col);
 
-        if ( (currentCoord.m_row < 0) || (currentCoord.m_row >= a_board.GetNRows())    ||
-             (currentCoord.m_col < 0) || (currentCoord.m_col >= a_board.GetNColumns()) ||
-             (a_board.IsCoordEmpty(currentCoord) == false) )
+        if ( (currentCoord.m_row >= 0) && (currentCoord.m_col >= 0) &&
+             (currentCoord.m_row < a_board.GetNRows())              &&
+             (currentCoord.m_col < a_board.GetNColumns())           &&
+             (a_board.IsPlayerInCoord(currentCoord, a_player)) )
         {
-            // this square is out of the board or it's not empty
+            // this square is already occupied by a_player. No piece of
+            // 'a_player' can already be in the forbidden area of the current
+            // piece for this move to be valid
             return false;
         }
+    } // for (it  = a_pieceConf.m_forbiddenArea.begin();
 
-        if (IsCoordTouchingPlayer(a_board, currentCoord, a_player))
-        {
-            return false;
-        }
-
-        if ( (currentCoord.m_row == a_nkPoint.m_row) &&
-             (currentCoord.m_col == a_nkPoint.m_col) )
-        {
-        	touchesNKPoint = true;
-        }
-    }
-
-    return touchesNKPoint;
-}
-
-bool rules::IsPieceDeployableInStartingPoint(
-        const Board                &a_board,
-        const pieceConfiguration_t &a_pieceConf,
-        const Coordinate           &a_coord,
-        const Coordinate           &a_startingPoint)
-{
-    bool touchesStartingPoint = false;
-
-    for (pieceConfiguration_t::const_iterator it = a_pieceConf.begin();
-        it != a_pieceConf.end();
-        it++)
-    {
-        Coordinate currentCoord(
-                a_coord.m_row + it->m_row,
-                a_coord.m_col + it->m_col);
-
-        if ( (currentCoord.m_row < 0) || (currentCoord.m_row >= a_board.GetNRows())    ||
-             (currentCoord.m_col < 0) || (currentCoord.m_col >= a_board.GetNColumns()) ||
-             (a_board.IsCoordEmpty(currentCoord) == false) )
-        {
-            // this square is out of the board or it's not empty
-            return false;
-        }
-
-        if ( (currentCoord.m_row == a_startingPoint.m_row) &&
-             (currentCoord.m_col == a_startingPoint.m_col) )
-        {
-        	touchesStartingPoint = true;
-        }
-    }
-
-    return touchesStartingPoint;
+    // if it got to here piece can be deployed in a_coord touching at least 1 nk point
+    return true;
 }
 
 bool rules::IsNucleationPointCompute(
@@ -297,13 +248,118 @@ bool rules::IsNucleationPointCompute(
     return isNucleationPoint;
 }
 
+bool rules::IsPieceDeployableInNKPoint(
+        const Board              &a_board,
+        const PieceConfiguration &a_pieceConf,
+        const Coordinate         &a_coord,
+        const Coordinate         &a_nkPoint,
+        const Player             &a_player)
+{
+#ifdef DEBUG
+    assert(a_player.IsNucleationPoint(a_nkPoint));
+#endif
+
+    bool touchesNKPoint = false;
+
+    PieceConfigurationContainer_t::const_iterator it;
+    for (it  = a_pieceConf.m_pieceSquares.begin();
+         it != a_pieceConf.m_pieceSquares.end();
+         it++)
+    {
+        Coordinate currentCoord(
+                a_coord.m_row + it->m_row,
+                a_coord.m_col + it->m_col);
+
+        if ( (currentCoord.m_row < 0) || (currentCoord.m_row >= a_board.GetNRows())    ||
+             (currentCoord.m_col < 0) || (currentCoord.m_col >= a_board.GetNColumns()) ||
+             (a_board.IsCoordEmpty(currentCoord) == false) )
+        {
+            // this square is out of the board or it's not empty
+            return false;
+        }
+
+        if ( (currentCoord.m_row == a_nkPoint.m_row) &&
+             (currentCoord.m_col == a_nkPoint.m_col) )
+        {
+        	touchesNKPoint = true;
+        }
+    } // for (it  = a_pieceConf.m_pieceSquares.begin();
+
+    if (touchesNKPoint == false)
+    {
+        // if no square of the piece is touching the nk point
+        // the piece can't be deployed in a_coord
+        return false;
+    }
+
+    // check if a_player has already deployed a piece which would be touching
+    // the forbidden area of the piece (represented by a_pieceConf)
+    for (it  = a_pieceConf.m_forbiddenArea.begin();
+         it != a_pieceConf.m_forbiddenArea.end();
+         it++)
+    {
+        Coordinate currentCoord(
+                a_coord.m_row + it->m_row,
+                a_coord.m_col + it->m_col);
+
+        if ( (currentCoord.m_row >= 0) && (currentCoord.m_col >= 0) &&
+             (currentCoord.m_row < a_board.GetNRows())              &&
+             (currentCoord.m_col < a_board.GetNColumns())           &&
+             (a_board.IsPlayerInCoord(currentCoord, a_player)) )
+        {
+            // this square is already occupied by a_player. No piece of
+            // 'a_player' can already be in the forbidden area of the current
+            // piece for this move to be valid
+            return false;
+        }
+    } // for (it  = a_pieceConf.m_forbiddenArea.begin();
+
+    // if it got to here piece can be deployed in a_coord touching a_nkPoint
+    return true;
+}
+
+bool rules::IsPieceDeployableInStartingPoint(
+        const Board              &a_board,
+        const PieceConfiguration &a_pieceConf,
+        const Coordinate         &a_coord,
+        const Coordinate         &a_startingPoint)
+{
+    bool touchesStartingPoint = false;
+
+    PieceConfigurationContainer_t::const_iterator it;
+    for (it  = a_pieceConf.m_pieceSquares.begin();
+         it != a_pieceConf.m_pieceSquares.end();
+         it++)
+    {
+        Coordinate currentCoord(
+                a_coord.m_row + it->m_row,
+                a_coord.m_col + it->m_col);
+
+        if ( (currentCoord.m_row < 0) || (currentCoord.m_row >= a_board.GetNRows())    ||
+             (currentCoord.m_col < 0) || (currentCoord.m_col >= a_board.GetNColumns()) ||
+             (a_board.IsCoordEmpty(currentCoord) == false) )
+        {
+            // this square is out of the board or it's not empty
+            return false;
+        }
+
+        if ( (currentCoord.m_row == a_startingPoint.m_row) &&
+             (currentCoord.m_col == a_startingPoint.m_col) )
+        {
+        	touchesStartingPoint = true;
+        }
+    }
+
+    return touchesStartingPoint;
+}
+
 bool rules::CalculateNextValidCoordInNucleationPoint(
-        const Board                &a_board,
-        const Player               &a_player,
-        const Coordinate           &a_nkPointCoord,
-        const pieceConfiguration_t &a_pieceConf,
-        int32_t                     a_pieceRadius,
-        Coordinate                 &in_out_validCoord)
+        const Board              &a_board,
+        const Player             &a_player,
+        const Coordinate         &a_nkPointCoord,
+        const PieceConfiguration &a_pieceConf,
+        int32_t                   a_pieceRadius,
+        Coordinate               &in_out_validCoord)
 {
 #ifdef DEBUG
     assert(a_player.IsNucleationPoint(a_nkPointCoord));
@@ -393,68 +449,50 @@ bool rules::CalculateNextValidCoordInNucleationPoint(
 }
 
 int32_t rules::CalculateValidCoordsInNucleationPoint(
-        const Board                &a_board,
-        const Player               &a_player,
-        const Coordinate           &a_nkPointCoord,
-        const pieceConfiguration_t &a_pieceConf,
-        int32_t                     a_pieceRadius,
-        std::vector<Coordinate>    &out_validCoords)
+        const Board              &a_board,
+        const Player             &a_player,
+        const Coordinate         &a_nkPointCoord,
+        const PieceConfiguration &a_pieceConf,
+        std::vector<Coordinate>  &out_validCoords)
 {
 #ifdef DEBUG
     assert(a_player.IsNucleationPoint(a_nkPointCoord));
 #endif
 
-    // It is true that every piece fits in a square 5x5 pieces.
-    // But most of the pieces need a smaller square (3x3). The baby piece only needs 1 little square
-    // the increment variable will save the amount of squares to be checked. The size of the square
-    // will be (increment x 2) + 1
-
     int32_t nValidCoords = 0;
 
-    if (a_pieceRadius > 0)
+    // go through all the squares that make up the piece and try to allocate
+    // the piece so those squares touch a_nkPointCoord (the nucleation
+    // point described by the user)
+    PieceConfigurationContainer_t::const_iterator it;
+    for (it  = a_pieceConf.m_pieceSquares.begin();
+         it != a_pieceConf.m_pieceSquares.end();
+         it++)
     {
-        int32_t endRow = std::min(a_nkPointCoord.m_row + a_pieceRadius, a_board.GetNRows() - 1);
-        int32_t endCol = std::min(a_nkPointCoord.m_col + a_pieceRadius, a_board.GetNColumns() - 1);
-        int32_t startRow = std::max(0, a_nkPointCoord.m_row - a_pieceRadius);
-        int32_t startCol = std::max(0, a_nkPointCoord.m_col - a_pieceRadius);
+        Coordinate thisCoord(
+            a_nkPointCoord.m_row - it->m_row,
+            a_nkPointCoord.m_col - it->m_col);
 
-        Coordinate thisCoord;
-        for (thisCoord.m_row = startRow; thisCoord.m_row <= endRow; thisCoord.m_row++)
+        if (IsPieceDeployableInNKPoint(
+                a_board, a_pieceConf, thisCoord, a_nkPointCoord, a_player))
         {
-            for (thisCoord.m_col = startCol; thisCoord.m_col <= endCol; thisCoord.m_col++)
-            {
-				if (IsPieceDeployableInNKPoint(
-						a_board, a_pieceConf, thisCoord, a_nkPointCoord, a_player))
-				{
 #ifdef DEBUG
-				    assert(static_cast<int32_t>(out_validCoords.size()) > nValidCoords);
+            assert(static_cast<int32_t>(out_validCoords.size()) > nValidCoords);
 #endif
-                    out_validCoords[nValidCoords] = thisCoord;
-					nValidCoords++;
-				}
-            }
+            out_validCoords[nValidCoords] = thisCoord;
+            nValidCoords++;
         }
-    }
-    else
-    {
-        // the baby piece. No need to use IsDeployableInNKPoint because the piece
-    	// only has one square. It will only fit in a known nucleation point
-#ifdef DEBUG
-        assert(static_cast<int32_t>(out_validCoords.size()) > nValidCoords);
-#endif
-        out_validCoords[nValidCoords] = a_nkPointCoord;
-		nValidCoords++;
     }
 
     return nValidCoords;
 }
 
 bool rules::HasValidCoordInNucleationPoint(
-        const Board                &a_board,
-        const Player               &a_player,
-        const Coordinate           &a_nkPointCoord,
-        const pieceConfiguration_t &a_pieceConf,
-        int32_t                     a_pieceRadius)
+        const Board              &a_board,
+        const Player             &a_player,
+        const Coordinate         &a_nkPointCoord,
+        const PieceConfiguration &a_pieceConf,
+        int32_t                   a_pieceRadius)
 {
     // create an uninitialised tmp coordinate.
     // If CalculateNextValidCoordInNucleationPoint finds a valid coord
@@ -471,71 +509,34 @@ bool rules::HasValidCoordInNucleationPoint(
 }
 
 int32_t rules::CalculateValidCoordsInStartingPoint(
-        const Board                &a_board,
-        const Player               &a_player,
-        const Coordinate           &a_startingPointCoord,
-        const pieceConfiguration_t &a_pieceConf,
-        int32_t                     a_pieceRadius,
-        std::vector<Coordinate>    &out_validCoords)
+        const Board              &a_board,
+        const Coordinate         &a_startingPointCoord,
+        const PieceConfiguration &a_pieceConf,
+        std::vector<Coordinate>  &out_validCoords)
 {
-    // It is true that every piece fits in a square 5x5 pieces.
-    // But most of the pieces need a smaller square (3x3). The baby piece only needs 1 little square
-    // the increment variable will save the amount of squares to be checked. The size of the square
-    // will be (increment x 2) + 1
-
     int32_t nValidCoords = 0;
 
-    if (a_pieceRadius > 0)
+    // go through all the squares that make up the piece and try to allocate
+    // the piece so those squares touch a_startingPointCoord (the starting
+    // point described by the user)
+    PieceConfigurationContainer_t::const_iterator it;
+    for (it  = a_pieceConf.m_pieceSquares.begin();
+         it != a_pieceConf.m_pieceSquares.end();
+         it++)
     {
-		for (int32_t i = -a_pieceRadius ; i <= a_pieceRadius ; i++)
-		{
-			for (int32_t j = -a_pieceRadius ; j <= a_pieceRadius ; j++)
-			{
-				bool validCoord = false;
-			    for (pieceConfiguration_t::const_iterator it = a_pieceConf.begin();
-			        it != a_pieceConf.end();
-			        it++)
-				{
-					Coordinate thisCoord(
-							a_startingPointCoord.m_row + i + it->m_row,
-							a_startingPointCoord.m_col + j + it->m_col);
+        Coordinate thisCoord(
+            a_startingPointCoord.m_row - it->m_row,
+            a_startingPointCoord.m_col - it->m_col);
 
-					if ( (thisCoord.m_row < 0) || (thisCoord.m_row >= a_board.GetNRows())    ||
-						 (thisCoord.m_col < 0) || (thisCoord.m_col >= a_board.GetNColumns()) ||
-						 (a_board.IsCoordEmpty(thisCoord) == false) )
-					{
-						validCoord = false;
-						break; // exit this fucking loop. The piece can't be place there 'cos it will be out of the board
-					}
-					else if ( (thisCoord.m_row == a_startingPointCoord.m_row) &&
-							  (thisCoord.m_col == a_startingPointCoord.m_col) )
-					{
-						// this square of this piece would be touching the selected starting point
-						validCoord = true;
-					}
-				} // for (pieceConfiguration_t::iterator it = a_pieceConf.begin();
-
-				if (validCoord && a_board.IsCoordEmpty(a_startingPointCoord))
-				{
+        if (IsPieceDeployableInStartingPoint(
+                a_board, a_pieceConf, thisCoord, a_startingPointCoord))
+        {
 #ifdef DEBUG
-                    assert(static_cast<int32_t>(out_validCoords.size()) > nValidCoords);
+            assert(static_cast<int32_t>(out_validCoords.size()) > nValidCoords);
 #endif
-                    out_validCoords[nValidCoords] = Coordinate(
-                            a_startingPointCoord.m_row + i,
-                            a_startingPointCoord.m_col + j);
-                    nValidCoords++;
-				}
-			}
-		}
-    }
-    else if (a_board.IsCoordEmpty(a_startingPointCoord))
-    {
-#ifdef DEBUG
-        assert(static_cast<int32_t>(out_validCoords.size()) > nValidCoords);
-#endif
-    	// starting with the baby piece. It doesn't seem to be the most sensible thing to do
-        out_validCoords[nValidCoords] = a_startingPointCoord;
-		nValidCoords++;
+            out_validCoords[nValidCoords] = thisCoord;
+            nValidCoords++;
+        }
     }
 
     return nValidCoords;
@@ -552,10 +553,10 @@ void rules::RecalculateNKAroundCoord(
     int32_t startRow = std::max(0, a_coord.m_row - a_radiusToCheck);
     int32_t startCol = std::max(0, a_coord.m_col - a_radiusToCheck);
 
-    Coordinate thisCoord(0, 0);
-    for (thisCoord.m_row  = startRow; thisCoord.m_row <= endRow; thisCoord.m_row++)
+    Coordinate thisCoord;
+    for (thisCoord.m_row = startRow; thisCoord.m_row <= endRow; thisCoord.m_row++)
     {
-		for (thisCoord.m_col  = startCol; thisCoord.m_col <= endCol; thisCoord.m_col++)
+		for (thisCoord.m_col = startCol; thisCoord.m_col <= endCol; thisCoord.m_col++)
 		{
 			if (rules::IsNucleationPointCompute(a_board, a_player, thisCoord))
 			{
@@ -568,90 +569,12 @@ void rules::RecalculateNKAroundCoord(
 		}
     }
 }
-/*
-void rules::RecalculateInflueceAreaInBoard(
-        const Board &a_board,
-        Player      &a_player)
-{
-    // remove current influence area state
-    Coordinate thisCoord;
-    for (thisCoord.m_row = 0; thisCoord.m_row < a_board.GetNRows(); thisCoord.m_row++)
-    {
-        for (thisCoord.m_col = 0; thisCoord.m_col < a_board.GetNColumns(); thisCoord.m_col++)
-        {
-            a_player.UnsetInfluencedCoord(thisCoord);
-        }
-    }
 
-    if (a_player.NumberOfPiecesAvailable() == 0)
-    {
-        return;
-    }
-
-    std::vector<Coordinate> validCoords(PIECE_MAX_SQUARES);
-    for (int8_t i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
-    {
-        if (a_player.IsPieceAvailable(static_cast<ePieceType_t>(i)) == false)
-        {
-            continue;
-        }
-
-        const std::list<pieceConfiguration_t> &coordConfList =
-            a_player.m_pieces[i].GetPrecalculatedConfs();
-        std::list<pieceConfiguration_t>::const_iterator pieceCoordIt;
-        for (pieceCoordIt = coordConfList.begin();
-             pieceCoordIt != coordConfList.end();
-             pieceCoordIt++)
-        {
-            bool nkExists;
-            Coordinate thisNkPoint;
-            Player::SpiralIterator nkIterator;
-
-            nkExists = a_player.GetFirstNucleationPointSpiral(nkIterator, thisNkPoint);
-            while(nkExists)
-            {
-                // retrieve if there is a valid coord of this piece in the current nk point
-                int32_t nValidCoords = rules::CalculateValidCoordsInNucleationPoint(
-                                            a_board,
-                                            a_player,
-                                            thisNkPoint,
-                                            (*pieceCoordIt),
-                                            a_player.m_pieces[i].GetRadius(),
-                                            validCoords);
-
-                for (int32_t k = 0; k < nValidCoords; k++)
-                {
-                    pieceConfiguration_t::const_iterator it;
-                    for (it = pieceCoordIt->begin(); it != pieceCoordIt->end(); it++)
-                    {
-                        Coordinate influeceAreaCoord(
-                            validCoords[k].m_row + it->m_row,
-                            validCoords[k].m_col + it->m_col);
-
-                        if ( (influeceAreaCoord.m_row >= 0) &&
-                             (influeceAreaCoord.m_row <  a_board.GetNRows()) &&
-                             (influeceAreaCoord.m_col >= 0) &&
-                             (influeceAreaCoord.m_col <  a_board.GetNColumns()) )
-                        {
-                            a_player.SetInfluencedCoord(influeceAreaCoord);
-                        }
-                    }
-                }
-
-                nkExists = a_player.GetNextNucleationPointSpiral(nkIterator, thisNkPoint);
-            } // while(nkExists)
-        } // for (pieceCoordIt = coordConfList.begin()
-    } // for (int i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
-
-    return false;
-}
-*/
-
-void rules::RecalculateInfluenceAreaAroundPiece(
-        const Board                &a_board,
-        const Coordinate           &a_coord,
-        const pieceConfiguration_t &a_pieceConf,
-        Player                     &a_player)
+void rules::RecalculateInfluenceAreaAroundPieceFast(
+        const Board              &a_board,
+        const Coordinate         &a_coord,
+        const PieceConfiguration &a_pieceConf,
+        Player                   &a_player)
 {
     int32_t startCol, endCol, startRow, endRow;
 
@@ -672,7 +595,7 @@ void rules::RecalculateInfluenceAreaAroundPiece(
         for (tmpCoord.m_col  = startCol; tmpCoord.m_col <= endCol; tmpCoord.m_col++)
         {
             if (a_board.IsCoordEmpty(tmpCoord) &&
-                (IsCoordTouchingPlayer(a_board, tmpCoord, a_player) == false) )
+                (IsCoordTouchingPlayerCompute(a_board, tmpCoord, a_player) == false) )
             {
                 a_player.SetInfluencedCoord(tmpCoord);
             }
@@ -686,13 +609,14 @@ void rules::RecalculateInfluenceAreaAroundPiece(
     // now go through the borders of the influence area per each one
     // of squares that make up the piece configuration to check if
     // this influence area should be bigger
-    pieceConfiguration_t::const_iterator it = a_pieceConf.begin();
+    PieceConfigurationContainer_t::const_iterator it =
+        a_pieceConf.m_pieceSquares.begin();
     // 1st square is always relative (0, 0) - read comment above -
     // it has been checked in the previous loop. Also note that
     // incrementing this iterator is always correct because all
     // piece must have at least one coordinate
     it++;
-    while (it != a_pieceConf.end())
+    while (it != a_pieceConf.m_pieceSquares.end())
     {
         // go for the borders on the top and bottom of the influence area
         startCol = std::max(0, a_coord.m_col - INFLUENCE_AREA_AROUND_SQUARE_SIZE + it->m_col);
@@ -712,7 +636,7 @@ void rules::RecalculateInfluenceAreaAroundPiece(
                      tmpCoord.m_col++)
                 {
                     if (a_board.IsCoordEmpty(tmpCoord) &&
-                        (IsCoordTouchingPlayer(a_board, tmpCoord, a_player) == false) )
+                        (IsCoordTouchingPlayerCompute(a_board, tmpCoord, a_player) == false) )
                     {
                         a_player.SetInfluencedCoord(tmpCoord);
                     }
@@ -734,7 +658,7 @@ void rules::RecalculateInfluenceAreaAroundPiece(
                      tmpCoord.m_col++)
                 {
                     if (a_board.IsCoordEmpty(tmpCoord) &&
-                        (IsCoordTouchingPlayer(a_board, tmpCoord, a_player) == false) )
+                        (IsCoordTouchingPlayerCompute(a_board, tmpCoord, a_player) == false) )
                     {
                         a_player.SetInfluencedCoord(tmpCoord);
                     }
@@ -765,7 +689,7 @@ void rules::RecalculateInfluenceAreaAroundPiece(
                      tmpCoord.m_row++)
                 {
                     if (a_board.IsCoordEmpty(tmpCoord) &&
-                        (IsCoordTouchingPlayer(a_board, tmpCoord, a_player) == false) )
+                        (IsCoordTouchingPlayerCompute(a_board, tmpCoord, a_player) == false) )
                     {
                         a_player.SetInfluencedCoord(tmpCoord);
                     }
@@ -787,7 +711,7 @@ void rules::RecalculateInfluenceAreaAroundPiece(
                      tmpCoord.m_row++)
                 {
                     if (a_board.IsCoordEmpty(tmpCoord) &&
-                        (IsCoordTouchingPlayer(a_board, tmpCoord, a_player) == false) )
+                        (IsCoordTouchingPlayerCompute(a_board, tmpCoord, a_player) == false) )
                     {
                         a_player.SetInfluencedCoord(tmpCoord);
                     }
@@ -805,7 +729,7 @@ void rules::RecalculateInfluenceAreaAroundPiece(
 
 }
 
-bool rules::IsCoordInfluencedByPlayerCompute(
+bool rules::IsCoordInfluencedByPlayerFastCompute(
         const Board       &a_board,
         const Coordinate  &a_coord,
         const Player      &a_player)
@@ -820,7 +744,7 @@ bool rules::IsCoordInfluencedByPlayerCompute(
     // if a_coord is not empty or is touching a_player cannot be part
     // of the influence area
     if ( (a_board.IsCoordEmpty(a_coord) == false) ||
-         IsCoordTouchingPlayer(a_board, a_coord, a_player))
+          IsCoordTouchingPlayerCompute(a_board, a_coord, a_player))
     {
         return false;
     }
@@ -850,6 +774,80 @@ bool rules::IsCoordInfluencedByPlayerCompute(
     return false;
 }
 
+void rules::RecalculateInfluenceAreaInBoard(
+        const Board &a_board,
+        Player      &a_player)
+{
+    // remove current influence area state
+    Coordinate thisCoord;
+    for (thisCoord.m_row = 0; thisCoord.m_row < a_board.GetNRows(); thisCoord.m_row++)
+    {
+        for (thisCoord.m_col = 0; thisCoord.m_col < a_board.GetNColumns(); thisCoord.m_col++)
+        {
+            a_player.UnsetInfluencedCoord(thisCoord);
+        }
+    }
+
+    if (a_player.NumberOfPiecesAvailable() == 0)
+    {
+        return;
+    }
+
+    STLCoordinateSet_t nkPointsSet;
+    std::vector<Coordinate> validCoords(PIECE_MAX_SQUARES);
+    for (int8_t i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
+    {
+        if (a_player.IsPieceAvailable(static_cast<ePieceType_t>(i)) == false)
+        {
+            continue;
+        }
+
+        const std::list<PieceConfiguration> &pieceConfList =
+            a_player.m_pieces[i].GetPrecalculatedConfs();
+
+        std::list<PieceConfiguration>::const_iterator pieceConfIt;
+        for (pieceConfIt  = pieceConfList.begin();
+             pieceConfIt != pieceConfList.end();
+             pieceConfIt++)
+        {
+            a_player.GetAllNucleationPoints(nkPointsSet);
+            for (STLCoordinateSet_t::const_iterator nkIt = nkPointsSet.begin();
+                 nkIt != nkPointsSet.end();
+                 nkIt++)
+            {
+                // retrieve if there is a valid coord of this piece in the current nk point
+                int32_t nValidCoords = rules::CalculateValidCoordsInNucleationPoint(
+                                            a_board,
+                                            a_player,
+                                            (*nkIt),
+                                            (*pieceConfIt),
+                                            validCoords);
+
+                for (int32_t k = 0; k < nValidCoords; k++)
+                {
+                    PieceConfigurationContainer_t::const_iterator it;
+                    for (it  = pieceConfIt->m_pieceSquares.begin();
+                         it != pieceConfIt->m_pieceSquares.end();
+                         it++)
+                    {
+                        Coordinate influeceAreaCoord(
+                            validCoords[k].m_row + it->m_row,
+                            validCoords[k].m_col + it->m_col);
+
+                        if ( (influeceAreaCoord.m_row >= 0) &&
+                             (influeceAreaCoord.m_row <  a_board.GetNRows()) &&
+                             (influeceAreaCoord.m_col >= 0) &&
+                             (influeceAreaCoord.m_col <  a_board.GetNColumns()) )
+                        {
+                            a_player.SetInfluencedCoord(influeceAreaCoord);
+                        }
+                    }
+                }
+            } // for (STLCoordinateSet_t::const_iterator it = nkPointsSet.begin();
+        } // for (pieceCoordIt = coordConfList.begin()
+    } // for (int i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
+}
+
 bool rules::CanPlayerGo(const Board &a_board, const Player &a_player)
 {
     if (a_player.NumberOfPiecesAvailable() == 0)
@@ -864,24 +862,21 @@ bool rules::CanPlayerGo(const Board &a_board, const Player &a_player)
             continue;
         }
 
-        const std::list<pieceConfiguration_t> &coordConfList =
+        const std::list<PieceConfiguration> &pieceConfList =
             a_player.m_pieces[i].GetPrecalculatedConfs();
-        std::list<pieceConfiguration_t>::const_iterator pieceCoordIt;
 
-        for (pieceCoordIt = coordConfList.begin();
-             pieceCoordIt != coordConfList.end();
-             pieceCoordIt++)
+        std::list<PieceConfiguration>::const_iterator pieceConfIt;
+        for (pieceConfIt  = pieceConfList.begin();
+             pieceConfIt != pieceConfList.end();
+             pieceConfIt++)
         {
             if (a_player.NumberOfPiecesAvailable() == e_numberOfPieces)
             {
                 std::vector<Coordinate> validCoords(VALID_COORDS_SIZE);
-
                 int32_t nValidCoords = CalculateValidCoordsInStartingPoint(
                                         a_board,
-                                        a_player,
                                         a_player.GetStartingCoordinate(),
-                                        (*pieceCoordIt),
-                                        a_player.m_pieces[i].GetRadius(),
+                                        (*pieceConfIt),
                                         validCoords);
 
                 if (nValidCoords > 0)
@@ -902,7 +897,7 @@ bool rules::CanPlayerGo(const Board &a_board, const Player &a_player)
                                             a_board,
                                             a_player,
                                             thisNkPoint,
-                                            (*pieceCoordIt),
+                                            (*pieceConfIt),
                                             a_player.m_pieces[i].GetRadius());
 
                 if (nValidCoords)

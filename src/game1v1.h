@@ -211,31 +211,27 @@ protected:
 	/// @param the board
     /// @param the ABSOLUTE coord
     /// @param the piece configuration
-    /// @param radius of the piece (1 will be added to it to calculate the to check for new nk points)
     /// @param the player that owns the piece to be removed
 	/// @param the opponent of the player that owns the piece
     static void RemovePiece(
-            Board                      &a_theBoard,
-            const Coordinate           &a_coord,
-            const pieceConfiguration_t &a_pieceConf,
-            int32_t                     a_pieceRadius,
-            Player                     &a_playerMe,
-            Player                     &a_playerOpponent);
+            Board                    &a_theBoard,
+            const Coordinate         &a_coord,
+            const PieceConfiguration &a_pieceConf,
+            Player                   &a_playerMe,
+            Player                   &a_playerOpponent);
 
     /// put down a piece on the board. The user is supposed to check if there is space for it before calling
     /// @param the board
     /// @param the ABSOLUTE coord
     /// @param the piece configuration
-    /// @param radius of the piece (1 will be added to it to calculate the to check for new nk points)
     /// @param the player that owns the piece to be removed
     /// @param the opponent of the player that owns the piece
     static void PutDownPiece(
-            Board                      &a_theBoard,
-            const Coordinate           &a_coord,
-            const pieceConfiguration_t &a_pieceConf,
-            int32_t                     a_pieceRadius,
-            Player                     &a_playerMe,
-            Player                     &a_playerOpponent);
+            Board                    &a_theBoard,
+            const Coordinate         &a_coord,
+            const PieceConfiguration &a_pieceConf,
+            Player                   &a_playerMe,
+            Player                   &a_playerOpponent);
 
     /// @brief calculate the first piece to be put in the board
     /// a_board, a_playerMe and a_playerOpponent are not const references, but they

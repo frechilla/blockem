@@ -46,7 +46,7 @@ const uint8_t PIECE_MAX_SQUARES = 5;
 typedef enum
 {
     // WARNING:
-    // if this enum is modified, ensure all the constants are updated accordingly
+    // if this enum is modified, ensure all the constants (values) are updated accordingly
     // ensure also Piece::PieceDescription and Piece::m_loadFunctionMap
     // are updated with the correct order described in this enum
     //
@@ -83,6 +83,9 @@ typedef enum
 
 } ePieceType_t;
 
+/// container used for all the attributes that make up class PieceConfiguration
+typedef std::vector<Coordinate> PieceConfigurationContainer_t;
+
 /// A piece configuration represents what the piece is like at the moment
 /// Once a piece is rotated/mirrored the piece configuration changes
 class PieceConfiguration
@@ -93,19 +96,16 @@ public:
         m_nkPoints(0),
         m_forbiddenArea(0)
     {};
-    ~PieceConfiguration()
-    {};
+    ~PieceConfiguration() {};
 
     // Stores one coordinate per square occupied by the piece
-    std::vector<Coordinate> m_pieceSquares;
+    PieceConfigurationContainer_t m_pieceSquares;
     // 1 coordinate per nk point created by the piece
-    std::vector<Coordinate> m_nkPoints;
+    PieceConfigurationContainer_t m_nkPoints;
     // 1 coordinate per square which will be forbidden for the player
     // once he/she deploys the piece
-    std::vector<Coordinate> m_forbiddenArea;
+    PieceConfigurationContainer_t m_forbiddenArea;
 };
-
-typedef std::vector<Coordinate> pieceConfiguration_t;
 
 /// @brief represents a piece
 class Piece
@@ -190,7 +190,7 @@ public:
     }
 
     /// @return the list of precalculated configurations of the piece
-    inline const std::list<pieceConfiguration_t>& GetPrecalculatedConfs() const
+    inline const std::list<PieceConfiguration>& GetPrecalculatedConfs() const
     {
         return m_precalculatedConfsList;
     }
@@ -203,21 +203,36 @@ public:
         return m_bitwiseRepresentationList;
     }
 
-    /// set current coords of the piece to the coordinates specified by a_newCoords
-    inline void SetCurrentConfiguration(const pieceConfiguration_t &a_newCoords)
+    /// set current configuration of the piece to the configuration specified by a_newCoords
+    /// The user of this function must ensure size of std::vectors in PieceConfiguration "a_newConf"
+    /// is the same as the vectors of the piece
+    inline void SetCurrentConfiguration(const PieceConfiguration &a_newConf)
     {
-        for (int8_t i = 0; i < GetNSquares(); i++)
+#ifdef DEBUG
+        assert(a_newConf.m_pieceSquares.size()  == m_currentConf.m_pieceSquares.size());
+        assert(a_newConf.m_nkPoints.size()      == m_currentConf.m_nkPoints.size());
+        assert(a_newConf.m_forbiddenArea.size() == m_currentConf.m_forbiddenArea.size());
+#endif
+        for (std::size_t i = 0; i < m_currentConf.m_pieceSquares.size(); i++)
         {
-            m_currentConf.m_pieceSquares[i] = a_newCoords[i];
+            m_currentConf.m_pieceSquares[i] = a_newConf.m_pieceSquares[i];
+        }
+        for (std::size_t i = 0; i < m_currentConf.m_nkPoints.size(); i++)
+        {
+            m_currentConf.m_nkPoints[i] = a_newConf.m_nkPoints[i];
+        }
+        for (std::size_t i = 0; i < m_currentConf.m_forbiddenArea.size(); i++)
+        {
+            m_currentConf.m_forbiddenArea[i] = a_newConf.m_forbiddenArea[i];
         }
     }
 
-    inline const pieceConfiguration_t& GetCurrentConfiguration() const
+    inline const PieceConfiguration& GetCurrentConfiguration() const
     {
-        return m_currentConf.m_pieceSquares;
+        return m_currentConf;
     }
 
-    /// gives access to the current coords of the piece
+    /// gives access to the current coords of the squares that make up the piece
     /// @return the coordinate saved in a_squareIndex in the current piece configuration
     inline const Coordinate& GetCoord(int32_t a_squareIndex) const
     {
@@ -243,7 +258,7 @@ private:
     /// "radius" of the square where the piece fits (see comment for SetPiece)
     uint8_t m_radius;
     /// list of precaculated configurations of the piece
-    std::list< pieceConfiguration_t > m_precalculatedConfsList;
+    std::list<PieceConfiguration> m_precalculatedConfsList;
     /// bitwise representation of al the possible configurations of the piece
     /// have a look at BuildUpBitwiseRepresentation to learn more
     std::list<uint64_t> m_bitwiseRepresentationList;
@@ -313,9 +328,8 @@ private:
     static LoadPieceFunction_t m_loadFunctionMap[e_numberOfPieces];
 
     /// @brief build up precalculated list of configurations of this piece
-    /// Saves into m_precalculatedConfsList a list of Coordinate[PIECE_MAX_SQUARES]
-    /// which represents the piece using an array of coordinates of the squares
-    /// which form the piece
+    /// Saves into m_precalculatedConfsList a list of PieceConfiguration
+    /// which represents the piece using (its squares + nk points + forbidden area)
     ///
     /// it also build up the bitwise representation of all the configurations of
     /// the piece

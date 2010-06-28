@@ -250,9 +250,9 @@ public:
         if ((coordProperty & COORD_PROPERTY_NKPOINTS) == COORD_PROPERTY_NKPOINTS)
         {
 #ifdef DEBUG
-             assert(m_nkPointsCount > 0);
+            assert(m_nkPointsCount > 0);
 #endif
-             m_coordinateProperties[a_coord.m_row][a_coord.m_col] &= ~COORD_PROPERTY_NKPOINTS;
+            m_coordinateProperties[a_coord.m_row][a_coord.m_col] &= ~COORD_PROPERTY_NKPOINTS;
             m_nkPointsCount--;
         }
     }

@@ -48,9 +48,8 @@ GameTotalAllocation::~GameTotalAllocation()
 }
 
 void GameTotalAllocation::RemovePiece(
-        const Coordinate           &a_coord,
-        const pieceConfiguration_t &a_pieceConf,
-        int32_t                     a_pieceRadius)
+        const Coordinate         &a_coord,
+        const PieceConfiguration &a_pieceConf)
 {
 #ifdef DEBUG
     assert(a_coord.m_row >= 0);
@@ -60,8 +59,11 @@ void GameTotalAllocation::RemovePiece(
     assert(a_coord.m_col < m_board.GetNColumns());
 #endif
 
-    for (pieceConfiguration_t::const_iterator it = a_pieceConf.begin();
-         it != a_pieceConf.end();
+    PieceConfigurationContainer_t::const_iterator it;
+
+    // go through the list of squares of the piecee first
+    for (it  = a_pieceConf.m_pieceSquares.begin();
+         it != a_pieceConf.m_pieceSquares.end();
          it++)
     {
         Coordinate thisCoord(a_coord.m_row + it->m_row,
@@ -78,14 +80,90 @@ void GameTotalAllocation::RemovePiece(
         m_board.BlankCoord(thisCoord);
     }
 
-    // recalculate all the nk points around the piece we just put down
-    rules::RecalculateNKAroundCoord(m_board, a_coord, a_pieceRadius + 1, m_player);
+    // go through the list of squares of the piece again, now that
+    // the piece has been removed
+    for (it  = a_pieceConf.m_pieceSquares.begin();
+         it != a_pieceConf.m_pieceSquares.end();
+         it++)
+    {
+        Coordinate thisCoord(a_coord.m_row + it->m_row,
+                             a_coord.m_col + it->m_col);
+
+        // thisCoord is now empty
+        // is it now a nucleation point for player? (it couldn't be before, as it was occupied)
+        if (rules::IsNucleationPointCompute(
+                m_board,
+        		m_player,
+        		thisCoord))
+        {
+        	m_player.SetNucleationPoint(thisCoord);
+        }
+    } // for (it  = a_pieceConf.m_pieceSquares.begin();
+
+    // now check the nk points of the piece. Are they still nk points for m_player?
+    for (it  = a_pieceConf.m_nkPoints.begin();
+         it != a_pieceConf.m_nkPoints.end();
+         it++)
+    {
+        Coordinate thisCoord(a_coord.m_row + it->m_row,
+                             a_coord.m_col + it->m_col);
+
+        if ( (thisCoord.m_row < 0) ||(thisCoord.m_col < 0)    ||
+             (thisCoord.m_row >= m_board.GetNRows())          ||
+             (thisCoord.m_col >= m_board.GetNColumns())       ||
+             (m_player.IsNucleationPoint(thisCoord) == false) )
+        {
+            // this point is out of the board (or is not an nk
+            // point). Try next one
+            continue;
+        }
+
+        if (!rules::IsNucleationPointCompute(
+                m_board,
+        		m_player,
+        		thisCoord))
+        {
+            // this nk point is not nk point any more since the piece has been
+            // removed
+        	m_player.UnsetNucleationPoint(thisCoord);
+        }
+    } // for (it  = a_pieceConf.m_nkPoints.begin();
+
+    // forbidden areas around the piece that was just removed might also be nk points
+    for (it  = a_pieceConf.m_forbiddenArea.begin();
+         it != a_pieceConf.m_forbiddenArea.end();
+         it++)
+    {
+        Coordinate thisCoord(a_coord.m_row + it->m_row,
+                             a_coord.m_col + it->m_col);
+
+        if ( (thisCoord.m_row < 0) || (thisCoord.m_col < 0) ||
+             (thisCoord.m_row >= m_board.GetNRows())        ||
+             (thisCoord.m_col >= m_board.GetNColumns())     ||
+             (m_board.IsCoordEmpty(thisCoord) == false)     )
+        {
+            // this forbidden coord is out of the board. Try next one
+            continue;
+        }
+
+#ifdef DEBUG
+        assert(m_player.IsNucleationPoint(thisCoord) == false);
+#endif
+
+        if (rules::IsNucleationPointCompute(
+                m_board,
+        		m_player,
+        		thisCoord))
+        {
+            // this forbidden coord is now a nk point since the piece was removed
+        	m_player.SetNucleationPoint(thisCoord);
+        }
+    } // for (it  = a_pieceConf.m_forbiddenArea.begin();
 }
 
 void GameTotalAllocation::PutDownPiece(
-        const Coordinate           &a_coord,
-        const pieceConfiguration_t &a_pieceConf,
-        int32_t                     a_pieceRadius)
+        const Coordinate         &a_coord,
+        const PieceConfiguration &a_pieceConf)
 {
 #ifdef DEBUG
     assert(a_coord.m_row >= 0);
@@ -95,8 +173,11 @@ void GameTotalAllocation::PutDownPiece(
     assert(a_coord.m_col < m_board.GetNColumns());
 #endif
 
-    for (pieceConfiguration_t::const_iterator it = a_pieceConf.begin();
-         it != a_pieceConf.end();
+    PieceConfigurationContainer_t::const_iterator it;
+
+    // go through the list of squares of the piecee first
+    for (it  = a_pieceConf.m_pieceSquares.begin();
+         it != a_pieceConf.m_pieceSquares.end();
          it++)
     {
         Coordinate thisCoord(a_coord.m_row + it->m_row,
@@ -111,10 +192,49 @@ void GameTotalAllocation::PutDownPiece(
 #endif
 
         m_board.SetPlayerInCoord(thisCoord,	m_player);
-    }
+        m_player.UnsetNucleationPoint(thisCoord);
+    } // for (it  = a_pieceConf.m_pieceSquares.begin();
 
-    // recalculate all the nk points around the piece we just put down
-    rules::RecalculateNKAroundCoord(m_board, a_coord, a_pieceRadius + 1, m_player);
+    // now check the nk points of the piece. If they are inside the board they will be set as
+    // nucleation point. No need to compute
+    for (it  = a_pieceConf.m_nkPoints.begin();
+         it != a_pieceConf.m_nkPoints.end();
+         it++)
+    {
+        Coordinate thisCoord(a_coord.m_row + it->m_row,
+                             a_coord.m_col + it->m_col);
+
+        if ( (thisCoord.m_row >= 0)                    &&
+             (thisCoord.m_col >= 0)                    &&
+             (thisCoord.m_row < m_board.GetNRows())    &&
+             (thisCoord.m_col < m_board.GetNColumns()) &&
+             (m_board.IsCoordEmpty(thisCoord))         &&
+             (!rules::IsCoordTouchingPlayerCompute(m_board, thisCoord, m_player)))
+        {
+            // this coord is now a valid nk point (if it already was a nk point
+            // it's ok -and faster- to set it twice
+        	m_player.SetNucleationPoint(thisCoord);
+        }
+    } // for (it  = a_pieceConf.m_nkPoints.begin();
+
+    // forbidden areas around the piece can't be a valid nk point any longer
+    for (it  = a_pieceConf.m_forbiddenArea.begin();
+         it != a_pieceConf.m_forbiddenArea.end();
+         it++)
+    {
+        Coordinate thisCoord(a_coord.m_row + it->m_row,
+                             a_coord.m_col + it->m_col);
+
+        if ( (thisCoord.m_row >= 0)                    &&
+             (thisCoord.m_col >= 0)                    &&
+             (thisCoord.m_row < m_board.GetNRows())    &&
+             (thisCoord.m_col < m_board.GetNColumns()) )
+        {
+            // this coord is not a nk point any longer since it belongs
+            // to the forbidden area of the deployed piece
+            m_player.UnsetNucleationPoint(thisCoord);
+        }
+    } // for (it  = a_pieceConf.m_forbiddenArea.begin();
 }
 
 bool GameTotalAllocation::Solve(const Coordinate &a_startingCoord)
@@ -152,34 +272,32 @@ bool GameTotalAllocation::Solve(const Coordinate &a_startingCoord)
         // save current deployed piece in the lastPieces array
         lastPieces[0] = m_player.m_pieces[currentPiece].GetType();
 
-    	const std::list<pieceConfiguration_t> &coordConfList =
+    	const std::list<PieceConfiguration> &pieceConfList =
             m_player.m_pieces[currentPiece].GetPrecalculatedConfs();
-        std::list<pieceConfiguration_t>::const_iterator pieceCoordIt;
 
-        for (pieceCoordIt = coordConfList.begin();
-             pieceCoordIt != coordConfList.end();
-             pieceCoordIt++)
+        std::list<PieceConfiguration>::const_iterator pieceConfIt;
+        for (pieceConfIt  = pieceConfList.begin();
+             pieceConfIt != pieceConfList.end();
+             pieceConfIt++)
         {
             int32_t nValidCoords = rules::CalculateValidCoordsInStartingPoint(
                                               m_board,
-                                              m_player,
                                               a_startingCoord,
-                                              *pieceCoordIt,
-                                              m_player.m_pieces[currentPiece].GetRadius(),
+                                              *pieceConfIt,
                                               validCoords);
 
             for (int32_t k = 0 ; k < nValidCoords ; k++)
             {
-                PutDownPiece(validCoords[k], *pieceCoordIt, m_player.m_pieces[currentPiece].GetRadius());
+                PutDownPiece(validCoords[k], *pieceConfIt);
 
                 if (AllocateAllPieces(lastPieces, oldNkPoints))
                 {
                     return true;
                 }
 
-                RemovePiece(validCoords[k], *pieceCoordIt, m_player.m_pieces[currentPiece].GetRadius());
+                RemovePiece(validCoords[k], *pieceConfIt);
             }
-        } // for (pieceCoordIt = coordConfList.begin()
+        } // for (pieceConfIt = pieceConfList.begin()
 
         m_player.SetPiece(static_cast<ePieceType_t>(currentPiece));
     } // for (int32_t currentPiece = e_numberOfPieces - 1;
@@ -228,13 +346,13 @@ bool GameTotalAllocation::AllocateAllPieces(
         a_lastPieces[e_numberOfPieces - m_player.NumberOfPiecesAvailable()] =
             m_player.m_pieces[currentPiece].GetType();
 
-        const std::list<pieceConfiguration_t> &coordConfList =
+    	const std::list<PieceConfiguration> &pieceConfList =
             m_player.m_pieces[currentPiece].GetPrecalculatedConfs();
 
-        std::list<pieceConfiguration_t>::const_iterator pieceCoordIt;
-        for (pieceCoordIt = coordConfList.begin();
-             pieceCoordIt != coordConfList.end();
-             pieceCoordIt++)
+        std::list<PieceConfiguration>::const_iterator pieceConfIt;
+        for (pieceConfIt = pieceConfList.begin();
+             pieceConfIt != pieceConfList.end();
+             pieceConfIt++)
         {
             STLCoordinateSet_t::iterator nkIterator = nkPointSet.begin();
             while(nkIterator != nkPointSet.end())
@@ -277,8 +395,7 @@ bool GameTotalAllocation::AllocateAllPieces(
                                                     m_board,
                                                     m_player,
                                                     *nkIterator,
-                                                    *pieceCoordIt,
-                                                    m_player.m_pieces[currentPiece].GetRadius(),
+                                                    *pieceConfIt,
                                                     validCoords);
 
                 for (int32_t k = 0; k < nValidCoords; k++)
@@ -289,14 +406,14 @@ bool GameTotalAllocation::AllocateAllPieces(
                     {
                         testedCoords.insert(validCoords[k]);
 
-                        PutDownPiece(validCoords[k], *pieceCoordIt, m_player.m_pieces[currentPiece].GetRadius());
+                        PutDownPiece(validCoords[k], *pieceConfIt);
 
                         if (AllocateAllPieces(a_lastPieces, a_oldNkPoints))
                         {
                             return true;
                         }
 
-                        RemovePiece(validCoords[k], *pieceCoordIt, m_player.m_pieces[currentPiece].GetRadius());
+                        RemovePiece(validCoords[k], *pieceConfIt);
                     }
                 } // for (int32_t k = 0; k < nValidCoords; k++)
 
@@ -304,7 +421,7 @@ bool GameTotalAllocation::AllocateAllPieces(
             } // while(nkIterator != nkPointSet.end())
 
             testedCoords.clear();
-        } // for (pieceCoordIt = coordConfList.begin()
+        } // for (pieceConfIt = pieceConfList.begin()
 
         m_player.SetPiece(static_cast<ePieceType_t>(currentPiece));
 
