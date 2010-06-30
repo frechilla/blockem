@@ -46,48 +46,54 @@ const int32_t COORD_UNINITIALISED = -2147483647; // -2147483648
 class Coordinate
 {
 public:
-	Coordinate():
-	    m_row(COORD_UNINITIALISED),
-	    m_col(COORD_UNINITIALISED)
-	{};
-	Coordinate(int32_t a_row, int32_t a_column):
-	    m_row(a_row),
-	    m_col(a_column)
-	{};
-	virtual ~Coordinate()
-	{}
+    Coordinate():
+        m_row(COORD_UNINITIALISED),
+        m_col(COORD_UNINITIALISED)
+    {};
+    Coordinate(int32_t a_row, int32_t a_column):
+        m_row(a_row),
+        m_col(a_column)
+    {};
+    virtual ~Coordinate()
+    {}
 
-	/// @brief sets the value of the coordinate
-	void Set(int32_t a_row, int32_t a_column)
-	{
-	    m_row = a_row;
-	    m_col = a_column;
-	};
+    /// @brief sets the value of the coordinate
+    void Set(int32_t a_row, int32_t a_column)
+    {
+        m_row = a_row;
+        m_col = a_column;
+    };
 
-	///@brief struct to be used as a comparator.
-	/// Implements an operator() which returns true if its first argument is less than its second argument,
-	/// and false otherwise
-	/// It can be used with std::set like this:
-	/// std::set<Coordinate, Coordinate::comparator> thisSet;
-	struct comparator
-	{
-		///@brief returns true if its first argument is less than its second argument, and false otherwise
-		bool operator()(const Coordinate& coord1, const Coordinate& coord2) const
-		{
-			if ( (coord1.m_row < coord2.m_row) ||
-				 ( (coord1.m_row == coord2.m_row) && (coord1.m_col < coord2.m_col) ) )
-			{
-				return true;
-			}
+    ///@brief struct to be used as a comparator.
+    /// Implements an operator() which returns true if its first argument is less than its second argument,
+    /// and false otherwise
+    /// It can be used with std::set like this:
+    /// std::set<Coordinate, Coordinate::comparator> thisSet;
+    struct comparator
+    {
+        ///@brief returns true if its first argument is less than its second argument, and false otherwise
+        bool operator()(const Coordinate& coord1, const Coordinate& coord2) const
+        {
+            if ( (coord1.m_row < coord2.m_row) ||
+                 ( (coord1.m_row == coord2.m_row) && (coord1.m_col < coord2.m_col) ) )
+            {
+                return true;
+            }
 
-			return false;
-		}
-	};
+            return false;
+        }
+    };
 
-	/// row of this coordinate
-	int32_t m_row;
-	/// column of this coordinate
-	int32_t m_col;
+    bool operator==(const Coordinate &a_src) const
+    {
+        return ((this->m_row == a_src.m_row) &&
+                (this->m_col == a_src.m_col) );
+    }
+
+    /// row of this coordinate
+    int32_t m_row;
+    /// column of this coordinate
+    int32_t m_col;
 };
 
 /// @brief a magical array of coordinates to be used with STL

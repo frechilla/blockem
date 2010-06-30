@@ -42,8 +42,14 @@ public:
     Game1v1Test();
     virtual ~Game1v1Test();
 
-    // tests the pieces are configured as they are supposed to
-    void TestPieces();
+    /// tests if the (faster) way Game1v1 puts down and removes pieces
+    /// has the same results as the basic methid that consists on setting
+    /// a piece on the board coordinate by coordinate and then cumputing
+    /// every coordinate of the board looking for nk points. Both boards
+    /// (the game1v1 one and the special for test) have to have the same
+    /// nk points in the same places
+    void TestGame1v1PutDownAndRemovePiece();
+
     // test the bitwise representation against he legacy well tested way
     void TestBitwise();
 
@@ -93,27 +99,6 @@ private:
             Game1v1::e_Game1v1Player1);
     }
 
-    void TestPiece_1BabyPiece();
-    void TestPiece_2TwoPiece();
-    void TestPiece_3LongPiece();
-    void TestPiece_3Triangle();
-    void TestPiece_4LongPiece();
-    void TestPiece_4LittleS();
-    void TestPiece_4LittleT();
-    void TestPiece_4littleL();
-    void TestPiece_4FullSquare();
-    void TestPiece_5BigS();
-    void TestPiece_5SafPiece();
-    void TestPiece_5WPiece();
-    void TestPiece_5CuntPiece();
-    void TestPiece_5BigPenis();
-    void TestPiece_5Cross();
-    void TestPiece_5HalfSquare();
-    void TestPiece_5BigL();
-    void TestPiece_5MrT();
-    void TestPiece_5SquareAppen();
-    void TestPiece_5BoringPiece();
-    void TestPiece_5TheUltimate();
 };
 
 #endif /* GAME1V1TEST_H_ */

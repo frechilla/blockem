@@ -29,6 +29,7 @@
 
 #include <iostream>
 #include "game1v1_test.h"
+#include "piece_test.h"
 #include "game_total_allocation.h"
 
 /// @brief a simple test with a well-known configuration
@@ -42,12 +43,21 @@ int main(int argc, char** argv)
               << std::endl;
 #endif
 
+    // Piece test
+    std::cout << "Piece test started..." << std::endl;
+    PieceTest pieceTest;
+    pieceTest.DoTest();
+    std::cout << "  [Passed]" << std::endl << std::endl;
+
+
     // Game1v1 test
     std::cout << "Game1v1 test started... ";
     std::cout.flush();
+    std::cout << std::endl;
 
     Game1v1Test the1v1Test;
-    the1v1Test.TestPieces();
+    the1v1Test.TestGame1v1PutDownAndRemovePiece();
+    //the1v1Test.TestPieces();
     the1v1Test.TestBitwise();
 
     std::cout << "  [Passed]" << std::endl << std::endl;
