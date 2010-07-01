@@ -27,10 +27,7 @@
 ///
 // ============================================================================
 
-#ifdef DEBUG_PRINT
 #include<iostream>
-#endif
-
 #include "piece_test.h"
 #include "rules.h"
 
@@ -49,9 +46,13 @@ PieceTest::~PieceTest()
 
 void PieceTest::PutDownPiece(const Piece &a_piece)
 {
+    PutDownPiece(a_piece.GetCurrentConfiguration());
+}
+
+void PieceTest::PutDownPiece(const PieceConfiguration &a_pieceConf)
+{
     // piece will always be deployed in 7,7 for the test
     Coordinate a_coord(7, 7);
-    const PieceConfiguration &a_pieceConf = a_piece.GetCurrentConfiguration();
 
     PieceConfigurationContainer_t::const_iterator it;
     for (it  = a_pieceConf.m_pieceSquares.begin();
@@ -95,9 +96,13 @@ void PieceTest::PutDownPiece(const Piece &a_piece)
 
 void PieceTest::RemovePiece(const Piece &a_piece)
 {
+    RemovePiece(a_piece.GetCurrentConfiguration());
+}
+
+void PieceTest::RemovePiece(const PieceConfiguration &a_pieceConf)
+{
     // piece will always be deployed in 7,7 for the test
     Coordinate a_coord(7, 7);
-    const PieceConfiguration &a_pieceConf = a_piece.GetCurrentConfiguration();
 
     PieceConfigurationContainer_t::const_iterator it;
     for (it  = a_pieceConf.m_pieceSquares.begin();
@@ -142,10 +147,140 @@ void PieceTest::RemovePiece(const Piece &a_piece)
 
 void PieceTest::DoTest()
 {
-#ifdef DEBUG_PRINT
-    std::cout << "PieceTest Started..." << std::endl;
-    std::cout << __FUNCTION__ << std::endl;
-#endif
+    std::cout << __FUNCTION__ << " Started" << std::endl << std::endl;
+
+    // test expected shape of the pieces
+    std::cout << __FUNCTION__ << ": TestPiece_1BabyPiece";
+    std::cout.flush();
+
+    TestPiece_1BabyPiece();
+
+    std::cout << " [ OK ]" << std::endl;
+    std::cout << __FUNCTION__ << ": TestPiece_2TwoPiece";
+    std::cout.flush();
+
+    TestPiece_2TwoPiece();
+
+    std::cout << " [ OK ]" << std::endl;
+    std::cout << __FUNCTION__ << ": TestPiece_3LongPiece";
+    std::cout.flush();
+
+    TestPiece_3LongPiece();
+
+    std::cout << " [ OK ]" << std::endl;
+    std::cout << __FUNCTION__ << ": TestPiece_3Triangle";
+    std::cout.flush();
+
+    TestPiece_3Triangle();
+
+    std::cout << " [ OK ]" << std::endl;
+    std::cout << __FUNCTION__ << ": TestPiece_4LongPiece";
+    std::cout.flush();
+
+    TestPiece_4LongPiece();
+
+    std::cout << " [ OK ]" << std::endl;
+    std::cout << __FUNCTION__ << ": TestPiece_4LittleS";
+    std::cout.flush();
+
+    TestPiece_4LittleS();
+
+    std::cout << " [ OK ]" << std::endl;
+    std::cout << __FUNCTION__ << ": TestPiece_4LittleT";
+    std::cout.flush();
+
+    TestPiece_4LittleT();
+
+    std::cout << " [ OK ]" << std::endl;
+    std::cout << __FUNCTION__ << ": TestPiece_4littleL";
+    std::cout.flush();
+
+    TestPiece_4littleL();
+
+    std::cout << " [ OK ]" << std::endl;
+    std::cout << __FUNCTION__ << ": TestPiece_4FullSquare";
+    std::cout.flush();
+
+    TestPiece_4FullSquare();
+
+    std::cout << " [ OK ]" << std::endl;
+    std::cout << __FUNCTION__ << ": TestPiece_5BigS";
+    std::cout.flush();
+
+    TestPiece_5BigS();
+
+    std::cout << " [ OK ]" << std::endl;
+    std::cout << __FUNCTION__ << ": TestPiece_5SafPiece";
+    std::cout.flush();
+
+    TestPiece_5SafPiece();
+
+    std::cout << " [ OK ]" << std::endl;
+    std::cout << __FUNCTION__ << ": TestPiece_5WPiece";
+    std::cout.flush();
+
+    TestPiece_5WPiece();
+
+    std::cout << " [ OK ]" << std::endl;
+    std::cout << __FUNCTION__ << ": TestPiece_5CuntPiece";
+    std::cout.flush();
+
+    TestPiece_5CuntPiece();
+
+    std::cout << " [ OK ]" << std::endl;
+    std::cout << __FUNCTION__ << ": TestPiece_5BigPenis";
+    std::cout.flush();
+
+    TestPiece_5BigPenis();
+
+    std::cout << " [ OK ]" << std::endl;
+    std::cout << __FUNCTION__ << ": TestPiece_5Cross";
+    std::cout.flush();
+
+    TestPiece_5Cross();
+
+    std::cout << " [ OK ]" << std::endl;
+    std::cout << __FUNCTION__ << ": TestPiece_5HalfSquare";
+    std::cout.flush();
+
+    TestPiece_5HalfSquare();
+
+    std::cout << " [ OK ]" << std::endl;
+    std::cout << __FUNCTION__ << ": TestPiece_5BigL";
+    std::cout.flush();
+
+    TestPiece_5BigL();
+
+    std::cout << " [ OK ]" << std::endl;
+    std::cout << __FUNCTION__ << ": TestPiece_5MrT";
+    std::cout.flush();
+
+    TestPiece_5MrT();
+
+    std::cout << " [ OK ]" << std::endl;
+    std::cout << __FUNCTION__ << ": TestPiece_5SquareAppen";
+    std::cout.flush();
+
+    TestPiece_5SquareAppen();
+
+    std::cout << " [ OK ]" << std::endl;
+    std::cout << __FUNCTION__ << ": TestPiece_5BoringPiece";
+    std::cout.flush();
+
+    TestPiece_5BoringPiece();
+
+
+    std::cout << " [ OK ]" << std::endl;
+    std::cout << __FUNCTION__ << ": TestPiece_5TheUltimate";
+    std::cout.flush();
+
+    TestPiece_5TheUltimate();
+
+    std::cout << " [ OK ]" << std::endl;
+
+
+    std::cout << __FUNCTION__ << ": Testing all piece configurations...";
+    std::cout.flush();
 
     int32_t possibleConfigurationsPrecalc = 0;
     int32_t possibleConfigurations = 0;
@@ -183,93 +318,180 @@ void PieceTest::DoTest()
     // this is a magic number, but you've got to trust me it is right
     assert(possibleConfigurations == 91);
     assert(possibleConfigurationsPrecalc == 91);
+    std::cout << " [ OK ]" << std::endl;
 
-    // test expected configuration of the pieces
+    std::cout << __FUNCTION__ << ": Testing precalculated piece configurations...";
+    std::cout.flush();
 
-#ifdef DEBUG_PRINT
-    std::cout << __FUNCTION__ << ": TestPiece_1BabyPiece" << std::endl;
-#endif
-    TestPiece_1BabyPiece();
-#ifdef DEBUG_PRINT
-    std::cout << __FUNCTION__ << ": TestPiece_2TwoPiece" << std::endl;
-#endif
-    TestPiece_2TwoPiece();
-#ifdef DEBUG_PRINT
-    std::cout << __FUNCTION__ << ": TestPiece_3LongPiece" << std::endl;
-#endif
-    TestPiece_3LongPiece();
-#ifdef DEBUG_PRINT
-    std::cout << __FUNCTION__ << ": TestPiece_3Triangle" << std::endl;
-#endif
-    TestPiece_3Triangle();
-#ifdef DEBUG_PRINT
-    std::cout << __FUNCTION__ << ": TestPiece_4LongPiece" << std::endl;
-#endif
-    TestPiece_4LongPiece();
-#ifdef DEBUG_PRINT
-    std::cout << __FUNCTION__ << ": TestPiece_4LittleS" << std::endl;
-#endif
-    TestPiece_4LittleS();
-#ifdef DEBUG_PRINT
-    std::cout << __FUNCTION__ << ": TestPiece_4LittleT" << std::endl;
-#endif
-    TestPiece_4LittleT();
-#ifdef DEBUG_PRINT
-    std::cout << __FUNCTION__ << ": TestPiece_4littleL" << std::endl;
-#endif
-    TestPiece_4littleL();
-#ifdef DEBUG_PRINT
-    std::cout << __FUNCTION__ << ": TestPiece_4FullSquare" << std::endl;
-#endif
-    TestPiece_4FullSquare();
-#ifdef DEBUG_PRINT
-    std::cout << __FUNCTION__ << ": TestPiece_5BigS" << std::endl;
-#endif
-    TestPiece_5BigS();
-#ifdef DEBUG_PRINT
-    std::cout << __FUNCTION__ << ": TestPiece_5SafPiece" << std::endl;
-#endif
-    TestPiece_5SafPiece();
-#ifdef DEBUG_PRINT
-    std::cout << __FUNCTION__ << ": TestPiece_5WPiece" << std::endl;
-#endif
-    TestPiece_5WPiece();
-#ifdef DEBUG_PRINT
-    std::cout << __FUNCTION__ << ": TestPiece_5CuntPiece" << std::endl;
-#endif
-    TestPiece_5CuntPiece();
-#ifdef DEBUG_PRINT
-    std::cout << __FUNCTION__ << ": TestPiece_5BigPenis" << std::endl;
-#endif
-    TestPiece_5BigPenis();
-#ifdef DEBUG_PRINT
-    std::cout << __FUNCTION__ << ": TestPiece_5Cross" << std::endl;
-#endif
-    TestPiece_5Cross();
-#ifdef DEBUG_PRINT
-    std::cout << __FUNCTION__ << ": TestPiece_5HalfSquare" << std::endl;
-#endif
-    TestPiece_5HalfSquare();
-#ifdef DEBUG_PRINT
-    std::cout << __FUNCTION__ << ": TestPiece_5BigL" << std::endl;
-#endif
-    TestPiece_5BigL();
-#ifdef DEBUG_PRINT
-    std::cout << __FUNCTION__ << ": TestPiece_5MrT" << std::endl;
-#endif
-    TestPiece_5MrT();
-#ifdef DEBUG_PRINT
-    std::cout << __FUNCTION__ << ": TestPiece_5SquareAppen" << std::endl;
-#endif
-    TestPiece_5SquareAppen();
-#ifdef DEBUG_PRINT
-    std::cout << __FUNCTION__ << ": TestPiece_5BoringPiece" << std::endl;
-#endif
-    TestPiece_5BoringPiece();
-#ifdef DEBUG_PRINT
-    std::cout << __FUNCTION__ << ": TestPiece_5TheUltimate" << std::endl;
-#endif
-    TestPiece_5TheUltimate();
+    m_board.Reset();
+    m_player.Reset();
+    for (int32_t i = e_minimumPieceIndex; i < e_numberOfPieces ; i++)
+    {
+        const std::list<PieceConfiguration> &pieceConfList =
+            m_player.m_pieces[i].GetPrecalculatedConfs();
+
+        std::list<PieceConfiguration>::const_iterator pieceConfIt;
+        for (pieceConfIt = pieceConfList.begin();
+             pieceConfIt != pieceConfList.end();
+             pieceConfIt++)
+        {
+            // pieces are all put down in 7,7 (have a look at
+            // PutDownPiece and RemovePiece
+            Coordinate a_coord(7, 7);
+
+            PutDownPiece(*pieceConfIt);
+
+            PieceConfigurationContainer_t::const_iterator it;
+            for (it  = pieceConfIt->m_pieceSquares.begin();
+                 it != pieceConfIt->m_pieceSquares.end();
+                 it++)
+            {
+                Coordinate thisCoord(a_coord.m_row + it->m_row,
+                                     a_coord.m_col + it->m_col);
+
+                assert( (thisCoord.m_row >= 0) &&
+                        (thisCoord.m_row < m_board.GetNRows()) );
+                assert( (thisCoord.m_col >= 0) &&
+                        (thisCoord.m_col < m_board.GetNColumns()) );
+                // this configuration must fit inside the radius specified
+                assert(thisCoord.m_row <= (a_coord.m_row + m_player.m_pieces[i].GetRadius()));
+                assert(thisCoord.m_row >= (a_coord.m_row - m_player.m_pieces[i].GetRadius()));
+                assert(thisCoord.m_col <= (a_coord.m_col + m_player.m_pieces[i].GetRadius()));
+                assert(thisCoord.m_col >= (a_coord.m_col - m_player.m_pieces[i].GetRadius()));
+
+                assert(!m_board.IsCoordEmpty(thisCoord));
+            }
+
+            for (it  = pieceConfIt->m_nkPoints.begin();
+                 it != pieceConfIt->m_nkPoints.end();
+                 it++)
+            {
+                Coordinate thisCoord(a_coord.m_row + it->m_row,
+                                     a_coord.m_col + it->m_col);
+
+                if ( (thisCoord.m_row >= 0) &&
+                     (thisCoord.m_row < m_board.GetNRows()) &&
+                     (thisCoord.m_col >= 0) &&
+                     (thisCoord.m_col < m_board.GetNColumns()) )
+                {
+                    assert(m_player.IsNucleationPoint(thisCoord));
+                }
+            }
+
+            for (it  = pieceConfIt->m_forbiddenArea.begin();
+                 it != pieceConfIt->m_forbiddenArea.end();
+                 it++)
+            {
+                Coordinate thisCoord(a_coord.m_row + it->m_row,
+                                     a_coord.m_col + it->m_col);
+
+                if ( (thisCoord.m_row >= 0) &&
+                     (thisCoord.m_row < m_board.GetNRows()) &&
+                     (thisCoord.m_col >= 0) &&
+                     (thisCoord.m_col < m_board.GetNColumns()) )
+                {
+                    assert(rules::IsCoordTouchingPlayerCompute(m_board, thisCoord, m_player));
+                }
+            }
+
+            RemovePiece(*pieceConfIt);
+
+            for (it  = pieceConfIt->m_pieceSquares.begin();
+                 it != pieceConfIt->m_pieceSquares.end();
+                 it++)
+            {
+                Coordinate thisCoord(a_coord.m_row + it->m_row,
+                                     a_coord.m_col + it->m_col);
+
+                assert( (thisCoord.m_row >= 0) &&
+                        (thisCoord.m_row < m_board.GetNRows()) );
+                assert( (thisCoord.m_col >= 0) &&
+                        (thisCoord.m_col < m_board.GetNColumns()) );
+
+                assert(m_board.IsCoordEmpty(thisCoord));
+            }
+
+            for (it  = pieceConfIt->m_nkPoints.begin();
+                 it != pieceConfIt->m_nkPoints.end();
+                 it++)
+            {
+                Coordinate thisCoord(a_coord.m_row + it->m_row,
+                                     a_coord.m_col + it->m_col);
+
+                if ( (thisCoord.m_row >= 0) &&
+                     (thisCoord.m_row < m_board.GetNRows()) &&
+                     (thisCoord.m_col >= 0) &&
+                     (thisCoord.m_col < m_board.GetNColumns()) )
+                {
+                    assert(!m_player.IsNucleationPoint(thisCoord));
+                }
+            }
+
+            for (it  = pieceConfIt->m_forbiddenArea.begin();
+                 it != pieceConfIt->m_forbiddenArea.end();
+                 it++)
+            {
+                Coordinate thisCoord(a_coord.m_row + it->m_row,
+                                     a_coord.m_col + it->m_col);
+
+                if ( (thisCoord.m_row >= 0) &&
+                     (thisCoord.m_row < m_board.GetNRows()) &&
+                     (thisCoord.m_col >= 0) &&
+                     (thisCoord.m_col < m_board.GetNColumns()) )
+                {
+                    assert(!rules::IsCoordTouchingPlayerCompute(m_board, thisCoord, m_player));
+                }
+            }
+
+        } // for (pieceConfIt = pieceConfList.begin();
+    } // for (int32_t i = e_minimumPieceIndex; i < e_numberOfPieces ; i++)
+
+    std::cout << " [ OK ]" << std::endl;
+
+    std::cout << __FUNCTION__ << ": Testing rotation and mirroring of pieces...";
+    std::cout.flush();
+
+    m_player.Reset();
+    for (int32_t i = e_minimumPieceIndex; i < e_numberOfPieces ; i++)
+    {
+        Piece tmpPiece(e_noPiece);
+        tmpPiece = m_player.m_pieces[i];
+        if (m_player.m_pieces[i].CanMirror())
+        {
+            tmpPiece.MirrorXAxis();
+            tmpPiece.MirrorXAxis();
+            m_player.m_pieces[i].MirrorYAxis();
+            m_player.m_pieces[i].MirrorYAxis();
+        }
+
+        assert(tmpPiece.GetCurrentConfiguration().m_pieceSquares ==
+            m_player.m_pieces[i].GetCurrentConfiguration().m_pieceSquares);
+
+        assert(tmpPiece.GetCurrentConfiguration().m_nkPoints ==
+            m_player.m_pieces[i].GetCurrentConfiguration().m_nkPoints);
+
+        assert(tmpPiece.GetCurrentConfiguration().m_forbiddenArea ==
+            m_player.m_pieces[i].GetCurrentConfiguration().m_forbiddenArea);
+
+        tmpPiece = m_player.m_pieces[i];
+        for(int8_t nRots = 0; nRots < m_player.m_pieces[i].GetNRotations(); nRots++)
+        {
+            tmpPiece.RotateLeft();
+            m_player.m_pieces[i].RotateRight();
+        }
+
+        assert(tmpPiece.GetCurrentConfiguration().m_pieceSquares ==
+            m_player.m_pieces[i].GetCurrentConfiguration().m_pieceSquares);
+
+        assert(tmpPiece.GetCurrentConfiguration().m_nkPoints ==
+            m_player.m_pieces[i].GetCurrentConfiguration().m_nkPoints);
+
+        assert(tmpPiece.GetCurrentConfiguration().m_forbiddenArea ==
+            m_player.m_pieces[i].GetCurrentConfiguration().m_forbiddenArea);
+
+    } // for (int32_t i = e_minimumPieceIndex; i < e_numberOfPieces ; i++)
+
+    std::cout << " [ OK ]" << std::endl;
 }
 
 void PieceTest::TestPiece_1BabyPiece()

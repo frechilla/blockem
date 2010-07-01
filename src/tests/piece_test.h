@@ -40,16 +40,18 @@ class PieceTest
 public:
     PieceTest();
     virtual ~PieceTest();
-    
+
     void DoTest();
 
 private:
     Board  m_board;
     Player m_player;
-    
+
     void PutDownPiece(const Piece &a_piece);
+    void PutDownPiece(const PieceConfiguration &a_pieceConf);
     void RemovePiece(const Piece &a_piece);
-    
+    void RemovePiece(const PieceConfiguration &a_pieceConf);
+
     void TestPiece_1BabyPiece();
     void TestPiece_2TwoPiece();
     void TestPiece_3LongPiece();
