@@ -30,6 +30,7 @@
 #include <iostream>
 #include "game1v1_test.h"
 #include "piece_test.h"
+#include "player_test.h"
 #include "game_total_allocation.h"
 
 /// @brief a simple test with a well-known configuration
@@ -47,6 +48,12 @@ int main(int argc, char** argv)
     std::cout << "Piece test started..." << std::endl;
     PieceTest pieceTest;
     pieceTest.DoTest();
+    std::cout << "  [Passed]" << std::endl << std::endl;
+
+    // Player test
+    std::cout << "Player test started..." << std::endl;
+    PlayerTest playerTest;
+    playerTest.DoTest();
     std::cout << "  [Passed]" << std::endl << std::endl;
 
 
@@ -78,29 +85,6 @@ int main(int argc, char** argv)
     assert(b3.IsCoordEmpty(Coordinate(0, 0)) != b1.IsCoordEmpty(Coordinate(0, 0)));
 
     std::cout << "  [Passed]" << std::endl << std::endl;
-
-    std::cout << "Player copy constructor and operator= test started... ";
-    std::cout.flush();
-
-    Player p1(std::string("tester1"), 'T', 5, 5);
-    Player p2(p1);
-    Player p3(std::string("tester3"), 'T', 6, 6);
-    assert(p2.IsNucleationPoint(Coordinate(0, 0)) == p1.IsNucleationPoint(Coordinate(0, 0)));
-
-    p2.SetNucleationPoint(Coordinate(0, 0));
-    assert(p2.IsNucleationPoint(Coordinate(0, 0)) != p1.IsNucleationPoint(Coordinate(0, 0)));
-
-    p1 = p2;
-    assert(p2.IsNucleationPoint(Coordinate(0, 0)) == p1.IsNucleationPoint(Coordinate(0, 0)));
-
-    p3 = p1;
-    assert(p3.IsNucleationPoint(Coordinate(0, 0)) == p1.IsNucleationPoint(Coordinate(0, 0)));
-
-    p3.UnsetNucleationPoint(Coordinate(0, 0));
-    assert(p3.IsNucleationPoint(Coordinate(0, 0)) != p1.IsNucleationPoint(Coordinate(0, 0)));
-
-    std::cout << "  [Passed]" << std::endl << std::endl;
-
 
     // run a total allocation test
     std::cout << "GameTotalAllocation test started... ";

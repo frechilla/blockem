@@ -27,7 +27,8 @@
 ///
 // ============================================================================
 
-#include<iostream>
+#include <iostream>
+#include <set>
 #include "piece_test.h"
 #include "rules.h"
 
@@ -147,7 +148,7 @@ void PieceTest::RemovePiece(const PieceConfiguration &a_pieceConf)
 
 void PieceTest::DoTest()
 {
-    std::cout << __FUNCTION__ << " Started" << std::endl << std::endl;
+    //std::cout << __FUNCTION__ << " Started" << std::endl << std::endl;
 
     // test expected shape of the pieces
     std::cout << __FUNCTION__ << ": TestPiece_1BabyPiece";
@@ -327,6 +328,11 @@ void PieceTest::DoTest()
     m_player.Reset();
     for (int32_t i = e_minimumPieceIndex; i < e_numberOfPieces ; i++)
     {
+        // this set will ensure coordinates used to describe pieces are
+        // not repeted
+        STLCoordinateSet_t testSet;
+        STLCoordinateSet_t::iterator testSetIterator;
+
         const std::list<PieceConfiguration> &pieceConfList =
             m_player.m_pieces[i].GetPrecalculatedConfs();
 
@@ -335,6 +341,8 @@ void PieceTest::DoTest()
              pieceConfIt != pieceConfList.end();
              pieceConfIt++)
         {
+            testSet.clear();
+
             // pieces are all put down in 7,7 (have a look at
             // PutDownPiece and RemovePiece
             Coordinate a_coord(7, 7);
@@ -346,6 +354,11 @@ void PieceTest::DoTest()
                  it != pieceConfIt->m_pieceSquares.end();
                  it++)
             {
+                // ensure this coordinate is not used more than once
+                testSetIterator = testSet.find(*it);
+                assert(testSetIterator == testSet.end());
+                testSet.insert(*it);
+
                 Coordinate thisCoord(a_coord.m_row + it->m_row,
                                      a_coord.m_col + it->m_col);
 
@@ -353,6 +366,7 @@ void PieceTest::DoTest()
                         (thisCoord.m_row < m_board.GetNRows()) );
                 assert( (thisCoord.m_col >= 0) &&
                         (thisCoord.m_col < m_board.GetNColumns()) );
+
                 // this configuration must fit inside the radius specified
                 assert(thisCoord.m_row <= (a_coord.m_row + m_player.m_pieces[i].GetRadius()));
                 assert(thisCoord.m_row >= (a_coord.m_row - m_player.m_pieces[i].GetRadius()));
@@ -366,6 +380,11 @@ void PieceTest::DoTest()
                  it != pieceConfIt->m_nkPoints.end();
                  it++)
             {
+                // ensure this coordinate is not used more than once
+                testSetIterator = testSet.find(*it);
+                assert(testSetIterator == testSet.end());
+                testSet.insert(*it);
+
                 Coordinate thisCoord(a_coord.m_row + it->m_row,
                                      a_coord.m_col + it->m_col);
 
@@ -382,6 +401,11 @@ void PieceTest::DoTest()
                  it != pieceConfIt->m_forbiddenArea.end();
                  it++)
             {
+                // ensure this coordinate is not used more than once
+                testSetIterator = testSet.find(*it);
+                assert(testSetIterator == testSet.end());
+                testSet.insert(*it);
+
                 Coordinate thisCoord(a_coord.m_row + it->m_row,
                                      a_coord.m_col + it->m_col);
 
