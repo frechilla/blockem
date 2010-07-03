@@ -886,7 +886,7 @@ void Piece::LoadPiece_5BigPenis(Piece &thisPiece)
     forbiddenArea[8] = Coordinate( 1,  1);
     forbiddenArea[9] = Coordinate( 2, -1);
     forbiddenArea[10]= Coordinate( 2,  1);
-    forbiddenArea[11]= Coordinate(-3,  0);
+    forbiddenArea[11]= Coordinate( 3,  0);
 
     thisPiece.SetPiece(coords, nkPoints, forbiddenArea, false, 2, 2);
 }
