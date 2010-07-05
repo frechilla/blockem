@@ -34,8 +34,104 @@
 #include <set> // for the STL based coordinate set
 #include "coordinate.h"
 
-/// @brief A coordinate set based on the STL containers
+/// @brief A coordinate set based on STL containers
 typedef std::set<Coordinate, Coordinate::comparator> STLCoordinateSet_t;
+#if 0
+/// @brief class which adds the methid isPresent so STLSets and
+///        customised sets are interchangeable
+class STLCoordinateSet_t :
+    public std::set<Coordinate, Coordinate::comparator>
+{
+public:
+    STLCoordinateSet_t() :
+        std::set<Coordinate, Coordinate::comparator>()
+    {};
+
+    ~STLCoordinateSet_t()
+    {};
+
+    inline bool isPresent(const Coordinate& a_coord) const
+    {
+        std::set<Coordinate, Coordinate::comparator>::const_iterator it;
+        it = std::set<Coordinate, Coordinate::comparator>::find(a_coord);
+        return (it != std::set<Coordinate, Coordinate::comparator>::end());
+    }
+};
+#endif
+
+/// @brief set of coordinates for a 16x16 board (maximum)
+class CoordinateSet16x16
+{
+public:
+    CoordinateSet16x16()
+    {
+        clear();
+    };
+    ~CoordinateSet16x16()
+    {
+    };
+
+    /// returns true if the coordinate exists in the CoordinateSet
+    inline bool isPresent(const Coordinate &a_coord) const
+    {
+#ifdef DEBUG
+        assert( (a_coord.m_row >= 0) && (a_coord.m_row < 16));
+        assert( (a_coord.m_col >= 0) && (a_coord.m_col < 16));
+#endif
+        uint16_t flag = 0x0001 << a_coord.m_col;
+        return ( (flag & m_theSet[a_coord.m_row]) == flag );
+    }
+
+    /// insert items into a set
+    inline void insert(const Coordinate &a_coord)
+    {
+#ifdef DEBUG
+        assert( (a_coord.m_row >= 0) && (a_coord.m_row < 16));
+        assert( (a_coord.m_col >= 0) && (a_coord.m_col < 16));
+#endif
+        uint16_t flag = 0x0001 << a_coord.m_col;
+        if ( (flag & m_theSet[a_coord.m_row]) != flag)
+        {
+            m_theSet[a_coord.m_row] |= flag;
+            m_nElems++;
+        }
+    }
+
+    /// removes all elements from the set
+    void clear()
+    {
+        for (int32_t i = 0; i < 16; i++)
+        {
+            m_theSet[i] = 0x0000;
+        }
+
+        m_nElems = 0;
+    }
+
+    /// returns the number of items in the set
+    std::size_t size()
+    {
+        return m_nElems;
+    }
+
+    /// true if the set has no elements
+    bool empty()
+    {
+        return (m_nElems == 0);
+    }
+
+private:
+    /// this array contains if an element is in the set or not
+    uint16_t m_theSet[16];
+
+    /// number of elements in the set
+    std::size_t m_nElems;
+};
+
+
+// this coordinate set has been commented out because the one above is a bit faster
+// (around 1-2%)
+#if 0
 
 /// constant to represent present coordinates in the CoordinateSet
 static const int8_t COORDINATESET_PRESENT = 1;
@@ -109,10 +205,12 @@ public:
 
 private:
     int8_t m_theSet[ROWS][COLUMNS];
-
-    int32_t m_nElems;
+    std::size_t m_nElems;
 };
+#endif // ifdef 0
 
+// this set is an idea which hasn't been tested yet
+#if 0
 /// @brief set of 32 sets of coordinates
 /// This class represents a set of sets of coordinates. It has to be instantiated with the number of ROWS and COLUMNS
 /// it will create an array[ROWS][COLUMNS], where each bit of each position in the array represent whether a coordinate
@@ -217,5 +315,6 @@ private:
 
     int32_t m_nElems[32]; // one per set
 };
+#endif
 
 #endif /* COORDINATESET_H_ */

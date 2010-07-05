@@ -70,9 +70,26 @@ public:
 
     } eGame1v1Player_t;
 
+    /// @brief the customised set that is used in Game1v1. It is a typedef so it can
+    ///        be swapped easily if a new faster method is found
     /// This coordinate set needs to know the size of the boards,
     /// since it is a static data structure
-    typedef CoordinateSet<BOARD_1VS1_ROWS, BOARD_1VS1_COLUMNS> CoordSetGame1v1_t;
+    /// It is true this set is much less customizable, but it performs much better.
+    /// this is an example in time of what is the difference between an STL set
+    /// and a custom CoordinateSet. This is the result of running:
+    ///     time ./src/blockem --mode=2 -d 3 ./src/tests/examples/games/game.txt.4b.old -h 0
+    /// STL:
+    ///   real  0m5.794s
+    ///   user  0m5.744s
+    ///   sys   0m0.016s
+    ///
+    /// Custom:
+    ///   real  0m3.593s
+    ///   user  0m3.544s
+    ///   sys   0m0.016s
+    typedef CoordinateSet16x16 Game1v1CoordinateSet_t; // 1-2% faster than the one below
+    //typedef CoordinateSet<BOARD_1VS1_ROWS, BOARD_1VS1_COLUMNS> Game1v1CoordinateSet_t; // 1-2% faster than the one below
+    //typedef STLCoordinateSet_t Game1v1CoordinateSet_t;
 
     /// function pointer that will be called each time there's a progress update
     /// float will be a value between 0.0 and 1.0
@@ -258,23 +275,88 @@ protected:
     /// every reference used as an output or returned value will have unexpected
     /// undescribed values.
     static int32_t MinMaxAlphaBetaCompute(
-            Board                        &a_board,
-            Player                       &a_playerMe,
-            CoordSetGame1v1_t*           a_oldNkPointsMe[e_numberOfPieces],
+            Board                       &a_board,
+            Player                      &a_playerMe,
+            Game1v1CoordinateSet_t*      a_oldNkPointsMe[e_numberOfPieces],
             ePieceType_t                 a_lastPiecesMe[e_numberOfPieces],
-            Player                       &a_playerOpponent,
-            CoordSetGame1v1_t*           a_oldNkPointsOpponent[e_numberOfPieces],
+            Player                      &a_playerOpponent,
+            Game1v1CoordinateSet_t*      a_oldNkPointsOpponent[e_numberOfPieces],
             ePieceType_t                 a_lastPiecesOpponent[e_numberOfPieces],
             Heuristic::EvalFunction_t    a_heuristicMethod,
             int32_t                      originalDepth,
             int32_t                      depth,
             int32_t                      alpha,  //  = -INFINITE (in the 1st call)
             int32_t                      beta,   //  = INFINITE  (in the 1st call)
-            const volatile sig_atomic_t  &stopProcessingFlag
+            const volatile sig_atomic_t &stopProcessingFlag
 #ifdef DEBUG_PRINT
             ,int32_t                      &times
 #endif
     );
+
+    /// Get all the nucleation points in the board. Save the results in a special kind of set
+    /// without memory allocation on the heap.
+    /// WARNING: This method won't work if there are more than 16 rows or columns in the board
+    /// @param set to save the nucleation points
+    /// @return the number of nucleation points saved into the output set
+    inline static int32_t GetAllNucleationPoints(
+            const Player       &a_player,
+            CoordinateSet16x16 &a_set)
+    {
+#ifdef DEBUG
+        assert(16 >= BOARD_1VS1_ROWS);
+        assert(16 >= BOARD_1VS1_COLUMNS);
+#endif
+        int32_t nNucleationPoints = 0;
+        Coordinate thisCoord;
+
+        for (thisCoord.m_row = 0; thisCoord.m_row < BOARD_1VS1_ROWS ; thisCoord.m_row++)
+        {
+            for (thisCoord.m_col = 0; thisCoord.m_col < BOARD_1VS1_COLUMNS ; thisCoord.m_col++)
+            {
+                if (a_player.IsNucleationPoint(thisCoord))
+                {
+                    a_set.insert(thisCoord);
+                    nNucleationPoints++;
+                }
+            }
+        }
+
+        return nNucleationPoints;
+    }
+
+#if 0
+    /// Get all the nucleation points in the board. Save the results in a special kind of set
+    /// without memory allocation on the heap
+    /// this method is slower (around 2%) than the method above
+    /// @param set to save the nucleation points
+    /// @return the number of nucleation points saved into the output set
+    template<int32_t ROWS, int32_t COLUMNS>
+    inline static int32_t GetAllNucleationPoints(
+            const Player                 &a_player,
+            CoordinateSet<ROWS, COLUMNS> &a_set)
+    {
+#ifdef DEBUG
+        assert(ROWS    == BOARD_1VS1_ROWS);
+        assert(COLUMNS == BOARD_1VS1_COLUMNS);
+#endif
+        int32_t nNucleationPoints = 0;
+        Coordinate thisCoord;
+
+        for (thisCoord.m_row = 0; thisCoord.m_row < m_nRowsInBoard ; thisCoord.m_row++)
+        {
+            for (thisCoord.m_col = 0; thisCoord.m_col < m_nColumnsInBoard ; thisCoord.m_col++)
+            {
+                if (a_player.IsNucleationPoint(thisCoord))
+                {
+                    a_set.insert(thisCoord);
+                    nNucleationPoints++;
+                }
+            }
+        }
+
+        return nNucleationPoints;
+    }
+#endif
 };
 
 #endif /* GAME1V1_H_ */

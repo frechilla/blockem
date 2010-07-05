@@ -673,18 +673,29 @@ void Game1v1Test::TestBitwise()
 
 void Game1v1Test::TestNKSpiralAlgorithm(eGame1v1Player_t who)
 {
-// this ifdef is needed to avoid warnings about things not being used because
-// they are used inside asserts (which do nothing if NDEBUG is defined)
 #ifndef NDEBUG
-    // variables to test Get[First|Next]NucleationPointSpiral
+    // this ifndef prevents a warning when compiling in release mode
     Player::SpiralIterator iterator;
+#endif
     Coordinate tmpCoord;
+
+    Game1v1::Game1v1CoordinateSet_t coordSetCustom;
+    Game1v1::GetAllNucleationPoints(GetPlayer(who), coordSetCustom);
+    assert(static_cast<int32_t>(coordSetCustom.size()) == GetPlayer(who).NumberOfNucleationPoints());
+
+    STLCoordinateSet_t coordSet;
+    GetPlayer(who).GetAllNucleationPoints(coordSet);
+    assert(static_cast<int32_t>(coordSet.size()) == GetPlayer(who).NumberOfNucleationPoints());
 
     if (GetPlayer(who).NumberOfNucleationPoints() > 0)
     {
         // check GetFirstNucleationPointSpiral works fine
         assert(
             GetPlayer(who).GetFirstNucleationPointSpiral(iterator, tmpCoord));
+
+        STLCoordinateSet_t::iterator setIt = coordSet.find(tmpCoord);
+        assert(setIt != coordSet.end());
+        assert(coordSetCustom.isPresent(tmpCoord));
 
         // easy to check now if CalculateNextValidCoordInNucleationPoint works as
         // CalculateValidCoordsInNucleationPoint does
@@ -695,6 +706,10 @@ void Game1v1Test::TestNKSpiralAlgorithm(eGame1v1Player_t who)
         {
             assert(
                 GetPlayer(who).GetNextNucleationPointSpiral(iterator, tmpCoord));
+
+            STLCoordinateSet_t::iterator setIt = coordSet.find(tmpCoord);
+            assert(setIt != coordSet.end());
+            assert(coordSetCustom.isPresent(tmpCoord));
 
             // easy to check now if CalculateNextValidCoordInNucleationPoint works as
             // CalculateValidCoordsInNucleationPoint does
@@ -711,7 +726,6 @@ void Game1v1Test::TestNKSpiralAlgorithm(eGame1v1Player_t who)
         assert(
             GetPlayer(who).GetFirstNucleationPointSpiral(iterator, tmpCoord) == false);
     }
-#endif // NDEBUG
 }
 
 void Game1v1Test::TestCalculateValidCoordsInNKPoint(eGame1v1Player_t who, const Coordinate &where)

@@ -243,12 +243,11 @@ void PlayerTest::TestNKPoints()
 void PlayerTest::TestNKSpiralAlgorithm(const Player &a_player)
 {
     // variables to test Get[First|Next]NucleationPointSpiral
+#ifndef NDEBUG
+    // this ifndef prevents a warning when compiling in release mode
     Player::SpiralIterator iterator;
+#endif
     Coordinate tmpCoord;
-
-    CoordinateSet<ROWS, COLUMNS> coordSetCustom;
-    a_player.GetAllNucleationPoints<ROWS, COLUMNS>(coordSetCustom);
-    assert(static_cast<int32_t>(coordSetCustom.size()) == a_player.NumberOfNucleationPoints());
 
     STLCoordinateSet_t coordSet;
     a_player.GetAllNucleationPoints(coordSet);
@@ -262,7 +261,6 @@ void PlayerTest::TestNKSpiralAlgorithm(const Player &a_player)
 
         STLCoordinateSet_t::iterator setIt = coordSet.find(tmpCoord);
         assert(setIt != coordSet.end());
-        assert(coordSetCustom.isPresent(tmpCoord));
 
         // assert any other nk point is found by the spiral algorithm
         for (int32_t i = 1; i < a_player.NumberOfNucleationPoints(); i++)
@@ -272,7 +270,6 @@ void PlayerTest::TestNKSpiralAlgorithm(const Player &a_player)
 
             setIt = coordSet.find(tmpCoord);
             assert(setIt != coordSet.end());
-            assert(coordSetCustom.isPresent(tmpCoord));
         }
 
         // assert there is no more nk points left

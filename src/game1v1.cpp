@@ -60,6 +60,17 @@ Game1v1::Game1v1(
     m_player2(std::string(PLAYER_2_NAME), CHAR_PLAYER2, BOARD_1VS1_ROWS, BOARD_1VS1_COLUMNS, a_player2StartingCoord),
     m_progressFunctor(NULL)
 {
+#ifdef DEBUG
+    assert (a_player1StartingCoord.m_row >= 0);
+    assert (a_player1StartingCoord.m_row <  BOARD_1VS1_ROWS);
+    assert (a_player2StartingCoord.m_row >= 0);
+    assert (a_player2StartingCoord.m_row <  BOARD_1VS1_ROWS);
+
+    assert (a_player1StartingCoord.m_col >= 0);
+    assert (a_player1StartingCoord.m_col <  BOARD_1VS1_COLUMNS);
+    assert (a_player2StartingCoord.m_col >= 0);
+    assert (a_player2StartingCoord.m_col <  BOARD_1VS1_COLUMNS);
+#endif
 }
 
 Game1v1::~Game1v1()
@@ -519,19 +530,20 @@ int32_t Game1v1::MinMax(
 
     // this set will be used not to place the same piece in the same place more than once
     // it will be reset every time the piece is rotated/mirrored or the piece is changed
-    CoordSetGame1v1_t testedCoords;
+    Game1v1CoordinateSet_t testedCoords;
 
     // this set will save the current nucleation points. It will be used in future calls not to
     // check configurations more than once
-    CoordSetGame1v1_t nkPointSetMe;
-    playerMe->GetAllNucleationPoints(nkPointSetMe);
+    Game1v1CoordinateSet_t nkPointSetMe;
+    Game1v1::GetAllNucleationPoints(*playerMe, nkPointSetMe);
+    //playerMe->GetAllNucleationPoints(nkPointSetMe);
 
     // declare the array of last pieces and old NK points for me and opponent
     // and clear them out
     ePieceType_t lastPiecesMe[e_numberOfPieces];
     ePieceType_t lastPiecesOpponent[e_numberOfPieces];
-    CoordSetGame1v1_t* oldNkPointsMe[e_numberOfPieces];
-    CoordSetGame1v1_t* oldNkPointsOpponent[e_numberOfPieces];
+    Game1v1CoordinateSet_t* oldNkPointsMe[e_numberOfPieces];
+    Game1v1CoordinateSet_t* oldNkPointsOpponent[e_numberOfPieces];
 
     for (int32_t i = e_minimumPieceIndex ; i < e_numberOfPieces ; i++)
     {
@@ -851,19 +863,19 @@ int32_t Game1v1::ComputeFirstPiece(
 }
 
 int32_t Game1v1::MinMaxAlphaBetaCompute(
-        Board                        &a_board,
-        Player                       &a_playerMe,
-        CoordSetGame1v1_t*           a_oldNkPointsMe[e_numberOfPieces],
+        Board                       &a_board,
+        Player                      &a_playerMe,
+        Game1v1CoordinateSet_t*      a_oldNkPointsMe[e_numberOfPieces],
         ePieceType_t                 a_lastPiecesMe[e_numberOfPieces],
-        Player                       &a_playerOpponent,
-        CoordSetGame1v1_t*           a_oldNkPointsOpponent[e_numberOfPieces],
+        Player                      &a_playerOpponent,
+        Game1v1CoordinateSet_t*      a_oldNkPointsOpponent[e_numberOfPieces],
         ePieceType_t                 a_lastPiecesOpponent[e_numberOfPieces],
         Heuristic::EvalFunction_t    a_heuristicMethod,
         int32_t                      originalDepth,
         int32_t                      depth,
         int32_t                      alpha,
         int32_t                      beta,
-        const volatile sig_atomic_t  &stopProcessingFlag
+        const volatile sig_atomic_t &stopProcessingFlag
 #ifdef DEBUG_PRINT
         ,int32_t                      &times
 #endif
@@ -885,14 +897,15 @@ int32_t Game1v1::MinMaxAlphaBetaCompute(
     }
     // this set will be used not to place the same piece in the same place more than once
     // it will be reset every time the piece is rotated/mirrored or the piece is changed
-    CoordSetGame1v1_t testedCoords;
+    Game1v1CoordinateSet_t testedCoords;
     // will contain the valid coords per nucleation point
     std::vector<Coordinate> validCoords(PIECE_MAX_SQUARES);
 
     // this set will save the current nucleation points. It will be used in future calls not to
     // check configurations more than once
-    CoordSetGame1v1_t nkPointSetMe;
-    a_playerMe.GetAllNucleationPoints(nkPointSetMe);
+    Game1v1CoordinateSet_t nkPointSetMe;
+    Game1v1::GetAllNucleationPoints(a_playerMe, nkPointSetMe);
+    //a_playerMe.GetAllNucleationPoints(nkPointSetMe);
 
     // save a pointer to this set in the place (index) reserved for it
     // (originalDepth / 2) - (depth / 2) represents this level of relative depth

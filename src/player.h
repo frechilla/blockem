@@ -269,24 +269,12 @@ public:
     /// Get all the nucleation points in the board.
     /// @param set to save the nucleation points
     /// @return the number of nucleation points saved into the output set
-    int32_t GetAllNucleationPoints(
-    		STLCoordinateSet_t &a_set) const;
-
-    /// Get all the nucleation points in the board. Save the results in a special kind of set
-    /// without memory allocation on the heap
-    /// @param set to save the nucleation points
-    /// @return the number of nucleation points saved into the output set
-    template<int32_t ROWS, int32_t COLUMNS>
-    int32_t GetAllNucleationPoints(
-            CoordinateSet<ROWS, COLUMNS> &a_set) const
+    inline int32_t GetAllNucleationPoints(
+    		STLCoordinateSet_t &a_set) const
     {
-#ifdef DEBUG
-        assert(ROWS    == m_nRowsInBoard);
-        assert(COLUMNS == m_nColumnsInBoard);
-#endif
         int32_t nNucleationPoints = 0;
-        Coordinate thisCoord;
 
+        Coordinate thisCoord(0, 0);
         for (thisCoord.m_row = 0; thisCoord.m_row < m_nRowsInBoard ; thisCoord.m_row++)
         {
             for (thisCoord.m_col = 0; thisCoord.m_col < m_nColumnsInBoard ; thisCoord.m_col++)

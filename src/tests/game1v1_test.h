@@ -76,7 +76,8 @@ private:
     ///        iot can be set to e_noPiece to prevent the assertion from being run
     void TestBoardAndPiecesBitwise(int32_t a_nUsedPieces, ePieceType_t a_pieceMissing = e_noPiece);
 
-    /// Tests if Get[First|Next]NucleationPointSpiral works properly
+    /// Tests if Get[First|Next]NucleationPointSpiral works properly and if
+    /// Game1v1::GetAllNucleationPoints also works as it is expected
     void TestNKSpiralAlgorithm(eGame1v1Player_t who);
 
     /// Tests if CalculateNextValidCoordInNucleationPoint works as well as

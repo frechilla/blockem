@@ -33,11 +33,6 @@
 
 #include <stdint.h> // for types
 
-/// uninitialised coord value
-//const int16_t COORD_MAX_VALUE     =  32767;
-//const int16_t COORD_MIN_VALUE     = -32767;
-//const int16_t COORD_UNINITIALISED = -32768;
-
 const int32_t COORD_MAX_VALUE     =  2147483646; // 2147483647
 const int32_t COORD_MIN_VALUE     = -2147483646; // -2147483647
 const int32_t COORD_UNINITIALISED = -2147483647; // -2147483648
@@ -96,25 +91,26 @@ public:
     int32_t m_col;
 };
 
+#if 0
 /// @brief a magical array of coordinates to be used with STL
-template<uint32_t NCOORDS>
+template<std::size_t NCOORDS>
 class CoordinateArray
 {
 public:
 
-    inline Coordinate& operator[] (uint32_t n)
+    inline Coordinate& operator[] (std::size_t n)
     {
         return m_coords[n];
     }
 
-    inline const Coordinate& operator[] (uint32_t n) const
+    inline const Coordinate& operator[] (std::size_t n) const
     {
         return m_coords[n];
     }
 
     inline CoordinateArray<NCOORDS>& operator=(const CoordinateArray<NCOORDS> &a_src)
     {
-        for (uint32_t i = 0; i < NCOORDS; i++)
+        for (std::size_t i = 0; i < NCOORDS; i++)
         {
             m_coords[i] = a_src.m_coords[i];
         }
@@ -125,5 +121,6 @@ public:
 private:
     Coordinate m_coords[NCOORDS];
 };
+#endif // #if 0
 
 #endif /* COORDINATE_H_ */

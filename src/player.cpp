@@ -324,27 +324,6 @@ int32_t Player::GetAllNucleationPoints(
     return nNucleationPoints;
 }
 
-int32_t Player::GetAllNucleationPoints(
-        STLCoordinateSet_t &a_set) const
-{
-    int32_t nNucleationPoints = 0;
-
-    Coordinate thisCoord(0, 0);
-    for (thisCoord.m_row = 0; thisCoord.m_row < m_nRowsInBoard ; thisCoord.m_row++)
-    {
-        for (thisCoord.m_col = 0; thisCoord.m_col < m_nColumnsInBoard ; thisCoord.m_col++)
-        {
-            if (IsNucleationPoint(thisCoord))
-            {
-                a_set.insert(thisCoord);
-                nNucleationPoints++;
-            }
-        }
-    }
-
-    return nNucleationPoints;
-}
-
 bool Player::GetFirstNucleationPointSpiral(
         SpiralIterator &iterator, Coordinate &out_coord) const
 {
