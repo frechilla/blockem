@@ -46,7 +46,14 @@
 #include "game1v1.h"
 #include "game_total_allocation.h"
 #include "gui_game1v1_config.h" // initialise singleton
+#include "heuristic.h"
 
+// list of error codes returned to the OS
+static const int COMMAND_LINE_PARSING_ERR    = 1;
+static const int TOTAL_ALLOC_BAD_OPTIONS_ERR = 3;
+static const int GAME1V1_BAD_OPTIONS_ERR     = 7;
+static const int BAD_MODE_OPTION_ERR         = 15;
+static const int GUI_EXCEPTION_ERR           = 127;
 
 // the following code is needed to load the gui into the application.
 // (See big comment in src/gui_glade.h)
@@ -79,10 +86,11 @@ extern int        _binary_gui_glade_size[];
 // http://library.gnome.org/devel/glib/unstable/glib-Commandline-option-parser.html
 // there was also the option of popt (http://directory.fsf.org/project/popt) but it would have added
 // an extra dependency
-static gint GOPTION_INT_NOT_SET = -1;
+static gint GOPTION_INT_NOT_SET = -2147483647;
 
 static gboolean g_version    = FALSE; // default is not to show --version message
 static gint g_mode           = 0;     // default is --mode=0
+static gint g_heuristic      = 0;     // default is --heuristic=0
 static gint g_rows           = GOPTION_INT_NOT_SET;
 static gint g_columns        = GOPTION_INT_NOT_SET;
 static gint g_startingRow    = GOPTION_INT_NOT_SET;
@@ -107,9 +115,9 @@ static GOptionEntry g_cmdEntries[] =
         "Prints current version of the software and exists", NULL },
     { "mode", 'm', 0, G_OPTION_ARG_INT, &g_mode,
         "Mandatory parameter which specifies the mode blockem runs. Valid options:\n"\
-        "                                  + 0 (GUI is shown. Default operation)\n"\
-        "                                  + 1 (1 player total-allocation)\n"\
-        "                                  + 2 (1vs1 Game)", "M" },
+        "                                  + 0: GUI is shown (Default operation)\n"\
+        "                                  + 1: 1 player total-allocation\n"\
+        "                                  + 2: 1vs1 Game", "M" },
     { "rows", 'r', 0, G_OPTION_ARG_INT, &g_rows,
         "1 player total allocation game's board will have N rows.\n"\
         "                              This is a MANDATORY parameter for --mode=1", "N"},
@@ -127,51 +135,79 @@ static GOptionEntry g_cmdEntries[] =
     { "depth"  , 'd', 0, G_OPTION_ARG_INT, &g_depth,
         "sets the maximum depth of search tree to N when 1vs1 Game is selected.\n"\
         "                              This is a MANDATORY parameter for --mode=2", "N"},
+    { "heuristic", 'h', 0, G_OPTION_ARG_INT, &g_heuristic,
+        "Heuristic to be used when mode is set to 1v1 game (--mode=2). Valid options:\n"\
+        "                                  + 0 \"Influence Area\" (Default)\n"\
+        "                                  + 1 \"Mr. Eastwood\"\n"\
+        "                                  + 2 \"NK weighted\"\n"\
+        "                                  + 3 \"Centre focused\"\n"\
+        "                                  + 4 \"Simple\"\n"\
+        "                                  + 5 \"Random\"", "N" },
 
     { G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_FILENAME_ARRAY, &g_blockemfilePath,
         "Paths to 1vs1game files (mode 2). Blockem will calculate next move per each one of them\n"\
         "                              and print out the result in console.\n"\
         "                              Specifying at least 1 file is MANDATORY for --mode=2", "[FILE(S)]"},
 
-//    {G_OPTION_REMAINING, 0, G_OPTION_ARG_FILENAME_ARRAY, &g_fileArray, "Blockem game file to load. The app will calculate next move and print out the result in console. GUI won't be started", "[FILE]"},
-//    { "max-size", 'm', 0, G_OPTION_ARG_INT, &max_size, "Test up to 2^M items", "M" },
-//    { "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose, "Be verbose", NULL },
-//    { "beep", 'b', 0, G_OPTION_ARG_NONE, &beep, "Beep when done", NULL },
-//    { "rand", 0, 0, G_OPTION_ARG_NONE, &rand, "Randomize the data", NULL },
     { NULL }
 };
+
+// must be deleted before the app exits
+static GOptionContext* g_cmdContext = NULL;
+
+/// @brief print the error message on the screen using a expected format and exits the app
+/// @param name of the binary (argv[0] in main)
+/// @param custom error message
+/// @param value which will be returned to the OS
+void FatalError(
+    const char* a_binName,
+    const char* a_customError,
+    int         a_errorCode)
+{
+    std::cerr << a_binName << ": Fatal error: " << a_customError << std::endl;
+    std::cerr << a_binName << ": Try '" << a_binName <<  " --help'" << std::endl;
+
+    // free command line parsing resources
+    if (g_cmdContext != NULL)
+    {
+        g_option_context_free(g_cmdContext);
+    }
+
+    // end of the app
+    exit(a_errorCode);
+}
 
 /// @brief what can I say? This is the main function!
 int main(int argc, char **argv)
 {
     GError *error = NULL;
-    GOptionContext *cmdContext;
 
-    cmdContext = g_option_context_new ("- The GNU polyominoes board game");
-    // to add i18n:
-    //   g_option_context_add_main_entries (cmdContext, g_cmdEntries, GETTEXT_PACKAGE);
-    g_option_context_add_main_entries (cmdContext, g_cmdEntries, NULL);
+    // create new command line context. This resource must be deleted before existing the app
+    g_cmdContext = g_option_context_new ("- The GNU polyominoes board game");
+
+    // TODO: add i18n
+    //   have a look to g_option_context_add_main_entries (cmdContext, g_cmdEntries, GETTEXT_PACKAGE);
+    g_option_context_add_main_entries (g_cmdContext, g_cmdEntries, NULL);
+
     // http://library.gnome.org/devel/glib/unstable/glib-Commandline-option-parser.html#g-option-context-add-group
-    g_option_context_add_group (cmdContext, gtk_get_option_group (TRUE));
-    if (!g_option_context_parse (cmdContext, &argc, &argv, &error))
+    g_option_context_add_group (g_cmdContext, gtk_get_option_group (TRUE));
+    if (!g_option_context_parse (g_cmdContext, &argc, &argv, &error))
     {
-        std::cerr << argv[0] << ": Error parsing command line: " << error->message << std::endl;
-        std::cerr << argv[0] << ": Try '" << argv[0] <<  " --help'" << std::endl;
-        return 1;
+        std::stringstream errMessage;
+        errMessage << "Error parsing command line: " << error->message;
+
+        FatalError(argv[0], errMessage.str().c_str(), COMMAND_LINE_PARSING_ERR);
     }
 
-    if (g_version)
+    if (g_version) // "version" option takes priority
     {
         std::cout << "Blockem, version " << VERSION << " (r" << SVN_REVISION << ")" << std::endl;
         std::cout << "  Compiled " << COMPILETIME << std::endl << std::endl;
         std::cout << "Copyright (C) 2009-2010 Faustino Frechilla" << std::endl;
         std::cout << "Blockem is open source software, see http://blockem.sourceforge.net/"
                   << std::endl << std::endl;
-
-        return 0;
     }
-
-    if (g_mode == 0)
+    else if (g_mode == 0)
     {
         //////////////////
         // GUI MODE
@@ -219,24 +255,23 @@ int main(int argc, char **argv)
                     reinterpret_cast<const char *>(__BIN_GUI_GLADE_START__),
                     reinterpret_cast<long int>(__BIN_GUI_GLADE_SIZE__)))
             {
-                std::cerr << "Couldn't load Gtkbuilder definitions. Exiting..." << std::endl;
-                return 1;
+                FatalError(
+                    argv[0],
+                    "Couldn't load Gtkbuilder definitions",
+                    GUI_EXCEPTION_ERR);
             }
 
 #ifdef GLIBMM_EXCEPTIONS_ENABLED
         }
         catch(const Glib::MarkupError& ex)
         {
-            std::cerr << ex.what() << std::endl;
-            return 1;
+            FatalError(argv[0], ex.what().c_str(), GUI_EXCEPTION_ERR);
         }
         catch(const Gtk::BuilderError& ex)
         {
-            std::cerr << ex.what() << std::endl;
-            return -1;
+            FatalError(argv[0], ex.what().c_str(), GUI_EXCEPTION_ERR);
         }
 #endif // GLIBMM_EXCEPTIONS_ENABLED
-
 
         MainWindow *pMainWindow = NULL;
         try
@@ -261,8 +296,7 @@ int main(int argc, char **argv)
         }
         catch (GUIException ex)
         {
-            std::cerr << ex.what() << std::endl;
-            exit(-1);
+            FatalError(argv[0], ex.what(), GUI_EXCEPTION_ERR);
         }
 
         if (pMainWindow)
@@ -291,36 +325,27 @@ int main(int argc, char **argv)
                  (g_startingRow == GOPTION_INT_NOT_SET) ||
                  (g_startingColumn == GOPTION_INT_NOT_SET) )
             {
-                std::cerr << argv[0] << ": Error in 1 player game. The following parameters are mandatory:" << std::endl;
-                std::cerr << argv[0] << ": \"--rows\", \"--columns\", \"--starting-row\" and \"--starting-column\"" << std::endl;
-                std::cerr << argv[0] << ": Try '" << argv[0] <<  " --help'" << std::endl;
-                return 3;
+                FatalError(
+                    argv[0],
+                    "\"--rows\", \"--columns\", \"--starting-row\" and \"--starting-column\" must be specified in mode '1'",
+                    TOTAL_ALLOC_BAD_OPTIONS_ERR);
             }
 
             if ( (g_rows <= 0) || (g_columns <= 0) )
             {
-                std::cerr << argv[0] << ": Error: Size (rows and columns) of the board in 1player (total allocation) "
-                          << "game must be a greater than 1" << std::endl;
-                std::cerr << argv[0] << ": Try '" << argv[0] <<  " --help'" << std::endl;
-                return 4;
+                FatalError(
+                    argv[0],
+                    "\"--rows\" and \"--columns\" must be a greater than 1",
+                    TOTAL_ALLOC_BAD_OPTIONS_ERR);
             }
 
-            if (g_startingRow >= g_rows)
+            if ( (g_startingRow >= g_rows) ||
+                 (g_startingColumn >= g_columns) )
             {
-                std::cerr << argv[0] << ": Error: App was told to start outside of the board "
-                          << "(starting row is greater or equal than number of rows)"
-                          << std::endl;
-                std::cerr << argv[0] << ": Try '" << argv[0] <<  " --help'" << std::endl;
-                return 5;
-            }
-
-            if (g_startingColumn >= g_columns)
-            {
-                std::cerr << argv[0] << ": Error: App was told to start outside of the board "
-                          << "(starting column is greater or equal than number of columns)"
-                          << std::endl;
-                std::cerr << argv[0] << ": Try '" << argv[0] <<  " --help'" << std::endl;
-                return 6;
+                FatalError(
+                    argv[0],
+                    "App was told to start outside of the board",
+                    TOTAL_ALLOC_BAD_OPTIONS_ERR);
             }
 
             GameTotalAllocation theGame(g_rows, g_columns);
@@ -348,16 +373,37 @@ int main(int argc, char **argv)
 
             if ( (g_blockemfilePath == NULL) || (g_blockemfilePath[0] == NULL) )
             {
-                std::cerr << argv[0] << ": Error: At least one file with a 1vs1Game saved must be specified";
-                std::cerr << argv[0] << ": Try '" << argv[0] <<  " --help'" << std::endl;
-                return 3;
+                FatalError(
+                    argv[0],
+                    "At least one file with a 1vs1Game saved must be specified",
+                    GAME1V1_BAD_OPTIONS_ERR);
             }
+
+            if ( (g_heuristic <  Heuristic::e_heuristicStartCount) ||
+                 (g_heuristic >= Heuristic::e_heuristicCount) )
+            {
+                std::stringstream errMessage;
+                errMessage << "Chosen heuristic type (" << g_heuristic << ") is invalid";
+
+                FatalError(
+                    argv[0],
+                    errMessage.str().c_str(),
+                    GAME1V1_BAD_OPTIONS_ERR);
+            }
+
+            // this little piece of magic uses the g_heuristic index to pick the expected evaluation
+            // function. Have a look at heuristic.h
+            Heuristic::EvalFunction_t heuristic = Heuristic::m_heuristicData[g_heuristic].m_evalFunction;
+            std::cout << "Evaluation function set to \""
+                      << Heuristic::m_heuristicData[g_heuristic].m_name
+                      << "\" (" << g_heuristic << ")" << std::endl;
 
             if (g_depth <= 0)
             {
-                std::cerr << argv[0] << "Error: Depth in 1vs1Game mode must be set to a positive value. Exiting..." << std::endl;
-                std::cerr << argv[0] << ": Try '" << argv[0] <<  " --help'" << std::endl;
-                return 4;
+                FatalError(
+                    argv[0],
+                    "Depth in 1vs1Game mode must be set to a positive value",
+                    GAME1V1_BAD_OPTIONS_ERR);
             }
             else if ( (g_depth & 0x01) == 0)
             {
@@ -396,7 +442,6 @@ int main(int argc, char **argv)
                               << g_blockemfilePath[fileIndex]
                               << ". Trying next one..." << std::endl;
                     cin.close();
-
                     continue;
                 }
                 cin.close();
@@ -413,7 +458,6 @@ int main(int argc, char **argv)
                 //std::cout << std::endl << std::endl;
                 //theGame.GetOpponent().PrintNucleationPoints(std::cout);
 
-                Heuristic::EvalFunction_t heuristic = Heuristic::CalculateInfluenceAreaWeighted;
                 Piece resultPiece(e_noPiece);
                 Coordinate resultCoord;
 
@@ -456,9 +500,13 @@ int main(int argc, char **argv)
         }
         else // (g_mode != 1 && g_mode != 2)
         {
-            std::cerr << argv[0] << ": Error Bad --mode option (" << g_mode << ")" << std::endl;
-            std::cerr << argv[0] << ": Try '" << argv[0] <<  " --help'" << std::endl;
-            return 2;
+            std::stringstream errMessage;
+            errMessage << "Bad --mode option (" << g_mode << ")";
+
+            FatalError(
+                argv[0],
+                errMessage.str().c_str(),
+                BAD_MODE_OPTION_ERR);
         }
 
         // CONSOLE mode
@@ -466,10 +514,7 @@ int main(int argc, char **argv)
     }
 
     // free command line parsing resources
-    g_option_context_free(cmdContext);
+    g_option_context_free(g_cmdContext);
 
     return 0;
 }
-
-
-
