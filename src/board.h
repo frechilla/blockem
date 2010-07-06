@@ -52,64 +52,22 @@ public:
     Board& operator= (const Board &a_src);
 
     /// @return true if the position specified by a_coord is empty
-    inline bool IsCoordEmpty(const Coordinate &a_coord) const
-    {
-#ifdef DEBUG
-        assert(a_coord.m_row >= 0);
-        assert(a_coord.m_col >= 0);
-        assert(a_coord.m_row < m_nRows);
-        assert(a_coord.m_col < m_nColumns);
-#endif
-        return (m_theBoard[a_coord.m_row][a_coord.m_col] == m_emptyChar);
-    }
+    bool IsCoordEmpty(const Coordinate &a_coord) const;
 
     /// @brief set the coord passed as parameter to empty in the board
-    inline void BlankCoord(const Coordinate &a_coord)
-    {
-#ifdef DEBUG
-        assert(a_coord.m_row >= 0);
-        assert(a_coord.m_col >= 0);
-        assert(a_coord.m_row < m_nRows);
-        assert(a_coord.m_col < m_nColumns);
-#endif
-        m_theBoard[a_coord.m_row][a_coord.m_col] = m_emptyChar;
-    }
+    void BlankCoord(const Coordinate &a_coord);
 
     /// @return true if the player is in a_coord
-    inline bool IsPlayerInCoord(const Coordinate &a_coord, const Player &a_player) const
-    {
-#ifdef DEBUG
-        assert(a_coord.m_row >= 0);
-        assert(a_coord.m_col >= 0);
-        assert(a_coord.m_row < m_nRows);
-        assert(a_coord.m_col < m_nColumns);
-#endif
-    	return (m_theBoard[a_coord.m_row][a_coord.m_col] == a_player.PresentationChar());
-    }
+    bool IsPlayerInCoord(const Coordinate &a_coord, const Player &a_player) const;
 
     /// @brief set the coord passed as paramater to be occupied by the player 'a_player'
-    inline void SetPlayerInCoord(const Coordinate &a_coord, const Player &a_player)
-    {
-#ifdef DEBUG
-        assert(a_coord.m_row >= 0);
-        assert(a_coord.m_col >= 0);
-        assert(a_coord.m_row < m_nRows);
-        assert(a_coord.m_col < m_nColumns);
-#endif
-    	m_theBoard[a_coord.m_row][a_coord.m_col] = a_player.PresentationChar();
-    }
+    void SetPlayerInCoord(const Coordinate &a_coord, const Player &a_player);
 
     /// Get the number of rows of the board
-    inline int32_t GetNRows() const
-    {
-    	return m_nRows;
-    }
+    int32_t GetNRows() const;
 
     /// Get the number of columns of the board
-    inline int32_t GetNColumns() const
-    {
-    	return m_nColumns;
-    }
+    int32_t GetNColumns() const;
 
     /// Print board into the out_stream
     void PrintBoard(std::ostream& a_outStream) const;
@@ -136,5 +94,8 @@ private:
     // prevent boards to be created without the proper arguments
     Board();
 };
+
+// include implementation details of inline functions
+#include "impl/board_impl.h"
 
 #endif /* BOARD_H_ */

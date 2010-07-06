@@ -53,11 +53,51 @@ public:
     {}
 
     /// @brief sets the value of the coordinate
-    void Set(int32_t a_row, int32_t a_column)
+    inline void Set(int32_t a_row, int32_t a_column)
     {
         m_row = a_row;
         m_col = a_column;
     };
+
+    inline bool Initialised() const
+    {
+        return ( (m_row != COORD_UNINITIALISED) &&
+                 (m_col != COORD_UNINITIALISED) );
+    };
+
+    inline bool operator== (const Coordinate &a_src) const
+    {
+        return ((this->m_row == a_src.m_row) &&
+                (this->m_col == a_src.m_col) );
+    }
+
+    inline bool operator!= (const Coordinate &a_src) const
+    {
+        return ((this->m_row != a_src.m_row) ||
+                (this->m_col != a_src.m_col) );
+    }
+
+    inline bool operator>= (const Coordinate &a_src) const
+    {
+        return ( (this->m_row > a_src.m_row) ||
+                 ((this->m_row == a_src.m_row) && (this->m_col >= a_src.m_col)) );
+    }
+
+    inline bool operator> (const Coordinate &a_src) const
+    {
+        return ( (this->m_row > a_src.m_row) ||
+                 ((this->m_row == a_src.m_row) && (this->m_col > a_src.m_col)) );
+    }
+
+    inline bool operator<= (const Coordinate &a_src) const
+    {
+        return (! (*this > a_src));
+    }
+
+    inline bool operator< (const Coordinate &a_src) const
+    {
+        return (! (*this >= a_src));
+    }
 
     ///@brief struct to be used as a comparator.
     /// Implements an operator() which returns true if its first argument is less than its second argument,
@@ -78,12 +118,6 @@ public:
             return false;
         }
     };
-
-    bool operator==(const Coordinate &a_src) const
-    {
-        return ((this->m_row == a_src.m_row) &&
-                (this->m_col == a_src.m_col) );
-    }
 
     /// row of this coordinate
     int32_t m_row;

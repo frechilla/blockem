@@ -40,7 +40,7 @@
 #include "coordinate.h"
 
 /// maximum number of squares a piece can have
-const uint8_t PIECE_MAX_SQUARES = 5;
+const std::size_t PIECE_MAX_SQUARES = 5;
 
 /// @brief available blockem pieces
 typedef enum
@@ -142,105 +142,44 @@ public:
     bool MirrorXAxis();
 
     /// @return the number of possible different rotations the piece has originally
-    inline int8_t GetNRotations() const
-    {
-#ifdef DEBUG
-        assert(m_initialised);
-#endif
-        return m_origRotations;
-    }
+    uint8_t GetNRotations() const;
 
     /// @return true if the piece can be mirrored
-    inline bool CanMirror() const
-    {
-#ifdef DEBUG
-        assert(m_initialised);
-#endif
-        return m_origMirror;
-    }
+    bool CanMirror() const;
 
     /// @return true if the actual configuration of the piece corresponds to the mirror of the original
-    inline bool IsMirrored() const
-    {
-#ifdef DEBUG
-        assert(m_initialised);
-#endif
-        return ( m_origMirror && (m_nMirrors & 0x01) );
-    }
+    bool IsMirrored() const;
 
     /// @return the type of piece
-    inline ePieceType_t GetType() const
-    {
-        return m_type;
-    }
+    ePieceType_t GetType() const;
 
     /// @return the amount of squares the piece is made of
-    inline int32_t GetNSquares() const
-    {
-    	return m_currentConf.m_pieceSquares.size();
-    }
+    std::size_t GetNSquares() const;
 
     /// @return "radius" of the square where the piece fits
     /// the real size of the square is: ( (squareSideSize * 2) + 1)
     /// For example for fullSquare will be 1, and for baby piece should be 0
     /// and for the bigpenis 2
-    inline uint8_t GetRadius() const
-    {
-        return m_radius;
-    }
+    uint8_t GetRadius() const;
 
     /// @return the list of precalculated configurations of the piece
-    inline const std::list<PieceConfiguration>& GetPrecalculatedConfs() const
-    {
-        return m_precalculatedConfsList;
-    }
+    const std::list<PieceConfiguration>& GetPrecalculatedConfs() const;
 
     /// @return the list of bitwise representations of the piece
     /// have a look at the documentation for BuildUpBitwiseRepresentation to learn
     /// more about this way of representing pieces
-    inline const std::list<uint64_t>& GetBitwiseList() const
-    {
-        return m_bitwiseRepresentationList;
-    }
+    const std::list<uint64_t>& GetBitwiseList() const;
 
     /// set current configuration of the piece to the configuration specified by a_newCoords
     /// The user of this function must ensure size of std::vectors in PieceConfiguration "a_newConf"
     /// is the same as the vectors of the piece
-    inline void SetCurrentConfiguration(const PieceConfiguration &a_newConf)
-    {
-#ifdef DEBUG
-        assert(a_newConf.m_pieceSquares.size()  == m_currentConf.m_pieceSquares.size());
-        assert(a_newConf.m_nkPoints.size()      == m_currentConf.m_nkPoints.size());
-        assert(a_newConf.m_forbiddenArea.size() == m_currentConf.m_forbiddenArea.size());
-#endif
-        for (std::size_t i = 0; i < m_currentConf.m_pieceSquares.size(); i++)
-        {
-            m_currentConf.m_pieceSquares[i] = a_newConf.m_pieceSquares[i];
-        }
-        for (std::size_t i = 0; i < m_currentConf.m_nkPoints.size(); i++)
-        {
-            m_currentConf.m_nkPoints[i] = a_newConf.m_nkPoints[i];
-        }
-        for (std::size_t i = 0; i < m_currentConf.m_forbiddenArea.size(); i++)
-        {
-            m_currentConf.m_forbiddenArea[i] = a_newConf.m_forbiddenArea[i];
-        }
-    }
+    void SetCurrentConfiguration(const PieceConfiguration &a_newConf);
 
-    inline const PieceConfiguration& GetCurrentConfiguration() const
-    {
-        return m_currentConf;
-    }
+    const PieceConfiguration& GetCurrentConfiguration() const;
 
     /// gives access to the current coords of the squares that make up the piece
     /// @return the coordinate saved in a_squareIndex in the current piece configuration
-    inline const Coordinate& GetCoord(int32_t a_squareIndex) const
-    {
-#ifdef DEBUG
-        assert(a_squareIndex < GetNSquares());
-#endif
-        return m_currentConf.m_pieceSquares[a_squareIndex];
-    }
+    const Coordinate& GetCoord(int32_t a_squareIndex) const;
 
 private:
     /// type of piece
@@ -252,7 +191,7 @@ private:
     /// true if PieceConfiguration piece has a different mirror image
     bool m_origMirror;
     /// number of possible different rotations
-    int8_t m_origRotations;
+    uint8_t m_origRotations;
     /// save the number of times the function Mirror has been called
     int8_t m_nMirrors;
     /// "radius" of the square where the piece fits (see comment for SetPiece)
@@ -296,7 +235,7 @@ private:
             const std::vector<Coordinate> &a_nkPoints,
             const std::vector<Coordinate> &a_forbiddenArea,
             bool                           a_mirror,
-            int8_t                         a_nRotations,
+            uint8_t                        a_nRotations,
             uint8_t                        a_radius);
 
     // static functions to load the description of each piece in the object passed as parameter
@@ -367,5 +306,8 @@ private:
     /// a maximum of 8 (4 rotations X 2 mirrors) configurations
     void BuildUpPrecalculatedRepresentations();
 };
+
+// include implementation details of inline functions
+#include "impl/piece_impl.h"
 
 #endif /* __PIECE_H__ */

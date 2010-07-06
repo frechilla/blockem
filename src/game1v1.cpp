@@ -94,12 +94,13 @@ const Player& Game1v1::GetPlayer(eGame1v1Player_t a_playerType) const
     {
         return m_player2;
     }
-#ifdef DEBUG
     default:
     {
+#ifdef DEBUG
         assert(0);
-    }
 #endif
+        return m_player1;
+    }
     } // switch (a_playerType)
 }
 
@@ -115,12 +116,13 @@ const Player& Game1v1::GetOpponent(eGame1v1Player_t a_playerType) const
     {
         return m_player1;
     }
-#ifdef DEBUG
     default:
     {
+#ifdef DEBUG
         assert(0);
-    }
 #endif
+        return m_player2;
+    }
     } // switch (a_playerType)
 }
 
@@ -136,12 +138,12 @@ Game1v1::eGame1v1Player_t Game1v1::GetPlayerType(const Player &a_player) const
     {
         rValue = Game1v1::e_Game1v1Player2;
     }
-#ifdef DEBUG
     else
     {
+#ifdef DEBUG
         assert(0);
-    }
 #endif
+    }
 
     return rValue;
 }
@@ -164,10 +166,13 @@ void Game1v1::SetPlayerColour(
         m_player2.SetColour(a_red, a_green, a_blue);
         break;
     }
-#ifdef DEBUG
     default:
+    {
+#ifdef DEBUG
+
         assert(0);
 #endif
+    }
     } // switch (a_player)
 }
 
@@ -200,10 +205,13 @@ void Game1v1::RemovePiece(
         m_player2.SetPiece(a_piece.GetType());
         break;
     }
-#ifdef DEBUG
     default:
+    {
+#ifdef DEBUG
+
         assert(0);
 #endif
+    }
     } // switch (a_player)
 }
 
@@ -236,10 +244,13 @@ void Game1v1::PutDownPiece(
         m_player2.UnsetPiece(a_piece.GetType());
         break;
     }
-#ifdef DEBUG
     default:
+    {
+#ifdef DEBUG
+
         assert(0);
 #endif
+    }
     } // switch (a_player)
 }
 
@@ -636,7 +647,7 @@ int32_t Game1v1::MinMax(
                                             *pieceConfIt,
                                             validCoords);
 
-                for (uint8_t k = 0 ; k < nValidCoords ; k++)
+                for (int32_t k = 0 ; k < nValidCoords ; k++)
                 {
                     if (!testedCoords.isPresent(validCoords[k]))
                     {
@@ -710,7 +721,7 @@ int32_t Game1v1::MinMax(
                         assert(beta > alpha);
 #endif
                     } // if (it == testedCoords.end())
-                } // for (uint8_t k = 0 ; k < nValidCoords ; k++)
+                } // for (int32_t k = 0 ; k < nValidCoords ; k++)
 
                 nkExists = playerMe->GetNextNucleationPointSpiral(nkIterator, thisNkPoint);
             } // while(nkExists)
@@ -821,7 +832,7 @@ int32_t Game1v1::ComputeFirstPiece(
                                             *pieceConfIt,
                                             validCoords);
 
-                for (uint8_t k = 0 ; k < nValidCoords ; k++)
+                for (int32_t k = 0 ; k < nValidCoords ; k++)
                 {
                     Game1v1::PutDownPiece(
                             a_board,
@@ -854,7 +865,7 @@ int32_t Game1v1::ComputeFirstPiece(
                             a_playerMe,
                             a_playerOpponent);
 
-                } // for (uint8_t k = 0 ; k < nValidCoords ; k++)
+                } // for (int32_t k = 0 ; k < nValidCoords ; k++)
             } // for (pieceConfIt = pieceConfList.begin()
         } // for (int8_t i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
     } // if (!rules::IsPieceDeployableInStartingPoint(
@@ -991,7 +1002,7 @@ int32_t Game1v1::MinMaxAlphaBetaCompute(
                                             *pieceConfIt,
                                             validCoords);
 
-                for (uint8_t k = 0 ; k < nValidCoords ; k++)
+                for (int32_t k = 0 ; k < nValidCoords ; k++)
                 {
                     if (!testedCoords.isPresent(validCoords[k]))
                     {
@@ -1060,7 +1071,7 @@ int32_t Game1v1::MinMaxAlphaBetaCompute(
                             return alpha;
                         }
                     } // if (it == testedCoords.end())
-                } // for (uint8_t k = 0 ; k < nValidCoords ; k++)
+                } // for (int32_t k = 0 ; k < nValidCoords ; k++)
 
                 nkExists = a_playerMe.GetNextNucleationPointSpiral(nkIterator, thisNkPoint);
             } // while(nkExists)

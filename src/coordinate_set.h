@@ -34,11 +34,11 @@
 #include <set> // for the STL based coordinate set
 #include "coordinate.h"
 
-/// @brief A coordinate set based on STL containers
-typedef std::set<Coordinate, Coordinate::comparator> STLCoordinateSet_t;
-#if 0
-/// @brief class which adds the methid isPresent so STLSets and
-///        customised sets are interchangeable
+// @brief A coordinate set based on STL containers
+//typedef std::set<Coordinate, Coordinate::comparator> STLCoordinateSet_t;
+
+// @brief special set which adds the method isPresent to the standard STL set
+// once this method is present customised sets and this special STL set are interchangeable
 class STLCoordinateSet_t :
     public std::set<Coordinate, Coordinate::comparator>
 {
@@ -57,7 +57,7 @@ public:
         return (it != std::set<Coordinate, Coordinate::comparator>::end());
     }
 };
-#endif
+
 
 /// @brief set of coordinates for a 16x16 board (maximum)
 class CoordinateSet16x16

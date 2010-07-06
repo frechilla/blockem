@@ -84,178 +84,57 @@ public:
     void GetColour(uint8_t &out_colourRed, uint8_t &out_colourGreen, uint8_t &out_colourBlue) const;
 
     /// Returns the character that represents the player
-    inline char PresentationChar() const
-    {
-    	return m_presentationChar;
-    }
+    char PresentationChar() const;
 
     /// Returns the name of the player
-    inline const std::string& GetName() const
-	{
-    	return m_name;
-	}
+    const std::string& GetName() const;
 
     /// modifies the name of the player
-    inline void SetName(std::string& a_newName)
-    {
-        m_name = a_newName;
-    }
+    void SetName(std::string& a_newName);
 
     /// Returns the starting coordinate of this player
-    inline const Coordinate& GetStartingCoordinate() const
-    {
-        return m_startingCoordinate;
-    }
+    const Coordinate& GetStartingCoordinate() const;
 
-    inline void SetStartingCoordinate(const Coordinate &a_startingCoordinate)
-    {
-        m_startingCoordinate = a_startingCoordinate;
-    }
+    /// @brief sets the starting coordinate of this player
+    void SetStartingCoordinate(const Coordinate &a_startingCoordinate);
 
     /// @return the number of pieces available
-    inline uint8_t NumberOfPiecesAvailable() const
-    {
-        return m_nPiecesAvailable;
-    }
+    uint8_t NumberOfPiecesAvailable() const;
 
     /// @return number of nucleation points of this player
-    inline int32_t NumberOfNucleationPoints() const
-    {
-    	return m_nkPointsCount;
-    }
+    int32_t NumberOfNucleationPoints() const;
 
     /// @return size of the influence area (in squares)
-    inline int32_t InfluenceAreaSize() const
-    {
-        return m_influencedCoordsCount;
-    }
+    int32_t InfluenceAreaSize() const;
 
     /// Set the piece as not present
-    inline void UnsetPiece(ePieceType_t a_piece)
-    {
-#ifdef DEBUG
-        assert((a_piece >= e_minimumPieceIndex) && (a_piece < e_numberOfPieces));
-        assert(m_piecesPresent[a_piece] == true);
-#endif
-        m_piecesPresent[a_piece] = false;
-        m_nPiecesAvailable--;
-    }
+    void UnsetPiece(ePieceType_t a_piece);
 
     /// Set the piece as present
-    inline void SetPiece(ePieceType_t a_piece)
-    {
-#ifdef DEBUG
-        assert((a_piece >= e_minimumPieceIndex) && (a_piece < e_numberOfPieces));
-        assert(m_piecesPresent[a_piece] == false);
-#endif
-        m_piecesPresent[a_piece] = true;
-        m_nPiecesAvailable++;
-    }
+    void SetPiece(ePieceType_t a_piece);
 
     /// returns true if the player still has the piece
-    inline bool IsPieceAvailable(ePieceType_t a_piece) const
-    {
-#ifdef DEBUG
-        assert((a_piece >= e_minimumPieceIndex) && (a_piece < e_numberOfPieces));
-#endif
-        return m_piecesPresent[a_piece];
-    }
+    bool IsPieceAvailable(ePieceType_t a_piece) const;
 
     /// returns true if a_coord is influenced by the player. Definition of "influenced"
     /// is a bit vague. Have a look at rules::RecalculateInfluenceAreaAroundPiece
     /// to know what "influence" in blokus
-    inline bool IsCoordInfluencedByPlayer(const Coordinate &a_coord) const
-    {
-#ifdef DEBUG
-        assert((a_coord.m_row >= 0) && (a_coord.m_row < m_nRowsInBoard));
-        assert((a_coord.m_col >= 0) && (a_coord.m_col < m_nColumnsInBoard));
-#endif
-        uint8_t coordProperty = m_coordinateProperties[a_coord.m_row][a_coord.m_col];
-        return static_cast<bool>(coordProperty & COORD_PROPERTY_INFLUENCE_AREA);
-    }
+    bool IsCoordInfluencedByPlayer(const Coordinate &a_coord) const;
 
     /// sets a specific coord as "influenced" by this player
-    inline void SetInfluencedCoord(const Coordinate &a_coord)
-    {
-#ifdef DEBUG
-        assert((a_coord.m_row >= 0) && (a_coord.m_row < m_nRowsInBoard));
-        assert((a_coord.m_col >= 0) && (a_coord.m_col < m_nColumnsInBoard));
-#endif
-        uint8_t coordProperty = m_coordinateProperties[a_coord.m_row][a_coord.m_col];
-        if ((coordProperty & COORD_PROPERTY_INFLUENCE_AREA) == 0)
-        {
-#ifdef DEBUG
-            assert(m_influencedCoordsCount < (m_nRowsInBoard * m_nColumnsInBoard));
-#endif
-            m_coordinateProperties[a_coord.m_row][a_coord.m_col] |= COORD_PROPERTY_INFLUENCE_AREA;
-            m_influencedCoordsCount++;
-        }
-    }
+    void SetInfluencedCoord(const Coordinate &a_coord);
 
     /// set a specific coord as not influenced by this player
-    inline void UnsetInfluencedCoord(const Coordinate &a_coord)
-    {
-#ifdef DEBUG
-        assert((a_coord.m_row >= 0) && (a_coord.m_row < m_nRowsInBoard));
-        assert((a_coord.m_col >= 0) && (a_coord.m_col < m_nColumnsInBoard));
-#endif
-        uint8_t coordProperty = m_coordinateProperties[a_coord.m_row][a_coord.m_col];
-        if ((coordProperty & COORD_PROPERTY_INFLUENCE_AREA) == COORD_PROPERTY_INFLUENCE_AREA)
-        {
-#ifdef DEBUG
-             assert(m_influencedCoordsCount > 0);
-#endif
-             m_coordinateProperties[a_coord.m_row][a_coord.m_col] &= ~COORD_PROPERTY_INFLUENCE_AREA;
-             m_influencedCoordsCount--;
-        }
-    }
+    void UnsetInfluencedCoord(const Coordinate &a_coord);
 
     /// returns true if this player has a nucleation point in the coords specified
-    inline bool IsNucleationPoint(const Coordinate &a_coord) const
-    {
-#ifdef DEBUG
-        assert((a_coord.m_row >= 0) && (a_coord.m_row < m_nRowsInBoard));
-        assert((a_coord.m_col >= 0) && (a_coord.m_col < m_nColumnsInBoard));
-#endif
-        uint8_t coordProperty = m_coordinateProperties[a_coord.m_row][a_coord.m_col];
-        return static_cast<bool>(coordProperty & COORD_PROPERTY_NKPOINTS);
-    }
+    bool IsNucleationPoint(const Coordinate &a_coord) const;
 
     /// save a nucleation point in the coords passed as parameters
-    inline void SetNucleationPoint(const Coordinate &a_coord)
-    {
-#ifdef DEBUG
-    	assert((a_coord.m_row >= 0) && (a_coord.m_row < m_nRowsInBoard));
-    	assert((a_coord.m_col >= 0) && (a_coord.m_col < m_nColumnsInBoard));
-#endif
-    	uint8_t coordProperty = m_coordinateProperties[a_coord.m_row][a_coord.m_col];
-        if ((coordProperty & COORD_PROPERTY_NKPOINTS) == 0)
-        {
-#ifdef DEBUG
-            assert(m_nkPointsCount < (m_nRowsInBoard * m_nColumnsInBoard));
-#endif
-            m_coordinateProperties[a_coord.m_row][a_coord.m_col] |= COORD_PROPERTY_NKPOINTS;
-            m_nkPointsCount++;
-        }
-    }
+    void SetNucleationPoint(const Coordinate &a_coord);
 
     /// delete a nucleation point in the coords passed as parameters
-    inline void UnsetNucleationPoint(const Coordinate &a_coord)
-    {
-#ifdef DEBUG
-    	assert((a_coord.m_row >= 0) && (a_coord.m_row < m_nRowsInBoard));
-    	assert((a_coord.m_col >= 0) && (a_coord.m_col < m_nColumnsInBoard));
-#endif
-    	uint8_t coordProperty = m_coordinateProperties[a_coord.m_row][a_coord.m_col];
-        if ((coordProperty & COORD_PROPERTY_NKPOINTS) == COORD_PROPERTY_NKPOINTS)
-        {
-#ifdef DEBUG
-            assert(m_nkPointsCount > 0);
-#endif
-            m_coordinateProperties[a_coord.m_row][a_coord.m_col] &= ~COORD_PROPERTY_NKPOINTS;
-            m_nkPointsCount--;
-        }
-    }
+    void UnsetNucleationPoint(const Coordinate &a_coord);
 
     /// Get all the nucleation points in the board. The user has to ensure the size of the array is big enough (for example
     /// 2/5 the size of the board) If the size of the array wasn't big enough this function will save a_size
@@ -269,26 +148,7 @@ public:
     /// Get all the nucleation points in the board.
     /// @param set to save the nucleation points
     /// @return the number of nucleation points saved into the output set
-    inline int32_t GetAllNucleationPoints(
-    		STLCoordinateSet_t &a_set) const
-    {
-        int32_t nNucleationPoints = 0;
-
-        Coordinate thisCoord(0, 0);
-        for (thisCoord.m_row = 0; thisCoord.m_row < m_nRowsInBoard ; thisCoord.m_row++)
-        {
-            for (thisCoord.m_col = 0; thisCoord.m_col < m_nColumnsInBoard ; thisCoord.m_col++)
-            {
-                if (IsNucleationPoint(thisCoord))
-                {
-                    a_set.insert(thisCoord);
-                    nNucleationPoints++;
-                }
-            }
-        }
-
-        return nNucleationPoints;
-    }
+    int32_t GetAllNucleationPoints(STLCoordinateSet_t &a_set) const;
 
     /// Get the first nucleation point in the board starting from the center of the board
     /// and keep on going on a spiral shape
@@ -310,6 +170,15 @@ public:
     /// @return true if a nk was found. False otherwise
     bool GetNextNucleationPointSpiral(
             SpiralIterator &iterator, Coordinate &in_out_coord) const;
+
+    /// @brief gets next nucleation point (starts from the following coord of in_out_coord)
+    /// If in_out_coord is uninitialised it starts from (0, 0)
+    /// @param in_out_coord must contain current coordinate from which the algorithm will start
+    ///        looking for nk points. It must be uninitialised first time is called to start off (0, 0)
+    ///        it will contain the next nk point found if the function returns true. It will be unmodified
+    ///        if no nk point was found (false is returned in this case)
+    /// @return true if a new nk point was found. False otherwise
+    bool GetNextNucleationPoint(Coordinate &in_out_coord) const;
 
     /// print a list of bits indicating which pieces are present and which not
     void PrintAvailablePieces(std::ostream& a_outStream) const;
@@ -358,5 +227,8 @@ private:
     // prevent players to be created without the proper arguments
     Player();
 };
+
+// include implementation details of inline functions
+#include "impl/player_impl.h"
 
 #endif /* PLAYER_H_ */

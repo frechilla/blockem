@@ -98,6 +98,6 @@ protected:
 };
 
 // include the implementation
-#include "g_blocking_queue_impl.h"
+#include "impl/g_blocking_queue_impl.h"
 
 #endif /* _GBLOCKINGQUEUE_H_ */

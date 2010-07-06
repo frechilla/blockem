@@ -120,7 +120,7 @@ void Piece::SetPiece(
     const std::vector<Coordinate> &a_nkPoints,
     const std::vector<Coordinate> &a_forbiddenArea,
     bool                           a_mirror,
-    int8_t                         a_nRotations,
+    uint8_t                        a_nRotations,
     uint8_t                        a_radius)
 {
 #ifdef DEBUG
@@ -1146,7 +1146,7 @@ void Piece::BuildUpPrecalculatedRepresentations()
 {
     do
     {
-        int8_t nRotations = 0;
+        uint8_t nRotations = 0;
         while(nRotations < GetNRotations())
         {
             // save current configuration into precalculated list of coords
