@@ -104,7 +104,7 @@ public:
     /// @param microsecondsto wait before returning if the queue was empty
     /// @return True if the element was retrieved from the queue.
     ///         False if the timeout was reached
-    bool TimedWaitPop(T &data, int32_t microsecs);
+    bool TimedWaitPop(T &data, glong microsecs);
 
 protected:
     std::queue<T> m_theQueue;

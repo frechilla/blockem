@@ -184,7 +184,7 @@ bool BlockingQueue<T>::TryPop(T &out_data)
 }
 
 template <typename T>
-bool BlockingQueue<T>::TimedWaitPop(T &data, int32_t microsecs)
+bool BlockingQueue<T>::TimedWaitPop(T &data, glong microsecs)
 {
     g_mutex_lock(m_mutex);
 
