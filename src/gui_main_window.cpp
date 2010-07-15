@@ -1029,18 +1029,27 @@ void MainWindow::BoardDrawingArea_BoardClicked(const Coordinate &a_coord, const 
     thisMove.playerToMove =  m_the1v1Game.GetPlayerType(a_player);
 
     // main thread cannot get blocked, if it fails inserting the element in
-    // the queue just do nothings
+    // the queue just do nothing
     bool result = m_moveQueue.TryPush(thisMove);
 
     if (result == false)
     {
-#if defined (DEBUG_PRINT) || defined(DEBUG)
+#ifdef DEBUG_PRINT
         std::cout << "Human move could not be added to the queue" << std::endl;
 #endif
 
-#ifdef DEBUG
-    assert(result == true);
-#endif
+        Gtk::MessageDialog::MessageDialog errorMsg(
+                *this,
+                "Internal Error: Move could not be processed. Please click on the board normally to try again",
+                true,
+                Gtk::MESSAGE_ERROR,
+                Gtk::BUTTONS_OK,
+                true);
+
+        if (errorMsg.run())
+        {
+            ; // the dialog has only 1 button
+        }
 
         // main thread cannot get blocked. It failed inserting the element so
         // get back and do nothing (do not notify this move)
