@@ -83,7 +83,7 @@ bool BlockingQueue<T>::IsEmpty()
 }
 
 template <typename T>
-bool BlockingQueue<T>::Push(const T &a_elem)
+void BlockingQueue<T>::Push(const T &a_elem)
 {
     g_mutex_lock(m_mutex);
 
@@ -103,8 +103,6 @@ bool BlockingQueue<T>::Push(const T &a_elem)
     }
 
     g_mutex_unlock(m_mutex);
-
-    return true;
 }
 
 template <typename T>

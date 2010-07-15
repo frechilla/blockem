@@ -69,9 +69,7 @@ public:
     /// queue. If the queue is full The thread will be blocked in this queue
     /// until someone else gets an element from the queue
     /// @param element to insert into the queue
-    /// @return True if the elem was successfully inserted into the queue.
-    ///         False otherwise
-    bool Push(const T &a_elem);
+    void Push(const T &a_elem);
 
     /// @brief inserts an element into queue queue
     /// This call can block if another thread owns the lock that protects the
