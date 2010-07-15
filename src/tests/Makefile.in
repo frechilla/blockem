@@ -47,12 +47,15 @@ CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 PROGRAMS = $(noinst_PROGRAMS)
-am_blockemtest_OBJECTS = main_test.$(OBJEXT) game1v1_test.$(OBJEXT) \
-	piece_test.$(OBJEXT) player_test.$(OBJEXT)
+am_blockemtest_OBJECTS = bitwise_test.$(OBJEXT) board_test.$(OBJEXT) \
+	game1v1_test.$(OBJEXT) g_blocking_queue_test.$(OBJEXT) \
+	main_test.$(OBJEXT) piece_test.$(OBJEXT) player_test.$(OBJEXT) \
+	rules_test.$(OBJEXT)
 blockemtest_OBJECTS = $(am_blockemtest_OBJECTS)
-blockemtest_DEPENDENCIES = ../board.o ../game1v1.o \
-	../game_total_allocation.o ../heuristic.o ../piece.o \
-	../player.o ../rules.o ../bitwise.o
+am__DEPENDENCIES_1 =
+blockemtest_DEPENDENCIES = $(am__DEPENDENCIES_1) ../board.o \
+	../game1v1.o ../game_total_allocation.o ../heuristic.o \
+	../piece.o ../player.o ../rules.o ../bitwise.o
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -180,20 +183,30 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 INCLUDES = -I$(srcdir)/..
-AM_CXXFLAGS = 
+AM_CXXFLAGS = $(GTHREAD_CFLAGS)
+AM_LDFLAGS = 
 blockemtest_SOURCES = \
-main_test.cpp \
+bitwise_test.cpp \
+bitwise_test.h \
+board_test.cpp \
+board_test.h \
 game1v1_test.cpp \
 game1v1_test.h \
-piece_test.h \
+g_blocking_queue_test.cpp \
+g_blocking_queue_test.h \
+main_test.cpp \
 piece_test.cpp \
+piece_test.h \
+player_test.cpp \
 player_test.h \
-player_test.cpp
+rules_test.cpp \
+rules_test.h
 
 
 # this should be changed at some point. we should be crating a library with the base blockem classes
 # and then add that library to blockemtest_LIBADD
 blockemtest_LDADD = \
+$(GTHREAD_LIBS) \
 ../board.o \
 ../game1v1.o \
 ../game_total_allocation.o \
@@ -250,10 +263,14 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bitwise_test.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/board_test.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/g_blocking_queue_test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/game1v1_test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main_test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/piece_test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/player_test.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rules_test.Po@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<

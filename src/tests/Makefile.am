@@ -5,20 +5,30 @@ TESTS = blockemtest
 
 INCLUDES = -I$(srcdir)/..
 
-AM_CXXFLAGS =
+AM_CXXFLAGS = $(GTHREAD_CFLAGS)
+AM_LDFLAGS = 
 
 blockemtest_SOURCES = \
-main_test.cpp \
+bitwise_test.cpp \
+bitwise_test.h \
+board_test.cpp \
+board_test.h \
 game1v1_test.cpp \
 game1v1_test.h \
-piece_test.h \
+g_blocking_queue_test.cpp \
+g_blocking_queue_test.h \
+main_test.cpp \
 piece_test.cpp \
+piece_test.h \
+player_test.cpp \
 player_test.h \
-player_test.cpp
+rules_test.cpp \
+rules_test.h
 
 # this should be changed at some point. we should be crating a library with the base blockem classes
 # and then add that library to blockemtest_LIBADD
 blockemtest_LDADD = \
+$(GTHREAD_LIBS) \
 ../board.o \
 ../game1v1.o \
 ../game_total_allocation.o \

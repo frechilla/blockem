@@ -58,10 +58,17 @@ private:
     /// Tests if Get[First|Next]NucleationPointSpiral works properly
     void TestNKSpiralAlgorithm(const Player &a_player);
 
-    // m_player puts a piece on m_board. nk points are updated with IsCoordNKPointCompute
+    /// Tests if CalculateNextValidCoordInNucleationPoint works as well as
+    /// CalculateValidCoordsInNucleationPoint does
+    void TestCalculateValidCoordsInNKPoint(const Player &a_player, const Coordinate &where);
+
+    /// m_player puts a piece on m_board. nk points are updated with IsCoordNKPointCompute
     void PutDownPiece(const Piece &a_piece, const Coordinate &a_coord, Player &a_player);
-    // m_player removes a piece from m_board. nk points are updated with IsCoordNKPointCompute
+    /// m_player removes a piece from m_board. nk points are updated with IsCoordNKPointCompute
     void RemovePiece(const Piece &a_piece, const Coordinate &a_coord, Player &a_player);
+
+    /// Recalculate nk points of player in the whole board
+    void RecalculateNKPointsInWholeBoard(Player &a_player);
 
 };
 

@@ -27,7 +27,10 @@
 ///
 // ============================================================================
 
+#ifdef DEBUG_PRINT
 #include <iostream>
+#endif
+
 #include "player_test.h"
 #include "rules.h"
 
@@ -57,8 +60,10 @@ void PlayerTest::DoTest()
 
 void PlayerTest::TestCopyPlayer()
 {
+#ifdef DEBUG_PRINT
     std::cout << "Player copy constructor and operator= test started... ";
     std::cout.flush();
+#endif
 
     Player p1(std::string("tester1"), 'T', 5, 5);
     Player p2(p1);
@@ -77,13 +82,17 @@ void PlayerTest::TestCopyPlayer()
     p3.UnsetNucleationPoint(Coordinate(0, 0));
     assert(p3.IsNucleationPoint(Coordinate(0, 0)) != p1.IsNucleationPoint(Coordinate(0, 0)));
 
+#ifdef DEBUG_PRINT
     std::cout << "  [Passed]" << std::endl;
+#endif
 }
 
 void PlayerTest::TestNKPoints()
 {
+#ifdef DEBUG_PRINT
     std::cout << "Player NK points test started... ";
     std::cout.flush();
+#endif
 
     m_board.Reset();
     m_player.Reset();
@@ -107,9 +116,11 @@ void PlayerTest::TestNKPoints()
     // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
     // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
     PutDownPiece(m_player.m_pieces[e_5Piece_Cross], Coordinate(6, 6), m_player);
+    RecalculateNKPointsInWholeBoard(a_tmpPlayer);
     TestNKSpiralAlgorithm(m_player);
     TestNKSpiralAlgorithm(a_tmpPlayer);
     PutDownPiece(a_tmpPlayer.m_pieces[e_5Piece_Cross], Coordinate(4, 4), a_tmpPlayer);
+    RecalculateNKPointsInWholeBoard(m_player);
     TestNKSpiralAlgorithm(m_player);
     TestNKSpiralAlgorithm(a_tmpPlayer);
 
@@ -136,9 +147,11 @@ void PlayerTest::TestNKPoints()
     // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
     // 0 0 0 0 0 0 0 0 0 0 0 0 0 0
     PutDownPiece(m_player.m_pieces[e_1Piece_BabyPiece], Coordinate(6, 6), m_player);
+    RecalculateNKPointsInWholeBoard(a_tmpPlayer);
     TestNKSpiralAlgorithm(m_player);
     TestNKSpiralAlgorithm(a_tmpPlayer);
     PutDownPiece(a_tmpPlayer.m_pieces[e_1Piece_BabyPiece], Coordinate(4, 4), a_tmpPlayer);
+    RecalculateNKPointsInWholeBoard(m_player);
     TestNKSpiralAlgorithm(m_player);
     TestNKSpiralAlgorithm(a_tmpPlayer);
 
@@ -171,10 +184,12 @@ void PlayerTest::TestNKPoints()
     //    X
     m_player.m_pieces[e_3Piece_Triangle].RotateLeft();
     PutDownPiece(m_player.m_pieces[e_3Piece_Triangle], Coordinate(6, 6), m_player);
+    RecalculateNKPointsInWholeBoard(a_tmpPlayer);
     TestNKSpiralAlgorithm(m_player);
     TestNKSpiralAlgorithm(a_tmpPlayer);
     a_tmpPlayer.m_pieces[e_3Piece_Triangle].RotateRight();
     PutDownPiece(a_tmpPlayer.m_pieces[e_3Piece_Triangle], Coordinate(4, 4), a_tmpPlayer);
+    RecalculateNKPointsInWholeBoard(m_player);
     TestNKSpiralAlgorithm(m_player);
     TestNKSpiralAlgorithm(a_tmpPlayer);
 
@@ -202,11 +217,13 @@ void PlayerTest::TestNKPoints()
     // X(X)X
     //     X
     PutDownPiece(m_player.m_pieces[e_5Piece_MrT], Coordinate(4, 7), m_player);
+    RecalculateNKPointsInWholeBoard(a_tmpPlayer);
     TestNKSpiralAlgorithm(m_player);
     TestNKSpiralAlgorithm(a_tmpPlayer);
     a_tmpPlayer.m_pieces[e_5Piece_MrT].RotateRight();
     a_tmpPlayer.m_pieces[e_5Piece_MrT].RotateRight();
     PutDownPiece(a_tmpPlayer.m_pieces[e_5Piece_MrT], Coordinate(6, 3), a_tmpPlayer);
+    RecalculateNKPointsInWholeBoard(m_player);
     TestNKSpiralAlgorithm(m_player);
     TestNKSpiralAlgorithm(a_tmpPlayer);
 
@@ -234,10 +251,13 @@ void PlayerTest::TestNKPoints()
     //  (X)
     // X X
     PutDownPiece(m_player.m_pieces[e_5Piece_BigS], Coordinate(1, 10), m_player);
+    RecalculateNKPointsInWholeBoard(a_tmpPlayer);
     TestNKSpiralAlgorithm(m_player);
     TestNKSpiralAlgorithm(a_tmpPlayer);
 
+#ifdef DEBUG_PRINT
     std::cout << "  [Passed]" << std::endl;
+#endif
 }
 
 void PlayerTest::TestNKSpiralAlgorithm(const Player &a_player)
@@ -262,6 +282,10 @@ void PlayerTest::TestNKSpiralAlgorithm(const Player &a_player)
         STLCoordinateSet_t::iterator setIt = coordSet.find(tmpCoord);
         assert(setIt != coordSet.end());
 
+        // easy to check now if CalculateNextValidCoordInNucleationPoint works as
+        // CalculateValidCoordsInNucleationPoint does
+        TestCalculateValidCoordsInNKPoint(a_player, tmpCoord);
+
         // assert any other nk point is found by the spiral algorithm
         for (int32_t i = 1; i < a_player.NumberOfNucleationPoints(); i++)
         {
@@ -270,6 +294,10 @@ void PlayerTest::TestNKSpiralAlgorithm(const Player &a_player)
 
             setIt = coordSet.find(tmpCoord);
             assert(setIt != coordSet.end());
+
+            // easy to check now if CalculateNextValidCoordInNucleationPoint works as
+            // CalculateValidCoordsInNucleationPoint does
+            TestCalculateValidCoordsInNKPoint(a_player, tmpCoord);
         }
 
         // assert there is no more nk points left
@@ -281,6 +309,70 @@ void PlayerTest::TestNKSpiralAlgorithm(const Player &a_player)
         // assert spiral algorithm also says there is no nk points
         assert(
                 a_player.GetFirstNucleationPointSpiral(iterator, tmpCoord) == false);
+    }
+}
+
+void PlayerTest::TestCalculateValidCoordsInNKPoint(const Player &a_player, const Coordinate &where)
+{
+    assert(a_player.IsNucleationPoint(where));
+    assert(m_board.IsCoordEmpty(where));
+
+    // no need to instantiate a bigger vector
+    std::vector<Coordinate> validCoordVector(PIECE_MAX_SQUARES);
+    Coordinate validCoord;
+    int32_t nNKPointsSecondMethod;
+    int32_t nNKPoints;
+
+    // test is done using all pieces available (no rotate or mirror though)
+    for (int32_t i = e_minimumPieceIndex; i < e_numberOfPieces; i++)
+    {
+        Piece tmpPiece(static_cast<ePieceType_t>(i));
+
+        nNKPoints = rules::CalculateValidCoordsInNucleationPoint(
+                                    m_board,
+                                    a_player,
+                                    where,
+                                    tmpPiece.GetCurrentConfiguration(),
+                                    validCoordVector);
+
+        validCoord.m_row = validCoord.m_col = COORD_UNINITIALISED;
+        nNKPointsSecondMethod = 0;
+        while(rules::CalculateNextValidCoordInNucleationPoint(
+                                    m_board,
+                                    a_player,
+                                    where,
+                                    tmpPiece.GetCurrentConfiguration(),
+                                    tmpPiece.GetRadius(),
+                                    validCoord))
+        {
+            nNKPointsSecondMethod++;
+        }
+
+        // assert both methods found the same amount of valid coords
+        assert(nNKPoints == nNKPointsSecondMethod);
+    }
+}
+
+void PlayerTest::RecalculateNKPointsInWholeBoard(Player &a_player)
+{
+    Coordinate thisCoord(0, 0);
+    for (thisCoord.m_row = 0 ;
+         thisCoord.m_row < m_board.GetNRows();
+         thisCoord.m_row++)
+    {
+        for (thisCoord.m_col = 0 ;
+             thisCoord.m_col < m_board.GetNColumns();
+             thisCoord.m_col++)
+        {
+            if (rules::IsNucleationPointCompute(m_board, a_player, thisCoord))
+            {
+                a_player.SetNucleationPoint(thisCoord);
+            }
+            else
+            {
+                a_player.UnsetNucleationPoint(thisCoord);
+            }
+        }
     }
 }
 
@@ -308,25 +400,7 @@ void PlayerTest::PutDownPiece(const Piece &a_piece, const Coordinate &a_coord, P
     } // for (it = a_pieceConf.m_pieceSquares.begin();
 
     // recalculate nk points in the whole board after this piece was put down
-    Coordinate thisCoord(0, 0);
-    for (thisCoord.m_row = 0 ;
-         thisCoord.m_row < m_board.GetNRows();
-         thisCoord.m_row++)
-    {
-        for (thisCoord.m_col = 0 ;
-             thisCoord.m_col < m_board.GetNColumns();
-             thisCoord.m_col++)
-        {
-            if (rules::IsNucleationPointCompute(m_board, a_player, thisCoord))
-            {
-                a_player.SetNucleationPoint(thisCoord);
-            }
-            else
-            {
-                a_player.UnsetNucleationPoint(thisCoord);
-            }
-        }
-    }
+    RecalculateNKPointsInWholeBoard(a_player);
 }
 
 void PlayerTest::RemovePiece(const Piece &a_piece, const Coordinate &a_coord, Player &a_player)
@@ -354,23 +428,5 @@ void PlayerTest::RemovePiece(const Piece &a_piece, const Coordinate &a_coord, Pl
     }
 
     // recalculate nk points in the whole board after this piece was removed
-    Coordinate thisCoord(0, 0);
-    for (thisCoord.m_row = 0 ;
-         thisCoord.m_row < m_board.GetNRows();
-         thisCoord.m_row++)
-    {
-        for (thisCoord.m_col = 0 ;
-             thisCoord.m_col < m_board.GetNColumns();
-             thisCoord.m_col++)
-        {
-            if (rules::IsNucleationPointCompute(m_board, a_player, thisCoord))
-            {
-                a_player.SetNucleationPoint(thisCoord);
-            }
-            else
-            {
-                a_player.UnsetNucleationPoint(thisCoord);
-            }
-        }
-    }
+    RecalculateNKPointsInWholeBoard(a_player);
 }

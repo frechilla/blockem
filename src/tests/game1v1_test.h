@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License along
 // with Blockem. If not, see http://www.gnu.org/licenses/.
 //
-/// @file  Game1v1Test.h
+/// @file  game1v1_test.h
 /// @brief
 ///
 /// @author Faustino Frechilla
@@ -24,6 +24,7 @@
 /// Ref       Who                When         What
 ///           Faustino Frechilla 13-Sep-2009  Original development
 ///           Faustino Frechilla 06-May-2010  Bitwise configuration check
+///           Faustino Frechilla 15-Jul-2010  Bitwise stuff moved to bitwise_test.[cpp|h]
 /// @endhistory
 ///
 // ============================================================================
@@ -42,6 +43,10 @@ public:
     Game1v1Test();
     virtual ~Game1v1Test();
 
+    /// launches the Game1v1 test!
+    void DoTest();
+    
+private:
     /// tests if the (faster) way Game1v1 puts down and removes pieces
     /// has the same results as the basic methid that consists on setting
     /// a piece on the board coordinate by coordinate and then cumputing
@@ -49,40 +54,9 @@ public:
     /// (the game1v1 one and the special for test) have to have the same
     /// nk points in the same places
     void TestGame1v1PutDownAndRemovePiece();
-
-    // test the bitwise representation against he legacy well tested way
-    void TestBitwise();
-
-private:
-    /// checks if a piece can be deployed in thisCoord using both legacy and bitwise representations
-    /// and asserts if results match. It also checks if a brand new calculation of bitwise configuration
-    /// of the board in thisCoord matches the paramaters bitwiseBoard, bitwiseBoardPlayer1, which are
-    /// supposed to have been calculated using Board::BitwiseBoardMoveRight, Board::BitwiseBoardMoveLeft
-    /// and Board::BitwiseBoardMoveDown
-    void TestBitwiseCheckConfiguration(
-            const Coordinate         &thisCoord,
-            const PieceConfiguration &piece,
-            uint64_t                  bPiece,
-            uint64_t                  bitwiseBoard,
-            uint64_t                  bitwiseBoardPlayer1);
-
-    /// Test that legacy and bitwise representation of board and pieces match. It uses the board
-    /// which is part of the Game1v1, so the caller must modify it before calling to this function
-    /// it also uses m_player1 to check whether its pieces can be deployed in each coord of the board
-    /// @param number of pieces that were picked to be put down on the board so they can't be checked
-    ///        in the this function (player1 already used them)
-    /// @param piece type that has been put on the board before calling to the function if a_nUsedPieces is 1
-    ///        function will assert it is the only piece which is not checked.
-    ///        iot can be set to e_noPiece to prevent the assertion from being run
-    void TestBoardAndPiecesBitwise(int32_t a_nUsedPieces, ePieceType_t a_pieceMissing = e_noPiece);
-
-    /// Tests if Get[First|Next]NucleationPointSpiral works properly and if
-    /// Game1v1::GetAllNucleationPoints also works as it is expected
-    void TestNKSpiralAlgorithm(eGame1v1Player_t who);
-
-    /// Tests if CalculateNextValidCoordInNucleationPoint works as well as
-    /// CalculateValidCoordsInNucleationPoint does
-    void TestCalculateValidCoordsInNKPoint(eGame1v1Player_t who, const Coordinate &where);
+    
+    /// Tests if Game1v1::GetAllNucleationPoints works properly
+    void TestGame1v1GetAllNucleationPoints(eGame1v1Player_t who);
 
     void PutDownPiece(Piece &a_piece)
     {

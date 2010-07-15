@@ -28,9 +28,14 @@
 // ============================================================================
 
 #include <iostream>
+#include "bitwise_test.h"
+#include "board_test.h"
+#include "g_blocking_queue_test.h"
 #include "game1v1_test.h"
 #include "piece_test.h"
 #include "player_test.h"
+#include "rules_test.h"
+
 #include "game_total_allocation.h"
 
 /// @brief a simple test with a well-known configuration
@@ -44,54 +49,62 @@ int main(int argc, char** argv)
               << std::endl;
 #endif
 
+    // blocking queue test
+    std::cout << "glib blocking queue test started... ";
+    std::cout.flush();
+    BlockingQueueTest blockingQTest;
+    blockingQTest.DoTest();
+    std::cout << "  [Passed]" << std::endl << std::endl;
+
+    // board test
+    std::cout << "Board test started...";
+    std::cout.flush();
+    BoardTest boardTest;
+    boardTest.DoTest();
+    std::cout << "  [Passed]" << std::endl << std::endl;
+
     // Piece test
-    std::cout << "Piece test started..." << std::endl;
+    std::cout << "Piece test started...";
+    std::cout.flush();
     PieceTest pieceTest;
     pieceTest.DoTest();
     std::cout << "  [Passed]" << std::endl << std::endl;
 
     // Player test
-    std::cout << "Player test started..." << std::endl;
+    std::cout << "Player test started...";
+    std::cout.flush();
     PlayerTest playerTest;
     playerTest.DoTest();
     std::cout << "  [Passed]" << std::endl << std::endl;
 
+    // rules test
+    std::cout << "Rules test started...";
+    std::cout.flush();
+    RulesTest rulesTest;
+    rulesTest.DoTest();
+    std::cout << "  [Passed]" << std::endl << std::endl;
+
+    // bitwise test
+    std::cout << "Bitwise test started...";
+    std::cout.flush();
+    BitwiseTest bitwiseTest;
+    bitwiseTest.DoTest();
+    std::cout << "  [Passed]" << std::endl << std::endl;
 
     // Game1v1 test
     std::cout << "Game1v1 test started... ";
     std::cout.flush();
-    std::cout << std::endl;
-
     Game1v1Test the1v1Test;
-    the1v1Test.TestGame1v1PutDownAndRemovePiece();
-    //the1v1Test.TestPieces();
-    the1v1Test.TestBitwise();
-
+    the1v1Test.DoTest();
     std::cout << "  [Passed]" << std::endl << std::endl;
 
-    // tests for copy constructor and operator= for classes with dynamic memory
-    std::cout << "Board copy constructor and operator= test started... ";
-    std::cout.flush();
 
-    Board b1(5, 5, ' ');
-    Board b2(b1);
-    Board b3(6, 6, ' ');
-
-    b1.SetPlayerInCoord(Coordinate(0, 0), the1v1Test.GetPlayer(Game1v1::e_Game1v1Player1));
-    b3 = b1;
-    assert(b3.IsCoordEmpty(Coordinate(0, 0)) == b1.IsCoordEmpty(Coordinate(0, 0)));
-
-    b3.BlankCoord(Coordinate(0, 0));
-    assert(b3.IsCoordEmpty(Coordinate(0, 0)) != b1.IsCoordEmpty(Coordinate(0, 0)));
-
-    std::cout << "  [Passed]" << std::endl << std::endl;
 
     // run a total allocation test
     std::cout << "GameTotalAllocation test started... ";
 
     GameTotalAllocation totalAllocation1PlayerGame(14, 14);
     assert(totalAllocation1PlayerGame.Solve(Coordinate(8, 8)));
-
     //totalAllocation1PlayerGame.GetBoard().PrintBoard(std::cout);
 
     std::cout << "  [Passed]" << std::endl << std::endl;
