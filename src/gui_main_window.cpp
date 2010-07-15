@@ -966,24 +966,15 @@ void MainWindow::WorkerThread_computingFinished(
     thisMove.piece = a_piece;
     thisMove.coord = a_coord;
     thisMove.playerToMove = a_playerToMove;
-#if defined(DEBUG) || defined(DEBUG_PRINT)
-    bool result =
-#endif
+
+    // if the queue is full this call might block, but there aren't that many moves really...
     m_moveQueue.Push(thisMove);
 
-
 #ifdef DEBUG_PRINT
-    if (result == false)
-    {
-        std::cout << "Computer move could not be added to the queue" << std::endl;
-    }
     if (a_piece.GetType() == e_noPiece)
     {
         std::cout << "Computer can't move" << std::endl;
     }
-#endif
-#ifdef DEBUG
-    assert(result == true);
 #endif
 
     // this signal is being issued from the MainWindowWorkerThread
@@ -1036,20 +1027,25 @@ void MainWindow::BoardDrawingArea_BoardClicked(const Coordinate &a_coord, const 
     thisMove.piece = a_piece;
     thisMove.coord = a_coord;
     thisMove.playerToMove =  m_the1v1Game.GetPlayerType(a_player);
-#if defined(DEBUG) || defined(DEBUG_PRINT)
-    bool result =
-#endif
-    m_moveQueue.Push(thisMove);
 
-#ifdef DEBUG_PRINT
+    // main thread cannot get blocked, if it fails inserting the element in
+    // the queue just do nothings
+    bool result = m_moveQueue.TryPush(thisMove);
+
     if (result == false)
     {
+#if defined (DEBUG_PRINT) || defined(DEBUG)
         std::cout << "Human move could not be added to the queue" << std::endl;
-    }
 #endif
+
 #ifdef DEBUG
     assert(result == true);
 #endif
+
+        // main thread cannot get blocked. It failed inserting the element so
+        // get back and do nothing (do not notify this move)
+        return;
+    }
 
     // this method is not expected to be run by another thread, but if both worker thread and human
     // user use the same interface, things are much easier to understand
