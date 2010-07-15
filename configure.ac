@@ -5,7 +5,7 @@ AC_PREREQ([2.64])
 
 m4_define([MAJOR_VERSION], 0)
 m4_define([MINOR_VERSION], 2)
-m4_define([MICRO_VERSION], 2)
+m4_define([MICRO_VERSION], 3)
 
 define([svnversion], esyscmd([sh -c "svnversion|tr -d '\n'"]))
 
@@ -48,6 +48,8 @@ fi
 PKG_CHECK_MODULES([GTKMM], [gtkmm-2.4 >= 2.16])
 # GTHREAD 2.16 hasn't been really checked. Just a guess
 PKG_CHECK_MODULES([GTHREAD], [gthread-2.0 >= 2.16])
+# if only glib is needed. 2.16 Hasn't been really checked. Just a guess
+#PKG_CHECK_MODULES([GLIB], [glib-2.0 >= 2.16])
 # contained in gtkmm
 # PKG_CHECK_MODULES([SIGCPP], [sigc++-2.0 >= 1.0.0])
 

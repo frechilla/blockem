@@ -4,7 +4,7 @@ bin_PROGRAMS = blockem
 
 INCLUDES = -I$(srcdir)
 
-AM_CXXFLAGS = $(GTKMM_CFLAGS) $(GLADEMM_CFLAGS) $(GTHREAD_CFLAGS)
+AM_CXXFLAGS = $(GTKMM_CFLAGS) $(GTHREAD_CFLAGS)
 AM_LDFLAGS = 
 
 #DATADIR in windows is the current directory

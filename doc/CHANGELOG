@@ -7,6 +7,10 @@
       pieces in an empty board (1 player total allocation game) can be tested
       through command line, for example with this command:
           ./blockem --mode=1 -r 14 -c 14 -x 4 -y 4
+    - Test app has been extended to check whether changes added to the
+      sourcebase insert regressions in blockem. Also, Makefile.am for
+      test app has been fixed so it only uses libraries for test, instead
+      of all libraries needed for the blockem app
 
 21/06/2010: Version 0.2.2
     - Code adapted to be able to run with glib >= 2.24 (included in ubuntu
