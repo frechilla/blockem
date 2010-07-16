@@ -263,10 +263,7 @@ void PlayerTest::TestNKPoints()
 void PlayerTest::TestNKSpiralAlgorithm(const Player &a_player)
 {
     // variables to test Get[First|Next]NucleationPointSpiral
-#ifndef NDEBUG
-    // this ifndef prevents a warning when compiling in release mode
     Player::SpiralIterator iterator;
-#endif
     Coordinate tmpCoord;
 
     STLCoordinateSet_t coordSet;
@@ -276,8 +273,8 @@ void PlayerTest::TestNKSpiralAlgorithm(const Player &a_player)
     if (a_player.NumberOfNucleationPoints() > 0)
     {
         // check GetFirstNucleationPointSpiral works fine
-        assert(
-                a_player.GetFirstNucleationPointSpiral(iterator, tmpCoord));
+        bool rv = a_player.GetFirstNucleationPointSpiral(iterator, tmpCoord);
+        assert(rv == true);
 
         STLCoordinateSet_t::iterator setIt = coordSet.find(tmpCoord);
         assert(setIt != coordSet.end());
@@ -289,8 +286,8 @@ void PlayerTest::TestNKSpiralAlgorithm(const Player &a_player)
         // assert any other nk point is found by the spiral algorithm
         for (int32_t i = 1; i < a_player.NumberOfNucleationPoints(); i++)
         {
-            assert(
-                    a_player.GetNextNucleationPointSpiral(iterator, tmpCoord));
+            rv = a_player.GetNextNucleationPointSpiral(iterator, tmpCoord);
+            assert(rv == true);
 
             setIt = coordSet.find(tmpCoord);
             assert(setIt != coordSet.end());
