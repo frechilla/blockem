@@ -51,6 +51,8 @@ void BoardTest::DoTest()
 
     // tests copy constructor and operator=
     TestCopyBoard();
+
+    TestCreateBoardFromArray();
 }
 
 void BoardTest::TestCopyBoard()
@@ -118,4 +120,77 @@ void BoardTest::TestCopyBoard()
             assert(b1.IsCoordEmpty(thisCoord));
         }
     }
+}
+
+void BoardTest::TestCreateBoardFromArray()
+{
+    // allocate array with the board
+    char ** m_preloadedBoard = new char* [ROWS];
+    for (int32_t i = 0; i < ROWS; i++)
+    {
+        m_preloadedBoard[i] = new char[COLUMNS];
+
+        for (int32_t j = 0; j < COLUMNS; j++)
+        {
+            m_preloadedBoard[i][j] = ' '; // ' ' is the empty coordinate char
+        }
+    }
+
+    Coordinate thisCoord;
+    Board testBoard1(ROWS, COLUMNS, ' ', m_preloadedBoard);
+    for (thisCoord.m_row = 0; thisCoord.m_row < ROWS; thisCoord.m_row++)
+    {
+        for (thisCoord.m_col = 0; thisCoord.m_col < COLUMNS; thisCoord.m_col++)
+        {
+            assert(testBoard1.IsCoordEmpty(thisCoord));
+            m_preloadedBoard[thisCoord.m_row][thisCoord.m_col] = 'X'; // any char different from ' ' will do it
+        }
+    }
+
+    Board testBoard2(ROWS, COLUMNS, ' ', m_preloadedBoard);
+    testBoard1 = testBoard2;
+    for (thisCoord.m_row = 0; thisCoord.m_row < ROWS; thisCoord.m_row++)
+    {
+        for (thisCoord.m_col = 0; thisCoord.m_col < COLUMNS; thisCoord.m_col++)
+        {
+            assert(!testBoard2.IsCoordEmpty(thisCoord));
+            assert(!testBoard1.IsCoordEmpty(thisCoord));
+            if (thisCoord.m_row & 0x01)
+            {
+                m_preloadedBoard[thisCoord.m_row][thisCoord.m_col] = 'X';
+            }
+            else
+            {
+                m_preloadedBoard[thisCoord.m_row][thisCoord.m_col] = ' ';
+            }
+        }
+    }
+
+    Board testBoard3(ROWS, COLUMNS, ' ', m_preloadedBoard);
+    testBoard1 = testBoard2 = testBoard3;
+    for (thisCoord.m_row = 0; thisCoord.m_row < ROWS; thisCoord.m_row++)
+    {
+        for (thisCoord.m_col = 0; thisCoord.m_col < COLUMNS; thisCoord.m_col++)
+        {
+            if (thisCoord.m_row & 0x01)
+            {
+                assert(!testBoard3.IsCoordEmpty(thisCoord));
+                assert(!testBoard2.IsCoordEmpty(thisCoord));
+                assert(!testBoard1.IsCoordEmpty(thisCoord));
+            }
+            else
+            {
+                assert(testBoard3.IsCoordEmpty(thisCoord));
+                assert(testBoard2.IsCoordEmpty(thisCoord));
+                assert(testBoard1.IsCoordEmpty(thisCoord));
+            }
+        }
+    }
+
+    // free heap memory
+    for (int32_t i = 0; i < ROWS; i++)
+    {
+        delete [] m_preloadedBoard[i];
+    }
+    delete [] m_preloadedBoard;
 }

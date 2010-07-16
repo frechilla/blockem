@@ -32,6 +32,9 @@
 
 #include "rules.h"
 
+#define RULES_TEST_ROWS    14
+#define RULES_TEST_COLUMNS 14
+
 /// @brief regression testing for the rules namespace
 class RulesTest
 {
@@ -43,33 +46,34 @@ public:
     void DoTest();
 
 private:
+    
+    /// board loaded with s_preloadedBoard so it can be used as a base for the test
+    /// is shouldn't be written to as it can screw someone else's tests
+    const Board m_baseBoard;
+    
+    /// 4 players. Needed for testing
+    Player m_player1;
+    Player m_player2;
+    Player m_player3;
+    Player m_player4;
+    
+    
+    /// a preloaded board to perform tests easily
+    static char s_preloadedBoardArray[RULES_TEST_ROWS][RULES_TEST_COLUMNS];
 
     void TestIsCoordTouchingPlayerCompute();
-    
     void TestIsPieceDeployableCompute();
-    
     void TestsNucleationPointCompute();
-    
     void TestIsPieceDeployableInNKPoint();
-    
     void TestIsPieceDeployableInStartingPoint();
-    
     void TestCalculateValidCoordsInNucleationPoint();
-    
     void TestCalculateNextValidCoordInNucleationPoint();
-    
     void TestHasValidCoordInNucleationPoint();
-    
     void TestCalculateValidCoordsInStartingPoint();
-    
     void TestRecalculateNKAroundCoord();
-    
     void TestRecalculateInfluenceAreaAroundPieceFast();
-    
     void TestIsCoordInfluencedByPlayerFastCompute();
-    
     void TestRecalculateInfluenceAreaInBoard();
-    
     void TestCanPlayerGo();
 };
 

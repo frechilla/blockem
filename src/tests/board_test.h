@@ -46,6 +46,9 @@ private:
 
     /// tests copy constructor and operator=
     void TestCopyBoard();
+
+    /// Test creation of boards loading data from arrays
+    void TestCreateBoardFromArray();
 };
 
 #endif // BOARD_TEST_H_
