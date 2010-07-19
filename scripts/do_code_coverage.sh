@@ -51,12 +51,15 @@ cd src/tests
 echo "running blockem test application in src/tests"
 ./blockemtest
 
+# cd back into the blockem directory (not the test app directory)
+cd ../
+
 # run blockem in console mode against the game examples. cd into src/ since blockem
 # must be run from there
-cd ../
-LIST_OF_FILES=`find tests/examples/games -maxdepth 1 -type f -not -iname "*error*"`
-echo "running ./blockem -d $DEPTH $LIST_OF_FILES"
-./blockem --mode=2 -d $DEPTH $LIST_OF_FILES 
+# @214. Run only test binary (blockemtest)
+#LIST_OF_FILES=`find tests/examples/games -maxdepth 1 -type f -not -iname "*error*"`
+#echo "running ./blockem -d $DEPTH $LIST_OF_FILES"
+#./blockem --mode=2 -d $DEPTH $LIST_OF_FILES 
 
 # now test the command line options
 # help & version message
@@ -71,6 +74,9 @@ echo "running ./blockem -d $DEPTH $LIST_OF_FILES"
 ./blockem --mode=1 -r 0 -c 0 -x 4 -y 4
 ./blockem --mode=1 -r 14 -c 14 -x 15 -y 4
 ./blockem --mode=1 -r 14 -c 14 -x 4 -y 14
+
+
+# @214: game total allocation. It's not in blockemtest yet
 # computer solves this
 ./blockem --mode=1 -r 14 -c 14 -x 4 -y 4
 # impossible to solve
