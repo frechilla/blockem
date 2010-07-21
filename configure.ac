@@ -6,10 +6,11 @@ AC_PREREQ([2.64])
 m4_define([MAJOR_VERSION], 0)
 m4_define([MINOR_VERSION], 2)
 m4_define([MICRO_VERSION], 3)
+m4_define([BLOCKEM_PACKAGE_NAME], blockem)
 
 define([svnversion], esyscmd([sh -c "svnversion|tr -d '\n'"]))
 
-AC_INIT([blockem], [MAJOR_VERSION.MINOR_VERSION.MICRO_VERSION], [frechilla -at- gmail -dot- com])
+AC_INIT([BLOCKEM_PACKAGE_NAME], [MAJOR_VERSION.MINOR_VERSION.MICRO_VERSION], [frechilla -at- gmail -dot- com])
 AM_INIT_AUTOMAKE(blockem, [MAJOR_VERSION.MINOR_VERSION.MICRO_VERSION])
 AC_CONFIG_SRCDIR([src/game1v1.cpp])
 AC_CONFIG_HEADERS([config.h])
@@ -22,6 +23,15 @@ AC_PROG_CC
 # AM_CONDITIONAL(HAVE_OBJCOPY_WEAKEN, ["$OBJCOPY" -W malloc /bin/ls /dev/null])
 AC_CHECK_TOOL([OBJCOPY], [objcopy], [])
 AC_CHECK_TOOL([LD], [ld], [])
+
+# i18n
+# ALL_LINGUAS variable lists all the available translations in your package.
+# It is a whitespace separated quoted string, such as "de es fr hu".
+ALL_LINGUAS="es"
+GETTEXT_PACKAGE=BLOCKEM_PACKAGE_NAME
+AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [gettext package])
+AC_SUBST(GETTEXT_PACKAGE)
+#AM_GLIB_GNU_GETTEXT
 
 # OS dependant checking. http://www.airs.com/ian/configure/configure_5.html
 # This macro will arrange to define a few shell variables...

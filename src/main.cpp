@@ -24,25 +24,28 @@
 /// Ref       Who                When         What
 ///           Faustino Frechilla 30-Mar-2009  Original development
 ///           Faustino Frechilla 23-Jun-2010  Nice handling of command line parameters
+///           Faustino Frechilla 21-Jul-2010  i18n
 /// @endhistory
 ///
 // ============================================================================
 
 #include <stdio.h>
+#include <cstdio>        // printf (needed for better i18n)
 #include <stdlib.h>
 #include <math.h>
-#include <string.h> // strcmp
+#include <string.h>      // strcmp
 #include <iostream>
 #include <fstream>
-#include <glib.h>   // glib-Commandline-option-parser
+#include <glib.h>       // glib-Commandline-option-parser
 #include <gtkmm.h>
-#include "config.h" // autotools header file
+#include <glib/gi18n.h> // i18n
+#include "config.h"     // autotools header file
 #include "assert.h"
 
 // header file created during the make process which saves the current date
 #include "compiletime.h"
-#include "gui_main_window.h"
 #include "gui_glade_defs.h"
+#include "gui_main_window.h"
 #include "game1v1.h"
 #include "game_total_allocation.h"
 #include "gui_game1v1_config.h" // initialise singleton
@@ -147,7 +150,7 @@ static GOptionEntry g_cmdEntries[] =
     { G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_FILENAME_ARRAY, &g_blockemfilePath,
         "Paths to 1vs1game files (mode 2). Blockem will calculate next move per each one of them\n"\
         "                              and print out the result in console.\n"\
-        "                              Specifying at least 1 file is MANDATORY for --mode=2", "[FILE(S)]"},
+        "                              Specifying at least 1 file is MANDATORY for --mode=2", "FILE [ FILE ... ]"},
 
     { NULL }
 };
@@ -164,8 +167,29 @@ void FatalError(
     const char* a_customError,
     int         a_errorCode)
 {
-    std::cerr << a_binName << ": Fatal error: " << a_customError << std::endl;
-    std::cerr << a_binName << ": Try '" << a_binName <<  " --help'" << std::endl;
+
+    std::cerr << a_binName 
+              //- TRANSLATORS: Please leave the starting colon since it is part of the expected format
+              //- Bear in mind this string will be used to print out a help message when an error is found
+              //- A typical example would be: "./blockem: Fatal error: error 123 while trying to connect"
+              //- That is the "Fatal error" sentence that needs to be translated
+              //- Thank you for contributing to this project
+              << _(": Fatal error")
+              << ": " 
+              << a_customError 
+              << std::endl;
+    
+    std::cerr << a_binName 
+              //- TRANSLATORS: Please leave the starting colon since it is part of the expected format
+              //- Bear in mind this string will be used to print out a help message when an error is found
+              //- A typical example would be: "./blockem: Try './blockem --help'". That is the "try" word
+              //- that is to be translated here
+              //- Thank you for contributing to this project
+              << _(": Try")
+              << " '" 
+              << a_binName 
+              <<  " --help'" 
+              << std::endl;
 
     // free command line parsing resources
     if (g_cmdContext != NULL)
@@ -182,19 +206,39 @@ int main(int argc, char **argv)
 {
     GError *error = NULL;
 
+    // i18n initialisation
+    // make sure first that the message catalog can be found
+    if (bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR) != NULL)
+    {
+        std::cerr << GETTEXT_PACKAGE << " " << LOCALEDIR  << std::endl;
+        // UTF-8 chosen as codeset
+        bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
+        // initialise the message catalog
+        textdomain (GETTEXT_PACKAGE);
+    }
+    else
+    {
+        std::cerr << "Error while setting the locale" << std::endl;
+    }
+    
     // create new command line context. This resource must be deleted before existing the app
-    g_cmdContext = g_option_context_new ("- The GNU polyominoes board game");
+    //- TRANSLATORS: Please leave the starting dash as it is part of the glib command line
+    //- parsing formatting
+    //- Thank you for contributing to this project
+    g_cmdContext = g_option_context_new (_("- The GNU polyominoes board game"));
 
-    // TODO: add i18n
-    //   have a look to g_option_context_add_main_entries (cmdContext, g_cmdEntries, GETTEXT_PACKAGE);
-    g_option_context_add_main_entries (g_cmdContext, g_cmdEntries, NULL);
+    // to diable i18n write NULL instead of GETTEXT_PACKAGE in the 3rd parameter 
+    //     g_option_context_add_main_entries (cmdContext, g_cmdEntries, NULL);
+    g_option_context_add_main_entries (g_cmdContext, g_cmdEntries, GETTEXT_PACKAGE);
 
     // http://library.gnome.org/devel/glib/unstable/glib-Commandline-option-parser.html#g-option-context-add-group
     g_option_context_add_group (g_cmdContext, gtk_get_option_group (TRUE));
     if (!g_option_context_parse (g_cmdContext, &argc, &argv, &error))
     {
         std::stringstream errMessage;
-        errMessage << "Error parsing command line: " << error->message;
+        errMessage << _("Error parsing command line") 
+                   << ": "
+                   << error->message;
 
         FatalError(argv[0], errMessage.str().c_str(), COMMAND_LINE_PARSING_ERR);
     }
@@ -257,7 +301,10 @@ int main(int argc, char **argv)
             {
                 FatalError(
                     argv[0],
-                    "Couldn't load Gtkbuilder definitions",
+                    //- TRANSLATORS: Please leave the word Gtkbuilder as it is since it's the name
+                    //- of the component that failed
+                    //- Thank you for contributing to this project
+                    _("Could not load Gtkbuilder definitions"),
                     GUI_EXCEPTION_ERR);
             }
 

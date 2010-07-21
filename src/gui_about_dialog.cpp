@@ -24,11 +24,15 @@
 /// Ref       Who                When         What
 ///           Faustino Frechilla 26-Nov-2009  Original development
 ///           Faustino Frechilla 25-Apr-2010  libglade dependency removed. Code migrated to GtkBuilder
+///           Faustino Frechilla 21-Jul-2010  i18n
 /// @endhistory
 ///
 // ============================================================================
-
+#ifdef DEBUG_PRINT
 #include <iostream> // std::cerr
+#endif
+
+#include <glib/gi18n.h> // i18n
 #include "config.h" // PACKAGE_VERSION
 #include "gui_about_dialog.h"
 #include "gui_glade_defs.h"
@@ -52,10 +56,15 @@ AboutDialog::AboutDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builde
         catch(...)
         {
             picture.reset();
+#ifdef DEBUG_PRINT
             std::cerr
-               << "WARNING: Exception occurred when setting the logo into the AboutDialog from "
+               //- TRANSLATORS: Bear in mind this string will be printed followed by the path to logo file
+               //- Thank you for contributing to this project
+               << _("WARNING: Exception occurred when setting the logo into the AboutDialog from")
+               << " "
                << GUI_PATH_TO_LOGO_STR
                << std::endl;
+#endif
         }
 
         if (picture)
@@ -74,10 +83,15 @@ AboutDialog::AboutDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builde
         catch(...)
         {
             picture.reset();
+#ifdef DEBUG_PRINT
             std::cerr
-               << "WARNING: Exception occurred when setting the 16x16 icon into the AboutDialog from "
+               //- TRANSLATORS: Bear in mind this string will be printed followed by the path to 16x16 icon file
+               //- Thank you for contributing to this project
+               << _("WARNING: Exception occurred when setting the 16x16 icon into the AboutDialog from")
+               << " "
                << GUI_PATH_TO_16PICTURE_STR
                << std::endl;
+#endif
         }
 
         if (picture)

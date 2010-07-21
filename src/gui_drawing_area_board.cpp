@@ -23,11 +23,15 @@
 /// @history
 /// Ref       Who                When         What
 ///           Faustino Frechilla 8-Apr-2010  Original development
+///           Faustino Frechilla 21-Jul-2010  i18n
 /// @endhistory
 ///
 // ============================================================================
 
-#include <iostream>
+#ifdef DEBUG_PRINT
+#include <cstdio> // printf (needed for better i18n)
+#endif
+#include <glib/gi18n.h> // i18n
 #include "gui_drawing_area_board.h"
 #include "rules.h"
 
@@ -550,7 +554,10 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
 bool DrawingAreaBoard::on_button_press_event(GdkEventButton* event)
 {
 #ifdef DEBUG_PRINT
-    std::cout << "clicked in (" << event->x << ", " << event->y << ")" << std::endl;
+    //- TRANSLATORS: both %d respectively represent the X and Y pixel where the user clicked
+    //- Please leave them there because they are needed by the program
+    //- Thank you for contributing to this project
+    printf(_("User clicked in pixel (%d, %d)\n)", event->x, event->y);
 #endif
 
     Coordinate thisCoord;
@@ -562,7 +569,10 @@ bool DrawingAreaBoard::on_button_press_event(GdkEventButton* event)
     }
 
 #ifdef DEBUG_PRINT
-    std::cout << "SQUARE: (" << thisCoord.m_row << ", " << thisCoord.m_col << ")" << std::endl;
+    //- TRANSLATORS: both %d respectively represent the row and column of the square in the board 
+    //- where the user clicked. Please leave them there because they are needed by the program
+    //- Thank you for contributing to this project
+    printf(_("Square in board: Row %d. Column %d)\n)", thisCoord.m_row, thisCoord.m_col);
 #endif
 
     // someone clicked on the board. Notify the coordinate, the piece and the player who did it

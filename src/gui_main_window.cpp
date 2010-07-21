@@ -27,14 +27,16 @@
 ///           Faustino Frechilla 06-Apr-2010  StopWatch for human and computer
 ///           Faustino Frechilla 25-Apr-2010  libglade dependency removed. Code migrated to GtkBuilder
 ///           Faustino Frechilla 27-Apr-2010  2 human players allowed. Computer can start from both player1 and 2
+///           Faustino Frechilla 21-Jul-2010  i18n
 /// @endhistory
 ///
 // ============================================================================
 
 #ifdef DEBUG_PRINT
 #include <iostream>
+#include <cstdio> // printf (needed for better i18n)
 #endif
-
+#include <glib/gi18n.h> // i18n
 #include <queue>   // queue computer's moves
 #include <iomanip> // setw
 #include "gui_main_window.h"
@@ -44,23 +46,23 @@
 /// message to be shown to the user when he/she requested the
 /// application to be closed, and the worker thread is busy computing
 static const char MESSAGE_ASK_BEFORE_CLOSE[] =
-        "The game is computing the next move. Are you sure do you want to close the application?";
+        N_("The game is computing the next move. Are you sure do you want to close the application?");
 
 /// how often stopwatches are updated
 static const uint32_t STOPWATCH_UPDATE_PERIOD_MILLIS = 500; // 1000 = 1 second
 
 
-// static methods to communicate Game1v1 progress with MainWindow
-// this float is used to communicate the worker thread with the main thread
-// in a thread-safe manner. It's a bit dirty but it will do it for now
+/// static methods to communicate Game1v1 progress with MainWindow
+/// this float is used to communicate the worker thread with the main thread
+/// in a thread-safe manner. It's a bit dirty but it will do it for now
 static float s_computingCurrentProgress = 0.0;
-// static easy to use mutex for shared data across threads
 // http://tadeboro.blogspot.com/2009/06/multi-threaded-gtk-applications.html
+/// static easy to use mutex for shared data across threads
 G_LOCK_DEFINE_STATIC(s_computingCurrentProgress);
 
-// this is a pointer to the MainWindow itself so it can be used from the static method
-// MainWindow::ProgressUpdate. It is dirty, but it works (and it is enough for now)
-// WARNING: it won't work if MainWindow is instantiated twice
+/// this is a pointer to the MainWindow itself so it can be used from the static method
+/// MainWindow::ProgressUpdate. It is dirty, but it works (and it is enough for now)
+/// WARNING: it won't work if MainWindow is instantiated twice
 static MainWindow *g_pMainWindow = NULL;
 
 void MainWindow::ProgressUpdate(float a_progress)
@@ -99,9 +101,25 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     m_boardDrawingArea(m_the1v1Game.GetBoard()),
     m_editPieceTable(NULL),
     m_stopWatchLabelPlayer1(
-        STOPWATCH_UPDATE_PERIOD_MILLIS, std::string("Player1: elapsed time ")),
+        STOPWATCH_UPDATE_PERIOD_MILLIS, 
+        m_the1v1Game.GetPlayer(
+            Game1v1::e_Game1v1Player1).GetName() + 
+            std::string (": ") + 
+            //- TRANSLATORS: Bear in mind that the name of a player plus a colon character preceeds this string
+            //- The final string would be something like: "Peter: elapsed time 00:01:43"
+            //- Thank you for contributing to this project
+            std::string(_("elapsed time")) + 
+            std::string(" ")),
     m_stopWatchLabelPlayer2(
-        STOPWATCH_UPDATE_PERIOD_MILLIS, std::string("Player2: elapsed time "))
+        STOPWATCH_UPDATE_PERIOD_MILLIS, 
+        m_the1v1Game.GetPlayer(
+            Game1v1::e_Game1v1Player2).GetName() + 
+            std::string (": ") + 
+            //- TRANSLATORS: Bear in mind that the name of a player plus a colon character preceeds this string
+            //- The final string would be something like: "Peter: elapsed time 00:01:43"
+            //- Thank you for contributing to this project
+            std::string(_("elapsed time")) + 
+            std::string(" "))
 {
     //TODO this is dirty (even though it works) the way MainWindow::ProgressUpdate
     // access the MainWindow Instance should be fixed in some way
@@ -129,7 +147,10 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
             icon.reset();
 #ifdef DEBUG_PRINT
             std::cerr
-               << "WARNING: Exception occurred when setting the 16x16 icon into the Main Window from "
+               //- TRANSLATORS: Bear in mind this string will be printed followed by the path to the 16x16 icon file
+               //- Thank you for contributing to this project
+               << _("WARNING: Exception occurred when setting the 16x16 icon into the Main Window from")
+               << " "
                << GUI_PATH_TO_16PICTURE_STR
                << std::endl;
 #endif
@@ -392,7 +413,12 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
                << "\">"
                << m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1).GetName()
                << "</span>"
-               << ": elapsed time ";
+               << ": "
+               //- TRANSLATORS: Bear in mind that the name of a player plus a colon character preceeds this string
+               //- The final string would be something like: "Peter: elapsed time 00:01:43"
+               //- Thank you for contributing to this project
+               << "elapsed time"
+               << " ";
     m_stopWatchLabelPlayer1.SetPrefix(theMessage.str());
 
     Game1v1Config::Instance().GetPlayer2Colour(red, green, blue);
@@ -405,7 +431,12 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
                << "\">"
                << m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2).GetName()
                << "</span>"
-               << ": elapsed time ";
+               << ": "
+               //- TRANSLATORS: Bear in mind that the name of a player plus a colon character preceeds this string
+               //- The final string would be something like: "Peter: elapsed time 00:01:43"
+               //- Thank you for contributing to this project
+               << "elapsed time"
+               << " ";
     m_stopWatchLabelPlayer2.SetPrefix(theMessage.str());
 
     // initialise the list of players of the board drawing area
@@ -443,7 +474,7 @@ bool MainWindow::MainWindow_DeleteEvent(GdkEventAny*)
     {
         Gtk::MessageDialog::MessageDialog exitingMessage(
                 *this,
-                MESSAGE_ASK_BEFORE_CLOSE,
+                _(MESSAGE_ASK_BEFORE_CLOSE),
                 true,
                 Gtk::MESSAGE_QUESTION,
                 Gtk::BUTTONS_YES_NO,
@@ -469,7 +500,7 @@ void MainWindow::MenuItemGameQuit_Activate()
     {
         Gtk::MessageDialog::MessageDialog exitingMessage(
                 *this,
-                MESSAGE_ASK_BEFORE_CLOSE,
+                _(MESSAGE_ASK_BEFORE_CLOSE),
                 true,
                 Gtk::MESSAGE_QUESTION,
                 Gtk::BUTTONS_YES_NO,
@@ -509,7 +540,7 @@ void MainWindow::MenuItemGameNew_Activate()
         // config dialog cancelled
         ;
 #ifdef DEBUG_PRINT
-        std::cout << "Config Dialog cancelled" << std::endl;
+        std::cout << _("Configuration Dialog cancelled") << std::endl;
 #endif // DEBUG_PRINT
     }
 #ifdef DEBUG

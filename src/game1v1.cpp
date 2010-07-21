@@ -23,20 +23,23 @@
 /// @history
 /// Ref       Who                When         What
 ///           Faustino Frechilla 28-Aug-2009  Original development
+///           Faustino Frechilla 21-Jul-2010  i18n
 /// @endhistory
 ///
 // ============================================================================
 
 #ifdef DEBUG_PRINT
 #include <iostream>
+#include <cstdio> // printf (needed for better i18n)
 #endif
 
+#include <glib/gi18n.h> // i18n
 #include "game1v1.h"
 
 /// player1's name
-static const char PLAYER_1_NAME[] = "Player1";
+static const char PLAYER_1_NAME[] = N_("Player1");
 /// player2's name
-static const char PLAYER_2_NAME[] = "Player2";
+static const char PLAYER_2_NAME[] = N_("Player2");
 
 /// it will be used as an empty space in the board
 static const char CHAR_EMPTY   = ' ';
@@ -56,8 +59,16 @@ Game1v1::Game1v1(
     const Coordinate &a_player1StartingCoord,
     const Coordinate &a_player2StartingCoord) :
 	m_board(BOARD_1VS1_ROWS, BOARD_1VS1_COLUMNS, CHAR_EMPTY),
-    m_player1(std::string(PLAYER_1_NAME), CHAR_PLAYER1, BOARD_1VS1_ROWS, BOARD_1VS1_COLUMNS, a_player1StartingCoord),
-    m_player2(std::string(PLAYER_2_NAME), CHAR_PLAYER2, BOARD_1VS1_ROWS, BOARD_1VS1_COLUMNS, a_player2StartingCoord),
+    m_player1(std::string(_(PLAYER_1_NAME)), 
+              CHAR_PLAYER1, 
+              BOARD_1VS1_ROWS, 
+              BOARD_1VS1_COLUMNS, 
+              a_player1StartingCoord),
+    m_player2(std::string(_(PLAYER_2_NAME)), 
+              CHAR_PLAYER2, 
+              BOARD_1VS1_ROWS, 
+              BOARD_1VS1_COLUMNS, 
+              a_player2StartingCoord),
     m_progressFunctor(NULL)
 {
 #ifdef DEBUG
@@ -585,7 +596,9 @@ int32_t Game1v1::MinMax(
     }
 
 #ifdef DEBUG_PRINT
-    std::cout << "NK: " << playerMe->NumberOfNucleationPoints() << std::endl;
+    std::cout << _("Nucleation points") << " " 
+              << playerMe->NumberOfNucleationPoints() 
+              << std::endl;
 #endif
 
     // will contain the valid coords per nucleation point
@@ -734,7 +747,10 @@ int32_t Game1v1::MinMax(
 
 
 #ifdef DEBUG_PRINT
-    std::cout << "Times called " << timesCalled << std::endl;
+    //- TRANSLATORS: %d represents the amount of times the functions has been called
+    //- Please leave it there because it is needed by the program
+    //- Thank you for contributing to this project
+    printf(_("Minimax function called %d times\n"), timesCalled);
 #endif
 
     return alpha;

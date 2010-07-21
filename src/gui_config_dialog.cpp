@@ -23,9 +23,12 @@
 /// @history
 /// Ref       Who                When         What
 ///           Faustino Frechilla 01-May-2010  Original development
+///           Faustino Frechilla 21-Jul-2010  i18n
 /// @endhistory
 ///
 // ============================================================================
+
+#include <glib/gi18n.h> // i18n
 #include "gui_config_dialog.h"
 #include "gui_glade_defs.h"
 #include "gui_game1v1_config.h"
@@ -34,8 +37,8 @@
 
 
 // strings for the user to choose the type of player
-static const char COMBO_PLAYER_TYPE_HUMAN[]    = "Human";
-static const char COMBO_PLAYER_TYPE_COMPUTER[] = "Computer";
+static const char COMBO_PLAYER_TYPE_HUMAN[]    = N_("Human");
+static const char COMBO_PLAYER_TYPE_COMPUTER[] = N_("Computer");
 
 // maximum and minimum coordinate values for the starting coordinate spinbuttons
 // they start by 1.0 'cos is more user friendly than the c-style 0
@@ -82,85 +85,127 @@ ConfigDialog::ConfigDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Buil
     m_gtkBuilder->get_widget(GUI_CONFIG_TABLE_PLAYER1, m_tablePlayer1);
     if (m_tablePlayer1 == NULL)
     {
-        throw new GUIException(std::string("gtk::table for player 1 item retrieval failed"));
+        //- TRANSLATORS: Please, leave gtk::Table, player1 and ConfigDialog as they are here
+        //- Those names specify internal data when the app can't start and can be useful to find out the error cause
+        //- Thank you for contributing to this project
+        throw new GUIException(std::string(_("Could not load gtk::Table (player1) in ConfigDialog")));
     }
 
     m_gtkBuilder->get_widget(GUI_CONFIG_TABLE_PLAYER2, m_tablePlayer2);
     if (m_tablePlayer2 == NULL)
     {
-        throw new GUIException(std::string("gtk::table for player 2 item retrieval failed"));
+        //- TRANSLATORS: Please, leave gtk::Table, player2 and ConfigDialog as they are here
+        //- Those names specify internal data when the app can't start and can be useful to find out the error cause
+        //- Thank you for contributing to this project
+        throw new GUIException(std::string(_("Could not load gtk::Table (player2) in ConfigDialog")));
     }
 
     m_gtkBuilder->get_widget(GUI_CONFIG_SPINBUTTON_STARTROW1, m_spinbuttonStartingRowPlayer1);
     if (m_spinbuttonStartingRowPlayer1 == NULL)
     {
-        throw new GUIException(std::string("gtk::spinbutton for starting row (player1) retrieval failed"));
+        //- TRANSLATORS: Please, leave gtk::SpinButton, player1 and ConfigDialog as they are here
+        //- Those names specify internal data when the app can't start and can be useful to find out the error cause
+        //- Thank you for contributing to this project
+        throw new GUIException(std::string(_("Could not load gtk::SpinButton (player1) for starting row in ConfigDialog")));
     }
 
     m_gtkBuilder->get_widget(GUI_CONFIG_SPINBUTTON_STARTCOL1, m_spinbuttonStartingColumnPlayer1);
     if (m_spinbuttonStartingColumnPlayer1 == NULL)
     {
-        throw new GUIException(std::string("gtk::spinbutton for starting col (player1) retrieval failed"));
+        //- TRANSLATORS: Please, leave gtk::SpinButton, player1 and ConfigDialog as they are here
+        //- Those names specify internal data when the app can't start and can be useful to find out the error cause
+        //- Thank you for contributing to this project
+        throw new GUIException(std::string(_("Could not load gtk::SpinButton (player1) for starting column in ConfigDialog")));
     }
 
     m_gtkBuilder->get_widget(GUI_CONFIG_SPINBUTTON_STARTROW2, m_spinbuttonStartingRowPlayer2);
     if (m_spinbuttonStartingRowPlayer2 == NULL)
     {
-        throw new GUIException(std::string("gtk::spinbutton for starting row (player2) retrieval failed"));
+        //- TRANSLATORS: Please, leave gtk::SpinButton, player2 and ConfigDialog as they are here
+        //- Those names specify internal data when the app can't start and can be useful to find out the error cause
+        //- Thank you for contributing to this project
+        throw new GUIException(std::string(_("Could not load gtk::SpinButton (player2) for starting row in ConfigDialog")));
     }
 
     m_gtkBuilder->get_widget(GUI_CONFIG_SPINBUTTON_STARTCOL2, m_spinbuttonStartingColumnPlayer2);
     if (m_spinbuttonStartingColumnPlayer2 == NULL)
     {
-        throw new GUIException(std::string("gtk::spinbutton for starting col (player2) retrieval failed"));
+        //- TRANSLATORS: Please, leave gtk::SpinButton, player2 and ConfigDialog as they are here
+        //- Those names specify internal data when the app can't start and can be useful to find out the error cause
+        //- Thank you for contributing to this project
+        throw new GUIException(std::string(_("Could not load gtk::SpinButton (player2) for starting column in ConfigDialog")));
     }
 
     m_gtkBuilder->get_widget(GUI_CONFIG_AI_FRAME_PLAYER1, m_AIFramePlayer1);
     if (m_AIFramePlayer1 == NULL)
     {
-        throw new GUIException(std::string("gtk::Frame for player 1 AI item retrieval failed"));
+        //- TRANSLATORS: Please, leave gtk::Frame, player1 and ConfigDialog as they are here
+        //- Those names specify internal data when the app can't start and can be useful to find out the error cause
+        //- Thank you for contributing to this project
+        throw new GUIException(std::string(_("Could not load AI gtk::Frame (player1) in ConfigDialog")));
     }
 
     m_gtkBuilder->get_widget(GUI_CONFIG_AI_FRAME_PLAYER2, m_AIFramePlayer2);
     if (m_AIFramePlayer2 == NULL)
     {
-        throw new GUIException(std::string("gtk::Frame for player 2 AI item retrieval failed"));
+        //- TRANSLATORS: Please, leave gtk::Frame, player2 and ConfigDialog as they are here
+        //- Those names specify internal data when the app can't start and can be useful to find out the error cause
+        //- Thank you for contributing to this project
+        throw new GUIException(std::string(_("Could not load AI gtk::Frame (player2) in ConfigDialog")));
     }
 
     m_gtkBuilder->get_widget(GUI_CONFIG_AI_TABLE_PLAYER1, m_AITablePlayer1);
     if (m_AITablePlayer1 == NULL)
     {
-        throw new GUIException(std::string("gtk::table for player 1 AI item retrieval failed"));
+        //- TRANSLATORS: Please, leave gtk::Table, player1 and ConfigDialog as they are here
+        //- Those names specify internal data when the app can't start and can be useful to find out the error cause
+        //- Thank you for contributing to this project
+        throw new GUIException(std::string(_("Could not load AI gtk::Table (player1) in ConfigDialog")));
     }
 
     m_gtkBuilder->get_widget(GUI_CONFIG_AI_TABLE_PLAYER2, m_AITablePlayer2);
     if (m_AITablePlayer2 == NULL)
     {
-        throw new GUIException(std::string("gtk::table for player 2 AI item retrieval failed"));
+        //- TRANSLATORS: Please, leave gtk::Table, player2 and ConfigDialog as they are here
+        //- Those names specify internal data when the app can't start and can be useful to find out the error cause
+        //- Thank you for contributing to this project
+        throw new GUIException(std::string(_("Could not load AI gtk::Table (player2) in ConfigDialog")));
     }
 
     m_gtkBuilder->get_widget(GUI_CONFIG_AI_SPINBUTTON_DEPTH1, m_spinbuttonDepthPlayer1);
     if (m_spinbuttonDepthPlayer1 == NULL)
     {
-        throw new GUIException(std::string("gtk::spinbutton for search tree depth (player1) retrieval failed"));
+        //- TRANSLATORS: Please, leave gtk::SpinButton, player1 and ConfigDialog as they are here
+        //- Those names specify internal data when the app can't start and can be useful to find out the error cause
+        //- Thank you for contributing to this project
+        throw new GUIException(std::string(_("Could not load gtk::SpinButton for search-tree depth (player1) in ConfigDialog")));
     }
 
     m_gtkBuilder->get_widget(GUI_CONFIG_AI_SPINBUTTON_DEPTH2, m_spinbuttonDepthPlayer2);
     if (m_spinbuttonDepthPlayer2 == NULL)
     {
-        throw new GUIException(std::string("gtk::spinbutton for search tree depth (player2) retrieval failed"));
+        //- TRANSLATORS: Please, leave gtk::SpinButton, player2 and ConfigDialog as they are here
+        //- Those names specify internal data when the app can't start and can be useful to find out the error cause
+        //- Thank you for contributing to this project
+        throw new GUIException(std::string(_("Could not load gtk::SpinButton for search-tree depth (player2) in ConfigDialog")));
     }
 
     m_gtkBuilder->get_widget(GUI_CONFIG_AI_TEXTVIEW_HEURISTIC1, m_textViewHeuristic1);
     if (m_textViewHeuristic1 == NULL)
     {
-        throw new GUIException(std::string("gtk::TextView for heuristic (player1) retrieval failed"));
+        //- TRANSLATORS: Please, leave gtk::TextView, player1 and ConfigDialog as they are here
+        //- Those names specify internal data when the app can't start and can be useful to find out the error cause
+        //- Thank you for contributing to this project
+        throw new GUIException(std::string(_("Could not load gtk::TextView for heuristic (player1) in ConfigDialog")));
     }
 
     m_gtkBuilder->get_widget(GUI_CONFIG_AI_TEXTVIEW_HEURISTIC2, m_textViewHeuristic2);
     if (m_textViewHeuristic2 == NULL)
     {
-        throw new GUIException(std::string("gtk::TextView for heuristic (player2) retrieval failed"));
+        //- TRANSLATORS: Please, leave gtk::TextView, player2 and ConfigDialog as they are here
+        //- Those names specify internal data when the app can't start and can be useful to find out the error cause
+        //- Thank you for contributing to this project
+        throw new GUIException(std::string(_("Could not load gtk::TextView for heuristic (player2) in ConfigDialog")));
     }
 
     // adjustments for starting coordinate spinbuttons
@@ -175,13 +220,13 @@ ConfigDialog::ConfigDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Buil
 
     // configure custom widgets
     // type of player1
-    m_comboTypePlayer1.insert_text(0, COMBO_PLAYER_TYPE_HUMAN);
-    m_comboTypePlayer1.append_text(COMBO_PLAYER_TYPE_COMPUTER);
-    m_comboTypePlayer1.set_active_text(COMBO_PLAYER_TYPE_HUMAN);
+    m_comboTypePlayer1.insert_text( 0, _(COMBO_PLAYER_TYPE_HUMAN) );
+    m_comboTypePlayer1.append_text( _(COMBO_PLAYER_TYPE_COMPUTER) );
+    m_comboTypePlayer1.set_active_text( _(COMBO_PLAYER_TYPE_HUMAN) );
     //type of player2
-    m_comboTypePlayer2.insert_text(0, COMBO_PLAYER_TYPE_HUMAN);
-    m_comboTypePlayer2.append_text(COMBO_PLAYER_TYPE_COMPUTER);
-    m_comboTypePlayer2.set_active_text(COMBO_PLAYER_TYPE_COMPUTER);
+    m_comboTypePlayer2.insert_text( 0, _(COMBO_PLAYER_TYPE_HUMAN) );
+    m_comboTypePlayer2.append_text( _(COMBO_PLAYER_TYPE_COMPUTER) );
+    m_comboTypePlayer2.set_active_text( _(COMBO_PLAYER_TYPE_COMPUTER) );
     // heuristics
     for (int32_t i = Heuristic::e_heuristicStartCount;
          i < Heuristic::e_heuristicCount;
@@ -321,7 +366,10 @@ void ConfigDialog::SpinButtonDepthPlayer1_SignalValueChanged()
             m_spinbuttonDepthPlayer1->set_numeric(false);
         }
 
-        m_spinbuttonDepthPlayer1->set_text("Auto");
+        //- TRANSLATORS: This string shouldn't be bigger than 4 characters long
+        //- strings bigger than those 4 characters will be stripped out
+        //- Thank you for contributing to this project
+        m_spinbuttonDepthPlayer1->set_text(_("Auto"));
     }
     else if (m_spinbuttonDepthPlayer1->get_numeric() == false)
     {
@@ -337,8 +385,11 @@ void ConfigDialog::SpinButtonDepthPlayer2_SignalValueChanged()
         {
             m_spinbuttonDepthPlayer2->set_numeric(false);
         }
-
-        m_spinbuttonDepthPlayer2->set_text("Auto");
+        
+        //- TRANSLATORS: This string shouldn't be bigger than 4 characters long
+        //- strings bigger than those 4 characters will be stripped out
+        //- Thank you for contributing to this project
+        m_spinbuttonDepthPlayer2->set_text(_("Auto"));
     }
     else if (m_spinbuttonDepthPlayer2->get_numeric() == false)
     {
