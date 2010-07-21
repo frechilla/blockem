@@ -397,7 +397,7 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
 
     Game1v1Config::Instance().GetPlayer2Colour(red, green, blue);
     m_the1v1Game.SetPlayerColour(Game1v1::e_Game1v1Player2, red, green, blue);
-    theMessage.str("");
+    theMessage.str(std::string());
     theMessage << "<span color=\"#"
                << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(red)
                << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(green)
@@ -1448,7 +1448,7 @@ void MainWindow::UpdateScoreStatus()
     m_player2ScoreLabel.set_markup(theMessage.str().c_str());
 
     player1.GetColour(red, green, blue);
-    theMessage.str("");
+    theMessage.str(std::string());
     theMessage << "<span color=\"#"
                << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(red)
                << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(green)
