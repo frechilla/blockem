@@ -14,6 +14,7 @@ if OS_WIN32
 else
     AM_CXXFLAGS += -DDATADIR=\"$(datadir)/@PACKAGE@\"
 endif
+AM_CXXFLAGS += -DLOCALEDIR=DATADIR\"/locale\"
 
 # if uncommented compiletime.h will be overwritten everytime the `make` command is run
 #.PHONY: compiletime.h

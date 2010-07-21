@@ -109,6 +109,7 @@ ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
+GETTEXT_PACKAGE = @GETTEXT_PACKAGE@
 GREP = @GREP@
 GTHREAD_CFLAGS = @GTHREAD_CFLAGS@
 GTHREAD_LIBS = @GTHREAD_LIBS@
@@ -195,7 +196,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 INCLUDES = -I$(srcdir)
 AM_CXXFLAGS = $(GTKMM_CFLAGS) $(GTHREAD_CFLAGS) $(am__append_1) \
-	$(am__append_2)
+	$(am__append_2) -DLOCALEDIR=DATADIR\"/locale\"
 AM_LDFLAGS = 
 blockem_DEPENDENCIES = gui_glade_obj.o $(am__append_4)
 blockem_LDADD = gui_glade_obj.o $(GTKMM_LIBS) $(GLADEMM_LIBS) \

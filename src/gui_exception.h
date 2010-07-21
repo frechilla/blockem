@@ -23,6 +23,7 @@
 /// @history
 /// Ref       Who                When         What
 ///           Faustino Frechilla 26-Nov-2009  Original development
+///           Faustino Frechilla 21-Jul-2010  i18n
 /// @endhistory
 ///
 // ============================================================================
@@ -31,13 +32,14 @@
 #define GUIEXCEPTION_H_
 
 #include <stdexcept>
+#include <glib/gi18n.h> // i18n
 
 /// @brief default exception handling the GUI
 class GUIException : public std::runtime_error
 {
 public:
     GUIException(const std::string &a_message) :
-        std::runtime_error("GUIException happened"),
+        std::runtime_error(_("GUI Exception happened")),
         a_msg(a_message)
     {}
 
