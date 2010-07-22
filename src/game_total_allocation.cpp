@@ -41,7 +41,7 @@ const char CHAR_PLAYER   = 'X';
 
 GameTotalAllocation::GameTotalAllocation(int32_t a_rows, int32_t a_columns) :
     m_board(a_rows, a_columns, CHAR_EMPTY),
-    m_player(std::string(_("ThePlayer")), 
+    m_player(std::string(_("The player")), 
              CHAR_PLAYER, 
              a_rows, 
              a_columns, 
