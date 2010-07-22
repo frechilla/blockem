@@ -110,11 +110,11 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     m_boardDrawingArea(m_the1v1Game.GetBoard()),
     m_editPieceTable(NULL),
     m_stopWatchLabelPlayer1(
-        STOPWATCH_UPDATE_PERIOD_MILLIS, 
-        m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1).GetName()),
+        STOPWATCH_UPDATE_PERIOD_MILLIS,
+        m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1).GetName() + std::string(" ")),
     m_stopWatchLabelPlayer2(
-        STOPWATCH_UPDATE_PERIOD_MILLIS, 
-        m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2).GetName())
+        STOPWATCH_UPDATE_PERIOD_MILLIS,
+        m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2).GetName() + std::string(" "))
 {
     //TODO this is dirty (even though it works) the way MainWindow::ProgressUpdate
     // access the MainWindow Instance should be fixed in some way
@@ -142,8 +142,8 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
             icon.reset();
 #ifdef DEBUG_PRINT
             std::cerr
-               //- TRANSLATORS: Bear in mind this string will be printed followed by the path to the 16x16 icon file
-               //- Thank you for contributing to this project
+               // i18n TRANSLATORS: Bear in mind this string will be printed followed by the path to the 16x16 icon file
+               // i18n Thank you for contributing to this project
                << _("WARNING: Exception occurred when setting the 16x16 icon into the Main Window from")
                << " "
                << GUI_PATH_TO_16PICTURE_STR
@@ -162,9 +162,9 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     m_gtkBuilder->get_widget_derived(GUI_CONFIG_DIALOG_NAME, m_configDialog);
     if (m_configDialog == NULL)
     {
-        //- TRANSLATORS: Please, leave ConfigDialog, and MainWindow as they are here
-        //- Those names specify internal data when the app can't start and can be useful to find out the error cause
-        //- Thank you for contributing to this project
+        // i18n TRANSLATORS: Please, leave ConfigDialog, and MainWindow as they are here
+        // i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+        // i18n Thank you for contributing to this project
         throw new GUIException(std::string(_("Could not load the ConfigDialog class in MainWindow")));
     }
 
@@ -173,9 +173,9 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     m_gtkBuilder->get_widget_derived(GUI_ABOUT_DIALOG_NAME, m_aboutDialog);
     if (m_aboutDialog == NULL)
     {
-        //- TRANSLATORS: Please, leave AboutDialog, and MainWindow as they are here
-        //- Those names specify internal data when the app can't start and can be useful to find out the error cause
-        //- Thank you for contributing to this project
+        // i18n TRANSLATORS: Please, leave AboutDialog, and MainWindow as they are here
+        // i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+        // i18n Thank you for contributing to this project
         throw new GUIException(std::string(_("Could not load the AboutDialog class in MainWindow")));
     }
 
@@ -184,9 +184,9 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     m_gtkBuilder->get_widget_derived(GUI_TABLE_EDITING_PIECE_NAME, m_editPieceTable);
     if (m_editPieceTable == NULL)
     {
-        //- TRANSLATORS: Please, leave gtk::Table, and MainWindow as they are here
-        //- Those names specify internal data when the app can't start and can be useful to find out the error cause
-        //- Thank you for contributing to this project
+        // i18n TRANSLATORS: Please, leave gtk::Table, and MainWindow as they are here
+        // i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+        // i18n Thank you for contributing to this project
         throw new GUIException(std::string(_("Could not load the edit pieces gtk::Table in MainWindow")));
     }
 
@@ -195,9 +195,9 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
             m_gtkBuilder->get_object(GUI_MENU_ITEM_ACCELERATOR));
     if (!m_accelGroup)
     {
-        //- TRANSLATORS: Please, leave MainWindow as it is here
-        //- That name specifies internal data when the app can't start and can be useful to find out the error cause
-        //- Thank you for contributing to this project
+        // i18n TRANSLATORS: Please, leave MainWindow as it is here
+        // i18n That name specifies internal data when the app can't start and can be useful to find out the error cause
+        // i18n Thank you for contributing to this project
         throw new GUIException(std::string(_("Could not load the menu accelerator for MainWindow")));
     }
 
@@ -205,9 +205,9 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
             m_gtkBuilder->get_object(GUI_MENU_ITEM_GAME_NEW));
     if (!m_newMenuItem)
     {
-        //- TRANSLATORS: Please, leave MainWindow as it is here
-        //- That name specifies internal data when the app can't start and can be useful to find out the error cause
-        //- Thank you for contributing to this project
+        // i18n TRANSLATORS: Please, leave MainWindow as it is here
+        // i18n That name specifies internal data when the app can't start and can be useful to find out the error cause
+        // i18n Thank you for contributing to this project
         throw new GUIException(std::string(_("Could not load the menu item \"new\" in MainWindow")));
     }
 
@@ -215,9 +215,9 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
             m_gtkBuilder->get_object(GUI_MENU_ITEM_GAME_QUIT));
     if (!m_quitMenuItem)
     {
-        //- TRANSLATORS: Please, leave MainWindow as it is here
-        //- That name specifies internal data when the app can't start and can be useful to find out the error cause
-        //- Thank you for contributing to this project
+        // i18n TRANSLATORS: Please, leave MainWindow as it is here
+        // i18n That name specifies internal data when the app can't start and can be useful to find out the error cause
+        // i18n Thank you for contributing to this project
         throw new GUIException(std::string(_("Could not load the menu item \"quit\" in MainWindow")));
     }
 
@@ -225,9 +225,9 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
             m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_NKPOINTS));
     if (!m_settingsNKPointsMenuItem)
     {
-        //- TRANSLATORS: Please, leave MainWindow as it is here
-        //- That name specifies internal data when the app can't start and can be useful to find out the error cause
-        //- Thank you for contributing to this project
+        // i18n TRANSLATORS: Please, leave MainWindow as it is here
+        // i18n That name specifies internal data when the app can't start and can be useful to find out the error cause
+        // i18n Thank you for contributing to this project
         throw new GUIException(std::string(_("Could not load the menu item \"View nucleation points\" in MainWindow")));
     }
 
@@ -235,9 +235,9 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
             m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_FORBIDDENAREA_PLAYER1));
     if (!m_settingsForbiddenAreaPlayer1MenuItem)
     {
-        //- TRANSLATORS: Please, leave MainWindow as it is here
-        //- That name specifies internal data when the app can't start and can be useful to find out the error cause
-        //- Thank you for contributing to this project
+        // i18n TRANSLATORS: Please, leave MainWindow as it is here
+        // i18n That name specifies internal data when the app can't start and can be useful to find out the error cause
+        // i18n Thank you for contributing to this project
         throw new GUIException(std::string(_("Could not load the menu item \"Show player1's forbidden area\" in MainWindow")));
     }
 
@@ -245,9 +245,9 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
             m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_FORBIDDENAREA_PLAYER2));
     if (!m_settingsForbiddenAreaPlayer2MenuItem)
     {
-        //- TRANSLATORS: Please, leave MainWindow as it is here
-        //- That name specifies internal data when the app can't start and can be useful to find out the error cause
-        //- Thank you for contributing to this project
+        // i18n TRANSLATORS: Please, leave MainWindow as it is here
+        // i18n That name specifies internal data when the app can't start and can be useful to find out the error cause
+        // i18n Thank you for contributing to this project
         throw new GUIException(std::string(_("Could not load the menu item \"Show player2's forbidden area\" in MainWindow")));
     }
 
@@ -255,9 +255,9 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
             m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_FORBIDDENAREA_NOSHOW));
     if (!m_settingsForbiddenAreaNoShowMenuItem)
     {
-        //- TRANSLATORS: Please, leave MainWindow as it is here
-        //- That name specifies internal data when the app can't start and can be useful to find out the error cause
-        //- Thank you for contributing to this project
+        // i18n TRANSLATORS: Please, leave MainWindow as it is here
+        // i18n That name specifies internal data when the app can't start and can be useful to find out the error cause
+        // i18n Thank you for contributing to this project
         throw new GUIException(std::string(_("Could not load the menu item \"do not show any forbidden area\" in MainWindow")));
     }
 
@@ -265,9 +265,9 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
             m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_INFLUENCEAREA_PLAYER1));
     if (!m_settingsInfluenceAreaPlayer1MenuItem)
     {
-        //- TRANSLATORS: Please, leave MainWindow as it is here
-        //- That name specifies internal data when the app can't start and can be useful to find out the error cause
-        //- Thank you for contributing to this project
+        // i18n TRANSLATORS: Please, leave MainWindow as it is here
+        // i18n That name specifies internal data when the app can't start and can be useful to find out the error cause
+        // i18n Thank you for contributing to this project
         throw new GUIException(std::string(_("Could not load the menu item \"show player1's influence area\" in MainWindow")));
     }
 
@@ -275,9 +275,9 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
             m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_INFLUENCEAREA_PLAYER2));
     if (!m_settingsInfluenceAreaPlayer2MenuItem)
     {
-        //- TRANSLATORS: Please, leave MainWindow as it is here
-        //- That name specifies internal data when the app can't start and can be useful to find out the error cause
-        //- Thank you for contributing to this project
+        // i18n TRANSLATORS: Please, leave MainWindow as it is here
+        // i18n That name specifies internal data when the app can't start and can be useful to find out the error cause
+        // i18n Thank you for contributing to this project
         throw new GUIException(std::string(_("Could not load the menu item \"show player2's influence area\" in MainWindow")));
     }
 
@@ -285,9 +285,9 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
             m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_INFLUENCEAREA_NOSHOW));
     if (!m_settingsInfluenceAreaNoShowMenuItem)
     {
-        //- TRANSLATORS: Please, leave MainWindow as it is here
-        //- That name specifies internal data when the app can't start and can be useful to find out the error cause
-        //- Thank you for contributing to this project
+        // i18n TRANSLATORS: Please, leave MainWindow as it is here
+        // i18n That name specifies internal data when the app can't start and can be useful to find out the error cause
+        // i18n Thank you for contributing to this project
         throw new GUIException(std::string(_("Could not load the menu item \"do not show any influence area\" in MainWindow")));
     }
 
@@ -295,9 +295,9 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
             m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_PREFS));
     if (!m_settingsPrefsMenuItem)
     {
-        //- TRANSLATORS: Please, leave MainWindow as it is here
-        //- That name specifies internal data when the app can't start and can be useful to find out the error cause
-        //- Thank you for contributing to this project
+        // i18n TRANSLATORS: Please, leave MainWindow as it is here
+        // i18n That name specifies internal data when the app can't start and can be useful to find out the error cause
+        // i18n Thank you for contributing to this project
         throw new GUIException(std::string(_("Could not load the menu item \"settings / preferences\" in MainWindow")));
     }
 
@@ -305,54 +305,54 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
             m_gtkBuilder->get_object(GUI_MENU_ITEM_HELP_ABOUT));
     if (!m_helpAboutMenuItem)
     {
-        //- TRANSLATORS: Please, leave MainWindow as it is here
-        //- That name specifies internal data when the app can't start and can be useful to find out the error cause
-        //- Thank you for contributing to this project
+        // i18n TRANSLATORS: Please, leave MainWindow as it is here
+        // i18n That name specifies internal data when the app can't start and can be useful to find out the error cause
+        // i18n Thank you for contributing to this project
         throw new GUIException(std::string(_("Could not load the menu item \"help / about\" in MainWindow")));
     }
 
     m_gtkBuilder->get_widget(GUI_VBOX_DRAWING_NAME, m_vBoxDrawing);
     if (m_vBoxDrawing == NULL)
     {
-        //- TRANSLATORS: Please, leave gtk::VBox and MainWindow as they are here
-        //- Those names specify internal data when the app can't start and can be useful to find out the error cause
-        //- Thank you for contributing to this project
+        // i18n TRANSLATORS: Please, leave gtk::VBox and MainWindow as they are here
+        // i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+        // i18n Thank you for contributing to this project
         throw new GUIException(std::string(_("Could not load the drawing area gtk::VBox in MainWindow")));
     }
 
     m_gtkBuilder->get_widget(GUI_HBOX_GAME_STATUS_NAME, m_hBoxGameStatus);
     if (m_hBoxGameStatus == NULL)
     {
-        //- TRANSLATORS: Please, leave gtk::HBox and MainWindow as they are here
-        //- Those names specify internal data when the app can't start and can be useful to find out the error cause
-        //- Thank you for contributing to this project
+        // i18n TRANSLATORS: Please, leave gtk::HBox and MainWindow as they are here
+        // i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+        // i18n Thank you for contributing to this project
         throw new GUIException(std::string(_("Could not load the current game status gtk::HBox in MainWindow")));
     }
 
     m_gtkBuilder->get_widget(GUI_HBOX_OPPONENT_PIECES_NAME, m_hBoxOpponentPieces);
     if (m_hBoxOpponentPieces == NULL)
     {
-        //- TRANSLATORS: Please, leave gtk::HBox and MainWindow as they are here
-        //- Those names specify internal data when the app can't start and can be useful to find out the error cause
-        //- Thank you for contributing to this project
+        // i18n TRANSLATORS: Please, leave gtk::HBox and MainWindow as they are here
+        // i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+        // i18n Thank you for contributing to this project
         throw new GUIException(std::string(_("Could not load the opponent pieces gtk::HBox in MainWindow")));
     }
 
     m_gtkBuilder->get_widget(GUI_HBOX_PIECES_AREA_NAME, m_hBoxEditPieces);
     if (m_hBoxEditPieces == NULL)
     {
-        //- TRANSLATORS: Please, leave gtk::HBox and MainWindow as they are here
-        //- Those names specify internal data when the app can't start and can be useful to find out the error cause
-        //- Thank you for contributing to this project
+        // i18n TRANSLATORS: Please, leave gtk::HBox and MainWindow as they are here
+        // i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+        // i18n Thank you for contributing to this project
         throw new GUIException(std::string(_("Could not load the edit piece gtk::HBox in MainWindow")));
     }
 
     m_gtkBuilder->get_widget(GUI_HBOX_STATUSBAR_NAME, m_hBoxStatusBar);
     if (m_hBoxStatusBar == NULL)
     {
-        //- TRANSLATORS: Please, leave gtk::HBox and MainWindow as they are here
-        //- Those names specify internal data when the app can't start and can be useful to find out the error cause
-        //- Thank you for contributing to this project
+        // i18n TRANSLATORS: Please, leave gtk::HBox and MainWindow as they are here
+        // i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+        // i18n Thank you for contributing to this project
         throw new GUIException(std::string(_("Could not load the status bar gtk::HBox in MainWindow")));
     }
 
@@ -468,7 +468,8 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
                << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(green)
                << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(blue)
                << "\">"
-               << m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1).GetName();
+               << m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1).GetName()
+               << " </span>";
     m_stopWatchLabelPlayer1.SetPrefix(theMessage.str());
 
     Game1v1Config::Instance().GetPlayer2Colour(red, green, blue);
@@ -479,7 +480,8 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
                << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(green)
                << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(blue)
                << "\">"
-               << m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2).GetName();
+               << m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2).GetName()
+               << " </span>";
     m_stopWatchLabelPlayer2.SetPrefix(theMessage.str());
 
     // initialise the list of players of the board drawing area
@@ -1000,8 +1002,8 @@ void MainWindow::RequestThreadToComputeNextMove(
             << std::endl;
 #endif
         std::stringstream theMessage;
-        //- TRANSLATORS: Please, leave <b> and </b> tags sorrounding the translation of "Fatal error"
-        //- Thank you for contributing to this project
+        // i18n TRANSLATORS: Please, leave <b> and </b> tags sorrounding the translation of "Fatal error"
+        // i18n Thank you for contributing to this project
         theMessage << _("<b>Fatal Error:</b> Could not communicate with worker thread. Application will exit now!");
 
         Gtk::MessageDialog::MessageDialog fatalErrorMessage(
@@ -1207,7 +1209,7 @@ void MainWindow::NotifyMoveComputed()
 #endif
         return;
     }
-    } // switch (latestPlayerToMove)    
+    } // switch (latestPlayerToMove)
 
 
     // invalidate the board drawing area to show the new moves
@@ -1322,7 +1324,7 @@ void MainWindow::GameFinished()
         return;
     }
     m_currentGameFinished = true;
-    
+
     // reset the cursor (even if it's been already done)
     ResetCursor();
 
@@ -1369,29 +1371,29 @@ void MainWindow::GameFinished()
     {
         snprintf(theMessage,
                 GAME_FINISHED_BUFFER_LENGTH,
-                //- TRANSLATORS: Please, leave the translated word DRAW between the <b> and </b> tags
-                //- Bear in mind the first ' color=\"#%02X%02X%02X\" ' will be replaced by player1's colour,
-                //- and the first %s will be replaced by player1's name
-                //- The 2nd ' color=\"#%02X%02X%02X\" ' and 2nd %s will be replaced by player2's colour and
-                //- player2's name respectively.
-                //- The final %d will be replaced by the final score
-                //- The order of these tags must be maintained in the translation
-                //- A typical complete message:
-                //- That was a <b>DRAW</b>!\nBoth <span color="#012345">Eddie</span> and <span color="#678901">John</span> have <b>5</b> squares left
-                //- Thank you for contributing to this project
+                // i18n TRANSLATORS: Please, leave the translated word DRAW between the <b> and </b> tags
+                // i18n Bear in mind the first ' color=\"#%02X%02X%02X\" ' will be replaced by player1's colour,
+                // i18n and the first %s will be replaced by player1's name
+                // i18n The 2nd ' color=\"#%02X%02X%02X\" ' and 2nd %s will be replaced by player2's colour and
+                // i18n player2's name respectively.
+                // i18n The final %d will be replaced by the final score
+                // i18n The order of these tags must be maintained in the translation
+                // i18n A typical complete message:
+                // i18n That was a <b>DRAW</b>!\nBoth <span color="#012345">Eddie</span> and <span color="#678901">John</span> have <b>5</b> squares left
+                // i18n Thank you for contributing to this project
                 _("That was a <b>DRAW</b>!\nBoth <span color=\"#%02X%02X%02X\">%s</span> and <span color=\"#%02X%02X%02X\">%s</span> have <b>%d</b> squares left"),
                 static_cast<int32_t>(red1),
                 static_cast<int32_t>(green1),
                 static_cast<int32_t>(blue1),
-                player1.GetName(),
+                player1.GetName().c_str(),
                 static_cast<int32_t>(red2),
                 static_cast<int32_t>(green2),
                 static_cast<int32_t>(blue2),
-                player2.GetName(),
+                player2.GetName().c_str(),
                 squaresLeftPlayer1);
 
         // for the record. This was the old way before i18n
-        /* 
+        /*
         std::stringstream theMessage;
         theMessage
             << "That was a <b>DRAW</b>!"
@@ -1421,31 +1423,31 @@ void MainWindow::GameFinished()
     {
         snprintf(theMessage,
                 GAME_FINISHED_BUFFER_LENGTH,
-                //- TRANSLATORS: Please, respect the HTML formatting as much as possible
-                //- Bear in mind that the 1st ' color=\"#%02X%02X%02X\" ' will be replaced by the winner's colour,
-                //- and the first %s will be replaced by the winner's name
-                //- The 2nd ' color=\"#%02X%02X%02X\" ' and 2nd %s will be replaced by player1's colour and
-                //- player1's name respectively. the following %d would be player1's score
-                //- The 3rd ' color=\"#%02X%02X%02X\" ' and 3rd %s will be replaced by player2's colour and
-                //- player2's name respectively. the following %d would be player2's score
-                //- The order of these tags must be taken into account for the translation
-                //- A typical complete message:
-                //- <b><span color="#012345">Eddie</span></b>!\n<span color="#012345">Eddie</span> has <b>5</b> squares left and <span color="#678901">John</span> has <b>7</b>
-                //- Thank you for contributing to this project
+                // i18n TRANSLATORS: Please, respect the HTML formatting as much as possible
+                // i18n Bear in mind that the 1st ' color=\"#%02X%02X%02X\" ' will be replaced by the winner's colour,
+                // i18n and the first %s will be replaced by the winner's name
+                // i18n The 2nd ' color=\"#%02X%02X%02X\" ' and 2nd %s will be replaced by player1's colour and
+                // i18n player1's name respectively. the following %d would be player1's score
+                // i18n The 3rd ' color=\"#%02X%02X%02X\" ' and 3rd %s will be replaced by player2's colour and
+                // i18n player2's name respectively. the following %d would be player2's score
+                // i18n The order of these tags must be taken into account for the translation
+                // i18n A typical complete message:
+                // i18n <b><span color="#012345">Eddie</span></b>!\n<span color="#012345">Eddie</span> has <b>5</b> squares left and <span color="#678901">John</span> has <b>7</b>
+                // i18n Thank you for contributing to this project
                 _("<b><span color=\"#%02X%02X%02X\">%s</span></b> won!\n<span color=\"#%02X%02X%02X\">%s</span> has <b>%d</b> squares left and <span color=\"#%02X%02X%02X\">%s</span> has <b>%d</b>"),
                 (squaresLeftPlayer1 < squaresLeftPlayer2) ? red1   : red2,
                 (squaresLeftPlayer1 < squaresLeftPlayer2) ? green1 : green2,
                 (squaresLeftPlayer1 < squaresLeftPlayer2) ? blue1  : blue2,
-                (squaresLeftPlayer1 < squaresLeftPlayer2) ? player1.GetName() : player2.GetName(),
+                (squaresLeftPlayer1 < squaresLeftPlayer2) ? player1.GetName().c_str() : player2.GetName().c_str(),
                 red1,
                 green1,
                 blue1,
-                player1.GetName(),
+                player1.GetName().c_str(),
                 squaresLeftPlayer1,
                 red2,
                 green2,
                 blue2,
-                player2.GetName(),
+                player2.GetName().c_str(),
                 squaresLeftPlayer2);
     }
 
@@ -1477,9 +1479,9 @@ void MainWindow::NotifyProgressUpdate()
         // do not update the progress bar if the current game is finished
         return;
     }
-    
+
     float progress;
-    
+
     G_LOCK(s_computingCurrentProgress);
         progress = s_computingCurrentProgress;
     G_UNLOCK(s_computingCurrentProgress);

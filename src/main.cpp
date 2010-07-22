@@ -168,27 +168,27 @@ void FatalError(
     int         a_errorCode)
 {
 
-    std::cerr << a_binName 
-              //- TRANSLATORS: Please leave the starting colon since it is part of the expected format
-              //- Bear in mind this string will be used to print out a help message when an error is found
-              //- A typical example would be: "./blockem: Fatal error: error 123 while trying to connect"
-              //- That is the "Fatal error" sentence that needs to be translated
-              //- Thank you for contributing to this project
+    std::cerr << a_binName
+              // i18n TRANSLATORS: Please leave the starting colon since it is part of the expected format
+              // i18n Bear in mind this string will be used to print out a help message when an error is found
+              // i18n A typical example would be: "./blockem: Fatal error: error 123 while trying to connect"
+              // i18n That is the "Fatal error" sentence that needs to be translated
+              // i18n Thank you for contributing to this project
               << _(": Fatal error")
-              << ": " 
-              << a_customError 
+              << ": "
+              << a_customError
               << std::endl;
-    
-    std::cerr << a_binName 
-              //- TRANSLATORS: Please leave the starting colon since it is part of the expected format
-              //- Bear in mind this string will be used to print out a help message when an error is found
-              //- A typical example would be: "./blockem: Try './blockem --help'". That is the "try" word
-              //- that is to be translated here
-              //- Thank you for contributing to this project
+
+    std::cerr << a_binName
+              // i18n TRANSLATORS: Please leave the starting colon since it is part of the expected format
+              // i18n Bear in mind this string will be used to print out a help message when an error is found
+              // i18n A typical example would be: "./blockem: Try './blockem --help'". That is the "try" word
+              // i18n that is to be translated here
+              // i18n Thank you for contributing to this project
               << _(": Try")
-              << " '" 
-              << a_binName 
-              <<  " --help'" 
+              << " '"
+              << a_binName
+              <<  " --help'"
               << std::endl;
 
     // free command line parsing resources
@@ -210,7 +210,6 @@ int main(int argc, char **argv)
     // make sure first that the message catalog can be found
     if (bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR) != NULL)
     {
-        std::cerr << GETTEXT_PACKAGE << " " << LOCALEDIR  << std::endl;
         // UTF-8 chosen as codeset
         bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
         // initialise the message catalog
@@ -220,23 +219,29 @@ int main(int argc, char **argv)
     {
         std::cerr << "Error while setting the locale" << std::endl;
     }
-    
+
     // create new command line context. This resource must be deleted before existing the app
-    //- TRANSLATORS: Please leave the starting dash as it is part of the glib command line
-    //- parsing formatting
-    //- Thank you for contributing to this project
+    // i18n TRANSLATORS: Please leave the starting dash as it is part of the glib command line
+    // i18n parsing formatting
+    // i18n Thank you for contributing to this project
     g_cmdContext = g_option_context_new (_("- The GNU polyominoes board game"));
 
-    // to diable i18n write NULL instead of GETTEXT_PACKAGE in the 3rd parameter 
+    // to diable i18n write NULL instead of GETTEXT_PACKAGE in the 3rd parameter
     //     g_option_context_add_main_entries (cmdContext, g_cmdEntries, NULL);
     g_option_context_add_main_entries (g_cmdContext, g_cmdEntries, GETTEXT_PACKAGE);
 
+    // option group
+    GOptionGroup* grp = gtk_get_option_group (TRUE);
+
     // http://library.gnome.org/devel/glib/unstable/glib-Commandline-option-parser.html#g-option-context-add-group
-    g_option_context_add_group (g_cmdContext, gtk_get_option_group (TRUE));
+    g_option_context_add_group (g_cmdContext, grp);
+
+    // http://library.gnome.org/devel/glib/unstable/glib-Commandline-option-parser.html#g-option-group-set-translation-domain
+    g_option_group_set_translation_domain (grp, GETTEXT_PACKAGE);
     if (!g_option_context_parse (g_cmdContext, &argc, &argv, &error))
     {
         std::stringstream errMessage;
-        errMessage << _("Error parsing command line") 
+        errMessage << _("Error parsing command line")
                    << ": "
                    << error->message;
 
@@ -301,9 +306,9 @@ int main(int argc, char **argv)
             {
                 FatalError(
                     argv[0],
-                    //- TRANSLATORS: Please leave the word Gtkbuilder as it is since it's the name
-                    //- of the component that failed
-                    //- Thank you for contributing to this project
+                    // i18n TRANSLATORS: Please leave the word Gtkbuilder as it is since it's the name
+                    // i18n of the component that failed
+                    // i18n Thank you for contributing to this project
                     _("Could not load Gtkbuilder definitions"),
                     GUI_EXCEPTION_ERR);
             }

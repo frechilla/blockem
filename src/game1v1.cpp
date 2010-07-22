@@ -37,9 +37,9 @@
 #include "game1v1.h"
 
 /// player1's name
-static const char PLAYER_1_NAME[] = N_("Player1");
+static const char PLAYER_1_NAME[] = N_("Mr Green");
 /// player2's name
-static const char PLAYER_2_NAME[] = N_("Player2");
+static const char PLAYER_2_NAME[] = N_("Mr Blue");
 
 /// it will be used as an empty space in the board
 static const char CHAR_EMPTY   = ' ';
@@ -59,15 +59,15 @@ Game1v1::Game1v1(
     const Coordinate &a_player1StartingCoord,
     const Coordinate &a_player2StartingCoord) :
 	m_board(BOARD_1VS1_ROWS, BOARD_1VS1_COLUMNS, CHAR_EMPTY),
-    m_player1(std::string(_(PLAYER_1_NAME)), 
-              CHAR_PLAYER1, 
-              BOARD_1VS1_ROWS, 
-              BOARD_1VS1_COLUMNS, 
+    m_player1(std::string(_(PLAYER_1_NAME)),
+              CHAR_PLAYER1,
+              BOARD_1VS1_ROWS,
+              BOARD_1VS1_COLUMNS,
               a_player1StartingCoord),
-    m_player2(std::string(_(PLAYER_2_NAME)), 
-              CHAR_PLAYER2, 
-              BOARD_1VS1_ROWS, 
-              BOARD_1VS1_COLUMNS, 
+    m_player2(std::string(_(PLAYER_2_NAME)),
+              CHAR_PLAYER2,
+              BOARD_1VS1_ROWS,
+              BOARD_1VS1_COLUMNS,
               a_player2StartingCoord),
     m_progressFunctor(NULL)
 {
@@ -596,8 +596,8 @@ int32_t Game1v1::MinMax(
     }
 
 #ifdef DEBUG_PRINT
-    std::cout << _("Nucleation points") << " " 
-              << playerMe->NumberOfNucleationPoints() 
+    std::cout << _("Nucleation points") << " "
+              << playerMe->NumberOfNucleationPoints()
               << std::endl;
 #endif
 
@@ -747,10 +747,9 @@ int32_t Game1v1::MinMax(
 
 
 #ifdef DEBUG_PRINT
-    //- TRANSLATORS: %d represents the amount of times the functions has been called
-    //- Please leave it there because it is needed by the program
-    //- Thank you for contributing to this project
-    printf(_("Minimax function called %d times\n"), timesCalled);
+    // i18n %d represents the amount of times the function has been called
+    // i18n Thank you for contributing to this project
+    printf(__("Minimax function called %d times\n"), timesCalled);
 #endif
 
     return alpha;

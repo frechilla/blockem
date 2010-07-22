@@ -24,3 +24,4 @@ supposed to be integrated in blockem at some point in the future:
  + Add default button to the new/config dialog
  + Convert std::lists to standard arrays in Piece
  + i18n
+ + cachegrind to profile (instead of gprof)

@@ -58,10 +58,10 @@ AboutDialog::AboutDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builde
             picture.reset();
 #ifdef DEBUG_PRINT
             std::cerr
-               //- TRANSLATORS: Bear in mind this string will be printed followed by the path to logo file
-               //- Thank you for contributing to this project
-               << _("WARNING: Exception occurred when setting the logo into the AboutDialog from")
-               << " "
+               // i18n Bear in mind this string will be printed followed by the path to logo file
+               // i18n The extra space at the end is necessary
+               // i18n Thank you for contributing to this project
+               << _("WARNING: Exception occurred when setting the logo into the AboutDialog from ")
                << GUI_PATH_TO_LOGO_STR
                << std::endl;
 #endif
@@ -85,10 +85,10 @@ AboutDialog::AboutDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builde
             picture.reset();
 #ifdef DEBUG_PRINT
             std::cerr
-               //- TRANSLATORS: Bear in mind this string will be printed followed by the path to 16x16 icon file
-               //- Thank you for contributing to this project
-               << _("WARNING: Exception occurred when setting the 16x16 icon into the AboutDialog from")
-               << " "
+               // i18n Bear in mind this string will be printed followed by the path to 16x16 icon file
+               // i18n The extra space at the end is necessary
+               // i18n Thank you for contributing to this project
+               << _("WARNING: Exception occurred when setting the 16x16 icon into the AboutDialog from ")
                << GUI_PATH_TO_16PICTURE_STR
                << std::endl;
 #endif

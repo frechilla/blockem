@@ -85,126 +85,126 @@ ConfigDialog::ConfigDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Buil
     m_gtkBuilder->get_widget(GUI_CONFIG_TABLE_PLAYER1, m_tablePlayer1);
     if (m_tablePlayer1 == NULL)
     {
-        //- TRANSLATORS: Please, leave gtk::Table, player1 and ConfigDialog as they are here
-        //- Those names specify internal data when the app can't start and can be useful to find out the error cause
-        //- Thank you for contributing to this project
+        // i18n Please, leave gtk::Table, player1 and ConfigDialog as they are here
+        // i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+        // i18n Thank you for contributing to this project
         throw new GUIException(std::string(_("Could not load gtk::Table (player1) in ConfigDialog")));
     }
 
     m_gtkBuilder->get_widget(GUI_CONFIG_TABLE_PLAYER2, m_tablePlayer2);
     if (m_tablePlayer2 == NULL)
     {
-        //- TRANSLATORS: Please, leave gtk::Table, player2 and ConfigDialog as they are here
-        //- Those names specify internal data when the app can't start and can be useful to find out the error cause
-        //- Thank you for contributing to this project
+        // i18n Please, leave gtk::Table, player2 and ConfigDialog as they are here
+        // i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+        // i18n Thank you for contributing to this project
         throw new GUIException(std::string(_("Could not load gtk::Table (player2) in ConfigDialog")));
     }
 
     m_gtkBuilder->get_widget(GUI_CONFIG_SPINBUTTON_STARTROW1, m_spinbuttonStartingRowPlayer1);
     if (m_spinbuttonStartingRowPlayer1 == NULL)
     {
-        //- TRANSLATORS: Please, leave gtk::SpinButton, player1 and ConfigDialog as they are here
-        //- Those names specify internal data when the app can't start and can be useful to find out the error cause
-        //- Thank you for contributing to this project
+        // i18n Please, leave gtk::SpinButton, player1 and ConfigDialog as they are here
+        // i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+        // i18n Thank you for contributing to this project
         throw new GUIException(std::string(_("Could not load gtk::SpinButton (player1) for starting row in ConfigDialog")));
     }
 
     m_gtkBuilder->get_widget(GUI_CONFIG_SPINBUTTON_STARTCOL1, m_spinbuttonStartingColumnPlayer1);
     if (m_spinbuttonStartingColumnPlayer1 == NULL)
     {
-        //- TRANSLATORS: Please, leave gtk::SpinButton, player1 and ConfigDialog as they are here
-        //- Those names specify internal data when the app can't start and can be useful to find out the error cause
-        //- Thank you for contributing to this project
+        // i18n Please, leave gtk::SpinButton, player1 and ConfigDialog as they are here
+        // i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+        // i18n Thank you for contributing to this project
         throw new GUIException(std::string(_("Could not load gtk::SpinButton (player1) for starting column in ConfigDialog")));
     }
 
     m_gtkBuilder->get_widget(GUI_CONFIG_SPINBUTTON_STARTROW2, m_spinbuttonStartingRowPlayer2);
     if (m_spinbuttonStartingRowPlayer2 == NULL)
     {
-        //- TRANSLATORS: Please, leave gtk::SpinButton, player2 and ConfigDialog as they are here
-        //- Those names specify internal data when the app can't start and can be useful to find out the error cause
-        //- Thank you for contributing to this project
+        // i18n Please, leave gtk::SpinButton, player2 and ConfigDialog as they are here
+        // i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+        // i18n Thank you for contributing to this project
         throw new GUIException(std::string(_("Could not load gtk::SpinButton (player2) for starting row in ConfigDialog")));
     }
 
     m_gtkBuilder->get_widget(GUI_CONFIG_SPINBUTTON_STARTCOL2, m_spinbuttonStartingColumnPlayer2);
     if (m_spinbuttonStartingColumnPlayer2 == NULL)
     {
-        //- TRANSLATORS: Please, leave gtk::SpinButton, player2 and ConfigDialog as they are here
-        //- Those names specify internal data when the app can't start and can be useful to find out the error cause
-        //- Thank you for contributing to this project
+        // i18n Please, leave gtk::SpinButton, player2 and ConfigDialog as they are here
+        // i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+        // i18n Thank you for contributing to this project
         throw new GUIException(std::string(_("Could not load gtk::SpinButton (player2) for starting column in ConfigDialog")));
     }
 
     m_gtkBuilder->get_widget(GUI_CONFIG_AI_FRAME_PLAYER1, m_AIFramePlayer1);
     if (m_AIFramePlayer1 == NULL)
     {
-        //- TRANSLATORS: Please, leave gtk::Frame, player1 and ConfigDialog as they are here
-        //- Those names specify internal data when the app can't start and can be useful to find out the error cause
-        //- Thank you for contributing to this project
+        // i18n Please, leave gtk::Frame, player1 and ConfigDialog as they are here
+        // i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+        // i18n Thank you for contributing to this project
         throw new GUIException(std::string(_("Could not load AI gtk::Frame (player1) in ConfigDialog")));
     }
 
     m_gtkBuilder->get_widget(GUI_CONFIG_AI_FRAME_PLAYER2, m_AIFramePlayer2);
     if (m_AIFramePlayer2 == NULL)
     {
-        //- TRANSLATORS: Please, leave gtk::Frame, player2 and ConfigDialog as they are here
-        //- Those names specify internal data when the app can't start and can be useful to find out the error cause
-        //- Thank you for contributing to this project
+        // i18n Please, leave gtk::Frame, player2 and ConfigDialog as they are here
+        // i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+        // i18n Thank you for contributing to this project
         throw new GUIException(std::string(_("Could not load AI gtk::Frame (player2) in ConfigDialog")));
     }
 
     m_gtkBuilder->get_widget(GUI_CONFIG_AI_TABLE_PLAYER1, m_AITablePlayer1);
     if (m_AITablePlayer1 == NULL)
     {
-        //- TRANSLATORS: Please, leave gtk::Table, player1 and ConfigDialog as they are here
-        //- Those names specify internal data when the app can't start and can be useful to find out the error cause
-        //- Thank you for contributing to this project
+        // i18n Please, leave gtk::Table, player1 and ConfigDialog as they are here
+        // i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+        // i18n Thank you for contributing to this project
         throw new GUIException(std::string(_("Could not load AI gtk::Table (player1) in ConfigDialog")));
     }
 
     m_gtkBuilder->get_widget(GUI_CONFIG_AI_TABLE_PLAYER2, m_AITablePlayer2);
     if (m_AITablePlayer2 == NULL)
     {
-        //- TRANSLATORS: Please, leave gtk::Table, player2 and ConfigDialog as they are here
-        //- Those names specify internal data when the app can't start and can be useful to find out the error cause
-        //- Thank you for contributing to this project
+        // i18n Please, leave gtk::Table, player2 and ConfigDialog as they are here
+        // i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+        // i18n Thank you for contributing to this project
         throw new GUIException(std::string(_("Could not load AI gtk::Table (player2) in ConfigDialog")));
     }
 
     m_gtkBuilder->get_widget(GUI_CONFIG_AI_SPINBUTTON_DEPTH1, m_spinbuttonDepthPlayer1);
     if (m_spinbuttonDepthPlayer1 == NULL)
     {
-        //- TRANSLATORS: Please, leave gtk::SpinButton, player1 and ConfigDialog as they are here
-        //- Those names specify internal data when the app can't start and can be useful to find out the error cause
-        //- Thank you for contributing to this project
+        // i18n Please, leave gtk::SpinButton, player1 and ConfigDialog as they are here
+        // i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+        // i18n Thank you for contributing to this project
         throw new GUIException(std::string(_("Could not load gtk::SpinButton for search-tree depth (player1) in ConfigDialog")));
     }
 
     m_gtkBuilder->get_widget(GUI_CONFIG_AI_SPINBUTTON_DEPTH2, m_spinbuttonDepthPlayer2);
     if (m_spinbuttonDepthPlayer2 == NULL)
     {
-        //- TRANSLATORS: Please, leave gtk::SpinButton, player2 and ConfigDialog as they are here
-        //- Those names specify internal data when the app can't start and can be useful to find out the error cause
-        //- Thank you for contributing to this project
+        // i18n Please, leave gtk::SpinButton, player2 and ConfigDialog as they are here
+        // i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+        // i18n Thank you for contributing to this project
         throw new GUIException(std::string(_("Could not load gtk::SpinButton for search-tree depth (player2) in ConfigDialog")));
     }
 
     m_gtkBuilder->get_widget(GUI_CONFIG_AI_TEXTVIEW_HEURISTIC1, m_textViewHeuristic1);
     if (m_textViewHeuristic1 == NULL)
     {
-        //- TRANSLATORS: Please, leave gtk::TextView, player1 and ConfigDialog as they are here
-        //- Those names specify internal data when the app can't start and can be useful to find out the error cause
-        //- Thank you for contributing to this project
+        // i18n Please, leave gtk::TextView, player1 and ConfigDialog as they are here
+        // i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+        // i18n Thank you for contributing to this project
         throw new GUIException(std::string(_("Could not load gtk::TextView for heuristic (player1) in ConfigDialog")));
     }
 
     m_gtkBuilder->get_widget(GUI_CONFIG_AI_TEXTVIEW_HEURISTIC2, m_textViewHeuristic2);
     if (m_textViewHeuristic2 == NULL)
     {
-        //- TRANSLATORS: Please, leave gtk::TextView, player2 and ConfigDialog as they are here
-        //- Those names specify internal data when the app can't start and can be useful to find out the error cause
-        //- Thank you for contributing to this project
+        // i18n Please, leave gtk::TextView, player2 and ConfigDialog as they are here
+        // i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+        // i18n Thank you for contributing to this project
         throw new GUIException(std::string(_("Could not load gtk::TextView for heuristic (player2) in ConfigDialog")));
     }
 
@@ -366,9 +366,9 @@ void ConfigDialog::SpinButtonDepthPlayer1_SignalValueChanged()
             m_spinbuttonDepthPlayer1->set_numeric(false);
         }
 
-        //- TRANSLATORS: This string shouldn't be bigger than 4 characters long
-        //- strings bigger than those 4 characters will be stripped out
-        //- Thank you for contributing to this project
+        // i18n This string shouldn't be bigger than 4 characters long
+        // i18n strings bigger than those 4 characters will be stripped out
+        // i18n Thank you for contributing to this project
         m_spinbuttonDepthPlayer1->set_text(_("Auto"));
     }
     else if (m_spinbuttonDepthPlayer1->get_numeric() == false)
@@ -385,10 +385,10 @@ void ConfigDialog::SpinButtonDepthPlayer2_SignalValueChanged()
         {
             m_spinbuttonDepthPlayer2->set_numeric(false);
         }
-        
-        //- TRANSLATORS: This string shouldn't be bigger than 4 characters long
-        //- strings bigger than those 4 characters will be stripped out
-        //- Thank you for contributing to this project
+
+        // i18n This string shouldn't be bigger than 4 characters long
+        // i18n strings bigger than those 4 characters will be stripped out
+        // i18n Thank you for contributing to this project
         m_spinbuttonDepthPlayer2->set_text(_("Auto"));
     }
     else if (m_spinbuttonDepthPlayer2->get_numeric() == false)
