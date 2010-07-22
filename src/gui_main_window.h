@@ -189,8 +189,8 @@ private:
     /// @brief the table that contains the board + pieces left
     Gtk::HBox* m_hBoxGameStatus;
 
-    /// @brief the table that contains the computer pieces
-    Gtk::HBox* m_hBoxComputerPieces;
+    /// @brief the table that contains the opponent's pieces
+    Gtk::HBox* m_hBoxOpponentPieces;
 
     /// @brief the horizontal box where the pieces are picked + edited
     Gtk::HBox* m_hBoxEditPieces;

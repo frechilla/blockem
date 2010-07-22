@@ -58,8 +58,7 @@ public:
     void Stop();
 
     /// @brief sets the prefix to be shown before the timestamp in the label
-    /// the widget will be updated with the prefix next time timer is up
-    /// and widget is updated automatically
+    /// the widget will be updated automatically
     void SetPrefix(const std::string &a_prefix);
 
 private:

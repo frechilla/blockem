@@ -34,7 +34,7 @@
 
 #ifdef DEBUG_PRINT
 #include <iostream>
-#include <cstdio> // printf (needed for better i18n)
+#include <cstdio> // printf/snprintf (needed for better i18n)
 #endif
 #include <glib/gi18n.h> // i18n
 #include <queue>   // queue computer's moves
@@ -47,6 +47,15 @@
 /// application to be closed, and the worker thread is busy computing
 static const char MESSAGE_ASK_BEFORE_CLOSE[] =
         N_("The game is computing the next move. Are you sure do you want to close the application?");
+
+/// title of the new 1vs1 game dialog box
+static const char MESSAGE_NEW_1V1GAME_DIALOG_TITLE[] = N_("New 1vs1 game");
+
+/// title of the configure current game dialog box
+static const char MESSAGE_CONFIGURE_GAME_DIALOG_TITLE[] = N_("Configure current game");
+
+/// maximum size of the string to notify the end of the game
+static const uint32_t GAME_FINISHED_BUFFER_LENGTH = 256;
 
 /// how often stopwatches are updated
 static const uint32_t STOPWATCH_UPDATE_PERIOD_MILLIS = 500; // 1000 = 1 second
@@ -102,24 +111,10 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     m_editPieceTable(NULL),
     m_stopWatchLabelPlayer1(
         STOPWATCH_UPDATE_PERIOD_MILLIS, 
-        m_the1v1Game.GetPlayer(
-            Game1v1::e_Game1v1Player1).GetName() + 
-            std::string (": ") + 
-            //- TRANSLATORS: Bear in mind that the name of a player plus a colon character preceeds this string
-            //- The final string would be something like: "Peter: elapsed time 00:01:43"
-            //- Thank you for contributing to this project
-            std::string(_("elapsed time")) + 
-            std::string(" ")),
+        m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1).GetName()),
     m_stopWatchLabelPlayer2(
         STOPWATCH_UPDATE_PERIOD_MILLIS, 
-        m_the1v1Game.GetPlayer(
-            Game1v1::e_Game1v1Player2).GetName() + 
-            std::string (": ") + 
-            //- TRANSLATORS: Bear in mind that the name of a player plus a colon character preceeds this string
-            //- The final string would be something like: "Peter: elapsed time 00:01:43"
-            //- Thank you for contributing to this project
-            std::string(_("elapsed time")) + 
-            std::string(" "))
+        m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2).GetName())
 {
     //TODO this is dirty (even though it works) the way MainWindow::ProgressUpdate
     // access the MainWindow Instance should be fixed in some way
@@ -167,7 +162,10 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     m_gtkBuilder->get_widget_derived(GUI_CONFIG_DIALOG_NAME, m_configDialog);
     if (m_configDialog == NULL)
     {
-        throw new GUIException(std::string("ConfigDialog retrieval failed"));
+        //- TRANSLATORS: Please, leave ConfigDialog, and MainWindow as they are here
+        //- Those names specify internal data when the app can't start and can be useful to find out the error cause
+        //- Thank you for contributing to this project
+        throw new GUIException(std::string(_("Could not load the ConfigDialog class in MainWindow")));
     }
 
     // retrieve the about dialog. It must be retrieved calling get_widget_derived
@@ -175,7 +173,10 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     m_gtkBuilder->get_widget_derived(GUI_ABOUT_DIALOG_NAME, m_aboutDialog);
     if (m_aboutDialog == NULL)
     {
-        throw new GUIException(std::string("AboutDialog retrieval failed"));
+        //- TRANSLATORS: Please, leave AboutDialog, and MainWindow as they are here
+        //- Those names specify internal data when the app can't start and can be useful to find out the error cause
+        //- Thank you for contributing to this project
+        throw new GUIException(std::string(_("Could not load the AboutDialog class in MainWindow")));
     }
 
     // retrieve the editing piece table. It must be retrieved calling get_widget_derived
@@ -183,7 +184,10 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     m_gtkBuilder->get_widget_derived(GUI_TABLE_EDITING_PIECE_NAME, m_editPieceTable);
     if (m_editPieceTable == NULL)
     {
-        throw new GUIException(std::string("Edit pieces table retrieval failed"));
+        //- TRANSLATORS: Please, leave gtk::Table, and MainWindow as they are here
+        //- Those names specify internal data when the app can't start and can be useful to find out the error cause
+        //- Thank you for contributing to this project
+        throw new GUIException(std::string(_("Could not load the edit pieces gtk::Table in MainWindow")));
     }
 
     // retrieve the rest of objects from the GUI design
@@ -191,114 +195,165 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
             m_gtkBuilder->get_object(GUI_MENU_ITEM_ACCELERATOR));
     if (!m_accelGroup)
     {
-        throw new GUIException(std::string("menu accelerator item retrieval failed"));
+        //- TRANSLATORS: Please, leave MainWindow as it is here
+        //- That name specifies internal data when the app can't start and can be useful to find out the error cause
+        //- Thank you for contributing to this project
+        throw new GUIException(std::string(_("Could not load the menu accelerator for MainWindow")));
     }
 
     m_newMenuItem = Glib::RefPtr<Gtk::MenuItem>::cast_dynamic(
             m_gtkBuilder->get_object(GUI_MENU_ITEM_GAME_NEW));
     if (!m_newMenuItem)
     {
-        throw new GUIException(std::string("new menu item retrieval failed"));
+        //- TRANSLATORS: Please, leave MainWindow as it is here
+        //- That name specifies internal data when the app can't start and can be useful to find out the error cause
+        //- Thank you for contributing to this project
+        throw new GUIException(std::string(_("Could not load the menu item \"new\" in MainWindow")));
     }
 
     m_quitMenuItem = Glib::RefPtr<Gtk::MenuItem>::cast_dynamic(
             m_gtkBuilder->get_object(GUI_MENU_ITEM_GAME_QUIT));
     if (!m_quitMenuItem)
     {
-        throw new GUIException(std::string("quit menu item retrieval failed"));
+        //- TRANSLATORS: Please, leave MainWindow as it is here
+        //- That name specifies internal data when the app can't start and can be useful to find out the error cause
+        //- Thank you for contributing to this project
+        throw new GUIException(std::string(_("Could not load the menu item \"quit\" in MainWindow")));
     }
 
     m_settingsNKPointsMenuItem = Glib::RefPtr<Gtk::CheckMenuItem>::cast_dynamic(
             m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_NKPOINTS));
     if (!m_settingsNKPointsMenuItem)
     {
-        throw new GUIException(std::string("view nk points menu item retrieval failed"));
+        //- TRANSLATORS: Please, leave MainWindow as it is here
+        //- That name specifies internal data when the app can't start and can be useful to find out the error cause
+        //- Thank you for contributing to this project
+        throw new GUIException(std::string(_("Could not load the menu item \"View nucleation points\" in MainWindow")));
     }
 
     m_settingsForbiddenAreaPlayer1MenuItem = Glib::RefPtr<Gtk::RadioMenuItem>::cast_dynamic(
             m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_FORBIDDENAREA_PLAYER1));
     if (!m_settingsForbiddenAreaPlayer1MenuItem)
     {
-        throw new GUIException(std::string("show player1's forbidden area menu item retrieval failed"));
+        //- TRANSLATORS: Please, leave MainWindow as it is here
+        //- That name specifies internal data when the app can't start and can be useful to find out the error cause
+        //- Thank you for contributing to this project
+        throw new GUIException(std::string(_("Could not load the menu item \"Show player1's forbidden area\" in MainWindow")));
     }
 
     m_settingsForbiddenAreaPlayer2MenuItem = Glib::RefPtr<Gtk::RadioMenuItem>::cast_dynamic(
             m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_FORBIDDENAREA_PLAYER2));
     if (!m_settingsForbiddenAreaPlayer2MenuItem)
     {
-        throw new GUIException(std::string("show player2's forbidden area menu item retrieval failed"));
+        //- TRANSLATORS: Please, leave MainWindow as it is here
+        //- That name specifies internal data when the app can't start and can be useful to find out the error cause
+        //- Thank you for contributing to this project
+        throw new GUIException(std::string(_("Could not load the menu item \"Show player2's forbidden area\" in MainWindow")));
     }
 
     m_settingsForbiddenAreaNoShowMenuItem = Glib::RefPtr<Gtk::RadioMenuItem>::cast_dynamic(
             m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_FORBIDDENAREA_NOSHOW));
     if (!m_settingsForbiddenAreaNoShowMenuItem)
     {
-        throw new GUIException(std::string("do not show any forbidden area menu item retrieval failed"));
+        //- TRANSLATORS: Please, leave MainWindow as it is here
+        //- That name specifies internal data when the app can't start and can be useful to find out the error cause
+        //- Thank you for contributing to this project
+        throw new GUIException(std::string(_("Could not load the menu item \"do not show any forbidden area\" in MainWindow")));
     }
 
     m_settingsInfluenceAreaPlayer1MenuItem = Glib::RefPtr<Gtk::RadioMenuItem>::cast_dynamic(
             m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_INFLUENCEAREA_PLAYER1));
     if (!m_settingsInfluenceAreaPlayer1MenuItem)
     {
-        throw new GUIException(std::string("show player1's influence area menu item retrieval failed"));
+        //- TRANSLATORS: Please, leave MainWindow as it is here
+        //- That name specifies internal data when the app can't start and can be useful to find out the error cause
+        //- Thank you for contributing to this project
+        throw new GUIException(std::string(_("Could not load the menu item \"show player1's influence area\" in MainWindow")));
     }
 
     m_settingsInfluenceAreaPlayer2MenuItem = Glib::RefPtr<Gtk::RadioMenuItem>::cast_dynamic(
             m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_INFLUENCEAREA_PLAYER2));
     if (!m_settingsInfluenceAreaPlayer2MenuItem)
     {
-        throw new GUIException(std::string("show player2's influence area menu item retrieval failed"));
+        //- TRANSLATORS: Please, leave MainWindow as it is here
+        //- That name specifies internal data when the app can't start and can be useful to find out the error cause
+        //- Thank you for contributing to this project
+        throw new GUIException(std::string(_("Could not load the menu item \"show player2's influence area\" in MainWindow")));
     }
 
     m_settingsInfluenceAreaNoShowMenuItem = Glib::RefPtr<Gtk::RadioMenuItem>::cast_dynamic(
             m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_INFLUENCEAREA_NOSHOW));
     if (!m_settingsInfluenceAreaNoShowMenuItem)
     {
-        throw new GUIException(std::string("do not show any influence area menu item retrieval failed"));
+        //- TRANSLATORS: Please, leave MainWindow as it is here
+        //- That name specifies internal data when the app can't start and can be useful to find out the error cause
+        //- Thank you for contributing to this project
+        throw new GUIException(std::string(_("Could not load the menu item \"do not show any influence area\" in MainWindow")));
     }
 
     m_settingsPrefsMenuItem = Glib::RefPtr<Gtk::MenuItem>::cast_dynamic(
             m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_PREFS));
     if (!m_settingsPrefsMenuItem)
     {
-        throw new GUIException(std::string("settings->preferences menu item retrieval failed"));
+        //- TRANSLATORS: Please, leave MainWindow as it is here
+        //- That name specifies internal data when the app can't start and can be useful to find out the error cause
+        //- Thank you for contributing to this project
+        throw new GUIException(std::string(_("Could not load the menu item \"settings / preferences\" in MainWindow")));
     }
 
     m_helpAboutMenuItem = Glib::RefPtr<Gtk::MenuItem>::cast_dynamic(
             m_gtkBuilder->get_object(GUI_MENU_ITEM_HELP_ABOUT));
     if (!m_helpAboutMenuItem)
     {
-        throw new GUIException(std::string("help->about menu item retrieval failed"));
+        //- TRANSLATORS: Please, leave MainWindow as it is here
+        //- That name specifies internal data when the app can't start and can be useful to find out the error cause
+        //- Thank you for contributing to this project
+        throw new GUIException(std::string(_("Could not load the menu item \"help / about\" in MainWindow")));
     }
 
     m_gtkBuilder->get_widget(GUI_VBOX_DRAWING_NAME, m_vBoxDrawing);
     if (m_vBoxDrawing == NULL)
     {
-        throw new GUIException(std::string("Drawing area vbox retrieval failed"));
+        //- TRANSLATORS: Please, leave gtk::VBox and MainWindow as they are here
+        //- Those names specify internal data when the app can't start and can be useful to find out the error cause
+        //- Thank you for contributing to this project
+        throw new GUIException(std::string(_("Could not load the drawing area gtk::VBox in MainWindow")));
     }
 
     m_gtkBuilder->get_widget(GUI_HBOX_GAME_STATUS_NAME, m_hBoxGameStatus);
     if (m_hBoxGameStatus == NULL)
     {
-        throw new GUIException(std::string("Game status hbox retrieval failed"));
+        //- TRANSLATORS: Please, leave gtk::HBox and MainWindow as they are here
+        //- Those names specify internal data when the app can't start and can be useful to find out the error cause
+        //- Thank you for contributing to this project
+        throw new GUIException(std::string(_("Could not load the current game status gtk::HBox in MainWindow")));
     }
 
-    m_gtkBuilder->get_widget(GUI_HBOX_COMPUTER_PIECES_NAME, m_hBoxComputerPieces);
-    if (m_hBoxComputerPieces == NULL)
+    m_gtkBuilder->get_widget(GUI_HBOX_OPPONENT_PIECES_NAME, m_hBoxOpponentPieces);
+    if (m_hBoxOpponentPieces == NULL)
     {
-        throw new GUIException(std::string("Computer pieces hbox retrieval failed"));
+        //- TRANSLATORS: Please, leave gtk::HBox and MainWindow as they are here
+        //- Those names specify internal data when the app can't start and can be useful to find out the error cause
+        //- Thank you for contributing to this project
+        throw new GUIException(std::string(_("Could not load the opponent pieces gtk::HBox in MainWindow")));
     }
 
     m_gtkBuilder->get_widget(GUI_HBOX_PIECES_AREA_NAME, m_hBoxEditPieces);
     if (m_hBoxEditPieces == NULL)
     {
-        throw new GUIException(std::string("PiecesHBox retrieval failed"));
+        //- TRANSLATORS: Please, leave gtk::HBox and MainWindow as they are here
+        //- Those names specify internal data when the app can't start and can be useful to find out the error cause
+        //- Thank you for contributing to this project
+        throw new GUIException(std::string(_("Could not load the edit piece gtk::HBox in MainWindow")));
     }
 
     m_gtkBuilder->get_widget(GUI_HBOX_STATUSBAR_NAME, m_hBoxStatusBar);
     if (m_hBoxStatusBar == NULL)
     {
-        throw new GUIException(std::string("status bar hbox retrieval failed"));
+        //- TRANSLATORS: Please, leave gtk::HBox and MainWindow as they are here
+        //- Those names specify internal data when the app can't start and can be useful to find out the error cause
+        //- Thank you for contributing to this project
+        throw new GUIException(std::string(_("Could not load the status bar gtk::HBox in MainWindow")));
     }
 
     // accelerators for main_window menu
@@ -315,7 +370,7 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     m_hBoxEditPieces->pack_start(m_pickPiecesDrawingArea, true, true);
     m_hBoxEditPieces->pack_start(*m_editPieceTable, false, false);
 
-    m_hBoxComputerPieces->pack_start(
+    m_hBoxOpponentPieces->pack_start(
             m_showOpponentPiecesDrawingArea,
             true,
             true);
@@ -325,7 +380,8 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     m_pickPiecesDrawingArea.show();
     m_showOpponentPiecesDrawingArea.show();
 
-    // update the score shown in the status bar
+    // update the score shown in the status bar before setting them up as visible
+    // so the widgets take their proper size at GUI startup
     UpdateScoreStatus();
 
     // the custom status bar
@@ -401,7 +457,8 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
             sigc::mem_fun(*this, &MainWindow::MenuItemSettingsShowNoneInfluenceArea_Toggled));
 
     // retrieve the default colour from the config class to apply it to the players
-    // and set the prefix to the stopwatch labels
+    // and use HTML tags so the stop watch labels show each player's name written
+    // with tis corresponding colour
     uint8_t red, green, blue;
     std::stringstream theMessage;
     Game1v1Config::Instance().GetPlayer1Colour(red, green, blue);
@@ -411,14 +468,7 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
                << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(green)
                << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(blue)
                << "\">"
-               << m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1).GetName()
-               << "</span>"
-               << ": "
-               //- TRANSLATORS: Bear in mind that the name of a player plus a colon character preceeds this string
-               //- The final string would be something like: "Peter: elapsed time 00:01:43"
-               //- Thank you for contributing to this project
-               << "elapsed time"
-               << " ";
+               << m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1).GetName();
     m_stopWatchLabelPlayer1.SetPrefix(theMessage.str());
 
     Game1v1Config::Instance().GetPlayer2Colour(red, green, blue);
@@ -429,14 +479,7 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
                << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(green)
                << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(blue)
                << "\">"
-               << m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2).GetName()
-               << "</span>"
-               << ": "
-               //- TRANSLATORS: Bear in mind that the name of a player plus a colon character preceeds this string
-               //- The final string would be something like: "Peter: elapsed time 00:01:43"
-               //- Thank you for contributing to this project
-               << "elapsed time"
-               << " ";
+               << m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2).GetName();
     m_stopWatchLabelPlayer2.SetPrefix(theMessage.str());
 
     // initialise the list of players of the board drawing area
@@ -521,7 +564,7 @@ void MainWindow::MenuItemGameQuit_Activate()
 
 void MainWindow::MenuItemGameNew_Activate()
 {
-    m_configDialog->set_title("New 1vs1 game");
+    m_configDialog->set_title(_(MESSAGE_NEW_1V1GAME_DIALOG_TITLE));
     // starting coords can always be edited when a new game is launched
     m_configDialog->SetStartingCoordEditionSensitive(true);
 
@@ -617,7 +660,7 @@ void MainWindow::MenuItemSettingsShowNoneInfluenceArea_Toggled()
 
 void MainWindow::MenuItemSettingsPreferences_Activate()
 {
-    m_configDialog->set_title("Configure current game");
+    m_configDialog->set_title(_(MESSAGE_CONFIGURE_GAME_DIALOG_TITLE));
 
     //TODO starting coords cannot be edited through the configuration dialog yet
     m_configDialog->SetStartingCoordEditionSensitive(false);
@@ -768,11 +811,11 @@ void MainWindow::MenuItemSettingsPreferences_Activate()
 
     if (showInfoMessage)
     {
-        // message for the user to inform he/she wants calculation was cancelled
-        // after the config dialog is hidden
+        // message for the user to inform his/her calculation was cancelled
+        // after the config dialog was hidden
         Gtk::MessageDialog::MessageDialog infoMessage(
                 *this,
-                "Previous move had to be cancelled before applying new settings",
+                _("Previous move had to be cancelled before applying new settings"),
                 true,
                 Gtk::MESSAGE_INFO,
                 Gtk::BUTTONS_OK,
@@ -953,15 +996,13 @@ void MainWindow::RequestThreadToComputeNextMove(
     {
 #ifdef DEBUG_PRINT
         std::cout
-            << "Error while telling the thread to start computing."
-            << std::endl
-            << "The worker thread seems to be busy"
+            << _("Error while telling the thread to start computing. Worker thread is busy")
             << std::endl;
 #endif
         std::stringstream theMessage;
-        theMessage << "<b>Fatal Error</b> telling the computing to start computing (seems to be busy)."
-                   << std::endl
-                   << "Application will try to exit now!";
+        //- TRANSLATORS: Please, leave <b> and </b> tags sorrounding the translation of "Fatal error"
+        //- Thank you for contributing to this project
+        theMessage << _("<b>Fatal Error:</b> Could not communicate with worker thread. Application will exit now!");
 
         Gtk::MessageDialog::MessageDialog fatalErrorMessage(
             *this,
@@ -1004,7 +1045,7 @@ void MainWindow::WorkerThread_computingFinished(
 #ifdef DEBUG_PRINT
     if (a_piece.GetType() == e_noPiece)
     {
-        std::cout << "Computer can't move" << std::endl;
+        std::cout << _("Computer can't move") << std::endl;
     }
 #endif
 
@@ -1019,15 +1060,11 @@ void MainWindow::WorkerThread_computingFinished(
 
 void MainWindow::BoardDrawingArea_BoardClicked(const Coordinate &a_coord, const Piece &a_piece, const Player &a_player)
 {
-#ifdef DEBUG_PRINT
-    std::cout << a_player.GetName() <<  " clicked in (" << a_coord.m_row << ", " << a_coord.m_col << ")" << std::endl;
-#endif
-
 	if (m_workerThread.IsThreadComputingMove())
 	{
 #ifdef DEBUG_PRINT
 	    std::cout
-            << "The worker thread is busy. Please be patient (a polite way to say: 'Fuck off')"
+            << _("Worker thread is busy. Please be patient while it is calculating next move")
             << std::endl;
 #endif
 	    return;
@@ -1047,7 +1084,8 @@ void MainWindow::BoardDrawingArea_BoardClicked(const Coordinate &a_coord, const 
                     a_player)) ) )
     {
 #ifdef DEBUG_PRINT
-        std::cout << "Cheeky you! Don't try to put a piece where it's not allowed to" << std::endl;
+        std::cout << _("Cheeky you! Don't try to deploy a piece where it's not allowed to")
+                  << std::endl;
 #endif
         return;
     }
@@ -1066,12 +1104,12 @@ void MainWindow::BoardDrawingArea_BoardClicked(const Coordinate &a_coord, const 
     if (result == false)
     {
 #ifdef DEBUG_PRINT
-        std::cout << "Human move could not be added to the queue" << std::endl;
+        std::cout << _("Human move could not be added to the queue") << std::endl;
 #endif
 
         Gtk::MessageDialog::MessageDialog errorMsg(
                 *this,
-                "Internal Error: Move could not be processed. Please click on the board normally to try again",
+                _("Internal Error: Move could not be processed. Please click on the board normally to try again"),
                 true,
                 Gtk::MESSAGE_ERROR,
                 Gtk::BUTTONS_OK,
@@ -1103,7 +1141,7 @@ void MainWindow::NotifyMoveComputed()
     // after the lock protected loop these variables will contain
     // the latest piece and latest coord deployed
     Piece latestPiece(e_noPiece);
-    Coordinate latestCoord(COORD_UNINITIALISED, COORD_UNINITIALISED);
+    Coordinate latestCoord;
     Game1v1::eGame1v1Player_t latestPlayerToMove = Game1v1::e_Game1v1Player1;
 
     CalculatedMove_t currentMove;
@@ -1130,7 +1168,7 @@ void MainWindow::NotifyMoveComputed()
 
     if (moveQueueEmpty)
     {
-        // there was no moves stored. Nothing to be done
+        // there were no moves stored in the queue. Nothing can be done
         return;
     }
 
@@ -1138,7 +1176,7 @@ void MainWindow::NotifyMoveComputed()
     const Player &latestPlayer   = m_the1v1Game.GetPlayer(latestPlayerToMove);
     const Player &latestOpponent = m_the1v1Game.GetOpponent(latestPlayerToMove);
 
-    // player who didn't put a piece o the board this time
+    // player who didn't put a piece on the board this time
     Game1v1::eGame1v1Player_t followingPlayer;
     // pointer to the stopwatch of the latest player to move
     StopWatchLabel* stopWatchPlayer = NULL;
@@ -1160,13 +1198,17 @@ void MainWindow::NotifyMoveComputed()
         followingPlayer   = Game1v1::e_Game1v1Player1;
         break;
     }
-#ifdef DEBUG
     default:
     {
+        // this is impossible. latestPlayerToMove should always be player1 or player2
+        // return here avoids compiling warnings
+#ifdef DEBUG
         assert(0);
-    }
 #endif
-    } // switch (latestPlayerToMove)
+        return;
+    }
+    } // switch (latestPlayerToMove)    
+
 
     // invalidate the board drawing area to show the new moves
     // activating the latest piece deployed glowing effect
@@ -1273,13 +1315,14 @@ void MainWindow::NotifyMoveComputed()
 
 void MainWindow::GameFinished()
 {
-    // once this function is called, game is supposed to e finished
+    // once this function is called, game is supposed to be finished
     if (m_currentGameFinished == true)
     {
+        // game was already notified to be finished
         return;
     }
     m_currentGameFinished = true;
-
+    
     // reset the cursor (even if it's been already done)
     ResetCursor();
 
@@ -1321,9 +1364,35 @@ void MainWindow::GameFinished()
     player1.GetColour(red1, green1, blue1);
     player2.GetColour(red2, green2, blue2);
 
-    std::stringstream theMessage;
+    char theMessage[GAME_FINISHED_BUFFER_LENGTH];
     if (squaresLeftPlayer1 == squaresLeftPlayer2)
     {
+        snprintf(theMessage,
+                GAME_FINISHED_BUFFER_LENGTH,
+                //- TRANSLATORS: Please, leave the translated word DRAW between the <b> and </b> tags
+                //- Bear in mind the first ' color=\"#%02X%02X%02X\" ' will be replaced by player1's colour,
+                //- and the first %s will be replaced by player1's name
+                //- The 2nd ' color=\"#%02X%02X%02X\" ' and 2nd %s will be replaced by player2's colour and
+                //- player2's name respectively.
+                //- The final %d will be replaced by the final score
+                //- The order of these tags must be maintained in the translation
+                //- A typical complete message:
+                //- That was a <b>DRAW</b>!\nBoth <span color="#012345">Eddie</span> and <span color="#678901">John</span> have <b>5</b> squares left
+                //- Thank you for contributing to this project
+                _("That was a <b>DRAW</b>!\nBoth <span color=\"#%02X%02X%02X\">%s</span> and <span color=\"#%02X%02X%02X\">%s</span> have <b>%d</b> squares left"),
+                static_cast<int32_t>(red1),
+                static_cast<int32_t>(green1),
+                static_cast<int32_t>(blue1),
+                player1.GetName(),
+                static_cast<int32_t>(red2),
+                static_cast<int32_t>(green2),
+                static_cast<int32_t>(blue2),
+                player2.GetName(),
+                squaresLeftPlayer1);
+
+        // for the record. This was the old way before i18n
+        /* 
+        std::stringstream theMessage;
         theMessage
             << "That was a <b>DRAW</b>!"
             << std::endl
@@ -1346,59 +1415,38 @@ void MainWindow::GameFinished()
             << " have <b>"
             << std::setbase(10) << squaresLeftPlayer1
             << "</b> squares left";
+        */
     }
     else //(squaresLeftPlayer1 != squaresLeftPlayer2)
     {
-        if (squaresLeftPlayer1 < squaresLeftPlayer2)
-        {
-            theMessage
-                << "<b>"
-                << "<span color=\"#"
-                << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(red1)
-                << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(green1)
-                << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(blue1)
-                << "\">"
-                << player1.GetName()
-                << "</span>"
-                << "</b> won!"
-                << std::endl;
-        }
-        else
-        {
-            theMessage
-                << "<b>"
-                << "<span color=\"#"
-                << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(red2)
-                << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(green2)
-                << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(blue2)
-                << "\">"
-                << player2.GetName()
-                << "</span>"
-                << "</b> won!"
-                << std::endl;
-        }
-        theMessage
-            << "    "
-            << "<span color=\"#"
-            << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(red1)
-            << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(green1)
-            << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(blue1)
-            << "\">"
-            << player1.GetName()
-            << "</span>"
-            << " has <b>"
-            << std::setbase(10) << squaresLeftPlayer1
-            << "</b> squares left and "
-            << "<span color=\"#"
-            << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(red2)
-            << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(green2)
-            << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(blue2)
-            << "\">"
-            << player2.GetName()
-            << "</span>"
-            << " <b>"
-            << std::setbase(10) << squaresLeftPlayer2
-            << "</b>";
+        snprintf(theMessage,
+                GAME_FINISHED_BUFFER_LENGTH,
+                //- TRANSLATORS: Please, respect the HTML formatting as much as possible
+                //- Bear in mind that the 1st ' color=\"#%02X%02X%02X\" ' will be replaced by the winner's colour,
+                //- and the first %s will be replaced by the winner's name
+                //- The 2nd ' color=\"#%02X%02X%02X\" ' and 2nd %s will be replaced by player1's colour and
+                //- player1's name respectively. the following %d would be player1's score
+                //- The 3rd ' color=\"#%02X%02X%02X\" ' and 3rd %s will be replaced by player2's colour and
+                //- player2's name respectively. the following %d would be player2's score
+                //- The order of these tags must be taken into account for the translation
+                //- A typical complete message:
+                //- <b><span color="#012345">Eddie</span></b>!\n<span color="#012345">Eddie</span> has <b>5</b> squares left and <span color="#678901">John</span> has <b>7</b>
+                //- Thank you for contributing to this project
+                _("<b><span color=\"#%02X%02X%02X\">%s</span></b> won!\n<span color=\"#%02X%02X%02X\">%s</span> has <b>%d</b> squares left and <span color=\"#%02X%02X%02X\">%s</span> has <b>%d</b>"),
+                (squaresLeftPlayer1 < squaresLeftPlayer2) ? red1   : red2,
+                (squaresLeftPlayer1 < squaresLeftPlayer2) ? green1 : green2,
+                (squaresLeftPlayer1 < squaresLeftPlayer2) ? blue1  : blue2,
+                (squaresLeftPlayer1 < squaresLeftPlayer2) ? player1.GetName() : player2.GetName(),
+                red1,
+                green1,
+                blue1,
+                player1.GetName(),
+                squaresLeftPlayer1,
+                red2,
+                green2,
+                blue2,
+                player2.GetName(),
+                squaresLeftPlayer2);
     }
 
     //MessageDialog (
@@ -1410,7 +1458,7 @@ void MainWindow::GameFinished()
     //        bool modal=false)
     Gtk::MessageDialog::MessageDialog gameOverMessage(
             *this,
-            theMessage.str().c_str(),
+            theMessage,
             true,
             Gtk::MESSAGE_INFO,
             Gtk::BUTTONS_OK,
@@ -1424,14 +1472,14 @@ void MainWindow::GameFinished()
 
 void MainWindow::NotifyProgressUpdate()
 {
-    float progress;
-
     if (m_currentGameFinished)
     {
         // do not update the progress bar if the current game is finished
         return;
     }
-
+    
+    float progress;
+    
     G_LOCK(s_computingCurrentProgress);
         progress = s_computingCurrentProgress;
     G_UNLOCK(s_computingCurrentProgress);
@@ -1473,8 +1521,7 @@ void MainWindow::UpdateScoreStatus()
                << "</span>"
                << ": "
                << std::setfill(' ') << std::setw(2) << std::setbase(10)
-               << static_cast<int32_t>(squaresLeftPlayer2)
-               << " left";
+               << static_cast<int32_t>(squaresLeftPlayer2);
 
     m_player2ScoreLabel.set_markup(theMessage.str().c_str());
 
@@ -1489,8 +1536,7 @@ void MainWindow::UpdateScoreStatus()
                << "</span>"
                << ": "
                << std::setfill(' ') << std::setw(2)  << std::setbase(10)
-               << static_cast<int32_t>(squaresLeftPLayer1)
-               << " left";
+               << static_cast<int32_t>(squaresLeftPLayer1);
 
     m_player1ScoreLabel.set_markup(theMessage.str().c_str());
 }
