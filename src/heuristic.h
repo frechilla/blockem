@@ -157,26 +157,26 @@ protected:
     /// @param the player whose pieces will be checked
     /// @param bitwise representation of the board (which places are available)
     /// @param bitwise represntation of 'a_player' pieces on the board
-    static int32_t CountSquaresCanBeDeployedBitwise(
-            const Board  &a_board,
-            const Player &a_player,
-            uint64_t      a_bitwiseBoard,
-            uint64_t      a_bitwisePlayerBoard);
+//    static int32_t CountSquaresCanBeDeployedBitwise(
+//            const Board  &a_board,
+//            const Player &a_player,
+//            uint64_t      a_bitwiseBoard,
+//            uint64_t      a_bitwisePlayerBoard);
 
 
     /// @calculates a nk based heuristic value of thisCoord
-    static int32_t NKBasedHeuristicThisCoord(
-            const Board  &a_board,
-            const Player &a_playerMe,
-            const Player &a_playerOpponent,
-            const Coordinate &thisCoord);
+//    static int32_t NKBasedHeuristicThisCoord(
+//            const Board  &a_board,
+//            const Player &a_playerMe,
+//            const Player &a_playerOpponent,
+//            const Coordinate &thisCoord);
 
     /// @return the size of the maximum piece deployable in a particular NK point
-    // it assumes pieces are defined in piece.h in reversed order from 5 to 1 squares (and they are)
-    static int32_t BiggestPieceDeployableInNKPointSize(
-            const Board      &a_board,
-            const Player     &a_player,
-            const Coordinate &a_NKPointCoord);
+    /// it assumes pieces are defined in piece.h in reversed order from 5 to 1 squares (and they are now)
+//    static int32_t BiggestPieceDeployableInNKPointSize(
+//            const Board      &a_board,
+//            const Player     &a_player,
+//            const Coordinate &a_NKPointCoord);
 
 private:
     /// @brief constructor

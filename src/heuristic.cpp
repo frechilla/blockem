@@ -23,6 +23,7 @@
 /// @history
 /// Ref       Who                When         What
 ///           Faustino Frechilla 31-Mar-2009  Original development
+///           Faustino Frechilla 23-Jul-2010  i18n
 /// @endhistory
 ///
 // ============================================================================
@@ -30,11 +31,14 @@
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
+#include <glib/gi18n.h> // i18n
 #include "heuristic.h"
 #include "player.h"
 #include "rules.h"
 #include "bitwise.h"
 
+/// Pieces that will be put down while trying to take over the centre of the board
+/// see CalculateNKWeightedv1 for an example
 static const int32_t N_PIECES_TO_TAKE_OVER_THE_CENTRE = 3;
 
 // instantiate the const heuristic data array. Heuristics must be defined here
@@ -43,43 +47,69 @@ const Heuristic::sHeuristicData_t Heuristic::m_heuristicData[e_heuristicCount] =
 {
     {e_heuristicInfluenceArea,
      Heuristic::CalculateInfluenceAreaWeighted,
-     std::string("Influence Area"),
-     std::string("Uses the influence areas that a user's pieces create on the board to determine the quality of a move")
+     // i18n TRANSLATORS: This is the name given to a type of heuristic. Should be as small as possible
+     std::string(_("Influence Area")),
+     // i18n TRANSLATORS: This is a quick explanation of what the "Influence Area" heuristic is supposed
+     // i18n to do. Shouldn't be too long since it will have to fit nicely on the GUI widgets
+     std::string(_("Uses the influence areas that a user's pieces create on the board to determine the quality of a move"))
     },
     {e_heuristicInfluenceAreaEastwood,
      Heuristic::CalculateInfluenceAreaWeightedEastwood,
-     std::string("Mr. Eastwood"),
-     std::string("Modified version of \"Influence Area\". When in doubt it will try to block you")
+     // i18n TRANSLATORS: This is the name given to a type of heuristic. Should be as small as possible
+     std::string(_("Mr. Eastwood")),
+     // i18n TRANSLATORS: This is a quick explanation of what the "Mr. Eastwood" heuristic is supposed
+     // i18n to do. Shouldn't be too long since it will have to fit nicely on the GUI widgets
+     std::string(_("Modified version of \"Influence Area\". When in doubt it will try to block you"))
     },
     {e_heuristicNKWeightedv1,
      Heuristic::CalculateNKWeightedv1,
-     std::string("NK weighted"),
-     std::string("The more Nucleation points the better. NK points are more important in the middle of the board at the beginning")
+     // i18n TRANSLATORS: This is the name given to a type of heuristic. Should be as small as possible
+     // i18n NK stands for Nucleation point
+     std::string(_("NK weighted")),
+     // i18n TRANSLATORS: This is a quick explanation of what the "NK weighted" heuristic is supposed
+     // i18n to do. Shouldn't be too long since it will have to fit nicely on the GUI widgets
+     // i18n NK stands for Nucleation point
+     std::string(_("The more Nucleation points the better. NK points are more important in the middle of the board at the beginning"))
     },
 //    {e_heuristicNKWeightedv2,
 //     Heuristic::CalculateNKWeightedv2,
-//     std::string("NK weighted v2"),
-//     std::string("Evolution of v1. The more pieces you can put down per nk point the better")
+//     // i18n TRANSLATORS: This is the name given to a type of heuristic. Should be as small as possible
+//     std::string(_("NK weighted v2")),
+//     // i18n TRANSLATORS: This is a quick explanation of what the "NK weighted v2" heuristic is supposed
+//     // i18n to do. Shouldn't be too long since it will have to fit nicely on the GUI widgets
+//     std::string(_("Evolution of v1. The more pieces you can put down per nk point the better"))
 //    },
     {e_heuristicCentreFocused,
      Heuristic::CalculateCentreFocused,
-     std::string("Centre focused"),
-     std::string("It has a tendency to create nucleation points over the centre of the board")
+     // i18n TRANSLATORS: This is the name given to a type of heuristic. Should be as small as possible
+     std::string(_("Centre focused")),
+     // i18n TRANSLATORS: This is a quick explanation of what the "Centre focused" heuristic is supposed
+     // i18n to do. Shouldn't be too long since it will have to fit nicely on the GUI widgets
+     std::string(_("It has a tendency to create nucleation points over the centre of the board"))
     },
     {e_heuristicSimple,
      Heuristic::CalculateSimple,
-     std::string("Simple"),
-     std::string("Takes into account only the amount of squares of the deployed pieces")
+     // i18n TRANSLATORS: This is the name given to a type of heuristic. Should be as small as possible
+     std::string(_("Simple")),
+     // i18n TRANSLATORS: This is a quick explanation of what the "Simple" heuristic is supposed
+     // i18n to do. Shouldn't be too long since it will have to fit nicely on the GUI widgets
+     std::string(_("Takes into account only the amount of squares of the deployed pieces"))
     },
     {e_heuristicRandom,
      Heuristic::CalculateRandom,
-     std::string("Random"),
-     std::string("Random heuristic. Evaluation function returns a random value so any heuristic can be checked against it")
+     // i18n TRANSLATORS: This is the name given to a type of heuristic. Should be as small as possible
+     std::string(_("Random")),
+     // i18n TRANSLATORS: This is a quick explanation of what the "Random" heuristic is supposed
+     // i18n to do. Shouldn't be too long since it will have to fit nicely on the GUI widgets
+     std::string(_("Random heuristic. Evaluation function returns a random value so any heuristic can be checked against it"))
     },
 //    {e_heuristicAmountOfPieces,
 //     Heuristic::CalculateNPieces,
-//     std::string("Amount of pieces"),
-//     std::string("The more pieces can be put down per NK point, the better. It's slow and a bit crazy sometimes")
+//     // i18n TRANSLATORS: This is the name given to a type of heuristic. Should be as small as possible
+//     std::string(_("Amount of pieces")),
+//     // i18n TRANSLATORS: This is a quick explanation of what the "Amount of pieces" heuristic is supposed
+//     // i18n to do. Shouldn't be too long since it will have to fit nicely on the GUI widgets
+//     std::string(_("The more pieces can be put down per NK point, the better. It's slow and a bit crazy sometimes"))
 //    }
 };
 
@@ -652,60 +682,60 @@ int32_t Heuristic::CalculateInfluenceAreaWeightedEastwood(
 //    return rv;
 //}
 
-int32_t Heuristic::NKBasedHeuristicThisCoord(
-        const Board  &a_board,
-        const Player &a_playerMe,
-        const Player &a_playerOpponent,
-        const Coordinate &thisCoord)
-{
-    int32_t valueNkMe = 0;
-    int32_t valueNkOpponent = 0;
-    int32_t squaresMe = 0;
-    int32_t squaresOpponent = 0;
-
-    if (a_board.IsCoordEmpty(thisCoord))
-    {
-        if (a_playerOpponent.IsNucleationPoint(thisCoord))
-        {
-            valueNkOpponent = 2;
-        }
-
-        if (a_playerMe.IsNucleationPoint(thisCoord))
-        {
-            if (valueNkOpponent == 0)
-            {
-                valueNkMe = 2;
-                if (rules::IsCoordTouchingPlayerCompute(a_board, thisCoord, a_playerOpponent))
-                {
-                    // an nk point that is touching the other player is unblockable by the opponent
-                    // (it might get blocked, but not directly)
-                    valueNkMe += 1;
-                }
-            }
-            else
-            {
-                // the weighted value of this nk point is half the value of the opponent
-                // because putting down a piece which is sharing nk points is bad
-                // since the next go will be for the opponent
-                valueNkMe = 1;
-            }
-        } // if (a_playerMe->IsNucleationPoint(thisCoord.m_row, thisCoord.m_col))
-    }
-    else if (a_board.IsPlayerInCoord(thisCoord, a_playerMe))
-    {
-        squaresMe++;
-    }
-    else // if (a_board.IsPlayerInCoord(thisCoord, a_playeOpponent))
-    {
-        squaresOpponent++;
-    }
-
-    int32_t rv = 0;
-    rv += squaresMe + valueNkMe;
-    rv -= squaresOpponent + valueNkOpponent;
-
-    return rv;
-}
+//int32_t Heuristic::NKBasedHeuristicThisCoord(
+//        const Board  &a_board,
+//        const Player &a_playerMe,
+//        const Player &a_playerOpponent,
+//        const Coordinate &thisCoord)
+//{
+//    int32_t valueNkMe = 0;
+//    int32_t valueNkOpponent = 0;
+//    int32_t squaresMe = 0;
+//    int32_t squaresOpponent = 0;
+//
+//    if (a_board.IsCoordEmpty(thisCoord))
+//    {
+//        if (a_playerOpponent.IsNucleationPoint(thisCoord))
+//        {
+//            valueNkOpponent = 2;
+//        }
+//
+//        if (a_playerMe.IsNucleationPoint(thisCoord))
+//        {
+//            if (valueNkOpponent == 0)
+//            {
+//                valueNkMe = 2;
+//                if (rules::IsCoordTouchingPlayerCompute(a_board, thisCoord, a_playerOpponent))
+//                {
+//                    // an nk point that is touching the other player is unblockable by the opponent
+//                    // (it might get blocked, but not directly)
+//                   valueNkMe += 1;
+//                }
+//            }
+//            else
+//            {
+//                // the weighted value of this nk point is half the value of the opponent
+//                // because putting down a piece which is sharing nk points is bad
+//                // since the next go will be for the opponent
+//                valueNkMe = 1;
+//            }
+//        } // if (a_playerMe->IsNucleationPoint(thisCoord.m_row, thisCoord.m_col))
+//    }
+//    else if (a_board.IsPlayerInCoord(thisCoord, a_playerMe))
+//    {
+//        squaresMe++;
+//    }
+//    else // if (a_board.IsPlayerInCoord(thisCoord, a_playeOpponent))
+//    {
+//        squaresOpponent++;
+//    }
+//
+//    int32_t rv = 0;
+//    rv += squaresMe + valueNkMe;
+//    rv -= squaresOpponent + valueNkOpponent;
+//
+//    return rv;
+//}
 
 int32_t Heuristic::CalculateCircularWeight(
 		const Board &a_board, const Coordinate &a_coord)
@@ -752,72 +782,72 @@ int32_t Heuristic::CalculateCircularWeight(
     return weightedValue;
 }
 
-int32_t Heuristic::CountSquaresCanBeDeployedBitwise(
-        const Board  &a_board,
-        const Player &a_player,
-        uint64_t      a_bitwiseBoard,
-        uint64_t      a_bitwisePlayerBoard)
-{
-    int32_t rValue = 0;
+//int32_t Heuristic::CountSquaresCanBeDeployedBitwise(
+//        const Board  &a_board,
+//        const Player &a_player,
+//        uint64_t      a_bitwiseBoard,
+//        uint64_t      a_bitwisePlayerBoard)
+//{
+//    int32_t rValue = 0;
+//
+//    for (int8_t i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
+//    {
+//        if (a_player.IsPieceAvailable(static_cast<ePieceType_t>(i)))
+//        {
+//            const std::list<uint64_t> &pieceConfigurations = a_player.m_pieces[i].GetBitwiseList();
+//            std::list<uint64_t>::const_iterator it = pieceConfigurations.begin();
+//            while (it != pieceConfigurations.end())
+//            {
+//                uint64_t bPiece = (*it);
+//
+//                if (bitwise::IsPieceDeployable(bPiece, a_bitwiseBoard, a_bitwisePlayerBoard))
+//                {
+//                    rValue += a_player.m_pieces[i].GetNSquares();
+//                    break;
+//                }
+//
+//                it++;
+//            }
+//        }
+//    }
+//
+//    return rValue;
+//}
 
-    for (int8_t i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
-    {
-        if (a_player.IsPieceAvailable(static_cast<ePieceType_t>(i)))
-        {
-            const std::list<uint64_t> &pieceConfigurations = a_player.m_pieces[i].GetBitwiseList();
-            std::list<uint64_t>::const_iterator it = pieceConfigurations.begin();
-            while (it != pieceConfigurations.end())
-            {
-                uint64_t bPiece = (*it);
-
-                if (bitwise::IsPieceDeployable(bPiece, a_bitwiseBoard, a_bitwisePlayerBoard))
-                {
-                    rValue += a_player.m_pieces[i].GetNSquares();
-                    break;
-                }
-
-                it++;
-            }
-        }
-    }
-
-    return rValue;
-}
-
-int32_t Heuristic::BiggestPieceDeployableInNKPointSize(
-        const Board      &a_board,
-        const Player     &a_player,
-        const Coordinate &a_NKPointCoord)
-{
-    // Player used as a container for all the pieces
-    const static Player sPlayer(
-            std::string("tmpPlayer"), '_', 1, 1);
-
-    for (int8_t i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
-    {
-        if (a_player.IsPieceAvailable(static_cast<ePieceType_t>(i)))
-        {
-            const std::list<PieceConfiguration> &pieceConfList =
-                                sPlayer.m_pieces[i].GetPrecalculatedConfs();
-
-            std::list<PieceConfiguration>::const_iterator pieceConfIt;
-            for (pieceConfIt  = pieceConfList.begin();
-                 pieceConfIt != pieceConfList.end();
-                 pieceConfIt++)
-            {
-                if (rules::HasValidCoordInNucleationPoint(
-                        a_board,
-                        a_player,
-                        a_NKPointCoord,
-                        *(pieceConfIt),
-                        sPlayer.m_pieces[i].GetRadius()) )
-                {
-                    return sPlayer.m_pieces[i].GetNSquares();
-                }
-            } // for (pieceConfIt  = coordConfList.begin()
-        } // if (a_player.IsPieceAvailable(static_cast<ePieceType_t>(i)))
-    } // for (int8_t i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
-
-    // no piece can be deployed
-    return 0;
-}
+//int32_t Heuristic::BiggestPieceDeployableInNKPointSize(
+//        const Board      &a_board,
+//        const Player     &a_player,
+//        const Coordinate &a_NKPointCoord)
+//{
+//    // Player used as a container for all the pieces
+//    const static Player sPlayer(
+//            std::string("tmpPlayer"), '_', 1, 1);
+//
+//    for (int8_t i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
+//    {
+//        if (a_player.IsPieceAvailable(static_cast<ePieceType_t>(i)))
+//        {
+//            const std::list<PieceConfiguration> &pieceConfList =
+//                                sPlayer.m_pieces[i].GetPrecalculatedConfs();
+//
+//            std::list<PieceConfiguration>::const_iterator pieceConfIt;
+//            for (pieceConfIt  = pieceConfList.begin();
+//                 pieceConfIt != pieceConfList.end();
+//                 pieceConfIt++)
+//            {
+//                if (rules::HasValidCoordInNucleationPoint(
+//                        a_board,
+//                        a_player,
+//                        a_NKPointCoord,
+//                        *(pieceConfIt),
+//                        sPlayer.m_pieces[i].GetRadius()) )
+//                {
+//                    return sPlayer.m_pieces[i].GetNSquares();
+//                }
+//            } // for (pieceConfIt  = coordConfList.begin()
+//        } // if (a_player.IsPieceAvailable(static_cast<ePieceType_t>(i)))
+//    } // for (int8_t i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
+//
+//    // no piece can be deployed
+//    return 0;
+//}
