@@ -23,39 +23,43 @@
 /// @history
 /// Ref       Who                When         What
 ///           Faustino Frechilla 30-Mar-2009  Original development
+///           Faustino Frechilla 23-Jul-2010  i18n
 /// @endhistory
 ///
 // ============================================================================
 
+#include <glib/gi18n.h> // i18n
 #include "piece.h"
 #include "stdio.h"
 
-// a piece has to fit in a square (2*2) + 1
+/// a piece has to fit in a square (2*2) + 1
 static const uint8_t PIECE_MAX_RADIUS = 2;
 
+// bear in mind the description the pieces must match the order in which
+// pieces are added to the enum ePieceType_t in piece.h
 const std::string Piece::PieceDescription[e_numberOfPieces] =
 {
-    "1Piece_BabyPiece",
-    "2Piece_TwoPiece",
-    "3Piece_LongPiece",
-    "3Piece_Triangle",
-    "4Piece_FullSquare",
-    "4Piece_LongPiece",
-    "4Piece_LittleL",
-    "4Piece_LittleS",
-    "4Piece_LittleT",
-    "5Piece_BigPeni",
-    "5Piece_SquarePlus",
-    "5Piece_HalfSquare",
-    "5Piece_CuntPiece",
-    "5Piece_BigL",
-    "5Piece_BoringPiece",
-    "5Piece_BigS",
-    "5Piece_MrT",
-    "5Piece_TheUltimate",
-    "5Piece_SafPiece",
-    "5Piece_WPiece",
-    "5Piece_Cross"
+    N_("1Piece_BabyPiece"),
+    N_("2Piece_TwoPiece"),
+    N_("3Piece_LongPiece"),
+    N_("3Piece_Triangle"),
+    N_("4Piece_FullSquare"),
+    N_("4Piece_LongPiece"),
+    N_("4Piece_LittleL"),
+    N_("4Piece_LittleS"),
+    N_("4Piece_LittleT"),
+    N_("5Piece_BigPeni"),
+    N_("5Piece_SquarePlus"),
+    N_("5Piece_HalfSquare"),
+    N_("5Piece_CuntPiece"),
+    N_("5Piece_BigL"),
+    N_("5Piece_BoringPiece"),
+    N_("5Piece_BigS"),
+    N_("5Piece_MrT"),
+    N_("5Piece_TheUltimate"),
+    N_("5Piece_SafPiece"),
+    N_("5Piece_WPiece"),
+    N_("5Piece_Cross")
 };
 
 // instantiate the load piece map.
@@ -179,6 +183,11 @@ void Piece::SetPiece(
 #ifdef DEBUG
     m_initialised = true;
 #endif
+}
+
+const char* Piece::GetPieceDescription(ePieceType_t a_pieceType)
+{
+    return _(Piece::m_pieceDescription[a_pieceType]);
 }
 
 void Piece::Reset()

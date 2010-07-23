@@ -115,9 +115,9 @@ public:
 	/// @param a_type type of blokus piece
 	Piece(ePieceType_t a_type = e_noPiece);
     virtual ~Piece();
-
-    /// @brief array of strings which describe every possible piece
-    static const std::string PieceDescription[e_numberOfPieces];
+    
+    /// @return a string of characters that describes in some sort of human language the piece 'a_pieceType'
+    static const char* GetPieceDescription(ePieceType_t a_pieceType);
 
     /// Reset the piece to the original configuration
     void Reset();
@@ -180,7 +180,7 @@ public:
     /// gives access to the current coords of the squares that make up the piece
     /// @return the coordinate saved in a_squareIndex in the current piece configuration
     const Coordinate& GetCoord(int32_t a_squareIndex) const;
-
+    
 private:
     /// type of piece
     ePieceType_t m_type;
@@ -265,6 +265,9 @@ private:
     typedef void (*LoadPieceFunction_t) (Piece &);
     /// array to map type of pieces to the corresponding Load function
     static LoadPieceFunction_t m_loadFunctionMap[e_numberOfPieces];
+    
+    /// @brief array of strings which describe every possible piece
+    static const std::string m_pieceDescription[e_numberOfPieces];
 
     /// @brief build up precalculated list of configurations of this piece
     /// Saves into m_precalculatedConfsList a list of PieceConfiguration

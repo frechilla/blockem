@@ -24,10 +24,12 @@
 /// Ref       Who                When         What
 ///           Faustino Frechilla 30-Mar-2010  Original development
 ///           Faustino Frechilla 25-Apr-2010  libglade dependency removed. Code migrated to GtkBuilder
+///           Faustino Frechilla 23-Jul-2010  i18n
 /// @endhistory
 ///
 // ============================================================================
 
+#include <glib/gi18n.h> // i18n
 #include "gui_table_edit_piece.h"
 #include "gui_glade_defs.h"
 
@@ -56,43 +58,64 @@ TableEditPiece::TableEditPiece(
 	m_gtkBuilder->get_widget(GUI_DRAWINGAREA_EDITING_PIECE, m_editPieceDrawingArea);
 	if (m_editPieceDrawingArea == NULL)
 	{
-		throw new GUIException(std::string("Edit pieces drawing area retrieval failed"));
+        // i18n Please, leave gtk::DrawingArea and TableEditPiece as they are here
+        // i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+        // i18n Thank you for contributing to this project
+		throw new GUIException(std::string(_("Could not load Edit pieces Gtk::DrawingArea in TableEditPiece")));
 	}
 
 	m_gtkBuilder->get_widget(GUI_BUTTON_ROTATE_LEFT_NAME, m_rotateLeftButton);
     if (m_rotateLeftButton == NULL)
     {
-        throw new GUIException(std::string("rotate left button retrieval failed"));
+        // i18n Please, leave gtk::Button and TableEditPiece as they are here
+        // i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+        // i18n Thank you for contributing to this project
+        throw new GUIException(std::string(_("Could not load rotate left Gtk::Button in TableEditPiece")));
     }
 
     m_gtkBuilder->get_widget(GUI_BUTTON_ROTATE_RIGHT_NAME, m_rotateRightButton);
 	if (m_rotateRightButton == NULL)
 	{
-		throw new GUIException(std::string("rotate right button retrieval failed"));
+        // i18n Please, leave gtk::Button and TableEditPiece as they are here
+        // i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+        // i18n Thank you for contributing to this project
+		throw new GUIException(std::string(_("Could not load rotate right Gtk::Button in TableEditPiece")));
 	}
 
 	m_gtkBuilder->get_widget(GUI_LABEL_ROTATE_NAME, m_rotateLabel);
     if (m_rotateLabel == NULL)
     {
-        throw new GUIException(std::string("rotate label retrieval failed"));
+        // i18n Please, leave gtk::Label and TableEditPiece as they are here
+        // i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+        // i18n Thank you for contributing to this project
+        throw new GUIException(std::string(_("Could not load rotate Gtk::Label in TableEditPiece")));
     }
 
     m_gtkBuilder->get_widget(GUI_LABEL_MIRROR_NAME, m_mirrorLabel);
     if (m_mirrorLabel == NULL)
     {
-        throw new GUIException(std::string("mirror label retrieval failed"));
+        // i18n Please, leave gtk::Label and TableEditPiece as they are here
+        // i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+        // i18n Thank you for contributing to this project
+        throw new GUIException(std::string(_("Could not load mirror Gtk::Label in TableEditPiece")));
     }
 
     m_gtkBuilder->get_widget(GUI_BUTTON_MIRROR_YAXIS_NAME, m_mirrorButtonYAxis);
 	if (m_mirrorButtonYAxis == NULL)
 	{
-		throw new GUIException(std::string("mirror YAxis button retrieval failed"));
+        // i18n Please, leave gtk::Button and TableEditPiece as they are here
+        // i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+        // i18n Thank you for contributing to this project
+		throw new GUIException(std::string(_("Could not load mirror on Y-Axis Gtk::Button in TableEditPiece")));
 	}
 
 	m_gtkBuilder->get_widget(GUI_BUTTON_MIRROR_XAXIS_NAME, m_mirrorButtonXAxis);
     if (m_mirrorButtonXAxis == NULL)
     {
-        throw new GUIException(std::string("mirror XAxis button retrieval failed"));
+        // i18n Please, leave gtk::Button and TableEditPiece as they are here
+        // i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+        // i18n Thank you for contributing to this project
+        throw new GUIException(std::string(_("Could not load mirror on X-Axis Gtk::Button in TableEditPiece")));
     }
 
 	// connect the signals to the handlers

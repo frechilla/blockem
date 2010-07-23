@@ -26,10 +26,12 @@
 ///           Faustino Frechilla 15-Mar-2010  pthreads moved to gthreads
 ///           Faustino Frechilla 30-Apr-2010  CancelComputing logic added
 ///           Faustino Frechilla 02-May-2010  blockin call to ComputeMove
+///           Faustino Frechilla 23-Jul-2010  i18n
 /// @endhistory
 ///
 // ============================================================================
 
+#include <glib/gi18n.h> // i18n
 #include "gui_main_window_worker_thread.h"
 
 // flags to set the sig_atomic_t variable to stop the Minimax computing
@@ -78,7 +80,7 @@ MainWindowWorkerThread::MainWindowWorkerThread() throw (GUIException):
     m_mutex = g_mutex_new();
     if (m_mutex == NULL)
     {
-        throw new GUIException(std::string("Mutex in worker thread couldn't be initialised"));
+        throw new GUIException(std::string(_("Mutex in worker thread couldn't be initialised")));
 #ifdef DEBUG
         assert(0);
 #endif
@@ -87,7 +89,7 @@ MainWindowWorkerThread::MainWindowWorkerThread() throw (GUIException):
     m_cond = g_cond_new();
     if (m_cond == NULL)
     {
-        throw new GUIException(std::string("Conditional variable in worker thread couldn't be initialised"));
+        throw new GUIException(std::string(_("Conditional variable in worker thread couldn't be initialised")));
 #ifdef DEBUG
         assert(0);
 #endif
@@ -121,7 +123,7 @@ void MainWindowWorkerThread::SpawnThread() throw (GUIException)
     if (m_thread == NULL)
     {
         throw new GUIException(
-            std::string("Worker Thread creation failed. ") + std::string(err->message));
+            std::string(_("Worker Thread creation failed. ")) + std::string(_(err->message)));
         g_error_free(err) ;
 #ifdef DEBUG
         assert(0);
