@@ -243,7 +243,7 @@ int main(int argc, char **argv)
         std::stringstream errMessage;
         errMessage << _("Error parsing command line")
                    << ": "
-                   << error->message;
+                   << _(error->message);
 
         FatalError(argv[0], errMessage.str().c_str(), COMMAND_LINE_PARSING_ERR);
     }
