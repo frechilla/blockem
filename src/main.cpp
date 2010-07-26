@@ -120,52 +120,52 @@ static gchar** g_blockemfilePath = NULL;
 static GOptionEntry g_cmdEntries[] =
 {
     { "version", 0, 0, G_OPTION_ARG_NONE, &g_version,
-      N_("Prints current version of the software and exists"), 
+      N_("Prints current version of the software and exists"),
       NULL },
 
     { "mode", 'm', 0, G_OPTION_ARG_INT, &g_mode,
       N_("Mandatory parameter which specifies the mode blockem runs. Valid options are: "
       "'0' GUI is shown (Default); '1' one player total-allocation; "
-      "'2' 1vs1 Game"), 
+      "'2' 1vs1 Game"),
       "M" },
 
     { "rows", 'r', 0, G_OPTION_ARG_INT, &g_rows,
       N_("1 player total allocation game's board will have N rows. "
-      "This is a MANDATORY parameter for --mode=1"), 
+      "This is a MANDATORY parameter for --mode=1"),
       "N"},
 
     { "columns", 'c', 0, G_OPTION_ARG_INT, &g_columns,
       N_("1 player total allocation game's board will have N columns. "
-      "This is a MANDATORY parameter for --mode=1"), 
+      "This is a MANDATORY parameter for --mode=1"),
       "N"},
 
     { "starting-column", 'x', 0, G_OPTION_ARG_INT, &g_startingColumn,
       N_("Computer will start to allocate pieces in column X (when running with --mode=1). "
       "1st valid column is 0, so maximum allowed column will be (number_of_columns - 1). "
-      "This is a MANDATORY parameter for --mode=1"), 
+      "This is a MANDATORY parameter for --mode=1"),
       "X"},
-      
+
     { "starting-row", 'y', 0, G_OPTION_ARG_INT, &g_startingRow,
       N_("Computer will start to allocate pieces in row Y (when running with --mode=1). "
       "1st valid row is 0, so maximum allowed row will be (number_of_rows - 1). "
-      "This is a MANDATORY parameter for --mode=1"), 
+      "This is a MANDATORY parameter for --mode=1"),
       "Y"},
 
     { "depth"  , 'd', 0, G_OPTION_ARG_INT, &g_depth,
       N_("Sets the maximum depth of search tree to D when 1vs1 Game is selected. "
-      "This is a MANDATORY parameter for --mode=2"), 
+      "This is a MANDATORY parameter for --mode=2"),
       "D"},
 
     { "heuristic", 'i', 0, G_OPTION_ARG_INT, &g_heuristic,
       N_("Heuristic to be used when mode is set to 1v1 game (--mode=2). Valid options: "
       "'0' \"Influence Area\" (Default); '1' \"Mr. Eastwood\"; '2' \"NK weighted\"; "
-      "'3' \"Centre focused\"; '4' \"Simple\"; '5' \"Random\"")
+      "'3' \"Centre focused\"; '4' \"Simple\"; '5' \"Random\""),
       "H" },
 
     { G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_FILENAME_ARRAY, &g_blockemfilePath,
       N_("Paths to 1vs1game files (mode 2). Blockem will calculate next move per each one of them "
       "and print out the result in console. "
-      "Specifying at least 1 file is MANDATORY for --mode=2"), 
+      "Specifying at least 1 file is MANDATORY for --mode=2"),
       // i18n TRANSLATORS: This string is supposed to mean that 1 file is mandatory
       // i18n but more than 1 can be specified
       // i18n Thank you for contributing to this project
@@ -225,7 +225,7 @@ void FatalError(
 int main(int argc, char **argv)
 {
     GError* error = NULL;
-    char*   errorStringBuffer[ERROR_STRING_BUFFER_SIZE];
+    char    errorStringBuffer[ERROR_STRING_BUFFER_SIZE];
 
     // i18n initialisation
     // make sure first that the message catalog can be found
@@ -414,7 +414,7 @@ int main(int argc, char **argv)
                     TOTAL_ALLOC_BAD_OPTIONS_ERR);
             }
 
-            if ( (g_startingRow >= g_rows) || (g_startingRow < 0)
+            if ( (g_startingRow >= g_rows) || (g_startingRow < 0) ||
                  (g_startingColumn >= g_columns) || (g_startingColumn < 0) )
             {
                 FatalError(
@@ -470,9 +470,9 @@ int main(int argc, char **argv)
             {
                 snprintf(errorStringBuffer,
                          ERROR_STRING_BUFFER_SIZE,
-                        // i18n TRANSLATORS: Please, leave that %d as it is. It will be replaced
-                        // i18n by the type of heuristic used by the user
-                        // i18n Thank you for contributing to this project
+                         // i18n TRANSLATORS: Please, leave that %d as it is. It will be replaced
+                         // i18n by the type of heuristic used by the user
+                         // i18n Thank you for contributing to this project
                          _("Invalid heuristic type (%d)"),
                          g_heuristic);
 
@@ -489,7 +489,7 @@ int main(int argc, char **argv)
             // i18n the 1st %s will be replaced by the heuristic's name, and %d by its index
             // i18n Thank you for contributing to this project
             printf(_("Evaluation function set to %s (%d)\n"),
-                   Heuristic::m_heuristicData[g_heuristic].m_name,
+                   Heuristic::m_heuristicData[g_heuristic].m_name.c_str(),
                    g_heuristic);
 
             if (g_depth <= 0)
@@ -501,7 +501,7 @@ int main(int argc, char **argv)
             }
             else if ( (g_depth & 0x01) == 0)
             {
-                std::cerr << argv[0] 
+                std::cerr << argv[0]
                           << ": "
                           << _("Warning: For better results you might want to set the depth to an odd number")
                           << std::endl;
@@ -524,7 +524,7 @@ int main(int argc, char **argv)
                             _("%s: Error: '%s' doesn't exist. Trying next file...\n"),
                             argv[0],
                             g_blockemfilePath[fileIndex]);
-                    
+
                     continue;
                 }
 
@@ -559,19 +559,19 @@ int main(int argc, char **argv)
                             _("%s: Error: '%s' does not contain a valid 1vs1Game. Trying next file...\n"),
                             argv[0],
                             g_blockemfilePath[fileIndex]);
-                            
+
                     cin.close();
                     continue;
                 }
                 cin.close();
-                
+
                 // i18n TRANSLATORS: '%s' will be replaced here by the path to the file
                 // i18n successfully loaded. Bear in mind the '\n' character should be there
                 // i18n in the translated version of the string too
                 // i18n Thank you for contributing to this project
                 printf (_("Game succesfully loaded from '%s'\n"),
                         g_blockemfilePath[fileIndex]);
-                          
+
                 // print current game on the screen
                 theGame.SaveGame(std::cout);
 
@@ -587,7 +587,7 @@ int main(int argc, char **argv)
 
                 // dummy volatile because no one will change it
                 volatile sig_atomic_t dummyAtomic = 0;
-                
+
                 int32_t minimaxWinner =
                     theGame.MinMax(
                             heuristic,
@@ -597,8 +597,8 @@ int main(int argc, char **argv)
                             resultCoord,
                             dummyAtomic);
 
-                // i18n TRANSLATORS: '%d' will be replaced here by the value of the winning 
-                // i18n move calculated by the minimax engine. Bear in mind the '\n' character 
+                // i18n TRANSLATORS: '%d' will be replaced here by the value of the winning
+                // i18n move calculated by the minimax engine. Bear in mind the '\n' character
                 // i18n should be there in the translated version of the string too
                 // i18n Thank you for contributing to this project
                 printf(_("Winning evaluation function value: %d\n"), minimaxWinner);
@@ -606,7 +606,7 @@ int main(int argc, char **argv)
                 if (resultPiece.GetType() == e_noPiece)
                 {
                     std::cout << std::endl;
-                    // i18n TRANSLATORS: This string will be printed on the screen when the minimax 
+                    // i18n TRANSLATORS: This string will be printed on the screen when the minimax
                     // i18n engine cannot put down a piece. It is left up to the translator to decide
                     // i18n to decide the formatting of the message, though this english version
                     // i18n could be used as the template

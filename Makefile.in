@@ -79,8 +79,8 @@ am__nobase_list = $(am__nobase_strip_setup); \
 am__base_list = \
   sed '$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;s/\n/ /g' | \
   sed '$$!N;$$!N;$$!N;$$!N;s/\n/ /g'
-am__installdirs = "$(DESTDIR)$(pixmapdir)"
-DATA = $(pixmap_DATA)
+am__installdirs = "$(DESTDIR)$(pixmapsdir)"
+DATA = $(pixmaps_DATA)
 RECURSIVE_CLEAN_TARGETS = mostlyclean-recursive clean-recursive	\
   distclean-recursive maintainer-clean-recursive
 AM_RECURSIVE_TARGETS = $(RECURSIVE_TARGETS:-recursive=) \
@@ -244,8 +244,10 @@ pixmaps/blockemlogo16.png  \
 pixmaps/blockemlogo48.png  \
 pixmaps/blockemlogo.png
 
-pixmapdir = $(datadir)/@PACKAGE@/pixmaps
-pixmap_DATA = \
+pixmapsdir = $(datadir)/@PACKAGE@/pixmaps
+# note that 'pixmaps/' must be added in front because it is the directory
+# where these files are stored (relative path from the root of the package)
+pixmaps_DATA = \
 pixmaps/blockemicon.ico    \
 pixmaps/blockemlogo128.png \
 pixmaps/blockemlogo16.png  \
@@ -307,26 +309,26 @@ $(srcdir)/config.h.in:  $(am__configure_deps)
 
 distclean-hdr:
 	-rm -f config.h stamp-h1
-install-pixmapDATA: $(pixmap_DATA)
+install-pixmapsDATA: $(pixmaps_DATA)
 	@$(NORMAL_INSTALL)
-	test -z "$(pixmapdir)" || $(MKDIR_P) "$(DESTDIR)$(pixmapdir)"
-	@list='$(pixmap_DATA)'; test -n "$(pixmapdir)" || list=; \
+	test -z "$(pixmapsdir)" || $(MKDIR_P) "$(DESTDIR)$(pixmapsdir)"
+	@list='$(pixmaps_DATA)'; test -n "$(pixmapsdir)" || list=; \
 	for p in $$list; do \
 	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
 	  echo "$$d$$p"; \
 	done | $(am__base_list) | \
 	while read files; do \
-	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(pixmapdir)'"; \
-	  $(INSTALL_DATA) $$files "$(DESTDIR)$(pixmapdir)" || exit $$?; \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(pixmapsdir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(pixmapsdir)" || exit $$?; \
 	done
 
-uninstall-pixmapDATA:
+uninstall-pixmapsDATA:
 	@$(NORMAL_UNINSTALL)
-	@list='$(pixmap_DATA)'; test -n "$(pixmapdir)" || list=; \
+	@list='$(pixmaps_DATA)'; test -n "$(pixmapsdir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	test -n "$$files" || exit 0; \
-	echo " ( cd '$(DESTDIR)$(pixmapdir)' && rm -f" $$files ")"; \
-	cd "$(DESTDIR)$(pixmapdir)" && rm -f $$files
+	echo " ( cd '$(DESTDIR)$(pixmapsdir)' && rm -f" $$files ")"; \
+	cd "$(DESTDIR)$(pixmapsdir)" && rm -f $$files
 
 # This directory's subdirectories are mostly independent; you can cd
 # into them and run `make' without going through this Makefile.
@@ -642,7 +644,7 @@ check: check-recursive
 all-am: Makefile $(DATA) config.h
 installdirs: installdirs-recursive
 installdirs-am:
-	for dir in "$(DESTDIR)$(pixmapdir)"; do \
+	for dir in "$(DESTDIR)$(pixmapsdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-recursive
@@ -691,7 +693,7 @@ info: info-recursive
 
 info-am:
 
-install-data-am: install-pixmapDATA
+install-data-am: install-pixmapsDATA
 
 install-dvi: install-dvi-recursive
 
@@ -737,7 +739,7 @@ ps: ps-recursive
 
 ps-am:
 
-uninstall-am: uninstall-pixmapDATA
+uninstall-am: uninstall-pixmapsDATA
 
 .MAKE: $(RECURSIVE_CLEAN_TARGETS) $(RECURSIVE_TARGETS) all \
 	ctags-recursive install-am install-strip tags-recursive
@@ -752,11 +754,11 @@ uninstall-am: uninstall-pixmapDATA
 	install-data-am install-dvi install-dvi-am install-exec \
 	install-exec-am install-html install-html-am install-info \
 	install-info-am install-man install-pdf install-pdf-am \
-	install-pixmapDATA install-ps install-ps-am install-strip \
+	install-pixmapsDATA install-ps install-ps-am install-strip \
 	installcheck installcheck-am installdirs installdirs-am \
 	maintainer-clean maintainer-clean-generic mostlyclean \
 	mostlyclean-generic pdf pdf-am ps ps-am tags tags-recursive \
-	uninstall uninstall-am uninstall-pixmapDATA
+	uninstall uninstall-am uninstall-pixmapsDATA
 
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

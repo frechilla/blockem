@@ -37,29 +37,29 @@ static const uint8_t PIECE_MAX_RADIUS = 2;
 
 // bear in mind the description the pieces must match the order in which
 // pieces are added to the enum ePieceType_t in piece.h
-const std::string Piece::PieceDescription[e_numberOfPieces] =
+const std::string Piece::m_pieceDescription[e_numberOfPieces] =
 {
-    N_("1Piece_BabyPiece"),
-    N_("2Piece_TwoPiece"),
-    N_("3Piece_LongPiece"),
-    N_("3Piece_Triangle"),
-    N_("4Piece_FullSquare"),
-    N_("4Piece_LongPiece"),
-    N_("4Piece_LittleL"),
-    N_("4Piece_LittleS"),
-    N_("4Piece_LittleT"),
-    N_("5Piece_BigPeni"),
-    N_("5Piece_SquarePlus"),
-    N_("5Piece_HalfSquare"),
-    N_("5Piece_CuntPiece"),
-    N_("5Piece_BigL"),
-    N_("5Piece_BoringPiece"),
-    N_("5Piece_BigS"),
-    N_("5Piece_MrT"),
-    N_("5Piece_TheUltimate"),
-    N_("5Piece_SafPiece"),
-    N_("5Piece_WPiece"),
-    N_("5Piece_Cross")
+    std::string(_("1Piece_BabyPiece")),
+    std::string(_("2Piece_TwoPiece")),
+    std::string(_("3Piece_LongPiece")),
+    std::string(_("3Piece_Triangle")),
+    std::string(_("4Piece_FullSquare")),
+    std::string(_("4Piece_LongPiece")),
+    std::string(_("4Piece_LittleL")),
+    std::string(_("4Piece_LittleS")),
+    std::string(_("4Piece_LittleT")),
+    std::string(_("5Piece_BigPeni")),
+    std::string(_("5Piece_SquarePlus")),
+    std::string(_("5Piece_HalfSquare")),
+    std::string(_("5Piece_CuntPiece")),
+    std::string(_("5Piece_BigL")),
+    std::string(_("5Piece_BoringPiece")),
+    std::string(_("5Piece_BigS")),
+    std::string(_("5Piece_MrT")),
+    std::string(_("5Piece_TheUltimate")),
+    std::string(_("5Piece_SafPiece")),
+    std::string(_("5Piece_WPiece")),
+    std::string(_("5Piece_Cross"))
 };
 
 // instantiate the load piece map.
@@ -185,9 +185,9 @@ void Piece::SetPiece(
 #endif
 }
 
-const char* Piece::GetPieceDescription(ePieceType_t a_pieceType)
+const std::string& Piece::GetPieceDescription(ePieceType_t a_pieceType)
 {
-    return _(Piece::m_pieceDescription[a_pieceType]);
+    return Piece::m_pieceDescription[a_pieceType];
 }
 
 void Piece::Reset()
