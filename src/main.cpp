@@ -51,12 +51,6 @@
 #include "gui_game1v1_config.h" // initialise singleton
 #include "heuristic.h"
 
-// list of error codes returned to the OS
-static const int COMMAND_LINE_PARSING_ERR    = 1;
-static const int TOTAL_ALLOC_BAD_OPTIONS_ERR = 3;
-static const int GAME1V1_BAD_OPTIONS_ERR     = 7;
-static const int BAD_MODE_OPTION_ERR         = 15;
-static const int GUI_EXCEPTION_ERR           = 127;
 
 // the following code is needed to load the gui into the application.
 // (See big comment in src/gui_glade.h)
@@ -84,6 +78,17 @@ extern int        _binary_gui_glade_size[];
 #define __BIN_GUI_GLADE_SIZE__  _binary_gui_glade_size
 
 #endif // ifdef WIN32
+
+
+// list of error codes returned to the OS
+static const int COMMAND_LINE_PARSING_ERR    = 1;
+static const int TOTAL_ALLOC_BAD_OPTIONS_ERR = 3;
+static const int GAME1V1_BAD_OPTIONS_ERR     = 7;
+static const int BAD_MODE_OPTION_ERR         = 15;
+static const int GUI_EXCEPTION_ERR           = 127;
+
+/// maximum size of error strings
+static const int32_t ERROR_STRING_BUFFER_SIZE = 128;
 
 // parsing command line arguments
 // http://library.gnome.org/devel/glib/unstable/glib-Commandline-option-parser.html
@@ -115,42 +120,56 @@ static gchar** g_blockemfilePath = NULL;
 static GOptionEntry g_cmdEntries[] =
 {
     { "version", 0, 0, G_OPTION_ARG_NONE, &g_version,
-        "Prints current version of the software and exists", NULL },
+      N_("Prints current version of the software and exists"), 
+      NULL },
+
     { "mode", 'm', 0, G_OPTION_ARG_INT, &g_mode,
-        "Mandatory parameter which specifies the mode blockem runs. Valid options:\n"\
-        "                                  + 0: GUI is shown (Default operation)\n"\
-        "                                  + 1: 1 player total-allocation\n"\
-        "                                  + 2: 1vs1 Game", "M" },
+      N_("Mandatory parameter which specifies the mode blockem runs. Valid options are: "
+      "'0' GUI is shown (Default); '1' one player total-allocation; "
+      "'2' 1vs1 Game"), 
+      "M" },
+
     { "rows", 'r', 0, G_OPTION_ARG_INT, &g_rows,
-        "1 player total allocation game's board will have N rows.\n"\
-        "                              This is a MANDATORY parameter for --mode=1", "N"},
+      N_("1 player total allocation game's board will have N rows. "
+      "This is a MANDATORY parameter for --mode=1"), 
+      "N"},
+
     { "columns", 'c', 0, G_OPTION_ARG_INT, &g_columns,
-        "1 player total allocation game's board will have N columns.\n"\
-        "                              This is a MANDATORY parameter for --mode=1", "N"},
-    { "starting-row", 'x', 0, G_OPTION_ARG_INT, &g_startingRow,
-        "Computer will start to allocate pieces in row X (when running with --mode=1).\n"\
-        "                              First valid row is 0 (so maximum allowed row will be (number_of_rows - 1).\n"\
-        "                              This is a MANDATORY parameter for --mode=1", "X"},
-    { "starting-column", 'y', 0, G_OPTION_ARG_INT, &g_startingColumn,
-        "Computer will start to allocate pieces in column Y (when running with --mode=1).\n"\
-        "                              First valid column is 0 (so maximum allowed column will be (number_of_columns - 1).\n"\
-        "                              This is a MANDATORY parameter for --mode=1", "Y"},
+      N_("1 player total allocation game's board will have N columns. "
+      "This is a MANDATORY parameter for --mode=1"), 
+      "N"},
+
+    { "starting-column", 'x', 0, G_OPTION_ARG_INT, &g_startingColumn,
+      N_("Computer will start to allocate pieces in column X (when running with --mode=1). "
+      "1st valid column is 0, so maximum allowed column will be (number_of_columns - 1). "
+      "This is a MANDATORY parameter for --mode=1"), 
+      "X"},
+      
+    { "starting-row", 'y', 0, G_OPTION_ARG_INT, &g_startingRow,
+      N_("Computer will start to allocate pieces in row Y (when running with --mode=1). "
+      "1st valid row is 0, so maximum allowed row will be (number_of_rows - 1). "
+      "This is a MANDATORY parameter for --mode=1"), 
+      "Y"},
+
     { "depth"  , 'd', 0, G_OPTION_ARG_INT, &g_depth,
-        "sets the maximum depth of search tree to N when 1vs1 Game is selected.\n"\
-        "                              This is a MANDATORY parameter for --mode=2", "N"},
-    { "heuristic", 'h', 0, G_OPTION_ARG_INT, &g_heuristic,
-        "Heuristic to be used when mode is set to 1v1 game (--mode=2). Valid options:\n"\
-        "                                  + 0 \"Influence Area\" (Default)\n"\
-        "                                  + 1 \"Mr. Eastwood\"\n"\
-        "                                  + 2 \"NK weighted\"\n"\
-        "                                  + 3 \"Centre focused\"\n"\
-        "                                  + 4 \"Simple\"\n"\
-        "                                  + 5 \"Random\"", "N" },
+      N_("Sets the maximum depth of search tree to D when 1vs1 Game is selected. "
+      "This is a MANDATORY parameter for --mode=2"), 
+      "D"},
+
+    { "heuristic", 'i', 0, G_OPTION_ARG_INT, &g_heuristic,
+      N_("Heuristic to be used when mode is set to 1v1 game (--mode=2). Valid options: "
+      "'0' \"Influence Area\" (Default); '1' \"Mr. Eastwood\"; '2' \"NK weighted\"; "
+      "'3' \"Centre focused\"; '4' \"Simple\"; '5' \"Random\"")
+      "H" },
 
     { G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_FILENAME_ARRAY, &g_blockemfilePath,
-        "Paths to 1vs1game files (mode 2). Blockem will calculate next move per each one of them\n"\
-        "                              and print out the result in console.\n"\
-        "                              Specifying at least 1 file is MANDATORY for --mode=2", "FILE [ FILE ... ]"},
+      N_("Paths to 1vs1game files (mode 2). Blockem will calculate next move per each one of them "
+      "and print out the result in console. "
+      "Specifying at least 1 file is MANDATORY for --mode=2"), 
+      // i18n TRANSLATORS: This string is supposed to mean that 1 file is mandatory
+      // i18n but more than 1 can be specified
+      // i18n Thank you for contributing to this project
+      N_("FILE [ FILE ... ]")},
 
     { NULL }
 };
@@ -180,12 +199,13 @@ void FatalError(
               << std::endl;
 
     std::cerr << a_binName
+              << ": "
               // i18n TRANSLATORS: Please leave the starting colon since it is part of the expected format
               // i18n Bear in mind this string will be used to print out a help message when an error is found
               // i18n A typical example would be: "./blockem: Try './blockem --help'". That is the "try" word
               // i18n that is to be translated here
               // i18n Thank you for contributing to this project
-              << _(": Try")
+              << _("Try")
               << " '"
               << a_binName
               <<  " --help'"
@@ -204,7 +224,8 @@ void FatalError(
 /// @brief what can I say? This is the main function!
 int main(int argc, char **argv)
 {
-    GError *error = NULL;
+    GError* error = NULL;
+    char*   errorStringBuffer[ERROR_STRING_BUFFER_SIZE];
 
     // i18n initialisation
     // make sure first that the message catalog can be found
@@ -217,6 +238,8 @@ int main(int argc, char **argv)
     }
     else
     {
+        // if the locale could not be set, trying to localise this string
+        // doesn't make a lot of sense
         std::cerr << "Error while setting the locale" << std::endl;
     }
 
@@ -243,12 +266,12 @@ int main(int argc, char **argv)
         std::stringstream errMessage;
         errMessage << _("Error parsing command line")
                    << ": "
-                   << _(error->message);
+                   << error->message;
 
         FatalError(argv[0], errMessage.str().c_str(), COMMAND_LINE_PARSING_ERR);
     }
 
-    if (g_version) // "version" option takes priority
+    if (g_version) // "version" option takes priority. If it set nothing else will be done
     {
         std::cout << "Blockem, version " << VERSION << " (r" << SVN_REVISION << ")" << std::endl;
         std::cout << "  Compiled " << COMPILETIME << std::endl << std::endl;
@@ -336,14 +359,14 @@ int main(int argc, char **argv)
             gtkBuilder->get_widget_derived(GUI_MAIN_WINDOW_NAME, pMainWindow);
             if (pMainWindow == NULL)
             {
-                throw new GUIException(std::string("couldn't retrieve the MainWindow from the .glade file"));
+                throw new GUIException(std::string(
+                    _("Could not load the Main Window from the .glade file")));
             }
 
             // if gdk_threads_enter and gdk_threads_leave were to be used
             // the Gtk::Main::run loop should be surrounded by
             // gdk_threads_enter and gdk_threads_leave
             // http://tadeboro.blogspot.com/2009/06/multi-threaded-gtk-applications.html
-
             kit.run(*pMainWindow);
         }
         catch (GUIException ex)
@@ -379,7 +402,7 @@ int main(int argc, char **argv)
             {
                 FatalError(
                     argv[0],
-                    "\"--rows\", \"--columns\", \"--starting-row\" and \"--starting-column\" must be specified in mode '1'",
+                    _("Number of rows, number of columns, starting row and starting column must be specified in mode '1'"),
                     TOTAL_ALLOC_BAD_OPTIONS_ERR);
             }
 
@@ -387,16 +410,16 @@ int main(int argc, char **argv)
             {
                 FatalError(
                     argv[0],
-                    "\"--rows\" and \"--columns\" must be a greater than 1",
+                    _("Number of rows and number of columns must be a greater than 1"),
                     TOTAL_ALLOC_BAD_OPTIONS_ERR);
             }
 
-            if ( (g_startingRow >= g_rows) ||
-                 (g_startingColumn >= g_columns) )
+            if ( (g_startingRow >= g_rows) || (g_startingRow < 0)
+                 (g_startingColumn >= g_columns) || (g_startingColumn < 0) )
             {
                 FatalError(
                     argv[0],
-                    "App was told to start outside of the board",
+                    _("Application cannot start outside of the board boundaries"),
                     TOTAL_ALLOC_BAD_OPTIONS_ERR);
             }
 
@@ -406,7 +429,10 @@ int main(int argc, char **argv)
             if (theGame.Solve(startingCoord))
             {
                 std::cout << std::endl;
-                std::cout << "SOLVED!" << std::endl;
+                // i18n TRANSLATORS: This string is to be printed when the applications finds
+                // i18n a solution to a one-player total-allocation game
+                // i18n Thank you for contributing to this project
+                std::cout << _("SOLVED!") << std::endl;
 
                 // print solved board on the screen
                 theGame.GetBoard().PrintBoard(std::cout);
@@ -414,9 +440,17 @@ int main(int argc, char **argv)
             else
             {
                 std::cout << std::endl;
-                std::cout << "Could not allocate all the pieces in this "
-                          << g_rows << "x" << g_columns << " board starting from row "
-                          << g_startingRow << ", column " << g_startingColumn << std::endl;
+                // i18n TRANSLATORS: This string is to be printed when the applications cannot find
+                // i18n a solution to a one-player total-allocation game. The integers printed on the screen
+                // i18n are (respectively) number of rows, number of columns, starting row and starting column
+                // i18n A typical string to be printed:
+                // i18n "Could not allocate all the pieces in this 8x8 board, starting from row 0, column 2"
+                // i18n Thank you for contributing to this project
+                printf(_("Could not allocate all the pieces in this %dx%d board, starting from row %d, columnd %d\n"),
+                    g_rows,
+                    g_columns,
+                    g_startingRow,
+                    g_startingColumn);
             }
         }
         else if (g_mode == 2)
@@ -427,39 +461,50 @@ int main(int argc, char **argv)
             {
                 FatalError(
                     argv[0],
-                    "At least one file with a 1vs1Game saved must be specified",
+                    _("At least one file with a 1vs1Game saved must be specified"),
                     GAME1V1_BAD_OPTIONS_ERR);
             }
 
             if ( (g_heuristic <  Heuristic::e_heuristicStartCount) ||
                  (g_heuristic >= Heuristic::e_heuristicCount) )
             {
-                std::stringstream errMessage;
-                errMessage << "Chosen heuristic type (" << g_heuristic << ") is invalid";
+                snprintf(errorStringBuffer,
+                         ERROR_STRING_BUFFER_SIZE,
+                        // i18n TRANSLATORS: Please, leave that %d as it is. It will be replaced
+                        // i18n by the type of heuristic used by the user
+                        // i18n Thank you for contributing to this project
+                         _("Invalid heuristic type (%d)"),
+                         g_heuristic);
 
                 FatalError(
                     argv[0],
-                    errMessage.str().c_str(),
+                    errorStringBuffer,
                     GAME1V1_BAD_OPTIONS_ERR);
             }
 
             // this little piece of magic uses the g_heuristic index to pick the expected evaluation
             // function. Have a look at heuristic.h
             Heuristic::EvalFunction_t heuristic = Heuristic::m_heuristicData[g_heuristic].m_evalFunction;
-            std::cout << "Evaluation function set to \""
-                      << Heuristic::m_heuristicData[g_heuristic].m_name
-                      << "\" (" << g_heuristic << ")" << std::endl;
+            // i18n TRANSLATORS: This string shows the chosen heuristic's name to the user
+            // i18n the 1st %s will be replaced by the heuristic's name, and %d by its index
+            // i18n Thank you for contributing to this project
+            printf(_("Evaluation function set to %s (%d)\n"),
+                   Heuristic::m_heuristicData[g_heuristic].m_name,
+                   g_heuristic);
 
             if (g_depth <= 0)
             {
                 FatalError(
                     argv[0],
-                    "Depth in 1vs1Game mode must be set to a positive value",
+                    _("Depth in 1vs1Game mode must be set to a positive value"),
                     GAME1V1_BAD_OPTIONS_ERR);
             }
             else if ( (g_depth & 0x01) == 0)
             {
-                std::cerr << argv[0] << " Warning: For better results you might want to set the depth to an odd number" << std::endl;
+                std::cerr << argv[0] 
+                          << ": "
+                          << _("Warning: For better results you might want to set the depth to an odd number")
+                          << std::endl;
             }
 
             // go through all the filenames array. Each file will be loaded into a gam1v1 and the next
@@ -469,40 +514,66 @@ int main(int argc, char **argv)
             {
                 if (!g_file_test(g_blockemfilePath[fileIndex], G_FILE_TEST_IS_REGULAR))
                 {
-                    std::cerr << argv[0] << ": Error: " << g_blockemfilePath[fileIndex] << " doesn't exist. Trying next one..." << std::endl;
+                    fprintf(stderr,
+                            // i18n TRANSLATORS: This string is shown when a file specified by the user
+                            // i18n cannot be loaded into the application. The 1st %s will be replaced
+                            // i18n by the name of the binary (normally "./blockem"), the 2nd one by
+                            // i18n the file that couldn't be accessed. Bear in mind the '\n' character should be there
+                            // i18n in the translated version of the string too
+                            // i18n Thank you for contributing to this project
+                            _("%s: Error: '%s' doesn't exist. Trying next file...\n"),
+                            argv[0],
+                            g_blockemfilePath[fileIndex]);
+                    
                     continue;
                 }
-
-                std::cout << "Loading game from " << g_blockemfilePath[fileIndex]
-                          << " and calculating next move (search tree depth is "
-                          << g_depth << ")" << std::endl;
 
                 std::ifstream cin;
                 cin.open(g_blockemfilePath[fileIndex]);
                 if(!cin)
                 {
-                    std::cerr << argv[0] << ": Error: "
-                              << g_blockemfilePath[fileIndex]
-                              << " could not be opened. Trying next one..." << std::endl;
+                    fprintf(stderr,
+                            // i18n TRANSLATORS: This string is shown when a file specified by the user
+                            // i18n could not be opened to be read. The 1st %s will be replaced
+                            // i18n by the name of the binary (normally "./blockem"), the 2nd one by
+                            // i18n the file that couldn't be opened. Bear in mind the '\n' character should be there
+                            // i18n in the translated version of the string too
+                            // i18n Thank you for contributing to this project
+                            _("%s: Error: '%s' could not be opened. Trying next file...\n"),
+                            argv[0],
+                            g_blockemfilePath[fileIndex]);
+
                     continue;
                 }
 
                 theGame.Reset();
                 if (theGame.LoadGame(cin) == false)
                 {
-                    std::cerr << argv[0] << ": Error while loading the game from "
-                              << g_blockemfilePath[fileIndex]
-                              << ". Trying next one..." << std::endl;
+                    fprintf(stderr,
+                            // i18n TRANSLATORS: This string is shown when a file specified by the user
+                            // i18n does not contain a valid 1vs1 game. The 1st %s will be replaced
+                            // i18n by the name of the binary (normally "./blockem"), the 2nd one by
+                            // i18n the file that couldn't be opened. Bear in mind the '\n' character should be there
+                            // i18n in the translated version of the string too
+                            // i18n Thank you for contributing to this project
+                            _("%s: Error: '%s' does not contain a valid 1vs1Game. Trying next file...\n"),
+                            argv[0],
+                            g_blockemfilePath[fileIndex]);
+                            
                     cin.close();
                     continue;
                 }
                 cin.close();
-
+                
+                // i18n TRANSLATORS: '%s' will be replaced here by the path to the file
+                // i18n successfully loaded. Bear in mind the '\n' character should be there
+                // i18n in the translated version of the string too
+                // i18n Thank you for contributing to this project
+                printf (_("Game succesfully loaded from '%s'\n"),
+                        g_blockemfilePath[fileIndex]);
+                          
                 // print current game on the screen
                 theGame.SaveGame(std::cout);
-
-                //test(&theGame, theGame.GetMe(), theGame.GetOpponent());
-                //exit(0);
 
                 //std::cout << std::endl << std::endl;
                 //theGame.GetMe().PrintNucleationPoints(std::cout);
@@ -510,11 +581,13 @@ int main(int argc, char **argv)
                 //std::cout << std::endl << std::endl;
                 //theGame.GetOpponent().PrintNucleationPoints(std::cout);
 
+                // these 2 variables will save the result calculated by minimax
                 Piece resultPiece(e_noPiece);
                 Coordinate resultCoord;
 
-                // it is dummy because no one is expected to change it
+                // dummy volatile because no one will change it
                 volatile sig_atomic_t dummyAtomic = 0;
+                
                 int32_t minimaxWinner =
                     theGame.MinMax(
                             heuristic,
@@ -524,14 +597,23 @@ int main(int argc, char **argv)
                             resultCoord,
                             dummyAtomic);
 
-                std::cout << "Winning evaluation function value: " << minimaxWinner << std::endl;
+                // i18n TRANSLATORS: '%d' will be replaced here by the value of the winning 
+                // i18n move calculated by the minimax engine. Bear in mind the '\n' character 
+                // i18n should be there in the translated version of the string too
+                // i18n Thank you for contributing to this project
+                printf(_("Winning evaluation function value: %d\n"), minimaxWinner);
 
                 if (resultPiece.GetType() == e_noPiece)
                 {
                     std::cout << std::endl;
-                    std::cout << "\t===================================================" << std::endl;
-                    std::cout << "\t=== END OF THE GAME. NO PIECE COULD BE PUT DOWN ===" << std::endl;
-                    std::cout << "\t===================================================" << std::endl;
+                    // i18n TRANSLATORS: This string will be printed on the screen when the minimax 
+                    // i18n engine cannot put down a piece. It is left up to the translator to decide
+                    // i18n to decide the formatting of the message, though this english version
+                    // i18n could be used as the template
+                    // i18n Thank you for contributing to this project
+                    std::cout << _(" ===================================================\n"\
+                                   " === END OF THE GAME. NO PIECE COULD BE PUT DOWN ===\n"\
+                                   " ===================================================\n");
                 }
                 else
                 {
@@ -552,12 +634,17 @@ int main(int argc, char **argv)
         }
         else // (g_mode != 1 && g_mode != 2)
         {
-            std::stringstream errMessage;
-            errMessage << "Bad --mode option (" << g_mode << ")";
+            snprintf(errorStringBuffer,
+                     ERROR_STRING_BUFFER_SIZE,
+                     // i18n TRANSLATORS: Please, leave that %d as it is. It will be replaced
+                     // i18n by the mode picked by the user
+                     // i18n Thank you for contributing to this project
+                     _("Invalid --mode option (%d)"),
+                     g_mode);
 
             FatalError(
                 argv[0],
-                errMessage.str().c_str(),
+                errorStringBuffer,
                 BAD_MODE_OPTION_ERR);
         }
 
