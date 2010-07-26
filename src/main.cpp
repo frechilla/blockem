@@ -169,7 +169,7 @@ static GOptionEntry g_cmdEntries[] =
       // i18n TRANSLATORS: This string is supposed to mean that 1 file is mandatory
       // i18n but more than 1 can be specified
       // i18n Thank you for contributing to this project
-      N_("FILE [ FILE ... ]")},
+      N_("FILE [FILE(S)]")},
 
     { NULL }
 };
