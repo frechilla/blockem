@@ -749,7 +749,7 @@ int32_t Game1v1::MinMax(
 #ifdef DEBUG_PRINT
     // i18n %d represents the amount of times the function has been called
     // i18n Thank you for contributing to this project
-    printf(__("Minimax function called %d times\n"), timesCalled);
+    printf(_("Minimax function called %d times\n"), timesCalled);
 #endif
 
     return alpha;

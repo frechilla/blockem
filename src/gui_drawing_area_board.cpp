@@ -557,7 +557,9 @@ bool DrawingAreaBoard::on_button_press_event(GdkEventButton* event)
     // i18n both %d respectively represent the X and Y pixel where the user clicked
     // i18n Please leave them there because they are needed by the program
     // i18n Thank you for contributing to this project
-    printf(_("User clicked in pixel (%d, %d)\n"), event->x, event->y);
+    printf(_("User clicked in pixel (%d, %d)\n"),
+            static_cast<int32_t>(event->x),
+            static_cast<int32_t>(event->y));
 #endif
 
     Coordinate thisCoord;
