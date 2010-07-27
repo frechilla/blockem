@@ -1,0 +1,3 @@
+# xgettext -c"i18n" -a --c++ -d -F -Dsrc/ -Dsrc/impl/ -Dsrc/tests/ -f i18n/file_list -o i18n/messages.po
+xgettext -c"i18n" -a --c++ --msgid-bugs-address=frechilla@gmail.com --package-name=blockem --package-version=0.2.4 --copyright-holder="Faustino Frechilla" -d -F -Dsrc/ -Dsrc/impl/ -Dsrc/tests/ -f locale/file_list -o locale/messages.pot
+xgettext -c"i18n" -j -a --language=Glade --msgid-bugs-address=frechilla@gmail.com --package-name=blockem --package-version=0.2.4 --copyright-holder="Faustino Frechilla" -d -F src/gui.glade -o locale/messages.pot
