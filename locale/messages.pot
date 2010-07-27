@@ -1,7 +1,8 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR Faustino Frechilla
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Blockem GNU gettext template file for i18n
+# see http://blockem.sourceforge.net
+# Copyright (C) 2010 Faustino Frechilla
+# This file is distributed under the same license as the blockem package.
+# Faustino Frechilla frechilla@gmail.com, 2010.
 #
 #, fuzzy
 msgid ""
@@ -16,28 +17,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: board.cpp:132 player.cpp:247
-msgid "  "
-msgstr ""
-
-#: board.cpp:135 board.cpp:151 game1v1.cpp:599 gui_main_window.cpp:114
-#: gui_main_window.cpp:117 gui_main_window.cpp:148 player.cpp:250
-#: player.cpp:267 player.cpp:274
-msgid " "
-msgstr ""
-
-#: board.cpp:141 board.cpp:156 player.cpp:257 player.cpp:281
-msgid "   +"
-msgstr ""
-
-#: board.cpp:144 board.cpp:159 player.cpp:260 player.cpp:284
-msgid "---+"
-msgstr ""
-
-#: board.cpp:148 board.cpp:151 player.cpp:264 player.cpp:276
-msgid " |"
-msgstr ""
-
 #: game1v1.cpp:40
 msgid "Mr Green"
 msgstr ""
@@ -48,10 +27,6 @@ msgstr ""
 
 #: game1v1.cpp:599
 msgid "Nucleation points"
-msgstr ""
-
-#: game1v1.cpp:619 gui_glade_defs.h:94 gui_stop_watch_label.cpp:113
-msgid "."
 msgstr ""
 
 #. i18n %d represents the amount of times the function has been called
@@ -92,14 +67,6 @@ msgstr ""
 
 #: gui_config_dialog.cpp:41
 msgid "Computer"
-msgstr ""
-
-#: gui_config_dialog.cpp:75 gui_config_dialog.cpp:81
-msgid "gtk-ok"
-msgstr ""
-
-#: gui_config_dialog.cpp:76 gui_config_dialog.cpp:80
-msgid "gtk-cancel"
 msgstr ""
 
 #. i18n Please, leave gtk::Table, player1 and ConfigDialog as they are here
@@ -229,190 +196,6 @@ msgstr ""
 #: gui_drawing_area_board.cpp:575
 #, c-format
 msgid "Square in board: Row %d. Column %d)\n"
-msgstr ""
-
-#: gui_glade_defs.h:97
-msgid "/pixmaps/blockemlogo.png"
-msgstr ""
-
-#: gui_glade_defs.h:98
-msgid "/pixmaps/blockemlogo16.png"
-msgstr ""
-
-#: gui_glade_defs.h:99
-msgid "/pixmaps/blockemlogo48.png"
-msgstr ""
-
-#: gui_glade_defs.h:100
-msgid "/pixmaps/blockemlogo128.png"
-msgstr ""
-
-#: gui_glade_defs.h:103 src/gui.glade:313
-msgid "window_main"
-msgstr ""
-
-#: gui_glade_defs.h:104
-msgid "aboutdialog"
-msgstr ""
-
-#: gui_glade_defs.h:105
-msgid "configdialog"
-msgstr ""
-
-#: gui_glade_defs.h:106 src/gui.glade:31 src/gui.glade:69
-msgid "accelgroup1"
-msgstr ""
-
-#: gui_glade_defs.h:107
-msgid "imagemenuitem_game_new"
-msgstr ""
-
-#: gui_glade_defs.h:108
-msgid "imagemenuitem_game_quit"
-msgstr ""
-
-#: gui_glade_defs.h:109
-msgid "checkmenuitem_settings_nkpoints"
-msgstr ""
-
-#: gui_glade_defs.h:110 src/gui.glade:107 src/gui.glade:116
-msgid "radiomenuitem_settings_forbidden_noshow"
-msgstr ""
-
-#: gui_glade_defs.h:111
-msgid "radiomenuitem_settings_forbidden_player1"
-msgstr ""
-
-#: gui_glade_defs.h:112
-msgid "radiomenuitem_settings_forbidden_player2"
-msgstr ""
-
-#: gui_glade_defs.h:113 src/gui.glade:145 src/gui.glade:154
-msgid "radiomenuitem_settings_influence_noshow"
-msgstr ""
-
-#: gui_glade_defs.h:114
-msgid "radiomenuitem_settings_influence_player1"
-msgstr ""
-
-#: gui_glade_defs.h:115
-msgid "radiomenuitem_settings_influence_player2"
-msgstr ""
-
-#: gui_glade_defs.h:116
-msgid "imagemenuitem_settings_preferences"
-msgstr ""
-
-#: gui_glade_defs.h:117
-msgid "imagemenuitem_help_about"
-msgstr ""
-
-#: gui_glade_defs.h:118
-msgid "vbox_drawing"
-msgstr ""
-
-#: gui_glade_defs.h:119
-msgid "hbox_gamestatus"
-msgstr ""
-
-#: gui_glade_defs.h:120
-msgid "hbox_computerpieces"
-msgstr ""
-
-#: gui_glade_defs.h:121
-msgid "hbox_editpieces"
-msgstr ""
-
-#: gui_glade_defs.h:122
-msgid "table_editing_piece"
-msgstr ""
-
-#: gui_glade_defs.h:123
-msgid "label_rotate"
-msgstr ""
-
-#: gui_glade_defs.h:124
-msgid "label_mirror"
-msgstr ""
-
-#: gui_glade_defs.h:125
-msgid "button_rotate_left"
-msgstr ""
-
-#: gui_glade_defs.h:126
-msgid "button_rotate_right"
-msgstr ""
-
-#: gui_glade_defs.h:127
-msgid "button_mirror_xaxis"
-msgstr ""
-
-#: gui_glade_defs.h:128
-msgid "button_mirror_yaxis"
-msgstr ""
-
-#: gui_glade_defs.h:129
-msgid "drawingarea_editing_piece"
-msgstr ""
-
-#: gui_glade_defs.h:130
-msgid "hbox_statusbar"
-msgstr ""
-
-#: gui_glade_defs.h:131
-msgid "config_table_player1"
-msgstr ""
-
-#: gui_glade_defs.h:132
-msgid "config_table_player2"
-msgstr ""
-
-#: gui_glade_defs.h:133
-msgid "spinbutton_startingrow1"
-msgstr ""
-
-#: gui_glade_defs.h:134
-msgid "spinbutton_startingcol1"
-msgstr ""
-
-#: gui_glade_defs.h:135
-msgid "spinbutton_startingrow2"
-msgstr ""
-
-#: gui_glade_defs.h:136
-msgid "spinbutton_startingcol2"
-msgstr ""
-
-#: gui_glade_defs.h:137
-msgid "config_frame_ai_player1"
-msgstr ""
-
-#: gui_glade_defs.h:138
-msgid "config_frame_ai_player2"
-msgstr ""
-
-#: gui_glade_defs.h:139
-msgid "config_table_ai_player1"
-msgstr ""
-
-#: gui_glade_defs.h:140
-msgid "config_table_ai_player2"
-msgstr ""
-
-#: gui_glade_defs.h:141
-msgid "spinbutton_depth1"
-msgstr ""
-
-#: gui_glade_defs.h:142
-msgid "spinbutton_depth2"
-msgstr ""
-
-#: gui_glade_defs.h:143
-msgid "textview_heuristic_player1"
-msgstr ""
-
-#: gui_glade_defs.h:144
-msgid "textview_heuristic_player2"
 msgstr ""
 
 #: gui_main_window.cpp:49
@@ -583,20 +366,6 @@ msgstr ""
 msgid "Could not load the status bar gtk::HBox in MainWindow"
 msgstr ""
 
-#: gui_main_window.cpp:466 gui_main_window.cpp:478 gui_main_window.cpp:1517
-#: gui_main_window.cpp:1532
-msgid "<span color=\"#"
-msgstr ""
-
-#: gui_main_window.cpp:470 gui_main_window.cpp:482 gui_main_window.cpp:1521
-#: gui_main_window.cpp:1536
-msgid "\">"
-msgstr ""
-
-#: gui_main_window.cpp:472 gui_main_window.cpp:484
-msgid " </span>"
-msgstr ""
-
 #: gui_main_window.cpp:588
 msgid "Configuration Dialog cancelled"
 msgstr ""
@@ -678,15 +447,6 @@ msgid ""
 "color=\"#%02X%02X%02X\">%s</span> has <b>%d</b>"
 msgstr ""
 
-#: gui_main_window.cpp:1523 gui_main_window.cpp:1538
-msgid "</span>"
-msgstr ""
-
-#: gui_main_window.cpp:1524 gui_main_window.cpp:1539 main.cpp:197 main.cpp:202
-#: main.cpp:268 main.cpp:505
-msgid ": "
-msgstr ""
-
 #: gui_main_window_worker_thread.cpp:83
 msgid "Mutex in worker thread couldn't be initialised"
 msgstr ""
@@ -746,18 +506,6 @@ msgstr ""
 #. i18n Thank you for contributing to this project
 #: gui_table_edit_piece.cpp:118
 msgid "Could not load mirror on X-Axis Gtk::Button in TableEditPiece"
-msgstr ""
-
-#: gui_stop_watch_label.cpp:105
-msgid "<b>"
-msgstr ""
-
-#: gui_stop_watch_label.cpp:108
-msgid ":"
-msgstr ""
-
-#: gui_stop_watch_label.cpp:119
-msgid "</b>"
 msgstr ""
 
 #. i18n TRANSLATORS: This is the name given to a type of heuristic. Should be as small as possible
@@ -837,118 +585,92 @@ msgid ""
 "heuristic can be checked against it"
 msgstr ""
 
-#: piece.cpp:42
-msgid "1Piece_BabyPiece"
-msgstr ""
-
-#: piece.cpp:43
-msgid "2Piece_TwoPiece"
-msgstr ""
-
-#: piece.cpp:44
-msgid "3Piece_LongPiece"
-msgstr ""
-
 #: piece.cpp:45
-msgid "3Piece_Triangle"
+msgid "Baby piece"
 msgstr ""
 
 #: piece.cpp:46
-msgid "4Piece_FullSquare"
+msgid "Two piece"
 msgstr ""
 
 #: piece.cpp:47
-msgid "4Piece_LongPiece"
+msgid "Three piece"
 msgstr ""
 
 #: piece.cpp:48
-msgid "4Piece_LittleL"
+msgid "Little V"
 msgstr ""
 
 #: piece.cpp:49
-msgid "4Piece_LittleS"
+msgid "Full square"
 msgstr ""
 
 #: piece.cpp:50
-msgid "4Piece_LittleT"
+msgid "Four long piece"
 msgstr ""
 
 #: piece.cpp:51
-msgid "5Piece_BigPeni"
+msgid "Little L"
 msgstr ""
 
 #: piece.cpp:52
-msgid "5Piece_SquarePlus"
+msgid "Little S"
 msgstr ""
 
 #: piece.cpp:53
-msgid "5Piece_HalfSquare"
+msgid "Little T"
 msgstr ""
 
 #: piece.cpp:54
-msgid "5Piece_CuntPiece"
+msgid "Big long piece"
 msgstr ""
 
 #: piece.cpp:55
-msgid "5Piece_BigL"
+msgid "Square++"
 msgstr ""
 
 #: piece.cpp:56
-msgid "5Piece_BoringPiece"
+msgid "Big V (aka Half square)"
 msgstr ""
 
 #: piece.cpp:57
-msgid "5Piece_BigS"
+msgid "U Piece"
 msgstr ""
 
 #: piece.cpp:58
-msgid "5Piece_MrT"
+msgid "Big L"
 msgstr ""
 
 #: piece.cpp:59
-msgid "5Piece_TheUltimate"
+msgid "Y Piece"
 msgstr ""
 
 #: piece.cpp:60
-msgid "5Piece_SafPiece"
+msgid "Big S"
 msgstr ""
 
 #: piece.cpp:61
-msgid "5Piece_WPiece"
+msgid "Mr T"
 msgstr ""
 
 #: piece.cpp:62
-msgid "5Piece_Cross"
+msgid "N Piece (aka the ultimate)"
 msgstr ""
 
-#: player.cpp:235 src/gui.glade:214 src/gui.glade:239 src/gui.glade:261
-#: src/gui.glade:266 src/gui.glade:275 src/gui.glade:353 src/gui.glade:354
-#: src/gui.glade:363 src/gui.glade:389 src/gui.glade:447 src/gui.glade:497
-#: src/gui.glade:506 src/gui.glade:563 src/gui.glade:577 src/gui.glade:598
-#: src/gui.glade:616 src/gui.glade:618 src/gui.glade:682 src/gui.glade:794
-#: src/gui.glade:813 src/gui.glade:815 src/gui.glade:828 src/gui.glade:849
-#: src/gui.glade:912 src/gui.glade:990 src/gui.glade:995
-msgid "1"
+#: piece.cpp:63
+msgid "Saf Piece"
 msgstr ""
 
-#: player.cpp:239 src/gui.glade:203 src/gui.glade:230 src/gui.glade:244
-#: src/gui.glade:342 src/gui.glade:381 src/gui.glade:488 src/gui.glade:535
-#: src/gui.glade:627 src/gui.glade:645 src/gui.glade:657 src/gui.glade:760
-#: src/gui.glade:766 src/gui.glade:857 src/gui.glade:875 src/gui.glade:887
-#: src/gui.glade:1012
-msgid "0"
+#: piece.cpp:64
+msgid "W Piece"
 msgstr ""
 
-#: main.cpp:122
-msgid "version"
+#: piece.cpp:65
+msgid "Cross piece"
 msgstr ""
 
 #: main.cpp:123
 msgid "Prints current version of the software and exists"
-msgstr ""
-
-#: main.cpp:126
-msgid "mode"
 msgstr ""
 
 #: main.cpp:127
@@ -958,36 +680,16 @@ msgid ""
 "Game"
 msgstr ""
 
-#: main.cpp:130
-msgid "M"
-msgstr ""
-
-#: main.cpp:132
-msgid "rows"
-msgstr ""
-
 #: main.cpp:133
 msgid ""
 "1 player total allocation game's board will have N rows. This is a MANDATORY "
 "parameter for --mode=1"
 msgstr ""
 
-#: main.cpp:135 main.cpp:140
-msgid "N"
-msgstr ""
-
-#: main.cpp:137
-msgid "columns"
-msgstr ""
-
 #: main.cpp:138
 msgid ""
 "1 player total allocation game's board will have N columns. This is a "
 "MANDATORY parameter for --mode=1"
-msgstr ""
-
-#: main.cpp:142
-msgid "starting-column"
 msgstr ""
 
 #: main.cpp:143
@@ -997,27 +699,11 @@ msgid ""
 "(number_of_columns - 1). This is a MANDATORY parameter for --mode=1"
 msgstr ""
 
-#: main.cpp:146
-msgid "X"
-msgstr ""
-
-#: main.cpp:148
-msgid "starting-row"
-msgstr ""
-
 #: main.cpp:149
 msgid ""
 "Computer will start to allocate pieces in row Y (when running with --"
 "mode=1). 1st valid row is 0, so maximum allowed row will be (number_of_rows "
 "- 1). This is a MANDATORY parameter for --mode=1"
-msgstr ""
-
-#: main.cpp:152
-msgid "Y"
-msgstr ""
-
-#: main.cpp:154
-msgid "depth"
 msgstr ""
 
 #: main.cpp:155
@@ -1026,23 +712,11 @@ msgid ""
 "is a MANDATORY parameter for --mode=2"
 msgstr ""
 
-#: main.cpp:157
-msgid "D"
-msgstr ""
-
-#: main.cpp:159
-msgid "heuristic"
-msgstr ""
-
 #: main.cpp:160
 msgid ""
 "Heuristic to be used when mode is set to 1v1 game (--mode=2). Valid options: "
 "'0' \"Influence Area\" (Default); '1' \"Mr. Eastwood\"; '2' \"NK weighted\"; "
 "'3' \"Centre focused\"; '4' \"Simple\"; '5' \"Random\""
-msgstr ""
-
-#: main.cpp:163
-msgid "H"
 msgstr ""
 
 #: main.cpp:166
@@ -1068,24 +742,13 @@ msgstr ""
 msgid ": Fatal error"
 msgstr ""
 
+#. i18n TRANSLATORS:
+#. i18n Bear in mind this string will be used to print out a help message when an error is found
+#. i18n A typical example would be: "./blockem: Try './blockem --help'". That is the "try" word
+#. i18n that is to be translated here
+#. i18n Thank you for contributing to this project
 #: main.cpp:208
 msgid "Try"
-msgstr ""
-
-#: main.cpp:209
-msgid " '"
-msgstr ""
-
-#: main.cpp:211
-msgid " --help'"
-msgstr ""
-
-#: main.cpp:235
-msgid "UTF-8"
-msgstr ""
-
-#: main.cpp:243
-msgid "Error while setting the locale"
 msgstr ""
 
 #. i18n TRANSLATORS: Please leave the starting dash as it is part of the glib command line
@@ -1097,30 +760,6 @@ msgstr ""
 
 #: main.cpp:267
 msgid "Error parsing command line"
-msgstr ""
-
-#: main.cpp:276
-msgid "Blockem, version "
-msgstr ""
-
-#: main.cpp:276
-msgid " (r"
-msgstr ""
-
-#: main.cpp:276
-msgid ")"
-msgstr ""
-
-#: main.cpp:277
-msgid "  Compiled "
-msgstr ""
-
-#: main.cpp:278
-msgid "Copyright (C) 2009-2010 Faustino Frechilla"
-msgstr ""
-
-#: main.cpp:279
-msgid "Blockem is open source software, see http://blockem.sourceforge.net/"
 msgstr ""
 
 #. i18n TRANSLATORS: Please leave the word Gtkbuilder as it is since it's the name
@@ -1269,222 +908,123 @@ msgstr ""
 msgid "Invalid --mode option (%d)"
 msgstr ""
 
-#: src/gui.glade:6 src/gui.glade:315
-msgid "Block'em"
-msgstr ""
-
-#: src/gui.glade:7 src/gui.glade:443 src/gui.glade:462
-msgid "center"
-msgstr ""
-
-#: src/gui.glade:8
-msgid "800"
-msgstr ""
-
-#: src/gui.glade:9
-msgid "600"
-msgstr ""
-
-#: src/gui.glade:12 src/gui.glade:16 src/gui.glade:19 src/gui.glade:21
-#: src/gui.glade:24 src/gui.glade:28 src/gui.glade:29 src/gui.glade:30
-#: src/gui.glade:38 src/gui.glade:39 src/gui.glade:46 src/gui.glade:47
-#: src/gui.glade:54 src/gui.glade:55 src/gui.glade:60 src/gui.glade:66
-#: src/gui.glade:67 src/gui.glade:68 src/gui.glade:78 src/gui.glade:80
-#: src/gui.glade:83 src/gui.glade:86 src/gui.glade:88 src/gui.glade:91
-#: src/gui.glade:94 src/gui.glade:96 src/gui.glade:97 src/gui.glade:98
-#: src/gui.glade:103 src/gui.glade:105 src/gui.glade:106 src/gui.glade:112
-#: src/gui.glade:114 src/gui.glade:115 src/gui.glade:126 src/gui.glade:129
-#: src/gui.glade:132 src/gui.glade:134 src/gui.glade:135 src/gui.glade:136
-#: src/gui.glade:141 src/gui.glade:143 src/gui.glade:144 src/gui.glade:150
-#: src/gui.glade:152 src/gui.glade:153 src/gui.glade:163 src/gui.glade:165
-#: src/gui.glade:171 src/gui.glade:172 src/gui.glade:173 src/gui.glade:182
-#: src/gui.glade:184 src/gui.glade:187 src/gui.glade:191 src/gui.glade:192
-#: src/gui.glade:193 src/gui.glade:208 src/gui.glade:213 src/gui.glade:221
-#: src/gui.glade:224 src/gui.glade:250 src/gui.glade:271 src/gui.glade:281
-#: src/gui.glade:325 src/gui.glade:328 src/gui.glade:336 src/gui.glade:350
-#: src/gui.glade:359 src/gui.glade:369 src/gui.glade:370 src/gui.glade:371
-#: src/gui.glade:374 src/gui.glade:377 src/gui.glade:386 src/gui.glade:406
-#: src/gui.glade:407 src/gui.glade:408 src/gui.glade:411 src/gui.glade:423
-#: src/gui.glade:424 src/gui.glade:425 src/gui.glade:428 src/gui.glade:441
-#: src/gui.glade:455 src/gui.glade:475 src/gui.glade:476 src/gui.glade:477
-#: src/gui.glade:480 src/gui.glade:484 src/gui.glade:493 src/gui.glade:519
-#: src/gui.glade:525 src/gui.glade:530 src/gui.glade:534 src/gui.glade:538
-#: src/gui.glade:542 src/gui.glade:549 src/gui.glade:559 src/gui.glade:571
-#: src/gui.glade:585 src/gui.glade:586 src/gui.glade:590 src/gui.glade:591
-#: src/gui.glade:592 src/gui.glade:605 src/gui.glade:606 src/gui.glade:610
-#: src/gui.glade:611 src/gui.glade:612 src/gui.glade:625 src/gui.glade:630
-#: src/gui.glade:637 src/gui.glade:644 src/gui.glade:656 src/gui.glade:669
-#: src/gui.glade:670 src/gui.glade:674 src/gui.glade:675 src/gui.glade:676
-#: src/gui.glade:691 src/gui.glade:693 src/gui.glade:724 src/gui.glade:726
-#: src/gui.glade:753 src/gui.glade:755 src/gui.glade:765 src/gui.glade:769
-#: src/gui.glade:773 src/gui.glade:780 src/gui.glade:790 src/gui.glade:802
-#: src/gui.glade:803 src/gui.glade:807 src/gui.glade:808 src/gui.glade:809
-#: src/gui.glade:822 src/gui.glade:836 src/gui.glade:837 src/gui.glade:841
-#: src/gui.glade:842 src/gui.glade:843 src/gui.glade:856 src/gui.glade:860
-#: src/gui.glade:867 src/gui.glade:874 src/gui.glade:886 src/gui.glade:899
-#: src/gui.glade:900 src/gui.glade:904 src/gui.glade:905 src/gui.glade:906
-#: src/gui.glade:921 src/gui.glade:923 src/gui.glade:954 src/gui.glade:956
-#: src/gui.glade:983 src/gui.glade:985 src/gui.glade:1000
-msgid "True"
-msgstr ""
-
-#: src/gui.glade:13 src/gui.glade:209 src/gui.glade:225 src/gui.glade:329
-#: src/gui.glade:481 src/gui.glade:526
-msgid "vertical"
-msgstr ""
-
+# TRANSLATORS: The underscore character is to be located just before the
+# letter which will be underlined. This underlined character represents which
+# letter can be presed to select this menu option when the keyboard is used to 
+# navigate through the archive menu
 #: src/gui.glade:20
 msgid "_Game"
 msgstr ""
 
-#: src/gui.glade:27
-msgid "gtk-new"
-msgstr ""
-
-#: src/gui.glade:36
-msgid "gtk-open"
-msgstr ""
-
-#: src/gui.glade:37 src/gui.glade:45 src/gui.glade:53 src/gui.glade:202
-#: src/gui.glade:228 src/gui.glade:238 src/gui.glade:260 src/gui.glade:274
-#: src/gui.glade:300 src/gui.glade:310 src/gui.glade:314 src/gui.glade:340
-#: src/gui.glade:518 src/gui.glade:522 src/gui.glade:626 src/gui.glade:692
-#: src/gui.glade:694 src/gui.glade:696 src/gui.glade:922 src/gui.glade:924
-#: src/gui.glade:926 src/gui.glade:1010
-msgid "False"
-msgstr ""
-
-#: src/gui.glade:44
-msgid "gtk-save"
-msgstr ""
-
-#: src/gui.glade:52
-msgid "gtk-save-as"
-msgstr ""
-
-#: src/gui.glade:65
-msgid "gtk-quit"
-msgstr ""
-
+# TRANSLATORS: The underscore character is to be located just before the
+# letter which will be underlined. This underlined character represents which
+# letter can be presed to select this menu option when the keyboard is used to 
+# navigate through the archive menu
 #: src/gui.glade:79
 msgid "_Settings"
 msgstr ""
 
+# TRANSLATORS: The underscore character is to be located just before the
+# letter which will be underlined. This underlined character represents which
+# letter can be presed to select this menu option when the keyboard is used to 
+# navigate through the archive menu
 #: src/gui.glade:87
 msgid "_Forbidden areas"
 msgstr ""
 
+# TRANSLATORS: The underscore character is to be located just before the
+# letter which will be underlined. This underlined character represents which
+# letter can be presed to select this menu option when the keyboard is used to 
+# navigate through the archive menu
 #: src/gui.glade:95
 msgid "Do _not show forbidden area"
 msgstr ""
 
+# TRANSLATORS: The underscore character is to be located just before the
+# letter which will be underlined. This underlined character represents which
+# letter can be presed to select this menu option when the keyboard is used to 
+# navigate through the archive menu
 #: src/gui.glade:104
-msgid "Show player_1's forbidden area"
+msgid "Show Mr _Green's forbidden area"
 msgstr ""
 
+# TRANSLATORS: The underscore character is to be located just before the
+# letter which will be underlined. This underlined character represents which
+# letter can be presed to select this menu option when the keyboard is used to 
+# navigate through the archive menu
 #: src/gui.glade:113
-msgid "Show player_2's forbidden area"
+msgid "Show Mr _Blue's forbidden area"
 msgstr ""
 
+# TRANSLATORS: The underscore character is to be located just before the
+# letter which will be underlined. This underlined character represents which
+# letter can be presed to select this menu option when the keyboard is used to 
+# navigate through the archive menu
 #: src/gui.glade:125
 msgid "_Influence areas"
 msgstr ""
 
+# TRANSLATORS: The underscore character is to be located just before the
+# letter which will be underlined. This underlined character represents which
+# letter can be presed to select this menu option when the keyboard is used to 
+# navigate through the archive menu
 #: src/gui.glade:133
 msgid "Do _not show influence area"
 msgstr ""
 
+# TRANSLATORS: The underscore character is to be located just before the
+# letter which will be underlined. This underlined character represents which
+# letter can be presed to select this menu option when the keyboard is used to 
+# navigate through the archive menu
 #: src/gui.glade:142
-msgid "Show player_1's influence area"
+msgid "Show Mr _Green's influence area"
 msgstr ""
 
+# TRANSLATORS: The underscore character is to be located just before the
+# letter which will be underlined. This underlined character represents which
+# letter can be presed to select this menu option when the keyboard is used to 
+# navigate through the archive menu
 #: src/gui.glade:151
-msgid "Show player_2's influence area"
+msgid "Show Mr _Blue's influence area"
 msgstr ""
 
+# TRANSLATORS: The underscore character is to be located just before the
+# letter which will be underlined. This underlined character represents which
+# letter can be presed to select this menu option when the keyboard is used to 
+# navigate through the archive menu
 #: src/gui.glade:164
 msgid "Show _nucleation points"
 msgstr ""
 
-#: src/gui.glade:170
-msgid "gtk-preferences"
-msgstr ""
-
+# TRANSLATORS: The underscore character is to be located just before the
+# letter which will be underlined. This underlined character represents which
+# letter can be presed to select this menu option when the keyboard is used to 
+# navigate through the archive menu
 #: src/gui.glade:183
 msgid "_Help"
 msgstr ""
 
-#: src/gui.glade:190
-msgid "gtk-about"
-msgstr ""
-
-#: src/gui.glade:210 src/gui.glade:229 src/gui.glade:308 src/gui.glade:517
-#: src/gui.glade:546 src/gui.glade:631 src/gui.glade:632 src/gui.glade:633
-#: src/gui.glade:634 src/gui.glade:641 src/gui.glade:735 src/gui.glade:777
-#: src/gui.glade:861 src/gui.glade:862 src/gui.glade:863 src/gui.glade:864
-#: src/gui.glade:871 src/gui.glade:965
-msgid "5"
-msgstr ""
-
-#: src/gui.glade:220
-msgid "100"
-msgstr ""
-
-#: src/gui.glade:249
-msgid "200"
-msgstr ""
-
-#: src/gui.glade:251 src/gui.glade:282 src/gui.glade:703 src/gui.glade:933
-msgid "10"
-msgstr ""
-
-#: src/gui.glade:276 src/gui.glade:330 src/gui.glade:433 src/gui.glade:448
-#: src/gui.glade:467 src/gui.glade:507 src/gui.glade:527 src/gui.glade:531
-#: src/gui.glade:545 src/gui.glade:564 src/gui.glade:575 src/gui.glade:578
-#: src/gui.glade:587 src/gui.glade:589 src/gui.glade:599 src/gui.glade:607
-#: src/gui.glade:609 src/gui.glade:617 src/gui.glade:619 src/gui.glade:640
-#: src/gui.glade:649 src/gui.glade:661 src/gui.glade:680 src/gui.glade:683
-#: src/gui.glade:700 src/gui.glade:702 src/gui.glade:732 src/gui.glade:734
-#: src/gui.glade:776 src/gui.glade:795 src/gui.glade:804 src/gui.glade:806
-#: src/gui.glade:814 src/gui.glade:816 src/gui.glade:826 src/gui.glade:829
-#: src/gui.glade:838 src/gui.glade:840 src/gui.glade:850 src/gui.glade:870
-#: src/gui.glade:879 src/gui.glade:891 src/gui.glade:910 src/gui.glade:913
-#: src/gui.glade:930 src/gui.glade:932 src/gui.glade:962 src/gui.glade:964
-msgid "2"
-msgstr ""
-
-#: src/gui.glade:301 src/gui.glade:362 src/gui.glade:396 src/gui.glade:398
-#: src/gui.glade:434 src/gui.glade:465 src/gui.glade:468 src/gui.glade:504
-#: src/gui.glade:576 src/gui.glade:596 src/gui.glade:638 src/gui.glade:662
-#: src/gui.glade:681 src/gui.glade:701 src/gui.glade:827 src/gui.glade:847
-#: src/gui.glade:868 src/gui.glade:892 src/gui.glade:911 src/gui.glade:931
-msgid "3"
-msgstr ""
-
+# This is the title of the about dialog of the game
 #: src/gui.glade:309
 msgid "About Block'em"
 msgstr ""
 
-#: src/gui.glade:311 src/gui.glade:520
-msgid "center-on-parent"
-msgstr ""
-
-#: src/gui.glade:312 src/gui.glade:521
-msgid "dialog"
-msgstr ""
-
-#: src/gui.glade:316
-msgid "0.0"
-msgstr ""
-
+# The copyright notice
 #: src/gui.glade:317
 msgid "Copyright © 2009-2010 Faustino Frechilla"
 msgstr ""
 
+# This is the short description of what this game is supposed to be
 #: src/gui.glade:318
 msgid "A board strategy game against the computer"
 msgstr ""
 
+# This is the GNU GPL version 3 license text.
+# You can find lots of already translated versions of this text along with
+# the instructions of how to translate it in
+# http://www.gnu.org/licenses/translations.html
+# Please, read very carefully the instructions of how to translate this text
+# since those translated version of the license are unofficial
 #: src/gui.glade:319
 msgid ""
 "blockem is free software; you can redistribute it and/or modify it under the "
@@ -1502,54 +1042,16 @@ msgid ""
 "Street, Fifth Floor, Boston, MA  02110-1301  USA"
 msgstr ""
 
-#: src/gui.glade:324
-msgid "Faustino Frechilla"
-msgstr ""
-
-#: src/gui.glade:337 src/gui.glade:341 src/gui.glade:1001 src/gui.glade:1011
-msgid "end"
-msgstr ""
-
-#: src/gui.glade:349
-msgid "180"
-msgstr ""
-
-#: src/gui.glade:351 src/gui.glade:352 src/gui.glade:364 src/gui.glade:397
-#: src/gui.glade:399 src/gui.glade:466 src/gui.glade:505 src/gui.glade:543
-#: src/gui.glade:544 src/gui.glade:597 src/gui.glade:639 src/gui.glade:671
-#: src/gui.glade:673 src/gui.glade:699 src/gui.glade:731 src/gui.glade:733
-#: src/gui.glade:774 src/gui.glade:775 src/gui.glade:848 src/gui.glade:869
-#: src/gui.glade:901 src/gui.glade:903 src/gui.glade:929 src/gui.glade:961
-#: src/gui.glade:963
-msgid "4"
-msgstr ""
-
-#: src/gui.glade:357 src/gui.glade:358
-msgid "115"
-msgstr ""
-
-#: src/gui.glade:378 src/gui.glade:412
-msgid "left"
-msgstr ""
-
-#: src/gui.glade:401 src/gui.glade:417 src/gui.glade:435 src/gui.glade:449
-#: src/gui.glade:470 src/gui.glade:509 src/gui.glade:554 src/gui.glade:566
-#: src/gui.glade:580 src/gui.glade:600 src/gui.glade:620 src/gui.glade:650
-#: src/gui.glade:651 src/gui.glade:663 src/gui.glade:664 src/gui.glade:684
-#: src/gui.glade:685 src/gui.glade:785 src/gui.glade:797 src/gui.glade:817
-#: src/gui.glade:831 src/gui.glade:851 src/gui.glade:880 src/gui.glade:881
-#: src/gui.glade:893 src/gui.glade:894 src/gui.glade:914 src/gui.glade:915
-msgid "GTK_FILL"
-msgstr ""
-
+# Rotate in this context means a transformation of a piece that describes the
+# motion of it around a fixed point
 #: src/gui.glade:442
 msgid "Rotate"
 msgstr ""
 
-#: src/gui.glade:444
-msgid "8"
-msgstr ""
-
+# This string contains the word "mirror" written downwards. Mirror in this
+# context means a reflection in any of the axis of a blockem piece
+# This string MUST be translated using the same downwards way, that is, a
+# new line character (\n) after every character
 #: src/gui.glade:456
 msgid ""
 "M\n"
@@ -1560,64 +1062,55 @@ msgid ""
 "r"
 msgstr ""
 
-#: src/gui.glade:485
-msgid "up"
-msgstr ""
-
-#: src/gui.glade:494
-msgid "down"
-msgstr ""
-
-#: src/gui.glade:539 src/gui.glade:770
-msgid "12"
-msgstr ""
-
+# Please leave the final ": " characters at the end to keep format on
+# the screen
+# This string is to be followed by a combobox where the user can edit the 
+# type of player of the next game (Human or computer)
 #: src/gui.glade:550 src/gui.glade:781
 msgid "Type: "
 msgstr ""
 
+# Please leave the final ": " characters at the end to keep format on
+# the screen
+# This string is to be followed by a textbox where the user can edit the 
+# starting row for the next game
 #: src/gui.glade:560 src/gui.glade:791
 msgid "Starting Row: "
 msgstr ""
 
+# Please leave the final ": " characters at the end to keep format on
+# the screen
+# This string is to be followed by a textbox where the user can edit the 
+# starting column for the next game
 #: src/gui.glade:572 src/gui.glade:823
 msgid "Column: "
 msgstr ""
 
-#: src/gui.glade:588 src/gui.glade:608 src/gui.glade:672 src/gui.glade:805
-#: src/gui.glade:839 src/gui.glade:902
-msgid "•"
-msgstr ""
-
-#: src/gui.glade:593 src/gui.glade:613 src/gui.glade:677 src/gui.glade:810
-#: src/gui.glade:844 src/gui.glade:907
-msgid "if-valid"
-msgstr ""
-
+# Please leave the final ": " characters at the end to keep format on
+# the screen. AI stands for Artificial Intelligence. The acronym was chosen
+# because a long string did not fit properly on the screen
 #: src/gui.glade:646 src/gui.glade:876
 msgid "AI type: "
 msgstr ""
 
+# Please leave the final ": " characters at the end to keep format on
+# the screen
 #: src/gui.glade:658 src/gui.glade:888
 msgid "Depth: "
-msgstr ""
-
-#: src/gui.glade:690 src/gui.glade:920
-msgid "75"
-msgstr ""
-
-#: src/gui.glade:695 src/gui.glade:925
-msgid "word"
 msgstr ""
 
 #: src/gui.glade:725 src/gui.glade:955
 msgid "Artificial Intelligence"
 msgstr ""
 
+# Please leave this string surrounded by the HTML <b> and </b> tags
+# it represents player1 (green)
 #: src/gui.glade:754
-msgid "<b>Player1</b>"
+msgid "<b>Green</b>"
 msgstr ""
 
+# Please leave this string surrounded by the HTML <b> and </b> tags
+# it represents player2 (blue)
 #: src/gui.glade:984
-msgid "<b>Player2</b>"
+msgid "<b>Blue</b>"
 msgstr ""
