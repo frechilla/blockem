@@ -200,7 +200,7 @@ void FatalError(
 
     std::cerr << a_binName
               << ": "
-              // i18n TRANSLATORS: Please leave the starting colon since it is part of the expected format
+              // i18n TRANSLATORS:
               // i18n Bear in mind this string will be used to print out a help message when an error is found
               // i18n A typical example would be: "./blockem: Try './blockem --help'". That is the "try" word
               // i18n that is to be translated here
