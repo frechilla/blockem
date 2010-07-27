@@ -595,6 +595,8 @@ ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
 LIBOBJS
+DEBUG_FALSE
+DEBUG_TRUE
 EGREP
 GREP
 CPP
@@ -2767,7 +2769,7 @@ am__tar='${AMTAR} chof - "$$tardir"'; am__untar='${AMTAR} xf -'
 ac_config_headers="$ac_config_headers config.h"
 
 
-$as_echo "#define SVN_REVISION \"226M\"" >>confdefs.h
+$as_echo "#define SVN_REVISION \"239M\"" >>confdefs.h
 
 
 # Checks for programs.
@@ -5485,6 +5487,14 @@ if test "${enable_debug+set}" = set; then :
     fi
 fi
 
+ if test "$debug" = "yes"; then
+  DEBUG_TRUE=
+  DEBUG_FALSE='#'
+else
+  DEBUG_TRUE='#'
+  DEBUG_FALSE=
+fi
+
 
 # Check whether --enable-debug-printing was given.
 if test "${enable_debug_printing+set}" = set; then :
@@ -5652,6 +5662,10 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${OS_WIN32_TRUE}" && test -z "${OS_WIN32_FALSE}"; then
   as_fn_error "conditional \"OS_WIN32\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${DEBUG_TRUE}" && test -z "${DEBUG_FALSE}"; then
+  as_fn_error "conditional \"DEBUG\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 

@@ -4,17 +4,23 @@ bin_PROGRAMS = blockem
 
 INCLUDES = -I$(srcdir)
 
-AM_CXXFLAGS = $(GTKMM_CFLAGS) $(GTHREAD_CFLAGS)
-AM_LDFLAGS = 
-
-#DATADIR in windows is the current directory
-# otherwise autotools "datadir" is used
+# DATADIR in the windows OS and in DEBUG mode is set to the current 
+# directory instead
 if OS_WIN32    
-    AM_CXXFLAGS += -DDATADIR=\".\"
-else
-    AM_CXXFLAGS += -DDATADIR=\"$(datadir)/@PACKAGE@\"
+    BLOCKEM_DATADIR ?= .
 endif
-AM_CXXFLAGS += -DLOCALEDIR=DATADIR\"/locale\"
+if DEBUG    
+    BLOCKEM_DATADIR ?= .
+endif
+
+# DATADIR is set by default using the autotools "datadir" variable
+# ?= sets the var only if it wasn't set before
+BLOCKEM_DATADIR ?= $(datadir)/@PACKAGE@
+
+AM_CXXFLAGS  =  $(GTKMM_CFLAGS) $(GTHREAD_CFLAGS)
+AM_CXXFLAGS += -DDATADIR=\"$(BLOCKEM_DATADIR)\" 
+AM_CXXFLAGS += -DLOCALEDIR=\"$(BLOCKEM_DATADIR)/locale\"
+AM_LDFLAGS = 
 
 # if uncommented compiletime.h will be overwritten everytime the `make` command is run
 #.PHONY: compiletime.h

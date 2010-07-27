@@ -37,14 +37,9 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 bin_PROGRAMS = blockem$(EXEEXT)
-
-#DATADIR in windows is the current directory
-# otherwise autotools "datadir" is used
-@OS_WIN32_TRUE@am__append_1 = -DDATADIR=\".\"
-@OS_WIN32_FALSE@am__append_2 = -DDATADIR=\"$(datadir)/@PACKAGE@\"
+@OS_WIN32_TRUE@am__append_1 = blockem_res.o
+@OS_WIN32_TRUE@am__append_2 = blockem_res.o
 @OS_WIN32_TRUE@am__append_3 = blockem_res.o
-@OS_WIN32_TRUE@am__append_4 = blockem_res.o
-@OS_WIN32_TRUE@am__append_5 = blockem_res.o
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -195,13 +190,14 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 INCLUDES = -I$(srcdir)
-AM_CXXFLAGS = $(GTKMM_CFLAGS) $(GTHREAD_CFLAGS) $(am__append_1) \
-	$(am__append_2) -DLOCALEDIR=DATADIR\"/locale\"
+AM_CXXFLAGS = $(GTKMM_CFLAGS) $(GTHREAD_CFLAGS) \
+	-DDATADIR=\"$(BLOCKEM_DATADIR)\" \
+	-DLOCALEDIR=\"$(BLOCKEM_DATADIR)/locale\"
 AM_LDFLAGS = 
-blockem_DEPENDENCIES = gui_glade_obj.o $(am__append_4)
+blockem_DEPENDENCIES = gui_glade_obj.o $(am__append_2)
 blockem_LDADD = gui_glade_obj.o $(GTKMM_LIBS) $(GLADEMM_LIBS) \
-	$(GTHREAD_LIBS) $(am__append_5)
-CLEANFILES = gui_glade_obj.o compiletime.h $(am__append_3)
+	$(GTHREAD_LIBS) $(am__append_3)
+CLEANFILES = gui_glade_obj.o compiletime.h $(am__append_1)
 EXTRA_DIST = \
 gui.glade    \
 blockem.rc
@@ -567,6 +563,15 @@ uninstall-am: uninstall-binPROGRAMS
 	mostlyclean-generic pdf pdf-am ps ps-am tags uninstall \
 	uninstall-am uninstall-binPROGRAMS
 
+
+# DATADIR in the windows OS and in DEBUG mode is set to the current 
+# directory instead
+@OS_WIN32_TRUE@    BLOCKEM_DATADIR ?= .
+@DEBUG_TRUE@    BLOCKEM_DATADIR ?= .
+
+# DATADIR is set by default using the autotools "datadir" variable
+# ?= sets the var only if it wasn't set before
+BLOCKEM_DATADIR ?= $(datadir)/@PACKAGE@
 
 # if uncommented compiletime.h will be overwritten everytime the `make` command is run
 #.PHONY: compiletime.h

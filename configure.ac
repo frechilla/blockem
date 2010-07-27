@@ -99,6 +99,7 @@ AC_ARG_ENABLE(debug,
         debug=yes
         CXXFLAGS="${USER_CFLAGS} -Wall -O0 -ggdb -DDEBUG"
     fi])
+AM_CONDITIONAL(DEBUG, test "$debug" = "yes")
 
 AC_ARG_ENABLE(debug-printing,
     AC_HELP_STRING([--enable-debug-printing], [Enable debugging printing to standard out]),
