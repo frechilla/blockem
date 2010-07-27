@@ -39,27 +39,30 @@ static const uint8_t PIECE_MAX_RADIUS = 2;
 // pieces are added to the enum ePieceType_t in piece.h
 const std::string Piece::m_pieceDescription[e_numberOfPieces] =
 {
-    std::string(_("1Piece_BabyPiece")),
-    std::string(_("2Piece_TwoPiece")),
-    std::string(_("3Piece_LongPiece")),
-    std::string(_("3Piece_Triangle")),
-    std::string(_("4Piece_FullSquare")),
-    std::string(_("4Piece_LongPiece")),
-    std::string(_("4Piece_LittleL")),
-    std::string(_("4Piece_LittleS")),
-    std::string(_("4Piece_LittleT")),
-    std::string(_("5Piece_BigPeni")),
-    std::string(_("5Piece_SquarePlus")),
-    std::string(_("5Piece_HalfSquare")),
-    std::string(_("5Piece_CuntPiece")),
-    std::string(_("5Piece_BigL")),
-    std::string(_("5Piece_BoringPiece")),
-    std::string(_("5Piece_BigS")),
-    std::string(_("5Piece_MrT")),
-    std::string(_("5Piece_TheUltimate")),
-    std::string(_("5Piece_SafPiece")),
-    std::string(_("5Piece_WPiece")),
-    std::string(_("5Piece_Cross"))
+    // some names are based on  
+    // http://www.boardgamegeek.com/image/112331/blokus
+    // some others are based on hours and hours of playing :)
+    std::string(_("Baby piece")),
+    std::string(_("Two piece")),
+    std::string(_("Three piece")),
+    std::string(_("Little V")),
+    std::string(_("Full square")),
+    std::string(_("Four long piece")),
+    std::string(_("Little L")),
+    std::string(_("Little S")),
+    std::string(_("Little T")),
+    std::string(_("Big long piece")),
+    std::string(_("Square++")),
+    std::string(_("Big V (aka Half square)")),
+    std::string(_("U Piece")),
+    std::string(_("Big L")),
+    std::string(_("Y Piece")),
+    std::string(_("Big S")),
+    std::string(_("Mr T")),
+    std::string(_("N Piece (aka the ultimate)")),
+    std::string(_("Saf Piece")),
+    std::string(_("W Piece")),
+    std::string(_("Cross piece"))
 };
 
 // instantiate the load piece map.
