@@ -1,0 +1,4 @@
+# Set of available languages as a set of available languages
+# It is a whitespace separated quoted string, such as:
+# de es fr hu
+es

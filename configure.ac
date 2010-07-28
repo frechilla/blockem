@@ -24,7 +24,7 @@ AC_PROG_CC
 AC_CHECK_TOOL([OBJCOPY], [objcopy], [])
 AC_CHECK_TOOL([LD], [ld], [])
 
-# i18n
+# i18n. See http://www.gnu.org/software/gettext/manual/gettext.html#Maintainers
 # ALL_LINGUAS variable lists all the available translations in your package.
 # It is a whitespace separated quoted string, such as "de es fr hu".
 ALL_LINGUAS="es"
@@ -32,6 +32,12 @@ GETTEXT_PACKAGE=BLOCKEM_PACKAGE_NAME
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [gettext package])
 AC_SUBST(GETTEXT_PACKAGE)
 #AM_GLIB_GNU_GETTEXT
+# This call is purposely simple, even if it generates a lot of configure time
+# checking and actions. If you have suppressed the intl/ subdirectory by 
+# calling gettextize without '--intl' option, this call should read 
+# AM_GNU_GETTEXT([external])
+AM_GNU_GETTEXT
+
 
 # OS dependant checking. http://www.airs.com/ian/configure/configure_5.html
 # This macro will arrange to define a few shell variables...
