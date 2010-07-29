@@ -28,7 +28,7 @@
 ///
 // ============================================================================
 
-#include <glib/gi18n.h> // i18n
+#include "gettext.h" // i18n
 #include "gui_config_dialog.h"
 #include "gui_glade_defs.h"
 #include "gui_game1v1_config.h"

@@ -1,0 +1,1121 @@
+# Spanish translations for blockem package.
+# Copyright (C) 2010 Faustino Frechilla
+# This file is distributed under the same license as the blockem package.
+#  <frechilla@gmail.com>, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: blockem 0.2.3\n"
+"Report-Msgid-Bugs-To: frechilla@gmail.com\n"
+"POT-Creation-Date: 2010-07-28 21:04+0200\n"
+"PO-Revision-Date: 2010-07-29 01:56+0200\n"
+"Last-Translator:  <frechilla@gmail.com>\n"
+"Language-Team: Spanish\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: src/game1v1.cpp:40
+msgid "Mr Green"
+msgstr ""
+
+#: src/game1v1.cpp:42
+msgid "Mr Blue"
+msgstr ""
+
+#: src/game1v1.cpp:599
+msgid "Nucleation points"
+msgstr ""
+
+#. i18n %d represents the amount of times the function has been called
+#. i18n Thank you for contributing to this project
+#: src/game1v1.cpp:752
+#, c-format
+msgid "Minimax function called %d times\n"
+msgstr ""
+
+#: src/game_total_allocation.cpp:44
+msgid "The player"
+msgstr ""
+
+#: src/gui_exception.h:42
+msgid "GUI Exception happened"
+msgstr ""
+
+#. i18n Bear in mind this string will be printed followed by the path to logo file
+#. i18n The extra space at the end is necessary
+#. i18n Thank you for contributing to this project
+#: src/gui_about_dialog.cpp:64
+msgid ""
+"WARNING: Exception occurred when setting the logo into the AboutDialog from "
+msgstr ""
+
+#. i18n Bear in mind this string will be printed followed by the path to 16x16 icon file
+#. i18n The extra space at the end is necessary
+#. i18n Thank you for contributing to this project
+#: src/gui_about_dialog.cpp:91
+msgid ""
+"WARNING: Exception occurred when setting the 16x16 icon into the AboutDialog "
+"from "
+msgstr ""
+
+#: src/gui_config_dialog.cpp:40
+msgid "Human"
+msgstr ""
+
+#: src/gui_config_dialog.cpp:41
+msgid "Computer"
+msgstr ""
+
+#. i18n Please, leave gtk::Table, player1 and ConfigDialog as they are here
+#. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+#. i18n Thank you for contributing to this project
+#: src/gui_config_dialog.cpp:91
+msgid "Could not load gtk::Table (player1) in ConfigDialog"
+msgstr ""
+
+#. i18n Please, leave gtk::Table, player2 and ConfigDialog as they are here
+#. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+#. i18n Thank you for contributing to this project
+#: src/gui_config_dialog.cpp:100
+msgid "Could not load gtk::Table (player2) in ConfigDialog"
+msgstr ""
+
+#. i18n Please, leave gtk::SpinButton, player1 and ConfigDialog as they are here
+#. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+#. i18n Thank you for contributing to this project
+#: src/gui_config_dialog.cpp:109
+msgid ""
+"Could not load gtk::SpinButton (player1) for starting row in ConfigDialog"
+msgstr ""
+
+#. i18n Please, leave gtk::SpinButton, player1 and ConfigDialog as they are here
+#. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+#. i18n Thank you for contributing to this project
+#: src/gui_config_dialog.cpp:118
+msgid ""
+"Could not load gtk::SpinButton (player1) for starting column in ConfigDialog"
+msgstr ""
+
+#. i18n Please, leave gtk::SpinButton, player2 and ConfigDialog as they are here
+#. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+#. i18n Thank you for contributing to this project
+#: src/gui_config_dialog.cpp:127
+msgid ""
+"Could not load gtk::SpinButton (player2) for starting row in ConfigDialog"
+msgstr ""
+
+#. i18n Please, leave gtk::SpinButton, player2 and ConfigDialog as they are here
+#. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+#. i18n Thank you for contributing to this project
+#: src/gui_config_dialog.cpp:136
+msgid ""
+"Could not load gtk::SpinButton (player2) for starting column in ConfigDialog"
+msgstr ""
+
+#. i18n Please, leave gtk::Frame, player1 and ConfigDialog as they are here
+#. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+#. i18n Thank you for contributing to this project
+#: src/gui_config_dialog.cpp:145
+msgid "Could not load AI gtk::Frame (player1) in ConfigDialog"
+msgstr ""
+
+#. i18n Please, leave gtk::Frame, player2 and ConfigDialog as they are here
+#. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+#. i18n Thank you for contributing to this project
+#: src/gui_config_dialog.cpp:154
+msgid "Could not load AI gtk::Frame (player2) in ConfigDialog"
+msgstr ""
+
+#. i18n Please, leave gtk::Table, player1 and ConfigDialog as they are here
+#. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+#. i18n Thank you for contributing to this project
+#: src/gui_config_dialog.cpp:163
+msgid "Could not load AI gtk::Table (player1) in ConfigDialog"
+msgstr ""
+
+#. i18n Please, leave gtk::Table, player2 and ConfigDialog as they are here
+#. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+#. i18n Thank you for contributing to this project
+#: src/gui_config_dialog.cpp:172
+msgid "Could not load AI gtk::Table (player2) in ConfigDialog"
+msgstr ""
+
+#. i18n Please, leave gtk::SpinButton, player1 and ConfigDialog as they are here
+#. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+#. i18n Thank you for contributing to this project
+#: src/gui_config_dialog.cpp:181
+msgid ""
+"Could not load gtk::SpinButton for search-tree depth (player1) in "
+"ConfigDialog"
+msgstr ""
+
+#. i18n Please, leave gtk::SpinButton, player2 and ConfigDialog as they are here
+#. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+#. i18n Thank you for contributing to this project
+#: src/gui_config_dialog.cpp:190
+msgid ""
+"Could not load gtk::SpinButton for search-tree depth (player2) in "
+"ConfigDialog"
+msgstr ""
+
+#. i18n Please, leave gtk::TextView, player1 and ConfigDialog as they are here
+#. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+#. i18n Thank you for contributing to this project
+#: src/gui_config_dialog.cpp:199
+msgid "Could not load gtk::TextView for heuristic (player1) in ConfigDialog"
+msgstr ""
+
+#. i18n Please, leave gtk::TextView, player2 and ConfigDialog as they are here
+#. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+#. i18n Thank you for contributing to this project
+#: src/gui_config_dialog.cpp:208
+msgid "Could not load gtk::TextView for heuristic (player2) in ConfigDialog"
+msgstr ""
+
+#. i18n This string shouldn't be bigger than 4 characters long
+#. i18n strings bigger than those 4 characters will be stripped out
+#. i18n Thank you for contributing to this project
+#: src/gui_config_dialog.cpp:372 src/gui_config_dialog.cpp:392
+msgid "Auto"
+msgstr ""
+
+#. i18n both %d respectively represent the X and Y pixel where the user clicked
+#. i18n Please leave them there because they are needed by the program
+#. i18n Thank you for contributing to this project
+#: src/gui_drawing_area_board.cpp:560
+#, c-format
+msgid "User clicked in pixel (%d, %d)\n"
+msgstr ""
+
+#. i18n both %d respectively represent the row and column of the square in the board
+#. i18n where the user clicked. Please leave them there because they are needed by the program
+#. i18n Thank you for contributing to this project
+#: src/gui_drawing_area_board.cpp:577
+#, c-format
+msgid "Square in board: Row %d. Column %d)\n"
+msgstr ""
+
+#: src/gui_main_window.cpp:49
+msgid ""
+"The game is computing the next move. Are you sure do you want to close the "
+"application?"
+msgstr ""
+
+#: src/gui_main_window.cpp:52
+msgid "New 1vs1 game"
+msgstr ""
+
+#: src/gui_main_window.cpp:55
+msgid "Configure current game"
+msgstr ""
+
+#. i18n TRANSLATORS: Bear in mind this string will be printed followed by the path to the 16x16 icon file
+#. i18n Thank you for contributing to this project
+#: src/gui_main_window.cpp:147
+msgid ""
+"WARNING: Exception occurred when setting the 16x16 icon into the Main Window "
+"from"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave ConfigDialog, and MainWindow as they are here
+#. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+#. i18n Thank you for contributing to this project
+#: src/gui_main_window.cpp:168
+msgid "Could not load the ConfigDialog class in MainWindow"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave AboutDialog, and MainWindow as they are here
+#. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+#. i18n Thank you for contributing to this project
+#: src/gui_main_window.cpp:179
+msgid "Could not load the AboutDialog class in MainWindow"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave gtk::Table, and MainWindow as they are here
+#. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+#. i18n Thank you for contributing to this project
+#: src/gui_main_window.cpp:190
+msgid "Could not load the edit pieces gtk::Table in MainWindow"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave MainWindow as it is here
+#. i18n That name specifies internal data when the app can't start and can be useful to find out the error cause
+#. i18n Thank you for contributing to this project
+#: src/gui_main_window.cpp:201
+msgid "Could not load the menu accelerator for MainWindow"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave MainWindow as it is here
+#. i18n That name specifies internal data when the app can't start and can be useful to find out the error cause
+#. i18n Thank you for contributing to this project
+#: src/gui_main_window.cpp:211
+msgid "Could not load the menu item \"new\" in MainWindow"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave MainWindow as it is here
+#. i18n That name specifies internal data when the app can't start and can be useful to find out the error cause
+#. i18n Thank you for contributing to this project
+#: src/gui_main_window.cpp:221
+msgid "Could not load the menu item \"quit\" in MainWindow"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave MainWindow as it is here
+#. i18n That name specifies internal data when the app can't start and can be useful to find out the error cause
+#. i18n Thank you for contributing to this project
+#: src/gui_main_window.cpp:231
+msgid "Could not load the menu item \"View nucleation points\" in MainWindow"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave MainWindow as it is here
+#. i18n That name specifies internal data when the app can't start and can be useful to find out the error cause
+#. i18n Thank you for contributing to this project
+#: src/gui_main_window.cpp:241
+msgid ""
+"Could not load the menu item \"Show player1's forbidden area\" in MainWindow"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave MainWindow as it is here
+#. i18n That name specifies internal data when the app can't start and can be useful to find out the error cause
+#. i18n Thank you for contributing to this project
+#: src/gui_main_window.cpp:251
+msgid ""
+"Could not load the menu item \"Show player2's forbidden area\" in MainWindow"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave MainWindow as it is here
+#. i18n That name specifies internal data when the app can't start and can be useful to find out the error cause
+#. i18n Thank you for contributing to this project
+#: src/gui_main_window.cpp:261
+msgid ""
+"Could not load the menu item \"do not show any forbidden area\" in MainWindow"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave MainWindow as it is here
+#. i18n That name specifies internal data when the app can't start and can be useful to find out the error cause
+#. i18n Thank you for contributing to this project
+#: src/gui_main_window.cpp:271
+msgid ""
+"Could not load the menu item \"show player1's influence area\" in MainWindow"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave MainWindow as it is here
+#. i18n That name specifies internal data when the app can't start and can be useful to find out the error cause
+#. i18n Thank you for contributing to this project
+#: src/gui_main_window.cpp:281
+msgid ""
+"Could not load the menu item \"show player2's influence area\" in MainWindow"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave MainWindow as it is here
+#. i18n That name specifies internal data when the app can't start and can be useful to find out the error cause
+#. i18n Thank you for contributing to this project
+#: src/gui_main_window.cpp:291
+msgid ""
+"Could not load the menu item \"do not show any influence area\" in MainWindow"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave MainWindow as it is here
+#. i18n That name specifies internal data when the app can't start and can be useful to find out the error cause
+#. i18n Thank you for contributing to this project
+#: src/gui_main_window.cpp:301
+msgid "Could not load the menu item \"settings / preferences\" in MainWindow"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave MainWindow as it is here
+#. i18n That name specifies internal data when the app can't start and can be useful to find out the error cause
+#. i18n Thank you for contributing to this project
+#: src/gui_main_window.cpp:311
+msgid "Could not load the menu item \"help / about\" in MainWindow"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave gtk::VBox and MainWindow as they are here
+#. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+#. i18n Thank you for contributing to this project
+#: src/gui_main_window.cpp:320
+msgid "Could not load the drawing area gtk::VBox in MainWindow"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave gtk::HBox and MainWindow as they are here
+#. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+#. i18n Thank you for contributing to this project
+#: src/gui_main_window.cpp:329
+msgid "Could not load the current game status gtk::HBox in MainWindow"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave gtk::HBox and MainWindow as they are here
+#. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+#. i18n Thank you for contributing to this project
+#: src/gui_main_window.cpp:338
+msgid "Could not load the opponent pieces gtk::HBox in MainWindow"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave gtk::HBox and MainWindow as they are here
+#. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+#. i18n Thank you for contributing to this project
+#: src/gui_main_window.cpp:347
+msgid "Could not load the edit piece gtk::HBox in MainWindow"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave gtk::HBox and MainWindow as they are here
+#. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+#. i18n Thank you for contributing to this project
+#: src/gui_main_window.cpp:356
+msgid "Could not load the status bar gtk::HBox in MainWindow"
+msgstr ""
+
+#: src/gui_main_window.cpp:588
+msgid "Configuration Dialog cancelled"
+msgstr ""
+
+#: src/gui_main_window.cpp:820
+msgid "Previous move had to be cancelled before applying new settings"
+msgstr ""
+
+#: src/gui_main_window.cpp:1001
+msgid ""
+"Error while telling the thread to start computing. Worker thread is busy"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave <b> and </b> tags sorrounding the translation of "Fatal error"
+#. i18n Thank you for contributing to this project
+#: src/gui_main_window.cpp:1007
+msgid ""
+"<b>Fatal Error:</b> Could not communicate with worker thread. Application "
+"will exit now!"
+msgstr ""
+
+#: src/gui_main_window.cpp:1050
+msgid "Computer can't move"
+msgstr ""
+
+#: src/gui_main_window.cpp:1069
+msgid ""
+"Worker thread is busy. Please be patient while it is calculating next move"
+msgstr ""
+
+#: src/gui_main_window.cpp:1089
+msgid "Cheeky you! Don't try to deploy a piece where it's not allowed to"
+msgstr ""
+
+#: src/gui_main_window.cpp:1109
+msgid "Human move could not be added to the queue"
+msgstr ""
+
+#: src/gui_main_window.cpp:1114
+msgid ""
+"Internal Error: Move could not be processed. Please click on the board "
+"normally to try again"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave the translated word DRAW between the <b> and </b> tags
+#. i18n Bear in mind the first ' color=\"#%02X%02X%02X\" ' will be replaced by player1's colour,
+#. i18n and the first %s will be replaced by player1's name
+#. i18n The 2nd ' color=\"#%02X%02X%02X\" ' and 2nd %s will be replaced by player2's colour and
+#. i18n player2's name respectively.
+#. i18n The final %d will be replaced by the final score
+#. i18n The order of these tags must be maintained in the translation
+#. i18n A typical complete message:
+#. i18n That was a <b>DRAW</b>!\nBoth <span color="#012345">Eddie</span> and <span color="#678901">John</span> have <b>5</b> squares left
+#. i18n Thank you for contributing to this project
+#: src/gui_main_window.cpp:1384
+#, c-format
+msgid ""
+"That was a <b>DRAW</b>!\n"
+"Both <span color=\"#%02X%02X%02X\">%s</span> and <span color=\"#%02X%02X%02X"
+"\">%s</span> have <b>%d</b> squares left"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, respect the HTML formatting as much as possible
+#. i18n Bear in mind that the 1st ' color=\"#%02X%02X%02X\" ' will be replaced by the winner's colour,
+#. i18n and the first %s will be replaced by the winner's name
+#. i18n The 2nd ' color=\"#%02X%02X%02X\" ' and 2nd %s will be replaced by player1's colour and
+#. i18n player1's name respectively. the following %d would be player1's score
+#. i18n The 3rd ' color=\"#%02X%02X%02X\" ' and 3rd %s will be replaced by player2's colour and
+#. i18n player2's name respectively. the following %d would be player2's score
+#. i18n The order of these tags must be taken into account for the translation
+#. i18n A typical complete message:
+#. i18n <b><span color="#012345">Eddie</span></b>!\n<span color="#012345">Eddie</span> has <b>5</b> squares left and <span color="#678901">John</span> has <b>7</b>
+#. i18n Thank you for contributing to this project
+#: src/gui_main_window.cpp:1437
+#, c-format
+msgid ""
+"<b><span color=\"#%02X%02X%02X\">%s</span></b> won!\n"
+"<span color=\"#%02X%02X%02X\">%s</span> has <b>%d</b> squares left and <span "
+"color=\"#%02X%02X%02X\">%s</span> has <b>%d</b>"
+msgstr ""
+
+#: src/gui_main_window_worker_thread.cpp:83
+msgid "Mutex in worker thread couldn't be initialised"
+msgstr ""
+
+#: src/gui_main_window_worker_thread.cpp:92
+msgid "Conditional variable in worker thread couldn't be initialised"
+msgstr ""
+
+#: src/gui_main_window_worker_thread.cpp:126
+msgid "Worker Thread creation failed. "
+msgstr ""
+
+#. i18n Please, leave gtk::DrawingArea and TableEditPiece as they are here
+#. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+#. i18n Thank you for contributing to this project
+#: src/gui_table_edit_piece.cpp:64
+msgid "Could not load Edit pieces Gtk::DrawingArea in TableEditPiece"
+msgstr ""
+
+#. i18n Please, leave gtk::Button and TableEditPiece as they are here
+#. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+#. i18n Thank you for contributing to this project
+#: src/gui_table_edit_piece.cpp:73
+msgid "Could not load rotate left Gtk::Button in TableEditPiece"
+msgstr ""
+
+#. i18n Please, leave gtk::Button and TableEditPiece as they are here
+#. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+#. i18n Thank you for contributing to this project
+#: src/gui_table_edit_piece.cpp:82
+msgid "Could not load rotate right Gtk::Button in TableEditPiece"
+msgstr ""
+
+#. i18n Please, leave gtk::Label and TableEditPiece as they are here
+#. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+#. i18n Thank you for contributing to this project
+#: src/gui_table_edit_piece.cpp:91
+msgid "Could not load rotate Gtk::Label in TableEditPiece"
+msgstr ""
+
+#. i18n Please, leave gtk::Label and TableEditPiece as they are here
+#. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+#. i18n Thank you for contributing to this project
+#: src/gui_table_edit_piece.cpp:100
+msgid "Could not load mirror Gtk::Label in TableEditPiece"
+msgstr ""
+
+#. i18n Please, leave gtk::Button and TableEditPiece as they are here
+#. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+#. i18n Thank you for contributing to this project
+#: src/gui_table_edit_piece.cpp:109
+msgid "Could not load mirror on Y-Axis Gtk::Button in TableEditPiece"
+msgstr ""
+
+#. i18n Please, leave gtk::Button and TableEditPiece as they are here
+#. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
+#. i18n Thank you for contributing to this project
+#: src/gui_table_edit_piece.cpp:118
+msgid "Could not load mirror on X-Axis Gtk::Button in TableEditPiece"
+msgstr ""
+
+#. i18n TRANSLATORS: This is the name given to a type of heuristic. Should be as small as possible
+#: src/heuristic.cpp:51
+msgid "Influence Area"
+msgstr ""
+
+#. i18n TRANSLATORS: This is a quick explanation of what the "Influence Area" heuristic is supposed
+#. i18n to do. Shouldn't be too long since it will have to fit nicely on the GUI widgets
+#: src/heuristic.cpp:54
+msgid ""
+"Uses the influence areas that a user's pieces create on the board to "
+"determine the quality of a move"
+msgstr ""
+
+#. i18n TRANSLATORS: This is the name given to a type of heuristic. Should be as small as possible
+#: src/heuristic.cpp:59
+msgid "Mr. Eastwood"
+msgstr ""
+
+#. i18n TRANSLATORS: This is a quick explanation of what the "Mr. Eastwood" heuristic is supposed
+#. i18n to do. Shouldn't be too long since it will have to fit nicely on the GUI widgets
+#: src/heuristic.cpp:62
+msgid ""
+"Modified version of \"Influence Area\". When in doubt it will try to block "
+"you"
+msgstr ""
+
+#. i18n TRANSLATORS: This is the name given to a type of heuristic. Should be as small as possible
+#. i18n NK stands for Nucleation point
+#: src/heuristic.cpp:68
+msgid "NK weighted"
+msgstr ""
+
+#. i18n TRANSLATORS: This is a quick explanation of what the "NK weighted" heuristic is supposed
+#. i18n to do. Shouldn't be too long since it will have to fit nicely on the GUI widgets
+#. i18n NK stands for Nucleation point
+#: src/heuristic.cpp:72
+msgid ""
+"The more Nucleation points the better. NK points are more important in the "
+"middle of the board at the beginning"
+msgstr ""
+
+#. i18n TRANSLATORS: This is the name given to a type of heuristic. Should be as small as possible
+#: src/heuristic.cpp:85
+msgid "Centre focused"
+msgstr ""
+
+#. i18n TRANSLATORS: This is a quick explanation of what the "Centre focused" heuristic is supposed
+#. i18n to do. Shouldn't be too long since it will have to fit nicely on the GUI widgets
+#: src/heuristic.cpp:88
+msgid ""
+"It has a tendency to create nucleation points over the centre of the board"
+msgstr ""
+
+#. i18n TRANSLATORS: This is the name given to a type of heuristic. Should be as small as possible
+#: src/heuristic.cpp:93
+msgid "Simple"
+msgstr ""
+
+#. i18n TRANSLATORS: This is a quick explanation of what the "Simple" heuristic is supposed
+#. i18n to do. Shouldn't be too long since it will have to fit nicely on the GUI widgets
+#: src/heuristic.cpp:96
+msgid "Takes into account only the amount of squares of the deployed pieces"
+msgstr ""
+
+#. i18n TRANSLATORS: This is the name given to a type of heuristic. Should be as small as possible
+#: src/heuristic.cpp:101
+msgid "Random"
+msgstr ""
+
+#. i18n TRANSLATORS: This is a quick explanation of what the "Random" heuristic is supposed
+#. i18n to do. Shouldn't be too long since it will have to fit nicely on the GUI widgets
+#: src/heuristic.cpp:104
+msgid ""
+"Random heuristic. Evaluation function returns a random value so any "
+"heuristic can be checked against it"
+msgstr ""
+
+#: src/piece.cpp:45
+msgid "Baby piece"
+msgstr ""
+
+#: src/piece.cpp:46
+msgid "Two piece"
+msgstr ""
+
+#: src/piece.cpp:47
+msgid "Three piece"
+msgstr ""
+
+#: src/piece.cpp:48
+msgid "Little V"
+msgstr ""
+
+#: src/piece.cpp:49
+msgid "Full square"
+msgstr ""
+
+#: src/piece.cpp:50
+msgid "Four long piece"
+msgstr ""
+
+#: src/piece.cpp:51
+msgid "Little L"
+msgstr ""
+
+#: src/piece.cpp:52
+msgid "Little S"
+msgstr ""
+
+#: src/piece.cpp:53
+msgid "Little T"
+msgstr ""
+
+#: src/piece.cpp:54
+msgid "Big long piece"
+msgstr ""
+
+#: src/piece.cpp:55
+msgid "Square++"
+msgstr ""
+
+#: src/piece.cpp:56
+msgid "Big V (aka Half square)"
+msgstr ""
+
+#: src/piece.cpp:57
+msgid "U Piece"
+msgstr ""
+
+#: src/piece.cpp:58
+msgid "Big L"
+msgstr ""
+
+#: src/piece.cpp:59
+msgid "Y Piece"
+msgstr ""
+
+#: src/piece.cpp:60
+msgid "Big S"
+msgstr ""
+
+#: src/piece.cpp:61
+msgid "Mr T"
+msgstr ""
+
+#: src/piece.cpp:62
+msgid "N Piece (aka the ultimate)"
+msgstr ""
+
+#: src/piece.cpp:63
+msgid "Saf Piece"
+msgstr ""
+
+#: src/piece.cpp:64
+msgid "W Piece"
+msgstr ""
+
+#: src/piece.cpp:65
+msgid "Cross piece"
+msgstr ""
+
+#: src/main.cpp:123
+msgid "Prints current version of the software and exists"
+msgstr ""
+
+#: src/main.cpp:127
+msgid ""
+"Mandatory parameter which specifies the mode blockem runs. Valid options "
+"are: '0' GUI is shown (Default); '1' one player total-allocation; '2' 1vs1 "
+"Game"
+msgstr ""
+
+#: src/main.cpp:133
+msgid ""
+"1 player total allocation game's board will have N rows. This is a MANDATORY "
+"parameter for --mode=1"
+msgstr ""
+
+#: src/main.cpp:138
+msgid ""
+"1 player total allocation game's board will have N columns. This is a "
+"MANDATORY parameter for --mode=1"
+msgstr ""
+
+#: src/main.cpp:143
+msgid ""
+"Computer will start to allocate pieces in column X (when running with --"
+"mode=1). 1st valid column is 0, so maximum allowed column will be "
+"(number_of_columns - 1). This is a MANDATORY parameter for --mode=1"
+msgstr ""
+
+#: src/main.cpp:149
+msgid ""
+"Computer will start to allocate pieces in row Y (when running with --"
+"mode=1). 1st valid row is 0, so maximum allowed row will be (number_of_rows "
+"- 1). This is a MANDATORY parameter for --mode=1"
+msgstr ""
+
+#: src/main.cpp:155
+msgid ""
+"Sets the maximum depth of search tree to D when 1vs1 Game is selected. This "
+"is a MANDATORY parameter for --mode=2"
+msgstr ""
+
+#: src/main.cpp:160
+msgid ""
+"Heuristic to be used when mode is set to 1v1 game (--mode=2). Valid options: "
+"'0' \"Influence Area\" (Default); '1' \"Mr. Eastwood\"; '2' \"NK weighted\"; "
+"'3' \"Centre focused\"; '4' \"Simple\"; '5' \"Random\""
+msgstr ""
+
+#: src/main.cpp:166
+msgid ""
+"Paths to 1vs1game files (mode 2). Blockem will calculate next move per each "
+"one of them and print out the result in console. Specifying at least 1 file "
+"is MANDATORY for --mode=2"
+msgstr ""
+
+#. i18n TRANSLATORS: This string is supposed to mean that 1 file is mandatory
+#. i18n but more than 1 can be specified
+#. i18n Thank you for contributing to this project
+#: src/main.cpp:172
+msgid "FILE [FILE(S)]"
+msgstr ""
+
+#. i18n TRANSLATORS: Please leave the starting colon since it is part of the expected format
+#. i18n Bear in mind this string will be used to print out a help message when an error is found
+#. i18n A typical example would be: "./blockem: Fatal error: error 123 while trying to connect"
+#. i18n That is the "Fatal error" sentence that needs to be translated
+#. i18n Thank you for contributing to this project
+#: src/main.cpp:196
+msgid ": Fatal error"
+msgstr ""
+
+#. i18n TRANSLATORS:
+#. i18n Bear in mind this string will be used to print out a help message when an error is found
+#. i18n A typical example would be: "./blockem: Try './blockem --help'". That is the "try" word
+#. i18n that is to be translated here
+#. i18n Thank you for contributing to this project
+#: src/main.cpp:208
+msgid "Try"
+msgstr ""
+
+#. i18n TRANSLATORS: Please leave the starting dash as it is part of the glib command line
+#. i18n parsing formatting
+#. i18n Thank you for contributing to this project
+#: src/main.cpp:250
+msgid "- The GNU polyominoes board game"
+msgstr "- el juego"
+
+#: src/main.cpp:267
+msgid "Error parsing command line"
+msgstr ""
+
+#. i18n TRANSLATORS: Please leave the word Gtkbuilder as it is since it's the name
+#. i18n of the component that failed
+#. i18n Thank you for contributing to this project
+#: src/main.cpp:335
+msgid "Could not load Gtkbuilder definitions"
+msgstr ""
+
+#: src/main.cpp:363
+msgid "Could not load the Main Window from the .glade file"
+msgstr ""
+
+#: src/main.cpp:405
+msgid ""
+"Number of rows, number of columns, starting row and starting column must be "
+"specified in mode '1'"
+msgstr ""
+
+#: src/main.cpp:413
+msgid "Number of rows and number of columns must be a greater than 1"
+msgstr ""
+
+#: src/main.cpp:422
+msgid "Application cannot start outside of the board boundaries"
+msgstr ""
+
+#. i18n TRANSLATORS: This string is to be printed when the applications finds
+#. i18n a solution to a one-player total-allocation game
+#. i18n Thank you for contributing to this project
+#: src/main.cpp:435
+msgid "SOLVED!"
+msgstr ""
+
+#. i18n TRANSLATORS: This string is to be printed when the applications cannot find
+#. i18n a solution to a one-player total-allocation game. The integers printed on the screen
+#. i18n are (respectively) number of rows, number of columns, starting row and starting column
+#. i18n A typical string to be printed:
+#. i18n "Could not allocate all the pieces in this 8x8 board, starting from row 0, column 2"
+#. i18n Thank you for contributing to this project
+#: src/main.cpp:449
+#, c-format
+msgid ""
+"Could not allocate all the pieces in this %dx%d board, starting from row %d, "
+"columnd %d\n"
+msgstr ""
+
+#: src/main.cpp:464
+msgid "At least one file with a 1vs1Game saved must be specified"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave that %d as it is. It will be replaced
+#. i18n by the type of heuristic used by the user
+#. i18n Thank you for contributing to this project
+#: src/main.cpp:476
+#, c-format
+msgid "Invalid heuristic type (%d)"
+msgstr ""
+
+#. i18n TRANSLATORS: This string shows the chosen heuristic's name to the user
+#. i18n the 1st %s will be replaced by the heuristic's name, and %d by its index
+#. i18n Thank you for contributing to this project
+#: src/main.cpp:491
+#, c-format
+msgid "Evaluation function set to %s (%d)\n"
+msgstr ""
+
+#: src/main.cpp:499
+msgid "Depth in 1vs1Game mode must be set to a positive value"
+msgstr ""
+
+#: src/main.cpp:506
+msgid ""
+"Warning: For better results you might want to set the depth to an odd number"
+msgstr ""
+
+#. i18n TRANSLATORS: This string is shown when a file specified by the user
+#. i18n cannot be loaded into the application. The 1st %s will be replaced
+#. i18n by the name of the binary (normally "./blockem"), the 2nd one by
+#. i18n the file that couldn't be accessed. Bear in mind the '\n' character should be there
+#. i18n in the translated version of the string too
+#. i18n Thank you for contributing to this project
+#: src/main.cpp:524
+#, c-format
+msgid "%s: Error: '%s' doesn't exist. Trying next file...\n"
+msgstr ""
+
+#. i18n TRANSLATORS: This string is shown when a file specified by the user
+#. i18n could not be opened to be read. The 1st %s will be replaced
+#. i18n by the name of the binary (normally "./blockem"), the 2nd one by
+#. i18n the file that couldn't be opened. Bear in mind the '\n' character should be there
+#. i18n in the translated version of the string too
+#. i18n Thank you for contributing to this project
+#: src/main.cpp:542
+#, c-format
+msgid "%s: Error: '%s' could not be opened. Trying next file...\n"
+msgstr ""
+
+#. i18n TRANSLATORS: This string is shown when a file specified by the user
+#. i18n does not contain a valid 1vs1 game. The 1st %s will be replaced
+#. i18n by the name of the binary (normally "./blockem"), the 2nd one by
+#. i18n the file that couldn't be opened. Bear in mind the '\n' character should be there
+#. i18n in the translated version of the string too
+#. i18n Thank you for contributing to this project
+#: src/main.cpp:559
+#, c-format
+msgid ""
+"%s: Error: '%s' does not contain a valid 1vs1Game. Trying next file...\n"
+msgstr ""
+
+#. i18n TRANSLATORS: '%s' will be replaced here by the path to the file
+#. i18n successfully loaded. Bear in mind the '\n' character should be there
+#. i18n in the translated version of the string too
+#. i18n Thank you for contributing to this project
+#: src/main.cpp:572
+#, c-format
+msgid "Game succesfully loaded from '%s'\n"
+msgstr ""
+
+#. i18n TRANSLATORS: '%d' will be replaced here by the value of the winning
+#. i18n move calculated by the minimax engine. Bear in mind the '\n' character
+#. i18n should be there in the translated version of the string too
+#. i18n Thank you for contributing to this project
+#: src/main.cpp:604
+#, c-format
+msgid "Winning evaluation function value: %d\n"
+msgstr ""
+
+#. i18n TRANSLATORS: This string will be printed on the screen when the minimax
+#. i18n engine cannot put down a piece. It is left up to the translator to decide
+#. i18n to decide the formatting of the message, though this english version
+#. i18n could be used as the template
+#. i18n Thank you for contributing to this project
+#: src/main.cpp:614
+msgid ""
+" ===================================================\n"
+" === END OF THE GAME. NO PIECE COULD BE PUT DOWN ===\n"
+" ===================================================\n"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave that %d as it is. It will be replaced
+#. i18n by the mode picked by the user
+#. i18n Thank you for contributing to this project
+#: src/main.cpp:642
+#, c-format
+msgid "Invalid --mode option (%d)"
+msgstr ""
+
+# TRANSLATORS: This is what is shown as the name of the main window.
+# It should be the name of the application
+#: src/gui.glade:6
+msgid "Block'em"
+msgstr ""
+
+# TRANSLATORS: The underscore character is to be located just before the
+# letter which will be underlined. This underlined character represents which
+# letter can be presed to select this menu option when the keyboard is used to 
+# navigate through the archive menu
+#: src/gui.glade:20
+msgid "_Game"
+msgstr ""
+
+# TRANSLATORS: The underscore character is to be located just before the
+# letter which will be underlined. This underlined character represents which
+# letter can be presed to select this menu option when the keyboard is used to 
+# navigate through the archive menu
+#: src/gui.glade:79
+msgid "_Settings"
+msgstr ""
+
+# TRANSLATORS: The underscore character is to be located just before the
+# letter which will be underlined. This underlined character represents which
+# letter can be presed to select this menu option when the keyboard is used to 
+# navigate through the archive menu
+#: src/gui.glade:87
+msgid "_Forbidden areas"
+msgstr ""
+
+# TRANSLATORS: The underscore character is to be located just before the
+# letter which will be underlined. This underlined character represents which
+# letter can be presed to select this menu option when the keyboard is used to 
+# navigate through the archive menu
+#: src/gui.glade:95
+msgid "Do _not show forbidden area"
+msgstr ""
+
+# TRANSLATORS: The underscore character is to be located just before the
+# letter which will be underlined. This underlined character represents which
+# letter can be presed to select this menu option when the keyboard is used to 
+# navigate through the archive menu
+#: src/gui.glade:104
+msgid "Show Mr _Green's forbidden area"
+msgstr ""
+
+# TRANSLATORS: The underscore character is to be located just before the
+# letter which will be underlined. This underlined character represents which
+# letter can be presed to select this menu option when the keyboard is used to 
+# navigate through the archive menu
+#: src/gui.glade:113
+msgid "Show Mr _Blue's forbidden area"
+msgstr ""
+
+# TRANSLATORS: The underscore character is to be located just before the
+# letter which will be underlined. This underlined character represents which
+# letter can be presed to select this menu option when the keyboard is used to 
+# navigate through the archive menu
+#: src/gui.glade:125
+msgid "_Influence areas"
+msgstr ""
+
+# TRANSLATORS: The underscore character is to be located just before the
+# letter which will be underlined. This underlined character represents which
+# letter can be presed to select this menu option when the keyboard is used to 
+# navigate through the archive menu
+#: src/gui.glade:133
+msgid "Do _not show influence area"
+msgstr ""
+
+# TRANSLATORS: The underscore character is to be located just before the
+# letter which will be underlined. This underlined character represents which
+# letter can be presed to select this menu option when the keyboard is used to 
+# navigate through the archive menu
+#: src/gui.glade:142
+msgid "Show Mr _Green's influence area"
+msgstr ""
+
+# TRANSLATORS: The underscore character is to be located just before the
+# letter which will be underlined. This underlined character represents which
+# letter can be presed to select this menu option when the keyboard is used to 
+# navigate through the archive menu
+#: src/gui.glade:151
+msgid "Show Mr _Blue's influence area"
+msgstr ""
+
+# TRANSLATORS: The underscore character is to be located just before the
+# letter which will be underlined. This underlined character represents which
+# letter can be presed to select this menu option when the keyboard is used to 
+# navigate through the archive menu
+#: src/gui.glade:164
+msgid "Show _nucleation points"
+msgstr ""
+
+# TRANSLATORS: The underscore character is to be located just before the
+# letter which will be underlined. This underlined character represents which
+# letter can be presed to select this menu option when the keyboard is used to 
+# navigate through the archive menu
+#: src/gui.glade:183
+msgid "_Help"
+msgstr ""
+
+# This is the title of the about dialog of the game
+#: src/gui.glade:309
+msgid "About Block'em"
+msgstr ""
+
+# The copyright notice
+#: src/gui.glade:317
+msgid "Copyright © 2009-2010 Faustino Frechilla"
+msgstr ""
+
+# This is the short description of what this game is supposed to be
+#: src/gui.glade:318
+msgid "A board strategy game against the computer"
+msgstr ""
+
+# This is the GNU GPL version 3 license text.
+# You can find lots of already translated versions of this text along with
+# the instructions of how to translate it in
+# http://www.gnu.org/licenses/translations.html
+# Please, read very carefully the instructions of how to translate this text
+# since those translated version of the license are unofficial
+#: src/gui.glade:319
+msgid ""
+"blockem is free software; you can redistribute it and/or modify it under the "
+"terms of the GNU General Public License as published by the Free Software "
+"Foundation; either version 3 of the License, or (at your option) any later "
+"version.\n"
+"\n"
+"blockem is distributed in the hope that it will be useful, but WITHOUT ANY "
+"WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
+"FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more "
+"details.\n"
+"\n"
+"You should have received a copy of the GNU General Public License along with "
+"blockem; if not, write to the Free Software Foundation, Inc., 51 Franklin "
+"Street, Fifth Floor, Boston, MA  02110-1301  USA"
+msgstr ""
+
+# Rotate in this context means a transformation of a piece that describes the
+# motion of it around a fixed point
+#: src/gui.glade:442
+msgid "Rotate"
+msgstr ""
+
+# This string contains the word "mirror" written downwards. Mirror in this
+# context means a reflection in any of the axis of a blockem piece
+# This string MUST be translated using the same downwards way, that is, a
+# new line character (\n) after every character
+#: src/gui.glade:456
+msgid ""
+"M\n"
+"i\n"
+"r\n"
+"r\n"
+"o\n"
+"r"
+msgstr ""
+
+# Please leave the final ": " characters at the end to keep format on
+# the screen
+# This string is to be followed by a combobox where the user can edit the 
+# type of player of the next game (Human or computer)
+#: src/gui.glade:550 src/gui.glade:781
+msgid "Type: "
+msgstr ""
+
+# Please leave the final ": " characters at the end to keep format on
+# the screen
+# This string is to be followed by a textbox where the user can edit the 
+# starting row for the next game
+#: src/gui.glade:560 src/gui.glade:791
+msgid "Starting Row: "
+msgstr ""
+
+# Please leave the final ": " characters at the end to keep format on
+# the screen
+# This string is to be followed by a textbox where the user can edit the 
+# starting column for the next game
+#: src/gui.glade:572 src/gui.glade:823
+msgid "Column: "
+msgstr ""
+
+# Please leave the final ": " characters at the end to keep format on
+# the screen. AI stands for Artificial Intelligence. The acronym was chosen
+# because a long string did not fit properly on the screen
+#: src/gui.glade:646 src/gui.glade:876
+msgid "AI type: "
+msgstr ""
+
+# Please leave the final ": " characters at the end to keep format on
+# the screen
+#: src/gui.glade:658 src/gui.glade:888
+msgid "Depth: "
+msgstr ""
+
+#: src/gui.glade:725 src/gui.glade:955
+msgid "Artificial Intelligence"
+msgstr ""
+
+# Please leave this string surrounded by the HTML <b> and </b> tags
+# it represents player1 (green)
+#: src/gui.glade:754
+msgid "<b>Green</b>"
+msgstr ""
+
+# Please leave this string surrounded by the HTML <b> and </b> tags
+# it represents player2 (blue)
+#: src/gui.glade:984
+msgid "<b>Blue</b>"
+msgstr ""

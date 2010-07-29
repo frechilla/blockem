@@ -31,7 +31,7 @@
 ///
 // ============================================================================
 
-#include <glib/gi18n.h> // i18n
+#include "gettext.h" // i18n
 #include "gui_main_window_worker_thread.h"
 
 // flags to set the sig_atomic_t variable to stop the Minimax computing

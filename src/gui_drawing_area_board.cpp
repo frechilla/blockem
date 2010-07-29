@@ -31,7 +31,7 @@
 #ifdef DEBUG_PRINT
 #include <cstdio> // printf (needed for better i18n)
 #endif
-#include <glib/gi18n.h> // i18n
+#include "gettext.h" // i18n
 #include "gui_drawing_area_board.h"
 #include "rules.h"
 

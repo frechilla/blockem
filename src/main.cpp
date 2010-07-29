@@ -30,16 +30,16 @@
 // ============================================================================
 
 #include <stdio.h>
-#include <cstdio>        // printf (needed for better i18n)
+#include <cstdio>    // printf (needed for better i18n)
 #include <stdlib.h>
 #include <math.h>
-#include <string.h>      // strcmp
+#include <string.h>  // strcmp
 #include <iostream>
 #include <fstream>
-#include <glib.h>       // glib-Commandline-option-parser
+#include <glib.h>    // glib-Commandline-option-parser
 #include <gtkmm.h>
-#include <glib/gi18n.h> // i18n
-#include "config.h"     // autotools header file
+#include "gettext.h" // i18n
+#include "config.h"  // autotools header file
 #include "assert.h"
 
 // header file created during the make process which saves the current date
@@ -226,6 +226,8 @@ int main(int argc, char **argv)
 {
     GError* error = NULL;
     char    errorStringBuffer[ERROR_STRING_BUFFER_SIZE];
+
+    setlocale (LC_ALL, "");
 
     // i18n initialisation
     // make sure first that the message catalog can be found

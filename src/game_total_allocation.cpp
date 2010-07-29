@@ -29,7 +29,7 @@
 // ============================================================================
 
 #include <stdlib.h>
-#include <glib/gi18n.h> // i18n
+#include "gettext.h" // i18n
 #include "game_total_allocation.h"
 #include "rules.h"
 
@@ -41,10 +41,10 @@ const char CHAR_PLAYER   = 'X';
 
 GameTotalAllocation::GameTotalAllocation(int32_t a_rows, int32_t a_columns) :
     m_board(a_rows, a_columns, CHAR_EMPTY),
-    m_player(std::string(_("The player")), 
-             CHAR_PLAYER, 
-             a_rows, 
-             a_columns, 
+    m_player(std::string(_("The player")),
+             CHAR_PLAYER,
+             a_rows,
+             a_columns,
              Coordinate(0, 0))
 {
 }

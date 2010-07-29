@@ -2,6 +2,8 @@
 # plus src/gui.glade
 xgettext -c"i18n" -a --c++ --msgid-bugs-address=frechilla@gmail.com --package-name=blockem --package-version=0.2.4 --copyright-holder="Faustino Frechilla" -d -F -Dsrc/ -Dsrc/impl/ -Dsrc/tests/ -f locale/file_list -o locale/messages.pot
 xgettext -c"i18n" -j -a --language=Glade --msgid-bugs-address=frechilla@gmail.com --package-name=blockem --package-version=0.2.4 --copyright-holder="Faustino Frechilla" -d -F src/gui.glade -o locale/messages.pot
+# using autotools:
+make update-p
 
 # from http://en.wikipedia.org/wiki/GNU_gettext
 # The translator derives a .po file from the template using the msginit program
@@ -11,3 +13,61 @@ msginit --locale=fr --input=name.pot
 
 # Finally, the .po files are compiled into binary .mo files with msgfmt. 
 # These are now ready for distribution with the software package
+# they can also be created using
+make update-gmo
+# inside the po/ directory
+
+# autotools
+run `gettextize`
+
+# follow instructions
+
+
+# if you are getting an error like:
+$ LANG=es_ES ./src/blockem --help
+
+(process:29291): Gtk-WARNING **: Locale not supported by C library.
+	Using the fallback 'C' locale
+	
+# check if that locale is available in /usr/lib/locale/
+ls -l /usr/lib/locale/
+total 68
+drwxr-xr-x 3 root root 4096 2009-12-02 15:18 en_AG
+drwxr-xr-x 3 root root 4096 2009-12-02 15:18 en_AU.utf8
+drwxr-xr-x 3 root root 4096 2009-05-02 05:28 en_BW.utf8
+drwxr-xr-x 3 root root 4096 2009-12-02 15:18 en_CA.utf8
+drwxr-xr-x 3 root root 4096 2009-12-02 15:18 en_DK.utf8
+drwxr-xr-x 3 root root 4096 2009-12-02 15:18 en_GB.utf8
+drwxr-xr-x 3 root root 4096 2009-12-02 15:18 en_HK.utf8
+drwxr-xr-x 3 root root 4096 2009-12-02 15:18 en_IE.utf8
+drwxr-xr-x 3 root root 4096 2009-12-02 15:19 en_IN
+drwxr-xr-x 3 root root 4096 2009-05-02 05:28 en_NG
+drwxr-xr-x 3 root root 4096 2009-12-02 15:19 en_NZ.utf8
+drwxr-xr-x 3 root root 4096 2009-12-02 15:19 en_PH.utf8
+drwxr-xr-x 3 root root 4096 2009-12-02 15:19 en_SG.utf8
+drwxr-xr-x 3 root root 4096 2009-12-02 15:19 en_US.utf8
+drwxr-xr-x 3 root root 4096 2009-12-02 15:19 en_ZA.utf8
+drwxr-xr-x 3 root root 4096 2009-05-02 05:29 en_ZW.utf8
+drwxr-xr-x 3 root root 4096 2010-07-29 01:51 es_ES.utf8
+
+# you can see only es_ES.utf8 is available so:
+$ LANG=es_ES.UTF-8 ./src/blockem --help
+
+works perfectly!!!!
+
+# to add new locales (https://answers.launchpad.net/ubuntu/+question/3707)
+1. check which locales are supported :
+
+less /usr/share/i18n/SUPPORTED
+
+2. add the locales you want (for example fr) :
+
+locale-gen fr_FR.UTF-8
+locale-gen fr_FR
+locale-gen fr_FR@euro
+
+
+####
+# have a look at po/en@quot.header and po/en@boldquot.header
+make en@quot.po-create
+make en@boldquot.po-create

@@ -32,7 +32,7 @@
 #define GUIEXCEPTION_H_
 
 #include <stdexcept>
-#include <glib/gi18n.h> // i18n
+#include "gettext.h" // i18n
 
 /// @brief default exception handling the GUI
 class GUIException : public std::runtime_error

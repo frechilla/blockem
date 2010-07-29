@@ -31,7 +31,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
-#include <glib/gi18n.h> // i18n
+#include "gettext.h" // i18n
 #include "heuristic.h"
 #include "player.h"
 #include "rules.h"

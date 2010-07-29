@@ -1,9 +1,13 @@
 AUTOMAKE_OPTIONS = foreign
 # SUBDIRS = src doc examples man scripts
-SUBDIRS = src src/tests doc
+# add intl if AM_GNU_GETTEXT is used in configure.ac
+SUBDIRS = intl po src src/tests doc
 
 # other stuff to be distributed without compiling
 EXTRA_DIST = \
+ABOUT-NLS \
+config.rpath \
+m4/ChangeLog \
 pixmaps/blockemicon.ico    \
 pixmaps/blockemlogo128.png \
 pixmaps/blockemlogo16.png  \
@@ -20,3 +24,5 @@ pixmaps/blockemlogo16.png  \
 pixmaps/blockemlogo48.png  \
 pixmaps/blockemlogo.png
 
+
+ACLOCAL_AMFLAGS = -I m4

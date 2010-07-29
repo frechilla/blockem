@@ -28,7 +28,7 @@
 ///
 // ============================================================================
 
-#include <glib/gi18n.h> // i18n
+#include "gettext.h" // i18n
 #include "piece.h"
 #include "stdio.h"
 
@@ -39,7 +39,7 @@ static const uint8_t PIECE_MAX_RADIUS = 2;
 // pieces are added to the enum ePieceType_t in piece.h
 const std::string Piece::m_pieceDescription[e_numberOfPieces] =
 {
-    // some names are based on  
+    // some names are based on
     // http://www.boardgamegeek.com/image/112331/blokus
     // some others are based on hours and hours of playing :)
     std::string(_("Baby piece")),

@@ -32,8 +32,8 @@
 #include <iostream> // std::cerr
 #endif
 
-#include <glib/gi18n.h> // i18n
-#include "config.h" // PACKAGE_VERSION
+#include "gettext.h" // i18n
+#include "config.h"  // PACKAGE_VERSION
 #include "gui_about_dialog.h"
 #include "gui_glade_defs.h"
 

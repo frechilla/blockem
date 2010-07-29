@@ -29,7 +29,7 @@
 ///
 // ============================================================================
 
-#include <glib/gi18n.h> // i18n
+#include "gettext.h" // i18n
 #include "gui_table_edit_piece.h"
 #include "gui_glade_defs.h"
 

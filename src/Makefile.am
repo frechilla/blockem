@@ -2,7 +2,7 @@
 
 bin_PROGRAMS = blockem
 
-INCLUDES = -I$(srcdir)
+INCLUDES = -I$(top_srcdir)/lib
 
 # DATADIR in the windows OS and in DEBUG mode is set to the current 
 # directory instead
@@ -17,7 +17,7 @@ endif
 # ?= sets the var only if it wasn't set before
 BLOCKEM_DATADIR ?= $(datadir)/@PACKAGE@
 
-AM_CXXFLAGS  =  $(GTKMM_CFLAGS) $(GTHREAD_CFLAGS)
+AM_CXXFLAGS  = $(GTKMM_CFLAGS) $(GTHREAD_CFLAGS)
 AM_CXXFLAGS += -DDATADIR=\"$(BLOCKEM_DATADIR)\" 
 AM_CXXFLAGS += -DLOCALEDIR=\"$(BLOCKEM_DATADIR)/locale\"
 AM_LDFLAGS = 
@@ -40,7 +40,7 @@ main.o: compiletime.h
 
 blockem_DEPENDENCIES = gui_glade_obj.o
 
-blockem_LDADD = gui_glade_obj.o $(GTKMM_LIBS) $(GLADEMM_LIBS) $(GTHREAD_LIBS)
+blockem_LDADD = @LIBINTL@ gui_glade_obj.o $(GTKMM_LIBS) $(GLADEMM_LIBS) $(GTHREAD_LIBS)
 
 CLEANFILES = gui_glade_obj.o compiletime.h
 

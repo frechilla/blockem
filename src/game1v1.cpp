@@ -33,7 +33,7 @@
 #include <cstdio> // printf (needed for better i18n)
 #endif
 
-#include <glib/gi18n.h> // i18n
+#include "gettext.h" // i18n
 #include "game1v1.h"
 
 /// player1's name

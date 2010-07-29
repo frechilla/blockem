@@ -20,23 +20,30 @@ AC_DEFINE(SVN_REVISION, "svnversion", [SVN Revision])
 AC_PROG_CXX
 AC_PROG_CC
 
+# http://www.gnu.org/software/gettext/manual/gettext.html#configure_002eac
+# you need to add an explicit invocation of ‘AC_GNU_SOURCE’ in the 
+# configure.ac file - after ‘AC_PROG_CC’ but before ‘AM_GNU_GETTEXT’, 
+# most likely very close to the ‘AC_PROG_CC’ invocation. This is necessary 
+# because of ordering restrictions imposed by GNU autoconf
+AC_GNU_SOURCE
+
 # AM_CONDITIONAL(HAVE_OBJCOPY_WEAKEN, ["$OBJCOPY" -W malloc /bin/ls /dev/null])
 AC_CHECK_TOOL([OBJCOPY], [objcopy], [])
 AC_CHECK_TOOL([LD], [ld], [])
 
 # i18n. See http://www.gnu.org/software/gettext/manual/gettext.html#Maintainers
-# ALL_LINGUAS variable lists all the available translations in your package.
-# It is a whitespace separated quoted string, such as "de es fr hu".
-ALL_LINGUAS="es"
 GETTEXT_PACKAGE=BLOCKEM_PACKAGE_NAME
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [gettext package])
 AC_SUBST(GETTEXT_PACKAGE)
 #AM_GLIB_GNU_GETTEXT
 # This call is purposely simple, even if it generates a lot of configure time
-# checking and actions. If you have suppressed the intl/ subdirectory by 
-# calling gettextize without '--intl' option, this call should read 
-# AM_GNU_GETTEXT([external])
+# checking and actions. 
 AM_GNU_GETTEXT
+# Please use AM_GNU_GETTEXT([external]) in order to cause autoconfiguration
+# to look for an external libintl or in case you have suppressed the intl/ 
+# subdirectory by calling gettextize without '--intl' option
+#AM_GNU_GETTEXT([external])
+
 
 
 # OS dependant checking. http://www.airs.com/ian/configure/configure_5.html
@@ -145,8 +152,10 @@ AC_ARG_ENABLE(gcov,
 if test "$os_win32" = "yes"; then
     CXXFLAGS+=" -mms-bitfields -mwindows"
 fi
-
-AC_OUTPUT([
+ 
+AC_OUTPUT([ 
+intl/Makefile 
+po/Makefile.in
 Makefile
 src/Makefile
 src/tests/Makefile

@@ -34,11 +34,11 @@
 
 #ifdef DEBUG_PRINT
 #include <iostream>
-#include <cstdio> // printf/snprintf (needed for better i18n)
+#include <cstdio>    // printf/snprintf (needed for better i18n)
 #endif
-#include <glib/gi18n.h> // i18n
-#include <queue>   // queue computer's moves
-#include <iomanip> // setw
+#include <queue>     // queue computer's moves
+#include <iomanip>   // setw
+#include "gettext.h" // i18n
 #include "gui_main_window.h"
 #include "gui_game1v1_config.h"
 #include "gui_glade_defs.h"
