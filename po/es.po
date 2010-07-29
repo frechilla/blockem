@@ -18,30 +18,30 @@ msgstr ""
 
 #: src/game1v1.cpp:40
 msgid "Mr Green"
-msgstr ""
+msgstr "Sr Verde"
 
 #: src/game1v1.cpp:42
 msgid "Mr Blue"
-msgstr ""
+msgstr "Sr Azul"
 
 #: src/game1v1.cpp:599
 msgid "Nucleation points"
-msgstr ""
+msgstr "esquinas válidas"
 
 #. i18n %d represents the amount of times the function has been called
 #. i18n Thank you for contributing to this project
 #: src/game1v1.cpp:752
 #, c-format
 msgid "Minimax function called %d times\n"
-msgstr ""
+msgstr "La función minimax ha sido llamada %d veces\n"
 
 #: src/game_total_allocation.cpp:44
 msgid "The player"
-msgstr ""
+msgstr "El jugador"
 
 #: src/gui_exception.h:42
 msgid "GUI Exception happened"
-msgstr ""
+msgstr "Ha ocurrido una excepción de tipo GUI"
 
 #. i18n Bear in mind this string will be printed followed by the path to logo file
 #. i18n The extra space at the end is necessary
@@ -50,6 +50,8 @@ msgstr ""
 msgid ""
 "WARNING: Exception occurred when setting the logo into the AboutDialog from "
 msgstr ""
+"AVISO: Ocurrió una excepción mientras se cargaba el logo del diálogo Acerca "
+de desde "
 
 #. i18n Bear in mind this string will be printed followed by the path to 16x16 icon file
 #. i18n The extra space at the end is necessary
@@ -59,14 +61,16 @@ msgid ""
 "WARNING: Exception occurred when setting the 16x16 icon into the AboutDialog "
 "from "
 msgstr ""
+"AVISO: Ocurrió una excepción mientras se cargaba el icono de 16x16 píxeles en
+"el diálogo Acerca de desde "
 
 #: src/gui_config_dialog.cpp:40
 msgid "Human"
-msgstr ""
+msgstr "Humano"
 
 #: src/gui_config_dialog.cpp:41
 msgid "Computer"
-msgstr ""
+msgstr "PC"
 
 #. i18n Please, leave gtk::Table, player1 and ConfigDialog as they are here
 #. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
@@ -179,7 +183,7 @@ msgstr ""
 #. i18n Thank you for contributing to this project
 #: src/gui_config_dialog.cpp:372 src/gui_config_dialog.cpp:392
 msgid "Auto"
-msgstr ""
+msgstr "Auto"
 
 #. i18n both %d respectively represent the X and Y pixel where the user clicked
 #. i18n Please leave them there because they are needed by the program
@@ -187,7 +191,7 @@ msgstr ""
 #: src/gui_drawing_area_board.cpp:560
 #, c-format
 msgid "User clicked in pixel (%d, %d)\n"
-msgstr ""
+msgstr "El usuario hico clic en el pixel (%d, %d)\n"
 
 #. i18n both %d respectively represent the row and column of the square in the board
 #. i18n where the user clicked. Please leave them there because they are needed by the program
@@ -195,29 +199,33 @@ msgstr ""
 #: src/gui_drawing_area_board.cpp:577
 #, c-format
 msgid "Square in board: Row %d. Column %d)\n"
-msgstr ""
+msgstr "Cuadrado del tablero: File %d, columna %d\n"
 
 #: src/gui_main_window.cpp:49
 msgid ""
 "The game is computing the next move. Are you sure do you want to close the "
 "application?"
 msgstr ""
+"El motor de cálculo está procesando el siguiente movimiento. ¿Está seguro "
+"de que quiere salir de la aplicación?"
 
 #: src/gui_main_window.cpp:52
 msgid "New 1vs1 game"
-msgstr ""
+msgstr "Nuevo juego 1 contra 1"
 
 #: src/gui_main_window.cpp:55
 msgid "Configure current game"
-msgstr ""
+msgstr "Configurar juego actual"
 
 #. i18n TRANSLATORS: Bear in mind this string will be printed followed by the path to the 16x16 icon file
 #. i18n Thank you for contributing to this project
-#: src/gui_main_window.cpp:147
+#: src/gui_main_window.cpp:148
 msgid ""
 "WARNING: Exception occurred when setting the 16x16 icon into the Main Window "
-"from"
+"from "
 msgstr ""
+"AVISO: Ocurrió una excepción mientras se cargaba el icono de 16x16 píxeles en
+"la ventana principal desde "
 
 #. i18n TRANSLATORS: Please, leave ConfigDialog, and MainWindow as they are here
 #. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
@@ -367,16 +375,20 @@ msgstr ""
 
 #: src/gui_main_window.cpp:588
 msgid "Configuration Dialog cancelled"
-msgstr ""
+msgstr "Diálogo de configuración cancelado"
 
 #: src/gui_main_window.cpp:820
 msgid "Previous move had to be cancelled before applying new settings"
 msgstr ""
+"El procesamiento del movimiento anterior ha tenido que ser cancelado antes "
+"de aplicar la nueva configuración"
 
 #: src/gui_main_window.cpp:1001
 msgid ""
 "Error while telling the thread to start computing. Worker thread is busy"
 msgstr ""
+"Hubo un error mientras se le comunicaba al hilo de procesamiento que "
+"debía empezar el cálculo. El hilo está ocupado con otro cálculo"
 
 #. i18n TRANSLATORS: Please, leave <b> and </b> tags sorrounding the translation of "Fatal error"
 #. i18n Thank you for contributing to this project
@@ -385,10 +397,12 @@ msgid ""
 "<b>Fatal Error:</b> Could not communicate with worker thread. Application "
 "will exit now!"
 msgstr ""
+"<b>Error Fatal:</b> No se pudo comuncar con el hilo de procesamiento. "
+"La aplicación se cerrará cuando acepte este mensaje"
 
 #: src/gui_main_window.cpp:1050
 msgid "Computer can't move"
-msgstr ""
+msgstr "El PC no puede poner ninguna pieza"
 
 #: src/gui_main_window.cpp:1069
 msgid ""
@@ -586,91 +600,91 @@ msgstr ""
 
 #: src/piece.cpp:45
 msgid "Baby piece"
-msgstr ""
+msgstr "Pieza de 1"
 
 #: src/piece.cpp:46
 msgid "Two piece"
-msgstr ""
+msgstr "Pieza de 2"
 
 #: src/piece.cpp:47
 msgid "Three piece"
-msgstr ""
+msgstr "Pieza alargada de 3"
 
 #: src/piece.cpp:48
 msgid "Little V"
-msgstr ""
+msgstr "V pequeña"
 
 #: src/piece.cpp:49
 msgid "Full square"
-msgstr ""
+msgstr "Cuadrado entero"
 
 #: src/piece.cpp:50
 msgid "Four long piece"
-msgstr ""
+msgstr "Pieza alargada de 4"
 
 #: src/piece.cpp:51
 msgid "Little L"
-msgstr ""
+msgstr "L pequeña"
 
 #: src/piece.cpp:52
 msgid "Little S"
-msgstr ""
+msgstr "S pequeña"
 
 #: src/piece.cpp:53
 msgid "Little T"
-msgstr ""
+msgstr "T pequeña"
 
 #: src/piece.cpp:54
 msgid "Big long piece"
-msgstr ""
+msgstr "La gran pieza alargada"
 
 #: src/piece.cpp:55
 msgid "Square++"
-msgstr ""
+msgstr "Cuadrado++"
 
 #: src/piece.cpp:56
 msgid "Big V (aka Half square)"
-msgstr ""
+msgstr "V grande"
 
 #: src/piece.cpp:57
 msgid "U Piece"
-msgstr ""
+msgstr "Pieza U"
 
 #: src/piece.cpp:58
 msgid "Big L"
-msgstr ""
+msgstr "L Grande"
 
 #: src/piece.cpp:59
 msgid "Y Piece"
-msgstr ""
+msgstr "Pieza Y"
 
 #: src/piece.cpp:60
 msgid "Big S"
-msgstr ""
+msgstr "S Grande"
 
 #: src/piece.cpp:61
 msgid "Mr T"
-msgstr ""
+msgstr "Mr T"
 
 #: src/piece.cpp:62
 msgid "N Piece (aka the ultimate)"
-msgstr ""
+msgstr "Pieza N"
 
 #: src/piece.cpp:63
 msgid "Saf Piece"
-msgstr ""
+msgstr "Pieza de Saf"
 
 #: src/piece.cpp:64
 msgid "W Piece"
-msgstr ""
+msgstr "Pieza W"
 
 #: src/piece.cpp:65
 msgid "Cross piece"
-msgstr ""
+msgstr "Cruz"
 
 #: src/main.cpp:123
 msgid "Prints current version of the software and exists"
-msgstr ""
+msgstr "Imprime la versión actual de la aplicación y finaliza"
 
 #: src/main.cpp:127
 msgid ""
@@ -724,13 +738,17 @@ msgid ""
 "one of them and print out the result in console. Specifying at least 1 file "
 "is MANDATORY for --mode=2"
 msgstr ""
+"Rutas a los archivos de juego de 1 contra 1 (modo 2). Blockem calculará el "
+"siguiente movimiento para cada uno de estos archivos e imprimirá los "
+"resultados en consola. Debe especificar al menos un archivo cuando use la "
+"opción --mode 2"
 
 #. i18n TRANSLATORS: This string is supposed to mean that 1 file is mandatory
 #. i18n but more than 1 can be specified
 #. i18n Thank you for contributing to this project
 #: src/main.cpp:172
 msgid "FILE [FILE(S)]"
-msgstr ""
+msgstr "ARCHIVO [ARCHIVO(S)]"
 
 #. i18n TRANSLATORS: Please leave the starting colon since it is part of the expected format
 #. i18n Bear in mind this string will be used to print out a help message when an error is found
@@ -739,7 +757,7 @@ msgstr ""
 #. i18n Thank you for contributing to this project
 #: src/main.cpp:196
 msgid ": Fatal error"
-msgstr ""
+msgstr ": Error fatal"
 
 #. i18n TRANSLATORS:
 #. i18n Bear in mind this string will be used to print out a help message when an error is found
@@ -748,50 +766,52 @@ msgstr ""
 #. i18n Thank you for contributing to this project
 #: src/main.cpp:208
 msgid "Try"
-msgstr ""
+msgstr "Escriba"
 
 #. i18n TRANSLATORS: Please leave the starting dash as it is part of the glib command line
 #. i18n parsing formatting
 #. i18n Thank you for contributing to this project
 #: src/main.cpp:250
 msgid "- The GNU polyominoes board game"
-msgstr "- el juego"
+msgstr "- El juego de tablero sobre poliominós GNU"
 
 #: src/main.cpp:267
 msgid "Error parsing command line"
-msgstr ""
+msgstr "Error analizando las opciones de línea de comando"
 
 #. i18n TRANSLATORS: Please leave the word Gtkbuilder as it is since it's the name
 #. i18n of the component that failed
 #. i18n Thank you for contributing to this project
 #: src/main.cpp:335
 msgid "Could not load Gtkbuilder definitions"
-msgstr ""
+msgstr "No se pudieron cargar las definiciones de GtkBuilder"
 
 #: src/main.cpp:363
 msgid "Could not load the Main Window from the .glade file"
-msgstr ""
+msgstr "No se pudo cargar la ventana principal del archivo .glade"
 
 #: src/main.cpp:405
 msgid ""
 "Number of rows, number of columns, starting row and starting column must be "
 "specified in mode '1'"
 msgstr ""
+"El número de files y columnas así como la fila y columna inicial debe ser "
+"especificado en modo '1'"
 
 #: src/main.cpp:413
 msgid "Number of rows and number of columns must be a greater than 1"
-msgstr ""
+msgstr "El número de filas y columnas debe ser mayor o igual a 1"
 
 #: src/main.cpp:422
 msgid "Application cannot start outside of the board boundaries"
-msgstr ""
+msgstr "La aplicación no puede empezar fuera de los límites del tablero"
 
 #. i18n TRANSLATORS: This string is to be printed when the applications finds
 #. i18n a solution to a one-player total-allocation game
 #. i18n Thank you for contributing to this project
 #: src/main.cpp:435
 msgid "SOLVED!"
-msgstr ""
+msgstr "RESUELTO!"
 
 #. i18n TRANSLATORS: This string is to be printed when the applications cannot find
 #. i18n a solution to a one-player total-allocation game. The integers printed on the screen
@@ -805,10 +825,12 @@ msgid ""
 "Could not allocate all the pieces in this %dx%d board, starting from row %d, "
 "columnd %d\n"
 msgstr ""
+"No se pudieron colocar todas las piezas en este tablero de %dx%d, empezando "
+"en la fila %d y la columna %d"
 
 #: src/main.cpp:464
 msgid "At least one file with a 1vs1Game saved must be specified"
-msgstr ""
+msgstr "Debe especificar al menos un archivo de juego 1 contra 1"
 
 #. i18n TRANSLATORS: Please, leave that %d as it is. It will be replaced
 #. i18n by the type of heuristic used by the user
@@ -816,7 +838,7 @@ msgstr ""
 #: src/main.cpp:476
 #, c-format
 msgid "Invalid heuristic type (%d)"
-msgstr ""
+msgstr "Tipo de heurística incorrecto (%d)"
 
 #. i18n TRANSLATORS: This string shows the chosen heuristic's name to the user
 #. i18n the 1st %s will be replaced by the heuristic's name, and %d by its index
@@ -824,16 +846,18 @@ msgstr ""
 #: src/main.cpp:491
 #, c-format
 msgid "Evaluation function set to %s (%d)\n"
-msgstr ""
+msgstr "Función de evaluación configurada como %s (%d)\n"
 
 #: src/main.cpp:499
 msgid "Depth in 1vs1Game mode must be set to a positive value"
-msgstr ""
+msgstr "La profundidad para el juego de 1 contra 1 debe ser un número positivo"
 
 #: src/main.cpp:506
 msgid ""
 "Warning: For better results you might want to set the depth to an odd number"
 msgstr ""
+"Aviso: Para conseguir mejores resultados la profundidad debería de ser un"
+"número impar"
 
 #. i18n TRANSLATORS: This string is shown when a file specified by the user
 #. i18n cannot be loaded into the application. The 1st %s will be replaced
@@ -845,6 +869,7 @@ msgstr ""
 #, c-format
 msgid "%s: Error: '%s' doesn't exist. Trying next file...\n"
 msgstr ""
+"%s: Error: '%s' no existe. Intentando con el archivo siguiente...\n"
 
 #. i18n TRANSLATORS: This string is shown when a file specified by the user
 #. i18n could not be opened to be read. The 1st %s will be replaced
@@ -856,6 +881,7 @@ msgstr ""
 #, c-format
 msgid "%s: Error: '%s' could not be opened. Trying next file...\n"
 msgstr ""
+"%s: Error: '%s' no pudo abrirse. Intentando con el archivo siguiente...\n"
 
 #. i18n TRANSLATORS: This string is shown when a file specified by the user
 #. i18n does not contain a valid 1vs1 game. The 1st %s will be replaced
@@ -867,7 +893,8 @@ msgstr ""
 #, c-format
 msgid ""
 "%s: Error: '%s' does not contain a valid 1vs1Game. Trying next file...\n"
-msgstr ""
+msgstr "%s: Error: '%s' no contiene un juego 1 contra 1 válido. "
+"Intentando con el archivo siguiente...\n"
 
 #. i18n TRANSLATORS: '%s' will be replaced here by the path to the file
 #. i18n successfully loaded. Bear in mind the '\n' character should be there
@@ -876,7 +903,7 @@ msgstr ""
 #: src/main.cpp:572
 #, c-format
 msgid "Game succesfully loaded from '%s'\n"
-msgstr ""
+msgstr "Juego cargado correctamente de '%s'"
 
 #. i18n TRANSLATORS: '%d' will be replaced here by the value of the winning
 #. i18n move calculated by the minimax engine. Bear in mind the '\n' character
@@ -885,7 +912,7 @@ msgstr ""
 #: src/main.cpp:604
 #, c-format
 msgid "Winning evaluation function value: %d\n"
-msgstr ""
+msgstr "Valor de la función de evaluación ganadora: %d\n"
 
 #. i18n TRANSLATORS: This string will be printed on the screen when the minimax
 #. i18n engine cannot put down a piece. It is left up to the translator to decide
@@ -898,6 +925,9 @@ msgid ""
 " === END OF THE GAME. NO PIECE COULD BE PUT DOWN ===\n"
 " ===================================================\n"
 msgstr ""
+" =========================================================\n"
+" === FINAL DEL JUEGO. NO SE PUDO COLOCAR NINGUNA PIEZA ===\n"
+" =========================================================\n"
 
 #. i18n TRANSLATORS: Please, leave that %d as it is. It will be replaced
 #. i18n by the mode picked by the user
@@ -905,13 +935,13 @@ msgstr ""
 #: src/main.cpp:642
 #, c-format
 msgid "Invalid --mode option (%d)"
-msgstr ""
+msgstr "Opción --mode inválida (%d)"
 
 # TRANSLATORS: This is what is shown as the name of the main window.
 # It should be the name of the application
 #: src/gui.glade:6
 msgid "Block'em"
-msgstr ""
+msgstr "Block'em"
 
 # TRANSLATORS: The underscore character is to be located just before the
 # letter which will be underlined. This underlined character represents which
@@ -919,7 +949,7 @@ msgstr ""
 # navigate through the archive menu
 #: src/gui.glade:20
 msgid "_Game"
-msgstr ""
+msgstr "_Juego"
 
 # TRANSLATORS: The underscore character is to be located just before the
 # letter which will be underlined. This underlined character represents which
@@ -927,7 +957,7 @@ msgstr ""
 # navigate through the archive menu
 #: src/gui.glade:79
 msgid "_Settings"
-msgstr ""
+msgstr "_Preferencias"
 
 # TRANSLATORS: The underscore character is to be located just before the
 # letter which will be underlined. This underlined character represents which
@@ -935,7 +965,7 @@ msgstr ""
 # navigate through the archive menu
 #: src/gui.glade:87
 msgid "_Forbidden areas"
-msgstr ""
+msgstr "Áreas _prohibidas"
 
 # TRANSLATORS: The underscore character is to be located just before the
 # letter which will be underlined. This underlined character represents which
@@ -943,7 +973,7 @@ msgstr ""
 # navigate through the archive menu
 #: src/gui.glade:95
 msgid "Do _not show forbidden area"
-msgstr ""
+msgstr "_No mostrar áreas prohibidas"
 
 # TRANSLATORS: The underscore character is to be located just before the
 # letter which will be underlined. This underlined character represents which
@@ -951,7 +981,7 @@ msgstr ""
 # navigate through the archive menu
 #: src/gui.glade:104
 msgid "Show Mr _Green's forbidden area"
-msgstr ""
+msgstr "Mostrar área prohibida del Sr _Verde"
 
 # TRANSLATORS: The underscore character is to be located just before the
 # letter which will be underlined. This underlined character represents which
@@ -959,7 +989,7 @@ msgstr ""
 # navigate through the archive menu
 #: src/gui.glade:113
 msgid "Show Mr _Blue's forbidden area"
-msgstr ""
+msgstr "Mostrar área prohibida del Sr A_zul"
 
 # TRANSLATORS: The underscore character is to be located just before the
 # letter which will be underlined. This underlined character represents which
@@ -967,7 +997,7 @@ msgstr ""
 # navigate through the archive menu
 #: src/gui.glade:125
 msgid "_Influence areas"
-msgstr ""
+msgstr "Areas de _Influencia"
 
 # TRANSLATORS: The underscore character is to be located just before the
 # letter which will be underlined. This underlined character represents which
@@ -975,7 +1005,7 @@ msgstr ""
 # navigate through the archive menu
 #: src/gui.glade:133
 msgid "Do _not show influence area"
-msgstr ""
+msgstr "_No mostrar áreas de influencia"
 
 # TRANSLATORS: The underscore character is to be located just before the
 # letter which will be underlined. This underlined character represents which
@@ -983,7 +1013,7 @@ msgstr ""
 # navigate through the archive menu
 #: src/gui.glade:142
 msgid "Show Mr _Green's influence area"
-msgstr ""
+msgstr "Mostrar área de influencia del Sr _Verde"
 
 # TRANSLATORS: The underscore character is to be located just before the
 # letter which will be underlined. This underlined character represents which
@@ -991,7 +1021,7 @@ msgstr ""
 # navigate through the archive menu
 #: src/gui.glade:151
 msgid "Show Mr _Blue's influence area"
-msgstr ""
+msgstr "Mostrar área de influencia del Sr A_zul"
 
 # TRANSLATORS: The underscore character is to be located just before the
 # letter which will be underlined. This underlined character represents which
@@ -999,7 +1029,7 @@ msgstr ""
 # navigate through the archive menu
 #: src/gui.glade:164
 msgid "Show _nucleation points"
-msgstr ""
+msgstr "Mostrar _esquinas válidas"
 
 # TRANSLATORS: The underscore character is to be located just before the
 # letter which will be underlined. This underlined character represents which
@@ -1007,22 +1037,22 @@ msgstr ""
 # navigate through the archive menu
 #: src/gui.glade:183
 msgid "_Help"
-msgstr ""
+msgstr "_Ayuda"
 
 # This is the title of the about dialog of the game
 #: src/gui.glade:309
 msgid "About Block'em"
-msgstr ""
+msgstr "Acerca de Block'em"
 
 # The copyright notice
 #: src/gui.glade:317
 msgid "Copyright © 2009-2010 Faustino Frechilla"
-msgstr ""
+msgstr "Copyright © 2009-2010 Faustino Frechilla"
 
 # This is the short description of what this game is supposed to be
 #: src/gui.glade:318
 msgid "A board strategy game against the computer"
-msgstr ""
+msgstr "Un juego de tablero de estrategia contra el ordenador"
 
 # This is the GNU GPL version 3 license text.
 # You can find lots of already translated versions of this text along with
@@ -1046,12 +1076,26 @@ msgid ""
 "blockem; if not, write to the Free Software Foundation, Inc., 51 Franklin "
 "Street, Fifth Floor, Boston, MA  02110-1301  USA"
 msgstr ""
+"blockem es software libre: usted puede redistribuirlo y/o modificarlo "
+"bajo los términos de la Licencia Pública General GNU publicada "
+"por la Fundación para el Software Libre, ya sea la versión 3 "
+"de la Licencia, o (a su elección) cualquier versión posterior.\n"
+"\n"
+"blockem se distribuye con la esperanza de que sea útil, pero "
+"SIN GARANTÍA ALGUNA; ni siquiera la garantía implícita "
+"MERCANTIL o de APTITUD PARA UN PROPÓSITO DETERMINADO. "
+"Consulte los detalles de la Licencia Pública General GNU para obtener "
+"una información más detallada.\n"
+"\n"
+"YDebería haber recibido una copia de la Licencia Pública General GNU "
+"junto a este programa. "
+"En caso contrario, consulte <http://www.gnu.org/licenses/>."
 
 # Rotate in this context means a transformation of a piece that describes the
 # motion of it around a fixed point
 #: src/gui.glade:442
 msgid "Rotate"
-msgstr ""
+msgstr "Rotar"
 
 # This string contains the word "mirror" written downwards. Mirror in this
 # context means a reflection in any of the axis of a blockem piece
@@ -1066,6 +1110,12 @@ msgid ""
 "o\n"
 "r"
 msgstr ""
+"E\n"
+"s\n"
+"p\n"
+"e\n"
+"j\n"
+"o"
 
 # Please leave the final ": " characters at the end to keep format on
 # the screen
@@ -1073,7 +1123,7 @@ msgstr ""
 # type of player of the next game (Human or computer)
 #: src/gui.glade:550 src/gui.glade:781
 msgid "Type: "
-msgstr ""
+msgstr "Tipo: "
 
 # Please leave the final ": " characters at the end to keep format on
 # the screen
@@ -1081,7 +1131,7 @@ msgstr ""
 # starting row for the next game
 #: src/gui.glade:560 src/gui.glade:791
 msgid "Starting Row: "
-msgstr ""
+msgstr "Fila inicial: "
 
 # Please leave the final ": " characters at the end to keep format on
 # the screen
@@ -1089,33 +1139,33 @@ msgstr ""
 # starting column for the next game
 #: src/gui.glade:572 src/gui.glade:823
 msgid "Column: "
-msgstr ""
+msgstr "Columna: "
 
 # Please leave the final ": " characters at the end to keep format on
 # the screen. AI stands for Artificial Intelligence. The acronym was chosen
 # because a long string did not fit properly on the screen
 #: src/gui.glade:646 src/gui.glade:876
 msgid "AI type: "
-msgstr ""
+msgstr "typo de IA: "
 
 # Please leave the final ": " characters at the end to keep format on
 # the screen
 #: src/gui.glade:658 src/gui.glade:888
 msgid "Depth: "
-msgstr ""
+msgstr "Profundidad: "
 
 #: src/gui.glade:725 src/gui.glade:955
 msgid "Artificial Intelligence"
-msgstr ""
+msgstr "Inteligencia Artificial"
 
 # Please leave this string surrounded by the HTML <b> and </b> tags
 # it represents player1 (green)
 #: src/gui.glade:754
 msgid "<b>Green</b>"
-msgstr ""
+msgstr "<b>Verde</b>"
 
 # Please leave this string surrounded by the HTML <b> and </b> tags
 # it represents player2 (blue)
 #: src/gui.glade:984
 msgid "<b>Blue</b>"
-msgstr ""
+msgstr "<b>Azul</b>"
