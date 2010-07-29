@@ -19,11 +19,17 @@
 #ifndef _LIBGETTEXT_H
 #define _LIBGETTEXT_H 1
 
+#include "config.h"  // ENABLE_NLS
+
 /* NLS can be disabled through the configure --disable-nls option.  */
 #if ENABLE_NLS
 
 /* Get declarations of GNU message catalog functions.  */
-# include <libintl.h>
+/*# include <libintl.h>*/
+/* 29th Jul 2010, retrieve i18n definitions from gtkmm
+ * Bear in mind it includes N_() and _()
+ */
+#include <glibmm/i18n.h> // gtkmm i18n
 
 /* You can set the DEFAULT_TEXT_DOMAIN macro to specify the domain used by
    the gettext() and ngettext() macros.  This is an alternative to calling
@@ -267,13 +273,5 @@ dcnpgettext_expr (const char *domain,
     }
   return (n == 1 ? msgid : msgid_plural);
 }
-
-// 28th-Jul-2010. _() and N_() support for i18n
-// this can be replaced by the following #defines to disable i18n
-//# define _(String) String
-//# define N_(String) String
-# define _(String) gettext(String)
-# define N_(String) String // detecting static strings
-
 
 #endif /* _LIBGETTEXT_H */

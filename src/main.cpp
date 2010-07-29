@@ -38,8 +38,8 @@
 #include <fstream>
 #include <glib.h>    // glib-Commandline-option-parser
 #include <gtkmm.h>
-#include "gettext.h" // i18n
 #include "config.h"  // autotools header file
+#include "gettext.h" // i18n
 #include "assert.h"
 
 // header file created during the make process which saves the current date

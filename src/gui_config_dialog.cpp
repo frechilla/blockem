@@ -572,20 +572,20 @@ int ConfigDialog::run()
     // type of players
     if (Game1v1Config::Instance().IsPlayer1Computer())
     {
-        m_comboTypePlayer1.set_active_text(COMBO_PLAYER_TYPE_COMPUTER);
+        m_comboTypePlayer1.set_active_text( _(COMBO_PLAYER_TYPE_COMPUTER) );
     }
     else
     {
-        m_comboTypePlayer1.set_active_text(COMBO_PLAYER_TYPE_HUMAN);
+        m_comboTypePlayer1.set_active_text( _(COMBO_PLAYER_TYPE_HUMAN) );
     }
 
     if (Game1v1Config::Instance().IsPlayer2Computer())
     {
-        m_comboTypePlayer2.set_active_text(COMBO_PLAYER_TYPE_COMPUTER);
+        m_comboTypePlayer2.set_active_text( _(COMBO_PLAYER_TYPE_COMPUTER) );
     }
     else
     {
-        m_comboTypePlayer2.set_active_text(COMBO_PLAYER_TYPE_HUMAN);
+        m_comboTypePlayer2.set_active_text( _(COMBO_PLAYER_TYPE_HUMAN) );
     }
 
     // starting coordinates. +1 because coordinates are shown to the user starting by 1 (not 0)

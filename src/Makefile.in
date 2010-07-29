@@ -43,7 +43,22 @@ bin_PROGRAMS = blockem$(EXEEXT)
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/configure.ac
+am__aclocal_m4_deps = $(top_srcdir)/m4/codeset.m4 \
+	$(top_srcdir)/m4/gettext.m4 $(top_srcdir)/m4/glibc2.m4 \
+	$(top_srcdir)/m4/glibc21.m4 $(top_srcdir)/m4/iconv.m4 \
+	$(top_srcdir)/m4/intdiv0.m4 $(top_srcdir)/m4/intl.m4 \
+	$(top_srcdir)/m4/intlmacosx.m4 $(top_srcdir)/m4/intmax.m4 \
+	$(top_srcdir)/m4/inttypes-pri.m4 \
+	$(top_srcdir)/m4/inttypes_h.m4 $(top_srcdir)/m4/lcmessage.m4 \
+	$(top_srcdir)/m4/lib-ld.m4 $(top_srcdir)/m4/lib-link.m4 \
+	$(top_srcdir)/m4/lib-prefix.m4 $(top_srcdir)/m4/lock.m4 \
+	$(top_srcdir)/m4/longlong.m4 $(top_srcdir)/m4/nls.m4 \
+	$(top_srcdir)/m4/po.m4 $(top_srcdir)/m4/printf-posix.m4 \
+	$(top_srcdir)/m4/progtest.m4 $(top_srcdir)/m4/size_max.m4 \
+	$(top_srcdir)/m4/stdint_h.m4 $(top_srcdir)/m4/uintmax_t.m4 \
+	$(top_srcdir)/m4/visibility.m4 $(top_srcdir)/m4/wchar_t.m4 \
+	$(top_srcdir)/m4/wint_t.m4 $(top_srcdir)/m4/xsize.m4 \
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -239,7 +254,7 @@ top_srcdir = @top_srcdir@
 INCLUDES = -I$(top_srcdir)/lib
 AM_CXXFLAGS = $(GTKMM_CFLAGS) $(GTHREAD_CFLAGS) \
 	-DDATADIR=\"$(BLOCKEM_DATADIR)\" \
-	-DLOCALEDIR=\"$(BLOCKEM_DATADIR)/locale\"
+	-DLOCALEDIR=\"$(BLOCKEM_LOCALEDIR)\"
 AM_LDFLAGS = 
 blockem_DEPENDENCIES = gui_glade_obj.o $(am__append_2)
 blockem_LDADD = @LIBINTL@ gui_glade_obj.o $(GTKMM_LIBS) \
@@ -611,14 +626,14 @@ uninstall-am: uninstall-binPROGRAMS
 	uninstall-am uninstall-binPROGRAMS
 
 
-# DATADIR in the windows OS and in DEBUG mode is set to the current 
-# directory instead
+# DATADIR in the windows OS is set to the current directory
 @OS_WIN32_TRUE@    BLOCKEM_DATADIR ?= .
-@DEBUG_TRUE@    BLOCKEM_DATADIR ?= .
+@OS_WIN32_TRUE@    BLOCKEM_LOCALEDIR ?= ./locale
 
 # DATADIR is set by default using the autotools "datadir" variable
 # ?= sets the var only if it wasn't set before
-BLOCKEM_DATADIR ?= $(datadir)/@PACKAGE@
+BLOCKEM_DATADIR ?= $(datadir)
+BLOCKEM_LOCALEDIR ?= $(localedir)
 
 # if uncommented compiletime.h will be overwritten everytime the `make` command is run
 #.PHONY: compiletime.h

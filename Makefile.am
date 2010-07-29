@@ -14,7 +14,10 @@ pixmaps/blockemlogo16.png  \
 pixmaps/blockemlogo48.png  \
 pixmaps/blockemlogo.png
 
+# Note pixmapsdir contains @PACKAGE@. This must be taken into account
+# by the binary sources (see gui_glade_defs.h)
 pixmapsdir = $(datadir)/@PACKAGE@/pixmaps
+
 # note that 'pixmaps/' must be added in front because it is the directory
 # where these files are stored (relative path from the root of the package)
 pixmaps_DATA = \

@@ -51,7 +51,7 @@ msgid ""
 "WARNING: Exception occurred when setting the logo into the AboutDialog from "
 msgstr ""
 "AVISO: Ocurrió una excepción mientras se cargaba el logo del diálogo Acerca "
-de desde "
+"de desde "
 
 #. i18n Bear in mind this string will be printed followed by the path to 16x16 icon file
 #. i18n The extra space at the end is necessary
@@ -61,8 +61,8 @@ msgid ""
 "WARNING: Exception occurred when setting the 16x16 icon into the AboutDialog "
 "from "
 msgstr ""
-"AVISO: Ocurrió una excepción mientras se cargaba el icono de 16x16 píxeles en
-"el diálogo Acerca de desde "
+"AVISO: Ocurrió una excepción mientras se cargaba el icono de 16x16 píxeles "
+"en el diálogo Acerca de desde "
 
 #: src/gui_config_dialog.cpp:40
 msgid "Human"
@@ -224,8 +224,8 @@ msgid ""
 "WARNING: Exception occurred when setting the 16x16 icon into the Main Window "
 "from "
 msgstr ""
-"AVISO: Ocurrió una excepción mientras se cargaba el icono de 16x16 píxeles en
-"la ventana principal desde "
+"AVISO: Ocurrió una excepción mientras se cargaba el icono de 16x16 píxeles "
+"en la ventana principal desde "
 
 #. i18n TRANSLATORS: Please, leave ConfigDialog, and MainWindow as they are here
 #. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
@@ -826,7 +826,7 @@ msgid ""
 "columnd %d\n"
 msgstr ""
 "No se pudieron colocar todas las piezas en este tablero de %dx%d, empezando "
-"en la fila %d y la columna %d"
+"en la fila %d y la columna %d\n"
 
 #: src/main.cpp:464
 msgid "At least one file with a 1vs1Game saved must be specified"
@@ -903,7 +903,7 @@ msgstr "%s: Error: '%s' no contiene un juego 1 contra 1 válido. "
 #: src/main.cpp:572
 #, c-format
 msgid "Game succesfully loaded from '%s'\n"
-msgstr "Juego cargado correctamente de '%s'"
+msgstr "Juego cargado correctamente de '%s'\n"
 
 #. i18n TRANSLATORS: '%d' will be replaced here by the value of the winning
 #. i18n move calculated by the minimax engine. Bear in mind the '\n' character
