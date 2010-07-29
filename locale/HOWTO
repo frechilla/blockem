@@ -71,3 +71,10 @@ locale-gen fr_FR@euro
 # have a look at po/en@quot.header and po/en@boldquot.header
 make en@quot.po-create
 make en@boldquot.po-create
+
+
+
+#######
+# where to install the .mo files!!!
+# this is the directory where localedir must point at so it works in my ubuntu 9.04
+./configure --localedir "/usr/share/locale"
