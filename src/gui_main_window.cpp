@@ -140,12 +140,12 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
         } catch(...)
         {
             icon.reset();
+
 #ifdef DEBUG_PRINT
             std::cerr
                // i18n TRANSLATORS: Bear in mind this string will be printed followed by the path to the 16x16 icon file
                // i18n Thank you for contributing to this project
-               << _("WARNING: Exception occurred when setting the 16x16 icon into the Main Window from")
-               << " "
+               << _("WARNING: Exception occurred when setting the 16x16 icon into the Main Window from ")
                << GUI_PATH_TO_16PICTURE_STR
                << std::endl;
 #endif

@@ -213,10 +213,10 @@ msgstr ""
 
 #. i18n TRANSLATORS: Bear in mind this string will be printed followed by the path to the 16x16 icon file
 #. i18n Thank you for contributing to this project
-#: src/gui_main_window.cpp:147
+#: src/gui_main_window.cpp:148
 msgid ""
 "WARNING: Exception occurred when setting the 16x16 icon into the Main Window "
-"from"
+"from "
 msgstr ""
 
 #. i18n TRANSLATORS: Please, leave ConfigDialog, and MainWindow as they are here
