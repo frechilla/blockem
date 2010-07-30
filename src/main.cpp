@@ -124,7 +124,7 @@ static GOptionEntry g_cmdEntries[] =
       NULL },
 
     { "mode", 'm', 0, G_OPTION_ARG_INT, &g_mode,
-      N_("Mandatory parameter which specifies the mode blockem runs. Valid options are: "
+      N_("Specifies the mode blockem runs. Valid options are: "
       "'0' GUI is shown (Default); '1' one player total-allocation; "
       "'2' 1vs1 Game"),
       "M" },
@@ -166,10 +166,10 @@ static GOptionEntry g_cmdEntries[] =
       N_("Paths to 1vs1game files (mode 2). Blockem will calculate next move per each one of them "
       "and print out the result in console. "
       "Specifying at least 1 file is MANDATORY for --mode=2"),
-      // i18n TRANSLATORS: This string is supposed to mean that 1 file is mandatory
-      // i18n but more than 1 can be specified
+      // i18n TRANSLATORS: This string is supposed to mean that one or more
+      // i18n files might be specified
       // i18n Thank you for contributing to this project
-      N_("FILE [FILE(S)]")},
+      N_("[FILE(S)]")},
 
     { NULL }
 };
