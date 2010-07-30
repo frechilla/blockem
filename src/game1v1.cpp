@@ -745,11 +745,12 @@ int32_t Game1v1::MinMax(
         playerMe->SetPiece(static_cast<ePieceType_t>(i));
     } // for (int i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
 
-
 #ifdef DEBUG_PRINT
+    // http://www.gnu.org/software/gettext/manual/gettext.html#Plural-forms
     // i18n %d represents the amount of times the function has been called
-    // i18n Thank you for contributing to this project
-    printf(_("Minimax function called %d times\n"), timesCalled);
+    printf(ngettext ("Minimax function called once\n",
+                     "Minimax function called %d times\n", timesCalled),
+           timesCalled);
 #endif
 
     return alpha;
@@ -783,12 +784,11 @@ int32_t Game1v1::ComputeFirstPiece(
     {
         // we shouldn't copy the 1st user's move, because it was shit
         // Do an acceptable 1st move (quick and dirty solution).
-        // The following piece of code will put the cross in an 'good'
+        // The following piece of code will put the cross in a 'good'
         // place, for example in 9,8 -if starting coord is (9,9)-
-        // or 5,6 if starting coord is (4,4). Which are the standard
-        // starting coords
+        // or 5,6 if starting coord is (4,4). 
+        // (4,4) and (9,9) are the standard starting coords
         out_resultPiece = Piece(e_5Piece_Cross);
-
         Coordinate startingCoord = a_playerMe.GetStartingCoordinate();
         if ((a_board.GetNColumns() / 2) > startingCoord.m_col)
         {
