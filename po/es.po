@@ -5,7 +5,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: blockem 0.2.3\n"
+"Project-Id-Version: blockem 0.2.4\n"
 "Report-Msgid-Bugs-To: frechilla@gmail.com\n"
 "POT-Creation-Date: 2010-07-28 21:04+0200\n"
 "PO-Revision-Date: 2010-07-29 01:56+0200\n"
@@ -26,7 +26,7 @@ msgstr "Sr Azul"
 
 #: src/game1v1.cpp:599
 msgid "Nucleation points"
-msgstr "esquinas válidas"
+msgstr "Esquinas válidas"
 
 #. i18n %d represents the amount of times the function has been called
 #. i18n Thank you for contributing to this project
@@ -78,6 +78,7 @@ msgstr "PC"
 #: src/gui_config_dialog.cpp:91
 msgid "Could not load gtk::Table (player1) in ConfigDialog"
 msgstr ""
+"No se pudo cargar el objeto de tipo gtk::Table (player1) en ConfigDialog"
 
 #. i18n Please, leave gtk::Table, player2 and ConfigDialog as they are here
 #. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
@@ -85,6 +86,7 @@ msgstr ""
 #: src/gui_config_dialog.cpp:100
 msgid "Could not load gtk::Table (player2) in ConfigDialog"
 msgstr ""
+"No se pudo cargar el objeto de tipo gtk::Table (player2) en ConfigDialog"
 
 #. i18n Please, leave gtk::SpinButton, player1 and ConfigDialog as they are here
 #. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
@@ -93,6 +95,8 @@ msgstr ""
 msgid ""
 "Could not load gtk::SpinButton (player1) for starting row in ConfigDialog"
 msgstr ""
+"No se pudo cargar el objeto de tipo gtk::SpinButton (player1) para la fila "
+"inicial en ConfigDialog"
 
 #. i18n Please, leave gtk::SpinButton, player1 and ConfigDialog as they are here
 #. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
@@ -101,6 +105,8 @@ msgstr ""
 msgid ""
 "Could not load gtk::SpinButton (player1) for starting column in ConfigDialog"
 msgstr ""
+"No se pudo cargar el objeto de tipo gtk::SpinButton (player1) para la "
+"columna inicial en ConfigDialog"
 
 #. i18n Please, leave gtk::SpinButton, player2 and ConfigDialog as they are here
 #. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
@@ -109,6 +115,8 @@ msgstr ""
 msgid ""
 "Could not load gtk::SpinButton (player2) for starting row in ConfigDialog"
 msgstr ""
+"No se pudo cargar el objeto de tipo gtk::SpinButton (player2) para la fila "
+"inicial en ConfigDialog"
 
 #. i18n Please, leave gtk::SpinButton, player2 and ConfigDialog as they are here
 #. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
@@ -117,6 +125,8 @@ msgstr ""
 msgid ""
 "Could not load gtk::SpinButton (player2) for starting column in ConfigDialog"
 msgstr ""
+"No se pudo cargar el objeto de tipo gtk::SpinButton (player2) para la "
+"columna inicial en ConfigDialog"
 
 #. i18n Please, leave gtk::Frame, player1 and ConfigDialog as they are here
 #. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
@@ -124,6 +134,7 @@ msgstr ""
 #: src/gui_config_dialog.cpp:145
 msgid "Could not load AI gtk::Frame (player1) in ConfigDialog"
 msgstr ""
+"No se pudo cargar el objeto de tipo gtk::Frame (player1) en ConfigDialog"
 
 #. i18n Please, leave gtk::Frame, player2 and ConfigDialog as they are here
 #. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
@@ -131,6 +142,7 @@ msgstr ""
 #: src/gui_config_dialog.cpp:154
 msgid "Could not load AI gtk::Frame (player2) in ConfigDialog"
 msgstr ""
+"No se pudo cargar el objeto de tipo gtk::Frame (player2) en ConfigDialog"
 
 #. i18n Please, leave gtk::Table, player1 and ConfigDialog as they are here
 #. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
@@ -138,6 +150,7 @@ msgstr ""
 #: src/gui_config_dialog.cpp:163
 msgid "Could not load AI gtk::Table (player1) in ConfigDialog"
 msgstr ""
+"No se pudo cargar el objeto de tipo gtk::Table (player1) en ConfigDialog"
 
 #. i18n Please, leave gtk::Table, player2 and ConfigDialog as they are here
 #. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
@@ -145,6 +158,7 @@ msgstr ""
 #: src/gui_config_dialog.cpp:172
 msgid "Could not load AI gtk::Table (player2) in ConfigDialog"
 msgstr ""
+"No se pudo cargar el objeto de tipo gtk::Table (player2) en ConfigDialog"
 
 #. i18n Please, leave gtk::SpinButton, player1 and ConfigDialog as they are here
 #. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
@@ -154,6 +168,8 @@ msgid ""
 "Could not load gtk::SpinButton for search-tree depth (player1) in "
 "ConfigDialog"
 msgstr ""
+"No se pudo cargar el objeto de tipo gtk::SpinButton (player1) para la "
+"profundidad del árbol de búsqueda en ConfigDialog"
 
 #. i18n Please, leave gtk::SpinButton, player2 and ConfigDialog as they are here
 #. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
@@ -163,6 +179,8 @@ msgid ""
 "Could not load gtk::SpinButton for search-tree depth (player2) in "
 "ConfigDialog"
 msgstr ""
+"No se pudo cargar el objeto de tipo gtk::SpinButton (player2) para la "
+"profundidad del árbol de búsqueda en ConfigDialog"
 
 #. i18n Please, leave gtk::TextView, player1 and ConfigDialog as they are here
 #. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
@@ -170,6 +188,8 @@ msgstr ""
 #: src/gui_config_dialog.cpp:199
 msgid "Could not load gtk::TextView for heuristic (player1) in ConfigDialog"
 msgstr ""
+"No se pudo cargar el objeto de tipo gtk::TextView (player1) para la "
+"heurística en ConfigDialog"
 
 #. i18n Please, leave gtk::TextView, player2 and ConfigDialog as they are here
 #. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
@@ -177,6 +197,8 @@ msgstr ""
 #: src/gui_config_dialog.cpp:208
 msgid "Could not load gtk::TextView for heuristic (player2) in ConfigDialog"
 msgstr ""
+"No se pudo cargar el objeto de tipo gtk::TextView (player2) para la "
+"heurística en ConfigDialog"
 
 #. i18n This string shouldn't be bigger than 4 characters long
 #. i18n strings bigger than those 4 characters will be stripped out
@@ -191,7 +213,7 @@ msgstr "Auto"
 #: src/gui_drawing_area_board.cpp:560
 #, c-format
 msgid "User clicked in pixel (%d, %d)\n"
-msgstr "El usuario hico clic en el pixel (%d, %d)\n"
+msgstr "El usuario hico clic en el píxel (%d, %d)\n"
 
 #. i18n both %d respectively represent the row and column of the square in the board
 #. i18n where the user clicked. Please leave them there because they are needed by the program
@@ -206,8 +228,8 @@ msgid ""
 "The game is computing the next move. Are you sure do you want to close the "
 "application?"
 msgstr ""
-"El motor de cálculo está procesando el siguiente movimiento. ¿Está seguro "
-"de que quiere salir de la aplicación?"
+"El motor de cálculo está procesando el siguiente movimiento. ¿Está seguro de "
+"que quiere salir de la aplicación?"
 
 #: src/gui_main_window.cpp:52
 msgid "New 1vs1 game"
@@ -232,14 +254,14 @@ msgstr ""
 #. i18n Thank you for contributing to this project
 #: src/gui_main_window.cpp:168
 msgid "Could not load the ConfigDialog class in MainWindow"
-msgstr ""
+msgstr "No se pudo cargar ConfigDialog en la ventana principal (MainWindow)"
 
 #. i18n TRANSLATORS: Please, leave AboutDialog, and MainWindow as they are here
 #. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
 #. i18n Thank you for contributing to this project
 #: src/gui_main_window.cpp:179
 msgid "Could not load the AboutDialog class in MainWindow"
-msgstr ""
+msgstr "No se pudo cargar AboutDialog en la ventana principal (MainWindow)"
 
 #. i18n TRANSLATORS: Please, leave gtk::Table, and MainWindow as they are here
 #. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
@@ -247,6 +269,8 @@ msgstr ""
 #: src/gui_main_window.cpp:190
 msgid "Could not load the edit pieces gtk::Table in MainWindow"
 msgstr ""
+"No se pudo cargar el objeto de tipo gtk::Table para editar piezas en la "
+"ventana principal (MainWindow)"
 
 #. i18n TRANSLATORS: Please, leave MainWindow as it is here
 #. i18n That name specifies internal data when the app can't start and can be useful to find out the error cause
@@ -254,6 +278,8 @@ msgstr ""
 #: src/gui_main_window.cpp:201
 msgid "Could not load the menu accelerator for MainWindow"
 msgstr ""
+"No se pudieron cargar los aceleradores de teclado en la ventana principal "
+"(MainWindow)"
 
 #. i18n TRANSLATORS: Please, leave MainWindow as it is here
 #. i18n That name specifies internal data when the app can't start and can be useful to find out the error cause
@@ -261,6 +287,8 @@ msgstr ""
 #: src/gui_main_window.cpp:211
 msgid "Could not load the menu item \"new\" in MainWindow"
 msgstr ""
+"No se pudo cargar el elemento de menú \"nuevo\" en la ventana principal "
+"(MainWindow)"
 
 #. i18n TRANSLATORS: Please, leave MainWindow as it is here
 #. i18n That name specifies internal data when the app can't start and can be useful to find out the error cause
@@ -268,6 +296,8 @@ msgstr ""
 #: src/gui_main_window.cpp:221
 msgid "Could not load the menu item \"quit\" in MainWindow"
 msgstr ""
+"No se pudo cargar el elemento de menú \"salir\" en la ventana principal "
+"(MainWindow)"
 
 #. i18n TRANSLATORS: Please, leave MainWindow as it is here
 #. i18n That name specifies internal data when the app can't start and can be useful to find out the error cause
@@ -275,6 +305,8 @@ msgstr ""
 #: src/gui_main_window.cpp:231
 msgid "Could not load the menu item \"View nucleation points\" in MainWindow"
 msgstr ""
+"No se pudo cargar el elemento de menú \"Mostrar esquinas válidas\" en la "
+"ventana principal (MainWindow)"
 
 #. i18n TRANSLATORS: Please, leave MainWindow as it is here
 #. i18n That name specifies internal data when the app can't start and can be useful to find out the error cause
@@ -387,8 +419,8 @@ msgstr ""
 msgid ""
 "Error while telling the thread to start computing. Worker thread is busy"
 msgstr ""
-"Hubo un error mientras se le comunicaba al hilo de procesamiento que "
-"debía empezar el cálculo. El hilo está ocupado con otro cálculo"
+"Hubo un error mientras se le comunicaba al hilo de procesamiento que debía "
+"empezar el cálculo. El hilo está ocupado con otro cálculo"
 
 #. i18n TRANSLATORS: Please, leave <b> and </b> tags sorrounding the translation of "Fatal error"
 #. i18n Thank you for contributing to this project
@@ -397,8 +429,8 @@ msgid ""
 "<b>Fatal Error:</b> Could not communicate with worker thread. Application "
 "will exit now!"
 msgstr ""
-"<b>Error Fatal:</b> No se pudo comuncar con el hilo de procesamiento. "
-"La aplicación se cerrará cuando acepte este mensaje"
+"<b>Error Fatal:</b> No se pudo comuncar con el hilo de procesamiento. La "
+"aplicación se cerrará cuando acepte este mensaje"
 
 #: src/gui_main_window.cpp:1050
 msgid "Computer can't move"
@@ -408,20 +440,24 @@ msgstr "El PC no puede poner ninguna pieza"
 msgid ""
 "Worker thread is busy. Please be patient while it is calculating next move"
 msgstr ""
+"El hilo de procesamiento está ocupado. Por favor espere mientras calcula el "
+"siguiente movimiento"
 
 #: src/gui_main_window.cpp:1089
 msgid "Cheeky you! Don't try to deploy a piece where it's not allowed to"
-msgstr ""
+msgstr "¡Tramposo! No intentes poner una pieza donde no esta permitido"
 
 #: src/gui_main_window.cpp:1109
 msgid "Human move could not be added to the queue"
-msgstr ""
+msgstr "El movimiento del jugador humano no se pudo añadir a la cola"
 
 #: src/gui_main_window.cpp:1114
 msgid ""
 "Internal Error: Move could not be processed. Please click on the board "
 "normally to try again"
 msgstr ""
+"Error interno: El movimiento no se pudo procesar. Por favor haga clic en el "
+"tablero de forma normal para intentarlo otra vez"
 
 #. i18n TRANSLATORS: Please, leave the translated word DRAW between the <b> and </b> tags
 #. i18n Bear in mind the first ' color=\"#%02X%02X%02X\" ' will be replaced by player1's colour,
@@ -440,6 +476,9 @@ msgid ""
 "Both <span color=\"#%02X%02X%02X\">%s</span> and <span color=\"#%02X%02X%02X"
 "\">%s</span> have <b>%d</b> squares left"
 msgstr ""
+"Resultado final: ¡<b>EMPATE</b>!\n"
+"A ambos jugadores, <span color=\"#%02X%02X%02X\">%s</span> y <span "
+"color=\"#%02X%02X%02X\">%s</span>, les quedan <b>%d</b> cuadrados"
 
 #. i18n TRANSLATORS: Please, respect the HTML formatting as much as possible
 #. i18n Bear in mind that the 1st ' color=\"#%02X%02X%02X\" ' will be replaced by the winner's colour,
@@ -459,18 +498,21 @@ msgid ""
 "<span color=\"#%02X%02X%02X\">%s</span> has <b>%d</b> squares left and <span "
 "color=\"#%02X%02X%02X\">%s</span> has <b>%d</b>"
 msgstr ""
+"¡<b><span color=\"#%02X%02X%02X\">%s</span></b> ha ganado!\n"
+"A <span color=\"#%02X%02X%02X\">%s</span> le quedaron <b>%d</b> cuadrados y "
+"a <span color=\"#%02X%02X%02X\">%s</span> <b>%d</b>"
 
 #: src/gui_main_window_worker_thread.cpp:83
 msgid "Mutex in worker thread couldn't be initialised"
-msgstr ""
+msgstr "El Mutex del hilo de procesamiento no pudo ser iniciada"
 
 #: src/gui_main_window_worker_thread.cpp:92
 msgid "Conditional variable in worker thread couldn't be initialised"
-msgstr ""
+msgstr "La variable condicional del hilo de procesamiento no pudo ser iniciada"
 
 #: src/gui_main_window_worker_thread.cpp:126
 msgid "Worker Thread creation failed. "
-msgstr ""
+msgstr "El hilo de procesamiento no pudo crearse. "
 
 #. i18n Please, leave gtk::DrawingArea and TableEditPiece as they are here
 #. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
@@ -478,6 +520,8 @@ msgstr ""
 #: src/gui_table_edit_piece.cpp:64
 msgid "Could not load Edit pieces Gtk::DrawingArea in TableEditPiece"
 msgstr ""
+"No se pudo cargar el objeto de tipo gtk::DrawingArea para editar las piezas "
+"en TableEditPiece"
 
 #. i18n Please, leave gtk::Button and TableEditPiece as they are here
 #. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
@@ -485,6 +529,8 @@ msgstr ""
 #: src/gui_table_edit_piece.cpp:73
 msgid "Could not load rotate left Gtk::Button in TableEditPiece"
 msgstr ""
+"No se pudo cargar el objeto de tipo gtk::Button para rotar las piezas a la "
+"izquierda en TableEditPiece"
 
 #. i18n Please, leave gtk::Button and TableEditPiece as they are here
 #. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
@@ -492,6 +538,8 @@ msgstr ""
 #: src/gui_table_edit_piece.cpp:82
 msgid "Could not load rotate right Gtk::Button in TableEditPiece"
 msgstr ""
+"No se pudo cargar el objeto de tipo gtk::Button para rotar las piezas a la "
+"derecha en TableEditPiece"
 
 #. i18n Please, leave gtk::Label and TableEditPiece as they are here
 #. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
@@ -499,6 +547,7 @@ msgstr ""
 #: src/gui_table_edit_piece.cpp:91
 msgid "Could not load rotate Gtk::Label in TableEditPiece"
 msgstr ""
+"No se pudo cargar el objeto de tipo gtk::Label \"rotar\" en TableEditPiece"
 
 #. i18n Please, leave gtk::Label and TableEditPiece as they are here
 #. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
@@ -506,6 +555,7 @@ msgstr ""
 #: src/gui_table_edit_piece.cpp:100
 msgid "Could not load mirror Gtk::Label in TableEditPiece"
 msgstr ""
+"No se pudo cargar el objeto de tipo gtk::Label \"espejo\" en TableEditPiece"
 
 #. i18n Please, leave gtk::Button and TableEditPiece as they are here
 #. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
@@ -513,6 +563,8 @@ msgstr ""
 #: src/gui_table_edit_piece.cpp:109
 msgid "Could not load mirror on Y-Axis Gtk::Button in TableEditPiece"
 msgstr ""
+"No se pudo cargar el objeto de tipo gtk::Button para calcular la imagen "
+"especular sobre el eje Y de las piezas en TableEditPiece"
 
 #. i18n Please, leave gtk::Button and TableEditPiece as they are here
 #. i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
@@ -520,11 +572,13 @@ msgstr ""
 #: src/gui_table_edit_piece.cpp:118
 msgid "Could not load mirror on X-Axis Gtk::Button in TableEditPiece"
 msgstr ""
+"No se pudo cargar el objeto de tipo gtk::Button para calcular la imagen "
+"especular sobre el eje X de las piezas en TableEditPiece"
 
 #. i18n TRANSLATORS: This is the name given to a type of heuristic. Should be as small as possible
 #: src/heuristic.cpp:51
 msgid "Influence Area"
-msgstr ""
+msgstr "Área de influencia"
 
 #. i18n TRANSLATORS: This is a quick explanation of what the "Influence Area" heuristic is supposed
 #. i18n to do. Shouldn't be too long since it will have to fit nicely on the GUI widgets
@@ -533,11 +587,13 @@ msgid ""
 "Uses the influence areas that a user's pieces create on the board to "
 "determine the quality of a move"
 msgstr ""
+"Usa las áreas de influencia de las piezas del usuario para determinar la "
+"calidad de los movimientos"
 
 #. i18n TRANSLATORS: This is the name given to a type of heuristic. Should be as small as possible
 #: src/heuristic.cpp:59
 msgid "Mr. Eastwood"
-msgstr ""
+msgstr "Clint Eastwood"
 
 #. i18n TRANSLATORS: This is a quick explanation of what the "Mr. Eastwood" heuristic is supposed
 #. i18n to do. Shouldn't be too long since it will have to fit nicely on the GUI widgets
@@ -546,12 +602,14 @@ msgid ""
 "Modified version of \"Influence Area\". When in doubt it will try to block "
 "you"
 msgstr ""
+"Versión modificada de \"Áreas de influencia\". Cuando hay duda la heurística "
+"tratará de bloquearte"
 
 #. i18n TRANSLATORS: This is the name given to a type of heuristic. Should be as small as possible
 #. i18n NK stands for Nucleation point
 #: src/heuristic.cpp:68
 msgid "NK weighted"
-msgstr ""
+msgstr "Importancia de esquinas"
 
 #. i18n TRANSLATORS: This is a quick explanation of what the "NK weighted" heuristic is supposed
 #. i18n to do. Shouldn't be too long since it will have to fit nicely on the GUI widgets
@@ -561,11 +619,13 @@ msgid ""
 "The more Nucleation points the better. NK points are more important in the "
 "middle of the board at the beginning"
 msgstr ""
+"Cuantas más esquinas válidas mejor. Al principio de la partida las esquinas "
+"creadas en el centro son más importantes"
 
 #. i18n TRANSLATORS: This is the name given to a type of heuristic. Should be as small as possible
 #: src/heuristic.cpp:85
 msgid "Centre focused"
-msgstr ""
+msgstr "Fijación por el centro"
 
 #. i18n TRANSLATORS: This is a quick explanation of what the "Centre focused" heuristic is supposed
 #. i18n to do. Shouldn't be too long since it will have to fit nicely on the GUI widgets
@@ -573,22 +633,26 @@ msgstr ""
 msgid ""
 "It has a tendency to create nucleation points over the centre of the board"
 msgstr ""
+"Tiene una tendencia a crear esquinas válidas alreadedor del centro del "
+"tablero"
 
 #. i18n TRANSLATORS: This is the name given to a type of heuristic. Should be as small as possible
 #: src/heuristic.cpp:93
 msgid "Simple"
-msgstr ""
+msgstr "Simple"
 
 #. i18n TRANSLATORS: This is a quick explanation of what the "Simple" heuristic is supposed
 #. i18n to do. Shouldn't be too long since it will have to fit nicely on the GUI widgets
 #: src/heuristic.cpp:96
 msgid "Takes into account only the amount of squares of the deployed pieces"
 msgstr ""
+"Sólo tiene en cuenta la cantidad de cuadrados de las pieces puestas en el "
+"tablero"
 
 #. i18n TRANSLATORS: This is the name given to a type of heuristic. Should be as small as possible
 #: src/heuristic.cpp:101
 msgid "Random"
-msgstr ""
+msgstr "Aleatorio"
 
 #. i18n TRANSLATORS: This is a quick explanation of what the "Random" heuristic is supposed
 #. i18n to do. Shouldn't be too long since it will have to fit nicely on the GUI widgets
@@ -597,6 +661,8 @@ msgid ""
 "Random heuristic. Evaluation function returns a random value so any "
 "heuristic can be checked against it"
 msgstr ""
+"La función de evaluación devuelve un valor aleatorio, así que cualquier "
+"otra heurística puede comprobarse jugando contra esta"
 
 #: src/piece.cpp:45
 msgid "Baby piece"
@@ -688,22 +754,28 @@ msgstr "Imprime la versión actual de la aplicación y finaliza"
 
 #: src/main.cpp:127
 msgid ""
-"Mandatory parameter which specifies the mode blockem runs. Valid options "
-"are: '0' GUI is shown (Default); '1' one player total-allocation; '2' 1vs1 "
-"Game"
+"Specifies the mode blockem runs. Valid options are: '0' GUI is shown "
+"(Default); '1' one player total-allocation; '2' 1vs1 Game"
 msgstr ""
+"Parámetro que especifica el modo de ejecución de blockem. Las opciones "
+"válidas son: '0' para mostrar la GUI (por defecto); '1' modo de 1 jugador; "
+"'2' modo de 1 contra 1"
 
 #: src/main.cpp:133
 msgid ""
 "1 player total allocation game's board will have N rows. This is a MANDATORY "
 "parameter for --mode=1"
 msgstr ""
+"El tablero de juego en modo de \"1 jugador\" tendrá N filas. Este parámetro "
+"es obligatorio en modo 1 (--mode=1)"
 
 #: src/main.cpp:138
 msgid ""
 "1 player total allocation game's board will have N columns. This is a "
 "MANDATORY parameter for --mode=1"
 msgstr ""
+"El tablero de juego en modo de \"1 jugador\" tendrá N columnas. Este "
+"parámetro es obligatorio en modo 1 (--mode=1)"
 
 #: src/main.cpp:143
 msgid ""
@@ -711,6 +783,9 @@ msgid ""
 "mode=1). 1st valid column is 0, so maximum allowed column will be "
 "(number_of_columns - 1). This is a MANDATORY parameter for --mode=1"
 msgstr ""
+"La aplicación empezará a poner piezas en la columna X (en modo 1). "
+"La mínima columna válida es 0, así que la máxima será el número "
+"de columnas menos 1. Este parámetro es obligatorio en modo 1 (--mode=1)"
 
 #: src/main.cpp:149
 msgid ""
@@ -718,12 +793,17 @@ msgid ""
 "mode=1). 1st valid row is 0, so maximum allowed row will be (number_of_rows "
 "- 1). This is a MANDATORY parameter for --mode=1"
 msgstr ""
+"La aplicación empezará a poner piezas en la fila Y (en modo 1). "
+"La mínima fila válida es 0, así que la máxima será el número "
+"de filas menos 1. Este parámetro es obligatorio en modo 1 (--mode=1)"
 
 #: src/main.cpp:155
 msgid ""
 "Sets the maximum depth of search tree to D when 1vs1 Game is selected. This "
 "is a MANDATORY parameter for --mode=2"
 msgstr ""
+"Configura la máxima profundidad del árbol de búsquda al valor D cuando se "
+"selecciona el modo \"1 contra 1\". Este parámetro es obligatorio en modo 2"
 
 #: src/main.cpp:160
 msgid ""
@@ -731,6 +811,10 @@ msgid ""
 "'0' \"Influence Area\" (Default); '1' \"Mr. Eastwood\"; '2' \"NK weighted\"; "
 "'3' \"Centre focused\"; '4' \"Simple\"; '5' \"Random\""
 msgstr ""
+"Heurística a usar cuando la aplicación corre en modo \"1 contra 1\" "
+"(--mode=2). Las opciones válidas son: '0' \"Área de influencia\" (Default); "
+"'1' \"Clint Eastwood\"; '2' \"Importancia de esquinas\"; "'3' \"Fijación "
+"por el centro\"; '4' \"Simple\"; '5' \"Aleatorio\""
 
 #: src/main.cpp:166
 msgid ""
@@ -743,12 +827,12 @@ msgstr ""
 "resultados en consola. Debe especificar al menos un archivo cuando use la "
 "opción --mode 2"
 
-#. i18n TRANSLATORS: This string is supposed to mean that 1 file is mandatory
-#. i18n but more than 1 can be specified
+#. i18n TRANSLATORS: This string is supposed to mean that one or more
+#. i18n files might be specified
 #. i18n Thank you for contributing to this project
 #: src/main.cpp:172
-msgid "FILE [FILE(S)]"
-msgstr "ARCHIVO [ARCHIVO(S)]"
+msgid "[FILE(S)]"
+msgstr "[ARCHIVO(S)]"
 
 #. i18n TRANSLATORS: Please leave the starting colon since it is part of the expected format
 #. i18n Bear in mind this string will be used to print out a help message when an error is found
@@ -856,7 +940,7 @@ msgstr "La profundidad para el juego de 1 contra 1 debe ser un número positivo"
 msgid ""
 "Warning: For better results you might want to set the depth to an odd number"
 msgstr ""
-"Aviso: Para conseguir mejores resultados la profundidad debería de ser un"
+"Aviso: Para conseguir mejores resultados la profundidad debería de ser un "
 "número impar"
 
 #. i18n TRANSLATORS: This string is shown when a file specified by the user
@@ -868,8 +952,7 @@ msgstr ""
 #: src/main.cpp:524
 #, c-format
 msgid "%s: Error: '%s' doesn't exist. Trying next file...\n"
-msgstr ""
-"%s: Error: '%s' no existe. Intentando con el archivo siguiente...\n"
+msgstr "%s: Error: '%s' no existe. Intentando con el archivo siguiente...\n"
 
 #. i18n TRANSLATORS: This string is shown when a file specified by the user
 #. i18n could not be opened to be read. The 1st %s will be replaced
@@ -893,8 +976,9 @@ msgstr ""
 #, c-format
 msgid ""
 "%s: Error: '%s' does not contain a valid 1vs1Game. Trying next file...\n"
-msgstr "%s: Error: '%s' no contiene un juego 1 contra 1 válido. "
-"Intentando con el archivo siguiente...\n"
+msgstr ""
+"%s: Error: '%s' no contiene un juego 1 contra 1 válido. Intentando con el "
+"archivo siguiente...\n"
 
 #. i18n TRANSLATORS: '%s' will be replaced here by the path to the file
 #. i18n successfully loaded. Bear in mind the '\n' character should be there
@@ -1076,20 +1160,18 @@ msgid ""
 "blockem; if not, write to the Free Software Foundation, Inc., 51 Franklin "
 "Street, Fifth Floor, Boston, MA  02110-1301  USA"
 msgstr ""
-"blockem es software libre: usted puede redistribuirlo y/o modificarlo "
-"bajo los términos de la Licencia Pública General GNU publicada "
-"por la Fundación para el Software Libre, ya sea la versión 3 "
-"de la Licencia, o (a su elección) cualquier versión posterior.\n"
+"blockem es software libre: usted puede redistribuirlo y/o modificarlo bajo "
+"los términos de la Licencia Pública General GNU publicada por la Fundación "
+"para el Software Libre, ya sea la versión 3 de la Licencia, o (a su "
+"elección) cualquier versión posterior.\n"
 "\n"
-"blockem se distribuye con la esperanza de que sea útil, pero "
-"SIN GARANTÍA ALGUNA; ni siquiera la garantía implícita "
-"MERCANTIL o de APTITUD PARA UN PROPÓSITO DETERMINADO. "
-"Consulte los detalles de la Licencia Pública General GNU para obtener "
-"una información más detallada.\n"
+"blockem se distribuye con la esperanza de que sea útil, pero SIN GARANTÍA "
+"ALGUNA; ni siquiera la garantía implícita MERCANTIL o de APTITUD PARA UN "
+"PROPÓSITO DETERMINADO. Consulte los detalles de la Licencia Pública General "
+"GNU para obtener una información más detallada.\n"
 "\n"
-"YDebería haber recibido una copia de la Licencia Pública General GNU "
-"junto a este programa. "
-"En caso contrario, consulte <http://www.gnu.org/licenses/>."
+"YDebería haber recibido una copia de la Licencia Pública General GNU junto a "
+"este programa. En caso contrario, consulte <http://www.gnu.org/licenses/>."
 
 # Rotate in this context means a transformation of a piece that describes the
 # motion of it around a fixed point

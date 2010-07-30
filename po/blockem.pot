@@ -6,7 +6,7 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: blockem 0.2.3\n"
+"Project-Id-Version: blockem 0.2.4\n"
 "Report-Msgid-Bugs-To: frechilla@gmail.com\n"
 "POT-Creation-Date: 2010-07-28 21:04+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
@@ -674,9 +674,8 @@ msgstr ""
 
 #: src/main.cpp:127
 msgid ""
-"Mandatory parameter which specifies the mode blockem runs. Valid options "
-"are: '0' GUI is shown (Default); '1' one player total-allocation; '2' 1vs1 "
-"Game"
+"Specifies the mode blockem runs. Valid options are: '0' GUI is shown "
+"(Default); '1' one player total-allocation; '2' 1vs1 Game"
 msgstr ""
 
 #: src/main.cpp:133
@@ -725,11 +724,11 @@ msgid ""
 "is MANDATORY for --mode=2"
 msgstr ""
 
-#. i18n TRANSLATORS: This string is supposed to mean that 1 file is mandatory
-#. i18n but more than 1 can be specified
+#. i18n TRANSLATORS: This string is supposed to mean that one or more
+#. i18n files might be specified
 #. i18n Thank you for contributing to this project
 #: src/main.cpp:172
-msgid "FILE [FILE(S)]"
+msgid "[FILE(S)]"
 msgstr ""
 
 #. i18n TRANSLATORS: Please leave the starting colon since it is part of the expected format
