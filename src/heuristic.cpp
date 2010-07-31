@@ -48,68 +48,68 @@ const Heuristic::sHeuristicData_t Heuristic::m_heuristicData[e_heuristicCount] =
     {e_heuristicInfluenceArea,
      Heuristic::CalculateInfluenceAreaWeighted,
      // i18n TRANSLATORS: This is the name given to a type of heuristic. Should be as small as possible
-     std::string(_("Influence Area")),
+     N_("Influence Area"),
      // i18n TRANSLATORS: This is a quick explanation of what the "Influence Area" heuristic is supposed
      // i18n to do. Shouldn't be too long since it will have to fit nicely on the GUI widgets
-     std::string(_("Uses the influence areas that a user's pieces create on the board to determine the quality of a move"))
+     N_("Uses the influence areas that a user's pieces create on the board to determine the quality of a move")
     },
     {e_heuristicInfluenceAreaEastwood,
      Heuristic::CalculateInfluenceAreaWeightedEastwood,
      // i18n TRANSLATORS: This is the name given to a type of heuristic. Should be as small as possible
-     std::string(_("Mr. Eastwood")),
+     N_("Mr. Eastwood"),
      // i18n TRANSLATORS: This is a quick explanation of what the "Mr. Eastwood" heuristic is supposed
      // i18n to do. Shouldn't be too long since it will have to fit nicely on the GUI widgets
-     std::string(_("Modified version of \"Influence Area\". When in doubt it will try to block you"))
+     N_("Modified version of \"Influence Area\". When in doubt it will try to block you")
     },
     {e_heuristicNKWeightedv1,
      Heuristic::CalculateNKWeightedv1,
      // i18n TRANSLATORS: This is the name given to a type of heuristic. Should be as small as possible
      // i18n NK stands for Nucleation point
-     std::string(_("NK weighted")),
+     N_("NK weighted"),
      // i18n TRANSLATORS: This is a quick explanation of what the "NK weighted" heuristic is supposed
      // i18n to do. Shouldn't be too long since it will have to fit nicely on the GUI widgets
      // i18n NK stands for Nucleation point
-     std::string(_("The more Nucleation points the better. NK points are more important in the middle of the board at the beginning"))
+     N_("The more Nucleation points the better. NK points are more important in the middle of the board at the beginning")
     },
 //    {e_heuristicNKWeightedv2,
 //     Heuristic::CalculateNKWeightedv2,
 //     // i18n TRANSLATORS: This is the name given to a type of heuristic. Should be as small as possible
-//     std::string(_("NK weighted v2")),
+//     N_("NK weighted v2"),
 //     // i18n TRANSLATORS: This is a quick explanation of what the "NK weighted v2" heuristic is supposed
 //     // i18n to do. Shouldn't be too long since it will have to fit nicely on the GUI widgets
-//     std::string(_("Evolution of v1. The more pieces you can put down per nk point the better"))
+//     N_("Evolution of v1. The more pieces you can put down per nk point the better")
 //    },
     {e_heuristicCentreFocused,
      Heuristic::CalculateCentreFocused,
      // i18n TRANSLATORS: This is the name given to a type of heuristic. Should be as small as possible
-     std::string(_("Centre focused")),
+     N_("Centre focused"),
      // i18n TRANSLATORS: This is a quick explanation of what the "Centre focused" heuristic is supposed
      // i18n to do. Shouldn't be too long since it will have to fit nicely on the GUI widgets
-     std::string(_("It has a tendency to create nucleation points over the centre of the board"))
+     N_("It has a tendency to create nucleation points over the centre of the board")
     },
     {e_heuristicSimple,
      Heuristic::CalculateSimple,
      // i18n TRANSLATORS: This is the name given to a type of heuristic. Should be as small as possible
-     std::string(_("Simple")),
+     N_("Simple"),
      // i18n TRANSLATORS: This is a quick explanation of what the "Simple" heuristic is supposed
      // i18n to do. Shouldn't be too long since it will have to fit nicely on the GUI widgets
-     std::string(_("Takes into account only the amount of squares of the deployed pieces"))
+     N_("Takes into account only the amount of squares of the deployed pieces")
     },
     {e_heuristicRandom,
      Heuristic::CalculateRandom,
      // i18n TRANSLATORS: This is the name given to a type of heuristic. Should be as small as possible
-     std::string(_("Random")),
+     N_("Random"),
      // i18n TRANSLATORS: This is a quick explanation of what the "Random" heuristic is supposed
      // i18n to do. Shouldn't be too long since it will have to fit nicely on the GUI widgets
-     std::string(_("Random heuristic. Evaluation function returns a random value so any heuristic can be checked against it"))
+     N_("Random heuristic. Evaluation function returns a random value so any heuristic can be checked against it")
     },
 //    {e_heuristicAmountOfPieces,
 //     Heuristic::CalculateNPieces,
 //     // i18n TRANSLATORS: This is the name given to a type of heuristic. Should be as small as possible
-//     std::string(_("Amount of pieces")),
+//     N_("Amount of pieces"),
 //     // i18n TRANSLATORS: This is a quick explanation of what the "Amount of pieces" heuristic is supposed
 //     // i18n to do. Shouldn't be too long since it will have to fit nicely on the GUI widgets
-//     std::string(_("The more pieces can be put down per NK point, the better. It's slow and a bit crazy sometimes"))
+//     N_("The more pieces can be put down per NK point, the better. It's slow and a bit crazy sometimes")
 //    }
 };
 

@@ -74,8 +74,8 @@ public:
     {
         eHeuristicType_t m_type;
         EvalFunction_t m_evalFunction;
-        std::string m_name;
-        std::string m_description;
+        char* m_name;
+        char* m_description;
     } sHeuristicData_t;
 
     static const sHeuristicData_t m_heuristicData[e_heuristicCount];

@@ -491,7 +491,7 @@ int main(int argc, char **argv)
             // i18n the 1st %s will be replaced by the heuristic's name, and %d by its index
             // i18n Thank you for contributing to this project
             printf(_("Evaluation function set to %s (%d)\n"),
-                   Heuristic::m_heuristicData[g_heuristic].m_name.c_str(),
+                   _(Heuristic::m_heuristicData[g_heuristic].m_name),
                    g_heuristic);
 
             if (g_depth <= 0)

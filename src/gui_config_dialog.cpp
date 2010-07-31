@@ -235,22 +235,22 @@ ConfigDialog::ConfigDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Buil
         const Heuristic::sHeuristicData_t &heuristicData =
             Heuristic::m_heuristicData[static_cast<Heuristic::eHeuristicType_t>(i)];
 
-        m_comboHeuristicPlayer1.append_text(heuristicData.m_name);
-        m_comboHeuristicPlayer2.append_text(heuristicData.m_name);
+        m_comboHeuristicPlayer1.append_text(_(heuristicData.m_name));
+        m_comboHeuristicPlayer2.append_text(_(heuristicData.m_name));
 
         // fill the TextBuffers with the descriptions
         m_refHeuristicDescriptionBuffer[i] = Gtk::TextBuffer::create();
-        m_refHeuristicDescriptionBuffer[i]->set_text(heuristicData.m_description.c_str());
+        m_refHeuristicDescriptionBuffer[i]->set_text(_(heuristicData.m_description));
     }
 
     const Heuristic::sHeuristicData_t &selectedHeuristicData1 =
         Heuristic::m_heuristicData[Game1v1Config::Instance().GetHeuristicTypePlayer1()];
-    m_comboHeuristicPlayer1.set_active_text(selectedHeuristicData1.m_name);
+    m_comboHeuristicPlayer1.set_active_text(_(selectedHeuristicData1.m_name));
     m_textViewHeuristic1->set_buffer(m_refHeuristicDescriptionBuffer[selectedHeuristicData1.m_type]);
 
     const Heuristic::sHeuristicData_t &selectedHeuristicData2 =
         Heuristic::m_heuristicData[Game1v1Config::Instance().GetHeuristicTypePlayer2()];
-    m_comboHeuristicPlayer2.set_active_text(selectedHeuristicData2.m_name);
+    m_comboHeuristicPlayer2.set_active_text(_(selectedHeuristicData2.m_name));
     m_textViewHeuristic2->set_buffer(m_refHeuristicDescriptionBuffer[selectedHeuristicData2.m_type]);
 
     // attach custom widgets (the ones not present in the .glade file) into the dialog
@@ -489,12 +489,12 @@ void ConfigDialog::ComboHeuristicPlayer2_signalChanged()
 
 bool ConfigDialog::IsPlayer1TypeComputer() const
 {
-    return (m_comboTypePlayer1.get_active_text().compare(COMBO_PLAYER_TYPE_COMPUTER) == 0);
+    return (m_comboTypePlayer1.get_active_text().compare(_(COMBO_PLAYER_TYPE_COMPUTER)) == 0);
 }
 
 bool ConfigDialog::IsPlayer2TypeComputer() const
 {
-    return (m_comboTypePlayer2.get_active_text().compare(COMBO_PLAYER_TYPE_COMPUTER) == 0);
+    return (m_comboTypePlayer2.get_active_text().compare(_(COMBO_PLAYER_TYPE_COMPUTER)) == 0);
 }
 
 void ConfigDialog::GetPlayer1StartingCoord(Coordinate &a_coord) const
@@ -532,7 +532,7 @@ Heuristic::eHeuristicType_t ConfigDialog::GetPlayer1Heuristic() const
         const Heuristic::sHeuristicData_t &heuristicData =
             Heuristic::m_heuristicData[static_cast<Heuristic::eHeuristicType_t>(i)];
 
-        if (m_comboHeuristicPlayer1.get_active_text().compare(heuristicData.m_name) == 0)
+        if (m_comboHeuristicPlayer1.get_active_text().compare(_(heuristicData.m_name)) == 0)
         {
             return static_cast<Heuristic::eHeuristicType_t>(i);
         }
@@ -553,7 +553,7 @@ Heuristic::eHeuristicType_t ConfigDialog::GetPlayer2Heuristic() const
         const Heuristic::sHeuristicData_t &heuristicData =
             Heuristic::m_heuristicData[static_cast<Heuristic::eHeuristicType_t>(i)];
 
-        if (m_comboHeuristicPlayer2.get_active_text().compare(heuristicData.m_name) == 0)
+        if (m_comboHeuristicPlayer2.get_active_text().compare(_(heuristicData.m_name)) == 0)
         {
             return static_cast<Heuristic::eHeuristicType_t>(i);
         }
@@ -605,10 +605,10 @@ int ConfigDialog::run()
     // heuristic type
     const Heuristic::sHeuristicData_t &selectedHeuristicData1 =
         Heuristic::m_heuristicData[Game1v1Config::Instance().GetHeuristicTypePlayer1()];
-    m_comboHeuristicPlayer1.set_active_text(selectedHeuristicData1.m_name);
+    m_comboHeuristicPlayer1.set_active_text(_(selectedHeuristicData1.m_name));
     const Heuristic::sHeuristicData_t &selectedHeuristicData2 =
         Heuristic::m_heuristicData[Game1v1Config::Instance().GetHeuristicTypePlayer2()];
-    m_comboHeuristicPlayer2.set_active_text(selectedHeuristicData2.m_name);
+    m_comboHeuristicPlayer2.set_active_text(_(selectedHeuristicData2.m_name));
 
     // run the Gtk dialog once the custom widgets are configured properly
     return Gtk::Dialog::run();
