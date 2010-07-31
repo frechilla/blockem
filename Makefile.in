@@ -304,6 +304,7 @@ SUBDIRS = intl po src src/tests doc
 EXTRA_DIST = \
 ABOUT-NLS \
 config.rpath \
+gettext.h \
 m4/ChangeLog \
 pixmaps/blockemicon.ico    \
 pixmaps/blockemlogo128.png \

@@ -57,6 +57,9 @@ static const char MESSAGE_CONFIGURE_GAME_DIALOG_TITLE[] = N_("Configure current 
 /// maximum size of the string to notify the end of the game
 static const uint32_t GAME_FINISHED_BUFFER_LENGTH = 256;
 
+/// maximum size of the string to apply to score labels
+static const uint32_t SCORE_LABEL_BUFFER_LENGTH = 64;
+
 /// how often stopwatches are updated
 static const uint32_t STOPWATCH_UPDATE_PERIOD_MILLIS = 500; // 1000 = 1 second
 
@@ -110,11 +113,9 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     m_boardDrawingArea(m_the1v1Game.GetBoard()),
     m_editPieceTable(NULL),
     m_stopWatchLabelPlayer1(
-        STOPWATCH_UPDATE_PERIOD_MILLIS,
-        m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1).GetName() + std::string(" ")),
+        STOPWATCH_UPDATE_PERIOD_MILLIS),
     m_stopWatchLabelPlayer2(
-        STOPWATCH_UPDATE_PERIOD_MILLIS,
-        m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2).GetName() + std::string(" "))
+        STOPWATCH_UPDATE_PERIOD_MILLIS)
 {
     //TODO this is dirty (even though it works) the way MainWindow::ProgressUpdate
     // access the MainWindow Instance should be fixed in some way
@@ -384,6 +385,36 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     // so the widgets take their proper size at GUI startup
     UpdateScoreStatus();
 
+    // retrieve the default colour from the config class to apply it to the players
+    // and use HTML tags so the stop watch labels show each player's name written
+    // with its corresponding colour. Both widgets will also get the proper size
+    // at GUI startup since they have their expected size before being added to the
+    // horizontal box "status bar"
+    uint8_t red, green, blue;
+    std::stringstream theMessage;
+    Game1v1Config::Instance().GetPlayer1Colour(red, green, blue);
+    m_the1v1Game.SetPlayerColour(Game1v1::e_Game1v1Player1, red, green, blue);
+    theMessage << "<span color=\"#"
+               << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(red)
+               << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(green)
+               << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(blue)
+               << "\">"
+               << m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1).GetName()
+               << " </span>";
+    m_stopWatchLabelPlayer1.SetPrefix(theMessage.str());
+
+    Game1v1Config::Instance().GetPlayer2Colour(red, green, blue);
+    m_the1v1Game.SetPlayerColour(Game1v1::e_Game1v1Player2, red, green, blue);
+    theMessage.str(std::string());
+    theMessage << "<span color=\"#"
+               << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(red)
+               << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(green)
+               << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(blue)
+               << "\">"
+               << m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2).GetName()
+               << " </span>";
+    m_stopWatchLabelPlayer2.SetPrefix(theMessage.str());
+
     // the custom status bar
     m_hBoxStatusBar->pack_start(m_player1ScoreLabel, true, true);
     m_hBoxStatusBar->pack_start(m_arrayStatusBarSeparator[0], false, true);
@@ -455,34 +486,6 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
             sigc::mem_fun(*this, &MainWindow::MenuItemSettingsShowPlayer2InfluenceArea_Toggled));
     m_settingsInfluenceAreaNoShowMenuItem->signal_toggled().connect(
             sigc::mem_fun(*this, &MainWindow::MenuItemSettingsShowNoneInfluenceArea_Toggled));
-
-    // retrieve the default colour from the config class to apply it to the players
-    // and use HTML tags so the stop watch labels show each player's name written
-    // with tis corresponding colour
-    uint8_t red, green, blue;
-    std::stringstream theMessage;
-    Game1v1Config::Instance().GetPlayer1Colour(red, green, blue);
-    m_the1v1Game.SetPlayerColour(Game1v1::e_Game1v1Player1, red, green, blue);
-    theMessage << "<span color=\"#"
-               << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(red)
-               << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(green)
-               << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(blue)
-               << "\">"
-               << m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1).GetName()
-               << " </span>";
-    m_stopWatchLabelPlayer1.SetPrefix(theMessage.str());
-
-    Game1v1Config::Instance().GetPlayer2Colour(red, green, blue);
-    m_the1v1Game.SetPlayerColour(Game1v1::e_Game1v1Player2, red, green, blue);
-    theMessage.str(std::string());
-    theMessage << "<span color=\"#"
-               << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(red)
-               << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(green)
-               << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(blue)
-               << "\">"
-               << m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2).GetName()
-               << " </span>";
-    m_stopWatchLabelPlayer2.SetPrefix(theMessage.str());
 
     // initialise the list of players of the board drawing area
     m_boardDrawingArea.AddPlayerToList(m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1));
@@ -1491,8 +1494,11 @@ void MainWindow::NotifyProgressUpdate()
 
 void MainWindow::UpdateScoreStatus()
 {
+    // this buffer will contain the string to be applied to the labels
+    char theMessage[SCORE_LABEL_BUFFER_LENGTH];
+
     // calculate the number of squares left
-    int32_t squaresLeftPLayer1 = 0;
+    int32_t squaresLeftPlayer1 = 0;
     int32_t squaresLeftPlayer2 = 0;
     const Player &player1 = m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1);
     const Player &player2 = m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2);
@@ -1500,7 +1506,7 @@ void MainWindow::UpdateScoreStatus()
     {
         if (player1.IsPieceAvailable(static_cast<ePieceType_t>(i)))
         {
-            squaresLeftPLayer1 += player1.m_pieces[i].GetNSquares();
+            squaresLeftPlayer1 += player1.m_pieces[i].GetNSquares();
         }
 
         if (player2.IsPieceAvailable(static_cast<ePieceType_t>(i)))
@@ -1512,35 +1518,42 @@ void MainWindow::UpdateScoreStatus()
     uint8_t red, green, blue;
     player2.GetColour(red, green, blue);
 
-    // update the GUI widgets
-    std::stringstream theMessage;
-    theMessage << "<span color=\"#"
-               << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(red)
-               << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(green)
-               << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(blue)
-               << "\">"
-               << player2.GetName()
-               << "</span>"
-               << ": "
-               << std::setfill(' ') << std::setw(2) << std::setbase(10)
-               << static_cast<int32_t>(squaresLeftPlayer2);
+    // update player2's GUI widget
+    snprintf (theMessage,
+              SCORE_LABEL_BUFFER_LENGTH,
+              // i18n TRANSLATORS: the first 3 %02X  will be replaced by the
+              // i18n colour of the current player. The '%s' will be replaced
+              // i18n by this player's name and the '%2d' his/her score
+              // i18n For a better GUI experience both strings should take
+              // i18n the same amount of characters
+              ngettext("<span color=\"#%02X%02X%02X\">%s</span>: %2d left",
+                       "<span color=\"#%02X%02X%02X\">%s</span>: %2d left",
+                       static_cast<int32_t>(squaresLeftPlayer2)),
+              red,
+              green,
+              blue,
+              player2.GetName().c_str(),
+              squaresLeftPlayer2);
+    m_player2ScoreLabel.set_markup(theMessage);
 
-    m_player2ScoreLabel.set_markup(theMessage.str().c_str());
-
+    // and now player1's
     player1.GetColour(red, green, blue);
-    theMessage.str(std::string());
-    theMessage << "<span color=\"#"
-               << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(red)
-               << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(green)
-               << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(blue)
-               << "\">"
-               << player1.GetName()
-               << "</span>"
-               << ": "
-               << std::setfill(' ') << std::setw(2)  << std::setbase(10)
-               << static_cast<int32_t>(squaresLeftPLayer1);
-
-    m_player1ScoreLabel.set_markup(theMessage.str().c_str());
+    snprintf (theMessage,
+              SCORE_LABEL_BUFFER_LENGTH,
+              // i18n TRANSLATORS: the first 3 %02X  will be replaced by the
+              // i18n colour of the current player. The '%s' will be replaced
+              // i18n by this player's name and the '%2d' his/her score
+              // i18n For a better GUI experience all these strings should take
+              // i18n the same amount of characters
+              ngettext("<span color=\"#%02X%02X%02X\">%s</span>: %2d left",
+                       "<span color=\"#%02X%02X%02X\">%s</span>: %2d left",
+                       static_cast<int32_t>(squaresLeftPlayer1)),
+              red,
+              green,
+              blue,
+              player1.GetName().c_str(),
+              squaresLeftPlayer1);
+    m_player1ScoreLabel.set_markup(theMessage);
 }
 
 void MainWindow::SetWaitCursor()

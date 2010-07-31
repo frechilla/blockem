@@ -2,7 +2,8 @@
 
 bin_PROGRAMS = blockem
 
-INCLUDES = -I$(top_srcdir)/lib
+# gettext.h used to be in top/lib
+#INCLUDES = -I$(top_srcdir)/lib
 
 # DATADIR in the windows OS is set to the current directory
 if OS_WIN32    

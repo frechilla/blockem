@@ -26,6 +26,9 @@ run `gettextize`
 # follow instructions
 
 
+##############
+## PROBLEMS ##
+
 # if you are getting an error like:
 $ LANG=es_ES ./src/blockem --help
 
@@ -70,14 +73,25 @@ locale-gen fr_FR
 locale-gen fr_FR@euro
 
 
-####
+## YOU CAN ALSO ADD LOCALES AUTOMATICALLY USING UBUNTU apt-get ##
+--> IN UBUNTU
+--> apt-get install language-pack-es language-pack-gnome-es 
+
+## YOU NEED language-pack-gnome-es TO TRANSLATE BUILT-IN BUTTONS AND MENUS!!!! ##
+
+
+
+
+
+##########
+## MISC ##
+##########
+# where to install the .mo files in ubuntu 9.04
+# this is the directory where localedir must point at so it works in my ubuntu 9.04
+./configure --localedir "/usr/share/locale"
+
 # have a look at po/en@quot.header and po/en@boldquot.header
 make en@quot.po-create
 make en@boldquot.po-create
 
 
-
-#######
-# where to install the .mo files!!!
-# this is the directory where localedir must point at so it works in my ubuntu 9.04
-./configure --localedir "/usr/share/locale"
