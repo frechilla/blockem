@@ -16,7 +16,8 @@ src/game1v1.cpp
 src/game1v1.h 
 src/game_total_allocation.cpp 
 src/game_total_allocation.h 
-src/g_blocking_queue.h 
+src/g_blocking_queue.h
+src/gui_exception.cpp 
 src/gui_exception.h 
 src/gui_about_dialog.cpp 
 src/gui_about_dialog.h 

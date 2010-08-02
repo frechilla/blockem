@@ -6,7 +6,8 @@ xgettext -c"i18n" -j -a --language=Glade --msgid-bugs-address=frechilla@gmail.co
 make blockem.pot-update
 
 # update .po files
-make update-po
+make es.po-update
+# 'make update-po' also calls 'make blockem.pot-update'
 
 # from http://en.wikipedia.org/wiki/GNU_gettext
 # The translator derives a .po file from the template using the msginit program

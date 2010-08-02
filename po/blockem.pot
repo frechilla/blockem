@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: blockem 0.2.4\n"
 "Report-Msgid-Bugs-To: frechilla@gmail.com\n"
-"POT-Creation-Date: 2010-08-03 00:37+0200\n"
+"POT-Creation-Date: 2010-08-03 00:52+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -39,6 +39,21 @@ msgstr[1] ""
 
 #: src/game_total_allocation.cpp:44
 msgid "The player"
+msgstr ""
+
+#. i18n Please, leave GtkBuilder as it is here since it is the name of the
+#. i18n programming toold that failed
+#. i18n Thank you for contributing to this project
+#: src/gui_exception.cpp:42
+msgid "Error loading a GUI object from GtkBuilder definitions"
+msgstr ""
+
+#: src/gui_exception.cpp:43
+msgid "Error creating processing thread"
+msgstr ""
+
+#: src/gui_exception.cpp:50
+msgid "GUI Exception happened"
 msgstr ""
 
 #. i18n Bear in mind this string will be printed followed by the path to logo file
