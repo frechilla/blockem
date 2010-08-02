@@ -116,8 +116,9 @@ public:
 	Piece(ePieceType_t a_type = e_noPiece);
     virtual ~Piece();
 
-    /// @return a string of characters that describes in some sort of human language the piece 'a_pieceType'
-    static const std::string& GetPieceDescription(ePieceType_t a_pieceType);
+    /// @return a string of characters that describes in some sort of human 
+    ///         language (internationalised) the piece 'a_pieceType'
+    static const char* GetPieceDescription(ePieceType_t a_pieceType);
 
     /// Reset the piece to the original configuration
     void Reset();
@@ -267,7 +268,7 @@ private:
     static LoadPieceFunction_t m_loadFunctionMap[e_numberOfPieces];
 
     /// @brief array of strings which describe every possible piece
-    static const std::string m_pieceDescription[e_numberOfPieces];
+    static const char* m_pieceDescription[e_numberOfPieces];
 
     /// @brief build up precalculated list of configurations of this piece
     /// Saves into m_precalculatedConfsList a list of PieceConfiguration

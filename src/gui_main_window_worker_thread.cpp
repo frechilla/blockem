@@ -80,7 +80,7 @@ MainWindowWorkerThread::MainWindowWorkerThread() throw (GUIException):
     m_mutex = g_mutex_new();
     if (m_mutex == NULL)
     {
-        throw new GUIException(std::string(_("Mutex in worker thread couldn't be initialised")));
+        throw new GUIException(e_GUIException_ProcessingThreadErr, __FILE__, __LINE__);
 #ifdef DEBUG
         assert(0);
 #endif
@@ -89,7 +89,7 @@ MainWindowWorkerThread::MainWindowWorkerThread() throw (GUIException):
     m_cond = g_cond_new();
     if (m_cond == NULL)
     {
-        throw new GUIException(std::string(_("Conditional variable in worker thread couldn't be initialised")));
+        throw new GUIException(e_GUIException_ProcessingThreadErr, __FILE__, __LINE__);
 #ifdef DEBUG
         assert(0);
 #endif
@@ -122,12 +122,9 @@ void MainWindowWorkerThread::SpawnThread() throw (GUIException)
 
     if (m_thread == NULL)
     {
-        throw new GUIException(
-            std::string(_("Worker Thread creation failed. ")) + std::string(_(err->message)));
-        g_error_free(err) ;
-#ifdef DEBUG
-        assert(0);
-#endif
+        // TODO err->message??
+        g_error_free(err);
+        throw new GUIException(e_GUIException_ProcessingThreadErr, __FILE__, __LINE__);
     }
 }
 

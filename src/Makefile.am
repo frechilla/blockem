@@ -75,6 +75,7 @@ game1v1.h \
 game_total_allocation.cpp \
 game_total_allocation.h \
 g_blocking_queue.h \
+gui_exception.cpp \
 gui_exception.h \
 gui_about_dialog.cpp \
 gui_about_dialog.h \

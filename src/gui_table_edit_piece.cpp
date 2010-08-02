@@ -58,64 +58,43 @@ TableEditPiece::TableEditPiece(
 	m_gtkBuilder->get_widget(GUI_DRAWINGAREA_EDITING_PIECE, m_editPieceDrawingArea);
 	if (m_editPieceDrawingArea == NULL)
 	{
-        // i18n Please, leave gtk::DrawingArea and TableEditPiece as they are here
-        // i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
-        // i18n Thank you for contributing to this project
-		throw new GUIException(std::string(_("Could not load Edit pieces Gtk::DrawingArea in TableEditPiece")));
+		throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
 	}
 
 	m_gtkBuilder->get_widget(GUI_BUTTON_ROTATE_LEFT_NAME, m_rotateLeftButton);
     if (m_rotateLeftButton == NULL)
     {
-        // i18n Please, leave gtk::Button and TableEditPiece as they are here
-        // i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
-        // i18n Thank you for contributing to this project
-        throw new GUIException(std::string(_("Could not load rotate left Gtk::Button in TableEditPiece")));
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
 
     m_gtkBuilder->get_widget(GUI_BUTTON_ROTATE_RIGHT_NAME, m_rotateRightButton);
 	if (m_rotateRightButton == NULL)
 	{
-        // i18n Please, leave gtk::Button and TableEditPiece as they are here
-        // i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
-        // i18n Thank you for contributing to this project
-		throw new GUIException(std::string(_("Could not load rotate right Gtk::Button in TableEditPiece")));
+		throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
 	}
 
 	m_gtkBuilder->get_widget(GUI_LABEL_ROTATE_NAME, m_rotateLabel);
     if (m_rotateLabel == NULL)
     {
-        // i18n Please, leave gtk::Label and TableEditPiece as they are here
-        // i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
-        // i18n Thank you for contributing to this project
-        throw new GUIException(std::string(_("Could not load rotate Gtk::Label in TableEditPiece")));
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
 
     m_gtkBuilder->get_widget(GUI_LABEL_MIRROR_NAME, m_mirrorLabel);
     if (m_mirrorLabel == NULL)
     {
-        // i18n Please, leave gtk::Label and TableEditPiece as they are here
-        // i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
-        // i18n Thank you for contributing to this project
-        throw new GUIException(std::string(_("Could not load mirror Gtk::Label in TableEditPiece")));
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
 
     m_gtkBuilder->get_widget(GUI_BUTTON_MIRROR_YAXIS_NAME, m_mirrorButtonYAxis);
 	if (m_mirrorButtonYAxis == NULL)
 	{
-        // i18n Please, leave gtk::Button and TableEditPiece as they are here
-        // i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
-        // i18n Thank you for contributing to this project
-		throw new GUIException(std::string(_("Could not load mirror on Y-Axis Gtk::Button in TableEditPiece")));
+		throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
 	}
 
 	m_gtkBuilder->get_widget(GUI_BUTTON_MIRROR_XAXIS_NAME, m_mirrorButtonXAxis);
     if (m_mirrorButtonXAxis == NULL)
     {
-        // i18n Please, leave gtk::Button and TableEditPiece as they are here
-        // i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
-        // i18n Thank you for contributing to this project
-        throw new GUIException(std::string(_("Could not load mirror on X-Axis Gtk::Button in TableEditPiece")));
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
 
 	// connect the signals to the handlers

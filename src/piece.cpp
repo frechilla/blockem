@@ -37,32 +37,32 @@ static const uint8_t PIECE_MAX_RADIUS = 2;
 
 // bear in mind the description the pieces must match the order in which
 // pieces are added to the enum ePieceType_t in piece.h
-const std::string Piece::m_pieceDescription[e_numberOfPieces] =
+const char* Piece::m_pieceDescription[e_numberOfPieces] =
 {
     // some names are based on
     // http://www.boardgamegeek.com/image/112331/blokus
     // some others are based on hours and hours of playing :)
-    std::string(_("Baby piece")),
-    std::string(_("Two piece")),
-    std::string(_("Three piece")),
-    std::string(_("Little V")),
-    std::string(_("Full square")),
-    std::string(_("Four long piece")),
-    std::string(_("Little L")),
-    std::string(_("Little S")),
-    std::string(_("Little T")),
-    std::string(_("Big long piece")),
-    std::string(_("Square++")),
-    std::string(_("Big V (aka Half square)")),
-    std::string(_("U Piece")),
-    std::string(_("Big L")),
-    std::string(_("Y Piece")),
-    std::string(_("Big S")),
-    std::string(_("Mr T")),
-    std::string(_("N Piece (aka the ultimate)")),
-    std::string(_("Saf Piece")),
-    std::string(_("W Piece")),
-    std::string(_("Cross piece"))
+    N_("Baby piece"),
+    N_("Two piece"),
+    N_("Three piece"),
+    N_("Little V"),
+    N_("Full square"),
+    N_("Four long piece"),
+    N_("Little L"),
+    N_("Little S"),
+    N_("Little T"),
+    N_("Big long piece"),
+    N_("Square++"),
+    N_("Big V (aka Half square)"),
+    N_("U Piece"),
+    N_("Big L"),
+    N_("Y Piece"),
+    N_("Big S"),
+    N_("Mr T"),
+    N_("N Piece (aka the ultimate)"),
+    N_("Saf Piece"),
+    N_("W Piece"),
+    N_("Cross piece")
 };
 
 // instantiate the load piece map.
@@ -188,9 +188,9 @@ void Piece::SetPiece(
 #endif
 }
 
-const std::string& Piece::GetPieceDescription(ePieceType_t a_pieceType)
+const char* Piece::GetPieceDescription(ePieceType_t a_pieceType)
 {
-    return Piece::m_pieceDescription[a_pieceType];
+    return _(Piece::m_pieceDescription[a_pieceType]);
 }
 
 void Piece::Reset()

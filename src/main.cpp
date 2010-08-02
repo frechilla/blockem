@@ -361,8 +361,10 @@ int main(int argc, char **argv)
             gtkBuilder->get_widget_derived(GUI_MAIN_WINDOW_NAME, pMainWindow);
             if (pMainWindow == NULL)
             {
-                throw new GUIException(std::string(
-                    _("Could not load the Main Window from the .glade file")));
+                throw new GUIException(
+                            e_GUIException_GTKBuilderErr, 
+                            __FILE__, 
+                            __LINE__);
             }
 
             // if gdk_threads_enter and gdk_threads_leave were to be used

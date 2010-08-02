@@ -163,10 +163,7 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     m_gtkBuilder->get_widget_derived(GUI_CONFIG_DIALOG_NAME, m_configDialog);
     if (m_configDialog == NULL)
     {
-        // i18n TRANSLATORS: Please, leave ConfigDialog, and MainWindow as they are here
-        // i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
-        // i18n Thank you for contributing to this project
-        throw new GUIException(std::string(_("Could not load the ConfigDialog class in MainWindow")));
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
 
     // retrieve the about dialog. It must be retrieved calling get_widget_derived
@@ -174,10 +171,7 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     m_gtkBuilder->get_widget_derived(GUI_ABOUT_DIALOG_NAME, m_aboutDialog);
     if (m_aboutDialog == NULL)
     {
-        // i18n TRANSLATORS: Please, leave AboutDialog, and MainWindow as they are here
-        // i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
-        // i18n Thank you for contributing to this project
-        throw new GUIException(std::string(_("Could not load the AboutDialog class in MainWindow")));
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
 
     // retrieve the editing piece table. It must be retrieved calling get_widget_derived
@@ -185,10 +179,7 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     m_gtkBuilder->get_widget_derived(GUI_TABLE_EDITING_PIECE_NAME, m_editPieceTable);
     if (m_editPieceTable == NULL)
     {
-        // i18n TRANSLATORS: Please, leave gtk::Table, and MainWindow as they are here
-        // i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
-        // i18n Thank you for contributing to this project
-        throw new GUIException(std::string(_("Could not load the edit pieces gtk::Table in MainWindow")));
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
 
     // retrieve the rest of objects from the GUI design
@@ -196,165 +187,114 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
             m_gtkBuilder->get_object(GUI_MENU_ITEM_ACCELERATOR));
     if (!m_accelGroup)
     {
-        // i18n TRANSLATORS: Please, leave MainWindow as it is here
-        // i18n That name specifies internal data when the app can't start and can be useful to find out the error cause
-        // i18n Thank you for contributing to this project
-        throw new GUIException(std::string(_("Could not load the menu accelerator for MainWindow")));
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
 
     m_newMenuItem = Glib::RefPtr<Gtk::MenuItem>::cast_dynamic(
             m_gtkBuilder->get_object(GUI_MENU_ITEM_GAME_NEW));
     if (!m_newMenuItem)
     {
-        // i18n TRANSLATORS: Please, leave MainWindow as it is here
-        // i18n That name specifies internal data when the app can't start and can be useful to find out the error cause
-        // i18n Thank you for contributing to this project
-        throw new GUIException(std::string(_("Could not load the menu item \"new\" in MainWindow")));
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
 
     m_quitMenuItem = Glib::RefPtr<Gtk::MenuItem>::cast_dynamic(
             m_gtkBuilder->get_object(GUI_MENU_ITEM_GAME_QUIT));
     if (!m_quitMenuItem)
     {
-        // i18n TRANSLATORS: Please, leave MainWindow as it is here
-        // i18n That name specifies internal data when the app can't start and can be useful to find out the error cause
-        // i18n Thank you for contributing to this project
-        throw new GUIException(std::string(_("Could not load the menu item \"quit\" in MainWindow")));
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
 
     m_settingsNKPointsMenuItem = Glib::RefPtr<Gtk::CheckMenuItem>::cast_dynamic(
             m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_NKPOINTS));
     if (!m_settingsNKPointsMenuItem)
     {
-        // i18n TRANSLATORS: Please, leave MainWindow as it is here
-        // i18n That name specifies internal data when the app can't start and can be useful to find out the error cause
-        // i18n Thank you for contributing to this project
-        throw new GUIException(std::string(_("Could not load the menu item \"View nucleation points\" in MainWindow")));
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
 
     m_settingsForbiddenAreaPlayer1MenuItem = Glib::RefPtr<Gtk::RadioMenuItem>::cast_dynamic(
             m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_FORBIDDENAREA_PLAYER1));
     if (!m_settingsForbiddenAreaPlayer1MenuItem)
     {
-        // i18n TRANSLATORS: Please, leave MainWindow as it is here
-        // i18n That name specifies internal data when the app can't start and can be useful to find out the error cause
-        // i18n Thank you for contributing to this project
-        throw new GUIException(std::string(_("Could not load the menu item \"Show player1's forbidden area\" in MainWindow")));
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
 
     m_settingsForbiddenAreaPlayer2MenuItem = Glib::RefPtr<Gtk::RadioMenuItem>::cast_dynamic(
             m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_FORBIDDENAREA_PLAYER2));
     if (!m_settingsForbiddenAreaPlayer2MenuItem)
     {
-        // i18n TRANSLATORS: Please, leave MainWindow as it is here
-        // i18n That name specifies internal data when the app can't start and can be useful to find out the error cause
-        // i18n Thank you for contributing to this project
-        throw new GUIException(std::string(_("Could not load the menu item \"Show player2's forbidden area\" in MainWindow")));
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
 
     m_settingsForbiddenAreaNoShowMenuItem = Glib::RefPtr<Gtk::RadioMenuItem>::cast_dynamic(
             m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_FORBIDDENAREA_NOSHOW));
     if (!m_settingsForbiddenAreaNoShowMenuItem)
     {
-        // i18n TRANSLATORS: Please, leave MainWindow as it is here
-        // i18n That name specifies internal data when the app can't start and can be useful to find out the error cause
-        // i18n Thank you for contributing to this project
-        throw new GUIException(std::string(_("Could not load the menu item \"do not show any forbidden area\" in MainWindow")));
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
 
     m_settingsInfluenceAreaPlayer1MenuItem = Glib::RefPtr<Gtk::RadioMenuItem>::cast_dynamic(
             m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_INFLUENCEAREA_PLAYER1));
     if (!m_settingsInfluenceAreaPlayer1MenuItem)
     {
-        // i18n TRANSLATORS: Please, leave MainWindow as it is here
-        // i18n That name specifies internal data when the app can't start and can be useful to find out the error cause
-        // i18n Thank you for contributing to this project
-        throw new GUIException(std::string(_("Could not load the menu item \"show player1's influence area\" in MainWindow")));
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
 
     m_settingsInfluenceAreaPlayer2MenuItem = Glib::RefPtr<Gtk::RadioMenuItem>::cast_dynamic(
             m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_INFLUENCEAREA_PLAYER2));
     if (!m_settingsInfluenceAreaPlayer2MenuItem)
     {
-        // i18n TRANSLATORS: Please, leave MainWindow as it is here
-        // i18n That name specifies internal data when the app can't start and can be useful to find out the error cause
-        // i18n Thank you for contributing to this project
-        throw new GUIException(std::string(_("Could not load the menu item \"show player2's influence area\" in MainWindow")));
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
 
     m_settingsInfluenceAreaNoShowMenuItem = Glib::RefPtr<Gtk::RadioMenuItem>::cast_dynamic(
             m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_INFLUENCEAREA_NOSHOW));
     if (!m_settingsInfluenceAreaNoShowMenuItem)
     {
-        // i18n TRANSLATORS: Please, leave MainWindow as it is here
-        // i18n That name specifies internal data when the app can't start and can be useful to find out the error cause
-        // i18n Thank you for contributing to this project
-        throw new GUIException(std::string(_("Could not load the menu item \"do not show any influence area\" in MainWindow")));
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
 
     m_settingsPrefsMenuItem = Glib::RefPtr<Gtk::MenuItem>::cast_dynamic(
             m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_PREFS));
     if (!m_settingsPrefsMenuItem)
     {
-        // i18n TRANSLATORS: Please, leave MainWindow as it is here
-        // i18n That name specifies internal data when the app can't start and can be useful to find out the error cause
-        // i18n Thank you for contributing to this project
-        throw new GUIException(std::string(_("Could not load the menu item \"settings / preferences\" in MainWindow")));
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
 
     m_helpAboutMenuItem = Glib::RefPtr<Gtk::MenuItem>::cast_dynamic(
             m_gtkBuilder->get_object(GUI_MENU_ITEM_HELP_ABOUT));
     if (!m_helpAboutMenuItem)
     {
-        // i18n TRANSLATORS: Please, leave MainWindow as it is here
-        // i18n That name specifies internal data when the app can't start and can be useful to find out the error cause
-        // i18n Thank you for contributing to this project
-        throw new GUIException(std::string(_("Could not load the menu item \"help / about\" in MainWindow")));
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
 
     m_gtkBuilder->get_widget(GUI_VBOX_DRAWING_NAME, m_vBoxDrawing);
     if (m_vBoxDrawing == NULL)
     {
-        // i18n TRANSLATORS: Please, leave gtk::VBox and MainWindow as they are here
-        // i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
-        // i18n Thank you for contributing to this project
-        throw new GUIException(std::string(_("Could not load the drawing area gtk::VBox in MainWindow")));
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
 
     m_gtkBuilder->get_widget(GUI_HBOX_GAME_STATUS_NAME, m_hBoxGameStatus);
     if (m_hBoxGameStatus == NULL)
     {
-        // i18n TRANSLATORS: Please, leave gtk::HBox and MainWindow as they are here
-        // i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
-        // i18n Thank you for contributing to this project
-        throw new GUIException(std::string(_("Could not load the current game status gtk::HBox in MainWindow")));
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
 
     m_gtkBuilder->get_widget(GUI_HBOX_OPPONENT_PIECES_NAME, m_hBoxOpponentPieces);
     if (m_hBoxOpponentPieces == NULL)
     {
-        // i18n TRANSLATORS: Please, leave gtk::HBox and MainWindow as they are here
-        // i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
-        // i18n Thank you for contributing to this project
-        throw new GUIException(std::string(_("Could not load the opponent pieces gtk::HBox in MainWindow")));
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
 
     m_gtkBuilder->get_widget(GUI_HBOX_PIECES_AREA_NAME, m_hBoxEditPieces);
     if (m_hBoxEditPieces == NULL)
     {
-        // i18n TRANSLATORS: Please, leave gtk::HBox and MainWindow as they are here
-        // i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
-        // i18n Thank you for contributing to this project
-        throw new GUIException(std::string(_("Could not load the edit piece gtk::HBox in MainWindow")));
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
 
     m_gtkBuilder->get_widget(GUI_HBOX_STATUSBAR_NAME, m_hBoxStatusBar);
     if (m_hBoxStatusBar == NULL)
     {
-        // i18n TRANSLATORS: Please, leave gtk::HBox and MainWindow as they are here
-        // i18n Those names specify internal data when the app can't start and can be useful to find out the error cause
-        // i18n Thank you for contributing to this project
-        throw new GUIException(std::string(_("Could not load the status bar gtk::HBox in MainWindow")));
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
 
     // accelerators for main_window menu

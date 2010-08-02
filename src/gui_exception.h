@@ -34,25 +34,48 @@
 #include <stdexcept>
 #include "gettext.h" // i18n
 
+/// types of GUI exception. Each one of them is described by a predefined
+/// string
+typedef enum
+{
+    e_GUIException_GTKBuilderErr = 0,   // error loading stuff from gtkbuilder
+    e_GUIException_ProcessingThreadErr, // error instantiating processing thread
+    
+} eGUIExceptionType_t;
+
 /// @brief default exception handling the GUI
 class GUIException : public std::runtime_error
 {
 public:
-    GUIException(const std::string &a_message) :
-        std::runtime_error(_("GUI Exception happened")),
-        a_msg(a_message)
-    {}
+    /// @param type of exception (see eGUIExceptionType_t)
+    /// @param file where the exception happened (use gcc's __FILE__)
+    /// @param line in in the file were the exception was raised (use gcc's
+    ///        __LINE__)
+    GUIException(eGUIExceptionType_t a_exceptionType,
+                 const char*         a_fileName,
+                 int32_t             a_line);
+    
+    virtual ~GUIException() throw();
 
-    virtual ~GUIException() throw()
-    {}
-
-    virtual const char* what() const throw()
-    {
-        return a_msg.c_str();
-    }
+    /// create and return an internationalised string describing the exception
+    /// Format of the string:
+    /// file:line string-describing-what-happened
+    /// @return an internationalised string describing the exception
+    virtual const char* what() const throw();
 
 private:
-    std::string a_msg;
+    /// type of exception
+    eGUIExceptionType_t m_exceptionType;    
+    /// file where the exception was raised
+    const char* m_filename;    
+    /// line in m_filename where the expcetion was raised
+    uint32_t m_line; 
+    
+    /// internal buffer to hold exception description in a string
+    std::stringstream m_theMessage;
+    
+    /// array with the strings that describe each type of exception
+    const static char* m_exceptionDescription[];
 };
 
 #endif /* GUIEXCEPTION_H_ */
