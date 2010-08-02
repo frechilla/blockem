@@ -31,8 +31,10 @@
 #ifndef GUIEXCEPTION_H_
 #define GUIEXCEPTION_H_
 
-#include <stdexcept>
-#include "gettext.h" // i18n
+#include <stdexcept> // std::runtime_error
+#include <stdint.h>  // for types
+
+#define GUIEXCEPTION_BUFFER_SIZE 128
 
 /// types of GUI exception. Each one of them is described by a predefined
 /// string
@@ -40,7 +42,8 @@ typedef enum
 {
     e_GUIException_GTKBuilderErr = 0,   // error loading stuff from gtkbuilder
     e_GUIException_ProcessingThreadErr, // error instantiating processing thread
-    
+
+    e_GUIException_MaxExceptionCount,   // maximum index assigned to exceptions
 } eGUIExceptionType_t;
 
 /// @brief default exception handling the GUI
@@ -54,7 +57,7 @@ public:
     GUIException(eGUIExceptionType_t a_exceptionType,
                  const char*         a_fileName,
                  int32_t             a_line);
-    
+
     virtual ~GUIException() throw();
 
     /// create and return an internationalised string describing the exception
@@ -64,16 +67,9 @@ public:
     virtual const char* what() const throw();
 
 private:
-    /// type of exception
-    eGUIExceptionType_t m_exceptionType;    
-    /// file where the exception was raised
-    const char* m_filename;    
-    /// line in m_filename where the expcetion was raised
-    uint32_t m_line; 
-    
     /// internal buffer to hold exception description in a string
-    std::stringstream m_theMessage;
-    
+    char m_theMessage[GUIEXCEPTION_BUFFER_SIZE];
+
     /// array with the strings that describe each type of exception
     const static char* m_exceptionDescription[];
 };

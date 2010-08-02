@@ -69,8 +69,8 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_blockem_OBJECTS = bitwise.$(OBJEXT) board.$(OBJEXT) \
 	game1v1.$(OBJEXT) game_total_allocation.$(OBJEXT) \
-	gui_about_dialog.$(OBJEXT) gui_config_dialog.$(OBJEXT) \
-	gui_drawing_area_board.$(OBJEXT) \
+	gui_exception.$(OBJEXT) gui_about_dialog.$(OBJEXT) \
+	gui_config_dialog.$(OBJEXT) gui_drawing_area_board.$(OBJEXT) \
 	gui_drawing_area_show_pieces.$(OBJEXT) \
 	gui_game1v1_config.$(OBJEXT) gui_main_window.$(OBJEXT) \
 	gui_main_window_worker_thread.$(OBJEXT) \
@@ -280,6 +280,7 @@ game1v1.h \
 game_total_allocation.cpp \
 game_total_allocation.h \
 g_blocking_queue.h \
+gui_exception.cpp \
 gui_exception.h \
 gui_about_dialog.cpp \
 gui_about_dialog.h \
@@ -400,6 +401,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_config_dialog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_drawing_area_board.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_drawing_area_show_pieces.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_exception.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_game1v1_config.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_main_window.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_main_window_worker_thread.Po@am__quote@
