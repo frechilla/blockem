@@ -36,12 +36,24 @@ GETTEXT_PACKAGE=BLOCKEM_PACKAGE_NAME
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [gettext package])
 AC_SUBST(GETTEXT_PACKAGE)
 #AM_GLIB_GNU_GETTEXT
+
+# http://www.gnu.org/software/hello/manual/gettext/AM_005fGNU_005fGETTEXT.html
 # This call is purposely simple, even if it generates a lot of configure time
 # checking and actions. 
+# AM_GNU_GETTEXT([intlsymbol], [needsymbol], [intldir])
+# intlsymbol can be ‘external’ or ‘no-libtool’. The default (if it is not 
+# specified or empty) is ‘no-libtool’. intlsymbol should be ‘external’ for 
+# packages with no intl/ directory. For packages with an intl/ directory, you 
+# can either use an intlsymbol equal to ‘no-libtool’, or you can use ‘external’
+# and override by using the macro AM_GNU_GETTEXT_INTL_SUBDIR elsewhere. The two
+# ways to specify the existence of an intl/ directory are equivalent. At build
+# time, a static library $(top_builddir)/intl/libintl.a will then be created
 AM_GNU_GETTEXT
 # Please use AM_GNU_GETTEXT([external]) in order to cause autoconfiguration
 # to look for an external libintl or in case you have suppressed the intl/ 
 # subdirectory by calling gettextize without '--intl' option
+# src/Makefile.am should be using LTLIBINTL instead of LIBINTL if this option
+# is the chosen one
 #AM_GNU_GETTEXT([external])
 
 

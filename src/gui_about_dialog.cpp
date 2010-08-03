@@ -28,12 +28,12 @@
 /// @endhistory
 ///
 // ============================================================================
+
 #ifdef DEBUG_PRINT
 #include <iostream> // std::cerr
 #endif
-
-#include "gettext.h" // i18n
 #include "config.h"  // PACKAGE_VERSION
+#include "gettext.h" // i18n
 #include "gui_about_dialog.h"
 #include "gui_glade_defs.h"
 

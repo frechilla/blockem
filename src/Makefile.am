@@ -39,7 +39,14 @@ main.o: compiletime.h
 
 blockem_DEPENDENCIES = gui_glade_obj.o
 
-blockem_LDADD = @LIBINTL@ gui_glade_obj.o $(GTKMM_LIBS) $(GLADEMM_LIBS) $(GTHREAD_LIBS)
+blockem_LDADD = gui_glade_obj.o 
+if OS_WIN32    
+    # windows needs the path to the MinGW version of libintl, otherwise
+    # there will be errors due to "undefined reference to `__printf__'"
+    blockem_LDADD += -L/MinGW/lib
+endif
+blockem_LDADD += @LIBINTL@ @LIBICONV@ \
+    $(GTKMM_LIBS) $(GLADEMM_LIBS) $(GTHREAD_LIBS)
 
 CLEANFILES = gui_glade_obj.o compiletime.h
 
