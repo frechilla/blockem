@@ -11,7 +11,8 @@ at the time version 2.16 was supposed to be the most stable
 I installed the following packages in my windows machine to compile blockem
 in windows. And it worked!
 
-gtkmm-win32-devel-2.16.0-4.exe
+gtkmm-win32-devel-2.16.0-4.exe (on a different folder than MSYS)
+
 gcc-c++-4.4.0-mingw32-bin.tar.gz
 gcc-c++-4.4.0-mingw32-dll.tar.gz
 gcc-core-4.4.0-mingw32-bin.tar.gz
@@ -24,8 +25,8 @@ mingwrt-3.18-mingw32-dev.tar.gz
 mingwrt-3.18-mingw32-dll.tar.gz
 binutils-2.20.1-2-ming232-bin.tar.gz
 make-3.81-20090914-mingw32-bin.tar.gz
-libiconv-1.13.1-1-mingw32-dll-2.tar.lzma
-    (libiconv-1.13.1-2-msys-1.0.13-dll-2.tar.lzma)
+libiconv-1.13.1-2-msys-1.0.13-dll-2.tar.lzma
+    (libiconv-1.13.1-1-mingw32-dll-2.tar.lzma)
 
 i18n:
 gettext-0.17-2-msys-1.0.13-bin.tar.lzma
@@ -41,22 +42,14 @@ in your system. automake detecs one of them and just adds -lintl to the linker
 line in the compiling process. Gcc's linker takes the wrong one and as a result
 several errors like the following ones are printed on the screen:
 
-main.o:main.cpp:(.text+0x191b): undefined reference to `__printf__'
+main.o:main.cpp:(.text+0x191b): undefined reference to '__printf__'
 
-to prevent this from happening a few lines had to be added to src/Makefile.am
+to prevent this from happening you have to pass a few options to the configure
+script to force the app to be compiled against the gettext library included in
+the package and to disable pthreads:
 
-blockem_LDADD = gui_glade_obj.o 
-if OS_WIN32    
-    # windows needs the path to the MinGW version of libintl, otherwise
-    # there will be errors due to "undefined reference to `__printf__'"
-    blockem_LDADD += -L/MinGW/lib
-endif
-blockem_LDADD += @LIBINTL@ @LIBICONV@ \
-    $(GTKMM_LIBS) $(GLADEMM_LIBS) $(GTHREAD_LIBS)
-    
+./configure --with-included-gettext
 
-so in windows systems the proper path to the MinGW version of libintl is 
-selected at linker time. This should be fixed at some point, but it does the
-trick for the moment. If your installation has a different path to the MinGW
-installation there will be errors while compiling though. Compiling in windows
-with MSYS can be a bit tricky :)
+At some point compiling with pthreads enabled should be tested, but having it
+disabled does the trick for the moment (though at compile time some warnings
+are printed on the screen because some parts of libintl are disabled)
