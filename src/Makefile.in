@@ -256,7 +256,12 @@ AM_CXXFLAGS = $(GTKMM_CFLAGS) $(GTHREAD_CFLAGS) \
 	-DLOCALEDIR=\"$(BLOCKEM_LOCALEDIR)\"
 AM_LDFLAGS = 
 blockem_DEPENDENCIES = gui_glade_obj.o $(am__append_2)
-blockem_LDADD = @LIBINTL@ gui_glade_obj.o $(GTKMM_LIBS) \
+
+# there is no need for @LIBICONV@:
+# libiconv is used to convert between a given text encoding and the user's 
+# encoding (...) for use on systems which don't have one, or whose implementation 
+# cannot convert from/to Unicode
+blockem_LDADD = gui_glade_obj.o @LIBINTL@ $(GTKMM_LIBS) \
 	$(GLADEMM_LIBS) $(GTHREAD_LIBS) $(am__append_3)
 CLEANFILES = gui_glade_obj.o compiletime.h $(am__append_1)
 EXTRA_DIST = \
