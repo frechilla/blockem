@@ -25,10 +25,24 @@ mingwrt-3.18-mingw32-dev.tar.gz
 mingwrt-3.18-mingw32-dll.tar.gz
 binutils-2.20.1-2-ming232-bin.tar.gz
 make-3.81-20090914-mingw32-bin.tar.gz
-libiconv-1.13.1-2-msys-1.0.13-dll-2.tar.lzma
-    (libiconv-1.13.1-1-mingw32-dll-2.tar.lzma)
 
-i18n:
++ libiconv (the one from MSYS base system)
+libiconv-1.13.1-1-mingw32-dll-2.tar.lzma
+libcharset-1.13.1-2-msys-1.0.13-dll-1.tar.lzma
+libiconv-1.13.1-2-msys-1.0.13-dll-2.tar.lzma
+libiconv-1.13.1-2-msys-1.0.13-bin.tar.lzma
+libiconv-1.13.1-2-msys-1.0.13-dev.tar.lzma
+
++ libiconv (from http://www.gtk.org/download-windows.html)
+(libiconv-1.9.1.bin.woe32.zip)
+(win-iconv-dev_tml-20090213_win32.zip)
+(win-iconv-dll_tml-20090213_win32.zip)
+
++ pthreads (from MinGW, not MSYS):
+pthreads-w32-2.8.0-3-mingw32-dev.tar.lzma
+libpthread-2.8.0-3-mingw32-dll-2.tar.lzma
+
++ i18n
 gettext-0.17-2-msys-1.0.13-bin.tar.lzma
 gettext-0.17-2-msys-1.0.13-dev.tar.lzma
 libintl-0.17-2-msys-dll-8.tar.lzma
@@ -37,18 +51,20 @@ libtermcap-0.20050421_1-2-msys-1.0.13-dll-0.tar.lzma
 libexpat-2.0.1-1-msys-1.0.13-dll-1.tar.lzma
 
 
-Since Gtkmm contains its own version there will be 2 intl libraries (libintl)
-in your system. automake detecs one of them and just adds -lintl to the linker
-line in the compiling process. Gcc's linker takes the wrong one and as a result
-several errors like the following ones are printed on the screen:
+Compiling the app against the libintl version included in MinGW is giving 
+errors at linking time:
 
 main.o:main.cpp:(.text+0x191b): undefined reference to '__printf__'
 
 to prevent this from happening you have to pass a few options to the configure
-script to force the app to be compiled against the gettext library included in
-the package and to disable pthreads:
+script to force the app to compile against the gettext library included in
+the package. Pthreads should also be disabled since having them on produces
+a lot of liker errors when blockem is linked against the libintl library.
+Libintl can be built without pthread support no problem, and blockem still will
+have 2 threds because they are gthreads instead of pthreads.
 
-./configure --with-included-gettext
+# ./configure --with-included-gettext
+./configure --with-included-gettext --disable-threads
 
 At some point compiling with pthreads enabled should be tested, but having it
 disabled does the trick for the moment (though at compile time some warnings
