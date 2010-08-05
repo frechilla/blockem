@@ -26,10 +26,21 @@ mingwrt-3.18-mingw32-dll.tar.gz
 binutils-2.20.1-2-ming232-bin.tar.gz
 make-3.81-20090914-mingw32-bin.tar.gz
 
++ i18n
+gettext-0.17-2-msys-1.0.13-bin.tar.lzma
+gettext-0.17-2-msys-1.0.13-dev.tar.lzma
+libintl-0.17-2-msys-dll-8.tar.lzma
+libgettextpo-0.17-2-msys-dll-0.tar.lzma
+libtermcap-0.20050421_1-2-msys-1.0.13-dll-0.tar.lzma
+libexpat-2.0.1-1-msys-1.0.13-dll-1.tar.lzma
+libiconv-1.13.1-2-msys-1.0.13-dll-2.tar.lzma
+
+---------------------
+EXTRA (no need to install)
+
 + libiconv (the one from MSYS base system)
 libiconv-1.13.1-1-mingw32-dll-2.tar.lzma
 libcharset-1.13.1-2-msys-1.0.13-dll-1.tar.lzma
-libiconv-1.13.1-2-msys-1.0.13-dll-2.tar.lzma
 libiconv-1.13.1-2-msys-1.0.13-bin.tar.lzma
 libiconv-1.13.1-2-msys-1.0.13-dev.tar.lzma
 
@@ -42,14 +53,8 @@ libiconv-1.13.1-2-msys-1.0.13-dev.tar.lzma
 pthreads-w32-2.8.0-3-mingw32-dev.tar.lzma
 libpthread-2.8.0-3-mingw32-dll-2.tar.lzma
 
-+ i18n
-gettext-0.17-2-msys-1.0.13-bin.tar.lzma
-gettext-0.17-2-msys-1.0.13-dev.tar.lzma
-libintl-0.17-2-msys-dll-8.tar.lzma
-libgettextpo-0.17-2-msys-dll-0.tar.lzma
-libtermcap-0.20050421_1-2-msys-1.0.13-dll-0.tar.lzma
-libexpat-2.0.1-1-msys-1.0.13-dll-1.tar.lzma
-
+EXTRA
+---------------------
 
 Compiling the app against the libintl version included in MinGW is giving 
 errors at linking time:
@@ -66,6 +71,19 @@ have 2 threds because they are gthreads instead of pthreads.
 # ./configure --with-included-gettext
 ./configure --with-included-gettext --disable-threads
 
+
+TODO
+get libiconv to work. While ./configure is run the following message appears:
+checking for iconv... no, consider installing GNU libiconv
+
+./configure needs --with-included-gettext to work. we should be able to use
+the libintl included in MinGW/MSYS.
+
+Translation of GTK widgets doesn't work. At the moment only plain strings and
+preloaded widgets get properly translated. It might have something to do with
+the previoud problems 
+
 At some point compiling with pthreads enabled should be tested, but having it
 disabled does the trick for the moment (though at compile time some warnings
 are printed on the screen because some parts of libintl are disabled)
+
