@@ -529,7 +529,7 @@ msgstr "Escriba"
 #. i18n Thank you for contributing to this project
 #: src/main.cpp:252
 msgid "- The GNU polyominoes board game"
-msgstr "- El juego de tablero sobre poliominós GNU"
+msgstr "- El juego de tablero sobre poliominoes GNU"
 
 #: src/main.cpp:269
 msgid "Error parsing command line"

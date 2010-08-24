@@ -227,7 +227,16 @@ int main(int argc, char **argv)
     GError* error = NULL;
     char    errorStringBuffer[ERROR_STRING_BUFFER_SIZE];
 
-    setlocale (LC_ALL, "");
+    // Prevents gtk_init(), gtk_init_check(), gtk_init_with_args() and 
+    // gtk_parse_args() from automatically calling setlocale (LC_ALL, ""). 
+    // You would want to use this function if you wanted to set the locale for 
+    // your program to something other than the user's locale
+    gtk_disable_setlocale ();
+    // This is the same as calling the C library function
+    // setlocale (LC_ALL, "") but also takes care of the locale specific setup 
+    // of the windowing system used by GDK
+    gtk_set_locale();
+    //setlocale (LC_ALL, "");
 
     // i18n initialisation
     // make sure first that the message catalog can be found
@@ -254,6 +263,9 @@ int main(int argc, char **argv)
     // to diable i18n write NULL instead of GETTEXT_PACKAGE in the 3rd parameter
     //     g_option_context_add_main_entries (cmdContext, g_cmdEntries, NULL);
     g_option_context_add_main_entries (g_cmdContext, g_cmdEntries, GETTEXT_PACKAGE);
+    
+    // http://library.gnome.org/devel/glib/stable/glib-Commandline-option-parser.html#g-option-context-set-translation-domain
+    g_option_context_set_translation_domain (g_cmdContext, GETTEXT_PACKAGE);
 
     // option group
     GOptionGroup* grp = gtk_get_option_group (TRUE);
@@ -318,6 +330,7 @@ int main(int argc, char **argv)
 
         // create a new gtk builder. add_from_string will load the definitions
         Glib::RefPtr<Gtk::Builder> gtkBuilder = Gtk::Builder::create();
+        gtkBuilder->set_translation_domain(GETTEXT_PACKAGE);
 
 #ifdef GLIBMM_EXCEPTIONS_ENABLED
         try
