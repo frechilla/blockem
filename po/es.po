@@ -484,9 +484,9 @@ msgid ""
 "'3' \"Centre focused\"; '4' \"Simple\"; '5' \"Random\""
 msgstr ""
 "Heurística a usar cuando la aplicación corre en modo \"1 contra 1\" (--"
-"mode=2). Las opciones válidas son: '0' \"Área de influencia\" (Default); '1' "
-"\"Clint Eastwood\"; '2' \"Importancia de esquinas\"; '3' \"Fijación por el "
-"centro\"; '4' \"Simple\"; '5' \"Aleatorio\""
+"mode=2). Las opciones válidas son: '0' \"Área de influencia\" (por defecto); "
+"'1' "\"Clint Eastwood\"; '2' \"Importancia de esquinas\"; '3' \"Fijación por "
+"el centro\"; '4' \"Simple\"; '5' \"Aleatorio\""
 
 #: src/main.cpp:166
 msgid ""
