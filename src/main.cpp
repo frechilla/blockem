@@ -174,9 +174,6 @@ static GOptionEntry g_cmdEntries[] =
     { NULL }
 };
 
-// must be deleted before the app exits
-static GOptionContext* g_cmdContext = NULL;
-
 /// @brief print the error message on the screen using a expected format and exits the app
 /// @param name of the binary (argv[0] in main)
 /// @param custom error message
@@ -211,12 +208,6 @@ void FatalError(
               <<  " --help'"
               << std::endl;
 
-    // free command line parsing resources
-    if (g_cmdContext != NULL)
-    {
-        g_option_context_free(g_cmdContext);
-    }
-
     // end of the app
     exit(a_errorCode);
 }
@@ -225,66 +216,148 @@ void FatalError(
 int main(int argc, char **argv)
 {
     GError* error = NULL;
+    GOptionContext* cmdContext = NULL;
     char    errorStringBuffer[ERROR_STRING_BUFFER_SIZE];
+    
+    // Init type system as soon as possible
+	g_type_init ();
+    
+    // gtkmm can do strange stuff if its internals are not initialised early 
+    // enough
+    Gtk::Main::init_gtkmm_internals();
 
-    // Prevents gtk_init(), gtk_init_check(), gtk_init_with_args() and 
-    // gtk_parse_args() from automatically calling setlocale (LC_ALL, ""). 
-    // You would want to use this function if you wanted to set the locale for 
-    // your program to something other than the user's locale
-    gtk_disable_setlocale ();
-    // This is the same as calling the C library function
-    // setlocale (LC_ALL, "") but also takes care of the locale specific setup 
-    // of the windowing system used by GDK
-    gtk_set_locale();
-    //setlocale (LC_ALL, "");
-
-    // i18n initialisation
+    //////////////////
+    // gettext internationalisation initialisation
+    setlocale (LC_ALL, "");    
     // make sure first that the message catalog can be found
-    if (bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR) != NULL)
-    {
-        // UTF-8 chosen as codeset
-        bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
-        // initialise the message catalog
-        textdomain (GETTEXT_PACKAGE);
-    }
-    else
-    {
-        // if the locale could not be set, trying to localise this string
-        // doesn't make a lot of sense
-        std::cerr << "Error while setting the locale" << std::endl;
-    }
+    bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
+    // UTF-8 chosen as codeset
+    bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
+    // initialise the message catalog
+    textdomain (GETTEXT_PACKAGE);
+    // gettext internationalisation initialisation
+    //////////////////
 
     // create new command line context. This resource must be deleted before existing the app
     // i18n TRANSLATORS: Please leave the starting dash as it is part of the glib command line
     // i18n parsing formatting
     // i18n Thank you for contributing to this project
-    g_cmdContext = g_option_context_new (_("- The GNU polyominoes board game"));
+    cmdContext = g_option_context_new (_("- The GNU polyominoes board game"));
 
-    // to diable i18n write NULL instead of GETTEXT_PACKAGE in the 3rd parameter
-    //     g_option_context_add_main_entries (cmdContext, g_cmdEntries, NULL);
-    g_option_context_add_main_entries (g_cmdContext, g_cmdEntries, GETTEXT_PACKAGE);
+#ifdef WIN32
+    // in win32 systems gettext fails when the string is static and marked as 
+    // translatable with N_() but _() is never called explicitely. Basically 
+    // there are 2 kinds of strings that are not translated:
+    //  + Those included in the GOptionEntry list, which show the available
+    //    options that can be passed to the program through command line
+    //  + Strings included in the .glade file that never change during the
+    //    execution of the application, for example a menu called "Game", or a
+    //    label that contains the word "rotate"
+    //
+    // We'll be creating here a temporary GOptionEntry based on g_cmdEntries, 
+    // where _() will be called explicitely so it gets properly translated into
+    // the current domain
+
+    int32_t nEntries;
+    GOptionEntry* translatedCmdEntries = NULL;
+    GOptionEntry* optEntryIterator;
     
-    // http://library.gnome.org/devel/glib/stable/glib-Commandline-option-parser.html#g-option-context-set-translation-domain
-    g_option_context_set_translation_domain (g_cmdContext, GETTEXT_PACKAGE);
+    // count number of entries in global array of command line options.
+    // that global array of command line optines is a null terminated array of
+    // structs
+    nEntries = 0;
+    optEntryIterator = g_cmdEntries;
+    while (*(reinterpret_cast<char*>(optEntryIterator)) != '\0')
+    {  
+        nEntries++;
+        optEntryIterator = g_cmdEntries + nEntries;
+    }
+    
+    // allocate memory for the dynamic trsnlated array
+    translatedCmdEntries = new GOptionEntry[nEntries];
+    
+    // copy the global command line optinos into the brand new GOptionEntry 
+    // calling explicitely to _()
+    for (int32_t i = 0; i < nEntries; i++)
+    {
+        // typedef struct {
+        //   const gchar *long_name;
+        //   gchar        short_name;
+        //   gint         flags;
+        //
+        //   GOptionArg   arg;
+        //   gpointer     arg_data;
+        //
+        //   const gchar *description;
+        //   const gchar *arg_description;
+        // } GOptionEntry;
+        
+        translatedCmdEntries[i].long_name = g_cmdEntries[i].long_name;
+        translatedCmdEntries[i].short_name = g_cmdEntries[i].short_name;
+        translatedCmdEntries[i].flags = g_cmdEntries[i].flags;
+        translatedCmdEntries[i].arg = g_cmdEntries[i].arg;
+        translatedCmdEntries[i].arg_data = g_cmdEntries[i].arg_data;
 
-    // option group
-    GOptionGroup* grp = gtk_get_option_group (TRUE);
+        // these ones are the only 2 that might need to be translated
+        translatedCmdEntries[i].description = _(g_cmdEntries[i].description);
+        translatedCmdEntries[i].arg_description = _(g_cmdEntries[i].arg_description);
+    }
+    
+    // must be a null terminated array of structs
+    translatedCmdEntries[nEntries] = g_cmdEntries[nEntries];
+    
+    // the workaround is ready. GETTEXT_PACKAGE is still needed so the rest
+    // of the strings shown when --help options is run are automatically 
+    // translated
+    g_option_context_add_main_entries (
+        cmdContext, 
+        translatedCmdEntries, 
+        GETTEXT_PACKAGE);
+        
+    // freeing dynamic memory allocation. Once they've been added to the command
+    // line context, they won't be used any more
+    delete [] translatedCmdEntries;
+
+#else
+    // Special temporary GOptionEntry is only needed in win32 so far. No need
+    // to overwrite the old working code in any other OS
+    
+    // to disable i18n write NULL instead of GETTEXT_PACKAGE in the 3rd parameter
+    //     g_option_context_add_main_entries (cmdContext, g_cmdEntries, NULL);
+    g_option_context_add_main_entries (
+        cmdContext, 
+        g_cmdEntries, 
+        GETTEXT_PACKAGE);
+
+#endif // WIN32
+
+    // no need for this. It is already set in g_option_context_add_main_entries
+    // http://library.gnome.org/devel/glib/stable/glib-Commandline-option-parser.html#g-option-context-set-translation-domain
+    //g_option_context_set_translation_domain (cmdContext, GETTEXT_PACKAGE);
 
     // http://library.gnome.org/devel/glib/unstable/glib-Commandline-option-parser.html#g-option-context-add-group
-    g_option_context_add_group (g_cmdContext, grp);
+    // note that the group will be freed together with the context when 
+    // g_option_context_free() is called, so you must not free the group 
+    // yourself after adding it to a context
+    g_option_context_add_group (cmdContext, gtk_get_option_group (TRUE));
 
     // http://library.gnome.org/devel/glib/unstable/glib-Commandline-option-parser.html#g-option-group-set-translation-domain
-    g_option_group_set_translation_domain (grp, GETTEXT_PACKAGE);
-    if (!g_option_context_parse (g_cmdContext, &argc, &argv, &error))
+    //g_option_group_set_translation_domain (grp, GETTEXT_PACKAGE);
+    if (!g_option_context_parse (cmdContext, &argc, &argv, &error))
     {
         std::stringstream errMessage;
         errMessage << _("Error parsing command line")
                    << ": "
                    << error->message;
-
+        g_error_free(error);         
+        
         FatalError(argv[0], errMessage.str().c_str(), COMMAND_LINE_PARSING_ERR);
     }
-
+    
+    // free command line parsing resources
+    g_option_context_free(cmdContext);
+    
+    
     if (g_version) // "version" option takes priority. If it set nothing else will be done
     {
         std::cout << "Blockem, version " << VERSION << " (r" << SVN_REVISION << ")" << std::endl;
@@ -298,9 +371,6 @@ int main(int argc, char **argv)
         //////////////////
         // GUI MODE
 
-        // gtkmm can do strange stuff if its internals are not initialised early enough
-        Gtk::Main::init_gtkmm_internals();
-
         // g_thread_supported returns TRUE if the thread system is initialised,
         // and FALSE if it is not. Initiliase gthreads only if they haven't been
         // initialised already. Since glib 2.24.0 (from its changelog):
@@ -308,23 +378,23 @@ int main(int argc, char **argv)
         // can be called multiple times, and does not have to be the first call.
         // GObject now links to GThread and threads are enabled automatically
         // when g_type_init() is called"
-        // for backwards compatibility call to g_thread_init only if it hasn't been
-        // called already
+        // for backwards compatibility call to g_thread_init only if it hasn't 
+        // been called already
         if(!g_thread_supported())
         {
             // Initialise gthreads even before gtk_init
             g_thread_init(NULL);
-
-            // This call is needed only if extra threads (not the main thread)
-            // updates directly the GUI widgets using gdk_threads_enter
-            // and gdk_threads_leave
-            // It's not really needed since there's only 1 extra thread
-            // (apart from the main one) and it doesn't update the GUI
-            // straight away. It uses signals for that matter (see comment
-            // in MainWindow::WorkerThread_computingFinished)
-            //gdk_threads_init();
         }
-
+        
+        // This call is needed only if extra threads (not the main thread)
+        // updates directly the GUI widgets using gdk_threads_enter
+        // and gdk_threads_leave
+        // It's not really needed since there's only 1 extra thread
+        // (apart from the main one) and it doesn't update the GUI
+        // straight away. It uses signals for that matter (see comment
+        // in MainWindow::WorkerThread_computingFinished)
+        //gdk_threads_init();
+        
         // this should be called before starting manipulating GUI stuff
         Gtk::Main kit(argc, argv);
 
@@ -337,10 +407,10 @@ int main(int argc, char **argv)
         {
 #endif // GLIBMM_EXCEPTIONS_ENABLED
             // Load the GUI from the xml code embedded in the executable file
-            // see src/gui_glade.h for more information
             if (!gtkBuilder->add_from_string(
+            // see src/gui_glade.h for more information
                     reinterpret_cast<const char *>(__BIN_GUI_GLADE_START__),
-                    reinterpret_cast<long int>(__BIN_GUI_GLADE_SIZE__)))
+                    reinterpret_cast<gsize>(__BIN_GUI_GLADE_SIZE__)))
             {
                 FatalError(
                     argv[0],
@@ -362,6 +432,38 @@ int main(int argc, char **argv)
             FatalError(argv[0], ex.what().c_str(), GUI_EXCEPTION_ERR);
         }
 #endif // GLIBMM_EXCEPTIONS_ENABLED
+
+#ifdef WIN32
+    // in win32 systems gettext fails when the string is static and marked as 
+    // translatable with N_() but _() is never called explicitely. Basically 
+    // there are 2 kinds of strings that are not translated:
+    //  + Those included in the GOptionEntry list, which show the available
+    //    options that can be passed to the program through command line
+    //  + Strings included in the .glade file that never change during the
+    //    execution of the application, for example a menu called "Game", or a
+    //    label that contains the word "rotate"
+    //
+    // We'll be calling here to _() for every string found in the .glade file
+    // so it gets properly translated into the current domain (the 2nd case
+    // described above)
+    
+    // Gtk::Builder::gobj_copy(): Provides access to the underlying C instance
+    // gtk_builder_get_objects(): Gets all objects that have been constructed 
+    //    by builder. Returns a newly-allocated GSList (...) should be freed by 
+    //    g_slist_free()
+    GSList* objList = gtk_builder_get_objects(gtkBuilder->gobj_copy());
+    
+    GSList* objListIterator = objList;
+    while (objListIterator != NULL)
+    {
+        GObject* obj = static_cast<GObject*>(objListIterator->data);
+        
+        objListIterator = g_slist_next(objListIterator);
+    }
+    
+    g_slist_free(objList);
+    
+#endif // WIN32
 
         MainWindow *pMainWindow = NULL;
         try
@@ -668,9 +770,6 @@ int main(int argc, char **argv)
         // CONSOLE mode
         //////////////////
     }
-
-    // free command line parsing resources
-    g_option_context_free(g_cmdContext);
 
     return 0;
 }
