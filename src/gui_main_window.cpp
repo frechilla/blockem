@@ -1584,8 +1584,8 @@ void MainWindow::ForceTranslationOfWidgets()
     m_settingsNKPointsMenuItem->set_label(
         _(m_settingsNKPointsMenuItem->get_label().c_str()));
 
-    m_settingsInfluenceAreaMenuItem->set_label(
-            _(m_settingsInfluenceAreaMenuItem->get_label().c_str()));
+    m_settingsForbiddenAreaMenuItem->set_label(
+            _(m_settingsForbiddenAreaMenuItem->get_label().c_str()));
 
     m_settingsForbiddenAreaPlayer1MenuItem->set_label(
         _(m_settingsForbiddenAreaPlayer1MenuItem->get_label().c_str()));
