@@ -68,9 +68,6 @@ am_blockemtest_OBJECTS = bitwise_test.$(OBJEXT) board_test.$(OBJEXT) \
 	rules_test.$(OBJEXT)
 blockemtest_OBJECTS = $(am_blockemtest_OBJECTS)
 am__DEPENDENCIES_1 =
-blockemtest_DEPENDENCIES = $(am__DEPENDENCIES_1) ../board.o \
-	../game1v1.o ../game_total_allocation.o ../heuristic.o \
-	../piece.o ../player.o ../rules.o ../bitwise.o
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -268,9 +265,7 @@ rules_test.h
 
 # this should be changed at some point. we should be crating a library with the base blockem classes
 # and then add that library to blockemtest_LIBADD
-blockemtest_LDADD = \
-@LIBINTL@ \
-$(GTHREAD_LIBS) \
+blockemtest_DEPENDENCIES = \
 ../board.o \
 ../game1v1.o \
 ../game_total_allocation.o \
@@ -279,6 +274,10 @@ $(GTHREAD_LIBS) \
 ../player.o \
 ../rules.o \
 ../bitwise.o
+
+blockemtest_LDADD = \
+@LIBINTL@ \
+$(GTHREAD_LIBS)
 
 all: all-am
 
