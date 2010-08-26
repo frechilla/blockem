@@ -27,7 +27,7 @@ rules_test.h
 
 # this should be changed at some point. we should be crating a library with the base blockem classes
 # and then add that library to blockemtest_LIBADD
-blockemtest_DEPENDENCIES = \
+BLOCKEM_OBJS = \
 ../board.o \
 ../game1v1.o \
 ../game_total_allocation.o \
@@ -39,4 +39,5 @@ blockemtest_DEPENDENCIES = \
 
 blockemtest_LDADD = \
 @LIBINTL@ \
-$(GTHREAD_LIBS)
+$(GTHREAD_LIBS) \
+$(BLOCKEM_OBJS)
