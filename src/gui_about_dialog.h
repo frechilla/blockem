@@ -44,6 +44,16 @@ public:
 private:
     /// @brief used to retrieve the objects from the Glade design
     Glib::RefPtr<Gtk::Builder> m_gtkBuilder;
+    
+    /// Calls gettext per every static widget in the dialog. These strings
+    /// are those ones included in the .glade file that never change during the
+    /// execution of the application, for example a menu called "Game", or a
+    /// label that contains the word "rotate"
+    ///
+    /// So far this is only needed in win32 platform due to some unknown issue
+    /// that prevents those strings to be automatically translated. It works
+    /// fine in linux, so there's no need there to explicitly call to gettext
+    void ForceTranslationOfWidgets();
 
     // prevent the default constructors to be used
     AboutDialog();

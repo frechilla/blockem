@@ -433,37 +433,6 @@ int main(int argc, char **argv)
         }
 #endif // GLIBMM_EXCEPTIONS_ENABLED
 
-#ifdef WIN32
-    // in win32 systems gettext fails when the string is static and marked as 
-    // translatable with N_() but _() is never called explicitely. Basically 
-    // there are 2 kinds of strings that are not translated:
-    //  + Those included in the GOptionEntry list, which show the available
-    //    options that can be passed to the program through command line
-    //  + Strings included in the .glade file that never change during the
-    //    execution of the application, for example a menu called "Game", or a
-    //    label that contains the word "rotate"
-    //
-    // We'll be calling here to _() for every string found in the .glade file
-    // so it gets properly translated into the current domain (the 2nd case
-    // described above)
-    
-    // Gtk::Builder::gobj_copy(): Provides access to the underlying C instance
-    // gtk_builder_get_objects(): Gets all objects that have been constructed 
-    //    by builder. Returns a newly-allocated GSList (...) should be freed by 
-    //    g_slist_free()
-    GSList* objList = gtk_builder_get_objects(gtkBuilder->gobj_copy());
-    
-    GSList* objListIterator = objList;
-    while (objListIterator != NULL)
-    {
-        GObject* obj = static_cast<GObject*>(objListIterator->data);
-        
-        objListIterator = g_slist_next(objListIterator);
-    }
-    
-    g_slist_free(objList);
-    
-#endif // WIN32
 
         MainWindow *pMainWindow = NULL;
         try

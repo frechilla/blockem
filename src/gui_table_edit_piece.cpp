@@ -96,6 +96,9 @@ TableEditPiece::TableEditPiece(
     {
         throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
+    
+    // this call will work in different ways depending on the current platform
+    ForceTranslationOfWidgets();
 
 	// connect the signals to the handlers
 	m_editPieceDrawingArea->signal_expose_event().connect(
@@ -333,3 +336,31 @@ bool TableEditPiece::InvalidateEditPieceDrawingArea()
 
     return false;
 }
+
+#ifdef WIN32
+void TableEditPiece::ForceTranslationOfWidgets()
+{
+    // in win32 systems gettext fails when the string is static and marked as 
+    // translatable with N_() but _() is never called explicitely. Basically 
+    // there are 2 kinds of strings that are not translated:
+    //  + Those included in the GOptionEntry list, which show the available
+    //    options that can be passed to the program through command line
+    //  + Strings included in the .glade file that never change during the
+    //    execution of the application, for example a menu called "Game", or a
+    //    label that contains the word "rotate"
+    //
+    // We'll be calling here to _() for every string found in the .glade file
+    // so it gets properly translated into the current domain (the 2nd case
+    // described above)
+    
+    m_rotateLabel->set_label( _(m_rotateLabel->get_label().c_str()) );
+    m_mirrorLabel->set_label( _(m_mirrorLabel->get_label().c_str()) );
+}
+#else  
+void TableEditPiece::ForceTranslationOfWidgets()
+{
+    // So far this is only needed in win32 platform due to some unknown issue
+    // that prevents those strings to be automatically translated. It works
+    // fine in linux, so there's no need there to explicitly call to gettext
+}
+#endif // WIN32

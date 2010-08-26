@@ -129,8 +129,18 @@ private:
     /// either because it's a different piece or because it was edited
     sigc::signal<void, const Piece&> m_signalPieceChanged;
 
-    // force the editPiece drawing area to be repainted
+    /// force the editPiece drawing area to be repainted
     bool InvalidateEditPieceDrawingArea();
+    
+    /// Calls gettext per every static widget in the table. These strings
+    /// are those ones included in the .glade file that never change during the
+    /// execution of the application, for example a menu called "Game", or a
+    /// label that contains the word "rotate"
+    ///
+    /// So far this is only needed in win32 platform due to some unknown issue
+    /// that prevents those strings to be automatically translated. It works
+    /// fine in linux, so there's no need there to explicitly call to gettext
+    void ForceTranslationOfWidgets();
 
     // prevent the default constructors from being used
 	TableEditPiece();

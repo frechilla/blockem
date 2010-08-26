@@ -190,6 +190,27 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
         throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
 
+    m_gameMenuItem = Glib::RefPtr<Gtk::MenuItem>::cast_dynamic(
+            m_gtkBuilder->get_object(GUI_MENU_ITEM_GAME));
+    if (!m_gameMenuItem)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+    
+    m_settingsMenuItem = Glib::RefPtr<Gtk::MenuItem>::cast_dynamic(
+            m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS));
+    if (!m_settingsMenuItem)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+    
+    m_helpMenuItem = Glib::RefPtr<Gtk::MenuItem>::cast_dynamic(
+            m_gtkBuilder->get_object(GUI_MENU_ITEM_HELP));
+    if (!m_helpMenuItem)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+    
     m_newMenuItem = Glib::RefPtr<Gtk::MenuItem>::cast_dynamic(
             m_gtkBuilder->get_object(GUI_MENU_ITEM_GAME_NEW));
     if (!m_newMenuItem)
@@ -296,6 +317,9 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     {
         throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
+    
+    // this call will work in different ways depending on the current platform
+    ForceTranslationOfWidgets();
 
     // accelerators for main_window menu
     this->add_accel_group(m_accelGroup);
@@ -1514,3 +1538,58 @@ void MainWindow::ResetCursor()
         window->set_cursor();
     }
 }
+
+#ifdef WIN32
+void MainWindow::ForceTranslationOfWidgets()
+{
+    // in win32 systems gettext fails when the string is static and marked as 
+    // translatable with N_() but _() is never called explicitely. Basically 
+    // there are 2 kinds of strings that are not translated:
+    //  + Those included in the GOptionEntry list, which show the available
+    //    options that can be passed to the program through command line
+    //  + Strings included in the .glade file that never change during the
+    //    execution of the application, for example a menu called "Game", or a
+    //    label that contains the word "rotate"
+    //
+    // We'll be calling here to _() for every string found in the .glade file
+    // so it gets properly translated into the current domain (the 2nd case
+    // described above)
+    
+    m_gameMenuItem->set_label(
+        _(m_gameMenuItem->get_label().c_str()));
+        
+    m_settingsMenuItem->set_label(
+        _(m_settingsMenuItem->get_label().c_str()));
+        
+    m_helpMenuItem->set_label(
+        _(m_helpMenuItem->get_label().c_str()));
+    
+    m_settingsNKPointsMenuItem->set_label(
+        _(m_settingsNKPointsMenuItem->get_label().c_str()));
+        
+    m_settingsForbiddenAreaPlayer1MenuItem->set_label(
+        _(m_settingsForbiddenAreaPlayer1MenuItem->get_label().c_str()));
+        
+    m_settingsForbiddenAreaPlayer2MenuItem->set_label(
+        _(m_settingsForbiddenAreaPlayer2MenuItem->get_label().c_str()));
+        
+    m_settingsForbiddenAreaNoShowMenuItem->set_label(
+        _(m_settingsForbiddenAreaNoShowMenuItem->get_label().c_str()));
+        
+    m_settingsInfluenceAreaPlayer1MenuItem->set_label(
+        _(m_settingsInfluenceAreaPlayer1MenuItem->get_label().c_str()));
+        
+    m_settingsInfluenceAreaPlayer2MenuItem->set_label(
+        _(m_settingsInfluenceAreaPlayer2MenuItem->get_label().c_str()));
+        
+    m_settingsInfluenceAreaNoShowMenuItem->set_label(
+        _(m_settingsInfluenceAreaNoShowMenuItem->get_label().c_str()));        
+}
+#else  
+void MainWindow::ForceTranslationOfWidgets()
+{
+    // So far this is only needed in win32 platform due to some unknown issue
+    // that prevents those strings to be automatically translated. It works
+    // fine in linux, so there's no need there to explicitly call to gettext
+}
+#endif // WIN32

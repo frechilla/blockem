@@ -99,8 +99,67 @@ AboutDialog::AboutDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builde
             this->set_icon(picture);
         }
     }
+    
+    // this call will work in different ways depending on the current platform
+    ForceTranslationOfWidgets();
 }
 
 AboutDialog::~AboutDialog()
 {
 }
+
+#ifdef WIN32
+void AboutDialog::ForceTranslationOfWidgets()
+{
+    // in win32 systems gettext fails when the string is static and marked as 
+    // translatable with N_() but _() is never called explicitely. Basically 
+    // there are 2 kinds of strings that are not translated:
+    //  + Those included in the GOptionEntry list, which show the available
+    //    options that can be passed to the program through command line
+    //  + Strings included in the .glade file that never change during the
+    //    execution of the application, for example a menu called "Game", or a
+    //    label that contains the word "rotate"
+    //
+    // We'll be calling here to _() for every string found in the .glade file
+    // so it gets properly translated into the current domain (the 2nd case
+    // described above)
+    
+    if (get_program_name().size() > 0)
+    {
+        set_program_name( _(get_program_name().c_str()) );
+    }
+    if (get_copyright().size() > 0)
+    {
+        set_copyright( _(get_copyright().c_str()) );
+    }
+    if (get_comments().size() > 0)
+    {
+        set_comments( _(get_comments().c_str()) );
+    }
+    if (get_license().size() > 0)
+    {
+        set_license( _(get_license().c_str()) );
+    }
+    if (get_website_label().size() > 0)
+    {
+        set_website_label( _(get_website_label().c_str()) );
+    }
+    //set_authors(get_authors().c_str());
+    //set_documenters(get_documenters().c_str());
+    //set_artists(get_artists().c_str());
+    if (get_translator_credits().size() > 0)
+    {
+        set_translator_credits( _(get_translator_credits().c_str()) );
+    }
+    
+    // do not set. It can break the icon
+    //set_logo_icon_name( _(get_logo_icon_name().c_str()) );
+}
+#else  
+void AboutDialog::ForceTranslationOfWidgets()
+{
+    // So far this is only needed in win32 platform due to some unknown issue
+    // that prevents those strings to be automatically translated. It works
+    // fine in linux, so there's no need there to explicitly call to gettext
+}
+#endif // WIN32

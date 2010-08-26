@@ -165,6 +165,9 @@ ConfigDialog::ConfigDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Buil
     {
         throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
+    
+    // this call will work in different ways depending on the current platform
+    ForceTranslationOfWidgets();
 
     // adjustments for starting coordinate spinbuttons
     m_spinbuttonStartingRowPlayer1->set_adjustment(m_spinbuttonStartingRowPlayer1Adj);
@@ -611,3 +614,29 @@ void ConfigDialog::SaveCurrentConfigIntoGlobalSettings() const
     Game1v1Config::Instance().SetMinimaxDepthPlayer1(this->GetPlayer1SearchTreeDepth());
     Game1v1Config::Instance().SetMinimaxDepthPlayer2(this->GetPlayer2SearchTreeDepth());
 }
+
+#ifdef WIN32
+void ConfigDialog::ForceTranslationOfWidgets()
+{
+    // in win32 systems gettext fails when the string is static and marked as 
+    // translatable with N_() but _() is never called explicitely. Basically 
+    // there are 2 kinds of strings that are not translated:
+    //  + Those included in the GOptionEntry list, which show the available
+    //    options that can be passed to the program through command line
+    //  + Strings included in the .glade file that never change during the
+    //    execution of the application, for example a menu called "Game", or a
+    //    label that contains the word "rotate"
+    //
+    // We'll be calling here to _() for every string found in the .glade file
+    // so it gets properly translated into the current domain (the 2nd case
+    // described above)
+    
+}
+#else  
+void ConfigDialog::ForceTranslationOfWidgets()
+{
+    // So far this is only needed in win32 platform due to some unknown issue
+    // that prevents those strings to be automatically translated. It works
+    // fine in linux, so there's no need there to explicitly call to gettext
+}
+#endif // WIN32

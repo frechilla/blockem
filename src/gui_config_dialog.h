@@ -129,7 +129,7 @@ private:
     /// heuristic explanation player1
     Gtk::TextView* m_textViewHeuristic1;
 
-    // heuristic explanation player2
+    /// heuristic explanation player2
     Gtk::TextView* m_textViewHeuristic2;
 
     /// Text Buffers which contain every heuristic description to be shown in
@@ -146,6 +146,16 @@ private:
     void SpinButtonDepthPlayer2_SignalValueChanged();
 
     bool on_expose_event (GdkEventExpose* event);
+    
+    /// Calls gettext per every static widget in the dialog. These strings
+    /// are those ones included in the .glade file that never change during the
+    /// execution of the application, for example a menu called "Game", or a
+    /// label that contains the word "rotate"
+    ///
+    /// So far this is only needed in win32 platform due to some unknown issue
+    /// that prevents those strings to be automatically translated. It works
+    /// fine in linux, so there's no need there to explicitly call to gettext
+    void ForceTranslationOfWidgets();
 
     // prevent the default constructors to be used
     ConfigDialog();

@@ -171,6 +171,9 @@ private:
     TableEditPiece* m_editPieceTable;
 
     Glib::RefPtr<Gtk::AccelGroup> m_accelGroup;
+    Glib::RefPtr<Gtk::MenuItem> m_gameMenuItem;
+    Glib::RefPtr<Gtk::MenuItem> m_settingsMenuItem;
+    Glib::RefPtr<Gtk::MenuItem> m_helpMenuItem;
     Glib::RefPtr<Gtk::MenuItem> m_newMenuItem;
     Glib::RefPtr<Gtk::MenuItem> m_quitMenuItem;
     Glib::RefPtr<Gtk::MenuItem> m_helpAboutMenuItem;
@@ -271,6 +274,16 @@ private:
     /// sets mouse cursor to the default pointer in the areas where
     /// SetWaitCursor might have set it to a watch
     void ResetCursor();
+    
+    /// Calls gettext per every static widget in the main window. These strings
+    /// are those ones included in the .glade file that never change during the
+    /// execution of the application, for example a menu called "Game", or a
+    /// label that contains the word "rotate"
+    ///
+    /// So far this is only needed in win32 platform due to some unknown issue
+    /// that prevents those strings to be automatically translated. It works
+    /// fine in linux, so there's no need there to explicitly call to gettext
+    void ForceTranslationOfWidgets();
 
     // prevent the default constructors to be used
     MainWindow();
