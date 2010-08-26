@@ -68,7 +68,7 @@ am_blockemtest_OBJECTS = bitwise_test.$(OBJEXT) board_test.$(OBJEXT) \
 	rules_test.$(OBJEXT)
 blockemtest_OBJECTS = $(am_blockemtest_OBJECTS)
 am__DEPENDENCIES_1 =
-blockemtest_DEPENDENCIES = $(am__DEPENDENCIES_1) $(BLOCKEM_OBJS)
+blockemtest_DEPENDENCIES = $(BLOCKEM_OBJS) $(am__DEPENDENCIES_1)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -277,9 +277,9 @@ BLOCKEM_OBJS = \
 ../bitwise.o
 
 blockemtest_LDADD = \
+$(BLOCKEM_OBJS) \
 @LIBINTL@ \
-$(GTHREAD_LIBS) \
-$(BLOCKEM_OBJS)
+$(GTHREAD_LIBS)
 
 all: all-am
 

@@ -38,6 +38,7 @@ BLOCKEM_OBJS = \
 ../bitwise.o
 
 blockemtest_LDADD = \
+$(BLOCKEM_OBJS) \
 @LIBINTL@ \
-$(GTHREAD_LIBS) \
-$(BLOCKEM_OBJS)
+$(GTHREAD_LIBS)
+
