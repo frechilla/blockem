@@ -28,6 +28,7 @@ rules_test.h
 # this should be changed at some point. we should be crating a library with the base blockem classes
 # and then add that library to blockemtest_LIBADD
 blockemtest_LDADD = \
+@LIBINTL@ \
 $(GTHREAD_LIBS) \
 ../board.o \
 ../game1v1.o \
