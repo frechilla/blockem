@@ -80,7 +80,11 @@ locale-gen fr_FR@euro
 
 ## YOU NEED language-pack-gnome-es TO TRANSLATE BUILT-IN BUTTONS AND MENUS!!!! ##
 
-
+# compilation in ubuntu
+localedir is automatically set to /usr/local/share/locale but the rest of locale
+files are stored in /usr/share/locale. So to compile a binary for ubuntu
+the configure script should be run as:
+./configure --localedir=/usr/share/locale
 
 
 
