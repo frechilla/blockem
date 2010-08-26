@@ -122,9 +122,11 @@ const char GUI_MENU_ITEM_GAME_NEW[]        = "imagemenuitem_game_new";
 const char GUI_MENU_ITEM_GAME_QUIT[]       = "imagemenuitem_game_quit";
 const char GUI_MENU_ITEM_SETTINGS[]        = "menuitem_settings";
 const char GUI_MENU_ITEM_SETTINGS_NKPOINTS[] = "checkmenuitem_settings_nkpoints";
+const char GUI_MENU_ITEM_SETTINGS_FORBIDDENAREA[]         = "menuitem_forbidden_areas";
 const char GUI_MENU_ITEM_SETTINGS_FORBIDDENAREA_NOSHOW[]  = "radiomenuitem_settings_forbidden_noshow";
 const char GUI_MENU_ITEM_SETTINGS_FORBIDDENAREA_PLAYER1[] = "radiomenuitem_settings_forbidden_player1";
 const char GUI_MENU_ITEM_SETTINGS_FORBIDDENAREA_PLAYER2[] = "radiomenuitem_settings_forbidden_player2";
+const char GUI_MENU_ITEM_SETTINGS_INFLUENCEAREA[]         = "menuitem_influence_areas";
 const char GUI_MENU_ITEM_SETTINGS_INFLUENCEAREA_NOSHOW[]  = "radiomenuitem_settings_influence_noshow";
 const char GUI_MENU_ITEM_SETTINGS_INFLUENCEAREA_PLAYER1[] = "radiomenuitem_settings_influence_player1";
 const char GUI_MENU_ITEM_SETTINGS_INFLUENCEAREA_PLAYER2[] = "radiomenuitem_settings_influence_player2";
@@ -158,5 +160,20 @@ const char GUI_CONFIG_AI_SPINBUTTON_DEPTH1[] = "spinbutton_depth1";
 const char GUI_CONFIG_AI_SPINBUTTON_DEPTH2[] = "spinbutton_depth2";
 const char GUI_CONFIG_AI_TEXTVIEW_HEURISTIC1[] = "textview_heuristic_player1";
 const char GUI_CONFIG_AI_TEXTVIEW_HEURISTIC2[] = "textview_heuristic_player2";
+const char GUI_CONFIG_PLAYER1_LABEL[] = "config_label_player1";
+const char GUI_CONFIG_PLAYER2_LABEL[] = "config_label_player2";
+const char GUI_CONFIG_PLAYER1_TYPE_LABEL[] = "config_label_type1";
+const char GUI_CONFIG_PLAYER2_TYPE_LABEL[] = "config_label_type2";
+const char GUI_CONFIG_PLAYER1_STARTING_ROW_LABEL[] = "config_label_startingrow1";
+const char GUI_CONFIG_PLAYER2_STARTING_ROW_LABEL[] = "config_label_startingrow2";
+const char GUI_CONFIG_PLAYER1_STARTING_COL_LABEL[] = "config_label_startingcol1";
+const char GUI_CONFIG_PLAYER2_STARTING_COL_LABEL[] = "config_label_startingcol2";
+const char GUI_CONFIG_PLAYER1_AI_HEADER_LABEL[] = "config_label_ai_header1";
+const char GUI_CONFIG_PLAYER2_AI_HEADER_LABEL[] = "config_label_ai_header2";
+const char GUI_CONFIG_PLAYER1_AI_TYPE_LABEL[] = "config_label_ai_type1";
+const char GUI_CONFIG_PLAYER2_AI_TYPE_LABEL[] = "config_label_ai_type2";
+const char GUI_CONFIG_PLAYER1_AI_DEPTH_LABEL[] = "config_label_ai_depth1";
+const char GUI_CONFIG_PLAYER2_AI_DEPTH_LABEL[] = "config_label_ai_depth2";
+
 
 #endif /* GUI_GLADE_H_ */

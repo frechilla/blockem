@@ -136,6 +136,22 @@ private:
     /// m_textViewHeuristic1 and m_textViewHeuristic2
     Glib::RefPtr<Gtk::TextBuffer> m_refHeuristicDescriptionBuffer[Heuristic::e_heuristicCount];
 
+    // labels loaded here because they need to be translated at startup on win32 platform
+    // have a look at ForceTranslationOfWidgets
+    Gtk::Label* m_player1Label;
+    Gtk::Label* m_player2Label;
+    Gtk::Label* m_player1TypeLabel;
+    Gtk::Label* m_player2TypeLabel;
+    Gtk::Label* m_player1StartingRowLabel;
+    Gtk::Label* m_player2StartingRowLabel;
+    Gtk::Label* m_player1StartingColLabel;
+    Gtk::Label* m_player2StartingColLabel;
+    Gtk::Label* m_player1AIHeaderLabel;
+    Gtk::Label* m_player2AIHeaderLabel;
+    Gtk::Label* m_player1AITypeLabel;
+    Gtk::Label* m_player2AITypeLabel;
+    Gtk::Label* m_player1AIDepthLabel;
+    Gtk::Label* m_player2AIDepthLabel;
 
     // signals
     void ComboPlayer1Type_signalChanged();
@@ -146,7 +162,7 @@ private:
     void SpinButtonDepthPlayer2_SignalValueChanged();
 
     bool on_expose_event (GdkEventExpose* event);
-    
+
     /// Calls gettext per every static widget in the dialog. These strings
     /// are those ones included in the .glade file that never change during the
     /// execution of the application, for example a menu called "Game", or a

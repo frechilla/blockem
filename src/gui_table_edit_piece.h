@@ -48,7 +48,7 @@ public:
     /// @brief gray out the whole table and children widgets
     /// It resets the current piece so there won't be any piece shown
     void set_sensitive(gboolean a_sensitive);
-    
+
     /// @brief callback to be called when the edit piece drawing area is redraw on screen
     bool EditPieceDrawingArea_ExposeEvent(GdkEventExpose* event);
 
@@ -131,7 +131,7 @@ private:
 
     /// force the editPiece drawing area to be repainted
     bool InvalidateEditPieceDrawingArea();
-    
+
     /// Calls gettext per every static widget in the table. These strings
     /// are those ones included in the .glade file that never change during the
     /// execution of the application, for example a menu called "Game", or a

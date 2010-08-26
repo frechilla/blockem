@@ -196,21 +196,21 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     {
         throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
-    
+
     m_settingsMenuItem = Glib::RefPtr<Gtk::MenuItem>::cast_dynamic(
             m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS));
     if (!m_settingsMenuItem)
     {
         throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
-    
+
     m_helpMenuItem = Glib::RefPtr<Gtk::MenuItem>::cast_dynamic(
             m_gtkBuilder->get_object(GUI_MENU_ITEM_HELP));
     if (!m_helpMenuItem)
     {
         throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
-    
+
     m_newMenuItem = Glib::RefPtr<Gtk::MenuItem>::cast_dynamic(
             m_gtkBuilder->get_object(GUI_MENU_ITEM_GAME_NEW));
     if (!m_newMenuItem)
@@ -232,6 +232,13 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
         throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
 
+    m_settingsForbiddenAreaMenuItem = Glib::RefPtr<Gtk::MenuItem>::cast_dynamic(
+            m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_FORBIDDENAREA));
+    if (!m_settingsForbiddenAreaMenuItem)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
     m_settingsForbiddenAreaPlayer1MenuItem = Glib::RefPtr<Gtk::RadioMenuItem>::cast_dynamic(
             m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_FORBIDDENAREA_PLAYER1));
     if (!m_settingsForbiddenAreaPlayer1MenuItem)
@@ -249,6 +256,13 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     m_settingsForbiddenAreaNoShowMenuItem = Glib::RefPtr<Gtk::RadioMenuItem>::cast_dynamic(
             m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_FORBIDDENAREA_NOSHOW));
     if (!m_settingsForbiddenAreaNoShowMenuItem)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
+    m_settingsInfluenceAreaMenuItem = Glib::RefPtr<Gtk::MenuItem>::cast_dynamic(
+            m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_INFLUENCEAREA));
+    if (!m_settingsInfluenceAreaMenuItem)
     {
         throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
@@ -317,7 +331,7 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     {
         throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
-    
+
     // this call will work in different ways depending on the current platform
     ForceTranslationOfWidgets();
 
@@ -1542,8 +1556,8 @@ void MainWindow::ResetCursor()
 #ifdef WIN32
 void MainWindow::ForceTranslationOfWidgets()
 {
-    // in win32 systems gettext fails when the string is static and marked as 
-    // translatable with N_() but _() is never called explicitely. Basically 
+    // in win32 systems gettext fails when the string is static and marked as
+    // translatable with N_() but _() is never called explicitely. Basically
     // there are 2 kinds of strings that are not translated:
     //  + Those included in the GOptionEntry list, which show the available
     //    options that can be passed to the program through command line
@@ -1554,38 +1568,47 @@ void MainWindow::ForceTranslationOfWidgets()
     // We'll be calling here to _() for every string found in the .glade file
     // so it gets properly translated into the current domain (the 2nd case
     // described above)
-    
+
+    // for some reason titles do get translated
+    //set_title( _(get_title().c_str()) );
+
     m_gameMenuItem->set_label(
         _(m_gameMenuItem->get_label().c_str()));
-        
+
     m_settingsMenuItem->set_label(
         _(m_settingsMenuItem->get_label().c_str()));
-        
+
     m_helpMenuItem->set_label(
         _(m_helpMenuItem->get_label().c_str()));
-    
+
     m_settingsNKPointsMenuItem->set_label(
         _(m_settingsNKPointsMenuItem->get_label().c_str()));
-        
+
+    m_settingsInfluenceAreaMenuItem->set_label(
+            _(m_settingsInfluenceAreaMenuItem->get_label().c_str()));
+
     m_settingsForbiddenAreaPlayer1MenuItem->set_label(
         _(m_settingsForbiddenAreaPlayer1MenuItem->get_label().c_str()));
-        
+
     m_settingsForbiddenAreaPlayer2MenuItem->set_label(
         _(m_settingsForbiddenAreaPlayer2MenuItem->get_label().c_str()));
-        
+
     m_settingsForbiddenAreaNoShowMenuItem->set_label(
         _(m_settingsForbiddenAreaNoShowMenuItem->get_label().c_str()));
-        
+
+    m_settingsInfluenceAreaMenuItem->set_label(
+            _(m_settingsInfluenceAreaMenuItem->get_label().c_str()));
+
     m_settingsInfluenceAreaPlayer1MenuItem->set_label(
         _(m_settingsInfluenceAreaPlayer1MenuItem->get_label().c_str()));
-        
+
     m_settingsInfluenceAreaPlayer2MenuItem->set_label(
         _(m_settingsInfluenceAreaPlayer2MenuItem->get_label().c_str()));
-        
+
     m_settingsInfluenceAreaNoShowMenuItem->set_label(
-        _(m_settingsInfluenceAreaNoShowMenuItem->get_label().c_str()));        
+        _(m_settingsInfluenceAreaNoShowMenuItem->get_label().c_str()));
 }
-#else  
+#else
 void MainWindow::ForceTranslationOfWidgets()
 {
     // So far this is only needed in win32 platform due to some unknown issue

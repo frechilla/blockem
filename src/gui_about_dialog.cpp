@@ -99,7 +99,7 @@ AboutDialog::AboutDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builde
             this->set_icon(picture);
         }
     }
-    
+
     // this call will work in different ways depending on the current platform
     ForceTranslationOfWidgets();
 }
@@ -111,8 +111,8 @@ AboutDialog::~AboutDialog()
 #ifdef WIN32
 void AboutDialog::ForceTranslationOfWidgets()
 {
-    // in win32 systems gettext fails when the string is static and marked as 
-    // translatable with N_() but _() is never called explicitely. Basically 
+    // in win32 systems gettext fails when the string is static and marked as
+    // translatable with N_() but _() is never called explicitely. Basically
     // there are 2 kinds of strings that are not translated:
     //  + Those included in the GOptionEntry list, which show the available
     //    options that can be passed to the program through command line
@@ -123,7 +123,10 @@ void AboutDialog::ForceTranslationOfWidgets()
     // We'll be calling here to _() for every string found in the .glade file
     // so it gets properly translated into the current domain (the 2nd case
     // described above)
-    
+
+    // for some reason titles do get translated
+    //set_title( _(get_title().c_str()) );
+
     if (get_program_name().size() > 0)
     {
         set_program_name( _(get_program_name().c_str()) );
@@ -151,11 +154,11 @@ void AboutDialog::ForceTranslationOfWidgets()
     {
         set_translator_credits( _(get_translator_credits().c_str()) );
     }
-    
+
     // do not set. It can break the icon
     //set_logo_icon_name( _(get_logo_icon_name().c_str()) );
 }
-#else  
+#else
 void AboutDialog::ForceTranslationOfWidgets()
 {
     // So far this is only needed in win32 platform due to some unknown issue

@@ -179,9 +179,11 @@ private:
     Glib::RefPtr<Gtk::MenuItem> m_helpAboutMenuItem;
     Glib::RefPtr<Gtk::MenuItem> m_settingsPrefsMenuItem;
     Glib::RefPtr<Gtk::CheckMenuItem> m_settingsNKPointsMenuItem;
+    Glib::RefPtr<Gtk::MenuItem> m_settingsForbiddenAreaMenuItem;
     Glib::RefPtr<Gtk::RadioMenuItem> m_settingsForbiddenAreaPlayer1MenuItem;
     Glib::RefPtr<Gtk::RadioMenuItem> m_settingsForbiddenAreaPlayer2MenuItem;
     Glib::RefPtr<Gtk::RadioMenuItem> m_settingsForbiddenAreaNoShowMenuItem;
+    Glib::RefPtr<Gtk::MenuItem> m_settingsInfluenceAreaMenuItem;
     Glib::RefPtr<Gtk::RadioMenuItem> m_settingsInfluenceAreaPlayer1MenuItem;
     Glib::RefPtr<Gtk::RadioMenuItem> m_settingsInfluenceAreaPlayer2MenuItem;
     Glib::RefPtr<Gtk::RadioMenuItem> m_settingsInfluenceAreaNoShowMenuItem;
@@ -274,7 +276,7 @@ private:
     /// sets mouse cursor to the default pointer in the areas where
     /// SetWaitCursor might have set it to a watch
     void ResetCursor();
-    
+
     /// Calls gettext per every static widget in the main window. These strings
     /// are those ones included in the .glade file that never change during the
     /// execution of the application, for example a menu called "Game", or a

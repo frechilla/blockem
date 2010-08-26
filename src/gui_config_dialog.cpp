@@ -165,7 +165,92 @@ ConfigDialog::ConfigDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Buil
     {
         throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
-    
+
+    m_gtkBuilder->get_widget(GUI_CONFIG_PLAYER1_LABEL, m_player1Label);
+    if (m_player1Label == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
+    m_gtkBuilder->get_widget(GUI_CONFIG_PLAYER2_LABEL, m_player2Label);
+    if (m_player2Label == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
+    m_gtkBuilder->get_widget(GUI_CONFIG_PLAYER1_TYPE_LABEL, m_player1TypeLabel);
+    if (m_player1TypeLabel == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
+    m_gtkBuilder->get_widget(GUI_CONFIG_PLAYER2_TYPE_LABEL, m_player2TypeLabel);
+    if (m_player2TypeLabel == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
+    m_gtkBuilder->get_widget(GUI_CONFIG_PLAYER1_STARTING_ROW_LABEL, m_player1StartingRowLabel);
+    if (m_player1StartingRowLabel == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
+    m_gtkBuilder->get_widget(GUI_CONFIG_PLAYER2_STARTING_ROW_LABEL, m_player2StartingRowLabel);
+    if (m_player2StartingRowLabel == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
+    m_gtkBuilder->get_widget(GUI_CONFIG_PLAYER1_STARTING_COL_LABEL, m_player1StartingColLabel);
+    if (m_player1StartingColLabel == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
+    m_gtkBuilder->get_widget(GUI_CONFIG_PLAYER2_STARTING_COL_LABEL, m_player2StartingColLabel);
+    if (m_player2StartingColLabel == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
+    m_gtkBuilder->get_widget(GUI_CONFIG_PLAYER1_AI_HEADER_LABEL, m_player1AIHeaderLabel);
+    if (m_player1AIHeaderLabel == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
+    m_gtkBuilder->get_widget(GUI_CONFIG_PLAYER2_AI_HEADER_LABEL, m_player2AIHeaderLabel);
+    if (m_player2AIHeaderLabel == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
+    m_gtkBuilder->get_widget(GUI_CONFIG_PLAYER1_AI_TYPE_LABEL, m_player1AITypeLabel);
+    if (m_player1AITypeLabel == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
+    m_gtkBuilder->get_widget(GUI_CONFIG_PLAYER2_AI_TYPE_LABEL, m_player2AITypeLabel);
+    if (m_player2AITypeLabel == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
+    m_gtkBuilder->get_widget(GUI_CONFIG_PLAYER1_AI_DEPTH_LABEL, m_player1AIDepthLabel);
+    if (m_player1AIDepthLabel == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
+    m_gtkBuilder->get_widget(GUI_CONFIG_PLAYER2_AI_DEPTH_LABEL, m_player2AIDepthLabel);
+    if (m_player2AIDepthLabel == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
+
     // this call will work in different ways depending on the current platform
     ForceTranslationOfWidgets();
 
@@ -618,8 +703,8 @@ void ConfigDialog::SaveCurrentConfigIntoGlobalSettings() const
 #ifdef WIN32
 void ConfigDialog::ForceTranslationOfWidgets()
 {
-    // in win32 systems gettext fails when the string is static and marked as 
-    // translatable with N_() but _() is never called explicitely. Basically 
+    // in win32 systems gettext fails when the string is static and marked as
+    // translatable with N_() but _() is never called explicitely. Basically
     // there are 2 kinds of strings that are not translated:
     //  + Those included in the GOptionEntry list, which show the available
     //    options that can be passed to the program through command line
@@ -630,9 +715,53 @@ void ConfigDialog::ForceTranslationOfWidgets()
     // We'll be calling here to _() for every string found in the .glade file
     // so it gets properly translated into the current domain (the 2nd case
     // described above)
-    
+
+    // for some reason titles do get translated
+    //set_title( _(get_title().c_str()) );
+
+    m_player1Label->set_text(
+            _(m_player1Label->get_text().c_str()) );
+
+    m_player2Label->set_text(
+            _(m_player2Label->get_text().c_str()) );
+
+    m_player1TypeLabel->set_text(
+            _(m_player1TypeLabel->get_text().c_str()) );
+
+    m_player2TypeLabel->set_text(
+            _(m_player2TypeLabel->get_text().c_str()) );
+
+    m_player1StartingRowLabel->set_text(
+            _(m_player1StartingRowLabel->get_text().c_str()) );
+
+    m_player2StartingRowLabel->set_text(
+            _(m_player2StartingRowLabel->get_text().c_str()) );
+
+    m_player1StartingColLabel->set_text(
+            _(m_player1StartingColLabel->get_text().c_str()) );
+
+    m_player2StartingColLabel->set_text(
+            _(m_player2StartingColLabel->get_text().c_str()) );
+
+    m_player1AIHeaderLabel->set_text(
+            _(m_player1AIHeaderLabel->get_text().c_str()) );
+
+    m_player2AIHeaderLabel->set_text(
+            _(m_player2AIHeaderLabel->get_text().c_str()) );
+
+    m_player1AITypeLabel->set_text(
+            _(m_player1AITypeLabel->get_text().c_str()) );
+
+    m_player2AITypeLabel->set_text(
+            _(m_player2AITypeLabel->get_text().c_str()) );
+
+    m_player1AIDepthLabel->set_text(
+            _(m_player1AIDepthLabel->get_text().c_str()) );
+
+    m_player2AIDepthLabel->set_text(
+            _(m_player2AIDepthLabel->get_text().c_str()) );
 }
-#else  
+#else
 void ConfigDialog::ForceTranslationOfWidgets()
 {
     // So far this is only needed in win32 platform due to some unknown issue

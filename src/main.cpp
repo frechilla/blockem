@@ -218,17 +218,17 @@ int main(int argc, char **argv)
     GError* error = NULL;
     GOptionContext* cmdContext = NULL;
     char    errorStringBuffer[ERROR_STRING_BUFFER_SIZE];
-    
+
     // Init type system as soon as possible
-	g_type_init ();
-    
-    // gtkmm can do strange stuff if its internals are not initialised early 
+    g_type_init ();
+
+    // gtkmm can do strange stuff if its internals are not initialised early
     // enough
     Gtk::Main::init_gtkmm_internals();
 
     //////////////////
     // gettext internationalisation initialisation
-    setlocale (LC_ALL, "");    
+    setlocale (LC_ALL, "");
     // make sure first that the message catalog can be found
     bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
     // UTF-8 chosen as codeset
@@ -245,8 +245,8 @@ int main(int argc, char **argv)
     cmdContext = g_option_context_new (_("- The GNU polyominoes board game"));
 
 #ifdef WIN32
-    // in win32 systems gettext fails when the string is static and marked as 
-    // translatable with N_() but _() is never called explicitely. Basically 
+    // in win32 systems gettext fails when the string is static and marked as
+    // translatable with N_() but _() is never called explicitely. Basically
     // there are 2 kinds of strings that are not translated:
     //  + Those included in the GOptionEntry list, which show the available
     //    options that can be passed to the program through command line
@@ -254,29 +254,29 @@ int main(int argc, char **argv)
     //    execution of the application, for example a menu called "Game", or a
     //    label that contains the word "rotate"
     //
-    // We'll be creating here a temporary GOptionEntry based on g_cmdEntries, 
+    // We'll be creating here a temporary GOptionEntry based on g_cmdEntries,
     // where _() will be called explicitely so it gets properly translated into
     // the current domain
 
     int32_t nEntries;
     GOptionEntry* translatedCmdEntries = NULL;
     GOptionEntry* optEntryIterator;
-    
+
     // count number of entries in global array of command line options.
     // that global array of command line optines is a null terminated array of
     // structs
     nEntries = 0;
     optEntryIterator = g_cmdEntries;
     while (*(reinterpret_cast<char*>(optEntryIterator)) != '\0')
-    {  
+    {
         nEntries++;
         optEntryIterator = g_cmdEntries + nEntries;
     }
-    
+
     // allocate memory for the dynamic trsnlated array
     translatedCmdEntries = new GOptionEntry[nEntries];
-    
-    // copy the global command line optinos into the brand new GOptionEntry 
+
+    // copy the global command line optinos into the brand new GOptionEntry
     // calling explicitely to _()
     for (int32_t i = 0; i < nEntries; i++)
     {
@@ -291,7 +291,7 @@ int main(int argc, char **argv)
         //   const gchar *description;
         //   const gchar *arg_description;
         // } GOptionEntry;
-        
+
         translatedCmdEntries[i].long_name = g_cmdEntries[i].long_name;
         translatedCmdEntries[i].short_name = g_cmdEntries[i].short_name;
         translatedCmdEntries[i].flags = g_cmdEntries[i].flags;
@@ -302,18 +302,18 @@ int main(int argc, char **argv)
         translatedCmdEntries[i].description = _(g_cmdEntries[i].description);
         translatedCmdEntries[i].arg_description = _(g_cmdEntries[i].arg_description);
     }
-    
+
     // must be a null terminated array of structs
     translatedCmdEntries[nEntries] = g_cmdEntries[nEntries];
-    
+
     // the workaround is ready. GETTEXT_PACKAGE is still needed so the rest
-    // of the strings shown when --help options is run are automatically 
+    // of the strings shown when --help options is run are automatically
     // translated
     g_option_context_add_main_entries (
-        cmdContext, 
-        translatedCmdEntries, 
+        cmdContext,
+        translatedCmdEntries,
         GETTEXT_PACKAGE);
-        
+
     // freeing dynamic memory allocation. Once they've been added to the command
     // line context, they won't be used any more
     delete [] translatedCmdEntries;
@@ -321,12 +321,12 @@ int main(int argc, char **argv)
 #else
     // Special temporary GOptionEntry is only needed in win32 so far. No need
     // to overwrite the old working code in any other OS
-    
+
     // to disable i18n write NULL instead of GETTEXT_PACKAGE in the 3rd parameter
     //     g_option_context_add_main_entries (cmdContext, g_cmdEntries, NULL);
     g_option_context_add_main_entries (
-        cmdContext, 
-        g_cmdEntries, 
+        cmdContext,
+        g_cmdEntries,
         GETTEXT_PACKAGE);
 
 #endif // WIN32
@@ -336,8 +336,8 @@ int main(int argc, char **argv)
     //g_option_context_set_translation_domain (cmdContext, GETTEXT_PACKAGE);
 
     // http://library.gnome.org/devel/glib/unstable/glib-Commandline-option-parser.html#g-option-context-add-group
-    // note that the group will be freed together with the context when 
-    // g_option_context_free() is called, so you must not free the group 
+    // note that the group will be freed together with the context when
+    // g_option_context_free() is called, so you must not free the group
     // yourself after adding it to a context
     g_option_context_add_group (cmdContext, gtk_get_option_group (TRUE));
 
@@ -349,15 +349,15 @@ int main(int argc, char **argv)
         errMessage << _("Error parsing command line")
                    << ": "
                    << error->message;
-        g_error_free(error);         
-        
+        g_error_free(error);
+
         FatalError(argv[0], errMessage.str().c_str(), COMMAND_LINE_PARSING_ERR);
     }
-    
+
     // free command line parsing resources
     g_option_context_free(cmdContext);
-    
-    
+
+
     if (g_version) // "version" option takes priority. If it set nothing else will be done
     {
         std::cout << "Blockem, version " << VERSION << " (r" << SVN_REVISION << ")" << std::endl;
@@ -378,14 +378,14 @@ int main(int argc, char **argv)
         // can be called multiple times, and does not have to be the first call.
         // GObject now links to GThread and threads are enabled automatically
         // when g_type_init() is called"
-        // for backwards compatibility call to g_thread_init only if it hasn't 
+        // for backwards compatibility call to g_thread_init only if it hasn't
         // been called already
         if(!g_thread_supported())
         {
             // Initialise gthreads even before gtk_init
             g_thread_init(NULL);
         }
-        
+
         // This call is needed only if extra threads (not the main thread)
         // updates directly the GUI widgets using gdk_threads_enter
         // and gdk_threads_leave
@@ -394,7 +394,7 @@ int main(int argc, char **argv)
         // straight away. It uses signals for that matter (see comment
         // in MainWindow::WorkerThread_computingFinished)
         //gdk_threads_init();
-        
+
         // this should be called before starting manipulating GUI stuff
         Gtk::Main kit(argc, argv);
 
@@ -402,10 +402,8 @@ int main(int argc, char **argv)
         Glib::RefPtr<Gtk::Builder> gtkBuilder = Gtk::Builder::create();
         gtkBuilder->set_translation_domain(GETTEXT_PACKAGE);
 
-#ifdef GLIBMM_EXCEPTIONS_ENABLED
         try
         {
-#endif // GLIBMM_EXCEPTIONS_ENABLED
             // Load the GUI from the xml code embedded in the executable file
             if (!gtkBuilder->add_from_string(
             // see src/gui_glade.h for more information
@@ -420,9 +418,8 @@ int main(int argc, char **argv)
                     _("Could not load Gtkbuilder definitions"),
                     GUI_EXCEPTION_ERR);
             }
-
-#ifdef GLIBMM_EXCEPTIONS_ENABLED
         }
+#ifdef GLIBMM_EXCEPTIONS_ENABLED
         catch(const Glib::MarkupError& ex)
         {
             FatalError(argv[0], ex.what().c_str(), GUI_EXCEPTION_ERR);
@@ -432,7 +429,10 @@ int main(int argc, char **argv)
             FatalError(argv[0], ex.what().c_str(), GUI_EXCEPTION_ERR);
         }
 #endif // GLIBMM_EXCEPTIONS_ENABLED
-
+        catch (const GUIException& ex)
+        {
+            FatalError(argv[0], ex.what(), GUI_EXCEPTION_ERR);
+        }
 
         MainWindow *pMainWindow = NULL;
         try
@@ -446,8 +446,8 @@ int main(int argc, char **argv)
             if (pMainWindow == NULL)
             {
                 throw new GUIException(
-                            e_GUIException_GTKBuilderErr, 
-                            __FILE__, 
+                            e_GUIException_GTKBuilderErr,
+                            __FILE__,
                             __LINE__);
             }
 
@@ -457,7 +457,11 @@ int main(int argc, char **argv)
             // http://tadeboro.blogspot.com/2009/06/multi-threaded-gtk-applications.html
             kit.run(*pMainWindow);
         }
-        catch (GUIException ex)
+        catch (const GUIException& ex)
+        {
+            FatalError(argv[0], ex.what(), GUI_EXCEPTION_ERR);
+        }
+        catch (const std::exception& ex)
         {
             FatalError(argv[0], ex.what(), GUI_EXCEPTION_ERR);
         }

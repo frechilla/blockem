@@ -10,7 +10,6 @@
     <child>
       <object class="GtkVBox" id="vbox_main">
         <property name="visible">True</property>
-        <property name="orientation">vertical</property>
         <child>
           <object class="GtkMenuBar" id="menubar">
             <property name="visible">True</property>
@@ -206,7 +205,6 @@
         <child>
           <object class="GtkVBox" id="vbox_drawing">
             <property name="visible">True</property>
-            <property name="orientation">vertical</property>
             <property name="spacing">5</property>
             <child>
               <object class="GtkHBox" id="hbox_gamestatus">
@@ -222,7 +220,6 @@
                     <child>
                       <object class="GtkVSeparator" id="vseparator_computerpieces">
                         <property name="visible">True</property>
-                        <property name="orientation">vertical</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -316,17 +313,18 @@
     <property name="version">0.0</property>
     <property name="copyright" translatable="yes">Copyright &#xA9; 2009-2010 Faustino Frechilla</property>
     <property name="comments" translatable="yes">A board strategy game against the computer</property>
+    <property name="website">http://blockem.sourceforge.net/</property>
     <property name="license" translatable="yes">blockem is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
 
 blockem is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with blockem; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA</property>
-    <property name="authors">Faustino Frechilla</property>
+    <property name="authors">Faustino Frechilla &lt;frechilla@gmail.com&gt;</property>
+    <property name="translator_credits">Faustino Frechilla &lt;frechilla@gmail.com&gt;</property>
     <property name="wrap_license">True</property>
     <child internal-child="vbox">
       <object class="GtkVBox" id="dialog-vbox1">
         <property name="visible">True</property>
-        <property name="orientation">vertical</property>
         <property name="spacing">2</property>
         <child>
           <placeholder/>
@@ -478,7 +476,6 @@ r</property>
         <child>
           <object class="GtkVBox" id="hbox_button_mirror_x">
             <property name="visible">True</property>
-            <property name="orientation">vertical</property>
             <child>
               <object class="GtkArrow" id="arrow_x_up">
                 <property name="visible">True</property>
@@ -523,7 +520,6 @@ r</property>
     <child internal-child="vbox">
       <object class="GtkVBox" id="dialog-vbox2">
         <property name="visible">True</property>
-        <property name="orientation">vertical</property>
         <property name="spacing">2</property>
         <child>
           <object class="GtkHBox" id="hbox1">
@@ -640,7 +636,7 @@ r</property>
                                     <property name="column_spacing">2</property>
                                     <property name="row_spacing">5</property>
                                     <child>
-                                      <object class="GtkLabel" id="label3">
+                                      <object class="GtkLabel" id="config_label_ai_type1">
                                         <property name="visible">True</property>
                                         <property name="xalign">0</property>
                                         <property name="label" translatable="yes">AI type: </property>
@@ -652,7 +648,7 @@ r</property>
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GtkLabel" id="label4">
+                                      <object class="GtkLabel" id="config_label_ai_depth1">
                                         <property name="visible">True</property>
                                         <property name="xalign">0</property>
                                         <property name="label" translatable="yes">Depth: </property>
@@ -720,7 +716,7 @@ r</property>
                               </object>
                             </child>
                             <child type="label">
-                              <object class="GtkLabel" id="label1">
+                              <object class="GtkLabel" id="config_label_ai_header1">
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">Artificial Intelligence</property>
                                 <property name="use_markup">True</property>
@@ -749,7 +745,7 @@ r</property>
                   </object>
                 </child>
                 <child type="label">
-                  <object class="GtkLabel" id="label_player1">
+                  <object class="GtkLabel" id="config_label_player1">
                     <property name="visible">True</property>
                     <property name="label" translatable="yes">&lt;b&gt;Green&lt;/b&gt;</property>
                     <property name="use_markup">True</property>
@@ -870,7 +866,7 @@ r</property>
                                     <property name="column_spacing">2</property>
                                     <property name="row_spacing">5</property>
                                     <child>
-                                      <object class="GtkLabel" id="label5">
+                                      <object class="GtkLabel" id="config_label_ai_type2">
                                         <property name="visible">True</property>
                                         <property name="xalign">0</property>
                                         <property name="label" translatable="yes">AI type: </property>
@@ -882,7 +878,7 @@ r</property>
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GtkLabel" id="label6">
+                                      <object class="GtkLabel" id="config_label_ai_depth2">
                                         <property name="visible">True</property>
                                         <property name="xalign">0</property>
                                         <property name="label" translatable="yes">Depth: </property>
@@ -950,7 +946,7 @@ r</property>
                               </object>
                             </child>
                             <child type="label">
-                              <object class="GtkLabel" id="label2">
+                              <object class="GtkLabel" id="config_label_ai_header2">
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">Artificial Intelligence</property>
                                 <property name="use_markup">True</property>
@@ -979,7 +975,7 @@ r</property>
                   </object>
                 </child>
                 <child type="label">
-                  <object class="GtkLabel" id="label_player2">
+                  <object class="GtkLabel" id="config_label_player2">
                     <property name="visible">True</property>
                     <property name="label" translatable="yes">&lt;b&gt;Blue&lt;/b&gt;</property>
                     <property name="use_markup">True</property>

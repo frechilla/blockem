@@ -44,7 +44,7 @@ public:
 private:
     /// @brief used to retrieve the objects from the Glade design
     Glib::RefPtr<Gtk::Builder> m_gtkBuilder;
-    
+
     /// Calls gettext per every static widget in the dialog. These strings
     /// are those ones included in the .glade file that never change during the
     /// execution of the application, for example a menu called "Game", or a
