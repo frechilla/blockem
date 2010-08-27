@@ -244,7 +244,7 @@ int main(int argc, char **argv)
     // from whatever is configured as current language in the windows platform
 
     // This call force the app to be shown in English (UK)
-    //putenv ("LANG=en_UK");
+    putenv ("LANG=en_UK");
 
     // This call force the app to be shown on a Spanish (Spain)
     //putenv ("LANG=es_ES");
