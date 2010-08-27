@@ -637,7 +637,9 @@ uninstall-am: uninstall-binPROGRAMS
 
 # DATADIR in the windows OS is set to the current directory
 @OS_WIN32_TRUE@    BLOCKEM_DATADIR ?= .
-@OS_WIN32_TRUE@    BLOCKEM_LOCALEDIR ?= ./locale
+@OS_WIN32_TRUE@    # This is not used (it is hardcoded in main.cpp) but it's
+@OS_WIN32_TRUE@    # set to the same value
+@OS_WIN32_TRUE@    BLOCKEM_LOCALEDIR ?= ./share/locale
 
 # DATADIR is set by default using the autotools "datadir" variable
 # ?= sets the var only if it wasn't set before

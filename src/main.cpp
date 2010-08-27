@@ -217,24 +217,69 @@ int main(int argc, char **argv)
 {
     GError* error = NULL;
     GOptionContext* cmdContext = NULL;
-    char    errorStringBuffer[ERROR_STRING_BUFFER_SIZE];
+    char errorStringBuffer[ERROR_STRING_BUFFER_SIZE];
 
     // Init type system as soon as possible
     g_type_init ();
 
-    // gtkmm can do strange stuff if its internals are not initialised early
-    // enough
-    Gtk::Main::init_gtkmm_internals();
-
     //////////////////
     // gettext internationalisation initialisation
+
+    // Prevents gtk_init(), gtk_init_check(), gtk_init_with_args() and
+    // gtk_parse_args() from automatically calling setlocale (LC_ALL, "").
+    // You would want to use this function if you wanted to set the locale
+    // for your program to something other than the user's locale, or if you
+    // wanted to set different values for different locale categories
+    gtk_disable_setlocale();
+
     setlocale (LC_ALL, "");
+
+#ifdef WIN32
+    // TODO language should be picked through some menu on the main window
+    // this will do it for now
+
+    // http://www.mail-archive.com/gtk-app-devel-list@gnome.org/msg11457.html
+    // Language selection under windows (environment variables are a bit tricky
+    // in that platform). putenv is used to set the environment variables
+    // that are easily set in *nix systems through command line
+    // if this environment variable is not set language will be retrieved
+    // from whatever is configured as current language in the windows platform
+
+    // This call force the app to be shown in English (UK)
+    // putenv ("LANG=en_UK");
+
+    // This call force the app to be shown on a Spanish (Spain)
+    // putenv ("LANG=es_ES");
+
+
+    // _pgmptr: full path to the executable file on win32
+    // http://msdn.microsoft.com/en-us/library/tza1y5f7%28VS.80%29.aspx
+    extern char* _pgmptr;
+    std::string fullPathToBin(_pgmptr);
+
+    // locale dir MUST be currentdir/share/locale for full translation support
+    // in windows. I learnt this by the old test-error method, and it took a good
+    // while
+    std::string fullPathToLocaleDir =
+        fullPathToBin.substr(0, fullPathToBin.find_last_of("/\\")).append("\\share\\locale");
+
+    bindtextdomain (GETTEXT_PACKAGE, fullPathToLocaleDir.c_str());
+    bindtextdomain ("gtk+", fullPathToLocaleDir.c_str());
+
+#else
+    // in any other platform we will be using LOCALEDIR which is defined
+    // at compile time (through configure script)
+
     // make sure first that the message catalog can be found
     bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
+
+#endif // WIN32
+
     // UTF-8 chosen as codeset
     bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
     // initialise the message catalog
     textdomain (GETTEXT_PACKAGE);
+
     // gettext internationalisation initialisation
     //////////////////
 
@@ -370,6 +415,10 @@ int main(int argc, char **argv)
     {
         //////////////////
         // GUI MODE
+
+        // gtkmm can do strange stuff if its internals are not initialised early
+        // enough
+        Gtk::Main::init_gtkmm_internals();
 
         // g_thread_supported returns TRUE if the thread system is initialised,
         // and FALSE if it is not. Initiliase gthreads only if they haven't been

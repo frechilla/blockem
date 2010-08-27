@@ -8,7 +8,9 @@ bin_PROGRAMS = blockem
 # DATADIR in the windows OS is set to the current directory
 if OS_WIN32    
     BLOCKEM_DATADIR ?= .
-    BLOCKEM_LOCALEDIR ?= ./locale
+    # This is not used (it is hardcoded in main.cpp) but it's
+    # set to the same value
+    BLOCKEM_LOCALEDIR ?= ./share/locale
 endif
 
 # DATADIR is set by default using the autotools "datadir" variable
