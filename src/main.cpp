@@ -232,8 +232,6 @@ int main(int argc, char **argv)
     // wanted to set different values for different locale categories
     gtk_disable_setlocale();
 
-    setlocale (LC_ALL, "");
-
 #ifdef WIN32
     // TODO language should be picked through some menu on the main window
     // this will do it for now
@@ -246,11 +244,21 @@ int main(int argc, char **argv)
     // from whatever is configured as current language in the windows platform
 
     // This call force the app to be shown in English (UK)
-    // putenv ("LANG=en_UK");
+    //putenv ("LANG=en_UK");
 
     // This call force the app to be shown on a Spanish (Spain)
-    // putenv ("LANG=es_ES");
+    //putenv ("LANG=es_ES");
 
+#endif // WIN32
+
+    // this call might be done whatever the platform it is
+    setlocale (LC_ALL, "");
+
+#ifdef WIN32
+    // win32 is a bit special again in the call to bindtextdomain
+    // we cannot use LOCALEDIR because the language files will be
+    // located in path-to-binary/share/locale. LOCALEDIR will be
+    // calculated at running time based on the current directory
 
     // _pgmptr: full path to the executable file on win32
     // http://msdn.microsoft.com/en-us/library/tza1y5f7%28VS.80%29.aspx
@@ -263,6 +271,7 @@ int main(int argc, char **argv)
     std::string fullPathToLocaleDir =
         fullPathToBin.substr(0, fullPathToBin.find_last_of("/\\")).append("\\share\\locale");
 
+    // make sure first that the message catalog can be found
     bindtextdomain (GETTEXT_PACKAGE, fullPathToLocaleDir.c_str());
     bindtextdomain ("gtk+", fullPathToLocaleDir.c_str());
 
