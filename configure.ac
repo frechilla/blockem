@@ -10,7 +10,11 @@ m4_define([BLOCKEM_PACKAGE_NAME], [blockem])
 
 define([svnversion], esyscmd([sh -c "svnversion|tr -d '\n'"]))
 
-AC_INIT([BLOCKEM_PACKAGE_NAME], [MAJOR_VERSION.MINOR_VERSION.MICRO_VERSION], [frechilla -at- gmail -dot- com])
+AC_INIT(
+    [BLOCKEM_PACKAGE_NAME], 
+    [MAJOR_VERSION.MINOR_VERSION.MICRO_VERSION], 
+    [frechilla -at- gmail -dot- com],
+    [BLOCKEM_PACKAGE_NAME])
 AM_INIT_AUTOMAKE([BLOCKEM_PACKAGE_NAME], [MAJOR_VERSION.MINOR_VERSION.MICRO_VERSION])
 AC_CONFIG_SRCDIR([src/game1v1.cpp])
 AC_CONFIG_HEADERS([config.h])
