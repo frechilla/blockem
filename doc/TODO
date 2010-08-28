@@ -20,8 +20,9 @@ supposed to be integrated in blockem at some point in the future:
    three pieces...
  + Improve evaluation function through bitwise representations of boards and 
    pieces. There's already some code done but it is too slow
- + Fix warnings when compiling in windows
  + Add default button to the new/config dialog
  + Convert std::lists to standard arrays in Piece
- + i18n
+ + i18n fix in windows. Language is hardcoded in main.cpp. It should be 
+   possible to change the language at running time instead of compiling
+   blockem as many times as languages are supported
  + cachegrind to profile (instead of gprof)

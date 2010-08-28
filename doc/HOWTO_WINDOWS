@@ -26,7 +26,9 @@ mingwrt-3.18-mingw32-dll.tar.gz
 binutils-2.20.1-2-ming232-bin.tar.gz
 make-3.81-20090914-mingw32-bin.tar.gz
 
-+ i18n
+From version 0.2.4 blockem has support for internationalization, (uses gettext
+for that matter). These are the packets you need to compile blockem in win32
+with full support for localization
 gettext-0.17-2-msys-1.0.13-bin.tar.lzma
 gettext-0.17-2-msys-1.0.13-dev.tar.lzma
 libintl-0.17-2-msys-dll-8.tar.lzma
@@ -35,8 +37,58 @@ libtermcap-0.20050421_1-2-msys-1.0.13-dll-0.tar.lzma
 libexpat-2.0.1-1-msys-1.0.13-dll-1.tar.lzma
 libiconv-1.13.1-2-msys-1.0.13-dll-2.tar.lzma
 
+libintl is not included in the packets above because compiling the app against
+the libintl version included in MinGW is giving errors at linking time:
+
+main.o:main.cpp:(.text+0x191b): undefined reference to '__printf__'
+
+to prevent this from happening you have to pass a few options to the configure
+script to force the app to compile against the gettext library included in
+the package. Pthreads should also be disabled since having them on produces
+a lot of linker errors when blockem is linked against the libintl library.
+Libintl can be built without pthread support without any problem, and blockem 
+will still have 2 threds because they are gthreads instead of pthreads.
+
+So, to summarise, after setting up your environment correctly you will have to
+run the configure script like this:
+
+./configure --with-included-gettext --disable-threads
+
+
+Now, once the configure script has been run the app is ready to be compiled
+using the command 'make', but before you do this you've got to bear in mind
+localization in win32 is different from GNU Linux systems. To force blockem
+to be shown in a specific language (obviously, a language that blockem has 
+already been translated into) you just have to run from a terminal (it'll 
+be translated into Spanish):
+
+$ LANG=es_ES.UTF-8 blockem
+
+if no LANG variable is set when you run blockem the app will retrieve the 
+system's one, wich will be english if your system was originally installed
+in English, or Spanish, etc.
+
+In win32 gtk retrieves the system default language, but it cannot be set
+as easily as in Linux in case you want to change the language. So a decission
+had to be made on how blockem will be handling languages on win32 platforms.
+For the moment there is a call to putenv in main.cpp that decides which 
+language blockem will run with. It is hardcoded and it can only be changed
+at compile time.
+
+So for the moment blockem is compiled as many times as languages are supported,
+therefore one package is released per language and the user can pick which
+version he/she wants. In the future language will be picked using the menus of
+the application, but this is doing the trick for now
+
+
 ---------------------
-EXTRA (no need to install)
+TODO
+At some point compiling with pthreads enabled should be tested, but having it
+disabled does the trick for the moment (though at compile time some warnings
+are printed on the screen because some parts of libintl are disabled)
+
+---------------------
+EXTRA (packages that have been tested -but are not needed for now-)
 
 + libiconv (the one from MSYS base system)
 libiconv-1.13.1-1-mingw32-dll-2.tar.lzma
@@ -53,37 +105,5 @@ libiconv-1.13.1-2-msys-1.0.13-dev.tar.lzma
 pthreads-w32-2.8.0-3-mingw32-dev.tar.lzma
 libpthread-2.8.0-3-mingw32-dll-2.tar.lzma
 
-EXTRA
+EXTRA 
 ---------------------
-
-Compiling the app against the libintl version included in MinGW is giving 
-errors at linking time:
-
-main.o:main.cpp:(.text+0x191b): undefined reference to '__printf__'
-
-to prevent this from happening you have to pass a few options to the configure
-script to force the app to compile against the gettext library included in
-the package. Pthreads should also be disabled since having them on produces
-a lot of liker errors when blockem is linked against the libintl library.
-Libintl can be built without pthread support no problem, and blockem still will
-have 2 threds because they are gthreads instead of pthreads.
-
-# ./configure --with-included-gettext
-./configure --with-included-gettext --disable-threads
-
-
-TODO
-get libiconv to work. While ./configure is run the following message appears:
-checking for iconv... no, consider installing GNU libiconv
-
-./configure needs --with-included-gettext to work. we should be able to use
-the libintl included in MinGW/MSYS.
-
-Translation of GTK widgets doesn't work. At the moment only plain strings and
-preloaded widgets get properly translated. It might have something to do with
-the previoud problems 
-
-At some point compiling with pthreads enabled should be tested, but having it
-disabled does the trick for the moment (though at compile time some warnings
-are printed on the screen because some parts of libintl are disabled)
-

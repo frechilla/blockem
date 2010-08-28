@@ -80,20 +80,13 @@ locale-gen fr_FR@euro
 
 ## YOU NEED language-pack-gnome-es TO TRANSLATE BUILT-IN BUTTONS AND MENUS!!!! ##
 
-# compilation in ubuntu
-localedir is automatically set to /usr/local/share/locale but the rest of locale
-files are stored in /usr/share/locale. So to compile a binary for ubuntu
-the configure script should be run as:
-./configure --localedir=/usr/share/locale
-
-
 
 ##########
 ## MISC ##
 ##########
-# where to install the .mo files in ubuntu 9.04
+# where to install the .mo files in ubuntu 9.04 (and ubuntu 9.10 LTS)
 # this is the directory where localedir must point at so it works in my ubuntu 9.04
-./configure --localedir "/usr/share/locale"
+./configure --localedir="/usr/share/locale"
 
 # have a look at po/en@quot.header and po/en@boldquot.header
 make en@quot.po-create
