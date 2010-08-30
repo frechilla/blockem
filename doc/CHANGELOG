@@ -1,5 +1,7 @@
-: Version 0.2.4
+28/08/2010: Version 0.2.4
     - About Dialog contains the URL of the project
+    - Support for internationalization. Available languages for now are English
+      and Spanish
 
 19/07/2010: Version 0.2.3
     - Around 20% performance improvement of Minimax algorithm since 0.2.2
