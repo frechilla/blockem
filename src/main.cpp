@@ -25,6 +25,7 @@
 ///           Faustino Frechilla 30-Mar-2009  Original development
 ///           Faustino Frechilla 23-Jun-2010  Nice handling of command line parameters
 ///           Faustino Frechilla 21-Jul-2010  i18n
+///           Faustino Frechilla 23-Sep-2010  Reorganisation. Blockem Options support
 /// @endhistory
 ///
 // ============================================================================
@@ -212,16 +213,10 @@ void FatalError(
     exit(a_errorCode);
 }
 
-/// @brief what can I say? This is the main function!
-int main(int argc, char **argv)
+/// @brief enable internationalisation support
+/// It has to do some magic for i18n to work on win32 platforms
+void I18nInit()
 {
-    GError* error = NULL;
-    GOptionContext* cmdContext = NULL;
-    char errorStringBuffer[ERROR_STRING_BUFFER_SIZE];
-
-    // Init type system as soon as possible
-    g_type_init ();
-
     //////////////////
     // gettext internationalisation initialisation
 
@@ -251,7 +246,7 @@ int main(int argc, char **argv)
 
 #endif // WIN32
 
-    // this call might be done whatever the platform it is
+    // this call must be done whatever the platform it is
     setlocale (LC_ALL, "");
 
 #ifdef WIN32
@@ -291,7 +286,20 @@ int main(int argc, char **argv)
 
     // gettext internationalisation initialisation
     //////////////////
+}
 
+/// @brief load command line options and and parse command input
+/// It uses i18n to translate command line options into the selected language
+/// WARNING: I18nInit() MUST be called before to enable i18n in all platforms
+/// (this function does some magic to ensure i18n is enabled under win32 
+/// platforms)
+/// It might cause the application to exit if the command line options couldn't
+/// be parsed (it calls to FatalError with the proper error code and message)
+void ProcessCommandLine()
+{
+    GError* error = NULL;
+    GOptionContext* cmdContext = NULL;
+    
     // create new command line context. This resource must be deleted before existing the app
     // i18n TRANSLATORS: Please leave the starting dash as it is part of the glib command line
     // i18n parsing formatting
@@ -357,7 +365,8 @@ int main(int argc, char **argv)
         translatedCmdEntries[i].arg_description = _(g_cmdEntries[i].arg_description);
     }
 
-    // must be a null terminated array of structs
+    // must be a null terminated array of structs. At this point
+    // g_cmdEntries[nEntries] is NULL
     translatedCmdEntries[nEntries] = g_cmdEntries[nEntries];
 
     // the workaround is ready. GETTEXT_PACKAGE is still needed so the rest
@@ -410,10 +419,35 @@ int main(int argc, char **argv)
 
     // free command line parsing resources
     g_option_context_free(cmdContext);
+}
 
+/// @brief what can I say? This is the main function!
+int main(int argc, char **argv)
+{
+    // fancy error messages creation with snprintf
+    char errorStringBuffer[ERROR_STRING_BUFFER_SIZE];
 
-    if (g_version) // "version" option takes priority. If it set nothing else will be done
+    // Init type system as soon as possible
+    g_type_init ();
+    
+    // SINGLETON creation is not thread safe. Ensure they are instantiated
+    // before the app creates extra threads
+    // BlockemConfig singleton contains general purpose configuration data that
+    // will be loaded from the config xml file
+    BlockemConfig::Instance();
+    
+    // enable internationalisation support. It MUST be called before 
+    // ProcessCommandLine
+    I18nInit();
+
+    // parse command line options. options will be saved in a bunch of static 
+    // global variables (scope to this file only) defined at the beginning of 
+    // this file (they all start with 'g_')
+    ProcessCommandLine();
+
+    if (g_version) 
     {
+        // "version" option takes priority. If it set nothing else will be done
         std::cout << "Blockem, version " << VERSION << " (r" << SVN_REVISION << ")" << std::endl;
         std::cout << "  Compiled " << COMPILETIME << std::endl << std::endl;
         std::cout << "Copyright (C) 2009-2010 Faustino Frechilla" << std::endl;
@@ -428,6 +462,11 @@ int main(int argc, char **argv)
         // gtkmm can do strange stuff if its internals are not initialised early
         // enough
         Gtk::Main::init_gtkmm_internals();
+        
+        // initialise singletons before extra threads are created.
+        // Singleton creation is not thread safe
+        // Game1v1Config data. Used to store GUI related configuration for 1vs1 games
+        Game1v1Config::Instance();
 
         // g_thread_supported returns TRUE if the thread system is initialised,
         // and FALSE if it is not. Initiliase gthreads only if they haven't been
@@ -495,10 +534,6 @@ int main(int argc, char **argv)
         MainWindow *pMainWindow = NULL;
         try
         {
-            // initialise singletons before extra threads are created.
-            // Singleton creation is not thread safe
-            Game1v1Config::Instance();
-
             // first of all retrieve the Gtk::window object
             gtkBuilder->get_widget_derived(GUI_MAIN_WINDOW_NAME, pMainWindow);
             if (pMainWindow == NULL)

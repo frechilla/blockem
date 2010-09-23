@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License along
 // with Blockem. If not, see http://www.gnu.org/licenses/.
 //
-/// @file  gui_config_dialog.cpp
+/// @file  gui_game1v1_config_dialog.cpp
 /// @brief
 ///
 /// @author Faustino Frechilla
@@ -24,6 +24,7 @@
 /// Ref       Who                When         What
 ///           Faustino Frechilla 01-May-2010  Original development
 ///           Faustino Frechilla 21-Jul-2010  i18n
+///           Faustino Frechilla 23-Sep-2010  Renamed to gui_game1v1_config_dialog
 /// @endhistory
 ///
 // ============================================================================

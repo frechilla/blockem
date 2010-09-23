@@ -17,7 +17,7 @@
 // with Blockem. If not, see http://www.gnu.org/licenses/.
 //
 /// @file  gui_game1v1_config.h
-/// @brief
+/// @brief Singleton which stores GUI related configuration data for 1vs1 games
 ///
 /// @author Faustino Frechilla
 /// @history

@@ -18,7 +18,7 @@ endif
 BLOCKEM_DATADIR ?= $(datadir)
 BLOCKEM_LOCALEDIR ?= $(localedir)
 
-AM_CXXFLAGS  = $(GTKMM_CFLAGS) $(GTHREAD_CFLAGS)
+AM_CXXFLAGS  = $(GTKMM_CFLAGS) $(GTHREAD_CFLAGS) $(LIBXML_CFLAGS)
 AM_CXXFLAGS += -DDATADIR=\"$(BLOCKEM_DATADIR)\" 
 AM_CXXFLAGS += -DLOCALEDIR=\"$(BLOCKEM_LOCALEDIR)\"
 AM_LDFLAGS = 
@@ -46,7 +46,7 @@ blockem_DEPENDENCIES = gui_glade_obj.o
 # encoding (...) for use on systems which don't have one, or whose implementation 
 # cannot convert from/to Unicode
 blockem_LDADD = gui_glade_obj.o @LIBINTL@ \
-    $(GTKMM_LIBS) $(GLADEMM_LIBS) $(GTHREAD_LIBS)
+    $(GTKMM_LIBS) $(GTHREAD_LIBS) $(LIBXML_LIBS)
 
 CLEANFILES = gui_glade_obj.o compiletime.h
 
@@ -73,6 +73,8 @@ impl/piece_impl.h \
 impl/player_impl.h \
 bitwise.cpp \
 bitwise.h \
+blockem_config.cpp \
+blockem_config.h \
 board.cpp \
 board.h \
 coordinate.h \
@@ -86,14 +88,14 @@ gui_exception.cpp \
 gui_exception.h \
 gui_about_dialog.cpp \
 gui_about_dialog.h \
-gui_config_dialog.cpp \
-gui_config_dialog.h \
 gui_drawing_area_board.h \
 gui_drawing_area_board.cpp \
 gui_drawing_area_show_pieces.cpp \
 gui_drawing_area_show_pieces.h   \
 gui_game1v1_config.cpp \
 gui_game1v1_config.h \
+gui_game1v1_config_dialog.cpp \
+gui_game1v1_config_dialog.h \
 gui_glade_defs.h \
 gui_main_window.cpp \
 gui_main_window.h \

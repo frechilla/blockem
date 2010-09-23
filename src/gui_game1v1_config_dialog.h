@@ -16,19 +16,20 @@
 // You should have received a copy of the GNU General Public License along
 // with Blockem. If not, see http://www.gnu.org/licenses/.
 //
-/// @file  gui_config_dialog.h
+/// @file  gui_game1v1_config_dialog.h
 /// @brief
 ///
 /// @author Faustino Frechilla
 /// @history
 /// Ref       Who                When         What
 ///           Faustino Frechilla 01-May-2010  Original development
+///           Faustino Frechilla 23-Sep-2010  Renamed to gui_game1v1_config_dialog
 /// @endhistory
 ///
 // ============================================================================
 
-#ifndef _CONFIGDIALOG_H_
-#define _CONFIGDIALOG_H_
+#ifndef _GUI_GAME1V1_CONFIG_DIALOG_H_
+#define _GUI_GAME1V1_CONFIG_DIALOG_H_
 
 #include <gtkmm.h>
 #include "gui_exception.h"
@@ -179,4 +180,4 @@ private:
     ConfigDialog& operator=(const ConfigDialog &a_src);
 };
 
-#endif /* _CONFIGDIALOG_H_ */
+#endif /* _GUI_GAME1V1_CONFIG_DIALOG_H_ */

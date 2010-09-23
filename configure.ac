@@ -87,8 +87,13 @@ fi
 PKG_CHECK_MODULES([GTKMM], [gtkmm-2.4 >= 2.16])
 # GTHREAD 2.16 hasn't been really checked. Just a guess
 PKG_CHECK_MODULES([GTHREAD], [gthread-2.0 >= 2.16])
-# if only glib is needed. 2.16 Hasn't been really checked. Just a guess
-#PKG_CHECK_MODULES([GLIB], [glib-2.0 >= 2.16])
+# xml parsing needs libxml. version dependency:
+# $ pkg-config --modversion libxml-2.0
+# 2.6.26
+PKG_CHECK_MODULES([LIBXML], [libxml-2.0 >= 2.6.26])
+# if only glib is needed (it is contained in gtkmm). 
+# 2.16 Hasn't been really checked. Just a guess
+# PKG_CHECK_MODULES([GLIB], [glib-2.0 >= 2.16])
 # contained in gtkmm
 # PKG_CHECK_MODULES([SIGCPP], [sigc++-2.0 >= 1.0.0])
 
@@ -96,6 +101,8 @@ AC_SUBST(GTKMM_CFLAGS)
 AC_SUBST(GTKMM_LIBS)
 AC_SUBST(GTHREAD_CFLAGS)
 AC_SUBST(GTHREAD_LIBS)
+AC_SUBST(LIBXML_CFLAGS)
+AC_SUBST(LIBXML_LIBS)
 
 # Checks for header files.
 AC_CHECK_HEADERS([stdint.h stdlib.h])
