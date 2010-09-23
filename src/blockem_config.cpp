@@ -27,12 +27,14 @@
 ///
 // ============================================================================
 
+#include <iostream>
+#include <fstream>
+#include <stdexcept> // std::runtime_error
+#include <gtkmm.h>   // g_file_test, G_FILE_TEST_IS_REGULAR
 // XML parsing
 #include <libxml/xmlmemory.h>
 #include <libxml/parser.h>
 #include <libxml/tree.h>
-
-#include <stdexcept> // std::runtime_error
 
 #include "blockem_config.h"
 #include "config.h" // PACKAGE
@@ -44,20 +46,18 @@ static const char CONFIG_FILE_NAME[] = "blockem.conf";
 // defaults for when config file can't be loaded
 static const char  DEFAULT_LANGUAGE[] = "en_UK"; // english from united kingdom as default
 
-//TODO language codes are supposed to be always 4 characters long
-// it hasn't been properly checked though. Some research on this should be done
-// it is 5 because of '\0' character. (4 + 1)
-/// null-terminated array wich contains all valid languages supported by blockem
-static const char g_validLanguagesList[][5] = 
+/// null-terminated array which contains all valid languages supported by blockem
+static const char* g_validLanguagesList[] =
 {
     "en_UK",
     "es_ES",
     NULL
-}
+};
 
-BlockemConfig::BlockemConfig() :
+
+BlockemConfig::BlockemConfig() throw (std::runtime_error):
     Singleton<BlockemConfig>(),
-    m_languageISO(DEFAULT_LANGUAGE) throw (std::runtime_error):
+    m_languageISO(DEFAULT_LANGUAGE)
 {
 
 // full PATH where the config file is stored. It depends on the platform
@@ -71,29 +71,31 @@ BlockemConfig::BlockemConfig() :
     char *home;
     home = getenv("HOME");
 
-    m_configFileFull = 
-        std::string (home)   + 
-        std::string("/.")    + 
+    m_configFileFull =
+        std::string (home)   +
+        std::string("/.")    +
         std::string(PACKAGE) +
         std::string("/")     +
-        std::String(CONFIG_FILE_NAME);
+        std::string(CONFIG_FILE_NAME);
 #endif // WIN32
 
-    if ( (!g_file_test(m_configFileFull.c_str(), G_FILE_TEST_IS_REGULAR)) &&
-         (!CreateDefaultConfigFile())
-    {
-        // default config file could not be created. Default settings have
-        // already been loaded
-        std::cerr << "Could not create default configuration file" << std::endl;
-        std::cerr << "Loading default settings..." << std::endl;
-    }
-    else
+    if ( (g_file_test(m_configFileFull.c_str(), G_FILE_TEST_IS_REGULAR)) ||
+         (CreateDefaultConfigFile()) )
     {
         // load config from config file (it's a bit redundant if the config file
         // had just been created, but it will only happen the 1st time blockem
         // is run)
         LoadConfigFromXmlFile();
     }
+#ifdef DEBUG
+    else
+    {
+        // default config file could not be created. Default settings have
+        // already been loaded
+        std::cerr << "Could not create default configuration file" << std::endl;
+        std::cerr << "Loading default settings..." << std::endl;
+    }
+#endif
 }
 
 BlockemConfig::~BlockemConfig()
@@ -102,15 +104,39 @@ BlockemConfig::~BlockemConfig()
 
 bool BlockemConfig::CreateDefaultConfigFile()
 {
-    std::ofstream oStr(m_configFileFull, 
+    std::string configFileDirectory(
+            m_configFileFull.substr(0, m_configFileFull.find_last_of("/")));
+
+    if (!g_file_test(configFileDirectory.c_str(), G_FILE_TEST_IS_DIR))
+    {
+#ifdef DEBUG
+        std::cerr << configFileDirectory << " doesn't exist. Creating..." << std::endl;
+#endif
+
+        // create the directory first of all
+        if (g_mkdir_with_parents(configFileDirectory.c_str(), 0754) != 0)
+        {
+#ifdef DEBUG
+        std::cerr << configFileDirectory << " couldn't be created" << std::endl;
+#endif
+            // directory could not be created
+            return false;
+        }
+    }
+
+    // directory has been properly created. Go ahead with file now
+    std::ofstream oStr(m_configFileFull.c_str(),
                        std::ios_base::out | std::ios_base::trunc);
 
     if(!oStr)
     {
         // file could not be created
+#ifdef DEBUG
+        std::cerr << m_configFileFull << " couldn't be opened" << std::endl;
+#endif
         return false;
     }
-    
+
     // default config file. Includes comments!
     oStr << "<blockem_config>"                                                          << std::endl;
     oStr << "  <!--"                                                                    << std::endl;
@@ -134,9 +160,9 @@ bool BlockemConfig::CreateDefaultConfigFile()
     oStr << "  -->"                                                                     << std::endl;
     oStr << "  <language>en_UK</language>"                                              << std::endl;
     oStr << "</blockem_config>"                                                         << std::endl;
-    
+
     oStr.close();
-    
+
     return true;
 }
 
@@ -144,38 +170,38 @@ void BlockemConfig::LoadConfigFromXmlFile() throw (std::runtime_error)
 {
     // based (almost copied and pasted) on http://www.yolinux.com/TUTORIALS/GnomeLibXml2.html
     xmlNode* cur_node = NULL;
-    xmlNode* root     = NULL
+    xmlNode* root = NULL;
     xmlDocPtr doc;
-    char* strValue;
-    
+    xmlChar* strValue = NULL;
+
     // ensure config file exists
     if (!g_file_test(m_configFileFull.c_str(), G_FILE_TEST_IS_REGULAR))
     {
         throw new std::runtime_error(
             std::string("Config file does not exist: ") + m_configFileFull);
     }
-    
+
     // open XML doc and try to parse it
-    doc = xmlParseFile(m_configFileFull);
+    doc = xmlParseFile(m_configFileFull.c_str());
     if (doc == NULL)
     {
         throw new std::runtime_error(
             m_configFileFull + std::string(" could not be parsed"));
     }
-    
+
     // retrieve root element
     root = xmlDocGetRootElement(doc);
-    
+
     // XML file MUST have a root element called blockem_config
     if ( (root == NULL) ||
          (root->name == NULL) ||
-         xmlStrcmp(root->name, "blockem_config") )
+         xmlStrcmp(root->name, (const xmlChar*) "blockem_config") )
     {
         xmlFreeDoc(doc);
         throw new std::runtime_error(
             m_configFileFull + std::string(": Root element does not exist or is not called \"blockem_config\""));
     }
-    
+
     // root's children. They are inside a loop to ensure they can be written to the file in any order
     for (cur_node = root->children; cur_node != NULL; cur_node = cur_node->next)
     {
@@ -184,14 +210,19 @@ void BlockemConfig::LoadConfigFromXmlFile() throw (std::runtime_error)
         {
             // xml element called "language"
             strValue = xmlNodeGetContent(cur_node);
-            SetLanguageISO(std::string(value));
-            xmlFree(value);
+#ifdef DEBUG
+            std::cout << "XML Parsing: \"" << (const char*)cur_node->name
+                      << "\" --> \"" << (const char*)strValue << "\""
+                      << std::endl;
+#endif
+            SetLanguageISO(std::string((const char*)strValue));
+            xmlFree(strValue);
         }
     }
-    
+
     // free the document
     xmlFreeDoc(doc);
-    
+
     // Free the global variables that may
     // have been allocated by the parser
     xmlCleanupParser();
@@ -202,7 +233,7 @@ const std::string& BlockemConfig::GetLanguageISO() const
     return m_languageISO;
 }
 
-void SetLanguageISO(const std::string &a_lang)
+bool BlockemConfig::SetLanguageISO(const std::string &a_lang)
 {
     int32_t i = 0;
     while (g_validLanguagesList[i] != NULL)
@@ -211,13 +242,17 @@ void SetLanguageISO(const std::string &a_lang)
         {
             // it is a valid language string. Set it and exit
             m_languageISO = a_lang;
-            return;
+            return true;
         }
-        
+
         i++;
     }
-    
+
     // a_lang is not a valid language string. Do nothing (keep the old value)
+#ifdef DEBUG
     std::cerr << a_lang << " is not a supported language string" << std::endl;
     std::cerr << PACKAGE << " will still be using " << m_languageISO << std::endl;
+#endif
+
+    return false;
 }

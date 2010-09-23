@@ -45,6 +45,7 @@
 
 // header file created during the make process which saves the current date
 #include "compiletime.h"
+#include "blockem_config.h"
 #include "gui_glade_defs.h"
 #include "gui_main_window.h"
 #include "game1v1.h"
@@ -229,7 +230,7 @@ void I18nInit()
 
 #ifdef WIN32
     // TODO language should be picked through some menu on the main window
-    // this will do it for now
+    // at the moment is just read from configuration file (BlockemConfig)
 
     // http://www.mail-archive.com/gtk-app-devel-list@gnome.org/msg11457.html
     // Language selection under windows (environment variables are a bit tricky
@@ -238,11 +239,13 @@ void I18nInit()
     // if this environment variable is not set language will be retrieved
     // from whatever is configured as current language in the windows platform
 
-    // This call force the app to be shown in English (UK)
-    putenv ("LANG=en_UK");
+    // An example of a call to putenv to set the LANG environment variable to
+    //   + to english UK (en_UK):    putenv ("LANG=en_UK");
+    //   + to spanish Spain (es_ES): putenv ("LANG=es_ES");
+    std::string langEnvironmentStr(
+            std::string("LANG=") + BlockemConfig::Instance()::GetLanguageISO());
 
-    // This call force the app to be shown on a Spanish (Spain)
-    //putenv ("LANG=es_ES");
+    putenv (langEnvironmentStr.c_str());
 
 #endif // WIN32
 
@@ -291,15 +294,17 @@ void I18nInit()
 /// @brief load command line options and and parse command input
 /// It uses i18n to translate command line options into the selected language
 /// WARNING: I18nInit() MUST be called before to enable i18n in all platforms
-/// (this function does some magic to ensure i18n is enabled under win32 
+/// (this function does some magic to ensure i18n is enabled under win32
 /// platforms)
 /// It might cause the application to exit if the command line options couldn't
 /// be parsed (it calls to FatalError with the proper error code and message)
-void ProcessCommandLine()
+/// @param main's argc
+/// @param main's argv
+void ProcessCommandLine(int argc, char **argv)
 {
     GError* error = NULL;
     GOptionContext* cmdContext = NULL;
-    
+
     // create new command line context. This resource must be deleted before existing the app
     // i18n TRANSLATORS: Please leave the starting dash as it is part of the glib command line
     // i18n parsing formatting
@@ -429,23 +434,23 @@ int main(int argc, char **argv)
 
     // Init type system as soon as possible
     g_type_init ();
-    
+
     // SINGLETON creation is not thread safe. Ensure they are instantiated
     // before the app creates extra threads
     // BlockemConfig singleton contains general purpose configuration data that
     // will be loaded from the config xml file
     BlockemConfig::Instance();
-    
-    // enable internationalisation support. It MUST be called before 
+
+    // enable internationalisation support. It MUST be called before
     // ProcessCommandLine
     I18nInit();
 
-    // parse command line options. options will be saved in a bunch of static 
-    // global variables (scope to this file only) defined at the beginning of 
+    // parse command line options. options will be saved in a bunch of static
+    // global variables (scope to this file only) defined at the beginning of
     // this file (they all start with 'g_')
-    ProcessCommandLine();
+    ProcessCommandLine(argc, argv);
 
-    if (g_version) 
+    if (g_version)
     {
         // "version" option takes priority. If it set nothing else will be done
         std::cout << "Blockem, version " << VERSION << " (r" << SVN_REVISION << ")" << std::endl;
@@ -462,7 +467,7 @@ int main(int argc, char **argv)
         // gtkmm can do strange stuff if its internals are not initialised early
         // enough
         Gtk::Main::init_gtkmm_internals();
-        
+
         // initialise singletons before extra threads are created.
         // Singleton creation is not thread safe
         // Game1v1Config data. Used to store GUI related configuration for 1vs1 games

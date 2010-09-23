@@ -42,26 +42,29 @@ public:
     const std::string& GetLanguageISO() const;
 
     /// @brief sets ISO string of the language blockem has been configured to run
-    void SetLanguageISO(const std::string &a_lang);
+    /// it checks if a_lang represents a supported language. If it doesn't nothing
+    /// will be done and the old value will be kept
+    /// @return true if new language was successfully set. False otherwise
+    bool SetLanguageISO(const std::string &a_lang);
 
 private:
     /// language string. iso 839 and 3166
     /// http://en.wikipedia.org/wiki/ISO_639
     /// http://en.wikipedia.org/wiki/ISO_3166
     std::string m_languageISO;
-    
-    /// full path to config file (includes config file name) 
-    /// It is stored in a variable because it is calculated at runtime 
+
+    /// full path to config file (includes config file name)
+    /// It is stored in a variable because it is calculated at runtime
     /// depending on the platform
     std::string m_configFileFull;
-    
+
     /// Creates a default config file in the expected path
     /// WARNING: it overwrites the current data if the file exists
     /// @return false if the file could not be created. True otherwise
     bool CreateDefaultConfigFile();
-    
+
     /// Loads blockem configuration from the config xml file
-    /// the config file name is calculated in the constructor 
+    /// the config file name is calculated in the constructor
     /// (m_pathToConfigFile + CONFIG_FILE_NAME)
     void LoadConfigFromXmlFile() throw (std::runtime_error);
 

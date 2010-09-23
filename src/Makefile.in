@@ -67,12 +67,13 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_blockem_OBJECTS = bitwise.$(OBJEXT) board.$(OBJEXT) \
-	game1v1.$(OBJEXT) game_total_allocation.$(OBJEXT) \
-	gui_exception.$(OBJEXT) gui_about_dialog.$(OBJEXT) \
-	gui_config_dialog.$(OBJEXT) gui_drawing_area_board.$(OBJEXT) \
+am_blockem_OBJECTS = bitwise.$(OBJEXT) blockem_config.$(OBJEXT) \
+	board.$(OBJEXT) game1v1.$(OBJEXT) \
+	game_total_allocation.$(OBJEXT) gui_exception.$(OBJEXT) \
+	gui_about_dialog.$(OBJEXT) gui_drawing_area_board.$(OBJEXT) \
 	gui_drawing_area_show_pieces.$(OBJEXT) \
-	gui_game1v1_config.$(OBJEXT) gui_main_window.$(OBJEXT) \
+	gui_game1v1_config.$(OBJEXT) \
+	gui_game1v1_config_dialog.$(OBJEXT) gui_main_window.$(OBJEXT) \
 	gui_main_window_worker_thread.$(OBJEXT) \
 	gui_table_edit_piece.$(OBJEXT) gui_stop_watch_label.$(OBJEXT) \
 	heuristic.$(OBJEXT) piece.$(OBJEXT) player.$(OBJEXT) \
@@ -162,6 +163,8 @@ LIBPTH = @LIBPTH@
 LIBPTH_PREFIX = @LIBPTH_PREFIX@
 LIBS = @LIBS@
 LIBTHREAD = @LIBTHREAD@
+LIBXML_CFLAGS = @LIBXML_CFLAGS@
+LIBXML_LIBS = @LIBXML_LIBS@
 LTLIBC = @LTLIBC@
 LTLIBICONV = @LTLIBICONV@
 LTLIBINTL = @LTLIBINTL@
@@ -251,7 +254,7 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-AM_CXXFLAGS = $(GTKMM_CFLAGS) $(GTHREAD_CFLAGS) \
+AM_CXXFLAGS = $(GTKMM_CFLAGS) $(GTHREAD_CFLAGS) $(LIBXML_CFLAGS) \
 	-DDATADIR=\"$(BLOCKEM_DATADIR)\" \
 	-DLOCALEDIR=\"$(BLOCKEM_LOCALEDIR)\"
 AM_LDFLAGS = 
@@ -262,7 +265,7 @@ blockem_DEPENDENCIES = gui_glade_obj.o $(am__append_2)
 # encoding (...) for use on systems which don't have one, or whose implementation 
 # cannot convert from/to Unicode
 blockem_LDADD = gui_glade_obj.o @LIBINTL@ $(GTKMM_LIBS) \
-	$(GLADEMM_LIBS) $(GTHREAD_LIBS) $(am__append_3)
+	$(GTHREAD_LIBS) $(LIBXML_LIBS) $(am__append_3)
 CLEANFILES = gui_glade_obj.o compiletime.h $(am__append_1)
 EXTRA_DIST = \
 gui.glade    \
@@ -276,6 +279,8 @@ impl/piece_impl.h \
 impl/player_impl.h \
 bitwise.cpp \
 bitwise.h \
+blockem_config.cpp \
+blockem_config.h \
 board.cpp \
 board.h \
 coordinate.h \
@@ -289,14 +294,14 @@ gui_exception.cpp \
 gui_exception.h \
 gui_about_dialog.cpp \
 gui_about_dialog.h \
-gui_config_dialog.cpp \
-gui_config_dialog.h \
 gui_drawing_area_board.h \
 gui_drawing_area_board.cpp \
 gui_drawing_area_show_pieces.cpp \
 gui_drawing_area_show_pieces.h   \
 gui_game1v1_config.cpp \
 gui_game1v1_config.h \
+gui_game1v1_config_dialog.cpp \
+gui_game1v1_config_dialog.h \
 gui_glade_defs.h \
 gui_main_window.cpp \
 gui_main_window.h \
@@ -399,15 +404,16 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bitwise.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/blockem_config.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/board.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/game1v1.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/game_total_allocation.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_about_dialog.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_config_dialog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_drawing_area_board.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_drawing_area_show_pieces.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_exception.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_game1v1_config.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_game1v1_config_dialog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_main_window.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_main_window_worker_thread.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_stop_watch_label.Po@am__quote@

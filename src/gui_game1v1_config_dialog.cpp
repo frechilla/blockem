@@ -30,7 +30,7 @@
 // ============================================================================
 
 #include "gettext.h" // i18n
-#include "gui_config_dialog.h"
+#include "gui_game1v1_config_dialog.h"
 #include "gui_glade_defs.h"
 #include "gui_game1v1_config.h"
 #include "game1v1.h" // BOARD_1VS1_ROWS and DEFAULT_STARTING_COORD_PLAYER[1-2]

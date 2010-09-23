@@ -37,7 +37,7 @@
 
 #include "g_blocking_queue.h"
 #include "gui_about_dialog.h"
-#include "gui_config_dialog.h"
+#include "gui_game1v1_config_dialog.h"
 #include "gui_drawing_area_show_pieces.h"
 #include "gui_drawing_area_board.h"
 #include "gui_exception.h"
