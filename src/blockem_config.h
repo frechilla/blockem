@@ -37,15 +37,8 @@ class BlockemConfig :
     public Singleton<BlockemConfig>
 {
 public:
-
     /// @return ISO string of the language blockem has been configured to run (for example: "en_UK")
     const std::string& GetLanguageISO() const;
-
-    /// @brief sets ISO string of the language blockem has been configured to run
-    /// it checks if a_lang represents a supported language. If it doesn't nothing
-    /// will be done and the old value will be kept
-    /// @return true if new language was successfully set. False otherwise
-    bool SetLanguageISO(const std::string &a_lang);
 
 private:
     /// language string. iso 839 and 3166
@@ -58,6 +51,12 @@ private:
     /// depending on the platform
     std::string m_configFileFull;
 
+    /// @brief sets ISO string of the language blockem has been configured to run
+    /// it checks if a_lang represents a supported language. If it doesn't nothing
+    /// will be done and the old value will be kept
+    /// @return true if new language was successfully set. False otherwise
+    bool SetLanguageISO(const std::string &a_lang);
+    
     /// Creates a default config file in the expected path
     /// WARNING: it overwrites the current data if the file exists
     /// @return false if the file could not be created. True otherwise

@@ -1,4 +1,4 @@
-// ============================================================================
+﻿// ============================================================================
 // Copyright 2010 Faustino Frechilla
 //
 // This file is part of Blockem.
@@ -79,19 +79,21 @@ BlockemConfig::BlockemConfig() throw (std::runtime_error):
         std::string(CONFIG_FILE_NAME);
 #endif // WIN32
 
+    // try to load configuration from config file. If it doesn't exist create
+    // a default one
     if ( (g_file_test(m_configFileFull.c_str(), G_FILE_TEST_IS_REGULAR)) ||
          (CreateDefaultConfigFile()) )
     {
         // load config from config file (it's a bit redundant if the config file
-        // had just been created, but it will only happen the 1st time blockem
+        // had just been created, but it should only happen the 1st time app
         // is run)
         LoadConfigFromXmlFile();
     }
-#ifdef DEBUG
+#ifdef DEBUG_PRINT
     else
     {
         // default config file could not be created. Default settings have
-        // already been loaded
+        // already been loaded through this constructor's initialisation list
         std::cerr << "Could not create default configuration file" << std::endl;
         std::cerr << "Loading default settings..." << std::endl;
     }
@@ -102,6 +104,11 @@ BlockemConfig::~BlockemConfig()
 {
 }
 
+const std::string& BlockemConfig::GetLanguageISO() const
+{
+    return m_languageISO;
+}
+
 bool BlockemConfig::CreateDefaultConfigFile()
 {
     std::string configFileDirectory(
@@ -109,14 +116,14 @@ bool BlockemConfig::CreateDefaultConfigFile()
 
     if (!g_file_test(configFileDirectory.c_str(), G_FILE_TEST_IS_DIR))
     {
-#ifdef DEBUG
+#ifdef DEBUG_PRINT
         std::cerr << configFileDirectory << " doesn't exist. Creating..." << std::endl;
 #endif
 
         // create the directory first of all
         if (g_mkdir_with_parents(configFileDirectory.c_str(), 0754) != 0)
         {
-#ifdef DEBUG
+#ifdef DEBUG_PRINT
         std::cerr << configFileDirectory << " couldn't be created" << std::endl;
 #endif
             // directory could not be created
@@ -131,13 +138,19 @@ bool BlockemConfig::CreateDefaultConfigFile()
     if(!oStr)
     {
         // file could not be created
-#ifdef DEBUG
+#ifdef DEBUG_PRINT
         std::cerr << m_configFileFull << " couldn't be opened" << std::endl;
 #endif
         return false;
     }
 
-    // default config file. Includes comments!
+    // default config file. Includes DTD and comments!
+    oStr << "<?xml version=\"1.0\"  encoding=\"UTF-8\"?>"                               << std::endl;
+    oStr << "<!DOCTYPE blockem_config ["                                                << std::endl;
+    oStr << "<!ELEMENT blockem_config (language)>"                                      << std::endl;
+    oStr << "<!ELEMENT language (#PCDATA)>"                                             << std::endl;
+    oStr << "]>"                                                                        << std::endl;
+    oStr << ""                                                                          << std::endl;
     oStr << "<blockem_config>"                                                          << std::endl;
     oStr << "  <!--"                                                                    << std::endl;
     oStr << "    This is the language blockem will use at startup. If it is changed"    << std::endl;
@@ -210,7 +223,7 @@ void BlockemConfig::LoadConfigFromXmlFile() throw (std::runtime_error)
         {
             // xml element called "language"
             strValue = xmlNodeGetContent(cur_node);
-#ifdef DEBUG
+#ifdef DEBUG_PRINT
             std::cout << "XML Parsing: \"" << (const char*)cur_node->name
                       << "\" --> \"" << (const char*)strValue << "\""
                       << std::endl;
@@ -226,11 +239,6 @@ void BlockemConfig::LoadConfigFromXmlFile() throw (std::runtime_error)
     // Free the global variables that may
     // have been allocated by the parser
     xmlCleanupParser();
-}
-
-const std::string& BlockemConfig::GetLanguageISO() const
-{
-    return m_languageISO;
 }
 
 bool BlockemConfig::SetLanguageISO(const std::string &a_lang)
@@ -249,7 +257,7 @@ bool BlockemConfig::SetLanguageISO(const std::string &a_lang)
     }
 
     // a_lang is not a valid language string. Do nothing (keep the old value)
-#ifdef DEBUG
+#ifdef DEBUG_PRINT
     std::cerr << a_lang << " is not a supported language string" << std::endl;
     std::cerr << PACKAGE << " will still be using " << m_languageISO << std::endl;
 #endif
