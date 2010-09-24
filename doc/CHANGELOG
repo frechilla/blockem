@@ -1,3 +1,10 @@
+: Version 0.2.5
+    - New configuration file in xml format which is loaded at start-up. At the
+      moment it is only used to set the language on windows platforms but it 
+      could be easily expanded in future
+    - Bug fixed in win32 platforms: Bogus handling of i18n in command line 
+      arguments
+
 28/08/2010: Version 0.2.4
     - About Dialog contains the URL of the project
     - Support for internationalization. Available languages for now are English
