@@ -1,0 +1,169 @@
+<?xml version="1.0"?>
+<blockem_challenge name="example 1">
+    <!--
+        Board specification  
+    -->
+    <board>
+        <!-- 
+            Number of rows of the board for this challenge.
+            It MUST be a positive number (bigger than 0).
+             Massive boards can be hard to hadle by blockem GUI, so be sensible 
+        -->
+        <rows>14</rows>
+        <!-- 
+            Number of comuns of the board for this challenge.
+            It MUST be a positive number (bigger than 0).
+            Massive boards can be hard to hadle by blockem GUI, so be sensible 
+        -->
+        <columns>14</columns>
+    </board>
+  
+    <!-- 
+        There is always 2 players in a blockem challenge:
+          + "challenger": Whoever loads the challenge to play it.
+          + "opponent": Another player who can own spaces on the board, so they
+                        don't belong to the challenger. It can be set up as
+                        active (it also puts down pieces) or inactive through
+                        the "active" tag (it can be set to "yes" or "no").
+                        This extra player can be handled by the computer or
+                        another human being when it is set up as active
+    -->
+    <opponent active="no">
+        <!--
+            Each square on the board taken by 'opponent' player will be
+            described using the taken tag:
+                <taken row="N" col="M"/>
+            
+            Where row N and column M exist on the board. All squares are free
+            by default until they are configured as taken by this tag
+            
+            WARNING: Bear in mind the first row or column is 0, and the latest
+                     valid row or column is the amount of rows/columns defined
+                     under the "board" tag minus 1
+                     
+            WARNING: Blockem won't be able to load the challenge if the same
+                     square in the board is taken by both opponent and 
+                     challenger
+        -->
+        <taken row="4"  col="4"/>
+        <taken row="5"  col="5"/>
+        <taken row="10" col="10"/>
+        
+        <!--
+            The following list contains the full set of available pieces in
+            blockem. If a piece is available for the current player the
+            "available" tag should be set to "yes". Otherwise set it to "no"
+            Default is NOT available.
+            
+            The list of available pieces of this player is only used if it has 
+            been set up as active (active="yes")
+            
+            Format of a piece tag is:
+                <piece available="yes|no">piece's description</piece>
+        -->
+        <piece available="no">Baby piece</piece>
+        <piece available="no">Two piece</piece>
+        <piece available="no">Three piece</piece>
+        <piece available="no">Little V</piece>
+        <piece available="no">Full square</piece>
+        <piece available="no">Four long piece</piece>
+        <piece available="no">Little L</piece>
+        <piece available="no">Little S</piece>
+        <piece available="no">Little T</piece>
+        <piece available="no">Big long piece</piece>
+        <piece available="no">Square++</piece>
+        <piece available="no">Big V (aka Half square)</piece>
+        <piece available="no">U piece</piece>
+        <piece available="no">Big L</piece>
+        <piece available="no">Y piece</piece>
+        <piece available="no">Big S</piece>
+        <piece available="no">Mr T</piece>
+        <piece available="no">N piece (aka the ultimate)</piece>
+        <piece available="no">Saf piece</piece>
+        <piece available="no">W piece</piece>
+        <piece available="no">Cross piece</piece>
+        
+        <!--
+            Starting row and starting column. This is only used if the player
+            has been set to active (active="yes")
+            
+            Both row and column must exist on the board
+            
+            WARNING: Bear in mind the first row or column is 0, and the latest
+                     valid row or column is the amount of rows/columns defined
+                     under the "board" tag minus 1
+        -->
+        <starting_row>0</starting_row>
+        <starting_col>0</starting_col>
+    </opponent>
+    
+    <!-- 
+        challenger is always active, "active" tag can't be used as in 
+        "opponent"
+    -->
+    <challenger>
+        <!--
+            Each square on the board taken by the challenger will be described
+            using the 'taken' tag here:
+                <taken row="N" col="M"/>
+            
+            Where row N and column M exist on the board. All squares are free
+            by default until they are configured as taken by this tag
+            
+            WARNING: Bear in mind the first row or column is 0, and the latest
+                     valid row or column is the amount of rows/columns defined
+                     under the "board" tag minus 1
+            
+            WARNING: Blockem won't be able to load the challenge if the same
+                     square in the board is taken by both opponent and 
+                     challenger
+        -->
+        <taken row="6"  col="6"/>
+        <taken row="11" col="11"/>
+        
+        <!--
+            The following list contains the full set of available pieces in
+            blockem. If a piece is available for the challengert the
+            "available" tag should be set to "yes". Otherwise set it to "no"
+            
+            Default is NOT available.
+            
+            Format of a piece tag is:
+                <piece available="yes|no">piece's description</piece>
+        -->
+        <piece available="yes">Baby piece</piece>
+        <piece available="yes">Two piece</piece>
+        <piece available="yes">Three piece</piece>
+        <piece available="yes">Little V</piece>
+        <piece available="yes">Full square</piece>
+        <piece available="yes">Four long piece</piece>
+        <piece available="yes">Little L</piece>
+        <piece available="yes">Little S</piece>
+        <piece available="yes">Little T</piece>
+        <piece available="yes">Big long piece</piece>
+        <piece available="yes">Square++</piece>
+        <piece available="yes">Big V (aka Half square)</piece>
+        <piece available="yes">U piece</piece>
+        <piece available="yes">Big L</piece>
+        <piece available="yes">Y piece</piece>
+        <piece available="yes">Big S</piece>
+        <piece available="yes">Mr T</piece>
+        <piece available="yes">N piece (aka the ultimate)</piece>
+        <piece available="yes">Saf piece</piece>
+        <piece available="yes">W piece</piece>
+        <piece available="yes">Cross piece</piece>
+    
+        <!--
+            Starting row and starting column. This MUST be set since the 
+            challenger will always be putting down pieces on the board
+            
+            Both row and column must exist on the board
+            
+            WARNING: Bear in mind the first row or column is 0, and the latest
+                     valid row or column is the amount of rows/columns defined
+                     under the "board" tag minus 1
+        -->
+        <starting_row>0</starting_row>
+        <starting_col>0</starting_col>
+    </challenger>
+</blockem_challenge>

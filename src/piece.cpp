@@ -42,6 +42,10 @@ const char* Piece::m_pieceDescription[e_numberOfPieces] =
     // some names are based on
     // http://www.boardgamegeek.com/image/112331/blokus
     // some others are based on hours and hours of playing :)
+    
+    // marked to be translated, but they are static strings. If the string
+    // is to be shown in another language gettext must be used, for example:
+    //     _(Piece::m_pieceDescription[0])
     N_("Baby piece"),
     N_("Two piece"),
     N_("Three piece"),
@@ -54,14 +58,14 @@ const char* Piece::m_pieceDescription[e_numberOfPieces] =
     N_("Big long piece"),
     N_("Square++"),
     N_("Big V (aka Half square)"),
-    N_("U Piece"),
+    N_("U piece"),
     N_("Big L"),
-    N_("Y Piece"),
+    N_("Y piece"),
     N_("Big S"),
     N_("Mr T"),
-    N_("N Piece (aka the ultimate)"),
-    N_("Saf Piece"),
-    N_("W Piece"),
+    N_("N piece (aka the ultimate)"),
+    N_("Saf piece"),
+    N_("W piece"),
     N_("Cross piece")
 };
 

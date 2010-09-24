@@ -385,7 +385,7 @@ msgid "Big V (aka Half square)"
 msgstr "V grande"
 
 #: src/piece.cpp:57
-msgid "U Piece"
+msgid "U piece"
 msgstr "Pieza U"
 
 #: src/piece.cpp:58
@@ -393,7 +393,7 @@ msgid "Big L"
 msgstr "L Grande"
 
 #: src/piece.cpp:59
-msgid "Y Piece"
+msgid "Y piece"
 msgstr "Pieza Y"
 
 #: src/piece.cpp:60
@@ -405,15 +405,15 @@ msgid "Mr T"
 msgstr "Mr T"
 
 #: src/piece.cpp:62
-msgid "N Piece (aka the ultimate)"
+msgid "N piece (aka the ultimate)"
 msgstr "Pieza N"
 
 #: src/piece.cpp:63
-msgid "Saf Piece"
+msgid "Saf piece"
 msgstr "Pieza de Saf"
 
 #: src/piece.cpp:64
-msgid "W Piece"
+msgid "W piece"
 msgstr "Pieza W"
 
 #: src/piece.cpp:65
