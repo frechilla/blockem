@@ -243,7 +243,11 @@ void I18nInit()
     //   + to english UK (en_UK):    putenv ("LANG=en_UK");
     //   + to spanish Spain (es_ES): putenv ("LANG=es_ES");
     std::string langEnvironmentStr(
-            std::string("LANG=") + BlockemConfig::Instance()::GetLanguageISO());
+            std::string("LANG=") + BlockemConfig::Instance().GetLanguageISO());
+
+#ifdef DEBUG_PRINT
+    std::cout << "Setting environment for i18n: \"" << langEnvironmentStr << "\"" << std::endl;
+#endif
 
     putenv (langEnvironmentStr.c_str());
 
@@ -321,83 +325,28 @@ void ProcessCommandLine(int argc, char **argv)
     //    execution of the application, for example a menu called "Game", or a
     //    label that contains the word "rotate"
     //
-    // We'll be creating here a temporary GOptionEntry based on g_cmdEntries,
-    // where _() will be called explicitely so it gets properly translated into
-    // the current domain
+    // We'll be calling explicitely here to _() per each translatable element
+    // of g_cmdEntries, so they get properly translated into the current domain
 
-    int32_t nEntries;
-    GOptionEntry* translatedCmdEntries = NULL;
-    GOptionEntry* optEntryIterator;
-
-    // count number of entries in global array of command line options.
-    // that global array of command line optines is a null terminated array of
-    // structs
-    nEntries = 0;
-    optEntryIterator = g_cmdEntries;
+    // g_cmdEntries is a null terminated array of structs
+    // iterate through to call _() explicitely
+    GOptionEntry* optEntryIterator = g_cmdEntries;
     while (*(reinterpret_cast<char*>(optEntryIterator)) != '\0')
     {
-        nEntries++;
-        optEntryIterator = g_cmdEntries + nEntries;
+        optEntryIterator->description = _(optEntryIterator->description);
+        optEntryIterator->arg_description = _(optEntryIterator->arg_description);
+        
+        optEntryIterator++;
     }
-
-    // allocate memory for the dynamic trsnlated array
-    translatedCmdEntries = new GOptionEntry[nEntries];
-
-    // copy the global command line optinos into the brand new GOptionEntry
-    // calling explicitely to _()
-    for (int32_t i = 0; i < nEntries; i++)
-    {
-        // typedef struct {
-        //   const gchar *long_name;
-        //   gchar        short_name;
-        //   gint         flags;
-        //
-        //   GOptionArg   arg;
-        //   gpointer     arg_data;
-        //
-        //   const gchar *description;
-        //   const gchar *arg_description;
-        // } GOptionEntry;
-
-        translatedCmdEntries[i].long_name = g_cmdEntries[i].long_name;
-        translatedCmdEntries[i].short_name = g_cmdEntries[i].short_name;
-        translatedCmdEntries[i].flags = g_cmdEntries[i].flags;
-        translatedCmdEntries[i].arg = g_cmdEntries[i].arg;
-        translatedCmdEntries[i].arg_data = g_cmdEntries[i].arg_data;
-
-        // these ones are the only 2 that might need to be translated
-        translatedCmdEntries[i].description = _(g_cmdEntries[i].description);
-        translatedCmdEntries[i].arg_description = _(g_cmdEntries[i].arg_description);
-    }
-
-    // must be a null terminated array of structs. At this point
-    // g_cmdEntries[nEntries] is NULL
-    translatedCmdEntries[nEntries] = g_cmdEntries[nEntries];
-
-    // the workaround is ready. GETTEXT_PACKAGE is still needed so the rest
-    // of the strings shown when --help options is run are automatically
-    // translated
-    g_option_context_add_main_entries (
-        cmdContext,
-        translatedCmdEntries,
-        GETTEXT_PACKAGE);
-
-    // freeing dynamic memory allocation. Once they've been added to the command
-    // line context, they won't be used any more
-    delete [] translatedCmdEntries;
-
-#else
-    // Special temporary GOptionEntry is only needed in win32 so far. No need
-    // to overwrite the old working code in any other OS
-
+    
+#endif // WIN32
+    
     // to disable i18n write NULL instead of GETTEXT_PACKAGE in the 3rd parameter
     //     g_option_context_add_main_entries (cmdContext, g_cmdEntries, NULL);
     g_option_context_add_main_entries (
         cmdContext,
         g_cmdEntries,
         GETTEXT_PACKAGE);
-
-#endif // WIN32
 
     // no need for this. It is already set in g_option_context_add_main_entries
     // http://library.gnome.org/devel/glib/stable/glib-Commandline-option-parser.html#g-option-context-set-translation-domain
@@ -439,6 +388,8 @@ int main(int argc, char **argv)
     // before the app creates extra threads
     // BlockemConfig singleton contains general purpose configuration data that
     // will be loaded from the config xml file
+    // It MUST be instantiated before i18n in windows because it loads the 
+    // preferred language
     BlockemConfig::Instance();
 
     // enable internationalisation support. It MUST be called before
