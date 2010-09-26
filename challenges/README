@@ -11,8 +11,10 @@ If you want to validate your xml you can use the xmllint program included
 with libxml. For example:
     xmllint --valid --noout example_challenge.xml
 
-The --dtdvalid dtd allows validation of the document(s) against a given DTD.
-If the DTD is specified inside the .xml file there is no need for this option
+The --dtdvalid dtd-file allows validation of the document(s) against a given 
+DTD. If the DTD is specified inside the .xml, either writing the content inside
+the .xml file or through the DOCTYPE SYSTEM directive, there is no need for 
+this option since it will be automatically checked
 
 have fun!
  
