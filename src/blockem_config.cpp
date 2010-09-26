@@ -145,7 +145,7 @@ bool BlockemConfig::CreateDefaultConfigFile()
     }
 
     // default config file. Includes DTD and comments!
-    oStr << "<?xml version=\"1.0\"  encoding=\"UTF-8\"?>"                               << std::endl;
+    oStr << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"                                << std::endl;
     oStr << "<!DOCTYPE blockem_config ["                                                << std::endl;
     oStr << "<!ELEMENT blockem_config (language)>"                                      << std::endl;
     oStr << "<!ELEMENT language (#PCDATA)>"                                             << std::endl;
