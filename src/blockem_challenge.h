@@ -57,15 +57,15 @@ public:
     /// different .xml files they should do so with different instances of this
     /// class
     void LoadXMLChallenge(const std::string &a_path)  throw (std::runtime_error);
-    
+
     /// resets the challenge stored in this object
     void Reset();
-    
+
     int32_t GetBoardRows()
     {
         return m_nRows;
     }
-    
+
     int32_t GetBoardColumns()
     {
         return m_nColumns;
@@ -75,7 +75,7 @@ private:
     /// XML parsing internal pointer. It is set to NULL after an XML file has
     /// been completely parsed (or a fatal error is given)
     xmlDocPtr m_xmlDoc;
-    
+
     /// Name of the challenge
     std::string m_challengeName;
 
@@ -106,29 +106,56 @@ private:
     /// resets internal XML variables and throws a std::runtime_exception
     /// that contains a_xmlFile and a_errorMsg
     void XMLParsingFatalError (
-        const std::string &a_xmlFile, 
+        const std::string &a_xmlFile,
         const std::string &a_errorMsg) throw (std::runtime_error);
-        
+
+    /// parses the contents of "board" tag of a challenge .xml file
+    /// throws a std::runtime_error if there is any kind of error in
+    /// the parsing process
+    /// @param xml file being parsed
+    /// @param board_node MUST point to the XML point which holds the "board" node
+    void XMLParseTagBoard(
+            const std::string &a_xmlFile,
+            xmlNode* board_node) throw (std::runtime_error);
+
+    /// parses the contents of "opponent" tag of a challenge .xml file
+    /// throws a std::runtime_error if there is any kind of error in
+    /// the parsing process
+    /// @param xml file being parsed
+    /// @param opponent_node MUST point to the XML point which holds the "opponent" node
+    void XMLParseTagOpponent(
+            const std::string &a_xmlFile,
+            xmlNode* opponent_node) throw (std::runtime_error);
+
+    /// parses the contents of "challenger" tag of a challenge .xml file
+    /// throws a std::runtime_error if there is any kind of error in
+    /// the parsing process
+    /// @param xml file being parsed
+    /// @param opponent_node MUST point to the XML point which holds the "challenger" node
+    void XMLParseTagChallenger(
+            const std::string &a_xmlFile,
+            xmlNode* challenger_node) throw (std::runtime_error);
+
     void SetChallengeName(const std::string &a_name)
     {
         m_challengeName = a_name;
     }
-    
+
     void SetNRows(int32_t a_nRows)
     {
         m_nRows = a_nRows;
     }
-    
+
     void SetNColumns(int32_t a_nRows)
     {
         m_nRows = a_nRows;
     }
-    
+
     void SetOpponentActive(bool a_isOpponentActive)
     {
         m_opponentActive = a_isOpponentActive;
     }
-    
+
     void SetOpponentStartingCoord(const Coordinate &a_coord)
     {
         m_opponentStartingCoord = a_coord;
