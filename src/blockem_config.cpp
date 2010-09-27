@@ -211,11 +211,13 @@ void BlockemConfig::LoadConfigFromXmlFile() throw (std::runtime_error)
          xmlStrcmp(root->name, (const xmlChar*) "blockem_config") )
     {
         xmlFreeDoc(doc);
+        xmlCleanupParser();
         throw new std::runtime_error(
             m_configFileFull + std::string(": Root element does not exist or is not called \"blockem_config\""));
     }
 
     // root's children. They are inside a loop to ensure they can be written to the file in any order
+    // if any of the expected options is not present default settings for it will be loaded instead
     for (cur_node = root->children; cur_node != NULL; cur_node = cur_node->next)
     {
         if ( (cur_node->type == XML_ELEMENT_NODE) &&

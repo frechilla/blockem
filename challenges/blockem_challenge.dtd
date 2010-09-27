@@ -1,8 +1,8 @@
 <!ELEMENT blockem_challenge (board, opponent, challenger)>
 <!ATTLIST blockem_challenge name CDATA #REQUIRED>
-<!ELEMENT board (rows, columns)>
-    <!ELEMENT rows (#PCDATA)>
-    <!ELEMENT columns (#PCDATA)>
+<!ELEMENT board (nrows, ncolumns)>
+    <!ELEMENT nrows (#PCDATA)>
+    <!ELEMENT ncolumns (#PCDATA)>
 <!ELEMENT opponent (taken*, piece+, starting_row?, starting_col?)>
 <!ATTLIST opponent active CDATA #REQUIRED>
 <!ELEMENT challenger (taken*, piece+, starting_row, starting_col)>

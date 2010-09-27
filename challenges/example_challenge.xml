@@ -24,13 +24,13 @@
             It MUST be a positive number (bigger than 0).
              Massive boards can be hard to hadle by blockem GUI, so be sensible 
         -->
-        <rows>14</rows>
+        <nrows>14</nrows>
         <!-- 
             Number of comuns of the board for this challenge.
             It MUST be a positive number (bigger than 0).
             Massive boards can be hard to hadle by blockem GUI, so be sensible 
         -->
-        <columns>14</columns>
+        <ncolumns>14</ncolumns>
     </board>
   
     <!-- 
