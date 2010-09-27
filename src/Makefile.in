@@ -67,8 +67,8 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_blockem_OBJECTS = bitwise.$(OBJEXT) blockem_config.$(OBJEXT) \
-	board.$(OBJEXT) game1v1.$(OBJEXT) \
+am_blockem_OBJECTS = bitwise.$(OBJEXT) blockem_challenge.$(OBJEXT) \
+	blockem_config.$(OBJEXT) board.$(OBJEXT) game1v1.$(OBJEXT) \
 	game_total_allocation.$(OBJEXT) gui_exception.$(OBJEXT) \
 	gui_about_dialog.$(OBJEXT) gui_drawing_area_board.$(OBJEXT) \
 	gui_drawing_area_show_pieces.$(OBJEXT) \
@@ -279,6 +279,8 @@ impl/piece_impl.h \
 impl/player_impl.h \
 bitwise.cpp \
 bitwise.h \
+blockem_challenge.cpp \
+blockem_challenge.h \
 blockem_config.cpp \
 blockem_config.h \
 board.cpp \
@@ -404,6 +406,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bitwise.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/blockem_challenge.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/blockem_config.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/board.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/game1v1.Po@am__quote@

@@ -73,6 +73,8 @@ impl/piece_impl.h \
 impl/player_impl.h \
 bitwise.cpp \
 bitwise.h \
+blockem_challenge.cpp \
+blockem_challenge.h \
 blockem_config.cpp \
 blockem_config.h \
 board.cpp \
