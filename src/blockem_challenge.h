@@ -32,6 +32,7 @@
 
 #include <set>
 #include "coordinate.h"
+#include "coordinate_set.h" // STLCoordinateSet_t
 #include "piece.h"
 
 /// @brief This class represents a blockem challenge
@@ -52,9 +53,29 @@ public:
     /// @brief loads the .xml file 'a_path' content into the current object
     /// deletes the current challenge loaded in 'this'
     /// throws a new std::runtime_error exception if the xml file can't be loaded
+    /// WARNING: This method is NOT thread safe. If several threads are parsing
+    /// different .xml files they should do so with different instances of this
+    /// class
     void LoadXMLChallenge(const std::string &a_path)  throw (std::runtime_error);
+    
+    /// resets the challenge stored in this object
+    void Reset();
+    
+    int32_t GetBoardRows()
+    {
+        return m_nRows;
+    }
+    
+    int32_t GetBoardColumns()
+    {
+        return m_nColumns;
+    }
 
 private:
+    /// XML parsing internal pointer. It is set to NULL after an XML file has
+    /// been completely parsed (or a fatal error is given)
+    xmlDocPtr m_xmlDoc;
+    
     /// Name of the challenge
     std::string m_challengeName;
 
@@ -66,7 +87,7 @@ private:
     /// Is the opponent active (is it expected to put down pieces?)
     bool m_opponentActive;
     /// Squares taken by the opponent
-    std::set<Coordinate> m_opponentTakenSquares;
+    STLCoordinateSet_t m_opponentTakenSquares;
     /// Available pieces of the opponent
     bool m_opponentPiecesPresent[e_numberOfPieces];
     /// Starting coordinate of the opponent (it is only used
@@ -76,15 +97,41 @@ private:
     /// Squares taken by the challenger
     /// m_challengerTakenSquares INTERSECTION m_challengerTakenSquares
     ///     MUST be the empty set
-    std::set<Coordinate> m_challengerTakenSquares;
+    STLCoordinateSet_t m_challengerTakenSquares;
     /// Available pieces of the challenger
     bool m_challengerPiecesPresent[e_numberOfPieces];
     /// Starting coordinate of the challenger
     Coordinate m_challengerStartingCoord;
 
+    /// resets internal XML variables and throws a std::runtime_exception
+    /// that contains a_xmlFile and a_errorMsg
+    void XMLParsingFatalError (
+        const std::string &a_xmlFile, 
+        const std::string &a_errorMsg) throw (std::runtime_error);
+        
     void SetChallengeName(const std::string &a_name)
     {
         m_challengeName = a_name;
+    }
+    
+    void SetNRows(int32_t a_nRows)
+    {
+        m_nRows = a_nRows;
+    }
+    
+    void SetNColumns(int32_t a_nRows)
+    {
+        m_nRows = a_nRows;
+    }
+    
+    void SetOpponentActive(bool a_isOpponentActive)
+    {
+        m_opponentActive = a_isOpponentActive;
+    }
+    
+    void SetOpponentStartingCoord(const Coordinate &a_coord)
+    {
+        m_opponentStartingCoord = a_coord;
     }
 };
 

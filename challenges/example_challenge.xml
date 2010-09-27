@@ -41,7 +41,9 @@
                         active (it also puts down pieces) or inactive through
                         the "active" tag (it can be set to "yes" or "no").
                         This extra player can be handled by the computer or
-                        another human being when it is set up as active
+                        another human being when it is set up as active.
+                        
+        This "active" tag is MANDATORY (set it to "yes" or "no")
     -->
     <opponent active="no">
         <!--
@@ -107,6 +109,11 @@
             WARNING: Bear in mind the first row or column is 0, and the latest
                      valid row or column is the amount of rows/columns defined
                      under the "board" tag minus 1
+                     
+            WARNING: opponent's starting row can not be the same as challenger's
+            
+            WARNING: If one of the tags is present, the other one MUST be 
+                     present too
         -->
         <starting_row>0</starting_row>
         <starting_col>0</starting_col>
@@ -141,7 +148,8 @@
             blockem. If a piece is available for the challengert the
             "available" tag should be set to "yes". Otherwise set it to "no"
             
-            Default is NOT available.
+            Default is NOT available, so if a piece is not found in one of these
+            tags it won't be available
             
             Format of a piece tag is:
                 <piece available="yes|no">piece's description</piece>
@@ -177,6 +185,8 @@
             WARNING: Bear in mind the first row or column is 0, and the latest
                      valid row or column is the amount of rows/columns defined
                      under the "board" tag minus 1
+            
+            WARNING: opponent's starting row can not be the same as challenger's
         -->
         <starting_row>0</starting_row>
         <starting_col>0</starting_col>
