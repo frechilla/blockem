@@ -59,6 +59,7 @@ public:
         m_col = a_column;
     };
 
+    /// @return true if both coords have been initialised
     inline bool Initialised() const
     {
         return ( (m_row != COORD_UNINITIALISED) &&

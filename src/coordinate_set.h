@@ -33,6 +33,7 @@
 
 #include <set> // for the STL based coordinate set
 #include "coordinate.h"
+#include "assert.h"
 
 // @brief A coordinate set based on STL containers
 //typedef std::set<Coordinate, Coordinate::comparator> STLCoordinateSet_t;
