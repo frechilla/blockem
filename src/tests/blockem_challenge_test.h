@@ -38,11 +38,11 @@ public:
 
     /// launch the test!!
     void DoTest();
-    
+
 private:
-    /// @return true if the XML could be loaded. False if an exception ocurred
+    /// @return true if the XML could be loaded. False if an exception occurred
     bool TryLoadXMLChallenge(const char* fileName);
-    
+
     /// Loads and check a preloaded valid challenge
     void LoadAndCheckValidChallenge();
 };

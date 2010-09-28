@@ -6,7 +6,7 @@ TESTS = blockemtest
 INCLUDES = -I$(srcdir)/..
 
 # blockem_challenge_test needs libxml 
-AM_CXXFLAGS = $(GTHREAD_CFLAGS) $(LIBXML_CFLAGS)
+AM_CXXFLAGS = $(GTKMM_CFLAGS) $(GTHREAD_CFLAGS) $(LIBXML_CFLAGS)
 AM_LDFLAGS = 
 
 blockemtest_SOURCES = \
@@ -31,6 +31,7 @@ rules_test.h
 # this should be changed at some point. we should be crating a library with the base blockem classes
 # and then add that library to blockemtest_LIBADD
 BLOCKEM_OBJS = \
+../blockem_challenge.o \
 ../board.o \
 ../game1v1.o \
 ../game_total_allocation.o \
@@ -41,5 +42,5 @@ BLOCKEM_OBJS = \
 ../bitwise.o
 
 blockemtest_LDADD = $(BLOCKEM_OBJS) @LIBINTL@ \
-    $(GTHREAD_LIBS) $(LIBXML_LIBS)
+    $(GTKMM_LIBS) $(GTHREAD_LIBS) $(LIBXML_LIBS)
 

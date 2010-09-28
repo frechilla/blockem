@@ -147,7 +147,7 @@
         <taken row="1"  col="12"/>
         <taken row="12" col="1"/>
         <taken row="12"  col="12"/>
-        <taken row="12"  col="12"/>
+        <taken row="12"  col="12"/> <!-- warning: it's set as taken twice -->
         <taken row="6"  col="6"/>
         <taken row="6"  col="7"/>
         <taken row="7"  col="6"/>

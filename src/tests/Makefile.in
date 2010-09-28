@@ -62,13 +62,15 @@ CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 PROGRAMS = $(noinst_PROGRAMS)
-am_blockemtest_OBJECTS = bitwise_test.$(OBJEXT) board_test.$(OBJEXT) \
+am_blockemtest_OBJECTS = bitwise_test.$(OBJEXT) \
+	blockem_challenge_test.$(OBJEXT) board_test.$(OBJEXT) \
 	game1v1_test.$(OBJEXT) g_blocking_queue_test.$(OBJEXT) \
 	main_test.$(OBJEXT) piece_test.$(OBJEXT) player_test.$(OBJEXT) \
 	rules_test.$(OBJEXT)
 blockemtest_OBJECTS = $(am_blockemtest_OBJECTS)
 am__DEPENDENCIES_1 =
-blockemtest_DEPENDENCIES = $(BLOCKEM_OBJS) $(am__DEPENDENCIES_1)
+blockemtest_DEPENDENCIES = $(BLOCKEM_OBJS) $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -246,11 +248,15 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 INCLUDES = -I$(srcdir)/..
-AM_CXXFLAGS = $(GTHREAD_CFLAGS)
+
+# blockem_challenge_test needs libxml 
+AM_CXXFLAGS = $(GTKMM_CFLAGS) $(GTHREAD_CFLAGS) $(LIBXML_CFLAGS)
 AM_LDFLAGS = 
 blockemtest_SOURCES = \
 bitwise_test.cpp \
 bitwise_test.h \
+blockem_challenge_test.cpp \
+blockem_challenge_test.h \
 board_test.cpp \
 board_test.h \
 game1v1_test.cpp \
@@ -269,6 +275,7 @@ rules_test.h
 # this should be changed at some point. we should be crating a library with the base blockem classes
 # and then add that library to blockemtest_LIBADD
 BLOCKEM_OBJS = \
+../blockem_challenge.o \
 ../board.o \
 ../game1v1.o \
 ../game_total_allocation.o \
@@ -278,10 +285,8 @@ BLOCKEM_OBJS = \
 ../rules.o \
 ../bitwise.o
 
-blockemtest_LDADD = \
-$(BLOCKEM_OBJS) \
-@LIBINTL@ \
-$(GTHREAD_LIBS)
+blockemtest_LDADD = $(BLOCKEM_OBJS) @LIBINTL@ \
+    $(GTKMM_LIBS) $(GTHREAD_LIBS) $(LIBXML_LIBS)
 
 all: all-am
 
@@ -331,6 +336,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bitwise_test.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/blockem_challenge_test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/board_test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/g_blocking_queue_test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/game1v1_test.Po@am__quote@
