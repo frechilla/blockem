@@ -105,7 +105,7 @@ void BlockemChallenge::LoadXMLChallenge(const std::string &a_path) throw (std::r
     // ensure config file exists
     if (!g_file_test(a_path.c_str(), G_FILE_TEST_IS_REGULAR))
     {
-        throw new std::runtime_error(
+        throw std::runtime_error(
             std::string("Challenge .xml file doesn't exist: ") + a_path);
     }
 
@@ -212,42 +212,42 @@ void BlockemChallenge::LoadXMLChallenge(const std::string &a_path) throw (std::r
         XMLParsingFatalError(a_path,
             std::string("Mandatory element(s) missing:") + mandatoryElemMissing);
     }
-    
+
     // m_challengerTakenSquares INTERSECTION m_opponentTakenSquares MUST
     // be an empty set
-    STLCoordinateSet_t takenSquaresUnionSet;
-    // The function std::set_union() can be used to construct a union of two 
-    // sets. The two sets are specified by iterator pairs, and the union is 
+    STLCoordinateSet_t takenSquaresIntersectionSet;
+    // The function std::set_intersection() can be used to construct an intersection of two
+    // sets. The two sets are specified by iterator pairs, and the union is
     // copied into an output iterator that is supplied as a fifth argument
     // http://www.cplusplus.com/reference/algorithm/set_union/
     // http://www2.roguewave.com/support/docs/sourcepro/edition9/html/stdlibug/8-2.html
-    std::set_union(
+    std::set_intersection(
         m_opponentTakenSquares.begin(),
         m_opponentTakenSquares.end(),
         m_challengerTakenSquares.begin(),
         m_challengerTakenSquares.end(),
-        std::inserter(takenSquaresUnionSet, takenSquaresUnionSet.begin()));
-        
-    if (takenSquaresUnionSet.empty() == false)
+        std::inserter(takenSquaresIntersectionSet, takenSquaresIntersectionSet.begin()));
+
+    if (takenSquaresIntersectionSet.empty() == false)
     {
         // This is an error. The same coordinate can't be taken by both
         // opponent and challenger
         std::stringstream  errorCoords;
         STLCoordinateSet_t::const_iterator it;
-        for (it  = takenSquaresUnionSet.begin();
-             it != takenSquaresUnionSet.end();
+        for (it  = takenSquaresIntersectionSet.begin();
+             it != takenSquaresIntersectionSet.end();
              it++)
         {
-            errorCoords << " (" << it->m_row << ", " << it->m_col << ")";                
+            errorCoords << " (" << it->m_row << ", " << it->m_col << ")";
         }
-        
+
         XMLParsingFatalError(a_path,
             std::string("Following coords are taken by both challenger and opponent:") + errorCoords.str());
     }
-    
+
     // if opponent is active, its starting coordinates MUST be different from
     // the challenger's
-    if ( IsOpponentActive() && 
+    if ( IsOpponentActive() &&
          (GetOpponentStartingCoord() == GetChallengerStartingCoord()) )
     {
         XMLParsingFatalError(a_path,
@@ -350,7 +350,7 @@ void BlockemChallenge::XMLParseTagBoard(
 
             SetBoardColumns(nCols);
         } // if ... (xmlStrcmp(child_node->name, (const xmlChar*) "ncolumns") == 0)
-        
+
     } // for (child_node = cur_node->children
 
     // board configuration (nrows and ncolumns) MUST be present
@@ -466,6 +466,8 @@ void BlockemChallenge::XMLParseTagOpponent(
                 XMLParsingFatalError(a_xmlFile,
                     std::string("\"opponent\" -> \"taken\" mandatory attribute \"col\" is missing"));
             }
+
+            iStrStream.clear(); // clear error flags. MUST be done first
             iStrStream.str(std::string((const char*)strValue));
             xmlFree(strValue);
 
@@ -485,9 +487,6 @@ void BlockemChallenge::XMLParseTagOpponent(
                     std::string("Bad integer value in opponent's \"col\" attribute (\"taken tag\"). MUST be lower than the number of columns of the board"));
             }
 
-            // save taken coordinate into the opponentTakenSquares set
-            m_opponentTakenSquares.insert(takenCoord);
-
 #ifdef DEBUG_PRINT
             std::cout << "XML Parsing: \""
                       << (const char*)opponent_node->name   << "\" -> \""
@@ -506,6 +505,10 @@ void BlockemChallenge::XMLParseTagOpponent(
                           << std::endl;
             }
 #endif // DEBUG_PRINT
+
+            // save taken coordinate into the opponentTakenSquares set
+            m_opponentTakenSquares.insert(takenCoord);
+
         } // if ... (xmlStrcmp(child_node->name, (const xmlChar*) "taken") == 0)
 
         //////////////
@@ -662,8 +665,8 @@ void BlockemChallenge::XMLParseTagOpponent(
         {
             SetOpponentStartingCoord(startingCord);
         }
-        else if ( (startingCord.m_row != COORD_UNINITIALISED) ||
-                  (startingCord.m_row != COORD_UNINITIALISED) )
+        else if ( (startingCord.m_row == COORD_UNINITIALISED) ||
+                  (startingCord.m_col == COORD_UNINITIALISED) )
         {
             // only one of the coords has been set
             XMLParsingFatalError(a_xmlFile,
@@ -740,6 +743,8 @@ void BlockemChallenge::XMLParseTagChallenger(
                 XMLParsingFatalError(a_xmlFile,
                     std::string("\"challenger\" -> \"taken\" mandatory attribute \"col\" is missing"));
             }
+
+            iStrStream.clear(); // clear error flags. MUST be done first
             iStrStream.str(std::string((const char*)strValue));
             xmlFree(strValue);
 
@@ -759,9 +764,6 @@ void BlockemChallenge::XMLParseTagChallenger(
                     std::string("Bad integer value in challenger's \"col\" attribute (\"taken tag\"). MUST be lower than the number of columns of the board"));
             }
 
-            // save taken coordinate into the opponentTakenSquares set
-            m_challengerTakenSquares.insert(takenCoord);
-
 #ifdef DEBUG_PRINT
             std::cout << "XML Parsing: \""
                       << (const char*)challenger_node->name   << "\" -> \""
@@ -780,8 +782,12 @@ void BlockemChallenge::XMLParseTagChallenger(
                           << std::endl;
             }
 #endif // DEBUG_PRINT
+
+            // save taken coordinate into the opponentTakenSquares set
+            m_challengerTakenSquares.insert(takenCoord);
+
         } // if ... (xmlStrcmp(child_node->name, (const xmlChar*) "taken") == 0)
-        
+
         /////////////
         // piece tag
         if ( (child_node->type == XML_ELEMENT_NODE) &&
@@ -925,9 +931,9 @@ void BlockemChallenge::XMLParseTagChallenger(
 
             startingCord.m_col = startingCol;
         } // if ... (xmlStrcmp(child_node->name, (const xmlChar*) "starting_col") == 0)
-        
+
     } // for (child_node = challenger_node->children
-    
+
     // can the starting coordinate be set?
     if (startingCord.Initialised() == true)
     {
@@ -959,7 +965,7 @@ void BlockemChallenge::XMLParsingFatalError(
     xmlCleanupParser();
 
     // throw the exception!
-    throw new std::runtime_error(std::string("Fatal error parsing ") +
+    throw std::runtime_error(std::string("Fatal error parsing ") +
         a_xmlFile + std::string(": ") + a_errorMsg);
 }
 

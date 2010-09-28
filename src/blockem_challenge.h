@@ -58,7 +58,7 @@ public:
     /// WARNING: This method is NOT thread safe. If several threads are parsing
     /// different .xml files they should do so with different instances of this
     /// class
-    void LoadXMLChallenge(const std::string &a_path)  throw (std::runtime_error);
+    void LoadXMLChallenge(const std::string &a_path) throw (std::runtime_error);
 
     /// resets the challenge stored in this object to the default described
     /// in default constructor
@@ -69,7 +69,7 @@ public:
     {
         return m_challengeName;
     }
-    
+
     /// @return number of rows of this challenge's board
     int32_t GetBoardRows()
     {
@@ -81,27 +81,27 @@ public:
     {
         return m_nColumns;
     }
-    
+
     /// @return true if the opponent is active in this challenge
     bool IsOpponentActive()
     {
         return m_opponentActive;
     }
-    
+
     /// @return opponent's starting coordinate
     /// it should only be used if the opponent is active
     const Coordinate& GetOpponentStartingCoord()
     {
         return m_opponentStartingCoord;
     }
-    
-    /// @return a const reference to a set of coordinates which point to 
+
+    /// @return a const reference to a set of coordinates which point to
     ///         squares taken by the opponent
     const STLCoordinateSet_t& GetOpponentTakenSquares()
     {
         return m_opponentTakenSquares;
     }
-    
+
     /// @param a_piece
     /// @return true if a_piece is available for the opponent
     /// it should only be used if the opponent is active
@@ -109,20 +109,20 @@ public:
     {
         return m_opponentPiecesPresent[a_piece];
     }
-    
+
     /// @return challenger's starting coordinate
     const Coordinate& GetChallengerStartingCoord()
     {
         return m_challengerStartingCoord;
     }
-    
-    /// @return a const reference to a set of coordinates which point to 
+
+    /// @return a const reference to a set of coordinates which point to
     ///         squares taken by the challenger
     const STLCoordinateSet_t& GetChallengerTakenSquares()
     {
         return m_challengerTakenSquares;
     }
-    
+
     /// @param a_piece
     /// @return true if a_piece is available for the challenger
     bool IsChallengerPieceAvailable(ePieceType_t a_piece)
@@ -192,12 +192,12 @@ private:
             const std::string &a_xmlFile,
             xmlNode* challenger_node) throw (std::runtime_error);
 
-            
+
     void SetChallengeName(const std::string &a_name);
     void SetBoardRows(int32_t a_nRows);
     void SetBoardColumns(int32_t a_nRows);
     void SetOpponentActive(bool a_isOpponentActive);
-    void SetOpponentStartingCoord(const Coordinate &a_coord);    
+    void SetOpponentStartingCoord(const Coordinate &a_coord);
     void SetChallengerStartingCoord(const Coordinate &a_coord);
 };
 
