@@ -58,9 +58,8 @@
                      valid row or column is the amount of rows/columns defined
                      under the "board" tag minus 1
                      
-            WARNING: Blockem won't be able to load the challenge if the same
-                     square in the board is taken by both opponent and 
-                     challenger
+            WARNING: Blockem won't load the challenge if the same square on the
+                     board is taken by both opponent and challenger
         -->
         <taken row="4"  col="4"/>
         <taken row="5"  col="5"/>
@@ -77,6 +76,8 @@
             
             Format of a piece tag is:
                 <piece available="yes|no">piece's description</piece>
+            
+            Name of pieces is case sensitive and MUST be left as it is here
         -->
         <piece available="no">Baby piece</piece>
         <piece available="no">Two piece</piece>
@@ -110,7 +111,9 @@
                      valid row or column is the amount of rows/columns defined
                      under the "board" tag minus 1
                      
-            WARNING: opponent's starting row can not be the same as challenger's
+            WARNING: opponent's starting coordinate can not be the same as 
+                     challenger's (if opponent is not active this coordinate
+                     will be fully ignored)
             
             WARNING: If one of the tags is present, the other one MUST be 
                      present too
@@ -136,16 +139,15 @@
                      valid row or column is the amount of rows/columns defined
                      under the "board" tag minus 1
             
-            WARNING: Blockem won't be able to load the challenge if the same
-                     square in the board is taken by both opponent and 
-                     challenger
+            WARNING: Blockem won't load the challenge if the same square on the
+                     board is taken by both opponent and challenger
         -->
         <taken row="6"  col="6"/>
         <taken row="11" col="11"/>
         
         <!--
             The following list contains the full set of available pieces in
-            blockem. If a piece is available for the challengert the
+            blockem. If a piece is available for the challenger the
             "available" tag should be set to "yes". Otherwise set it to "no"
             
             Default is NOT available, so if a piece is not found in one of these
@@ -153,6 +155,8 @@
             
             Format of a piece tag is:
                 <piece available="yes|no">piece's description</piece>
+            
+            Name of pieces is case sensitive and MUST be left as it is here
         -->
         <piece available="yes">Baby piece</piece>
         <piece available="yes">Two piece</piece>
@@ -186,7 +190,9 @@
                      valid row or column is the amount of rows/columns defined
                      under the "board" tag minus 1
             
-            WARNING: opponent's starting row can not be the same as challenger's
+            WARNING: opponent's starting coordinate can not be the same as 
+                     challenger's (if opponent is not active this coordinate
+                     will be fully ignored)
         -->
         <starting_row>0</starting_row>
         <starting_col>0</starting_col>

@@ -30,7 +30,9 @@
 #ifndef __BLOCKEM_CHALLENGE__
 #define __BLOCKEM_CHALLENGE__
 
+#include <stdexcept>        // std::runtime_error
 #include <set>
+#include <libxml/tree.h>    // xmlNode
 #include "coordinate.h"
 #include "coordinate_set.h" // STLCoordinateSet_t
 #include "piece.h"
@@ -42,7 +44,7 @@ class BlockemChallenge
 public:
     /// @brief instantiates an object with a default challenge
     /// a default challenge is an empty board of 14x14 in which
-    /// only one player tries to put down all its pieces
+    /// no player has any pieces available
     BlockemChallenge();
     /// @brief instantiates an object loading the blockem challenge from a_path
     /// loads the .xml file 'a_path' content into the new object
@@ -58,17 +60,74 @@ public:
     /// class
     void LoadXMLChallenge(const std::string &a_path)  throw (std::runtime_error);
 
-    /// resets the challenge stored in this object
+    /// resets the challenge stored in this object to the default described
+    /// in default constructor
     void Reset();
 
+    /// @return name of this challenge
+    const std::string& GetChallengeName()
+    {
+        return m_challengeName;
+    }
+    
+    /// @return number of rows of this challenge's board
     int32_t GetBoardRows()
     {
         return m_nRows;
     }
 
+    /// @return number of columns of this challenge's board
     int32_t GetBoardColumns()
     {
         return m_nColumns;
+    }
+    
+    /// @return true if the opponent is active in this challenge
+    bool IsOpponentActive()
+    {
+        return m_opponentActive;
+    }
+    
+    /// @return opponent's starting coordinate
+    /// it should only be used if the opponent is active
+    const Coordinate& GetOpponentStartingCoord()
+    {
+        return m_opponentStartingCoord;
+    }
+    
+    /// @return a const reference to a set of coordinates which point to 
+    ///         squares taken by the opponent
+    const STLCoordinateSet_t& GetOpponentTakenSquares()
+    {
+        return m_opponentTakenSquares;
+    }
+    
+    /// @param a_piece
+    /// @return true if a_piece is available for the opponent
+    /// it should only be used if the opponent is active
+    bool IsOpponentPieceAvailable(ePieceType_t a_piece)
+    {
+        return m_opponentPiecesPresent[a_piece];
+    }
+    
+    /// @return challenger's starting coordinate
+    const Coordinate& GetChallengerStartingCoord()
+    {
+        return m_challengerStartingCoord;
+    }
+    
+    /// @return a const reference to a set of coordinates which point to 
+    ///         squares taken by the challenger
+    const STLCoordinateSet_t& GetChallengerTakenSquares()
+    {
+        return m_challengerTakenSquares;
+    }
+    
+    /// @param a_piece
+    /// @return true if a_piece is available for the challenger
+    bool IsChallengerPieceAvailable(ePieceType_t a_piece)
+    {
+        return m_challengerPiecesPresent[a_piece];
     }
 
 private:
@@ -78,12 +137,10 @@ private:
 
     /// Name of the challenge
     std::string m_challengeName;
-
     /// Number of rows of the board
     int32_t m_nRows;
     /// Number of columns of the board
     int32_t m_nColumns;
-
     /// Is the opponent active (is it expected to put down pieces?)
     bool m_opponentActive;
     /// Squares taken by the opponent
@@ -93,9 +150,8 @@ private:
     /// Starting coordinate of the opponent (it is only used
     /// if it is active)
     Coordinate m_opponentStartingCoord;
-
     /// Squares taken by the challenger
-    /// m_challengerTakenSquares INTERSECTION m_challengerTakenSquares
+    /// m_challengerTakenSquares INTERSECTION m_opponentTakenSquares
     ///     MUST be the empty set
     STLCoordinateSet_t m_challengerTakenSquares;
     /// Available pieces of the challenger
@@ -136,30 +192,13 @@ private:
             const std::string &a_xmlFile,
             xmlNode* challenger_node) throw (std::runtime_error);
 
-    void SetChallengeName(const std::string &a_name)
-    {
-        m_challengeName = a_name;
-    }
-
-    void SetNRows(int32_t a_nRows)
-    {
-        m_nRows = a_nRows;
-    }
-
-    void SetNColumns(int32_t a_nRows)
-    {
-        m_nRows = a_nRows;
-    }
-
-    void SetOpponentActive(bool a_isOpponentActive)
-    {
-        m_opponentActive = a_isOpponentActive;
-    }
-
-    void SetOpponentStartingCoord(const Coordinate &a_coord)
-    {
-        m_opponentStartingCoord = a_coord;
-    }
+            
+    void SetChallengeName(const std::string &a_name);
+    void SetBoardRows(int32_t a_nRows);
+    void SetBoardColumns(int32_t a_nRows);
+    void SetOpponentActive(bool a_isOpponentActive);
+    void SetOpponentStartingCoord(const Coordinate &a_coord);    
+    void SetChallengerStartingCoord(const Coordinate &a_coord);
 };
 
 #endif // __BLOCKEM_CHALLENGE__
