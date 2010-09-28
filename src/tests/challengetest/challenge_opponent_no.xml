@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE blockem_challenge SYSTEM "blockem_challenge.dtd">
+
+<blockem_challenge name="tmpl: Example 1">
+    
+    <board>
+        <nrows>14</nrows>
+        <ncolumns>14</ncolumns>
+    </board>
+  
+    <!-- MISSING opponent tag -->
+    
+    <challenger>
+    
+        <taken row="6"  col="6"/>
+        <taken row="11" col="11"/>
+
+        <piece available="yes">Baby piece</piece>
+        <piece available="yes">Two piece</piece>
+        <piece available="yes">Three piece</piece>
+        <piece available="yes">Little V</piece>
+        <piece available="yes">Full square</piece>
+        <piece available="yes">Four long piece</piece>
+        <piece available="yes">Little L</piece>
+        <piece available="yes">Little S</piece>
+        <piece available="yes">Little T</piece>
+        <piece available="yes">Big long piece</piece>
+        <piece available="yes">Square++</piece>
+        <piece available="yes">Big V (aka Half square)</piece>
+        <piece available="yes">U piece</piece>
+        <piece available="yes">Big L</piece>
+        <piece available="yes">Y piece</piece>
+        <piece available="yes">Big S</piece>
+        <piece available="yes">Mr T</piece>
+        <piece available="yes">N piece (aka the ultimate)</piece>
+        <piece available="yes">Saf piece</piece>
+        <piece available="yes">W piece</piece>
+        <piece available="yes">Cross piece</piece>
+    
+        <starting_row>0</starting_row>
+        <starting_col>0</starting_col>
+    </challenger>
+</blockem_challenge>

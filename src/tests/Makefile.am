@@ -5,12 +5,15 @@ TESTS = blockemtest
 
 INCLUDES = -I$(srcdir)/..
 
-AM_CXXFLAGS = $(GTHREAD_CFLAGS)
+# blockem_challenge_test needs libxml 
+AM_CXXFLAGS = $(GTHREAD_CFLAGS) $(LIBXML_CFLAGS)
 AM_LDFLAGS = 
 
 blockemtest_SOURCES = \
 bitwise_test.cpp \
 bitwise_test.h \
+blockem_challenge_test.cpp \
+blockem_challenge_test.h \
 board_test.cpp \
 board_test.h \
 game1v1_test.cpp \
@@ -37,8 +40,6 @@ BLOCKEM_OBJS = \
 ../rules.o \
 ../bitwise.o
 
-blockemtest_LDADD = \
-$(BLOCKEM_OBJS) \
-@LIBINTL@ \
-$(GTHREAD_LIBS)
+blockemtest_LDADD = $(BLOCKEM_OBJS) @LIBINTL@ \
+    $(GTHREAD_LIBS) $(LIBXML_LIBS)
 

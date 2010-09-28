@@ -23,12 +23,14 @@
 /// @history
 /// Ref       Who                When         What
 ///           Faustino Frechilla 27-Nov-2009  Original development
+///           Faustino Frechilla 28-Sep-2010  Blockem challenge test
 /// @endhistory
 ///
 // ============================================================================
 
 #include <iostream>
 #include "bitwise_test.h"
+#include "blockem_challenge_test.h"
 #include "board_test.h"
 #include "g_blocking_queue_test.h"
 #include "game1v1_test.h"
@@ -98,6 +100,12 @@ int main(int argc, char** argv)
     the1v1Test.DoTest();
     std::cout << "  [Passed]" << std::endl << std::endl;
 
+    // Blockem challenge test
+    std::cout << "Blockem challenge test started... ";
+    std::cout.flush();
+    BlockemChallengeTest theChallengeTest;
+    theChallengeTest.DoTest();
+    std::cout << "  [Passed]" << std::endl << std::endl;
 
 
     // run a total allocation test
