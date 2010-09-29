@@ -45,17 +45,13 @@
 static const char               DEFAULT_CHALLENGE_NAME[] = "default challenge";
 static const int32_t            DEFAULT_NROWS = 14;
 static const int32_t            DEFAULT_NCOLS = 14;
-static const bool               DEFAULT_OPPONENT_ACTIVE = false;
-static const Coordinate         DEFAULT_OPPONENT_STARTING_COORD = Coordinate(COORD_UNINITIALISED, COORD_UNINITIALISED);
-static const Coordinate         DEFAULT_CHALLENGER_STARTING_COORD = Coordinate(0, 0);
+static const Coordinate         DEFAULT_CHALLENGER_STARTING_COORD = Coordinate(COORD_UNINITIALISED, COORD_UNINITIALISED);
 
 BlockemChallenge::BlockemChallenge() :
     m_xmlDoc(NULL),
     m_challengeName(DEFAULT_CHALLENGE_NAME),
     m_nRows(DEFAULT_NROWS),
     m_nColumns(DEFAULT_NCOLS),
-    m_opponentActive(DEFAULT_OPPONENT_ACTIVE),
-    m_opponentStartingCoord(DEFAULT_OPPONENT_STARTING_COORD),
     m_challengerStartingCoord(DEFAULT_CHALLENGER_STARTING_COORD)
 {
     // load defaults
@@ -77,8 +73,6 @@ void BlockemChallenge::Reset()
     m_challengeName = DEFAULT_CHALLENGE_NAME;
     m_nRows = DEFAULT_NROWS;
     m_nColumns = DEFAULT_NCOLS;
-    m_opponentActive = DEFAULT_OPPONENT_ACTIVE;
-    m_opponentStartingCoord = DEFAULT_OPPONENT_STARTING_COORD;
     m_challengerStartingCoord = DEFAULT_CHALLENGER_STARTING_COORD;
 
     m_opponentTakenSquares.clear();
@@ -87,7 +81,6 @@ void BlockemChallenge::Reset()
     for (int32_t i = e_minimumPieceIndex; i < e_numberOfPieces; i++)
     {
         // default is having NO pieces at all
-        m_opponentPiecesPresent[i]   = false;
         m_challengerPiecesPresent[i] = false;
     }
 }
@@ -216,8 +209,9 @@ void BlockemChallenge::LoadXMLChallenge(const std::string &a_path) throw (std::r
     // m_challengerTakenSquares INTERSECTION m_opponentTakenSquares MUST
     // be an empty set
     STLCoordinateSet_t takenSquaresIntersectionSet;
-    // The function std::set_intersection() can be used to construct an intersection of two
-    // sets. The two sets are specified by iterator pairs, and the union is
+    // The function std::set_intersection() can be used to construct an 
+    // intersection of two sets. 
+    // The two sets are specified by iterator pairs, and the intersection is
     // copied into an output iterator that is supplied as a fifth argument
     // http://www.cplusplus.com/reference/algorithm/set_union/
     // http://www2.roguewave.com/support/docs/sourcepro/edition9/html/stdlibug/8-2.html
@@ -226,7 +220,9 @@ void BlockemChallenge::LoadXMLChallenge(const std::string &a_path) throw (std::r
         m_opponentTakenSquares.end(),
         m_challengerTakenSquares.begin(),
         m_challengerTakenSquares.end(),
-        std::inserter(takenSquaresIntersectionSet, takenSquaresIntersectionSet.begin()));
+        std::inserter(
+            takenSquaresIntersectionSet, 
+            takenSquaresIntersectionSet.begin()));
 
     if (takenSquaresIntersectionSet.empty() == false)
     {
@@ -243,15 +239,6 @@ void BlockemChallenge::LoadXMLChallenge(const std::string &a_path) throw (std::r
 
         XMLParsingFatalError(a_path,
             std::string("Following coords are taken by both challenger and opponent:") + errorCoords.str());
-    }
-
-    // if opponent is active, its starting coordinates MUST be different from
-    // the challenger's
-    if ( IsOpponentActive() &&
-         (GetOpponentStartingCoord() == GetChallengerStartingCoord()) )
-    {
-        XMLParsingFatalError(a_path,
-            std::string("Opponent is active and its starting coordinate is the same as the challenger's"));
     }
 
     // success parsing the file!
@@ -383,41 +370,9 @@ void BlockemChallenge::XMLParseTagOpponent(
     assert(xmlStrcmp(opponent_node->name, (const xmlChar*) "opponent") == 0);
 #endif
 
-    // opponent has a mandatory attribute ("active") and is made up of four elements:
-    //     <taken>, <piece>, <starting_row> and <starting_col>
-    // <taken> can be present 0 or several times
-    // <piece> can be present up to 21 times.
-    // <starting_row> and <starting_col> can be 0 or 1 time present each
-
-    // check "active" property exists. It MUST be present
-    strValue = xmlGetProp(opponent_node, (const xmlChar*)"active");
-    if (strValue == NULL)
-    {
-        // property not present
-        XMLParsingFatalError(a_xmlFile,
-            std::string("\"opponent\" mandatory attribute \"active\" is missing"));
-    }
-
-    std::string tmpStr((const char*)strValue);
-    xmlFree(strValue);
-    if (tmpStr == "yes")
-    {
-        SetOpponentActive(true);
-    }
-    else if (tmpStr == "no")
-    {
-        SetOpponentActive(false);
-    }
-    else
-    {
-        // "active" property is neither "yes" nor "no". This is an error
-        XMLParsingFatalError(a_xmlFile,
-            std::string("\"opponent\" mandatory attribute \"active\" must be set to either \"yes\" or \"no\""));
-    }
-
-    // starting row and starting column are optional values, but if one of them
-    // is set the other one MUST be set too
-    Coordinate startingCord(COORD_UNINITIALISED, COORD_UNINITIALISED);
+    // opponent tag contains only a set of taken coordinates. They are marked
+    // as taken by this "virtual" player, so they can't be used by the 
+    // challenger
 
     for (child_node = opponent_node->children; child_node != NULL; child_node = child_node->next)
     {
@@ -511,173 +466,7 @@ void BlockemChallenge::XMLParseTagOpponent(
 
         } // if ... (xmlStrcmp(child_node->name, (const xmlChar*) "taken") == 0)
 
-        //////////////
-        // piece tag
-        if ( (child_node->type == XML_ELEMENT_NODE) &&
-             (xmlStrcmp(child_node->name, (const xmlChar*) "piece") == 0) )
-        {
-            // check "available" property exists. It MUST be present
-            strValue = xmlGetProp(child_node, (const xmlChar*)"available");
-            if (strValue == NULL)
-            {
-                // property not present
-                XMLParsingFatalError(a_xmlFile,
-                    std::string("\"opponent\" -> \"piece\" mandatory attribute \"available\" is missing"));
-            }
-
-            bool currentPieceAvailable = false;
-            std::string tmpStr((const char*)strValue);
-            xmlFree(strValue);
-            if (tmpStr == "yes")
-            {
-                currentPieceAvailable = true;
-            }
-            else if (tmpStr == "no")
-            {
-                currentPieceAvailable = false;
-            }
-            else
-            {
-                // "active" property is neither "yes" nor "no". This is an error
-                XMLParsingFatalError(a_xmlFile,
-                    std::string("\"opponent\" -> \"piece\" mandatory attribute \"available\" must be set to either \"yes\" or \"no\""));
-            }
-
-            // look for the piece which description matches one of the
-            // descriptions in piece.cpp
-            strValue = xmlNodeGetContent(child_node);
-            std::string pieceNameXML((const char*)strValue);
-            xmlFree(strValue);
-            int32_t pieceIndex = 0;
-            for (pieceIndex = e_minimumPieceIndex;
-                 pieceIndex < e_numberOfPieces;
-                 pieceIndex++)
-            {
-                const char* pieceName =
-                    Piece::GetPieceDescription(static_cast<ePieceType_t>(pieceIndex));
-
-                if (strcmp(pieceName, pieceNameXML.c_str()) == 0)
-                {
-                    if (currentPieceAvailable)
-                    {
-                        m_opponentPiecesPresent[pieceIndex] = true;
-                    }
-                    else
-                    {
-                        m_opponentPiecesPresent[pieceIndex] = false;
-                    }
-
-                    break;
-                }
-            }
-
-#ifdef DEBUG_PRINT
-            if (pieceIndex == e_numberOfPieces)
-            {
-                std::cerr << a_xmlFile << ": Invalid piece name in opponent: \""
-                          << pieceNameXML << "\""
-                          << std::endl;
-            }
-#endif
-        } // if ... (xmlStrcmp(child_node->name, (const xmlChar*) "piece") == 0)
-
-        ////////////////////
-        // starting_row tag
-        if ( (child_node->type == XML_ELEMENT_NODE) &&
-             (xmlStrcmp(child_node->name, (const xmlChar*) "starting_row") == 0) )
-        {
-            // xml element starting_row
-            strValue = xmlNodeGetContent(child_node);
-#ifdef DEBUG_PRINT
-            std::cout << "XML Parsing: \""
-                      << (const char*)opponent_node->name   << "\" -> \""
-                      << (const char*)child_node->name << "\" -> \""
-                      << (const char*)strValue         << "\""
-                      << std::endl;
-#endif
-            std::istringstream iStrStream(std::string((const char*)strValue));
-            xmlFree(strValue);
-
-            int32_t startingRow;
-            if (!(iStrStream >> startingRow))
-            {
-                XMLParsingFatalError(a_xmlFile,
-                    std::string("Bad integer value in opponent's \"starting_row\""));
-            }
-            if (startingRow < 0)
-            {
-                XMLParsingFatalError(a_xmlFile,
-                    std::string("Bad integer value in opponent's \"starting_row\". MUST be >= 0"));
-            }
-            else if (startingRow >= GetBoardRows())
-            {
-                XMLParsingFatalError(a_xmlFile,
-                    std::string("Bad integer value in opponent's \"starting_row\". MUST be lower than the number of rows of the board"));
-            }
-
-            startingCord.m_row = startingRow;
-        } // if ... (xmlStrcmp(child_node->name, (const xmlChar*) "starting_row") == 0)
-
-        ////////////////////
-        // starting_col tag
-        if ( (child_node->type == XML_ELEMENT_NODE) &&
-             (xmlStrcmp(child_node->name, (const xmlChar*) "starting_col") == 0) )
-        {
-            // xml element starting_col
-            strValue = xmlNodeGetContent(child_node);
-#ifdef DEBUG_PRINT
-            std::cout << "XML Parsing: \""
-                      << (const char*)opponent_node->name   << "\" -> \""
-                      << (const char*)child_node->name << "\" -> \""
-                      << (const char*)strValue         << "\""
-                      << std::endl;
-#endif
-            std::istringstream iStrStream(std::string((const char*)strValue));
-            xmlFree(strValue);
-
-            int32_t startingCol;
-            if (!(iStrStream >> startingCol))
-            {
-                XMLParsingFatalError(a_xmlFile,
-                    std::string("Bad integer value in opponent's \"starting_col\""));
-            }
-            if (startingCol < 0)
-            {
-                XMLParsingFatalError(a_xmlFile,
-                    std::string("Bad integer value in opponent's \"starting_col\". MUST be >= 0"));
-            }
-            else if (startingCol >= GetBoardColumns())
-            {
-                XMLParsingFatalError(a_xmlFile,
-                    std::string("Bad integer value in opponent's \"starting_col\". MUST be lower than the number of columns of the board"));
-            }
-
-            startingCord.m_col = startingCol;
-        } // if ... (xmlStrcmp(child_node->name, (const xmlChar*) "starting_col") == 0)
-
     } // for (child_node = opponent_node->children
-
-    // if opponent is active check if the starting coordinate be set
-    // Otherwise we set it as uninitialised
-    if (IsOpponentActive())
-    {
-        if (startingCord.Initialised() == true)
-        {
-            SetOpponentStartingCoord(startingCord);
-        }
-        else if ( (startingCord.m_row == COORD_UNINITIALISED) ||
-                  (startingCord.m_col == COORD_UNINITIALISED) )
-        {
-            // only one of the coords has been set
-            XMLParsingFatalError(a_xmlFile,
-                std::string("Both \"starting_row\" and \"starting_col\" MUST be set to configure the starting coordinate in \"opponent\""));
-        }
-    }
-    else
-    {
-        SetOpponentStartingCoord(
-            Coordinate(COORD_UNINITIALISED, COORD_UNINITIALISED));
-    }
 }
 
 void BlockemChallenge::XMLParseTagChallenger(
@@ -982,16 +771,6 @@ void BlockemChallenge::SetBoardRows(int32_t a_nRows)
 void BlockemChallenge::SetBoardColumns(int32_t a_nRows)
 {
     m_nRows = a_nRows;
-}
-
-void BlockemChallenge::SetOpponentActive(bool a_isOpponentActive)
-{
-    m_opponentActive = a_isOpponentActive;
-}
-
-void BlockemChallenge::SetOpponentStartingCoord(const Coordinate &a_coord)
-{
-    m_opponentStartingCoord = a_coord;
 }
 
 void BlockemChallenge::SetChallengerStartingCoord(const Coordinate &a_coord)

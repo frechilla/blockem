@@ -8,36 +8,10 @@
         <ncolumns>14</ncolumns>
     </board>
   
-    <opponent active="no">
-
+    <opponent>
         <taken row="4"  col="4"/>
         <taken row="5"  col="-1"/>
         <taken row="10" col="10"/>
-        
-        <piece available="no">Baby piece</piece>
-        <piece available="no">Two piece</piece>
-        <piece available="no">Three piece</piece>
-        <piece available="no">Little V</piece>
-        <piece available="no">Full square</piece>
-        <piece available="no">Four long piece</piece>
-        <piece available="no">Little L</piece>
-        <piece available="no">Little S</piece>
-        <piece available="no">Little T</piece>
-        <piece available="no">Big long piece</piece>
-        <piece available="no">Square++</piece>
-        <piece available="no">Big V (aka Half square)</piece>
-        <piece available="no">U piece</piece>
-        <piece available="no">Big L</piece>
-        <piece available="no">Y piece</piece>
-        <piece available="no">Big S</piece>
-        <piece available="no">Mr T</piece>
-        <piece available="no">N piece (aka the ultimate)</piece>
-        <piece available="no">Saf piece</piece>
-        <piece available="no">W piece</piece>
-        <piece available="no">Cross piece</piece>
-        
-        <starting_row>0</starting_row>
-        <starting_col>0</starting_col>
     </opponent>
     
     <challenger>

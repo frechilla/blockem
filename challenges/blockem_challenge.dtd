@@ -3,8 +3,7 @@
 <!ELEMENT board (nrows, ncolumns)>
     <!ELEMENT nrows (#PCDATA)>
     <!ELEMENT ncolumns (#PCDATA)>
-<!ELEMENT opponent (taken*, piece*, starting_row?, starting_col?)>
-<!ATTLIST opponent active CDATA #REQUIRED>
+<!ELEMENT opponent (taken*)>
 <!ELEMENT challenger (taken*, piece*, starting_row, starting_col)>
     <!ELEMENT taken EMPTY>
     <!ATTLIST taken 
@@ -14,5 +13,4 @@
     <!ATTLIST piece
         available CDATA #REQUIRED>
     <!ELEMENT starting_row (#PCDATA)>
-    <!ELEMENT starting_col (#PCDATA)>
-    
+    <!ELEMENT starting_col (#PCDATA)>    

@@ -79,10 +79,6 @@ void BlockemChallengeTest::DoTest()
 
     // "blockem_challenge" doesn't have "opponent" tag
     assert(!TryLoadXMLChallenge(CHALLENGE_DIR"/challenge_opponent_no.xml"));
-    // "blockem_challenge" doesn't have "opponent" tag
-    assert(!TryLoadXMLChallenge(CHALLENGE_DIR"/challenge_opponent_activetag_no.xml"));
-    // "blockem_challenge" doesn't have "opponent" tag
-    assert(!TryLoadXMLChallenge(CHALLENGE_DIR"/challenge_opponent_activetag_invalid.xml"));
     // "blockem_challenge" bogus "opponent"->"taken" no row
     assert(!TryLoadXMLChallenge(CHALLENGE_DIR"/challenge_opponent_taken_row_no.xml"));
     // "blockem_challenge" bogus "opponent"->"taken" no col
@@ -101,28 +97,6 @@ void BlockemChallengeTest::DoTest()
     assert(!TryLoadXMLChallenge(CHALLENGE_DIR"/challenge_opponent_taken_col_toobig.xml"));
     // "blockem_challenge" bogus "opponent"->"taken" duplicated and bogus
     assert(!TryLoadXMLChallenge(CHALLENGE_DIR"/challenge_opponent_taken_duplicated_bogus.xml"));
-    //"blockem_challenge" bogus "opponent"->"piece". available tag missing
-    assert(!TryLoadXMLChallenge(CHALLENGE_DIR"/challenge_opponent_piece_available_no.xml"));
-    //"blockem_challenge" bogus "opponent"->"piece". available tag bogus
-    assert(!TryLoadXMLChallenge(CHALLENGE_DIR"/challenge_opponent_piece_available_invalid.xml"));
-    //"blockem_challenge" bogus "opponent"->"piece". Piece name invalid + available tag bogus
-    assert(!TryLoadXMLChallenge(CHALLENGE_DIR"/challenge_opponent_piece_available_invalid_name_bogus.xml"));
-    // "blockem_challenge" bogus "opponent"->"starting_row" no (col set)
-    assert(!TryLoadXMLChallenge(CHALLENGE_DIR"/challenge_opponent_starting_row_no.xml"));
-    // "blockem_challenge" bogus "opponent"->"starting_col" no (row set)
-    assert(!TryLoadXMLChallenge(CHALLENGE_DIR"/challenge_opponent_starting_col_no.xml"));
-    // "blockem_challenge" bogus "opponent"->"starting_row" tag
-    assert(!TryLoadXMLChallenge(CHALLENGE_DIR"/challenge_opponent_starting_row_invalid.xml"));
-    // "blockem_challenge" bogus "opponent"->"starting_row" tag
-    assert(!TryLoadXMLChallenge(CHALLENGE_DIR"/challenge_opponent_starting_row_negative.xml"));
-    // "blockem_challenge" bogus "opponent"->"starting_row" tag
-    assert(!TryLoadXMLChallenge(CHALLENGE_DIR"/challenge_opponent_starting_row_toobig.xml"));
-    // "blockem_challenge" bogus "opponent"->"starting_col" tag
-    assert(!TryLoadXMLChallenge(CHALLENGE_DIR"/challenge_opponent_starting_col_invalid.xml"));
-    // "blockem_challenge" bogus "opponent"->"starting_col" tag
-    assert(!TryLoadXMLChallenge(CHALLENGE_DIR"/challenge_opponent_starting_col_negative.xml"));
-    // "blockem_challenge" bogus "opponent"->"starting_col" tag
-    assert(!TryLoadXMLChallenge(CHALLENGE_DIR"/challenge_opponent_starting_col_toobig.xml"));
 
     // "blockem_challenge" doesn't have "challenger" tag
     assert(!TryLoadXMLChallenge(CHALLENGE_DIR"/challenge_challenger_no.xml"));
@@ -172,9 +146,6 @@ void BlockemChallengeTest::DoTest()
     // "blockem_challenge" bogus challenger and opponent have same coordinate as taken
     assert(!TryLoadXMLChallenge(CHALLENGE_DIR"/challenge_taken_duplicated_opponent_challenger.xml"));
 
-    // opponent is active and its starting coords are the same as the challenger's
-    assert(!TryLoadXMLChallenge(CHALLENGE_DIR"/challenge_starting_coords_equal.xml"));
-
     // go for a valid challenge, and ensure it loads what the xml file says
     LoadAndCheckValidChallenge();
 }
@@ -218,10 +189,6 @@ void BlockemChallengeTest::LoadAndCheckValidChallenge()
     assert (theChallenge.GetBoardRows() == 14);
     assert (theChallenge.GetBoardColumns() == 14);
 
-    assert (theChallenge.IsOpponentActive() == true);
-
-    assert (theChallenge.GetOpponentStartingCoord() ==
-            Coordinate(5, 5));
     assert (theChallenge.GetChallengerStartingCoord() ==
             Coordinate(8, 8));
 
@@ -257,16 +224,6 @@ void BlockemChallengeTest::LoadAndCheckValidChallenge()
         challengerTakenSet.end(),
         std::inserter(takenSquaresIntersectionSet, takenSquaresIntersectionSet.begin()));
     assert(takenSquaresIntersectionSet.empty() == true);
-
-    assert (theChallenge.IsOpponentPieceAvailable(e_1Piece_BabyPiece) == true);
-    assert (theChallenge.IsOpponentPieceAvailable(e_5Piece_Cross)     == true);
-    for (int32_t i = e_minimumPieceIndex; i < e_numberOfPieces; i++)
-    {
-        if ((i != e_1Piece_BabyPiece) && (i != e_5Piece_Cross))
-        {
-            assert (theChallenge.IsOpponentPieceAvailable(static_cast<ePieceType_t>(i)) == false);
-        }
-    }
 
     assert (theChallenge.IsChallengerPieceAvailable(e_1Piece_BabyPiece) == false);
     assert (theChallenge.IsChallengerPieceAvailable(e_5Piece_SafPiece) == false);

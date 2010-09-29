@@ -82,32 +82,11 @@ public:
         return m_nColumns;
     }
 
-    /// @return true if the opponent is active in this challenge
-    bool IsOpponentActive()
-    {
-        return m_opponentActive;
-    }
-
-    /// @return opponent's starting coordinate
-    /// it should only be used if the opponent is active
-    const Coordinate& GetOpponentStartingCoord()
-    {
-        return m_opponentStartingCoord;
-    }
-
     /// @return a const reference to a set of coordinates which point to
     ///         squares taken by the opponent
     const STLCoordinateSet_t& GetOpponentTakenSquares()
     {
         return m_opponentTakenSquares;
-    }
-
-    /// @param a_piece
-    /// @return true if a_piece is available for the opponent
-    /// it should only be used if the opponent is active
-    bool IsOpponentPieceAvailable(ePieceType_t a_piece)
-    {
-        return m_opponentPiecesPresent[a_piece];
     }
 
     /// @return challenger's starting coordinate
@@ -141,15 +120,8 @@ private:
     int32_t m_nRows;
     /// Number of columns of the board
     int32_t m_nColumns;
-    /// Is the opponent active (is it expected to put down pieces?)
-    bool m_opponentActive;
     /// Squares taken by the opponent
     STLCoordinateSet_t m_opponentTakenSquares;
-    /// Available pieces of the opponent
-    bool m_opponentPiecesPresent[e_numberOfPieces];
-    /// Starting coordinate of the opponent (it is only used
-    /// if it is active)
-    Coordinate m_opponentStartingCoord;
     /// Squares taken by the challenger
     /// m_challengerTakenSquares INTERSECTION m_opponentTakenSquares
     ///     MUST be the empty set
