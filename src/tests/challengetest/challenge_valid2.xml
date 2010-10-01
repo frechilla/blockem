@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE blockem_challenge SYSTEM "blockem_challenge.dtd">
+
+<blockem_challenge name="tst: Valid challenge 2">
+    
+    <board>
+        <nrows>14</nrows>
+        <ncolumns>14</ncolumns>
+    </board>
+  
+    <opponent>
+        <taken row="0"  col="0"/>
+        <taken row="13" col="0"/>
+        <taken row="13" col="0"/> <!-- warning: it's set as taken twice -->
+    </opponent>
+    
+    <challenger>
+        <taken row="6"  col="6"/>
+        <taken row="6"  col="7"/>
+        <taken row="7"  col="6"/>
+        <taken row="7"  col="7"/>
+        
+        <piece available="yes">Baby piece</piece>
+        <piece available="no">Two piece</piece>
+        <piece available="no">Three piece</piece>
+        <piece available="no">Little V</piece>
+        <piece available="no">Full square</piece>
+        <piece available="no">Four long piece</piece>
+        <piece available="no">Little L</piece>
+        <piece available="no">Little S</piece>
+        <piece available="no">Little T</piece>
+        <piece available="no">Big long piece</piece>
+        <piece available="no">Square++</piece>
+        <piece available="no">Big V (aka Half square)</piece>
+        <piece available="no">U piece</piece>
+        <piece available="no">Big L</piece>
+        <piece available="no">Y piece</piece>
+        <piece available="no">Big S</piece>
+        <piece available="no">Mr T</piece>
+        <piece available="no">N piece (aka the ultimate)</piece>
+        <piece available="no">Saf piece</piece>
+        <piece available="no">W piece</piece>
+        <piece available="no">Cross piece</piece>
+    
+        <!-- starting coord is not set. Challenger will have to start off the
+             nucleation points created by the taken squares -->
+    </challenger>
+</blockem_challenge>

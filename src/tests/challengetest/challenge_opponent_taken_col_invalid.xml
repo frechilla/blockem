@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE blockem_challenge SYSTEM "blockem_challenge.dtd">
 
-<blockem_challenge name="tmpl: Example 1">
+<blockem_challenge name="tst: opponent->taken col invalid">
     
     <board>
         <nrows>14</nrows>

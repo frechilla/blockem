@@ -240,6 +240,24 @@ void BlockemChallenge::LoadXMLChallenge(const std::string &a_path) throw (std::r
         XMLParsingFatalError(a_path,
             std::string("Following coords are taken by both challenger and opponent:") + errorCoords.str());
     }
+    
+    // If challenger's coordinate has been set, ensure it is free, this is, it
+    // doesn't belong to any of the taken squares sets (m_opponentTakenSquares 
+    // or m_challengerTakenSquares)
+    if (IsChallengerStartingCoordSet())
+    {
+        if (m_opponentTakenSquares.isPresent(GetChallengerStartingCoord()))
+        {
+            XMLParsingFatalError(a_path,
+                std::string("Challenger's starting coordinate is taken by the opponent"));
+        }
+        
+        if (m_challengerTakenSquares.isPresent(GetChallengerStartingCoord()))
+        {
+            XMLParsingFatalError(a_path,
+                std::string("Challenger's starting coordinate is taken by the challenger"));
+        }
+    }
 
     // success parsing the file!
     // free the XML document
@@ -723,16 +741,38 @@ void BlockemChallenge::XMLParseTagChallenger(
 
     } // for (child_node = challenger_node->children
 
-    // can the starting coordinate be set?
+    // is starting coordinate set in the XML?
     if (startingCord.Initialised() == true)
     {
         SetChallengerStartingCoord(startingCord);
     }
+    else if (startingCord.m_row != COORD_UNINITIALISED)
+    {
+        // if row is set, column should have been set too
+        XMLParsingFatalError(a_xmlFile,
+            std::string("\"starting_row\" is present in \"challenger\", but \"starting_col\" is not"));
+    }
+    else if (startingCord.m_col != COORD_UNINITIALISED)
+    {
+        // if column is set, row should have been set too
+        XMLParsingFatalError(a_xmlFile,
+            std::string("\"starting_col\" is present in \"challenger\", but \"starting_row\" is not"));
+    }
     else
     {
-        // both starting row and starting column MUST be set for the challenger
-        XMLParsingFatalError(a_xmlFile,
-            std::string("Both \"starting_row\" and \"starting_col\" MUST be set to configure \"challenger\""));
+        // Neither starting_row nor starting_col are present in challenger
+        if (m_challengerTakenSquares.empty())
+        {
+            // starting coordiante hasn't been set and there's no taken squares
+            // defined for the challenger either. Player wouldn't be able to
+            // start in a challenge like this. This is an error!
+            XMLParsingFatalError(a_xmlFile,
+                std::string("Starting coordinate hasn't been set and there aren't any taken squares by the challenger either"));
+        }
+        
+        // we are happy with this. Challenger will start the challenge from one
+        // of the nuclation points defined by its taken squares. Up to the 
+        // challenge designer to ensure at least one of them is valid
     }
 }
 

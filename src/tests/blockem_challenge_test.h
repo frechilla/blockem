@@ -44,5 +44,9 @@ private:
     bool TryLoadXMLChallenge(const char* fileName);
 
     /// Loads and check a preloaded valid challenge
-    void LoadAndCheckValidChallenge();
+    void LoadAndCheckValidChallenge1();
+    
+    /// Loads and check a preloaded valid challenge 
+    /// (different from the one in LoadAndCheckValidChallenge1)
+    void LoadAndCheckValidChallenge2();
 };

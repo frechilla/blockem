@@ -4,7 +4,7 @@
     <!ELEMENT nrows (#PCDATA)>
     <!ELEMENT ncolumns (#PCDATA)>
 <!ELEMENT opponent (taken*)>
-<!ELEMENT challenger (taken*, piece*, starting_row, starting_col)>
+<!ELEMENT challenger (taken*, piece*, starting_row?, starting_col?)>
     <!ELEMENT taken EMPTY>
     <!ATTLIST taken 
         row CDATA #REQUIRED

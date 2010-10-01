@@ -65,46 +65,53 @@ public:
     void Reset();
 
     /// @return name of this challenge
-    const std::string& GetChallengeName()
+    const std::string& GetChallengeName() const
     {
         return m_challengeName;
     }
 
     /// @return number of rows of this challenge's board
-    int32_t GetBoardRows()
+    int32_t GetBoardRows() const
     {
         return m_nRows;
     }
 
     /// @return number of columns of this challenge's board
-    int32_t GetBoardColumns()
+    int32_t GetBoardColumns() const
     {
         return m_nColumns;
     }
 
     /// @return a const reference to a set of coordinates which point to
     ///         squares taken by the opponent
-    const STLCoordinateSet_t& GetOpponentTakenSquares()
+    const STLCoordinateSet_t& GetOpponentTakenSquares() const
     {
         return m_opponentTakenSquares;
     }
+    
+    /// @return true if challenger's starting coordinate has been set 
+    bool IsChallengerStartingCoordSet() const
+    {
+        return m_challengerStartingCoord.Initialised();
+    }
 
     /// @return challenger's starting coordinate
-    const Coordinate& GetChallengerStartingCoord()
+    /// It returns an uninitialised coordiante if it hasn't been set
+    const Coordinate& GetChallengerStartingCoord() const
     {
         return m_challengerStartingCoord;
     }
 
     /// @return a const reference to a set of coordinates which point to
     ///         squares taken by the challenger
-    const STLCoordinateSet_t& GetChallengerTakenSquares()
+    const STLCoordinateSet_t& GetChallengerTakenSquares() const
     {
         return m_challengerTakenSquares;
     }
 
     /// @param a_piece
     /// @return true if a_piece is available for the challenger
-    bool IsChallengerPieceAvailable(ePieceType_t a_piece)
+    bool IsChallengerPieceAvailable(ePieceType_t a_piece) const
     {
         return m_challengerPiecesPresent[a_piece];
     }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE blockem_challenge SYSTEM "blockem_challenge.dtd">
 
-<blockem_challenge name="tmpl: Example 1">
+<blockem_challenge name="tst: challenger->starting_col too big">
     
     <board>
         <nrows>14</nrows>
@@ -16,9 +16,6 @@
     
     <challenger>
 
-        <taken row="6"  col="6"/>
-        <taken row="11" col="11"/>
-        
         <piece available="yes">Baby piece</piece>
         <piece available="yes">Two piece</piece>
         <piece available="yes">Three piece</piece>
@@ -41,6 +38,7 @@
         <piece available="yes">W piece</piece>
         <piece available="yes">Cross piece</piece>
     
-        <!-- starting_row and starting_col MISSING -->
+        <!-- starting_row and starting_col MISSING and no taken squares 
+             defined-->
     </challenger>
 </blockem_challenge>

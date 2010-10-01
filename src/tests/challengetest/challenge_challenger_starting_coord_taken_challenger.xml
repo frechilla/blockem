@@ -1,23 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE blockem_challenge SYSTEM "blockem_challenge.dtd">
 
-<blockem_challenge name="tst: square taken by challenger and opponent">
+<blockem_challenge name="tst: challenger->starting_coord taken by challenger">
     
+    <!--
+        Board specification  
+    -->
     <board>
         <nrows>14</nrows>
         <ncolumns>14</ncolumns>
     </board>
   
     <opponent>
-        <!-- TAKEN by challenger too -->
         <taken row="0"  col="0"/>
+        <taken row="0"  col="13"/>
+        <taken row="13" col="0"/>
+        <taken row="13"  col="13"/>
     </opponent>
     
     <challenger>
-        <!-- TAKEN by challenger too -->
-        <taken row="0"  col="0"/>
+        <taken row="1"  col="1"/>
+        <taken row="1"  col="12"/>
+        <taken row="12" col="1"/>
+        <taken row="12"  col="12"/>
+        <taken row="12"  col="12"/> <!-- warning: it's set as taken twice -->
+        <taken row="6"  col="6"/>
+        <taken row="6"  col="7"/>
+        <taken row="7"  col="6"/>
+        <taken row="7"  col="7"/>
         
-        <piece available="yes">Baby piece</piece>
+        <piece available="no">Baby piece</piece>
         <piece available="yes">Two piece</piece>
         <piece available="yes">Three piece</piece>
         <piece available="yes">Little V</piece>
@@ -35,11 +47,12 @@
         <piece available="yes">Big S</piece>
         <piece available="yes">Mr T</piece>
         <piece available="yes">N piece (aka the ultimate)</piece>
-        <piece available="yes">Saf piece</piece>
-        <piece available="yes">W piece</piece>
-        <piece available="yes">Cross piece</piece>
+        <piece available="no">Saf piece</piece>
+        <piece available="no">W piece</piece>
+        <piece available="no">Cross piece</piece>
     
-        <starting_row>1</starting_row>
-        <starting_col>1</starting_col>
+        <!-- starting coord taken by challenger -->
+        <starting_row>6</starting_row>
+        <starting_col>6</starting_col>
     </challenger>
 </blockem_challenge>

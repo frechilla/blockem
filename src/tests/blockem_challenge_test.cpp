@@ -129,6 +129,7 @@ void BlockemChallengeTest::DoTest()
     // "blockem_challenge" bogus "challenger"->"starting_col" no
     assert(!TryLoadXMLChallenge(CHALLENGE_DIR"/challenge_challenger_starting_col_no.xml"));
     // "blockem_challenge" bogus "challenger"->"starting_col" and "starting_row" not set
+    // and challenger has no taken squares
     assert(!TryLoadXMLChallenge(CHALLENGE_DIR"/challenge_challenger_starting_col_row_no.xml"));
     // "blockem_challenge" bogus "challenger"->"starting_row" tag
     assert(!TryLoadXMLChallenge(CHALLENGE_DIR"/challenge_challenger_starting_row_invalid.xml"));
@@ -142,12 +143,19 @@ void BlockemChallengeTest::DoTest()
     assert(!TryLoadXMLChallenge(CHALLENGE_DIR"/challenge_challenger_starting_col_negative.xml"));
     // "blockem_challenge" bogus "challenger"->"starting_col" tag
     assert(!TryLoadXMLChallenge(CHALLENGE_DIR"/challenge_challenger_starting_col_toobig.xml"));
-
+    // "blockem_challenge" bogus starting coordinate (taken by challenger)
+    assert(!TryLoadXMLChallenge(CHALLENGE_DIR"/challenge_challenger_starting_coord_taken_challenger.xml"));
+    // "blockem_challenge" bogus starting coordinate (taken by opponent)
+    assert(!TryLoadXMLChallenge(CHALLENGE_DIR"/challenge_challenger_starting_coord_taken_opponent.xml"));
+    
     // "blockem_challenge" bogus challenger and opponent have same coordinate as taken
     assert(!TryLoadXMLChallenge(CHALLENGE_DIR"/challenge_taken_duplicated_opponent_challenger.xml"));
 
     // go for a valid challenge, and ensure it loads what the xml file says
-    LoadAndCheckValidChallenge();
+    LoadAndCheckValidChallenge1();
+    
+    // go for another valid challenge, and ensure it loads what the xml file says
+    LoadAndCheckValidChallenge2();
 }
 
 bool BlockemChallengeTest::TryLoadXMLChallenge(const char* fileName)
@@ -168,7 +176,7 @@ bool BlockemChallengeTest::TryLoadXMLChallenge(const char* fileName)
     return successfullyLoaded;
 }
 
-void BlockemChallengeTest::LoadAndCheckValidChallenge()
+void BlockemChallengeTest::LoadAndCheckValidChallenge1()
 {
     BlockemChallenge theChallenge;
     try
@@ -189,6 +197,7 @@ void BlockemChallengeTest::LoadAndCheckValidChallenge()
     assert (theChallenge.GetBoardRows() == 14);
     assert (theChallenge.GetBoardColumns() == 14);
 
+    assert (theChallenge.IsChallengerStartingCoordSet());
     assert (theChallenge.GetChallengerStartingCoord() ==
             Coordinate(8, 8));
 
@@ -237,6 +246,66 @@ void BlockemChallengeTest::LoadAndCheckValidChallenge()
              (i != e_5Piece_Cross)     )
         {
             assert (theChallenge.IsChallengerPieceAvailable(static_cast<ePieceType_t>(i)) == true);
+        }
+    }
+}
+
+void BlockemChallengeTest::LoadAndCheckValidChallenge2()
+{
+    BlockemChallenge theChallenge;
+    try
+    {
+        theChallenge.LoadXMLChallenge(CHALLENGE_DIR"/challenge_valid2.xml");
+    }
+    catch (const std::runtime_error &ex)
+    {
+        // error!
+        std::cout << "Exception caught: " << ex.what() << std::endl;
+        assert(0);
+    }
+
+    // You've got to trust me about this. The .xml file contains
+    // exactly these parameters
+    assert (theChallenge.GetChallengeName() == "tst: Valid challenge 2");
+
+    assert (theChallenge.GetBoardRows() == 14);
+    assert (theChallenge.GetBoardColumns() == 14);
+
+    assert (theChallenge.IsChallengerStartingCoordSet() == false);
+
+    const STLCoordinateSet_t &opponentTakenSet =
+        theChallenge.GetOpponentTakenSquares();
+
+    assert (opponentTakenSet.size() == 2);
+    assert (opponentTakenSet.isPresent(Coordinate(0,  0)));
+    assert (opponentTakenSet.isPresent(Coordinate(13, 0)));
+
+    const STLCoordinateSet_t &challengerTakenSet =
+        theChallenge.GetChallengerTakenSquares();
+
+    assert (challengerTakenSet.size() == 4);
+    assert (challengerTakenSet.isPresent(Coordinate(6,  6)));
+    assert (challengerTakenSet.isPresent(Coordinate(6,  7)));
+    assert (challengerTakenSet.isPresent(Coordinate(7,  6)));
+    assert (challengerTakenSet.isPresent(Coordinate(7,  7)));
+
+    // m_challengerTakenSquares INTERSECTION m_opponentTakenSquares MUST
+    // be an empty set
+    STLCoordinateSet_t takenSquaresIntersectionSet;
+    std::set_intersection(
+        opponentTakenSet.begin(),
+        opponentTakenSet.end(),
+        challengerTakenSet.begin(),
+        challengerTakenSet.end(),
+        std::inserter(takenSquaresIntersectionSet, takenSquaresIntersectionSet.begin()));
+    assert(takenSquaresIntersectionSet.empty() == true);
+
+    assert (theChallenge.IsChallengerPieceAvailable(e_1Piece_BabyPiece) == true);
+    for (int32_t i = e_minimumPieceIndex; i < e_numberOfPieces; i++)
+    {
+        if (i != e_1Piece_BabyPiece)
+        {
+            assert (theChallenge.IsChallengerPieceAvailable(static_cast<ePieceType_t>(i)) == false);
         }
     }
 }
