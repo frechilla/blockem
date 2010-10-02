@@ -44,6 +44,7 @@
 #include "gui_main_window_worker_thread.h"
 #include "gui_stop_watch_label.h"
 #include "gui_table_edit_piece.h"
+#include "gui_game_statusbar.h"
 #include "game1v1.h"
 #include "coordinate.h"
 #include "piece.h"
@@ -188,6 +189,9 @@ private:
     Glib::RefPtr<Gtk::RadioMenuItem> m_settingsInfluenceAreaPlayer2MenuItem;
     Glib::RefPtr<Gtk::RadioMenuItem> m_settingsInfluenceAreaNoShowMenuItem;
 
+    /// @brief Main vertical box (It's got the menu, vbox drawing plus status bar)
+    Gtk::VBox* m_vBoxMain;
+
     /// @brief the vertical box that keeps the board + pieces
     Gtk::VBox* m_vBoxDrawing;
 
@@ -201,27 +205,7 @@ private:
     Gtk::HBox* m_hBoxEditPieces;
 
     /// @brief hbox which serves as status bar
-    Gtk::HBox* m_hBoxStatusBar;
-
-    /// @brief vertical separators to be used in the status bar
-    //TODO that number 3 is magic!!
-    Gtk::VSeparator m_arrayStatusBarSeparator[3];
-
-    /// @brief progress bar for when the computer is "thinking".
-    ///        To be shown in the status bar
-    Gtk::ProgressBar m_progressBar;
-
-    /// @brief label to show the user score in the status bar
-    Gtk::Label m_player1ScoreLabel;
-
-    /// @brief label to show the computer score in the status bar
-    Gtk::Label m_player2ScoreLabel;
-
-    /// @brief show the time the player1 takes to think
-    StopWatchLabel m_stopWatchLabelPlayer1;
-
-    /// @brief show the time the player2 takes to think
-    StopWatchLabel m_stopWatchLabelPlayer2;
+    GameStatusBar m_statusBar;
 
     /// Signal class for inter-thread communication to
     /// notify the next move has been computed

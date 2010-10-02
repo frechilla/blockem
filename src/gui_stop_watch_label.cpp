@@ -54,6 +54,11 @@ StopWatchLabel::~StopWatchLabel()
     g_timer_destroy(m_timer);
 }
 
+bool StopWatchLabel::IsRunning() const
+{
+    return m_timerRunning;
+}
+
 void StopWatchLabel::Reset()
 {
     m_timerRunning = false;

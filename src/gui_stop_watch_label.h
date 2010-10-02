@@ -57,6 +57,9 @@ public:
     /// @brief pauses the timer
     void Stop();
 
+    /// @brief return true if the stopwatch is running
+    bool IsRunning() const;
+
     /// @brief sets the prefix to be shown before the timestamp in the label
     /// the widget will be updated automatically
     void SetPrefix(const std::string &a_prefix);

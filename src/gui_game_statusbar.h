@@ -30,39 +30,52 @@
 #ifndef GAME_STATUSBAR_H_
 #define GAME_STATUSBAR_H_
 
-#include <string>
 #include <gtkmm.h>
 
-#include "gui_exception.h"
 #include "player.h"
+#include "gui_stop_watch_label.h"
 
 /// @brief class to handle the status bar to be shown on the main window
 class GameStatusBar :
     public Gtk::HBox
 {
 public:
-    GameStatusBar(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder) throw (GUIException);
+    GameStatusBar();
     ~GameStatusBar();
-    
+
     /// update score of only player1
     void SetScoreStatus(const Player &a_player1);
-    
+
     /// update score of both player1 and player2
     void SetScoreStatus(const Player &a_player1, const Player &a_player2);
-    
+
     /// set prefix to be shown before the stopwatches values of both
     /// player1 and player2
     void SetStopwatchPrefix(const Player &a_player1, const Player &a_player2);
-    
+
+    /// Reset all stopwatches contained in the status bar
+    void ResetAllStopwatches();
+
+    /// stop all stopwatches
+    void StopAllStopwatches();
+
+    /// resume player1's stopwatch count
+    void StopwatchPlayer1Continue();
+
+    /// swap stopwatches. Stop the stopwatch currently running and starts
+    /// the next one
+    /// If no stopwatches are running it does nothing
+    void SwapStopwatches();
+
     /// @param player2 information will be shown if it's true. This data will
     ///        be hidden if it set to false
     /// Player2 is enabled by default
     void EnablePlayer2(bool a_action);
-    
+
     /// sets the fraction of the progress bar shown in the status bar
     /// @param a floating point number between 0.0 to 1.0 (0% to 100%)
     void SetFraction(float a_fraction);
-    
+
 private:
     /// @brief vertical separators to be used in the status bar
     //TODO that number 3 is magic!!
@@ -83,6 +96,6 @@ private:
 
     /// @brief show the time the player2 takes to think
     StopWatchLabel m_stopWatchLabelPlayer2;
-}
+};
 
 #endif // GAME_STATUSBAR_H_

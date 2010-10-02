@@ -27,6 +27,9 @@
 ///
 // ============================================================================
 
+#include <stdint.h>  // uint32_t
+#include <iomanip>   // setw
+#include "gettext.h" // i18n
 #include "gui_game_statusbar.h"
 
 /// maximum size of the string to apply to score labels
@@ -36,13 +39,16 @@ static const uint32_t SCORE_LABEL_BUFFER_LENGTH = 64;
 static const uint32_t STOPWATCH_UPDATE_PERIOD_MILLIS = 500; // 1000 = 1 second
 
 
-GameStatusBar::GameStatusBar(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder) throw (GUIException):
-    Gtk::Window(cobject), //Calls the base class constructor
+GameStatusBar::GameStatusBar():
     m_stopWatchLabelPlayer1(
         STOPWATCH_UPDATE_PERIOD_MILLIS),
     m_stopWatchLabelPlayer2(
         STOPWATCH_UPDATE_PERIOD_MILLIS)
 {
+    // custom settings for the hbox
+    this->set_spacing(10);
+    this->set_homogeneous(false);
+
     // build up the status bar
     this->pack_start(m_player1ScoreLabel, true, true);
     this->pack_start(m_arrayStatusBarSeparator[0], false, true);
@@ -54,7 +60,6 @@ GameStatusBar::GameStatusBar(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Bu
     m_progressBar.set_orientation(Gtk::PROGRESS_LEFT_TO_RIGHT);
     m_progressBar.set_fraction(0.0);
     this->pack_start(m_progressBar, true, true);
-    this->show_all();
 }
 
 GameStatusBar::~GameStatusBar()
@@ -76,10 +81,10 @@ void GameStatusBar::SetScoreStatus(
             squaresLeftPlayer1 += a_player1.m_pieces[i].GetNSquares();
         }
     }
-    
+
     uint8_t red, green, blue;
     a_player1.GetColour(red, green, blue);
-    
+
     snprintf (theMessage,
               SCORE_LABEL_BUFFER_LENGTH,
               // i18n TRANSLATORS: the first 3 %02X  will be replaced by the
@@ -93,23 +98,22 @@ void GameStatusBar::SetScoreStatus(
               red,
               green,
               blue,
-              player1.GetName().c_str(),
+              a_player1.GetName().c_str(),
               squaresLeftPlayer1);
     m_player1ScoreLabel.set_markup(theMessage);
 }
 
 void GameStatusBar::SetScoreStatus(
-    const Player &a_player1, 
+    const Player &a_player1,
     const Player &a_player2)
 {
     // this buffer will contain the string to be applied to the labels
     char theMessage[SCORE_LABEL_BUFFER_LENGTH];
-    
+
     // set score status of player1
     SetScoreStatus(a_player1);
 
     // calculate the number of squares left of player2
-    int32_t squaresLeftPlayer1 = 0;
     int32_t squaresLeftPlayer2 = 0;
     for (int8_t i = e_minimumPieceIndex ; i < e_numberOfPieces; i++)
     {
@@ -136,21 +140,21 @@ void GameStatusBar::SetScoreStatus(
               red,
               green,
               blue,
-              player2.GetName().c_str(),
+              a_player2.GetName().c_str(),
               squaresLeftPlayer2);
     m_player2ScoreLabel.set_markup(theMessage);
 }
 
 void GameStatusBar::SetStopwatchPrefix(
-    const Player &a_player1, 
+    const Player &a_player1,
     const Player &a_player2)
 {
-    // retrieve the default colour from the  players and use HTML tags so 
-    // the stop watch labels show each player's name written with its 
+    // retrieve the default colour from the  players and use HTML tags so
+    // the stop watch labels show each player's name written with its
     // corresponding colour
     uint8_t red, green, blue;
     a_player1.GetColour(red, green, blue);
-    
+
     std::stringstream theMessage;
     theMessage << "<span color=\"#"
                << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(red)
@@ -163,6 +167,8 @@ void GameStatusBar::SetStopwatchPrefix(
 
     a_player2.GetColour(red, green, blue);
 
+    theMessage.clear();
+    theMessage.str("");
     theMessage << "<span color=\"#"
                << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(red)
                << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(green)
@@ -171,6 +177,37 @@ void GameStatusBar::SetStopwatchPrefix(
                << a_player2.GetName()
                << " </span>";
     m_stopWatchLabelPlayer2.SetPrefix(theMessage.str());
+}
+
+void GameStatusBar::ResetAllStopwatches()
+{
+    m_stopWatchLabelPlayer1.Reset();
+    m_stopWatchLabelPlayer2.Reset();
+}
+
+void GameStatusBar::StopAllStopwatches()
+{
+    m_stopWatchLabelPlayer1.Stop();
+    m_stopWatchLabelPlayer2.Stop();
+}
+
+void GameStatusBar::SwapStopwatches()
+{
+    if (m_stopWatchLabelPlayer1.IsRunning())
+    {
+        m_stopWatchLabelPlayer1.Stop();
+        m_stopWatchLabelPlayer2.Continue();
+    }
+    else if (m_stopWatchLabelPlayer2.IsRunning())
+    {
+        m_stopWatchLabelPlayer2.Stop();
+        m_stopWatchLabelPlayer1.Continue();
+    }
+}
+
+void GameStatusBar::StopwatchPlayer1Continue()
+{
+    m_stopWatchLabelPlayer1.Continue();
 }
 
 void GameStatusBar::SetFraction(float a_fraction)
@@ -186,7 +223,7 @@ void GameStatusBar::EnablePlayer2(bool a_action)
         m_player2ScoreLabel.show();
         m_arrayStatusBarSeparator[2].show();
         m_stopWatchLabelPlayer2.show();
-        
+
         m_stopWatchLabelPlayer2.Continue();
     }
     else
@@ -195,7 +232,7 @@ void GameStatusBar::EnablePlayer2(bool a_action)
         m_player2ScoreLabel.hide();
         m_arrayStatusBarSeparator[2].hide();
         m_stopWatchLabelPlayer2.hide();
-        
+
         m_stopWatchLabelPlayer2.Stop();
     }
 }

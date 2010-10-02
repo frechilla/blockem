@@ -94,6 +94,8 @@ gui_drawing_area_board.h \
 gui_drawing_area_board.cpp \
 gui_drawing_area_show_pieces.cpp \
 gui_drawing_area_show_pieces.h   \
+gui_game_statusbar.cpp \
+gui_game_statusbar.h \
 gui_game1v1_config.cpp \
 gui_game1v1_config.h \
 gui_game1v1_config_dialog.cpp \

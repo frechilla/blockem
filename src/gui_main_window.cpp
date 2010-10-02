@@ -57,12 +57,6 @@ static const char MESSAGE_CONFIGURE_GAME_DIALOG_TITLE[] = N_("Configure current 
 /// maximum size of the string to notify the end of the game
 static const uint32_t GAME_FINISHED_BUFFER_LENGTH = 256;
 
-/// maximum size of the string to apply to score labels
-static const uint32_t SCORE_LABEL_BUFFER_LENGTH = 64;
-
-/// how often stopwatches are updated
-static const uint32_t STOPWATCH_UPDATE_PERIOD_MILLIS = 500; // 1000 = 1 second
-
 
 /// static methods to communicate Game1v1 progress with MainWindow
 /// this float is used to communicate the worker thread with the main thread
@@ -111,11 +105,7 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
         m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2),
         DrawingAreaShowPieces::eOrientation_bottomToTop),
     m_boardDrawingArea(m_the1v1Game.GetBoard()),
-    m_editPieceTable(NULL),
-    m_stopWatchLabelPlayer1(
-        STOPWATCH_UPDATE_PERIOD_MILLIS),
-    m_stopWatchLabelPlayer2(
-        STOPWATCH_UPDATE_PERIOD_MILLIS)
+    m_editPieceTable(NULL)
 {
     //TODO this is dirty (even though it works) the way MainWindow::ProgressUpdate
     // access the MainWindow Instance should be fixed in some way
@@ -302,6 +292,12 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
         throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
 
+    m_gtkBuilder->get_widget(GUI_VBOX_MAIN, m_vBoxMain);
+    if (m_vBoxMain == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
     m_gtkBuilder->get_widget(GUI_VBOX_DRAWING_NAME, m_vBoxDrawing);
     if (m_vBoxDrawing == NULL)
     {
@@ -326,17 +322,38 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
         throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
 
-    m_gtkBuilder->get_widget(GUI_HBOX_STATUSBAR_NAME, m_hBoxStatusBar);
-    if (m_hBoxStatusBar == NULL)
-    {
-        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
-    }
-
     // this call will work in different ways depending on the current platform
     ForceTranslationOfWidgets();
 
     // accelerators for main_window menu
     this->add_accel_group(m_accelGroup);
+
+    // retrieve the default colour from the config class to apply it to the players
+    uint8_t red, green, blue;
+    std::stringstream theMessage;
+    Game1v1Config::Instance().GetPlayer1Colour(red, green, blue);
+    m_the1v1Game.SetPlayerColour(Game1v1::e_Game1v1Player1, red, green, blue);
+    Game1v1Config::Instance().GetPlayer2Colour(red, green, blue);
+    m_the1v1Game.SetPlayerColour(Game1v1::e_Game1v1Player2, red, green, blue);
+
+    // the custom status bar. Add it into the window
+    // Do not expand, but fill
+    m_vBoxMain->pack_start(m_statusBar, false, true);
+
+    // update the score shown in the status bar before setting them up as visible
+    // so the widgets take their proper size at GUI startup
+    m_statusBar.SetScoreStatus(
+            m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1),
+            m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2));
+
+    // stopwatch must be initialised also
+    m_statusBar.SetStopwatchPrefix(
+            m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1),
+            m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2));
+
+    // now that all widgets have been properly configured to their size
+    // show them
+    m_statusBar.show_all();
 
     // place the custom widgets where they are expected to be
     // pack_start (Widget& child, bool expand, bool fill, guint padding=0)
@@ -358,53 +375,6 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     // set_visible doesn't work in 2.16 (which is used in windows). use show!
     m_pickPiecesDrawingArea.show();
     m_showOpponentPiecesDrawingArea.show();
-
-    // update the score shown in the status bar before setting them up as visible
-    // so the widgets take their proper size at GUI startup
-    UpdateScoreStatus();
-
-    // retrieve the default colour from the config class to apply it to the players
-    // and use HTML tags so the stop watch labels show each player's name written
-    // with its corresponding colour. Both widgets will also get the proper size
-    // at GUI startup since they have their expected size before being added to the
-    // horizontal box "status bar"
-    uint8_t red, green, blue;
-    std::stringstream theMessage;
-    Game1v1Config::Instance().GetPlayer1Colour(red, green, blue);
-    m_the1v1Game.SetPlayerColour(Game1v1::e_Game1v1Player1, red, green, blue);
-    theMessage << "<span color=\"#"
-               << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(red)
-               << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(green)
-               << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(blue)
-               << "\">"
-               << m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1).GetName()
-               << " </span>";
-    m_stopWatchLabelPlayer1.SetPrefix(theMessage.str());
-
-    Game1v1Config::Instance().GetPlayer2Colour(red, green, blue);
-    m_the1v1Game.SetPlayerColour(Game1v1::e_Game1v1Player2, red, green, blue);
-    theMessage.str(std::string());
-    theMessage << "<span color=\"#"
-               << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(red)
-               << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(green)
-               << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(blue)
-               << "\">"
-               << m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2).GetName()
-               << " </span>";
-    m_stopWatchLabelPlayer2.SetPrefix(theMessage.str());
-
-    // the custom status bar
-    m_hBoxStatusBar->pack_start(m_player1ScoreLabel, true, true);
-    m_hBoxStatusBar->pack_start(m_arrayStatusBarSeparator[0], false, true);
-    m_hBoxStatusBar->pack_start(m_stopWatchLabelPlayer1, true, true);
-    m_hBoxStatusBar->pack_start(m_arrayStatusBarSeparator[1], false, true);
-    m_hBoxStatusBar->pack_start(m_player2ScoreLabel, true, true);
-    m_hBoxStatusBar->pack_start(m_arrayStatusBarSeparator[2], false, true);
-    m_hBoxStatusBar->pack_start(m_stopWatchLabelPlayer2, true, true);
-    m_progressBar.set_orientation(Gtk::PROGRESS_LEFT_TO_RIGHT);
-    m_progressBar.set_fraction(0.0);
-    m_hBoxStatusBar->pack_start(m_progressBar, true, true);
-    m_hBoxStatusBar->show_all();
 
     // progress handler for the computing process of the MinMax algorithm
     m_the1v1Game.SetProgressHandler(&MainWindow::ProgressUpdate);
@@ -719,7 +689,7 @@ void MainWindow::MenuItemSettingsPreferences_Activate()
                 G_LOCK(s_computingCurrentProgress);
                     s_computingCurrentProgress = 0.0;
                 G_UNLOCK(s_computingCurrentProgress);
-                m_progressBar.set_fraction(0.0);
+                m_statusBar.SetFraction(0.0);
 
                 // allow the new human user to put down pieces on the board
                 m_editPieceTable->set_sensitive(true);
@@ -766,7 +736,7 @@ void MainWindow::MenuItemSettingsPreferences_Activate()
                 G_LOCK(s_computingCurrentProgress);
                     s_computingCurrentProgress = 0.0;
                 G_UNLOCK(s_computingCurrentProgress);
-                m_progressBar.set_fraction(0.0);
+                m_statusBar.SetFraction(0.0);
 
                 // save current config for it to be applied in the future
                 m_configDialog->SaveCurrentConfigIntoGlobalSettings();
@@ -860,17 +830,16 @@ void MainWindow::LaunchNewGame()
     ResetCursor();
 
     // stopwatches must be restarted.
-    m_stopWatchLabelPlayer1.Reset();
-    m_stopWatchLabelPlayer2.Reset();
+    m_statusBar.ResetAllStopwatches();
 
     // restart the progress bar
     G_LOCK(s_computingCurrentProgress);
         s_computingCurrentProgress = 0.0;
     G_UNLOCK(s_computingCurrentProgress);
-    m_progressBar.set_fraction(0.0);
+    m_statusBar.SetFraction(0.0);
 
     // Start player1's timer
-    m_stopWatchLabelPlayer1.Continue();
+    m_statusBar.StopwatchPlayer1Continue();
 
     // reset and force redraw editPieceTable. It'l be set to sensitive
     // or unsensitive depending on the type of player1
@@ -1161,23 +1130,16 @@ void MainWindow::NotifyMoveComputed()
 
     // player who didn't put a piece on the board this time
     Game1v1::eGame1v1Player_t followingPlayer;
-    // pointer to the stopwatch of the latest player to move
-    StopWatchLabel* stopWatchPlayer = NULL;
-    // pointer to the stopwatch of the opponent of latest player to move
-    StopWatchLabel* stopWatchOpponent = NULL;
+
     switch (latestPlayerToMove)
     {
     case Game1v1::e_Game1v1Player1:
     {
-        stopWatchPlayer   = &m_stopWatchLabelPlayer1;
-        stopWatchOpponent = &m_stopWatchLabelPlayer2;
         followingPlayer   = Game1v1::e_Game1v1Player2;
         break;
     }
     case Game1v1::e_Game1v1Player2:
     {
-        stopWatchPlayer   = &m_stopWatchLabelPlayer2;
-        stopWatchOpponent = &m_stopWatchLabelPlayer1;
         followingPlayer   = Game1v1::e_Game1v1Player1;
         break;
     }
@@ -1209,15 +1171,13 @@ void MainWindow::NotifyMoveComputed()
         // next player to move is the opponent
         m_boardDrawingArea.SetCurrentPlayer(latestOpponent);
 
-        // stop current player's stopwatch
-        stopWatchPlayer->Stop();
-        // resume the opponent's stopwatch
-        stopWatchOpponent->Continue();
-        // restart the progress bar
+        // stop current player's stopwatch and start the opponent's
+        m_statusBar.SwapStopwatches();
+
         G_LOCK(s_computingCurrentProgress);
             s_computingCurrentProgress = 0.0;
         G_UNLOCK(s_computingCurrentProgress);
-        m_progressBar.set_fraction(0.0);
+        m_statusBar.SetFraction(0.0);
 
         // it will be platestOpponent's go next. set piece colour to latestOpponent's
         uint8_t red   = 0;
@@ -1310,8 +1270,7 @@ void MainWindow::GameFinished()
     ResetCursor();
 
     // stop stopwatches (even if it was already done)
-    m_stopWatchLabelPlayer1.Stop();
-    m_stopWatchLabelPlayer2.Stop();
+    m_statusBar.StopAllStopwatches();
 
     // no player is expected to put down any piece on the board now
     m_boardDrawingArea.UnsetCurrentPlayer();
@@ -1323,7 +1282,7 @@ void MainWindow::GameFinished()
     G_LOCK(s_computingCurrentProgress);
         s_computingCurrentProgress = 0.0;
     G_UNLOCK(s_computingCurrentProgress);
-    m_progressBar.set_fraction(0.0);
+    m_statusBar.SetFraction(0.0);
 
     int32_t squaresLeftPlayer1 = 0;
     int32_t squaresLeftPlayer2 = 0;
@@ -1467,71 +1426,14 @@ void MainWindow::NotifyProgressUpdate()
         progress = s_computingCurrentProgress;
     G_UNLOCK(s_computingCurrentProgress);
 
-    m_progressBar.set_fraction(progress);
+    m_statusBar.SetFraction(0.0);
 }
 
 void MainWindow::UpdateScoreStatus()
 {
-    // this buffer will contain the string to be applied to the labels
-    char theMessage[SCORE_LABEL_BUFFER_LENGTH];
-
-    // calculate the number of squares left
-    int32_t squaresLeftPlayer1 = 0;
-    int32_t squaresLeftPlayer2 = 0;
-    const Player &player1 = m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1);
-    const Player &player2 = m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2);
-    for (int8_t i = e_minimumPieceIndex ; i < e_numberOfPieces; i++)
-    {
-        if (player1.IsPieceAvailable(static_cast<ePieceType_t>(i)))
-        {
-            squaresLeftPlayer1 += player1.m_pieces[i].GetNSquares();
-        }
-
-        if (player2.IsPieceAvailable(static_cast<ePieceType_t>(i)))
-        {
-            squaresLeftPlayer2 += player2.m_pieces[i].GetNSquares();
-        }
-    }
-
-    uint8_t red, green, blue;
-    player2.GetColour(red, green, blue);
-
-    // update player2's GUI widget
-    snprintf (theMessage,
-              SCORE_LABEL_BUFFER_LENGTH,
-              // i18n TRANSLATORS: the first 3 %02X  will be replaced by the
-              // i18n colour of the current player. The '%s' will be replaced
-              // i18n by this player's name and the '%2d' his/her score
-              // i18n For a better GUI experience both strings should take
-              // i18n the same amount of characters
-              ngettext("<span color=\"#%02X%02X%02X\">%s</span>: %2d left",
-                       "<span color=\"#%02X%02X%02X\">%s</span>: %2d left",
-                       static_cast<int32_t>(squaresLeftPlayer2)),
-              red,
-              green,
-              blue,
-              player2.GetName().c_str(),
-              squaresLeftPlayer2);
-    m_player2ScoreLabel.set_markup(theMessage);
-
-    // and now player1's
-    player1.GetColour(red, green, blue);
-    snprintf (theMessage,
-              SCORE_LABEL_BUFFER_LENGTH,
-              // i18n TRANSLATORS: the first 3 %02X  will be replaced by the
-              // i18n colour of the current player. The '%s' will be replaced
-              // i18n by this player's name and the '%2d' his/her score
-              // i18n For a better GUI experience all these strings should take
-              // i18n the same amount of characters
-              ngettext("<span color=\"#%02X%02X%02X\">%s</span>: %2d left",
-                       "<span color=\"#%02X%02X%02X\">%s</span>: %2d left",
-                       static_cast<int32_t>(squaresLeftPlayer1)),
-              red,
-              green,
-              blue,
-              player1.GetName().c_str(),
-              squaresLeftPlayer1);
-    m_player1ScoreLabel.set_markup(theMessage);
+    m_statusBar.SetScoreStatus(
+            m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1),
+            m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2));
 }
 
 void MainWindow::SetWaitCursor()
