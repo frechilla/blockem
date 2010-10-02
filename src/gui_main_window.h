@@ -247,10 +247,6 @@ private:
     void NotifyProgressUpdate();
 
     /// updates the score shown in the status bar
-    /// takes the status of the game from
-    /// m_computerSquaresLeft and m_userSquaresLeft
-    /// so someone else is responsible for updating these
-    /// variables accordingly
     void UpdateScoreStatus();
 
     /// sets mouse cursor to a watch in certain areas of the window
