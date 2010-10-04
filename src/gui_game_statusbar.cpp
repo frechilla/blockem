@@ -23,6 +23,7 @@
 /// @history
 /// Ref       Who                When         What
 ///           Faustino Frechilla 01-Oct-2010  Original development
+///           Faustino Frechilla 04-Oct-2010  Extended to support N players
 /// @endhistory
 ///
 // ============================================================================
@@ -39,51 +40,117 @@ static const uint32_t SCORE_LABEL_BUFFER_LENGTH = 64;
 static const uint32_t STOPWATCH_UPDATE_PERIOD_MILLIS = 500; // 1000 = 1 second
 
 
-GameStatusBar::GameStatusBar():
-    m_stopWatchLabelPlayer1(
-        STOPWATCH_UPDATE_PERIOD_MILLIS),
-    m_stopWatchLabelPlayer2(
-        STOPWATCH_UPDATE_PERIOD_MILLIS)
+GameStatusBar::GameStatusBar(uint32_t a_nPlayers, bool a_progressBarPresent):
+    m_nPlayers(a_nPlayers),
+    m_arrayStatusBarSeparator(0),
+    m_arrayScoreLabel(0),
+    m_arrayStopwatchLabel(0),
+    m_progressBar(NULL)
 {
     // custom settings for the hbox
     this->set_spacing(10);
     this->set_homogeneous(false);
-
-    // build up the status bar
-    this->pack_start(m_player1ScoreLabel, true, true);
-    this->pack_start(m_arrayStatusBarSeparator[0], false, true);
-    this->pack_start(m_stopWatchLabelPlayer1, true, true);
-    this->pack_start(m_arrayStatusBarSeparator[1], false, true);
-    this->pack_start(m_player2ScoreLabel, true, true);
-    this->pack_start(m_arrayStatusBarSeparator[2], false, true);
-    this->pack_start(m_stopWatchLabelPlayer2, true, true);
-    m_progressBar.set_orientation(Gtk::PROGRESS_LEFT_TO_RIGHT);
-    m_progressBar.set_fraction(0.0);
-    this->pack_start(m_progressBar, true, true);
+        
+    if (a_nPlayers > 0)
+    {
+        m_arrayStatusBarSeparator.resize((m_nPlayers * 2) - 1, NULL);
+        m_arrayScoreLabel.resize(m_nPlayers, NULL);
+        m_arrayStopwatchLabel.resize(m_nPlayers, NULL);
+        
+        for (uint32_t i = 0; i < (m_nPlayers * 2) - 1; i++)
+        {
+            m_arrayStatusBarSeparator[i] = new Gtk::VSeparator;
+        }
+        
+        uint32_t separatorIndex = 0;
+        for (uint32_t playerIndex = 0; playerIndex < m_nPlayers; playerIndex++)
+        {            
+            m_arrayScoreLabel[playerIndex] = new Gtk::Label;
+            m_arrayStopwatchLabel[playerIndex] = 
+                new StopWatchLabel(STOPWATCH_UPDATE_PERIOD_MILLIS);
+            
+            if (playerIndex != 0)
+            {
+                this->pack_start(
+                    *m_arrayStatusBarSeparator[separatorIndex++], 
+                    false, 
+                    true);
+            }
+            
+            this->pack_start(*m_arrayScoreLabel[playerIndex], true, true);
+            
+            this->pack_start(
+                *m_arrayStatusBarSeparator[separatorIndex++], 
+                false, 
+                true);
+            
+            this->pack_start(*m_arrayStopwatchLabel[playerIndex], true, true);
+        }
+    }
+    
+    // finally, add the progress bar if requested to do so
+    if (a_progressBarPresent)
+    {
+        m_progressBar = new Gtk::ProgressBar;
+        m_progressBar->set_orientation(Gtk::PROGRESS_LEFT_TO_RIGHT);
+        m_progressBar->set_fraction(0.0);
+        
+        this->pack_start(*m_progressBar, true, true);
+    }
 }
 
 GameStatusBar::~GameStatusBar()
 {
+    for (uint32_t i = 0; i < (m_nPlayers * 2) - 1; i++)
+    {
+        m_arrayStatusBarSeparator[i]->hide();
+        
+        delete m_arrayStatusBarSeparator[i];
+        m_arrayStatusBarSeparator[i] = NULL;
+    }
+    
+    for (uint32_t i = 0; i < m_nPlayers; i++)
+    {
+        m_arrayScoreLabel[i]->hide();
+        m_arrayStopwatchLabel[i]->hide();
+        
+        delete m_arrayScoreLabel[i];
+        delete m_arrayStopwatchLabel[i];
+        
+        m_arrayScoreLabel[i]     = NULL;
+        m_arrayStopwatchLabel[i] = NULL;
+    }
+    
+    if (m_progressBar != NULL)
+    {
+        delete m_progressBar;
+    }
 }
 
-void GameStatusBar::SetScoreStatus(
-    const Player &a_player1)
+bool GameStatusBar::SetScoreStatus(
+    uint32_t a_playerIndex, 
+    const Player &a_player)
 {
+#ifdef DEBUG
+    assert (a_playerIndex >= 1);
+    assert (a_playerIndex <= m_nPlayers);
+#endif
+
     // this buffer will contain the string to be applied to the labels
     char theMessage[SCORE_LABEL_BUFFER_LENGTH];
 
     // calculate the number of squares left
-    int32_t squaresLeftPlayer1 = 0;
+    int32_t squaresLeftPlayer = 0;
     for (int8_t i = e_minimumPieceIndex ; i < e_numberOfPieces; i++)
     {
-        if (a_player1.IsPieceAvailable(static_cast<ePieceType_t>(i)))
+        if (a_player.IsPieceAvailable(static_cast<ePieceType_t>(i)))
         {
-            squaresLeftPlayer1 += a_player1.m_pieces[i].GetNSquares();
+            squaresLeftPlayer += a_player.m_pieces[i].GetNSquares();
         }
     }
 
     uint8_t red, green, blue;
-    a_player1.GetColour(red, green, blue);
+    a_player.GetColour(red, green, blue);
 
     snprintf (theMessage,
               SCORE_LABEL_BUFFER_LENGTH,
@@ -94,66 +161,36 @@ void GameStatusBar::SetScoreStatus(
               // i18n the same amount of characters
               ngettext("<span color=\"#%02X%02X%02X\">%s</span>: %2d left",
                        "<span color=\"#%02X%02X%02X\">%s</span>: %2d left",
-                       static_cast<int32_t>(squaresLeftPlayer1)),
+                       static_cast<int32_t>(squaresLeftPlayer)),
               red,
               green,
               blue,
-              a_player1.GetName().c_str(),
-              squaresLeftPlayer1);
-    m_player1ScoreLabel.set_markup(theMessage);
-}
-
-void GameStatusBar::SetScoreStatus(
-    const Player &a_player1,
-    const Player &a_player2)
-{
-    // this buffer will contain the string to be applied to the labels
-    char theMessage[SCORE_LABEL_BUFFER_LENGTH];
-
-    // set score status of player1
-    SetScoreStatus(a_player1);
-
-    // calculate the number of squares left of player2
-    int32_t squaresLeftPlayer2 = 0;
-    for (int8_t i = e_minimumPieceIndex ; i < e_numberOfPieces; i++)
+              a_player.GetName().c_str(),
+              squaresLeftPlayer);
+              
+    if ((a_playerIndex >= 1) && (a_playerIndex <= m_nPlayers))
     {
-        if (a_player2.IsPieceAvailable(static_cast<ePieceType_t>(i)))
-        {
-            squaresLeftPlayer2 += a_player2.m_pieces[i].GetNSquares();
-        }
+        m_arrayScoreLabel[a_playerIndex - 1]->set_markup(theMessage);
+        return true;
     }
-
-    uint8_t red, green, blue;
-    a_player2.GetColour(red, green, blue);
-
-    // update player2's GUI widget
-    snprintf (theMessage,
-              SCORE_LABEL_BUFFER_LENGTH,
-              // i18n TRANSLATORS: the first 3 %02X  will be replaced by the
-              // i18n colour of the current player. The '%s' will be replaced
-              // i18n by this player's name and the '%2d' his/her score
-              // i18n For a better GUI experience both strings should take
-              // i18n the same amount of characters
-              ngettext("<span color=\"#%02X%02X%02X\">%s</span>: %2d left",
-                       "<span color=\"#%02X%02X%02X\">%s</span>: %2d left",
-                       static_cast<int32_t>(squaresLeftPlayer2)),
-              red,
-              green,
-              blue,
-              a_player2.GetName().c_str(),
-              squaresLeftPlayer2);
-    m_player2ScoreLabel.set_markup(theMessage);
+    
+    return false;
 }
 
-void GameStatusBar::SetStopwatchPrefix(
-    const Player &a_player1,
-    const Player &a_player2)
+bool GameStatusBar::SetStopwatchPrefix(
+    uint32_t a_playerIndex, 
+    const Player &a_player)
 {
-    // retrieve the default colour from the  players and use HTML tags so
-    // the stop watch labels show each player's name written with its
+#ifdef DEBUG
+    assert (a_playerIndex >= 1);
+    assert (a_playerIndex <= m_nPlayers);
+#endif
+
+    // retrieve the colour from player and use HTML tags so
+    // the stop watch labels show player's name written with its
     // corresponding colour
     uint8_t red, green, blue;
-    a_player1.GetColour(red, green, blue);
+    a_player.GetColour(red, green, blue);
 
     std::stringstream theMessage;
     theMessage << "<span color=\"#"
@@ -161,78 +198,83 @@ void GameStatusBar::SetStopwatchPrefix(
                << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(green)
                << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(blue)
                << "\">"
-               << a_player1.GetName()
+               << a_player.GetName()
                << " </span>";
-    m_stopWatchLabelPlayer1.SetPrefix(theMessage.str());
-
-    a_player2.GetColour(red, green, blue);
-
-    theMessage.clear();
-    theMessage.str("");
-    theMessage << "<span color=\"#"
-               << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(red)
-               << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(green)
-               << std::setfill('0') << std::setw(2) << std::hex << std::uppercase << static_cast<int32_t>(blue)
-               << "\">"
-               << a_player2.GetName()
-               << " </span>";
-    m_stopWatchLabelPlayer2.SetPrefix(theMessage.str());
+               
+    if ((a_playerIndex >= 1) && (a_playerIndex <= m_nPlayers))
+    {
+        m_arrayStopwatchLabel[a_playerIndex - 1]->SetPrefix(theMessage.str());
+        return true;
+    }
+    
+    return false;
 }
 
 void GameStatusBar::ResetAllStopwatches()
 {
-    m_stopWatchLabelPlayer1.Reset();
-    m_stopWatchLabelPlayer2.Reset();
+    for (uint32_t i = 0; i < m_nPlayers; i++)
+    {
+        m_arrayStopwatchLabel[i]->Reset();
+    }
 }
 
 void GameStatusBar::StopAllStopwatches()
 {
-    m_stopWatchLabelPlayer1.Stop();
-    m_stopWatchLabelPlayer2.Stop();
+    for (uint32_t i = 0; i < m_nPlayers; i++)
+    {
+        m_arrayStopwatchLabel[i]->Stop();
+    }
 }
 
 void GameStatusBar::SwapStopwatches()
 {
-    if (m_stopWatchLabelPlayer1.IsRunning())
+    if (m_nPlayers <= 1)
     {
-        m_stopWatchLabelPlayer1.Stop();
-        m_stopWatchLabelPlayer2.Continue();
+        // do nothing. 
+        // There is only 1 stopwatch (or none) so it cannot be swapped
+        return;
     }
-    else if (m_stopWatchLabelPlayer2.IsRunning())
+    
+    for (uint32_t i = 0; i < m_nPlayers; i++)
     {
-        m_stopWatchLabelPlayer2.Stop();
-        m_stopWatchLabelPlayer1.Continue();
+        if (m_arrayStopwatchLabel[i]->IsRunning())
+        {
+            // stop it
+            m_arrayStopwatchLabel[i]->Stop();
+            
+            // resume next stopwatch's count
+            if ((i + 1) < m_nPlayers)
+            {
+                m_arrayStopwatchLabel[i + 1]->Continue();
+            }
+            else
+            {
+                m_arrayStopwatchLabel[0]->Continue();
+            }
+        }
     }
 }
 
-void GameStatusBar::StopwatchPlayer1Continue()
+bool GameStatusBar::ContinueStopwatch(uint32_t a_playerIndex)
 {
-    m_stopWatchLabelPlayer1.Continue();
+#ifdef DEBUG
+    assert (a_playerIndex >= 1);
+    assert (a_playerIndex <= m_nPlayers);
+#endif
+
+    if ((a_playerIndex >= 1) && (a_playerIndex <= m_nPlayers))
+    {
+        m_arrayStopwatchLabel[a_playerIndex]->Continue();
+        return true;
+    }
+    
+    return false;
 }
 
 void GameStatusBar::SetFraction(float a_fraction)
 {
-    m_progressBar.set_fraction(a_fraction);
-}
-
-void GameStatusBar::EnablePlayer2(bool a_action)
-{
-    if (a_action == true)
+    if (m_progressBar)
     {
-        m_arrayStatusBarSeparator[1].show();
-        m_player2ScoreLabel.show();
-        m_arrayStatusBarSeparator[2].show();
-        m_stopWatchLabelPlayer2.show();
-
-        m_stopWatchLabelPlayer2.Continue();
-    }
-    else
-    {
-        m_arrayStatusBarSeparator[1].hide();
-        m_player2ScoreLabel.hide();
-        m_arrayStatusBarSeparator[2].hide();
-        m_stopWatchLabelPlayer2.hide();
-
-        m_stopWatchLabelPlayer2.Stop();
+        m_progressBar->set_fraction(a_fraction);
     }
 }

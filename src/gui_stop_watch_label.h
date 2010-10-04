@@ -34,7 +34,6 @@
 #include <glib.h>
 #include <stdint.h> // for types
 
-
 // warning: this stopwatchlabel is not thread safe. it must be used in the context of
 // only the same thread that creates it
 class StopWatchLabel :
@@ -44,7 +43,9 @@ public:
     /// @brief constructor of the class
     /// the label widget will be updated every a_periodMillis milliseconds
     /// a_prefix will be added in front of the elapsed time when the label is updated
-    StopWatchLabel(uint32_t a_periodMillis, const std::string &a_prefix = std::string());
+    StopWatchLabel(
+        uint32_t a_periodMillis, 
+        const std::string &a_prefix = std::string());
     ~StopWatchLabel();
 
     /// @brief resets the timer to when the world was created (0)
@@ -84,7 +85,7 @@ private:
     /// @brief callback to be called by the g timer
     static gboolean timerCallback(void* param);
 
-    // prevent the default constructors from being used
+    // prevent default constructors from being used
     StopWatchLabel();
     StopWatchLabel(const StopWatchLabel &a_src);
     StopWatchLabel& operator=(const StopWatchLabel &a_src);

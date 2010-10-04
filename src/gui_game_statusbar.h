@@ -23,6 +23,7 @@
 /// @history
 /// Ref       Who                When         What
 ///           Faustino Frechilla 01-Oct-2010  Original development
+///           Faustino Frechilla 04-Oct-2010  Extended to support N players
 /// @endhistory
 ///
 // ============================================================================
@@ -30,6 +31,7 @@
 #ifndef GAME_STATUSBAR_H_
 #define GAME_STATUSBAR_H_
 
+#include <vector>
 #include <gtkmm.h>
 
 #include "player.h"
@@ -40,18 +42,24 @@ class GameStatusBar :
     public Gtk::HBox
 {
 public:
-    GameStatusBar();
+    /// @param amount of players to be represented by this status bar (positive)
+    /// @param true if the status bar should contain a progress bar
+    GameStatusBar(uint32_t a_nPlayers, bool a_progressBarPresent);
     ~GameStatusBar();
 
-    /// update score of only player1
-    void SetScoreStatus(const Player &a_player1);
+    /// update score of a player
+    /// @param index of the player. Valid range goes from 1 to the nPlayers
+    ///        parameter used in the constructor
+    /// @return true if it succesfully updated player's score
+    ///         false otherwise
+    bool SetScoreStatus(uint32_t playerIndex, const Player &a_player);
 
-    /// update score of both player1 and player2
-    void SetScoreStatus(const Player &a_player1, const Player &a_player2);
-
-    /// set prefix to be shown before the stopwatches values of both
-    /// player1 and player2
-    void SetStopwatchPrefix(const Player &a_player1, const Player &a_player2);
+    /// set prefix to be shown before player's stopwatch
+    /// @param index of the player. Valid range goes from 1 to the nPlayers
+    ///        parameter used in the constructor
+    /// @return true if it succesfully updated player's stopwatch
+    ///         false otherwise
+    bool SetStopwatchPrefix(uint32_t playerIndex, const Player &a_player);
 
     /// Reset all stopwatches contained in the status bar
     void ResetAllStopwatches();
@@ -59,43 +67,54 @@ public:
     /// stop all stopwatches
     void StopAllStopwatches();
 
-    /// resume player1's stopwatch count
-    void StopwatchPlayer1Continue();
-
     /// swap stopwatches. Stop the stopwatch currently running and starts
-    /// the next one
-    /// If no stopwatches are running it does nothing
+    /// the next one. For example, in a status bar for 4 players, the following
+    /// list represents the sequence of events:
+    /// Running before: player1. Afterwards: player2 
+    /// Running before: player2. Afterwards: player3 
+    /// Running before: player3. Afterwards: player4 
+    /// Running before: player4. Afterwards: player1 
+    ///
+    /// WARNINGS:
+    ///   + If no stopwatches are running it does nothing
+    ///   + If this status bar has only one player it does nothing either
     void SwapStopwatches();
 
-    /// @param player2 information will be shown if it's true. This data will
-    ///        be hidden if it set to false
-    /// Player2 is enabled by default
-    void EnablePlayer2(bool a_action);
-
+    /// resume player's stopwatch count
+    /// @param index of the player. Valid range goes from 1 to the nPlayers
+    ///        parameter used in the constructor
+    /// @return true if it succesfully issued the command to the stopwatch.
+    ///         false otherwise
+    bool ContinueStopwatch(uint32_t a_playerIndex);
+    
     /// sets the fraction of the progress bar shown in the status bar
+    /// It does nothing if the object has been instantiated without progress bar
     /// @param a floating point number between 0.0 to 1.0 (0% to 100%)
     void SetFraction(float a_fraction);
 
 private:
+    /// @brief number of players to be represented by this status bar
+    uint32_t m_nPlayers;
+    
     /// @brief vertical separators to be used in the status bar
     //TODO that number 3 is magic!!
-    Gtk::VSeparator m_arrayStatusBarSeparator[3];
+    std::vector<Gtk::VSeparator*> m_arrayStatusBarSeparator;
+
+    /// @brief labels to show the users score in the status bar
+    std::vector<Gtk::Label*> m_arrayScoreLabel;
+
+    /// @brief show time player's takes to think
+    std::vector<StopWatchLabel*> m_arrayStopwatchLabel;
 
     /// @brief progress bar for when the computer is "thinking".
     ///        To be shown in the status bar
-    Gtk::ProgressBar m_progressBar;
-
-    /// @brief label to show the user score in the status bar
-    Gtk::Label m_player1ScoreLabel;
-
-    /// @brief label to show the computer score in the status bar
-    Gtk::Label m_player2ScoreLabel;
-
-    /// @brief show the time the player1 takes to think
-    StopWatchLabel m_stopWatchLabelPlayer1;
-
-    /// @brief show the time the player2 takes to think
-    StopWatchLabel m_stopWatchLabelPlayer2;
+    Gtk::ProgressBar* m_progressBar;
+    
+    // prevent default constructors/operators from being accidentaly called
+    GameStatusBar();
+    GameStatusBar(const GameStatusBar &a_src);
+    GameStatusBar& operator=(const GameStatusBar &a_src);
+    
 };
 
 #endif // GAME_STATUSBAR_H_
