@@ -50,51 +50,51 @@ GameStatusBar::GameStatusBar(uint32_t a_nPlayers, bool a_progressBarPresent):
     // custom settings for the hbox
     this->set_spacing(10);
     this->set_homogeneous(false);
-        
+
     if (a_nPlayers > 0)
     {
         m_arrayStatusBarSeparator.resize((m_nPlayers * 2) - 1, NULL);
         m_arrayScoreLabel.resize(m_nPlayers, NULL);
         m_arrayStopwatchLabel.resize(m_nPlayers, NULL);
-        
+
         for (uint32_t i = 0; i < (m_nPlayers * 2) - 1; i++)
         {
             m_arrayStatusBarSeparator[i] = new Gtk::VSeparator;
         }
-        
+
         uint32_t separatorIndex = 0;
         for (uint32_t playerIndex = 0; playerIndex < m_nPlayers; playerIndex++)
-        {            
+        {
             m_arrayScoreLabel[playerIndex] = new Gtk::Label;
-            m_arrayStopwatchLabel[playerIndex] = 
+            m_arrayStopwatchLabel[playerIndex] =
                 new StopWatchLabel(STOPWATCH_UPDATE_PERIOD_MILLIS);
-            
+
             if (playerIndex != 0)
             {
                 this->pack_start(
-                    *m_arrayStatusBarSeparator[separatorIndex++], 
-                    false, 
+                    *m_arrayStatusBarSeparator[separatorIndex++],
+                    false,
                     true);
             }
-            
+
             this->pack_start(*m_arrayScoreLabel[playerIndex], true, true);
-            
+
             this->pack_start(
-                *m_arrayStatusBarSeparator[separatorIndex++], 
-                false, 
+                *m_arrayStatusBarSeparator[separatorIndex++],
+                false,
                 true);
-            
+
             this->pack_start(*m_arrayStopwatchLabel[playerIndex], true, true);
         }
     }
-    
+
     // finally, add the progress bar if requested to do so
     if (a_progressBarPresent)
     {
         m_progressBar = new Gtk::ProgressBar;
         m_progressBar->set_orientation(Gtk::PROGRESS_LEFT_TO_RIGHT);
         m_progressBar->set_fraction(0.0);
-        
+
         this->pack_start(*m_progressBar, true, true);
     }
 }
@@ -104,23 +104,23 @@ GameStatusBar::~GameStatusBar()
     for (uint32_t i = 0; i < (m_nPlayers * 2) - 1; i++)
     {
         m_arrayStatusBarSeparator[i]->hide();
-        
+
         delete m_arrayStatusBarSeparator[i];
         m_arrayStatusBarSeparator[i] = NULL;
     }
-    
+
     for (uint32_t i = 0; i < m_nPlayers; i++)
     {
         m_arrayScoreLabel[i]->hide();
         m_arrayStopwatchLabel[i]->hide();
-        
+
         delete m_arrayScoreLabel[i];
         delete m_arrayStopwatchLabel[i];
-        
+
         m_arrayScoreLabel[i]     = NULL;
         m_arrayStopwatchLabel[i] = NULL;
     }
-    
+
     if (m_progressBar != NULL)
     {
         delete m_progressBar;
@@ -128,7 +128,7 @@ GameStatusBar::~GameStatusBar()
 }
 
 bool GameStatusBar::SetScoreStatus(
-    uint32_t a_playerIndex, 
+    uint32_t a_playerIndex,
     const Player &a_player)
 {
 #ifdef DEBUG
@@ -167,18 +167,18 @@ bool GameStatusBar::SetScoreStatus(
               blue,
               a_player.GetName().c_str(),
               squaresLeftPlayer);
-              
+
     if ((a_playerIndex >= 1) && (a_playerIndex <= m_nPlayers))
     {
         m_arrayScoreLabel[a_playerIndex - 1]->set_markup(theMessage);
         return true;
     }
-    
+
     return false;
 }
 
 bool GameStatusBar::SetStopwatchPrefix(
-    uint32_t a_playerIndex, 
+    uint32_t a_playerIndex,
     const Player &a_player)
 {
 #ifdef DEBUG
@@ -200,13 +200,13 @@ bool GameStatusBar::SetStopwatchPrefix(
                << "\">"
                << a_player.GetName()
                << " </span>";
-               
+
     if ((a_playerIndex >= 1) && (a_playerIndex <= m_nPlayers))
     {
         m_arrayStopwatchLabel[a_playerIndex - 1]->SetPrefix(theMessage.str());
         return true;
     }
-    
+
     return false;
 }
 
@@ -230,18 +230,18 @@ void GameStatusBar::SwapStopwatches()
 {
     if (m_nPlayers <= 1)
     {
-        // do nothing. 
+        // do nothing.
         // There is only 1 stopwatch (or none) so it cannot be swapped
         return;
     }
-    
+
     for (uint32_t i = 0; i < m_nPlayers; i++)
     {
         if (m_arrayStopwatchLabel[i]->IsRunning())
         {
             // stop it
             m_arrayStopwatchLabel[i]->Stop();
-            
+
             // resume next stopwatch's count
             if ((i + 1) < m_nPlayers)
             {
@@ -251,6 +251,8 @@ void GameStatusBar::SwapStopwatches()
             {
                 m_arrayStopwatchLabel[0]->Continue();
             }
+
+            return;
         }
     }
 }
@@ -264,10 +266,10 @@ bool GameStatusBar::ContinueStopwatch(uint32_t a_playerIndex)
 
     if ((a_playerIndex >= 1) && (a_playerIndex <= m_nPlayers))
     {
-        m_arrayStopwatchLabel[a_playerIndex]->Continue();
+        m_arrayStopwatchLabel[a_playerIndex - 1]->Continue();
         return true;
     }
-    
+
     return false;
 }
 

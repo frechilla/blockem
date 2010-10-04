@@ -105,7 +105,8 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
         m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2),
         DrawingAreaShowPieces::eOrientation_bottomToTop),
     m_boardDrawingArea(m_the1v1Game.GetBoard()),
-    m_editPieceTable(NULL)
+    m_editPieceTable(NULL),
+    m_statusBar(2, true) // 2 players, include progress bar
 {
     //TODO this is dirty (even though it works) the way MainWindow::ProgressUpdate
     // access the MainWindow Instance should be fixed in some way
@@ -340,16 +341,15 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     // Do not expand, but fill
     m_vBoxMain->pack_start(m_statusBar, false, true);
 
+    //TODO handling of status bar contains quite a lot of magic
     // update the score shown in the status bar before setting them up as visible
     // so the widgets take their proper size at GUI startup
-    m_statusBar.SetScoreStatus(
-            m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1),
-            m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2));
+    m_statusBar.SetScoreStatus(1, m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1));
+    m_statusBar.SetScoreStatus(2, m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2));
 
     // stopwatch must be initialised also
-    m_statusBar.SetStopwatchPrefix(
-            m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1),
-            m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2));
+    m_statusBar.SetStopwatchPrefix(1, m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1));
+    m_statusBar.SetStopwatchPrefix(2, m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2));
 
     // now that all widgets have been properly configured to their size
     // show them
@@ -839,7 +839,7 @@ void MainWindow::LaunchNewGame()
     m_statusBar.SetFraction(0.0);
 
     // Start player1's timer
-    m_statusBar.StopwatchPlayer1Continue();
+    m_statusBar.ContinueStopwatch(1);
 
     // reset and force redraw editPieceTable. It'l be set to sensitive
     // or unsensitive depending on the type of player1
@@ -1431,9 +1431,10 @@ void MainWindow::NotifyProgressUpdate()
 
 void MainWindow::UpdateScoreStatus()
 {
-    m_statusBar.SetScoreStatus(
-            m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1),
-            m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2));
+    //TODO I've said somewhere above that handling of status bar
+    // contains quite a lot of magic
+    m_statusBar.SetScoreStatus(1, m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1));
+    m_statusBar.SetScoreStatus(2, m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2));
 }
 
 void MainWindow::SetWaitCursor()
