@@ -860,7 +860,7 @@ void MainWindow::LaunchNewGame()
     }
     else
     {
-        // a human b eing is allowed to edit next piece
+        // a human being is allowed to edit next piece
         m_editPieceTable->set_sensitive(true);
 
         // player1 is a human and he/she will put down the next piece (player1 goes always first)

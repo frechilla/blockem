@@ -1,4 +1,4 @@
-<!ELEMENT blockem_challenge (board, opponent, challenger)>
+<!ELEMENT blockem_challenge (board, opponent, challenger, infochallenge?)>
 <!ATTLIST blockem_challenge name CDATA #REQUIRED>
 <!ELEMENT board (nrows, ncolumns)>
     <!ELEMENT nrows (#PCDATA)>
@@ -14,3 +14,7 @@
         available CDATA #REQUIRED>
     <!ELEMENT starting_row (#PCDATA)>
     <!ELEMENT starting_col (#PCDATA)>    
+<!ELEMENT infochallenge (author?, email?, description?)>
+    <!ELEMENT author (#PCDATA)>
+    <!ELEMENT email (#PCDATA)>
+    <!ELEMENT description (#PCDATA)>

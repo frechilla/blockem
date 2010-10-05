@@ -248,6 +248,13 @@ void BlockemChallengeTest::LoadAndCheckValidChallenge1()
             assert (theChallenge.IsChallengerPieceAvailable(static_cast<ePieceType_t>(i)) == true);
         }
     }
+    
+    const BlockemChallenge::BlockemChallengeInfo_t 
+        &challengeInfo = theChallenge.GetChallengeInfo();
+    
+    assert(challengeInfo.authorName  == "");
+    assert(challengeInfo.authorEmail == "");
+    assert(challengeInfo.description == "");
 }
 
 void BlockemChallengeTest::LoadAndCheckValidChallenge2()
@@ -308,4 +315,12 @@ void BlockemChallengeTest::LoadAndCheckValidChallenge2()
             assert (theChallenge.IsChallengerPieceAvailable(static_cast<ePieceType_t>(i)) == false);
         }
     }
+    
+    const BlockemChallenge::BlockemChallengeInfo_t 
+        &challengeInfo = theChallenge.GetChallengeInfo();
+    
+    assert(challengeInfo.authorName  == "John Example");
+    assert(challengeInfo.authorEmail == "john.example@theresnobodythere.com");
+    assert(challengeInfo.description == 
+        "This is an example challenge. You are lucky if it even works...");
 }

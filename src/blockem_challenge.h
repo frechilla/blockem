@@ -23,6 +23,7 @@
 /// @history
 /// Ref       Who                When         What
 ///           Faustino Frechilla 26-Sep-2010  Original development
+///           Faustino Frechilla 05-Oct-2010  Support for infochallenge tag
 /// @endhistory
 ///
 // ============================================================================
@@ -42,6 +43,16 @@
 class BlockemChallenge
 {
 public:
+    /// Miscellaneous data about this challenge
+    /// This data is optional, so if it's not present on the original .xml 
+    /// file strings will be set to "" (empty string)
+    typedef struct
+    {
+        std::string authorName;
+        std::string authorEmail;
+        std::string description;
+    } BlockemChallengeInfo_t;
+    
     /// @brief instantiates an object with a default challenge
     /// a default challenge is an empty board of 14x14 in which
     /// no player has any pieces available
@@ -115,6 +126,12 @@ public:
     {
         return m_challengerPiecesPresent[a_piece];
     }
+    
+    /// @return Miscellaneous blockem challenge info
+    const BlockemChallengeInfo_t& GetChallengeInfo() const
+    {
+        return m_challengeInfo;
+    }
 
 private:
     /// XML parsing internal pointer. It is set to NULL after an XML file has
@@ -137,6 +154,9 @@ private:
     bool m_challengerPiecesPresent[e_numberOfPieces];
     /// Starting coordinate of the challenger
     Coordinate m_challengerStartingCoord;
+    
+    /// Miscellaneous blockem challenge info
+    BlockemChallengeInfo_t m_challengeInfo;
 
     /// resets internal XML variables and throws a std::runtime_exception
     /// that contains a_xmlFile and a_errorMsg
@@ -170,6 +190,15 @@ private:
     void XMLParseTagChallenger(
             const std::string &a_xmlFile,
             xmlNode* challenger_node) throw (std::runtime_error);
+            
+    /// parses the contents of "infochallenge" tag of a challenge .xml file
+    /// throws a std::runtime_error if there is any kind of error in
+    /// the parsing process
+    /// @param xml file being parsed
+    /// @param opponent_node MUST point to the XML point which holds the "infochallenge" node
+    void XMLParseTagInfochallenge(
+            const std::string &a_xmlFile,
+            xmlNode* infochallenge_node) throw (std::runtime_error);
 
 
     void SetChallengeName(const std::string &a_name);

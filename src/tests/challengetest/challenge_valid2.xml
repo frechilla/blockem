@@ -45,4 +45,11 @@
         <!-- starting coord is not set. Challenger will have to start off the
              nucleation points created by the taken squares -->
     </challenger>
+    
+    <infochallenge>
+        <author>John Example</author>
+        <email>john.example@theresnobodythere.com</email>
+        <description>This is an example challenge. You are lucky if it even works...</description>
+    </infochallenge>
+    
 </blockem_challenge>

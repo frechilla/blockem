@@ -23,6 +23,7 @@
 /// @history
 /// Ref       Who                When         What
 ///           Faustino Frechilla 26-Sep-2010  Original development
+///           Faustino Frechilla 05-Oct-2010  Support for infochallenge tag
 /// @endhistory
 ///
 // ============================================================================
@@ -181,6 +182,15 @@ void BlockemChallenge::LoadXMLChallenge(const std::string &a_path) throw (std::r
             challengerTagPresent = true;
             XMLParseTagChallenger(a_path, cur_node);
         }
+        
+        /////////////////////
+        // infochallenge tag
+        if ( (cur_node->type == XML_ELEMENT_NODE) &&
+             (xmlStrcmp(cur_node->name, (const xmlChar*) "infochallenge") == 0) )
+        {
+            // this tag is optional. No need to check if it has been set or not
+            XMLParseTagInfochallenge(a_path, cur_node);
+        }
     }
 
     // The three mandatory tags MUST be present. Ensure it is true
@@ -321,7 +331,7 @@ void BlockemChallenge::XMLParseTagBoard(
             }
 
             SetBoardRows(nRows);
-        } // if ... (xmlStrcmp(child_node->name, (const xmlChar*) "ncolumns") == 0)
+        } // if ... (xmlStrcmp(child_node->name, (const xmlChar*) "nrows") == 0)
 
         ////////////////
         // ncolumns tag
@@ -774,6 +784,78 @@ void BlockemChallenge::XMLParseTagChallenger(
         // of the nuclation points defined by its taken squares. Up to the 
         // challenge designer to ensure at least one of them is valid
     }
+}
+
+void BlockemChallenge::XMLParseTagInfochallenge(
+    const std::string &a_xmlFile,
+    xmlNode* infochallenge_node) throw (std::runtime_error)
+{
+    xmlNode* child_node = NULL;
+    xmlChar* strValue   = NULL;
+
+#ifdef DEBUG
+    assert(infochallenge_node->type == XML_ELEMENT_NODE);
+    assert(xmlStrcmp(infochallenge_node->name, (const xmlChar*) "infochallenge") == 0);
+#endif
+
+    // infochallenge has no attributes. All elements are OPTIONAL:
+    //     <author>, <email> and <description>
+    for (child_node = infochallenge_node->children; 
+         child_node != NULL; 
+         child_node = child_node->next)
+    {
+        //////////////
+        // author tag
+        if ( (child_node->type == XML_ELEMENT_NODE) &&
+             (xmlStrcmp(child_node->name, (const xmlChar*) "author") == 0) )
+        {
+            strValue = xmlNodeGetContent(child_node);
+#ifdef DEBUG_PRINT
+            std::cout << "XML Parsing: \""
+                      << (const char*)infochallenge_node->name << "\" -> \""
+                      << (const char*)child_node->name         << "\" -> \""
+                      << (const char*)strValue                 << "\""
+                      << std::endl;
+#endif
+            m_challengeInfo.authorName.assign((const char*)strValue);
+            xmlFree(strValue);
+        } // if ... (xmlStrcmp(child_node->name, (const xmlChar*) "author") == 0)
+
+        //////////////
+        // email tag
+        if ( (child_node->type == XML_ELEMENT_NODE) &&
+             (xmlStrcmp(child_node->name, (const xmlChar*) "email") == 0) )
+        {
+            strValue = xmlNodeGetContent(child_node);
+#ifdef DEBUG_PRINT
+            std::cout << "XML Parsing: \""
+                      << (const char*)infochallenge_node->name << "\" -> \""
+                      << (const char*)child_node->name         << "\" -> \""
+                      << (const char*)strValue                 << "\""
+                      << std::endl;
+#endif
+            m_challengeInfo.authorEmail.assign((const char*)strValue);
+            xmlFree(strValue);
+        } // if ... (xmlStrcmp(child_node->name, (const xmlChar*) "email") == 0)
+
+        //////////////
+        // email tag
+        if ( (child_node->type == XML_ELEMENT_NODE) &&
+             (xmlStrcmp(child_node->name, (const xmlChar*) "description") == 0) )
+        {
+            strValue = xmlNodeGetContent(child_node);
+#ifdef DEBUG_PRINT
+            std::cout << "XML Parsing: \""
+                      << (const char*)infochallenge_node->name << "\" -> \""
+                      << (const char*)child_node->name         << "\" -> \""
+                      << (const char*)strValue                 << "\""
+                      << std::endl;
+#endif
+            m_challengeInfo.description.assign((const char*)strValue);
+            xmlFree(strValue);
+        } // if ... (xmlStrcmp(child_node->name, (const xmlChar*) "description") == 0)
+
+    } // for (child_node = cur_node->children
 }
 
 void BlockemChallenge::XMLParsingFatalError(

@@ -151,4 +151,28 @@
         <starting_row>0</starting_row>
         <starting_col>0</starting_col>
     </challenger>
+    
+    <!--
+        Miscellaneous data about this challenge
+        
+        This is an OPTIONAL tag. All tags contained in it are also OPTIONAL
+    -->
+    <infochallenge>
+        <!-- 
+            Author's name
+        -->
+        <author>John Doe</author>
+        <!--
+            Author's e-mail 
+        -->
+        <email>john.doe@theresnobodythere.com</email>
+        <!-- 
+            challenge description. 
+            
+            WARNING: It will be parsed with all new line and space characters
+                     contained here
+        -->
+        <description>This is an example challenge. You are lucky if it even works...</description>
+    </infochallenge>
+    
 </blockem_challenge>
