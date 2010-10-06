@@ -24,6 +24,7 @@
 /// Ref       Who                When         What
 ///           Faustino Frechilla 01-Oct-2010  Original development
 ///           Faustino Frechilla 04-Oct-2010  Extended to support N players
+///           Faustino Frechilla 06-Oct-2010  Added a horizontal separator
 /// @endhistory
 ///
 // ============================================================================
@@ -39,7 +40,7 @@
 
 /// @brief class to handle the status bar to be shown on the main window
 class GameStatusBar :
-    public Gtk::HBox
+    public Gtk::VBox
 {
 public:
     /// @param amount of players to be represented by this status bar (positive)
@@ -95,6 +96,12 @@ public:
 private:
     /// @brief number of players to be represented by this status bar
     uint32_t m_nPlayers;
+    
+    /// @brief horizontal separator to be shown on top of the status bar
+    Gtk::HSeparator m_barSeparator;
+    
+    /// @brief horizontal box where all the elements to be displayed are added
+    Gtk::HBox m_elementsBox;
     
     /// @brief vertical separators to be used in the status bar
     //TODO that number 3 is magic!!

@@ -41,16 +41,26 @@ static const uint32_t STOPWATCH_UPDATE_PERIOD_MILLIS = 500; // 1000 = 1 second
 
 
 GameStatusBar::GameStatusBar(uint32_t a_nPlayers, bool a_progressBarPresent):
+    Gtk::VBox(),
     m_nPlayers(a_nPlayers),
     m_arrayStatusBarSeparator(0),
     m_arrayScoreLabel(0),
     m_arrayStopwatchLabel(0),
     m_progressBar(NULL)
-{
-    // custom settings for the hbox
-    this->set_spacing(10);
+{    
+    this->set_spacing(1);
     this->set_homogeneous(false);
-
+    
+    // add the status bar separator
+    this->pack_start(m_barSeparator, true, true);
+    
+    // add now the horizontal box ehich contains the different widgets
+    this->pack_start(m_elementsBox, true, true);
+    
+    // custom settings for the hbox
+    m_elementsBox.set_spacing(10);
+    m_elementsBox.set_homogeneous(false);
+    
     if (a_nPlayers > 0)
     {
         m_arrayStatusBarSeparator.resize((m_nPlayers * 2) - 1, NULL);
@@ -71,20 +81,20 @@ GameStatusBar::GameStatusBar(uint32_t a_nPlayers, bool a_progressBarPresent):
 
             if (playerIndex != 0)
             {
-                this->pack_start(
+                m_elementsBox.pack_start(
                     *m_arrayStatusBarSeparator[separatorIndex++],
                     false,
                     true);
             }
 
-            this->pack_start(*m_arrayScoreLabel[playerIndex], true, true);
+            m_elementsBox.pack_start(*m_arrayScoreLabel[playerIndex], true, true);
 
-            this->pack_start(
+            m_elementsBox.pack_start(
                 *m_arrayStatusBarSeparator[separatorIndex++],
                 false,
                 true);
 
-            this->pack_start(*m_arrayStopwatchLabel[playerIndex], true, true);
+            m_elementsBox.pack_start(*m_arrayStopwatchLabel[playerIndex], true, true);
         }
     }
 
@@ -95,7 +105,7 @@ GameStatusBar::GameStatusBar(uint32_t a_nPlayers, bool a_progressBarPresent):
         m_progressBar->set_orientation(Gtk::PROGRESS_LEFT_TO_RIGHT);
         m_progressBar->set_fraction(0.0);
 
-        this->pack_start(*m_progressBar, true, true);
+        m_elementsBox.pack_start(*m_progressBar, true, true);
     }
 }
 
