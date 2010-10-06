@@ -1,7 +1,14 @@
-: Version 0.2.5
+: Version 0.3.0
+    - Total allocation mode available on GUI. Player is requested to put down 
+      all his/her pieces on a custom-size board playing against no opponent
+    - Major refactoring on GUI handling. New games can be added easier into 
+      the Main Window. New Game dialog redesigned too.
     - New configuration file in xml format which is loaded at start-up. At the
       moment it is only used to set the language on windows platforms but it 
       could be easily expanded in future
+    - Format of blockem challenges has been design. Next version (0.3.1) is 
+      expected to add support to play these challenges on the GUI
+      can be designed before adding support for them in next release
     - Bug fixed in win32 platforms: Bogus handling of i18n in command line 
       arguments
 

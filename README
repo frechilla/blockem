@@ -31,6 +31,23 @@ updated version of the source code along with some documentation and help in
 there.
 
 
+Blockem challenges
+-----------------------
+A blockem challenge is a special kind of game that consists in a customised
+board where a player must allocate a set of pieces (might be all of them or
+just a subset of all the available pieces). There is no opponent, so the human
+user will be playing against the challenge's designer.
+
+Along with this copy of blockem you have received a copy of a set of already
+designed blockem challenges. There is one in particular in
+$package-dir/challenges/example_challenge.xml that can be used as a starting
+point to understand what is going on with these challenges. 
+
+Inside that same directory there is also a README file with some information 
+about the blockem challenge .xml files. Feel free to design and test new 
+challenges, either from scratch or using an existing one as a starting point.
+
+
 Building and installing
 -----------------------
 

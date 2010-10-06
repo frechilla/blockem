@@ -215,38 +215,50 @@ void GameTotalAllocationWidget::BoardDrawingArea_BoardClicked(
     const Piece &a_piece, 
     const Player &a_player)
 {
-    if( ( (a_player.NumberOfPiecesAvailable() == e_numberOfPieces) &&
-          (a_player.GetStartingCoordinate().Initialised())         &&
-          (!rules::IsPieceDeployableInStartingPoint(
-                    m_theTotalAllocationGame.GetBoard(),
-                    a_piece.GetCurrentConfiguration(),
-                    a_coord,
-                    a_player.GetStartingCoordinate())) ) ||
-        ( (a_player.NumberOfPiecesAvailable() < e_numberOfPieces) &&
-          (!rules::IsPieceDeployableCompute(
-                    m_theTotalAllocationGame.GetBoard(),
-                    a_piece.GetCurrentConfiguration(),
-                    a_coord,
-                    a_player)) ) )
+    if (a_player.NumberOfPiecesAvailable() == e_numberOfPieces)
     {
+        if ( ( (!a_player.GetStartingCoordinate().Initialised()) &&
+               (!rules::IsPieceDeployableInStartingPoint(
+                    m_theTotalAllocationGame.GetBoard(),
+                    a_piece.GetCurrentConfiguration(),
+                    a_coord,
+                    a_coord)) ) ||
+             ( (a_player.GetStartingCoordinate().Initialised()) &&
+               (!rules::IsPieceDeployableInStartingPoint(
+                    m_theTotalAllocationGame.GetBoard(),
+                    a_piece.GetCurrentConfiguration(),
+                    a_coord,
+                    a_player.GetStartingCoordinate())) ) )
+        {
 #ifdef DEBUG_PRINT
-        std::cout << "Cheeky you! Don't try to deploy a piece where it's not allowed to"
-                  << std::endl;
+            std::cout << "Starting coordinate deployment failure: Cheeky you! Don't try to deploy a piece where it's not allowed to"
+                      << std::endl;
 #endif
-        return;
+            return;
+        }
+    }
+    else
+    {
+        if (!rules::IsPieceDeployableCompute(
+                    m_theTotalAllocationGame.GetBoard(),
+                    a_piece.GetCurrentConfiguration(),
+                    a_coord,
+                    a_player))
+        {
+#ifdef DEBUG_PRINT
+            std::cout << "Deployment failure: Cheeky you! Don't try to deploy a piece where it's not allowed to"
+                      << std::endl;
+#endif
+            return;
+        }
     }
     
     // put down current piece before anything else
-    m_theTotalAllocationGame.PutDownPiece(
-            a_coord,
-            a_piece.GetCurrentConfiguration());
+    m_theTotalAllocationGame.PutDownPiece(a_piece, a_coord);
 
     // invalidate the board drawing area to show the new moves
     // activating the latest piece deployed glowing effect
-    m_boardDrawingArea.Invalidate(
-            a_piece,
-            a_coord,
-            a_player);
+    m_boardDrawingArea.Invalidate(a_piece, a_coord, a_player);
 
 	// update score
     m_statusBar.SetScoreStatus(1, a_player);

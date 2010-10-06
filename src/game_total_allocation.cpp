@@ -78,6 +78,28 @@ void GameTotalAllocation::Reset(
 }
 
 void GameTotalAllocation::RemovePiece(
+        const Piece      &a_piece,
+        const Coordinate &a_coord)
+{
+    RemovePiece(
+        a_coord,
+        a_piece.GetCurrentConfiguration());
+    
+    m_player.SetPiece(a_piece.GetType());
+}
+
+void GameTotalAllocation::PutDownPiece(
+        const Piece      &a_piece,
+        const Coordinate &a_coord)
+{
+    PutDownPiece(
+        a_coord,
+        a_piece.GetCurrentConfiguration());
+    
+    m_player.UnsetPiece(a_piece.GetType());
+}
+
+void GameTotalAllocation::RemovePiece(
         const Coordinate         &a_coord,
         const PieceConfiguration &a_pieceConf)
 {

@@ -78,28 +78,29 @@ public:
     ///        able to start from any place on the board 
     void Reset(int32_t a_rows, int32_t a_columns, const Coordinate &a_startingCoord);
 
+    /// put down a piece on the board. The user is supposed to check if there is space for it before calling
+    /// It updates the internal player contained in the total allocation game
+    /// @param the piece
+    /// @param the ABSOLUTE coord
+	void PutDownPiece(
+			const Piece      &a_piece,
+			const Coordinate &a_coord);
+
+    /// remove a piece from the board. The user is supposed to check if the piece was there
+    /// before calling this function since it will just set to empty the squares
+    /// It updates the internal player contained in the total allocation game
+    /// @param the piece
+    /// @param the ABSOLUTE coord
+	void RemovePiece(
+			const Piece      &a_piece,
+			const Coordinate &a_coord);
+    
     /// @brief a backtracking algorithm will try to put all the pieces in the board.
     /// It will modify the player and board objects inside this instance
     /// They will contain how the calculations ended
     /// @return true if the game was solved. False if there is no solution to the problem
     bool Solve();
     
-    /// remove a piece from the board. The user is supposed to check if the piece was there
-    /// before calling this function since it just will set to empty the squares
-    /// @param the ABSOLUTE coord
-    /// @param the piece configuration
-    void RemovePiece(
-            const Coordinate         &a_coord,
-            const PieceConfiguration &a_pieceConf);
-
-    /// put down a piece on the board. The user is supposed to check if there is space for
-    /// it before calling
-    /// @param the ABSOLUTE coord
-    /// @param the piece configuration
-    void PutDownPiece(
-            const Coordinate         &a_coord,
-            const PieceConfiguration &a_pieceConf);
-
 private:
     /// The blokus board where the game will be played
     Board m_board;
@@ -111,6 +112,23 @@ private:
     /// start from any coordinate on the board 
     Coordinate m_startingCoord;
 
+    /// remove a piece from the board. The user is supposed to check if the piece was there
+    /// before calling this function since it just will set to empty the squares
+    /// It doesn't set the piece back as available to the player
+    /// @param the ABSOLUTE coord
+    /// @param the piece configuration
+    void RemovePiece(
+            const Coordinate         &a_coord,
+            const PieceConfiguration &a_pieceConf);
+
+    /// put down a piece on the board. The user is supposed to check if there is space for
+    /// it before calling. It doesn't unset the piece from player
+    /// @param the ABSOLUTE coord
+    /// @param the piece configuration
+    void PutDownPiece(
+            const Coordinate         &a_coord,
+            const PieceConfiguration &a_pieceConf);
+    
     /// once there is at least one piece put down in the board this function
     /// will try to put down all the pieces in the existing nk points in the board
     /// @param an array with piece types of the latest pieces set in previous

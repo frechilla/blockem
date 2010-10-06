@@ -60,7 +60,8 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     m_gtkBuilder(a_gtkBuilder),
     m_aboutDialog(NULL),
     m_configDialog(NULL),
-    m_game1v1Widget(NULL)
+    m_game1v1Widget(NULL),
+    m_gameTotalAllocation(a_gtkBuilder)
 {
     // icon of the window
     Glib::RefPtr< Gdk::Pixbuf > icon;
@@ -248,6 +249,8 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     
     // add the game1v1 widget into the window. Expand and fill!
     m_vBoxMain->pack_start(*m_game1v1Widget, true, true);
+    //m_vBoxMain->pack_start(m_gameTotalAllocation, true, true);
+    //m_gameTotalAllocation.show_all();
     
     // connect also its handlers
     m_game1v1Widget->signal_fatalError().connect(

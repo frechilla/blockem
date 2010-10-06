@@ -412,12 +412,18 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
             // initialised (it can start from everywhere on the board) or
             // if the piece is deployable in that starting coordinate (it has
             // been previously initialised)
-            if ( (!m_currentPlayer->GetStartingCoordinate().Initialised()) ||
-                 (rules::IsPieceDeployableInStartingPoint(
-                    m_theBoard,
-                    m_currentPiece.GetCurrentConfiguration(),
-                    m_currentCoord,
-                    m_currentPlayer->GetStartingCoordinate())) )
+            if ( (!m_currentPlayer->GetStartingCoordinate().Initialised() &&
+                   rules::IsPieceDeployableInStartingPoint(
+                       m_theBoard,
+                       m_currentPiece.GetCurrentConfiguration(),
+                       m_currentCoord,
+                       m_currentCoord)) ||
+                 ( m_currentPlayer->GetStartingCoordinate().Initialised() &&
+                   rules::IsPieceDeployableInStartingPoint(
+                       m_theBoard,
+                       m_currentPiece.GetCurrentConfiguration(),
+                       m_currentCoord,
+                       m_currentPlayer->GetStartingCoordinate())) )
             {
                 cr->set_source_rgba(
                         static_cast<float>(red)  / 255,

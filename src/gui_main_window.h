@@ -40,6 +40,7 @@
 #include "gui_game1v1_config_dialog.h"
 #include "gui_exception.h"
 #include "gui_game1v1_widget.h"
+#include "gui_game_total_allocation_widget.h"
 
 
 /// @brief class to handle the main window in the GUI
@@ -111,6 +112,9 @@ private:
     
     /// @brief the game1v1 widget
     Game1v1Widget* m_game1v1Widget;
+    
+    /// @brief the total allocation game widget
+    GameTotalAllocationWidget m_gameTotalAllocation;
     
     // accel group + menu items
     Glib::RefPtr<Gtk::AccelGroup> m_accelGroup;

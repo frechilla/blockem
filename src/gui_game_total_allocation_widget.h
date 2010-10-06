@@ -27,8 +27,8 @@
 ///
 // ============================================================================
 
-#ifndef _GAME1V1_WIDGET_H_
-#define _GAME1V1_WIDGET_H_
+#ifndef _GAME_TOTAL_ALLOCATION_WIDGET_H_
+#define _GAME_TOTAL_ALLOCATION_WIDGET_H_
 
 #include <string>
 #include <exception>
@@ -146,4 +146,4 @@ private:
     GameTotalAllocationWidget& operator=(const GameTotalAllocationWidget &a_src);
 };
 
-#endif /* _GAME1V1_WIDGET_H_ */
+#endif /* _GAME_TOTAL_ALLOCATION_WIDGET_H_ */
