@@ -54,48 +54,46 @@ class Game1v1Widget :
     public Gtk::VBox
 {
 public:
-    /// Instantiates the class. It needs a Gtk::Builder object to retrieve the
-    /// glade info
-    // to be used with m_gtkBuilder->get_widget_derived(GUI_VBOX_GAME1V1, m_game1v1Widget)
-    Game1v1Widget(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder) throw (GUIException);
+    /// Instantiates the class
+    Game1v1Widget(Glib::RefPtr<Gtk::Builder> a_gtkBuilder) throw (GUIException);
     virtual ~Game1v1Widget();
 
     /// Cancels computing thread and sets it to "waiting" state
-    /// It is a blocking call (it gets blocked until the thread cancels its 
+    /// It is a blocking call (it gets blocked until the thread cancels its
     /// current calculation process)
     void CancelComputing();
-    
+
     /// @return true if the worker thread is processing a new move
     bool IsComputingMove();
-    
-    /// Launches a new game. 
+
+    /// Launches a new game.
     /// WARNING: It must be used carefully since it cancels whatever the worker
-    /// thread is computing now and resets the game to the settigns stored in 
+    /// thread is computing now and resets the game to the settigns stored in
     /// the Game1v1Config singleton
     void LaunchNewGame();
-    
+
     /// Uses the game1v1 config dialog to decide what changes in the
     /// current game need to be done
     /// Then updates the general config singleton with the new configuration
     /// And launches requests to the worker thread if neccesary
-    /// WARNING: It should only be called if the user accepted changes when 
+    /// WARNING: It should only be called if the user accepted changes when
     /// he/she was shown the config dialog
     /// @param the game1v1 config dialog
     /// @return true if the current calculation of the worker thread had to be
     ///         cancelled. False otherwise
     bool ProcessChangeInCurrentGame(Game1v1ConfigDialog& a_configDialog);
-    
+
     /// @return a reference to the drawing area shown by this widget
     DrawingAreaBoard& BoardDrawingArea();
-    
+
     /// @brief shows the influence area of a player on the board
     /// @param a_game1v1Player if it is e_Game1v1NoPlayer no influence area will be shown
     void ShowInfluenceAreaInBoard(Game1v1::eGame1v1Player_t a_game1v1Player);
-    
+
     /// @brief shows forbidden area of a player on the board
     /// @param a_game1v1Player if it is e_Game1v1NoPlayer no forbidden area will be shown
     void ShowForbiddenAreaInBoard(Game1v1::eGame1v1Player_t a_game1v1Player);
-    
+
     /// @brief callback to be called whenever the worker thread finishes computing a move
     void WorkerThread_computingFinished(
             const Piece              &a_piece,
@@ -106,7 +104,7 @@ public:
     /// @brief callback to be called when a button is pressed inside the board
     void BoardDrawingArea_BoardClicked(const Coordinate &, const Piece &, const Player &);
 
-    /// Access to the fatal error signal private member. Note this signal is 
+    /// Access to the fatal error signal private member. Note this signal is
     /// not thread safe so it must be processed by the same thread who
     /// handles the GUI
     /// It contains a HTML formatted error message describing the fatal error
@@ -114,8 +112,8 @@ public:
     {
         return m_signal_fatalError;
     }
-    
-    /// Access to the game finished signal private member. Note this signal is 
+
+    /// Access to the game finished signal private member. Note this signal is
     /// not thread safe so it must be processed by the same thread who
     /// handles the GUI
     /// It contains a HTML formated message describing the final score
@@ -123,13 +121,13 @@ public:
     {
         return m_signal_gameFinished;
     }
-    
+
     /// @brief to be used as a functor so Game1v1 notifies this class the progress of the computing
     ///        process for computer's next move
     /// this function can be called from a different thread because it uses signal dispatcher
     /// see: http://library.gnome.org/devel/glibmm/stable/thread_2dispatcher_8cc-example.html
-    static void ProgressUpdate(float a_progress);    
-    
+    static void ProgressUpdate(float a_progress);
+
 private:
 
     /// struct which contains the info that stores a move (piece + where + who)
@@ -181,13 +179,16 @@ private:
     TableEditPiece* m_editPieceTable;
 
     /// @brief the table that contains the board + pieces left
-    Gtk::HBox* m_hBoxGameStatus;
+    Gtk::HBox m_hBoxGameStatus;
 
     /// @brief the table that contains the opponent's pieces
-    Gtk::HBox* m_hBoxOpponentPieces;
+    Gtk::HBox m_hBoxOpponentPieces;
+
+    /// @brief vertical separator to separate board from opponent's pieces
+    Gtk::VSeparator m_opponentSeparator;
 
     /// @brief the horizontal box where the pieces are picked + edited
-    Gtk::HBox* m_hBoxEditPieces;
+    Gtk::HBox m_hBoxEditPieces;
 
     /// @brief hbox which serves as status bar
     GameStatusBar m_statusBar;
@@ -199,10 +200,10 @@ private:
     /// thread-safe signal object for inter-thread communication to
     /// notify a change in computing progress
     Glib::Dispatcher m_signal_computingProgressUpdated;
-    
+
     /// Signal object to notify fatal errors
     sigc::signal<void, const std::string&> m_signal_fatalError;
-    
+
     /// Signal object to notify when game is finished
     sigc::signal<void, const std::string&> m_signal_gameFinished;
 

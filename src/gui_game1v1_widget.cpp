@@ -50,8 +50,8 @@ static float s_computingCurrentProgress = 0.0;
 /// static easy to use mutex for shared data across threads
 G_LOCK_DEFINE_STATIC(s_computingCurrentProgress);
 
-/// this is a pointer to the Game1v1Widget itself so it can be used from the 
-/// static method/ Game1v1Widget::ProgressUpdate. It is dirty, but it works 
+/// this is a pointer to the Game1v1Widget itself so it can be used from the
+/// static method/ Game1v1Widget::ProgressUpdate. It is dirty, but it works
 /// (and it is enough for now)
 /// WARNING: it won't work if Game1v1Widget is instantiated twice
 static Game1v1Widget *g_pGame1v1Widget = NULL;
@@ -72,8 +72,8 @@ void Game1v1Widget::ProgressUpdate(float a_progress)
     }
 }
 
-Game1v1Widget::Game1v1Widget(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder) throw (GUIException):
-    Gtk::VBox(cobject), //Calls the base class constructor
+Game1v1Widget::Game1v1Widget(Glib::RefPtr<Gtk::Builder> a_gtkBuilder) throw (GUIException):
+    Gtk::VBox(), //Calls the base class constructor
     m_currentGameFinished(false),
     m_currentMovingPlayer(Game1v1::e_Game1v1Player1),
     m_gtkBuilder(a_gtkBuilder),
@@ -113,25 +113,6 @@ Game1v1Widget::Game1v1Widget(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Bu
         throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
 
-    // retrieve the rest of objects from the GUI design
-    m_gtkBuilder->get_widget(GUI_HBOX_GAME_STATUS_NAME, m_hBoxGameStatus);
-    if (m_hBoxGameStatus == NULL)
-    {
-        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
-    }
-
-    m_gtkBuilder->get_widget(GUI_HBOX_OPPONENT_PIECES_NAME, m_hBoxOpponentPieces);
-    if (m_hBoxOpponentPieces == NULL)
-    {
-        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
-    }
-
-    m_gtkBuilder->get_widget(GUI_HBOX_PIECES_AREA_NAME, m_hBoxEditPieces);
-    if (m_hBoxEditPieces == NULL)
-    {
-        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
-    }
-
     // this call will work in different ways depending on the current platform
     ForceTranslationOfWidgets();
 
@@ -142,9 +123,26 @@ Game1v1Widget::Game1v1Widget(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Bu
     Game1v1Config::Instance().GetPlayer2Colour(red, green, blue);
     m_the1v1Game.SetPlayerColour(Game1v1::e_Game1v1Player2, red, green, blue);
 
-    // the custom status bar. Add it into the window
-    // Do not expand, but fill
-    this->pack_start(m_statusBar, false, true);
+    // configure the widgets
+    m_hBoxEditPieces.set_spacing(10);
+    m_hBoxEditPieces.set_size_request(-1, 200);
+    m_hBoxGameStatus.set_spacing(1);
+    m_hBoxGameStatus.set_homogeneous(false);
+    m_hBoxOpponentPieces.set_size_request(100, -1);
+    m_hBoxOpponentPieces.set_homogeneous(false);
+
+    // pack_start (Widget& child, bool expand, bool fill, guint padding=0)
+    m_hBoxGameStatus.pack_start(m_boardDrawingArea, true, true);     // expand and fill
+    m_hBoxGameStatus.pack_start(m_hBoxOpponentPieces, false, true);  // don't expand but fill
+    m_hBoxOpponentPieces.pack_start(m_opponentSeparator, false, true, 5); // don't expand but fill
+    m_hBoxOpponentPieces.pack_start(m_showOpponentPiecesDrawingArea, true, true); // expand and fill
+    // pick pieces drawing area, edit pieces table and show opponent's pieces
+    m_hBoxEditPieces.pack_start(m_pickPiecesDrawingArea, true, true);
+    m_hBoxEditPieces.pack_start(*m_editPieceTable, false, false);
+
+    this->pack_start(m_hBoxGameStatus, true, true);  // expand and fill
+    this->pack_start(m_hBoxEditPieces, false, true); // not expand but fill
+    this->pack_start(m_statusBar, false, true);      // not expand but fill
 
     // update the score shown in the status bar before setting them up as visible
     // so the widgets take their proper size at GUI startup
@@ -157,28 +155,13 @@ Game1v1Widget::Game1v1Widget(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Bu
 
     // now that all widgets have been properly configured to their size
     // show them
-    m_statusBar.show_all();
-
-    // place the custom widgets where they are expected to be
-    // pack_start (Widget& child, bool expand, bool fill, guint padding=0)
-    // first the board drawing area to the game status hbox and display it
-    m_hBoxGameStatus->pack_start(m_boardDrawingArea, true, true);
-    m_hBoxGameStatus->reorder_child(m_boardDrawingArea, 0);
-    m_boardDrawingArea.show();
-
-    // pick pieces drawing area, edit pieces table and show opponent's pieces
-    m_hBoxEditPieces->pack_start(m_pickPiecesDrawingArea, true, true);
-    m_hBoxEditPieces->pack_start(*m_editPieceTable, false, false);
-
-    m_hBoxOpponentPieces->pack_start(
-            m_showOpponentPiecesDrawingArea,
-            true,
-            true);
-
-    // if we don't show them, nobody will be able to see them
     // set_visible doesn't work in 2.16 (which is used in windows). use show!
-    m_pickPiecesDrawingArea.show();
-    m_showOpponentPiecesDrawingArea.show();
+    this->show_all();
+    //m_statusBar.show_all();
+    //m_boardDrawingArea.show_all();
+    //m_pickPiecesDrawingArea.show();
+    //m_showOpponentPiecesDrawingArea.show();
+    //m_hBoxOpponentPieces.show_all();
 
     // progress handler for the computing process of the MinMax algorithm
     m_the1v1Game.SetProgressHandler(&Game1v1Widget::ProgressUpdate);
@@ -223,7 +206,7 @@ Game1v1Widget::Game1v1Widget(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Bu
 Game1v1Widget::~Game1v1Widget()
 {
     //TODO this is dirty too. See comment at the beginning of the constructor
-    // it might cause a lot of trouble if there are more than 1 instance of 
+    // it might cause a lot of trouble if there are more than 1 instance of
     // Game1v1Widget
     g_pGame1v1Widget = NULL;
 
@@ -259,7 +242,7 @@ void Game1v1Widget::ShowInfluenceAreaInBoard(Game1v1::eGame1v1Player_t a_game1v1
         m_boardDrawingArea.ShowPlayerInfluenceArea(
             m_the1v1Game.GetPlayer(a_game1v1Player));
         break;
-        
+
     case Game1v1::e_Game1v1NoPlayer:
         m_boardDrawingArea.HidePlayerInfluenceArea();
         break;
@@ -279,7 +262,7 @@ void Game1v1Widget::ShowForbiddenAreaInBoard(Game1v1::eGame1v1Player_t a_game1v1
         m_boardDrawingArea.ShowPlayerForbiddenArea(
             m_the1v1Game.GetPlayer(a_game1v1Player));
         break;
-        
+
     case Game1v1::e_Game1v1NoPlayer:
         m_boardDrawingArea.HidePlayerForbiddenArea();
         break;
@@ -377,7 +360,7 @@ void Game1v1Widget::LaunchNewGame()
 bool Game1v1Widget::ProcessChangeInCurrentGame(Game1v1ConfigDialog& a_configDialog)
 {
     bool currentProcessingCancelled = false;
-    
+
     // if current player is a human being and it's been set to computer
     // next move will have to be requested to the worker thread.
     // if current player is the computer and its settings has been changed
@@ -512,7 +495,7 @@ bool Game1v1Widget::ProcessChangeInCurrentGame(Game1v1ConfigDialog& a_configDial
         // new configuratio will be applied once current move is calculated
         a_configDialog.SaveCurrentConfigIntoGlobalSettings();
     }
-    
+
     return currentProcessingCancelled;
 }
 
@@ -646,8 +629,8 @@ void Game1v1Widget::WorkerThread_computingFinished(
 }
 
 void Game1v1Widget::BoardDrawingArea_BoardClicked(
-    const Coordinate &a_coord, 
-    const Piece &a_piece, 
+    const Coordinate &a_coord,
+    const Piece &a_piece,
     const Player &a_player)
 {
 	if (m_workerThread.IsThreadComputingMove())
@@ -793,7 +776,7 @@ void Game1v1Widget::NotifyMoveComputed()
         followingPlayer   = Game1v1::e_Game1v1Player1;
         break;
     }
-    
+
     case Game1v1::e_Game1v1NoPlayer: // let it fall down
     default:
     {
@@ -1061,7 +1044,7 @@ void Game1v1Widget::NotifyProgressUpdate()
         progress = s_computingCurrentProgress;
     G_UNLOCK(s_computingCurrentProgress);
 
-    m_statusBar.SetFraction(0.0);
+    m_statusBar.SetFraction(progress);
 }
 
 void Game1v1Widget::UpdateScoreStatus()
@@ -1075,8 +1058,8 @@ void Game1v1Widget::SetWaitCursor()
     Glib::RefPtr<Gdk::Window> topLevelWindow;
     topLevelWindow = this->get_window();
     if (topLevelWindow)
-    {        
-        // set the cursor to busy 
+    {
+        // set the cursor to busy
         topLevelWindow->set_cursor(Gdk::Cursor(Gdk::WATCH));
     }
 }
@@ -1085,7 +1068,7 @@ void Game1v1Widget::ResetCursor()
     Glib::RefPtr<Gdk::Window> topLevelWindow;
     topLevelWindow = this->get_window();
     if (topLevelWindow)
-    {        
+    {
         // set the cursor to default
         topLevelWindow->set_cursor();
     }

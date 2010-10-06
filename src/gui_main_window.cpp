@@ -60,7 +60,7 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     m_gtkBuilder(a_gtkBuilder),
     m_aboutDialog(NULL),
     m_configDialog(NULL),
-    m_game1v1Widget(NULL),
+    m_game1v1Widget(a_gtkBuilder),
     m_gameTotalAllocation(a_gtkBuilder)
 {
     // icon of the window
@@ -103,14 +103,6 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     // otherwise app will core
     m_gtkBuilder->get_widget_derived(GUI_ABOUT_DIALOG_NAME, m_aboutDialog);
     if (m_aboutDialog == NULL)
-    {
-        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
-    }
-
-    // retrieve the game1v1 widget. It must be retrieved calling get_widget_derived
-    // otherwise app will core
-    m_gtkBuilder->get_widget_derived(GUI_VBOX_GAME1V1, m_game1v1Widget);
-    if (m_game1v1Widget == NULL)
     {
         throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
@@ -246,17 +238,18 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
 
     // accelerators for main_window menu
     this->add_accel_group(m_accelGroup);
-    
+
     // add the game1v1 widget into the window. Expand and fill!
-    m_vBoxMain->pack_start(*m_game1v1Widget, true, true);
+    m_vBoxMain->pack_start(m_game1v1Widget, true, true);
+    m_game1v1Widget.show_all();
     //m_vBoxMain->pack_start(m_gameTotalAllocation, true, true);
     //m_gameTotalAllocation.show_all();
-    
+
     // connect also its handlers
-    m_game1v1Widget->signal_fatalError().connect(
+    m_game1v1Widget.signal_fatalError().connect(
             sigc::mem_fun(*this, &MainWindow::Game1v1Widget_FatalError));
-    m_game1v1Widget->signal_gameFinished().connect(
-            sigc::mem_fun(*this, &MainWindow::Game1v1Widget_GameFinished));    
+    m_game1v1Widget.signal_gameFinished().connect(
+            sigc::mem_fun(*this, &MainWindow::Game1v1Widget_GameFinished));
 
     // connect signals to handlers
     // if the handler is not part of an object use sigc::ptr_fun
@@ -286,7 +279,7 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
             sigc::mem_fun(*this, &MainWindow::MenuItemSettingsShowNoneInfluenceArea_Toggled));
 
     // launch the 1v1 game by default!!
-    m_game1v1Widget->LaunchNewGame();
+    m_game1v1Widget.LaunchNewGame();
 }
 
 MainWindow::~MainWindow()
@@ -302,7 +295,7 @@ MainWindow::~MainWindow()
 
 bool MainWindow::MainWindow_DeleteEvent(GdkEventAny*)
 {
-    if (m_game1v1Widget->IsComputingMove())
+    if (m_game1v1Widget.IsComputingMove())
     {
         Gtk::MessageDialog::MessageDialog exitingMessage(
                 *this,
@@ -320,7 +313,7 @@ bool MainWindow::MainWindow_DeleteEvent(GdkEventAny*)
     }
 
     // cancel the worker thread
-    m_game1v1Widget->CancelComputing();
+    m_game1v1Widget.CancelComputing();
 
     // continue with delete event
     return false;
@@ -328,7 +321,7 @@ bool MainWindow::MainWindow_DeleteEvent(GdkEventAny*)
 
 void MainWindow::MenuItemGameQuit_Activate()
 {
-    if (m_game1v1Widget->IsComputingMove())
+    if (m_game1v1Widget.IsComputingMove())
     {
         Gtk::MessageDialog::MessageDialog exitingMessage(
                 *this,
@@ -346,7 +339,7 @@ void MainWindow::MenuItemGameQuit_Activate()
     }
 
     // cancel the worker thread
-    m_game1v1Widget->CancelComputing();
+    m_game1v1Widget.CancelComputing();
 
     // exit the app
     this->hide();
@@ -358,7 +351,7 @@ void MainWindow::MenuItemGameNew_Activate()
     // starting coords can always be edited when a new game is launched
     m_configDialog->SetStartingCoordEditionSensitive(true);
 
-    Gtk::ResponseType result = 
+    Gtk::ResponseType result =
         static_cast<Gtk::ResponseType>(m_configDialog->run());
     if (result == Gtk::RESPONSE_OK)
     {
@@ -366,7 +359,7 @@ void MainWindow::MenuItemGameNew_Activate()
         m_configDialog->SaveCurrentConfigIntoGlobalSettings();
 
         // go for the brand new game with the new settings!!
-        m_game1v1Widget->LaunchNewGame();
+        m_game1v1Widget.LaunchNewGame();
     }
 #ifdef DEBUG
     else if ( (result != Gtk::RESPONSE_CANCEL) && (result != Gtk::RESPONSE_DELETE_EVENT))
@@ -383,11 +376,11 @@ void MainWindow::MenuItemSettingsViewNKPoints_Toggled()
 {
     if (m_settingsNKPointsMenuItem->property_active())
     {
-        m_game1v1Widget->BoardDrawingArea().ShowNucleationPoints();
+        m_game1v1Widget.BoardDrawingArea().ShowNucleationPoints();
     }
     else
     {
-        m_game1v1Widget->BoardDrawingArea().HideNucleationPoints();
+        m_game1v1Widget.BoardDrawingArea().HideNucleationPoints();
     }
 }
 
@@ -395,7 +388,7 @@ void MainWindow::MenuItemSettingsShowPlayer1ForbiddenArea_Toggled()
 {
     if (m_settingsForbiddenAreaPlayer1MenuItem->property_active())
     {
-        m_game1v1Widget->ShowForbiddenAreaInBoard(Game1v1::e_Game1v1Player1);
+        m_game1v1Widget.ShowForbiddenAreaInBoard(Game1v1::e_Game1v1Player1);
     }
 }
 
@@ -403,7 +396,7 @@ void MainWindow::MenuItemSettingsShowPlayer2ForbiddenArea_Toggled()
 {
     if (m_settingsForbiddenAreaPlayer2MenuItem->property_active())
     {
-        m_game1v1Widget->ShowForbiddenAreaInBoard(Game1v1::e_Game1v1Player2);
+        m_game1v1Widget.ShowForbiddenAreaInBoard(Game1v1::e_Game1v1Player2);
     }
 }
 
@@ -411,7 +404,7 @@ void MainWindow::MenuItemSettingsShowNoneForbiddenArea_Toggled()
 {
     if (m_settingsForbiddenAreaNoShowMenuItem->property_active())
     {
-        m_game1v1Widget->ShowForbiddenAreaInBoard(Game1v1::e_Game1v1NoPlayer);
+        m_game1v1Widget.ShowForbiddenAreaInBoard(Game1v1::e_Game1v1NoPlayer);
     }
 }
 
@@ -419,7 +412,7 @@ void MainWindow::MenuItemSettingsShowPlayer1InfluenceArea_Toggled()
 {
     if (m_settingsInfluenceAreaPlayer1MenuItem->property_active())
     {
-        m_game1v1Widget->ShowInfluenceAreaInBoard(Game1v1::e_Game1v1Player1);
+        m_game1v1Widget.ShowInfluenceAreaInBoard(Game1v1::e_Game1v1Player1);
     }
 }
 
@@ -427,7 +420,7 @@ void MainWindow::MenuItemSettingsShowPlayer2InfluenceArea_Toggled()
 {
     if (m_settingsInfluenceAreaPlayer2MenuItem->property_active())
     {
-        m_game1v1Widget->ShowInfluenceAreaInBoard(Game1v1::e_Game1v1Player2);
+        m_game1v1Widget.ShowInfluenceAreaInBoard(Game1v1::e_Game1v1Player2);
     }
 }
 
@@ -435,7 +428,7 @@ void MainWindow::MenuItemSettingsShowNoneInfluenceArea_Toggled()
 {
     if (m_settingsInfluenceAreaNoShowMenuItem->property_active())
     {
-        m_game1v1Widget->ShowInfluenceAreaInBoard(Game1v1::e_Game1v1NoPlayer);
+        m_game1v1Widget.ShowInfluenceAreaInBoard(Game1v1::e_Game1v1NoPlayer);
     }
 }
 
@@ -452,8 +445,8 @@ void MainWindow::MenuItemSettingsPreferences_Activate()
         static_cast<Gtk::ResponseType>(m_configDialog->run());
     if (result == Gtk::RESPONSE_OK)
     {
-        showInfoMessage = 
-            m_game1v1Widget->ProcessChangeInCurrentGame(*m_configDialog);
+        showInfoMessage =
+            m_game1v1Widget.ProcessChangeInCurrentGame(*m_configDialog);
     } // if (result == Gtk::RESPONSE_OK)
 
     m_configDialog->hide();
@@ -495,7 +488,7 @@ void MainWindow::Game1v1Widget_FatalError(const std::string& a_msg)
     {
         ; // the dialog only has 1 button
     }
-    
+
     // fatal errors can't be handled
     this->hide();
 }
@@ -503,7 +496,7 @@ void MainWindow::Game1v1Widget_FatalError(const std::string& a_msg)
 void MainWindow::Game1v1Widget_GameFinished(const std::string& a_msg)
 {
     // show the final score message and wait for the user to accept
-    
+
     //MessageDialog (
     //        Gtk::Window& parent,
     //        const Glib::ustring& message,
@@ -518,7 +511,7 @@ void MainWindow::Game1v1Widget_GameFinished(const std::string& a_msg)
         Gtk::MESSAGE_INFO,
         Gtk::BUTTONS_OK,
         true);
-            
+
     if (gameOverMessage.run())
     {
         ; // the dialog only has 1 button

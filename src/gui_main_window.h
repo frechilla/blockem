@@ -57,7 +57,7 @@ public:
 
     /// @brief handle fatal errors coming from the Game1v1Widget
     void Game1v1Widget_FatalError(const std::string& a_msg);
-    
+
     /// @brief handle game finished signals coming from the Game1v1Widget
     void Game1v1Widget_GameFinished(const std::string& a_msg);
 
@@ -109,13 +109,13 @@ private:
 
     /// @brief the config dialog class
     Game1v1ConfigDialog* m_configDialog;
-    
+
     /// @brief the game1v1 widget
-    Game1v1Widget* m_game1v1Widget;
-    
+    Game1v1Widget m_game1v1Widget;
+
     /// @brief the total allocation game widget
     GameTotalAllocationWidget m_gameTotalAllocation;
-    
+
     // accel group + menu items
     Glib::RefPtr<Gtk::AccelGroup> m_accelGroup;
     Glib::RefPtr<Gtk::MenuItem> m_gameMenuItem;

@@ -46,7 +46,7 @@ static const uint8_t DEFAULT_PLAYER_COLOUR_G  = 130;
 static const uint8_t DEFAULT_PLAYER_COLOUR_B  = 31;
 
 static const int32_t BOARD_NROWS = 14;
-static const int32_t BOARD_NCOLS = 14; 
+static const int32_t BOARD_NCOLS = 14;
 
 
 GameTotalAllocationWidget::GameTotalAllocationWidget(Glib::RefPtr<Gtk::Builder> a_gtkBuilder) throw (GUIException) :
@@ -74,14 +74,16 @@ GameTotalAllocationWidget::GameTotalAllocationWidget(Glib::RefPtr<Gtk::Builder> 
     // TODO setting default colours to the player
     // this should be done loading from some config class
     m_theTotalAllocationGame.SetPlayerColour(
-        DEFAULT_PLAYER_COLOUR_R, 
-        DEFAULT_PLAYER_COLOUR_G, 
+        DEFAULT_PLAYER_COLOUR_R,
+        DEFAULT_PLAYER_COLOUR_G,
         DEFAULT_PLAYER_COLOUR_B);
 
     // configure hbox edit pieces
+    m_hBoxEditPieces.set_spacing(10);
+    m_hBoxEditPieces.set_size_request(-1, 200);
     m_hBoxEditPieces.pack_start(m_pickPiecesDrawingArea, true, true);
-    m_hBoxEditPieces.pack_start(*m_editPieceTable, false, false);
-    
+    //m_hBoxEditPieces.pack_start(*m_editPieceTable, false, false);
+
     // add widgets to this table
     // pack_start (Widget& child, bool expand, bool fill, guint padding=0)
     this->pack_start(m_boardDrawingArea, true, true);
@@ -98,10 +100,10 @@ GameTotalAllocationWidget::GameTotalAllocationWidget(Glib::RefPtr<Gtk::Builder> 
     // now that all widgets have been properly configured to their size
     // show them. if we don't show them, nobody will be able to see them
     // set_visible doesn't work in 2.16 (which is used in windows). use show!
-    m_boardDrawingArea.show_all();
-    m_pickPiecesDrawingArea.show_all();
-    m_editPieceTable->show_all();
-    m_statusBar.show_all();
+    //m_boardDrawingArea.show_all();
+    //m_pickPiecesDrawingArea.show_all();
+    //m_editPieceTable->show_all();
+    //m_statusBar.show_all();
 
     // connect the signal coming from the pickPiecesDrawingArea to update TableEditPiece
     m_pickPiecesDrawingArea.signal_piecePicked().connect(
@@ -129,13 +131,13 @@ GameTotalAllocationWidget::GameTotalAllocationWidget(Glib::RefPtr<Gtk::Builder> 
         static_cast<float>(red)   / 255,
         static_cast<float>(green) / 255,
         static_cast<float>(blue)  / 255);
-    
+
     // human beings are allowed to edit pieces
     m_editPieceTable->set_sensitive(true);
 
     // player is a human and he/she will put down a piece
     m_boardDrawingArea.SetCurrentPlayer(m_theTotalAllocationGame.GetPlayer());
-    
+
     // launch the game!!
     LaunchNewGame();
 }
@@ -211,8 +213,8 @@ void GameTotalAllocationWidget::LaunchNewGame()
 }
 
 void GameTotalAllocationWidget::BoardDrawingArea_BoardClicked(
-    const Coordinate &a_coord, 
-    const Piece &a_piece, 
+    const Coordinate &a_coord,
+    const Piece &a_piece,
     const Player &a_player)
 {
     if (a_player.NumberOfPiecesAvailable() == e_numberOfPieces)
@@ -252,7 +254,7 @@ void GameTotalAllocationWidget::BoardDrawingArea_BoardClicked(
             return;
         }
     }
-    
+
     // put down current piece before anything else
     m_theTotalAllocationGame.PutDownPiece(a_piece, a_coord);
 
@@ -262,7 +264,7 @@ void GameTotalAllocationWidget::BoardDrawingArea_BoardClicked(
 
 	// update score
     m_statusBar.SetScoreStatus(1, a_player);
-    
+
     // remove the actual piece being edited from the edit piece drawing area
     // and force the edit piece drawing area to be redraw
     m_editPieceTable->SetPiece(e_noPiece);
