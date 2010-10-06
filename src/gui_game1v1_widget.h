@@ -35,8 +35,6 @@
 #include <gtkmm.h>
 
 #include "g_blocking_queue.h"
-#include "gui_about_dialog.h"
-#include "gui_game1v1_config_dialog.h"
 #include "gui_drawing_area_show_pieces.h"
 #include "gui_drawing_area_board.h"
 #include "gui_exception.h"
@@ -44,6 +42,7 @@
 #include "gui_stop_watch_label.h"
 #include "gui_table_edit_piece.h"
 #include "gui_game_statusbar.h"
+#include "gui_game1v1_config_dialog.h"
 #include "game1v1.h"
 #include "coordinate.h"
 #include "piece.h"
@@ -61,6 +60,42 @@ public:
     Game1v1Widget(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder) throw (GUIException);
     virtual ~Game1v1Widget();
 
+    /// Cancels computing thread and sets it to "waiting" state
+    /// It is a blocking call (it gets blocked until the thread cancels its 
+    /// current calculation process)
+    void CancelComputing();
+    
+    /// @return true if the worker thread is processing a new move
+    bool IsComputingMove();
+    
+    /// Launches a new game. 
+    /// WARNING: It must be used carefully since it cancels whatever the worker
+    /// thread is computing now and resets the game to the settigns stored in 
+    /// the Game1v1Config singleton
+    void LaunchNewGame();
+    
+    /// Uses the game1v1 config dialog to decide what changes in the
+    /// current game need to be done
+    /// Then updates the general config singleton with the new configuration
+    /// And launches requests to the worker thread if neccesary
+    /// WARNING: It should only be called if the user accepted changes when 
+    /// he/she was shown the config dialog
+    /// @param the game1v1 config dialog
+    /// @return true if the current calculation of the worker thread had to be
+    ///         cancelled. False otherwise
+    bool ProcessChangeInCurrentGame(Game1v1ConfigDialog& a_configDialog);
+    
+    /// @return a reference to the drawing area shown by this widget
+    DrawingAreaBoard& BoardDrawingArea();
+    
+    /// @brief shows the influence area of a player on the board
+    /// @param a_game1v1Player if it is e_Game1v1NoPlayer no influence area will be shown
+    void ShowInfluenceAreaInBoard(Game1v1::eGame1v1Player_t a_game1v1Player);
+    
+    /// @brief shows forbidden area of a player on the board
+    /// @param a_game1v1Player if it is e_Game1v1NoPlayer no forbidden area will be shown
+    void ShowForbiddenAreaInBoard(Game1v1::eGame1v1Player_t a_game1v1Player);
+    
     /// @brief callback to be called whenever the worker thread finishes computing a move
     void WorkerThread_computingFinished(
             const Piece              &a_piece,
@@ -68,53 +103,33 @@ public:
             Game1v1::eGame1v1Player_t a_playerToMove,
             int32_t                   a_returnValue);
 
-    /// @brief callback to be called when the window is about to be closed
-    ///        using the X on the corner
-    bool MainWindow_DeleteEvent(GdkEventAny*);
-
-    /// @brief callback to be called when the window is about to be closed
-    ///        using the menutiem Game->quit
-    void MenuItemGameQuit_Activate();
-
-    /// @brief callback to be called when the menuitem Game->new is pressed
-    void MenuItemGameNew_Activate();
-
-    /// @brief callback to be called when the menuitem Help->about is pressed
-    void MenuItemHelpAbout_Activate();
-
-    /// @brief callback to be called when the menuitem Settings->Preferences is pressed
-    void MenuItemSettingsPreferences_Activate();
-
-    /// @brief  callback to be called when the menuitem Settings->view nk points is toggled
-    void MenuItemSettingsViewNKPoints_Toggled();
-
-    /// @brief  callback to be called when the menuitem Settings->areas->show player1's forbidden area is toggled
-    void MenuItemSettingsShowPlayer1ForbiddenArea_Toggled();
-
-    /// @brief  callback to be called when the menuitem Settings->areas->show player2 forbidden area is toggled
-    void MenuItemSettingsShowPlayer2ForbiddenArea_Toggled();
-
-    /// @brief  callback to be called when the menuitem Settings->areas->do not show forbidden area is toggled
-    void MenuItemSettingsShowNoneForbiddenArea_Toggled();
-
-    /// @brief  callback to be called when the menuitem Settings->areas->show player1's influence area is toggled
-    void MenuItemSettingsShowPlayer1InfluenceArea_Toggled();
-
-    /// @brief  callback to be called when the menuitem Settings->areas->show player2 influence area is toggled
-    void MenuItemSettingsShowPlayer2InfluenceArea_Toggled();
-
-    /// @brief  callback to be called when the menuitem Settings->areas->do not show influence area is toggled
-    void MenuItemSettingsShowNoneInfluenceArea_Toggled();
-
     /// @brief callback to be called when a button is pressed inside the board
     void BoardDrawingArea_BoardClicked(const Coordinate &, const Piece &, const Player &);
 
+    /// Access to the fatal error signal private member. Note this signal is 
+    /// not thread safe so it must be processed by the same thread who
+    /// handles the GUI
+    /// It contains a HTML formatted error message describing the fatal error
+    sigc::signal<void, const std::string&>& signal_fatalError()
+    {
+        return m_signal_fatalError;
+    }
+    
+    /// Access to the game finished signal private member. Note this signal is 
+    /// not thread safe so it must be processed by the same thread who
+    /// handles the GUI
+    /// It contains a HTML formated message describing the final score
+    sigc::signal<void, const std::string&>& signal_gameFinished()
+    {
+        return m_signal_gameFinished;
+    }
+    
     /// @brief to be used as a functor so Game1v1 notifies this class the progress of the computing
     ///        process for computer's next move
     /// this function can be called from a different thread because it uses signal dispatcher
     /// see: http://library.gnome.org/devel/glibmm/stable/thread_2dispatcher_8cc-example.html
-    static void ProgressUpdate(float a_progress);
-
+    static void ProgressUpdate(float a_progress);    
+    
 private:
 
     /// struct which contains the info that stores a move (piece + where + who)
@@ -147,14 +162,11 @@ private:
     /// @brief latest place of the board where the user had the mouse pointer in
     Coordinate m_lastCoord;
 
-    /// @brief the worker thread used to leave the GUI active while the next moves is calculated
+    /// @brief the worker thread used to leave the GUI active while next moves are calculated
     MainWindowWorkerThread m_workerThread;
 
     /// @brief randomizer 'cos we might use a bit of randomness when computing the next move
     GRand* m_randomizer;
-
-    /// @brief the config dialog class
-    ConfigDialog* m_configDialog;
 
     /// @brief the drawing area where the pieces can be picked up by the user
     DrawingAreaShowPieces m_pickPiecesDrawingArea;
@@ -168,9 +180,6 @@ private:
     /// @brief the table where the selected piece is edited
     TableEditPiece* m_editPieceTable;
 
-    /// @brief the vertical box that keeps the board + pieces
-    Gtk::VBox* m_vBoxDrawing;
-
     /// @brief the table that contains the board + pieces left
     Gtk::HBox* m_hBoxGameStatus;
 
@@ -183,17 +192,19 @@ private:
     /// @brief hbox which serves as status bar
     GameStatusBar m_statusBar;
 
-    /// Signal class for inter-thread communication to
+    /// thread-safe signal object for inter-thread communication to
     /// notify the next move has been computed
     Glib::Dispatcher m_signal_moveComputed;
 
-    /// Signal class for inter-thread communication to
+    /// thread-safe signal object for inter-thread communication to
     /// notify a change in computing progress
     Glib::Dispatcher m_signal_computingProgressUpdated;
-
-    /// Launches a new game. It cancels whatever the worker thread is computing now
-    /// and resets the game to the starting configuration
-    void LaunchNewGame();
+    
+    /// Signal object to notify fatal errors
+    sigc::signal<void, const std::string&> m_signal_fatalError;
+    
+    /// Signal object to notify when game is finished
+    sigc::signal<void, const std::string&> m_signal_gameFinished;
 
     /// @brief requests the worker thread to compute a move
     /// It finishes the app if there's an error communicating with this thread

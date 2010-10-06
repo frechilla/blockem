@@ -48,7 +48,7 @@ static const double MAXIMUM_STARTING_COORD_ROW = BOARD_1VS1_ROWS;
 static const double MINIMUM_STARTING_COORD_COL = 1;
 static const double MAXIMUM_STARTING_COORD_COL = BOARD_1VS1_COLUMNS;
 
-ConfigDialog::ConfigDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder)  throw (GUIException) :
+Game1v1ConfigDialog::Game1v1ConfigDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder)  throw (GUIException) :
     Gtk::Dialog(cobject), //Calls the base class constructor
     m_gtkBuilder(a_gtkBuilder),
     m_spinbuttonStartingRowPlayer1Adj(
@@ -362,25 +362,25 @@ ConfigDialog::ConfigDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Buil
 
     //signal handling
     m_comboTypePlayer1.signal_changed().connect(
-            sigc::mem_fun(*this, &ConfigDialog::ComboPlayer1Type_signalChanged));
+            sigc::mem_fun(*this, &Game1v1ConfigDialog::ComboPlayer1Type_signalChanged));
     m_comboTypePlayer2.signal_changed().connect(
-            sigc::mem_fun(*this, &ConfigDialog::ComboPlayer2Type_signalChanged));
+            sigc::mem_fun(*this, &Game1v1ConfigDialog::ComboPlayer2Type_signalChanged));
     m_comboHeuristicPlayer1.signal_changed().connect(
-            sigc::mem_fun(*this, &ConfigDialog::ComboHeuristicPlayer1_signalChanged));
+            sigc::mem_fun(*this, &Game1v1ConfigDialog::ComboHeuristicPlayer1_signalChanged));
     m_comboHeuristicPlayer2.signal_changed().connect(
-            sigc::mem_fun(*this, &ConfigDialog::ComboHeuristicPlayer2_signalChanged));
+            sigc::mem_fun(*this, &Game1v1ConfigDialog::ComboHeuristicPlayer2_signalChanged));
 
     m_spinbuttonDepthPlayer1->signal_value_changed().connect(
-            sigc::mem_fun(*this, &ConfigDialog::SpinButtonDepthPlayer1_SignalValueChanged));
+            sigc::mem_fun(*this, &Game1v1ConfigDialog::SpinButtonDepthPlayer1_SignalValueChanged));
     m_spinbuttonDepthPlayer2->signal_value_changed().connect(
-            sigc::mem_fun(*this, &ConfigDialog::SpinButtonDepthPlayer2_SignalValueChanged));
+            sigc::mem_fun(*this, &Game1v1ConfigDialog::SpinButtonDepthPlayer2_SignalValueChanged));
 }
 
-ConfigDialog::~ConfigDialog()
+Game1v1ConfigDialog::~Game1v1ConfigDialog()
 {
 }
 
-bool ConfigDialog::on_expose_event (GdkEventExpose* event)
+bool Game1v1ConfigDialog::on_expose_event (GdkEventExpose* event)
 {
     // workaround to show the "Auto" string in the depth spin buttons
     // m_spinbuttonDepthPlayer1->set_text("Auto") doesn't work until
@@ -396,7 +396,7 @@ bool ConfigDialog::on_expose_event (GdkEventExpose* event)
     return Gtk::Dialog::on_expose_event(event);
 }
 
-void ConfigDialog::SetStartingCoordEditionSensitive(bool action)
+void Game1v1ConfigDialog::SetStartingCoordEditionSensitive(bool action)
 {
     m_spinbuttonStartingRowPlayer1->set_sensitive(action);
     m_spinbuttonStartingColumnPlayer1->set_sensitive(action);
@@ -404,7 +404,7 @@ void ConfigDialog::SetStartingCoordEditionSensitive(bool action)
     m_spinbuttonStartingColumnPlayer2->set_sensitive(action);
 }
 
-void ConfigDialog::SpinButtonDepthPlayer1_SignalValueChanged()
+void Game1v1ConfigDialog::SpinButtonDepthPlayer1_SignalValueChanged()
 {
     if (static_cast<int32_t>(m_spinbuttonDepthPlayer1Adj.get_value()) == 0)
     {
@@ -424,7 +424,7 @@ void ConfigDialog::SpinButtonDepthPlayer1_SignalValueChanged()
     }
 }
 
-void ConfigDialog::SpinButtonDepthPlayer2_SignalValueChanged()
+void Game1v1ConfigDialog::SpinButtonDepthPlayer2_SignalValueChanged()
 {
     if (static_cast<int32_t>(m_spinbuttonDepthPlayer2Adj.get_value()) == 0)
     {
@@ -444,7 +444,7 @@ void ConfigDialog::SpinButtonDepthPlayer2_SignalValueChanged()
     }
 }
 
-void ConfigDialog::ComboPlayer1Type_signalChanged()
+void Game1v1ConfigDialog::ComboPlayer1Type_signalChanged()
 {
     if (IsPlayer1TypeComputer())
     {
@@ -456,7 +456,7 @@ void ConfigDialog::ComboPlayer1Type_signalChanged()
     }
 }
 
-void ConfigDialog::ComboPlayer2Type_signalChanged()
+void Game1v1ConfigDialog::ComboPlayer2Type_signalChanged()
 {
     if (IsPlayer2TypeComputer())
     {
@@ -468,7 +468,7 @@ void ConfigDialog::ComboPlayer2Type_signalChanged()
     }
 }
 
-void ConfigDialog::ComboHeuristicPlayer1_signalChanged()
+void Game1v1ConfigDialog::ComboHeuristicPlayer1_signalChanged()
 {
     const Heuristic::sHeuristicData_t &heuristicData =
                 Heuristic::m_heuristicData[GetPlayer1Heuristic()];
@@ -501,7 +501,7 @@ void ConfigDialog::ComboHeuristicPlayer1_signalChanged()
 
 }
 
-void ConfigDialog::ComboHeuristicPlayer2_signalChanged()
+void Game1v1ConfigDialog::ComboHeuristicPlayer2_signalChanged()
 {
     const Heuristic::sHeuristicData_t &heuristicData =
                 Heuristic::m_heuristicData[GetPlayer2Heuristic()];
@@ -534,17 +534,17 @@ void ConfigDialog::ComboHeuristicPlayer2_signalChanged()
     }
 }
 
-bool ConfigDialog::IsPlayer1TypeComputer() const
+bool Game1v1ConfigDialog::IsPlayer1TypeComputer() const
 {
     return (m_comboTypePlayer1.get_active_text().compare(_(COMBO_PLAYER_TYPE_COMPUTER)) == 0);
 }
 
-bool ConfigDialog::IsPlayer2TypeComputer() const
+bool Game1v1ConfigDialog::IsPlayer2TypeComputer() const
 {
     return (m_comboTypePlayer2.get_active_text().compare(_(COMBO_PLAYER_TYPE_COMPUTER)) == 0);
 }
 
-void ConfigDialog::GetPlayer1StartingCoord(Coordinate &a_coord) const
+void Game1v1ConfigDialog::GetPlayer1StartingCoord(Coordinate &a_coord) const
 {
     // -1 because coordinates are shown to the user starting by 1 (not 0)
     a_coord = Coordinate(
@@ -552,7 +552,7 @@ void ConfigDialog::GetPlayer1StartingCoord(Coordinate &a_coord) const
                 static_cast<int32_t>(m_spinbuttonStartingColumnPlayer1Adj.get_value()) - 1);
 }
 
-void ConfigDialog::GetPlayer2StartingCoord(Coordinate &a_coord) const
+void Game1v1ConfigDialog::GetPlayer2StartingCoord(Coordinate &a_coord) const
 {
     // -1 because coordinates are shown to the user starting by 1 (not 0)
     a_coord = Coordinate(
@@ -560,17 +560,17 @@ void ConfigDialog::GetPlayer2StartingCoord(Coordinate &a_coord) const
                 static_cast<int32_t>(m_spinbuttonStartingColumnPlayer2Adj.get_value()) - 1);
 }
 
-int32_t ConfigDialog::GetPlayer1SearchTreeDepth() const
+int32_t Game1v1ConfigDialog::GetPlayer1SearchTreeDepth() const
 {
     return static_cast<uint32_t>(m_spinbuttonDepthPlayer1Adj.get_value());
 }
 
-int32_t ConfigDialog::GetPlayer2SearchTreeDepth() const
+int32_t Game1v1ConfigDialog::GetPlayer2SearchTreeDepth() const
 {
     return static_cast<uint32_t>(m_spinbuttonDepthPlayer2Adj.get_value());
 }
 
-Heuristic::eHeuristicType_t ConfigDialog::GetPlayer1Heuristic() const
+Heuristic::eHeuristicType_t Game1v1ConfigDialog::GetPlayer1Heuristic() const
 {
     for (int32_t i = Heuristic::e_heuristicStartCount;
          i < Heuristic::e_heuristicCount;
@@ -591,7 +591,7 @@ Heuristic::eHeuristicType_t ConfigDialog::GetPlayer1Heuristic() const
     return Heuristic::e_heuristicStartCount;
 }
 
-Heuristic::eHeuristicType_t ConfigDialog::GetPlayer2Heuristic() const
+Heuristic::eHeuristicType_t Game1v1ConfigDialog::GetPlayer2Heuristic() const
 {
     for (int32_t i = Heuristic::e_heuristicStartCount;
          i < Heuristic::e_heuristicCount;
@@ -612,7 +612,7 @@ Heuristic::eHeuristicType_t ConfigDialog::GetPlayer2Heuristic() const
     return Heuristic::e_heuristicStartCount;
 }
 
-int ConfigDialog::run()
+int Game1v1ConfigDialog::run()
 {
     // load current global configuration into the widgets before showing the dialog
 
@@ -661,7 +661,7 @@ int ConfigDialog::run()
     return Gtk::Dialog::run();
 }
 
-void ConfigDialog::SaveCurrentConfigIntoGlobalSettings() const
+void Game1v1ConfigDialog::SaveCurrentConfigIntoGlobalSettings() const
 {
     // retrieve user settings from dialog and use them to set up global configuration
 
@@ -702,7 +702,7 @@ void ConfigDialog::SaveCurrentConfigIntoGlobalSettings() const
 }
 
 #ifdef WIN32
-void ConfigDialog::ForceTranslationOfWidgets()
+void Game1v1ConfigDialog::ForceTranslationOfWidgets()
 {
     // in win32 systems gettext fails when the string is static and marked as
     // translatable with N_() but _() is never called explicitely. Basically
@@ -763,7 +763,7 @@ void ConfigDialog::ForceTranslationOfWidgets()
             _(m_player2AIDepthLabel->get_text().c_str()) );
 }
 #else
-void ConfigDialog::ForceTranslationOfWidgets()
+void Game1v1ConfigDialog::ForceTranslationOfWidgets()
 {
     // So far this is only needed in win32 platform due to some unknown issue
     // that prevents those strings to be automatically translated. It works

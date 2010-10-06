@@ -36,13 +36,13 @@
 #include "coordinate.h"
 #include "heuristic.h"
 
-class ConfigDialog :
+class Game1v1ConfigDialog :
     public Gtk::Dialog
 {
 public:
     // to be used with m_gtkBuilder->get_widget_derived(GUI_ABOUT_DIALOG_NAME, m_aboutDialog);
-    ConfigDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder) throw (GUIException);
-    virtual ~ConfigDialog();
+    Game1v1ConfigDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder) throw (GUIException);
+    virtual ~Game1v1ConfigDialog();
 
     /// set starting coords spinbuttons to sensitive or unsensitive so they can/cannot be edited
     /// @param true will set it to sensitive. false will blur them so they cannot be edited
@@ -175,9 +175,9 @@ private:
     void ForceTranslationOfWidgets();
 
     // prevent the default constructors to be used
-    ConfigDialog();
-    ConfigDialog(const ConfigDialog &a_src);
-    ConfigDialog& operator=(const ConfigDialog &a_src);
+    Game1v1ConfigDialog();
+    Game1v1ConfigDialog(const Game1v1ConfigDialog &a_src);
+    Game1v1ConfigDialog& operator=(const Game1v1ConfigDialog &a_src);
 };
 
 #endif /* _GUI_GAME1V1_CONFIG_DIALOG_H_ */

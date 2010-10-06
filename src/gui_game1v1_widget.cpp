@@ -30,30 +30,19 @@
 #ifdef DEBUG_PRINT
 #include <iostream>
 #include <cstdio>    // printf/snprintf (needed for better i18n)
-#endif
-#include <queue>     // queue computer's moves
 #include <iomanip>   // setw
+#endif
+
 #include "gettext.h" // i18n
-#include "gui_main_window.h"
+#include "gui_game1v1_widget.h"
 #include "gui_game1v1_config.h"
 #include "gui_glade_defs.h"
-
-/// message to be shown to the user when he/she requested the
-/// application to be closed, and the worker thread is busy computing
-static const char MESSAGE_ASK_BEFORE_CLOSE[] =
-        N_("The game is computing the next move. Are you sure do you want to close the application?");
-
-/// title of the new 1vs1 game dialog box
-static const char MESSAGE_NEW_1V1GAME_DIALOG_TITLE[] = N_("New 1vs1 game");
-
-/// title of the configure current game dialog box
-static const char MESSAGE_CONFIGURE_GAME_DIALOG_TITLE[] = N_("Configure current game");
 
 /// maximum size of the string to notify the end of the game
 static const uint32_t GAME_FINISHED_BUFFER_LENGTH = 256;
 
 
-/// static methods to communicate Game1v1 progress with MainWindow
+/// static methods to communicate Game1v1 progress with Game1v1Widget
 /// this float is used to communicate the worker thread with the main thread
 /// in a thread-safe manner. It's a bit dirty but it will do it for now
 static float s_computingCurrentProgress = 0.0;
@@ -61,10 +50,11 @@ static float s_computingCurrentProgress = 0.0;
 /// static easy to use mutex for shared data across threads
 G_LOCK_DEFINE_STATIC(s_computingCurrentProgress);
 
-/// this is a pointer to the MainWindow itself so it can be used from the static method
-/// MainWindow::ProgressUpdate. It is dirty, but it works (and it is enough for now)
-/// WARNING: it won't work if MainWindow is instantiated twice
-static MainWindow *g_pMainWindow = NULL;
+/// this is a pointer to the Game1v1Widget itself so it can be used from the 
+/// static method/ Game1v1Widget::ProgressUpdate. It is dirty, but it works 
+/// (and it is enough for now)
+/// WARNING: it won't work if Game1v1Widget is instantiated twice
+static Game1v1Widget *g_pGame1v1Widget = NULL;
 
 void Game1v1Widget::ProgressUpdate(float a_progress)
 {
@@ -76,9 +66,9 @@ void Game1v1Widget::ProgressUpdate(float a_progress)
         s_computingCurrentProgress = a_progress;
     G_UNLOCK(s_computingCurrentProgress);
 
-    if (g_pMainWindow)
+    if (g_pGame1v1Widget)
     {
-        g_pMainWindow->m_signal_computingProgressUpdated.emit();
+        g_pGame1v1Widget->m_signal_computingProgressUpdated.emit();
     }
 }
 
@@ -92,7 +82,6 @@ Game1v1Widget::Game1v1Widget(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Bu
         Game1v1Config::Instance().GetPlayer2StartingCoord()),
     m_lastCoord(COORD_UNINITIALISED, COORD_UNINITIALISED),
     m_workerThread(),
-    m_aboutDialog(NULL),
     m_pickPiecesDrawingArea(
         m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1),
         DrawingAreaShowPieces::eOrientation_leftToRight),
@@ -103,27 +92,18 @@ Game1v1Widget::Game1v1Widget(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Bu
     m_editPieceTable(NULL),
     m_statusBar(2, true) // 2 players, include progress bar
 {
-    //TODO this is dirty (even though it works) the way MainWindow::ProgressUpdate
-    // access the MainWindow Instance should be fixed in some way
+    //TODO this is dirty (even though it works) the way Game1v1Widget::ProgressUpdate
+    // access the Game1v1Widget Instance should be fixed in some way
 #ifdef DEBUG
-    // assert there's no more than 1 instance of MainWindow
-    assert(g_pMainWindow == NULL);
+    // assert there's no more than 1 instance of Game1v1Widget
+    assert(g_pGame1v1Widget == NULL);
 #endif
-    g_pMainWindow = this;
+    g_pGame1v1Widget = this;
 
     // create and initialise the randomizer using now time as the seed
     GTimeVal timeNow;
     g_get_current_time(&timeNow);
     m_randomizer = g_rand_new_with_seed(static_cast<guint32>(timeNow.tv_sec ^ timeNow.tv_usec));
-
-    // retrieve the config dialog. It must be retrieved calling get_widget_derived
-    // otherwise app will core
-    m_gtkBuilder->get_widget_derived(GUI_CONFIG_DIALOG_NAME, m_configDialog);
-    if (m_configDialog == NULL)
-    {
-        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
-    }
-
 
     // retrieve the editing piece table. It must be retrieved calling get_widget_derived
     // otherwise app will core
@@ -134,12 +114,6 @@ Game1v1Widget::Game1v1Widget(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Bu
     }
 
     // retrieve the rest of objects from the GUI design
-    m_gtkBuilder->get_widget(GUI_VBOX_GAME1V1, m_vBoxDrawing);
-    if (m_vBoxDrawing == NULL)
-    {
-        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
-    }
-
     m_gtkBuilder->get_widget(GUI_HBOX_GAME_STATUS_NAME, m_hBoxGameStatus);
     if (m_hBoxGameStatus == NULL)
     {
@@ -171,7 +145,7 @@ Game1v1Widget::Game1v1Widget(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Bu
 
     // the custom status bar. Add it into the window
     // Do not expand, but fill
-    m_vBoxMain->pack_start(m_statusBar, false, true);
+    this->pack_start(m_statusBar, false, true);
 
     // update the score shown in the status bar before setting them up as visible
     // so the widgets take their proper size at GUI startup
@@ -213,15 +187,15 @@ Game1v1Widget::Game1v1Widget(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Bu
     // connect the interthread communication (GLib::Dispatcher) to invalidate the
     // board drawing area
     m_signal_moveComputed.connect(
-            sigc::mem_fun(*this, &MainWindow::NotifyMoveComputed));
+            sigc::mem_fun(*this, &Game1v1Widget::NotifyMoveComputed));
 
     // connect the interthread communication to update the progress bar
     m_signal_computingProgressUpdated.connect(
-            sigc::mem_fun(*this, &MainWindow::NotifyProgressUpdate));
+            sigc::mem_fun(*this, &Game1v1Widget::NotifyProgressUpdate));
 
     // connect the worker thread signal
     m_workerThread.signal_computingFinished().connect(
-            sigc::mem_fun(*this, &MainWindow::WorkerThread_computingFinished));
+            sigc::mem_fun(*this, &Game1v1Widget::WorkerThread_computingFinished));
             //sigc::ptr_fun(f) );
 
     // connect the signal coming from the pickPiecesDrawingArea to update TableEditPiece
@@ -236,35 +210,8 @@ Game1v1Widget::Game1v1Widget(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Bu
     // connect the signal coming fromt he board drawing area to process when the user clicks
     // on the board
     m_boardDrawingArea.signal_boardPicked().connect(
-            sigc::mem_fun(*this, &MainWindow::BoardDrawingArea_BoardClicked));
+            sigc::mem_fun(*this, &Game1v1Widget::BoardDrawingArea_BoardClicked));
 
-
-    // connect the rest of the signals to the handlers
-    // if the handler is not part of an object use sigc::ptr_fun
-    this->signal_delete_event().connect(
-            sigc::mem_fun(*this, &MainWindow::MainWindow_DeleteEvent));
-    m_newMenuItem->signal_activate().connect(
-            sigc::mem_fun(*this, &MainWindow::MenuItemGameNew_Activate));
-    m_quitMenuItem->signal_activate().connect(
-            sigc::mem_fun(*this, &MainWindow::MenuItemGameQuit_Activate));
-    m_helpAboutMenuItem->signal_activate().connect(
-            sigc::mem_fun(*this, &MainWindow::MenuItemHelpAbout_Activate));
-    m_settingsPrefsMenuItem->signal_activate().connect(
-            sigc::mem_fun(*this, &MainWindow::MenuItemSettingsPreferences_Activate));
-    m_settingsNKPointsMenuItem->signal_toggled().connect(
-            sigc::mem_fun(*this, &MainWindow::MenuItemSettingsViewNKPoints_Toggled));
-    m_settingsForbiddenAreaPlayer1MenuItem->signal_toggled().connect(
-            sigc::mem_fun(*this, &MainWindow::MenuItemSettingsShowPlayer1ForbiddenArea_Toggled));
-    m_settingsForbiddenAreaPlayer2MenuItem->signal_toggled().connect(
-            sigc::mem_fun(*this, &MainWindow::MenuItemSettingsShowPlayer2ForbiddenArea_Toggled));
-    m_settingsForbiddenAreaNoShowMenuItem->signal_toggled().connect(
-            sigc::mem_fun(*this, &MainWindow::MenuItemSettingsShowNoneForbiddenArea_Toggled));
-    m_settingsInfluenceAreaPlayer1MenuItem->signal_toggled().connect(
-            sigc::mem_fun(*this, &MainWindow::MenuItemSettingsShowPlayer1InfluenceArea_Toggled));
-    m_settingsInfluenceAreaPlayer2MenuItem->signal_toggled().connect(
-            sigc::mem_fun(*this, &MainWindow::MenuItemSettingsShowPlayer2InfluenceArea_Toggled));
-    m_settingsInfluenceAreaNoShowMenuItem->signal_toggled().connect(
-            sigc::mem_fun(*this, &MainWindow::MenuItemSettingsShowNoneInfluenceArea_Toggled));
 
     // initialise the list of players of the board drawing area
     m_boardDrawingArea.AddPlayerToList(m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1));
@@ -274,348 +221,77 @@ Game1v1Widget::Game1v1Widget(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Bu
     LaunchNewGame();
 }
 
-MainWindow::~MainWindow()
+Game1v1Widget::~Game1v1Widget()
 {
     //TODO this is dirty too. See comment at the beginning of the constructor
-    // it might cause a lot of trouble if there are more than 1 instance of MainWindow
-    g_pMainWindow = NULL;
+    // it might cause a lot of trouble if there are more than 1 instance of 
+    // Game1v1Widget
+    g_pGame1v1Widget = NULL;
 
     // delete the worker thread
     m_workerThread.Join();
 
     // delete the randomizer too
     g_rand_free(m_randomizer);
-
-    // http://library.gnome.org/devel/gtkmm/stable/classGtk_1_1Builder.html#ab8c6679c1296d6c4d8590ef907de4d5a
-    // Note that you are responsible for deleting top-level widgets (windows and dialogs) instantiated
-    // by the Builder object. Other widgets are instantiated as managed so they will be deleted
-    // automatically if you add them to a container widget
-    delete(m_aboutDialog);
-    delete(m_configDialog);
-    //delete(m_editPieceTable);
 }
 
-bool MainWindow::MainWindow_DeleteEvent(GdkEventAny*)
+void Game1v1Widget::CancelComputing()
 {
-    if (m_workerThread.IsThreadComputingMove())
-    {
-        Gtk::MessageDialog::MessageDialog exitingMessage(
-                *this,
-                _(MESSAGE_ASK_BEFORE_CLOSE),
-                true,
-                Gtk::MESSAGE_QUESTION,
-                Gtk::BUTTONS_YES_NO,
-                true);
-
-        if (exitingMessage.run() == Gtk::RESPONSE_NO)
-        {
-            // cancel delete event
-            return true;
-        }
-    }
-
     // cancel the worker thread
     m_workerThread.CancelComputing();
-
-    // continue with delete event
-    return false;
 }
 
-void MainWindow::MenuItemGameQuit_Activate()
+bool Game1v1Widget::IsComputingMove()
 {
-    if (m_workerThread.IsThreadComputingMove())
-    {
-        Gtk::MessageDialog::MessageDialog exitingMessage(
-                *this,
-                _(MESSAGE_ASK_BEFORE_CLOSE),
-                true,
-                Gtk::MESSAGE_QUESTION,
-                Gtk::BUTTONS_YES_NO,
-                true);
-
-        if (exitingMessage.run() == Gtk::RESPONSE_NO)
-        {
-            // cancel delete event
-            return;
-        }
-    }
-
-    m_workerThread.CancelComputing();
-
-    // exit the app
-    this->hide();
+    return m_workerThread.IsThreadComputingMove();
 }
 
-void MainWindow::MenuItemGameNew_Activate()
+DrawingAreaBoard& Game1v1Widget::BoardDrawingArea()
 {
-    m_configDialog->set_title(_(MESSAGE_NEW_1V1GAME_DIALOG_TITLE));
-    // starting coords can always be edited when a new game is launched
-    m_configDialog->SetStartingCoordEditionSensitive(true);
-
-    Gtk::ResponseType result = static_cast<Gtk::ResponseType>(m_configDialog->run());
-    if (result == Gtk::RESPONSE_OK)
-    {
-        // save configuration shown by the dialog into global config singleton
-        m_configDialog->SaveCurrentConfigIntoGlobalSettings();
-
-        // go for the brand new game!!
-        LaunchNewGame();
-    }
-#if defined(DEBUG_PRINT) || defined (DEBUG)
-    else if ( (result == Gtk::RESPONSE_CANCEL) || (result == Gtk::RESPONSE_DELETE_EVENT))
-    {
-        // config dialog cancelled
-        ;
-#ifdef DEBUG_PRINT
-        std::cout << _("Configuration Dialog cancelled") << std::endl;
-#endif // DEBUG_PRINT
-    }
-#ifdef DEBUG
-    else
-    {
-        // unexpected
-        assert(0);
-    }
-#endif // DEBUG
-#endif // defined(DEBUG_PRINT) || defined (DEBUG)
-
-    m_configDialog->hide();
+    return m_boardDrawingArea;
 }
 
-void MainWindow::MenuItemSettingsViewNKPoints_Toggled()
+void Game1v1Widget::ShowInfluenceAreaInBoard(Game1v1::eGame1v1Player_t a_game1v1Player)
 {
-    if (m_settingsNKPointsMenuItem->property_active())
+    switch (a_game1v1Player)
     {
-        m_boardDrawingArea.ShowNucleationPoints();
-    }
-    else
-    {
-        m_boardDrawingArea.HideNucleationPoints();
-    }
-}
-
-void MainWindow::MenuItemSettingsShowPlayer1ForbiddenArea_Toggled()
-{
-    if (m_settingsForbiddenAreaPlayer1MenuItem->property_active())
-    {
-        m_boardDrawingArea.ShowPlayerForbiddenArea(m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1));
-    }
-}
-
-void MainWindow::MenuItemSettingsShowPlayer2ForbiddenArea_Toggled()
-{
-    if (m_settingsForbiddenAreaPlayer2MenuItem->property_active())
-    {
-        m_boardDrawingArea.ShowPlayerForbiddenArea(m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2));
-    }
-}
-
-void MainWindow::MenuItemSettingsShowNoneForbiddenArea_Toggled()
-{
-    if (m_settingsForbiddenAreaNoShowMenuItem->property_active())
-    {
-        m_boardDrawingArea.HidePlayerForbiddenArea();
-    }
-}
-
-void MainWindow::MenuItemSettingsShowPlayer1InfluenceArea_Toggled()
-{
-    if (m_settingsInfluenceAreaPlayer1MenuItem->property_active())
-    {
-        m_boardDrawingArea.ShowPlayerInfluenceArea(m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1));
-    }
-}
-
-void MainWindow::MenuItemSettingsShowPlayer2InfluenceArea_Toggled()
-{
-    if (m_settingsInfluenceAreaPlayer2MenuItem->property_active())
-    {
-        m_boardDrawingArea.ShowPlayerInfluenceArea(m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2));
-    }
-}
-
-void MainWindow::MenuItemSettingsShowNoneInfluenceArea_Toggled()
-{
-    if (m_settingsInfluenceAreaNoShowMenuItem->property_active())
-    {
+    case Game1v1::e_Game1v1Player1: // let it fall down
+    case Game1v1::e_Game1v1Player2:
+        m_boardDrawingArea.ShowPlayerInfluenceArea(
+            m_the1v1Game.GetPlayer(a_game1v1Player));
+        break;
+        
+    case Game1v1::e_Game1v1NoPlayer:
         m_boardDrawingArea.HidePlayerInfluenceArea();
+        break;
+#ifdef DEBUG
+    default:
+        assert(0);
+#endif
     }
 }
 
-void MainWindow::MenuItemSettingsPreferences_Activate()
+void Game1v1Widget::ShowForbiddenAreaInBoard(Game1v1::eGame1v1Player_t a_game1v1Player)
 {
-    m_configDialog->set_title(_(MESSAGE_CONFIGURE_GAME_DIALOG_TITLE));
-
-    //TODO starting coords cannot be edited through the configuration dialog yet
-    m_configDialog->SetStartingCoordEditionSensitive(false);
-
-    // show a message informing the user a move was cancelled?
-    bool showInfoMessage = false;
-    Gtk::ResponseType result;
-    result = static_cast<Gtk::ResponseType>(m_configDialog->run());
-    if (result == Gtk::RESPONSE_OK)
+    switch (a_game1v1Player)
     {
-        // if current player is a human being and it's been set to computer
-        // next move will have to be requested to the worker thread.
-        // if current player is the computer and its settings has been changed
-        // current move will be cancelled and new settings will be applied
-        // (both if player has been set up to be human or computer)
-
-        if ( ( (m_currentMovingPlayer == Game1v1::e_Game1v1Player1)     &&
-               (Game1v1Config::Instance().IsPlayer1Computer() == false) &&
-               (m_configDialog->IsPlayer1TypeComputer() == true)        )
-             ||
-             ( (m_currentMovingPlayer == Game1v1::e_Game1v1Player2)     &&
-               (Game1v1Config::Instance().IsPlayer2Computer() == false) &&
-               (m_configDialog->IsPlayer2TypeComputer() == true)        )
-           )
-        {
-            // current player is not the computer and it has been
-            // requested in the config dialog to change it to be the computer
-            // save configuration shown by the dialog into global config singleton
-            // and request the processing thread to compute next player1 move
-            m_configDialog->SaveCurrentConfigIntoGlobalSettings();
-
-            // next move was being calculated by a human being, but now it has
-            // been swapped to a computer player. Humans are not allowed to edit
-            // pieces while computer is thinking
-            m_editPieceTable->set_sensitive(false);
-
-            // requesting the thread!!
-            RequestThreadToComputeNextMove(m_currentMovingPlayer, true);
-        }
-        else if ( ( (m_currentMovingPlayer == Game1v1::e_Game1v1Player1)    &&
-                    (Game1v1Config::Instance().IsPlayer1Computer() == true) )
-                ||
-                  ( (m_currentMovingPlayer == Game1v1::e_Game1v1Player2)    &&
-                    (Game1v1Config::Instance().IsPlayer2Computer() == true) )
-                )
-        {
-            if ( ( (m_currentMovingPlayer == Game1v1::e_Game1v1Player1) &&
-                   (m_configDialog->IsPlayer1TypeComputer() == false) )
-                 ||
-                 ( (m_currentMovingPlayer == Game1v1::e_Game1v1Player2) &&
-                   (m_configDialog->IsPlayer2TypeComputer() == false) ) )
-            {
-                // current moving player is the computer and it has been set to be a human user
-                // cancel current calculation and launch the new move
-
-                // current move is going to be cancelled
-                showInfoMessage = true;
-
-                // cancel worker thread current computing process
-                m_workerThread.CancelComputing();
-
-                // empty out move queue
-                while (!m_moveQueue.IsEmpty())
-                {
-                    CalculatedMove_t dummy;
-                    m_moveQueue.Pop(dummy);
-                }
-
-                // save new settings into global config
-                m_configDialog->SaveCurrentConfigIntoGlobalSettings();
-
-                // restart the progress bar (computer is not thinking this move anymore)
-                G_LOCK(s_computingCurrentProgress);
-                    s_computingCurrentProgress = 0.0;
-                G_UNLOCK(s_computingCurrentProgress);
-                m_statusBar.SetFraction(0.0);
-
-                // allow the new human user to put down pieces on the board
-                m_editPieceTable->set_sensitive(true);
-
-                // restore the mouse cursor so the human being who has to put down next piece
-                // can do it
-                ResetCursor();
-            } // if (m_configDialog->IsPlayer1TypeComputer() == false)
-            else if (
-                  ( (m_currentMovingPlayer == Game1v1::e_Game1v1Player1)      &&
-                    ( (Game1v1Config::Instance().GetMinimaxDepthPlayer1() !=
-                          m_configDialog->GetPlayer1SearchTreeDepth()        )
-                      ||
-                      (Game1v1Config::Instance().GetHeuristicTypePlayer1() !=
-                          m_configDialog->GetPlayer1Heuristic()              ) ) )
-                  ||
-                  ( (m_currentMovingPlayer == Game1v1::e_Game1v1Player2)      &&
-                    ( (Game1v1Config::Instance().GetMinimaxDepthPlayer2() !=
-                           m_configDialog->GetPlayer2SearchTreeDepth()        )
-                       ||
-                       (Game1v1Config::Instance().GetHeuristicTypePlayer2() !=
-                           m_configDialog->GetPlayer2Heuristic()              ) ) ) )
-            {
-                // current player was the computer and it still is.
-                // cancel current move process if there has been a change
-                // in any of the rest of the settings (all but the
-                // type of player: type of heuristic, depth of
-                // search tree)
-
-                // current move is going to be cancelled
-                showInfoMessage = true;
-
-                // cancel worker thread current computing process
-                m_workerThread.CancelComputing();
-
-                // empty out move queue
-                while (!m_moveQueue.IsEmpty())
-                {
-                    CalculatedMove_t dummy;
-                    m_moveQueue.Pop(dummy);
-                }
-
-                // restart the progress bar (computer is not thinking this move anymore)
-                G_LOCK(s_computingCurrentProgress);
-                    s_computingCurrentProgress = 0.0;
-                G_UNLOCK(s_computingCurrentProgress);
-                m_statusBar.SetFraction(0.0);
-
-                // save current config for it to be applied in the future
-                m_configDialog->SaveCurrentConfigIntoGlobalSettings();
-
-                // requesting the thread!!
-                RequestThreadToComputeNextMove(m_currentMovingPlayer, true);
-            }
-            else
-            {
-                // current player settings weren't modified. Save them
-                // but do not cancel current calculation
-                m_configDialog->SaveCurrentConfigIntoGlobalSettings();
-            }
-        }
-        else
-        {
-            // changes to the config dialog don't affect current move
-            // save configuration shown by the dialog into global config singleton
-            // new configuratio will be applied once current move is calculated
-            m_configDialog->SaveCurrentConfigIntoGlobalSettings();
-        }
-    } // if (result == Gtk::RESPONSE_OK)
-
-    m_configDialog->hide();
-
-    if (showInfoMessage)
-    {
-        // message for the user to inform his/her calculation was cancelled
-        // after the config dialog was hidden
-        Gtk::MessageDialog::MessageDialog infoMessage(
-                *this,
-                _("Previous move had to be cancelled before applying new settings"),
-                true,
-                Gtk::MESSAGE_INFO,
-                Gtk::BUTTONS_OK,
-                true);
-
-        infoMessage.run(); // there will be only one type of value returned
+    case Game1v1::e_Game1v1Player1: // let it fall down
+    case Game1v1::e_Game1v1Player2:
+        m_boardDrawingArea.ShowPlayerForbiddenArea(
+            m_the1v1Game.GetPlayer(a_game1v1Player));
+        break;
+        
+    case Game1v1::e_Game1v1NoPlayer:
+        m_boardDrawingArea.HidePlayerForbiddenArea();
+        break;
+#ifdef DEBUG
+    default:
+        assert(0);
+#endif
     }
 }
 
-void MainWindow::MenuItemHelpAbout_Activate()
-{
-    m_aboutDialog->run();
-    m_aboutDialog->hide();
-}
-
-void MainWindow::LaunchNewGame()
+void Game1v1Widget::LaunchNewGame()
 {
     if (m_workerThread.IsThreadComputingMove())
     {
@@ -672,7 +348,7 @@ void MainWindow::LaunchNewGame()
     // Start player1's timer
     m_statusBar.ContinueStopwatch(1);
 
-    // reset and force redraw editPieceTable. It'l be set to sensitive
+    // reset and force redraw editPieceTable. It'll be set to sensitive
     // or unsensitive depending on the type of player1
     m_editPieceTable->SetPiece(e_noPiece);
 
@@ -699,7 +375,149 @@ void MainWindow::LaunchNewGame()
     }
 }
 
-void MainWindow::RequestThreadToComputeNextMove(
+bool Game1v1Widget::ProcessChangeInCurrentGame(Game1v1ConfigDialog& a_configDialog)
+{
+    bool currentProcessingCancelled = false;
+    
+    // if current player is a human being and it's been set to computer
+    // next move will have to be requested to the worker thread.
+    // if current player is the computer and its settings has been changed
+    // current move will be cancelled and new settings will be applied
+    // (both if player has been set up to be human or computer)
+
+    if ( ( (m_currentMovingPlayer == Game1v1::e_Game1v1Player1)     &&
+           (Game1v1Config::Instance().IsPlayer1Computer() == false) &&
+           (a_configDialog.IsPlayer1TypeComputer() == true)        )
+         ||
+         ( (m_currentMovingPlayer == Game1v1::e_Game1v1Player2)     &&
+           (Game1v1Config::Instance().IsPlayer2Computer() == false) &&
+           (a_configDialog.IsPlayer2TypeComputer() == true)        )
+       )
+    {
+        // current player is not the computer and it has been
+        // requested in the config dialog to change it to be the computer
+        // save configuration shown by the dialog into global config singleton
+        // and request the processing thread to compute next player1 move
+        a_configDialog.SaveCurrentConfigIntoGlobalSettings();
+
+        // next move was being calculated by a human being, but now it has
+        // been swapped to a computer player. Humans are not allowed to edit
+        // pieces while computer is thinking
+        m_editPieceTable->set_sensitive(false);
+
+        // requesting the thread!!
+        RequestThreadToComputeNextMove(m_currentMovingPlayer, true);
+    }
+    else if ( ( (m_currentMovingPlayer == Game1v1::e_Game1v1Player1)    &&
+                (Game1v1Config::Instance().IsPlayer1Computer() == true) )
+            ||
+              ( (m_currentMovingPlayer == Game1v1::e_Game1v1Player2)    &&
+                (Game1v1Config::Instance().IsPlayer2Computer() == true) )
+            )
+    {
+        if ( ( (m_currentMovingPlayer == Game1v1::e_Game1v1Player1) &&
+               (a_configDialog.IsPlayer1TypeComputer() == false) )
+             ||
+             ( (m_currentMovingPlayer == Game1v1::e_Game1v1Player2) &&
+               (a_configDialog.IsPlayer2TypeComputer() == false) ) )
+        {
+            // current moving player is the computer and it has been set to be a human user
+            // cancel current calculation and launch the new move
+
+            // current move is going to be cancelled
+            currentProcessingCancelled = true;
+
+            // cancel worker thread current computing process
+            m_workerThread.CancelComputing();
+
+            // empty out move queue
+            while (!m_moveQueue.IsEmpty())
+            {
+                CalculatedMove_t dummy;
+                m_moveQueue.Pop(dummy);
+            }
+
+            // save new settings into global config
+            a_configDialog.SaveCurrentConfigIntoGlobalSettings();
+
+            // restart the progress bar (computer is not thinking this move anymore)
+            G_LOCK(s_computingCurrentProgress);
+                s_computingCurrentProgress = 0.0;
+            G_UNLOCK(s_computingCurrentProgress);
+            m_statusBar.SetFraction(0.0);
+
+            // allow the new human user to put down pieces on the board
+            m_editPieceTable->set_sensitive(true);
+
+            // restore the mouse cursor so the human being who has to put down next piece
+            // can do it
+            ResetCursor();
+        } // if (a_configDialog.IsPlayer1TypeComputer() == false)
+        else if (
+              ( (m_currentMovingPlayer == Game1v1::e_Game1v1Player1)      &&
+                ( (Game1v1Config::Instance().GetMinimaxDepthPlayer1() !=
+                      a_configDialog.GetPlayer1SearchTreeDepth()        )
+                  ||
+                  (Game1v1Config::Instance().GetHeuristicTypePlayer1() !=
+                      a_configDialog.GetPlayer1Heuristic()              ) ) )
+              ||
+              ( (m_currentMovingPlayer == Game1v1::e_Game1v1Player2)      &&
+                ( (Game1v1Config::Instance().GetMinimaxDepthPlayer2() !=
+                       a_configDialog.GetPlayer2SearchTreeDepth()        )
+                   ||
+                   (Game1v1Config::Instance().GetHeuristicTypePlayer2() !=
+                       a_configDialog.GetPlayer2Heuristic()              ) ) ) )
+        {
+            // current player was the computer and it still is.
+            // cancel current move process if there has been a change
+            // in any of the rest of the settings (all but the
+            // type of player: type of heuristic, depth of
+            // search tree)
+
+            // current move is going to be cancelled
+            currentProcessingCancelled = true;
+
+            // cancel worker thread current computing process
+            m_workerThread.CancelComputing();
+
+            // empty out move queue
+            while (!m_moveQueue.IsEmpty())
+            {
+                CalculatedMove_t dummy;
+                m_moveQueue.Pop(dummy);
+            }
+
+            // restart the progress bar (computer is not thinking this move anymore)
+            G_LOCK(s_computingCurrentProgress);
+                s_computingCurrentProgress = 0.0;
+            G_UNLOCK(s_computingCurrentProgress);
+            m_statusBar.SetFraction(0.0);
+
+            // save current config for it to be applied in the future
+            a_configDialog.SaveCurrentConfigIntoGlobalSettings();
+
+            // requesting the thread!!
+            RequestThreadToComputeNextMove(m_currentMovingPlayer, true);
+        }
+        else
+        {
+            // current player settings weren't modified. Save them
+            // but do not cancel current calculation
+            a_configDialog.SaveCurrentConfigIntoGlobalSettings();
+        }
+    }
+    else
+    {
+        // changes to the config dialog don't affect current move
+        // save configuration shown by the dialog into global config singleton
+        // new configuratio will be applied once current move is calculated
+        a_configDialog.SaveCurrentConfigIntoGlobalSettings();
+    }
+    
+    return currentProcessingCancelled;
+}
+
+void Game1v1Widget::RequestThreadToComputeNextMove(
         Game1v1::eGame1v1Player_t a_whoMoves,
         bool                      a_blockCall,
         const Coordinate         &a_coordinate,
@@ -779,7 +597,7 @@ void MainWindow::RequestThreadToComputeNextMove(
     {
 #ifdef DEBUG_PRINT
         std::cout
-            << _("Error while telling the thread to start computing. Worker thread is busy")
+            << "Error while telling the thread to start computing. Worker thread is busy"
             << std::endl;
 #endif
         std::stringstream theMessage;
@@ -787,28 +605,15 @@ void MainWindow::RequestThreadToComputeNextMove(
         // i18n Thank you for contributing to this project
         theMessage << _("<b>Fatal Error:</b> Could not communicate with worker thread. Application will exit now!");
 
-        Gtk::MessageDialog::MessageDialog fatalErrorMessage(
-            *this,
-            theMessage.str().c_str(),
-            true,
-            Gtk::MESSAGE_ERROR,
-            Gtk::BUTTONS_OK,
-            true);
-
-        if (fatalErrorMessage.run())
-        {
-            ; // the dialog only has 1 button
-        }
-
-        // kill the worker thread
+        // stop worker thread
         m_workerThread.CancelComputing();
 
-        // exit the app
-        this->hide();
+        // Notify the fatal error. They can't be handled
+        signal_fatalError().emit(theMessage.str());
     }
 }
 
-void MainWindow::WorkerThread_computingFinished(
+void Game1v1Widget::WorkerThread_computingFinished(
         const Piece              &a_piece,
         const Coordinate         &a_coord,
         Game1v1::eGame1v1Player_t a_playerToMove,
@@ -841,13 +646,16 @@ void MainWindow::WorkerThread_computingFinished(
     m_signal_moveComputed.emit();
 }
 
-void MainWindow::BoardDrawingArea_BoardClicked(const Coordinate &a_coord, const Piece &a_piece, const Player &a_player)
+void Game1v1Widget::BoardDrawingArea_BoardClicked(
+    const Coordinate &a_coord, 
+    const Piece &a_piece, 
+    const Player &a_player)
 {
 	if (m_workerThread.IsThreadComputingMove())
 	{
 #ifdef DEBUG_PRINT
 	    std::cout
-            << _("Worker thread is busy. Please be patient while it is calculating next move")
+            << "Worker thread is busy. Please be patient while it is calculating next move"
             << std::endl;
 #endif
 	    return;
@@ -867,7 +675,7 @@ void MainWindow::BoardDrawingArea_BoardClicked(const Coordinate &a_coord, const 
                     a_player)) ) )
     {
 #ifdef DEBUG_PRINT
-        std::cout << _("Cheeky you! Don't try to deploy a piece where it's not allowed to")
+        std::cout << "Cheeky you! Don't try to deploy a piece where it's not allowed to"
                   << std::endl;
 #endif
         return;
@@ -887,20 +695,32 @@ void MainWindow::BoardDrawingArea_BoardClicked(const Coordinate &a_coord, const 
     if (result == false)
     {
 #ifdef DEBUG_PRINT
-        std::cout << _("Human move could not be added to the queue") << std::endl;
+        std::cout << "Human move could not be added to the queue" << std::endl;
 #endif
 
-        Gtk::MessageDialog::MessageDialog errorMsg(
-                *this,
-                _("Internal Error: Move could not be processed. Please click on the board normally to try again"),
-                true,
-                Gtk::MESSAGE_ERROR,
-                Gtk::BUTTONS_OK,
-                true);
+        Gtk::Window* topLevelWindow = NULL;
+        topLevelWindow = static_cast<Gtk::Window*>(this->get_toplevel());
 
-        if (errorMsg.run())
+        if (topLevelWindow)
         {
-            ; // the dialog has only 1 button
+            Gtk::MessageDialog::MessageDialog errorMsg(
+                    *topLevelWindow,
+                    _("Internal Error: Move could not be processed. Please click on the board normally to try again"),
+                    true,
+                    Gtk::MESSAGE_ERROR,
+                    Gtk::BUTTONS_OK,
+                    true);
+
+            if (errorMsg.run())
+            {
+                ; // the dialog has only 1 button
+            }
+        }
+        else
+        {
+            // emit a fatal error message
+            signal_fatalError().emit(
+                std::string(_("Main Window could not be retrieved from a child GUI element")));
         }
 
         // main thread cannot get blocked. It failed inserting the element so
@@ -919,9 +739,9 @@ void MainWindow::BoardDrawingArea_BoardClicked(const Coordinate &a_coord, const 
     return;
 }
 
-void MainWindow::NotifyMoveComputed()
+void Game1v1Widget::NotifyMoveComputed()
 {
-    // after the lock protected loop these variables will contain
+    // after the loop on the locked queue these variables will contain
     // the latest piece and latest coord deployed
     Piece latestPiece(e_noPiece);
     Coordinate latestCoord;
@@ -974,6 +794,8 @@ void MainWindow::NotifyMoveComputed()
         followingPlayer   = Game1v1::e_Game1v1Player1;
         break;
     }
+    
+    case Game1v1::e_Game1v1NoPlayer: // let it fall down
     default:
     {
         // this is impossible. latestPlayerToMove should always be player1 or player2
@@ -1087,7 +909,7 @@ void MainWindow::NotifyMoveComputed()
     }
 }
 
-void MainWindow::GameFinished()
+void Game1v1Widget::GameFinished()
 {
     // once this function is called, game is supposed to be finished
     if (m_currentGameFinished == true)
@@ -1222,28 +1044,11 @@ void MainWindow::GameFinished()
                 squaresLeftPlayer2);
     }
 
-    //MessageDialog (
-    //        Gtk::Window& parent,
-    //        const Glib::ustring& message,
-    //        bool use_markup=false,
-    //        MessageType type=MESSAGE_INFO,
-    //        ButtonsType buttons=BUTTONS_OK,
-    //        bool modal=false)
-    Gtk::MessageDialog::MessageDialog gameOverMessage(
-            *this,
-            theMessage,
-            true,
-            Gtk::MESSAGE_INFO,
-            Gtk::BUTTONS_OK,
-            true);
-
-    if (gameOverMessage.run())
-    {
-        ; // the dialog only has 1 button
-    }
+    // notify this game is finished sending the final score message
+    signal_gameFinished().emit(std::string(theMessage));
 }
 
-void MainWindow::NotifyProgressUpdate()
+void Game1v1Widget::NotifyProgressUpdate()
 {
     if (m_currentGameFinished)
     {
@@ -1260,35 +1065,35 @@ void MainWindow::NotifyProgressUpdate()
     m_statusBar.SetFraction(0.0);
 }
 
-void MainWindow::UpdateScoreStatus()
+void Game1v1Widget::UpdateScoreStatus()
 {
-    //TODO I've said somewhere above that handling of status bar
-    // contains quite a lot of magic
     m_statusBar.SetScoreStatus(1, m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1));
     m_statusBar.SetScoreStatus(2, m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2));
 }
 
-void MainWindow::SetWaitCursor()
+void Game1v1Widget::SetWaitCursor()
 {
-    Glib::RefPtr<Gdk::Window> window;
-    window = m_editPieceTable->get_window();
-    if (window)
-    {
-        get_window()->set_cursor(Gdk::Cursor(Gdk::WATCH));
+    Glib::RefPtr<Gdk::Window> topLevelWindow;
+    topLevelWindow = this->get_window();
+    if (topLevelWindow)
+    {        
+        // set the cursor to busy 
+        topLevelWindow->set_cursor(Gdk::Cursor(Gdk::WATCH));
     }
 }
-void MainWindow::ResetCursor()
+void Game1v1Widget::ResetCursor()
 {
-    Glib::RefPtr<Gdk::Window> window;
-    window= m_editPieceTable->get_window();
-    if (window)
-    {
-        window->set_cursor();
+    Glib::RefPtr<Gdk::Window> topLevelWindow;
+    topLevelWindow = this->get_window();
+    if (topLevelWindow)
+    {        
+        // set the cursor to default
+        topLevelWindow->set_cursor();
     }
 }
 
 #ifdef WIN32
-void MainWindow::ForceTranslationOfWidgets()
+void Game1v1Widget::ForceTranslationOfWidgets()
 {
     // in win32 systems gettext fails when the string is static and marked as
     // translatable with N_() but _() is never called explicitely. Basically
@@ -1303,47 +1108,9 @@ void MainWindow::ForceTranslationOfWidgets()
     // so it gets properly translated into the current domain (the 2nd case
     // described above)
 
-    // for some reason titles do get translated
-    //set_title( _(get_title().c_str()) );
-
-    m_gameMenuItem->set_label(
-        _(m_gameMenuItem->get_label().c_str()));
-
-    m_settingsMenuItem->set_label(
-        _(m_settingsMenuItem->get_label().c_str()));
-
-    m_helpMenuItem->set_label(
-        _(m_helpMenuItem->get_label().c_str()));
-
-    m_settingsNKPointsMenuItem->set_label(
-        _(m_settingsNKPointsMenuItem->get_label().c_str()));
-
-    m_settingsForbiddenAreaMenuItem->set_label(
-            _(m_settingsForbiddenAreaMenuItem->get_label().c_str()));
-
-    m_settingsForbiddenAreaPlayer1MenuItem->set_label(
-        _(m_settingsForbiddenAreaPlayer1MenuItem->get_label().c_str()));
-
-    m_settingsForbiddenAreaPlayer2MenuItem->set_label(
-        _(m_settingsForbiddenAreaPlayer2MenuItem->get_label().c_str()));
-
-    m_settingsForbiddenAreaNoShowMenuItem->set_label(
-        _(m_settingsForbiddenAreaNoShowMenuItem->get_label().c_str()));
-
-    m_settingsInfluenceAreaMenuItem->set_label(
-            _(m_settingsInfluenceAreaMenuItem->get_label().c_str()));
-
-    m_settingsInfluenceAreaPlayer1MenuItem->set_label(
-        _(m_settingsInfluenceAreaPlayer1MenuItem->get_label().c_str()));
-
-    m_settingsInfluenceAreaPlayer2MenuItem->set_label(
-        _(m_settingsInfluenceAreaPlayer2MenuItem->get_label().c_str()));
-
-    m_settingsInfluenceAreaNoShowMenuItem->set_label(
-        _(m_settingsInfluenceAreaNoShowMenuItem->get_label().c_str()));
 }
 #else
-void MainWindow::ForceTranslationOfWidgets()
+void Game1v1Widget::ForceTranslationOfWidgets()
 {
     // So far this is only needed in win32 platform due to some unknown issue
     // that prevents those strings to be automatically translated. It works

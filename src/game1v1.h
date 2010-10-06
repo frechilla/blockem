@@ -67,6 +67,8 @@ public:
     {
         e_Game1v1Player1 = 0,
         e_Game1v1Player2,
+        
+        e_Game1v1NoPlayer,
 
     } eGame1v1Player_t;
 
