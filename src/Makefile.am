@@ -100,6 +100,8 @@ gui_game1v1_config.cpp \
 gui_game1v1_config.h \
 gui_game1v1_config_dialog.cpp \
 gui_game1v1_config_dialog.h \
+gui_game1v1_widget.cpp \
+gui_game1v1_widget.h \
 gui_glade_defs.h \
 gui_main_window.cpp \
 gui_main_window.h \

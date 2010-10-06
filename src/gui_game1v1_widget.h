@@ -1,5 +1,5 @@
 // ============================================================================
-// Copyright 2009 Faustino Frechilla
+// Copyright 2010 Faustino Frechilla
 //
 // This file is part of Blockem.
 //
@@ -16,20 +16,19 @@
 // You should have received a copy of the GNU General Public License along
 // with Blockem. If not, see http://www.gnu.org/licenses/.
 //
-/// @file gui_main_window.h
+/// @file gui_game1v1_widget.h
 /// @brief
 ///
 /// @author Faustino Frechilla
 /// @history
 /// Ref       Who                When         What
-///           Faustino Frechilla 12-Nov-2009  Original development
-///           Faustino Frechilla 25-Apr-2010  libglade dependency removed. Code migrated to GtkBuilder
+///           Faustino Frechilla 05-Oct-2010  Original development
 /// @endhistory
 ///
 // ============================================================================
 
-#ifndef MAINWINDOW_H_
-#define MAINWINDOW_H_
+#ifndef _GAME1V1_WIDGET_H_
+#define _GAME1V1_WIDGET_H_
 
 #include <string>
 #include <exception>
@@ -50,16 +49,17 @@
 #include "piece.h"
 
 
-/// @brief class to handle the main window in the GUI
-class MainWindow :
-    public Gtk::Window
+/// @brief class to handle the game1v1 widget
+/// It can be added to a window and it would handle its own messages
+class Game1v1Widget :
+    public Gtk::VBox
 {
 public:
     /// Instantiates the class. It needs a Gtk::Builder object to retrieve the
     /// glade info
-    // to be used with m_gtkBuilder->get_widget_derived(GUI_VBOX_MAIN, pMainWindow)
-    MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder) throw (GUIException);
-    virtual ~MainWindow();
+    // to be used with m_gtkBuilder->get_widget_derived(GUI_VBOX_GAME1V1, m_game1v1Widget)
+    Game1v1Widget(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder) throw (GUIException);
+    virtual ~Game1v1Widget();
 
     /// @brief callback to be called whenever the worker thread finishes computing a move
     void WorkerThread_computingFinished(
@@ -153,9 +153,6 @@ private:
     /// @brief randomizer 'cos we might use a bit of randomness when computing the next move
     GRand* m_randomizer;
 
-    /// @brief the about dialog class
-    AboutDialog* m_aboutDialog;
-
     /// @brief the config dialog class
     ConfigDialog* m_configDialog;
 
@@ -170,27 +167,6 @@ private:
 
     /// @brief the table where the selected piece is edited
     TableEditPiece* m_editPieceTable;
-
-    Glib::RefPtr<Gtk::AccelGroup> m_accelGroup;
-    Glib::RefPtr<Gtk::MenuItem> m_gameMenuItem;
-    Glib::RefPtr<Gtk::MenuItem> m_settingsMenuItem;
-    Glib::RefPtr<Gtk::MenuItem> m_helpMenuItem;
-    Glib::RefPtr<Gtk::MenuItem> m_newMenuItem;
-    Glib::RefPtr<Gtk::MenuItem> m_quitMenuItem;
-    Glib::RefPtr<Gtk::MenuItem> m_helpAboutMenuItem;
-    Glib::RefPtr<Gtk::MenuItem> m_settingsPrefsMenuItem;
-    Glib::RefPtr<Gtk::CheckMenuItem> m_settingsNKPointsMenuItem;
-    Glib::RefPtr<Gtk::MenuItem> m_settingsForbiddenAreaMenuItem;
-    Glib::RefPtr<Gtk::RadioMenuItem> m_settingsForbiddenAreaPlayer1MenuItem;
-    Glib::RefPtr<Gtk::RadioMenuItem> m_settingsForbiddenAreaPlayer2MenuItem;
-    Glib::RefPtr<Gtk::RadioMenuItem> m_settingsForbiddenAreaNoShowMenuItem;
-    Glib::RefPtr<Gtk::MenuItem> m_settingsInfluenceAreaMenuItem;
-    Glib::RefPtr<Gtk::RadioMenuItem> m_settingsInfluenceAreaPlayer1MenuItem;
-    Glib::RefPtr<Gtk::RadioMenuItem> m_settingsInfluenceAreaPlayer2MenuItem;
-    Glib::RefPtr<Gtk::RadioMenuItem> m_settingsInfluenceAreaNoShowMenuItem;
-
-    /// @brief Main vertical box (It's got the menu, vbox drawing plus status bar)
-    Gtk::VBox* m_vBoxMain;
 
     /// @brief the vertical box that keeps the board + pieces
     Gtk::VBox* m_vBoxDrawing;
@@ -268,9 +244,9 @@ private:
     void ForceTranslationOfWidgets();
 
     // prevent the default constructors to be used
-    MainWindow();
-    MainWindow(const MainWindow &a_src);
-    MainWindow& operator=(const MainWindow &a_src);
+    Game1v1Widget();
+    Game1v1Widget(const Game1v1Widget &a_src);
+    Game1v1Widget& operator=(const Game1v1Widget &a_src);
 };
 
-#endif /* MAINWINDOW_H_ */
+#endif /* _GAME1V1_WIDGET_H_ */
