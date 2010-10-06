@@ -24,6 +24,7 @@
 /// Ref       Who                When         What
 ///           Faustino Frechilla 13-Sep-2009  Original development
 ///           Faustino Frechilla 21-Jul-2010  i18n
+///           Faustino Frechilla 06-Oct-2010  starting coordinate not mandatory
 /// @endhistory
 ///
 // ============================================================================
@@ -39,18 +40,41 @@ const char CHAR_EMPTY    = ' ';
 const char CHAR_PLAYER   = 'X';
 
 
-GameTotalAllocation::GameTotalAllocation(int32_t a_rows, int32_t a_columns) :
+GameTotalAllocation::GameTotalAllocation(
+    int32_t a_rows, 
+    int32_t a_columns,
+    const Coordinate &a_startingCoord) :
     m_board(a_rows, a_columns, CHAR_EMPTY),
     m_player(std::string(_("The player")),
              CHAR_PLAYER,
              a_rows,
              a_columns,
-             Coordinate(0, 0))
+             a_startingCoord),
+    m_startingCoord(a_startingCoord)
 {
 }
 
 GameTotalAllocation::~GameTotalAllocation()
 {
+}
+
+void GameTotalAllocation::Reset(
+    int32_t a_rows, 
+    int32_t a_columns,
+    const Coordinate &a_startingCoord)
+{
+    m_startingCoord = a_startingCoord;
+    m_player.Reset(m_startingCoord);
+    
+    if ((a_rows    == m_board.GetNRows()) &&
+        (a_columns == m_board.GetNColumns()) )
+    {
+        m_board.Reset();
+    }
+    else
+    {
+        m_board = Board(a_rows, a_columns, CHAR_EMPTY);
+    }    
 }
 
 void GameTotalAllocation::RemovePiece(
@@ -243,12 +267,9 @@ void GameTotalAllocation::PutDownPiece(
     } // for (it  = a_pieceConf.m_forbiddenArea.begin();
 }
 
-bool GameTotalAllocation::Solve(const Coordinate &a_startingCoord)
+bool GameTotalAllocation::Solve()
 {
     std::vector<Coordinate> validCoords(PIECE_MAX_SQUARES);
-
-	//update the starting point of the player
-	m_player.SetStartingCoordinate(a_startingCoord);
 
 	// declare the array of last pieces and old NK points and clear them out
 	ePieceType_t lastPieces[e_numberOfPieces];
@@ -286,23 +307,61 @@ bool GameTotalAllocation::Solve(const Coordinate &a_startingCoord)
              pieceConfIt != pieceConfList.end();
              pieceConfIt++)
         {
-            int32_t nValidCoords = rules::CalculateValidCoordsInStartingPoint(
-                                              m_board,
-                                              a_startingCoord,
-                                              *pieceConfIt,
-                                              validCoords);
-
-            for (int32_t k = 0 ; k < nValidCoords ; k++)
+            if (m_startingCoord.Initialised())
             {
-                PutDownPiece(validCoords[k], *pieceConfIt);
+                int32_t nValidCoords = rules::CalculateValidCoordsInStartingPoint(
+                                                  m_board,
+                                                  m_startingCoord,
+                                                  *pieceConfIt,
+                                                  validCoords);
 
-                if (AllocateAllPieces(lastPieces, oldNkPoints))
+                for (int32_t k = 0 ; k < nValidCoords ; k++)
                 {
-                    return true;
-                }
+                    PutDownPiece(validCoords[k], *pieceConfIt);
 
-                RemovePiece(validCoords[k], *pieceConfIt);
-            }
+                    if (AllocateAllPieces(lastPieces, oldNkPoints))
+                    {
+                        return true;
+                    }
+
+                    RemovePiece(validCoords[k], *pieceConfIt);
+                }
+            } // if (m_startingCoord.Initialised())
+            else
+            {
+                // try to start from everywhere in the board till a solution 
+                // is found
+                Coordinate thisStartingCoord(0, 0);
+                for (thisStartingCoord.m_row = 0; 
+                    thisStartingCoord.m_row < m_board.GetNRows();
+                    thisStartingCoord.m_row++)
+                {
+                    for (thisStartingCoord.m_col = 0; 
+                        thisStartingCoord.m_col < m_board.GetNColumns();
+                        thisStartingCoord.m_col++)
+                    {
+                        int32_t nValidCoords = rules::CalculateValidCoordsInStartingPoint(
+                                                          m_board,
+                                                          thisStartingCoord,
+                                                          *pieceConfIt,
+                                                          validCoords);
+
+                        for (int32_t k = 0 ; k < nValidCoords ; k++)
+                        {
+                            PutDownPiece(validCoords[k], *pieceConfIt);
+
+                            if (AllocateAllPieces(lastPieces, oldNkPoints))
+                            {
+                                return true;
+                            }
+
+                            RemovePiece(validCoords[k], *pieceConfIt);
+                        }
+                        
+                    } // for (thisStartingCoord.m_col = 0; 
+                } // for (thisStartingCoord.m_row = 0; 
+            } // else             
+            
         } // for (pieceConfIt = pieceConfList.begin()
 
         m_player.SetPiece(static_cast<ePieceType_t>(currentPiece));

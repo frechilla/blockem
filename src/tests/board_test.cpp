@@ -57,7 +57,12 @@ void BoardTest::DoTest()
 
 void BoardTest::TestCopyBoard()
 {
-    Player testPlayer(std::string("the test player"), 'X', ROWS, COLUMNS);
+    Player testPlayer(
+        std::string("the test player"), 
+        'X', 
+        ROWS, 
+        COLUMNS,
+        Coordinate(0, 0));
 
     Board b1(5, 5, ' ');
     Board b2(b1);

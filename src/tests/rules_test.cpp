@@ -60,10 +60,10 @@ char RulesTest::s_preloadedBoardArray[RULES_TEST_ROWS][RULES_TEST_COLUMNS] =
 
 RulesTest::RulesTest() :
     m_baseBoard(RULES_TEST_ROWS, RULES_TEST_COLUMNS, ' '),
-    m_player1(std::string("player1"), 'X', RULES_TEST_ROWS, RULES_TEST_COLUMNS),
-    m_player2(std::string("player2"), 'O', RULES_TEST_ROWS, RULES_TEST_COLUMNS),
-    m_player3(std::string("player3"), '+', RULES_TEST_ROWS, RULES_TEST_COLUMNS),
-    m_player4(std::string("player4"), '=', RULES_TEST_ROWS, RULES_TEST_COLUMNS)
+    m_player1(std::string("player1"), 'X', RULES_TEST_ROWS, RULES_TEST_COLUMNS, Coordinate(0, 0)),
+    m_player2(std::string("player2"), 'O', RULES_TEST_ROWS, RULES_TEST_COLUMNS, Coordinate(0, 13)),
+    m_player3(std::string("player3"), '+', RULES_TEST_ROWS, RULES_TEST_COLUMNS, Coordinate(13, 0)),
+    m_player4(std::string("player4"), '=', RULES_TEST_ROWS, RULES_TEST_COLUMNS, Coordinate(13, 13))
 {
     // this is quite dirty, but it is the fastest way to set
     // m_baseBoard to the values stored in s_preloadedBoardArray

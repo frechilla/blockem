@@ -42,7 +42,14 @@ public:
 	/// @brief builds the game
 	/// It creates a board and 1 players, 'me' and the board
 	/// using a_rows and a_columns as size
-    GameTotalAllocation(int32_t a_rows, int32_t a_columns);
+    /// @param number of rows
+    /// @param number of columns
+    /// @param starting coordinate. If it is an uninitialised coord player
+    ///        will be able to start from any place on the board
+    GameTotalAllocation(
+        int32_t a_rows, 
+        int32_t a_columns,
+        const Coordinate &a_startingCoord);
     virtual ~GameTotalAllocation();
 
 	/// @returns the board of the game
@@ -50,21 +57,33 @@ public:
 	{
 	    return m_board;
 	}
+    
+    inline const Player& GetPlayer() const
+    {
+        return m_player;
+    }
+    
+    inline void SetPlayerColour(
+	        uint8_t a_red,
+	        uint8_t a_green,
+	        uint8_t a_blue)
+    {
+        m_player.SetColour(a_red, a_green, a_blue);
+    }
+    
+    /// @brief reset current total allocation game
+    /// @param number of rows
+    /// @param number of columns
+    /// @param starting coordinate. If it isn't initialised player will be 
+    ///        able to start from any place on the board 
+    void Reset(int32_t a_rows, int32_t a_columns, const Coordinate &a_startingCoord);
 
-    /// @brief The player will try to put all the pieces in the board.
+    /// @brief a backtracking algorithm will try to put all the pieces in the board.
     /// It will modify the player and board objects inside this instance
-    /// They will save how the calculations ended
-    /// @param Coordinate with the starting row and the starting column
+    /// They will contain how the calculations ended
     /// @return true if the game was solved. False if there is no solution to the problem
-    bool Solve(const Coordinate &a_startingCoord);
-
-private:
-    /// The blokus board where the game will be played
-    Board m_board;
-
-    /// The player who is supposed to allocate all the pieces in the board
-    Player m_player;
-
+    bool Solve();
+    
     /// remove a piece from the board. The user is supposed to check if the piece was there
     /// before calling this function since it just will set to empty the squares
     /// @param the ABSOLUTE coord
@@ -80,6 +99,17 @@ private:
     void PutDownPiece(
             const Coordinate         &a_coord,
             const PieceConfiguration &a_pieceConf);
+
+private:
+    /// The blokus board where the game will be played
+    Board m_board;
+
+    /// The player who is supposed to allocate all the pieces in the board
+    Player m_player;
+    
+    /// starting coordinate. If it isn't initialised player will be able to 
+    /// start from any coordinate on the board 
+    Coordinate m_startingCoord;
 
     /// once there is at least one piece put down in the board this function
     /// will try to put down all the pieces in the existing nk points in the board

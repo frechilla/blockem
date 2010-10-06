@@ -221,7 +221,8 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
         const Player* thisPlayer = *it;
         thisPlayer->GetColour(red, green, blue);
 
-        if (thisPlayer->NumberOfPiecesAvailable() == e_numberOfPieces)
+        if ((thisPlayer->NumberOfPiecesAvailable() == e_numberOfPieces) &&
+            (thisPlayer->GetStartingCoordinate().Initialised()) )
         {
             // if this player put down no pieces yet, draw a small circle in the starting point
             cr->set_source_rgba(
@@ -396,10 +397,9 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
     // print the current selected piece in the place where the mouse pointer is
     // if there's a currently selected piece and a current player
     // we are so good we'll be using a bit of transparency!
-    if ( (m_currentPlayer != NULL)                     &&
-         (m_currentPiece.GetType() != e_noPiece)       &&
-         (m_currentCoord.m_row != COORD_UNINITIALISED) &&
-         (m_currentCoord.m_col != COORD_UNINITIALISED) )
+    if ( (m_currentPlayer != NULL)               &&
+         (m_currentPiece.GetType() != e_noPiece) &&
+         (m_currentCoord.Initialised() )         )
     {
         uint8_t red   = 0;
         uint8_t green = 0;
@@ -408,11 +408,16 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
 
         if (m_currentPlayer->NumberOfPiecesAvailable() == e_numberOfPieces)
         {
-            if (rules::IsPieceDeployableInStartingPoint(
+            // piece can be deployed if starting coord of this player is not
+            // initialised (it can start from everywhere on the board) or
+            // if the piece is deployable in that starting coordinate (it has
+            // been previously initialised)
+            if ( (!m_currentPlayer->GetStartingCoordinate().Initialised()) ||
+                 (rules::IsPieceDeployableInStartingPoint(
                     m_theBoard,
                     m_currentPiece.GetCurrentConfiguration(),
                     m_currentCoord,
-                    m_currentPlayer->GetStartingCoordinate()))
+                    m_currentPlayer->GetStartingCoordinate())) )
             {
                 cr->set_source_rgba(
                         static_cast<float>(red)  / 255,

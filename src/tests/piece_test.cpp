@@ -37,7 +37,7 @@
 
 PieceTest::PieceTest() :
     m_board(ROWS, COLUMNS),
-    m_player(std::string("the player"), 'X', ROWS, COLUMNS)
+    m_player(std::string("the player"), 'X', ROWS, COLUMNS, Coordinate())
 {
 }
 

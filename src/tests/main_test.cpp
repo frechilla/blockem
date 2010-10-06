@@ -111,8 +111,9 @@ int main(int argc, char** argv)
     // run a total allocation test
     std::cout << "GameTotalAllocation test started... ";
 
-    GameTotalAllocation totalAllocation1PlayerGame(14, 14);
-    assert(totalAllocation1PlayerGame.Solve(Coordinate(8, 8)));
+    // start from anywhere in the board
+    GameTotalAllocation totalAllocation1PlayerGame(14, 14, Coordinate());
+    assert(totalAllocation1PlayerGame.Solve());
     //totalAllocation1PlayerGame.GetBoard().PrintBoard(std::cout);
 
     std::cout << "  [Passed]" << std::endl << std::endl;

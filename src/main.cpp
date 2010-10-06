@@ -144,13 +144,13 @@ static GOptionEntry g_cmdEntries[] =
     { "starting-column", 'x', 0, G_OPTION_ARG_INT, &g_startingColumn,
       N_("Computer will start to allocate pieces in column X (when running with --mode=1). "
       "1st valid column is 0, so maximum allowed column will be (number_of_columns - 1). "
-      "This is a MANDATORY parameter for --mode=1"),
+      "This is an optional parameter for --mode=1 but if it is set --starting-row must be set too"),
       "X"},
 
     { "starting-row", 'y', 0, G_OPTION_ARG_INT, &g_startingRow,
       N_("Computer will start to allocate pieces in row Y (when running with --mode=1). "
       "1st valid row is 0, so maximum allowed row will be (number_of_rows - 1). "
-      "This is a MANDATORY parameter for --mode=1"),
+      "This is an optional parameter for --mode=1 but if it is set --starting-column must be set too"),
       "Y"},
 
     { "depth"  , 'd', 0, G_OPTION_ARG_INT, &g_depth,
@@ -536,14 +536,12 @@ int main(int argc, char **argv)
         {
             // 1 player total allocation (--mode=1)
 
-            if ( (g_rows == GOPTION_INT_NOT_SET)        ||
-                 (g_columns == GOPTION_INT_NOT_SET)     ||
-                 (g_startingRow == GOPTION_INT_NOT_SET) ||
-                 (g_startingColumn == GOPTION_INT_NOT_SET) )
+            if ( (g_rows == GOPTION_INT_NOT_SET) ||
+                 (g_columns == GOPTION_INT_NOT_SET) )
             {
                 FatalError(
                     argv[0],
-                    _("Number of rows, number of columns, starting row and starting column must be specified in mode '1'"),
+                    _("Number of rows and number of columns must be specified in mode '1'"),
                     TOTAL_ALLOC_BAD_OPTIONS_ERR);
             }
 
@@ -555,19 +553,38 @@ int main(int argc, char **argv)
                     TOTAL_ALLOC_BAD_OPTIONS_ERR);
             }
 
-            if ( (g_startingRow >= g_rows) || (g_startingRow < 0) ||
-                 (g_startingColumn >= g_columns) || (g_startingColumn < 0) )
+            if ( (g_startingRow != g_startingColumn) &&
+                 ( (g_startingRow == GOPTION_INT_NOT_SET) ||
+                   (g_startingColumn == GOPTION_INT_NOT_SET) ) )
             {
+                // only one of the 2 options starting row and starting columns was set
                 FatalError(
                     argv[0],
-                    _("Application cannot start outside of the board boundaries"),
+                    _("Both starting row and column must be set to configure a starting coordinate"),
                     TOTAL_ALLOC_BAD_OPTIONS_ERR);
             }
+            
+            Coordinate startingCoord;
+            if ( (g_startingRow != GOPTION_INT_NOT_SET) &&
+                 (g_startingColumn != GOPTION_INT_NOT_SET) )
+            {            
+                if ( (g_startingRow >= g_rows) || (g_startingRow < 0) ||
+                     (g_startingColumn >= g_columns) || (g_startingColumn < 0) )
+                {
+                    FatalError(
+                        argv[0],
+                        _("Application cannot start outside of the board boundaries"),
+                        TOTAL_ALLOC_BAD_OPTIONS_ERR);
+                }
+                
+                // overwrite uninitialised starting coordinate with the 
+                // user-selected one
+                startingCoord.m_row = g_startingRow;
+                startingCoord.m_col = g_startingColumn;
+            }
 
-            GameTotalAllocation theGame(g_rows, g_columns);
-
-            Coordinate startingCoord(g_startingRow, g_startingColumn);
-            if (theGame.Solve(startingCoord))
+            GameTotalAllocation theGame(g_rows, g_columns, startingCoord);
+            if (theGame.Solve())
             {
                 std::cout << std::endl;
                 // i18n TRANSLATORS: This string is to be printed when the applications finds

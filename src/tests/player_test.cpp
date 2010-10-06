@@ -39,7 +39,7 @@
 
 PlayerTest::PlayerTest() :
     m_board(ROWS, COLUMNS),
-    m_player(std::string("the player"), 'X', ROWS, COLUMNS)
+    m_player(std::string("the player"), 'X', ROWS, COLUMNS, Coordinate())
 {
 }
 
@@ -65,9 +65,9 @@ void PlayerTest::TestCopyPlayer()
     std::cout.flush();
 #endif
 
-    Player p1(std::string("tester1"), 'T', 5, 5);
+    Player p1(std::string("tester1"), 'T', 5, 5, Coordinate());
     Player p2(p1);
-    Player p3(std::string("tester3"), 'T', 6, 6);
+    Player p3(std::string("tester3"), 'T', 6, 6, Coordinate(1, 1));
     assert(p2.IsNucleationPoint(Coordinate(0, 0)) == p1.IsNucleationPoint(Coordinate(0, 0)));
 
     p2.SetNucleationPoint(Coordinate(0, 0));
@@ -96,7 +96,7 @@ void PlayerTest::TestNKPoints()
 
     m_board.Reset();
     m_player.Reset();
-    Player a_tmpPlayer(std::string("someone else"), 'O', ROWS, COLUMNS);
+    Player a_tmpPlayer(std::string("someone else"), 'O', ROWS, COLUMNS, Coordinate());
 
     // 0: empty
     // +: a_tmpPlayer

@@ -59,7 +59,7 @@ public:
             char a_presentationChar,
             int32_t a_rowsInBoard,
             int32_t a_columnsInBoard,
-            const Coordinate &a_startingCoordinate = Coordinate(0,0));
+            const Coordinate &a_startingCoordinate);
     virtual ~Player();
 
     /// @brief copy constructor. Needed because there's some dynamic memory
