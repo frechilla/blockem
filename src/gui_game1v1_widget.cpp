@@ -137,7 +137,6 @@ Game1v1Widget::Game1v1Widget(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Bu
 
     // retrieve the default colour from the config class to apply it to the players
     uint8_t red, green, blue;
-    std::stringstream theMessage;
     Game1v1Config::Instance().GetPlayer1Colour(red, green, blue);
     m_the1v1Game.SetPlayerColour(Game1v1::e_Game1v1Player1, red, green, blue);
     Game1v1Config::Instance().GetPlayer2Colour(red, green, blue);

@@ -220,7 +220,7 @@ private:
             const Coordinate         &a_coordinate = Coordinate(),
             const Piece              &a_piece      = Piece(e_noPiece));
 
-    /// @brief notifies to the user that the game is finished using a fancy message box
+    /// @brief notifies to the user that the game is finished using m_signal_gameFinished
     void GameFinished();
 
     /// Do all the stuff that needs to be done when a move has been computed

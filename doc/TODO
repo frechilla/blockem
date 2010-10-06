@@ -26,3 +26,4 @@ supposed to be integrated in blockem at some point in the future:
    possible to change the language at running time instead of compiling
    blockem as many times as languages are supported
  + cachegrind to profile (instead of gprof)
+ + complete rules_test
