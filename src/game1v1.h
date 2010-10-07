@@ -32,7 +32,8 @@
 
 #include <istream>
 #include <ostream>
-#include <csignal> // atomic_t
+#include <csignal>         // atomic_t
+#include <sigc++/signal.h> // sigc++-2.0/sigc++
 #include "piece.h"
 #include "player.h"
 #include "board.h"
@@ -78,10 +79,6 @@ public:
     //typedef CoordinateSet<BOARD_1VS1_ROWS, BOARD_1VS1_COLUMNS> Game1v1CoordinateSet_t; // 1-2% faster than the one below
     //typedef STLCoordinateSet_t Game1v1CoordinateSet_t;
 
-    /// function pointer that will be called each time there's a progress update
-    /// float will be a value between 0.0 and 1.0
-    typedef void(*ProgressFunctor_t)(float);
-
 	/// @brief builds the game
 	/// It creates a board where the game will be played
     /// @param player1 starting coordinate
@@ -94,8 +91,18 @@ public:
 	/// @returns the board of the game
 	const Board& GetBoard() const;
 
-	/// @brief sets the progress functor
-	void SetProgressHandler(ProgressFunctor_t a_progressFunctor);
+    /// access to the signal that will issued each time there's a progress 
+    /// update in the minimax algorithm
+    /// float will be a value between 0.0 and 1.0
+    /// instantiating an object that will be notified by this signal is as easy
+    /// as this:
+    ///     SignalProgress().connect(sigc::mem_fun(
+    ///         your_instance, 
+    ///         &YourClass::YourMethod));
+    ///
+    /// YourClass::YourMethod must be declared like this:
+    ///     void YourClass::YourMethod(float)
+    sigc::signal<void, float>& SignalProgressUpdate();
 
     /// @returns a const reference to the player passed as parameter
 	/// If a_playerType is invalid Player returned is undefined
@@ -200,8 +207,13 @@ protected:
 	/// one of the players that take part in the game. It's called 2, but it's not more (or less) important
 	Player m_player2;
 
-	/// functor to notify the progress made by the MinMax algorithm
-	ProgressFunctor_t m_progressFunctor;
+    /// signal that will issued each time there's a progress update in the
+    /// minimax algorithm
+    /// float will be a value between 0.0 and 1.0
+    sigc::signal<void, float> m_signal_progress;
+    
+    /// signal to be sent when the computing is finished
+    sigc::signal<void, const Piece&, const Coordinate&, Game1v1::eGame1v1Player_t, int32_t> m_signal_computingFinished;
 
     /// @brief recalculate the nucleation points using the whole blokus board and save them into the players
     void RecalculateNKInAllBoard();

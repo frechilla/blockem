@@ -68,8 +68,7 @@ Game1v1::Game1v1(
               CHAR_PLAYER2,
               BOARD_1VS1_ROWS,
               BOARD_1VS1_COLUMNS,
-              a_player2StartingCoord),
-    m_progressFunctor(NULL)
+              a_player2StartingCoord)
 {
 #ifdef DEBUG
     assert (a_player1StartingCoord.m_row >= 0);
@@ -88,9 +87,9 @@ Game1v1::~Game1v1()
 {
 }
 
-void Game1v1::SetProgressHandler(ProgressFunctor_t a_progressFunctor)
+sigc::signal<void, float>& Game1v1::SignalProgressUpdate()
 {
-    m_progressFunctor = a_progressFunctor;
+    return m_signal_progress;
 }
 
 const Player& Game1v1::GetPlayer(eGame1v1Player_t a_playerType) const
@@ -611,10 +610,9 @@ int32_t Game1v1::MinMax(
 
     for (int8_t i = e_numberOfPieces - 1 ; i >= e_minimumPieceIndex ; i--)
     {
-        if (m_progressFunctor)
-        {
-            m_progressFunctor(static_cast<float>(e_numberOfPieces - i) / e_numberOfPieces);
-        }
+        // notify possible listeners the progress update
+        m_signal_progress.emit(
+            static_cast<float>(e_numberOfPieces - i) / e_numberOfPieces);
 #ifdef DEBUG_PRINT
         std::cout <<".";
         std::cout.flush(); // fflush(stdout);

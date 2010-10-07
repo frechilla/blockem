@@ -121,11 +121,11 @@ public:
         return m_signal_gameFinished;
     }
 
-    /// @brief to be used as a functor so Game1v1 notifies this class the progress of the computing
-    ///        process for computer's next move
+    /// @brief receives signals coming from Game1v1 when it  notifies the 
+    ///        progress of the computing process for computer's next move
     /// this function can be called from a different thread because it uses signal dispatcher
     /// see: http://library.gnome.org/devel/glibmm/stable/thread_2dispatcher_8cc-example.html
-    static void ProgressUpdate(float a_progress);
+    void ProgressUpdate(float a_progress);
 
 private:
 
@@ -227,8 +227,8 @@ private:
     /// It can be used with  Glib::Dispatcher as it is a no-argument void function
     void NotifyMoveComputed();
 
-    /// updates the progress bar with the value saved in m_computingCurrentProgress;
-    void NotifyProgressUpdate();
+    /// updates the progress bar using global values static to gui_game1v1_widget.cpp
+    void ThreadSafeProgressUpdate();
 
     /// updates the score shown in the status bar
     void UpdateScoreStatus();

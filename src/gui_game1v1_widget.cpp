@@ -50,27 +50,6 @@ static float s_computingCurrentProgress = 0.0;
 /// static easy to use mutex for shared data across threads
 G_LOCK_DEFINE_STATIC(s_computingCurrentProgress);
 
-/// this is a pointer to the Game1v1Widget itself so it can be used from the
-/// static method/ Game1v1Widget::ProgressUpdate. It is dirty, but it works
-/// (and it is enough for now)
-/// WARNING: it won't work if Game1v1Widget is instantiated twice
-static Game1v1Widget *g_pGame1v1Widget = NULL;
-
-void Game1v1Widget::ProgressUpdate(float a_progress)
-{
-    // WARNING: this method is run by another thread.
-    // once the m_signal_moveComputed signal is emited the
-    // main thread will update the GUI widgets
-
-    G_LOCK(s_computingCurrentProgress);
-        s_computingCurrentProgress = a_progress;
-    G_UNLOCK(s_computingCurrentProgress);
-
-    if (g_pGame1v1Widget)
-    {
-        g_pGame1v1Widget->m_signal_computingProgressUpdated.emit();
-    }
-}
 
 Game1v1Widget::Game1v1Widget():
     Gtk::VBox(), //Calls the base class constructor
@@ -91,14 +70,6 @@ Game1v1Widget::Game1v1Widget():
     m_editPieceTable(),
     m_statusBar(2, true) // 2 players, include progress bar
 {
-    //TODO this is dirty (even though it works) the way Game1v1Widget::ProgressUpdate
-    // access the Game1v1Widget Instance should be fixed in some way
-#ifdef DEBUG
-    // assert there's no more than 1 instance of Game1v1Widget
-    assert(g_pGame1v1Widget == NULL);
-#endif
-    g_pGame1v1Widget = this;
-
     // create and initialise the randomizer using now time as the seed
     GTimeVal timeNow;
     g_get_current_time(&timeNow);
@@ -145,7 +116,8 @@ Game1v1Widget::Game1v1Widget():
     m_statusBar.SetStopwatchPrefix(2, m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2));
 
     // progress handler for the computing process of the MinMax algorithm
-    m_the1v1Game.SetProgressHandler(&Game1v1Widget::ProgressUpdate);
+    m_the1v1Game.SignalProgressUpdate().connect(
+            sigc::mem_fun(*this, &Game1v1Widget::ProgressUpdate));
 
     // connect the interthread communication (GLib::Dispatcher) to invalidate the
     // board drawing area
@@ -154,7 +126,7 @@ Game1v1Widget::Game1v1Widget():
 
     // connect the interthread communication to update the progress bar
     m_signal_computingProgressUpdated.connect(
-            sigc::mem_fun(*this, &Game1v1Widget::NotifyProgressUpdate));
+            sigc::mem_fun(*this, &Game1v1Widget::ThreadSafeProgressUpdate));
 
     // connect the worker thread signal
     m_workerThread.signal_computingFinished().connect(
@@ -186,16 +158,24 @@ Game1v1Widget::Game1v1Widget():
 
 Game1v1Widget::~Game1v1Widget()
 {
-    //TODO this is dirty too. See comment at the beginning of the constructor
-    // it might cause a lot of trouble if there are more than 1 instance of
-    // Game1v1Widget
-    g_pGame1v1Widget = NULL;
-
     // delete the worker thread
     m_workerThread.Join();
 
     // delete the randomizer too
     g_rand_free(m_randomizer);
+}
+
+void Game1v1Widget::ProgressUpdate(float a_progress)
+{
+    // WARNING: this method is run by another thread.
+    // once the m_signal_moveComputed signal (which is a thread-safe dispatcher) 
+    // is emited the main thread will update the GUI widgets
+
+    G_LOCK(s_computingCurrentProgress);
+        s_computingCurrentProgress = a_progress;
+    G_UNLOCK(s_computingCurrentProgress);
+
+    m_signal_computingProgressUpdated.emit();
 }
 
 void Game1v1Widget::CancelComputing()
@@ -1011,7 +991,7 @@ void Game1v1Widget::GameFinished()
     signal_gameFinished().emit(std::string(theMessage));
 }
 
-void Game1v1Widget::NotifyProgressUpdate()
+void Game1v1Widget::ThreadSafeProgressUpdate()
 {
     if (m_currentGameFinished)
     {
