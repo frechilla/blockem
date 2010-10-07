@@ -24,6 +24,7 @@
 /// Ref       Who                When         What
 ///           Faustino Frechilla 26-Sep-2010  Original development
 ///           Faustino Frechilla 05-Oct-2010  Support for infochallenge tag
+///           Faustino Frechilla 07-Oct-2010  i18n
 /// @endhistory
 ///
 // ============================================================================
@@ -41,12 +42,15 @@
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 
+#include "gettext.h" // i18n
 #include "blockem_challenge.h"
 
-static const char               DEFAULT_CHALLENGE_NAME[] = "default challenge";
-static const int32_t            DEFAULT_NROWS = 14;
-static const int32_t            DEFAULT_NCOLS = 14;
-static const Coordinate         DEFAULT_CHALLENGER_STARTING_COORD = Coordinate(COORD_UNINITIALISED, COORD_UNINITIALISED);
+static const uint32_t   ERROR_STRING_BUFFER_SIZE = 128;
+
+static const char       DEFAULT_CHALLENGE_NAME[] = "default challenge";
+static const int32_t    DEFAULT_NROWS = 14;
+static const int32_t    DEFAULT_NCOLS = 14;
+static const Coordinate DEFAULT_CHALLENGER_STARTING_COORD = Coordinate(COORD_UNINITIALISED, COORD_UNINITIALISED);
 
 BlockemChallenge::BlockemChallenge() :
     m_xmlDoc(NULL),
@@ -99,16 +103,23 @@ void BlockemChallenge::LoadXMLChallenge(const std::string &a_path) throw (std::r
     // ensure config file exists
     if (!g_file_test(a_path.c_str(), G_FILE_TEST_IS_REGULAR))
     {
-        throw std::runtime_error(
-            std::string("Challenge .xml file doesn't exist: ") + a_path);
+        char errorStringBuffer[ERROR_STRING_BUFFER_SIZE];
+        snprintf(errorStringBuffer,
+                ERROR_STRING_BUFFER_SIZE,
+                // i18n TRANSLATORS: Please, leave that %s as it is. It will be replaced
+                // i18n by the path to the file that could not be loaded
+                // i18n Thank you for contributing to this project
+                _("Challenge .xml file doesn't exist: %s"),
+                a_path.c_str());
+
+        throw std::runtime_error(errorStringBuffer);
     }
 
     // open XML doc and try to parse it
     m_xmlDoc = xmlParseFile(a_path.c_str());
     if (m_xmlDoc == NULL)
     {
-        XMLParsingFatalError(a_path,
-            std::string("XML syntax error"));
+        XMLParsingFatalError(a_path, _("XML syntax error"));
     }
 
     // retrieve root element
@@ -120,7 +131,9 @@ void BlockemChallenge::LoadXMLChallenge(const std::string &a_path) throw (std::r
          xmlStrcmp(root->name, (const xmlChar*) "blockem_challenge") )
     {
         XMLParsingFatalError(a_path,
-            std::string("Root element does not exist or is not called \"blockem_challenge\""));
+            // i18n TRANSLATORS: Please, leave quoted strings as they are since they
+            // i18n reference to xml tags
+            _("Root element does not exist or is not called \"blockem_challenge\""));
     }
 
     strValue = xmlGetProp(root, (const xmlChar*)"name");
@@ -128,7 +141,9 @@ void BlockemChallenge::LoadXMLChallenge(const std::string &a_path) throw (std::r
     {
         // property not present
         XMLParsingFatalError(a_path,
-                std::string("Root element does not have mandatory property \"name\""));
+            // i18n TRANSLATORS: Please, leave quoted strings as they are since they
+            // i18n reference to xml tags
+            _("Root element does not have mandatory property \"name\""));
     }
     if (xmlStrcmp(strValue, (const xmlChar*) "") == 0)
     {
@@ -136,7 +151,9 @@ void BlockemChallenge::LoadXMLChallenge(const std::string &a_path) throw (std::r
         xmlFree(strValue);
 
         XMLParsingFatalError(a_path,
-                std::string("Root element's property \"name\" can't be empty"));
+            // i18n TRANSLATORS: Please, leave quoted strings as they are since they
+            // i18n reference to xml tags
+            _("Root element's property \"name\" can't be empty"));
     }
 
 #ifdef DEBUG_PRINT
@@ -182,7 +199,7 @@ void BlockemChallenge::LoadXMLChallenge(const std::string &a_path) throw (std::r
             challengerTagPresent = true;
             XMLParseTagChallenger(a_path, cur_node);
         }
-        
+
         /////////////////////
         // infochallenge tag
         if ( (cur_node->type == XML_ELEMENT_NODE) &&
@@ -213,14 +230,16 @@ void BlockemChallenge::LoadXMLChallenge(const std::string &a_path) throw (std::r
         }
 
         XMLParsingFatalError(a_path,
-            std::string("Mandatory element(s) missing:") + mandatoryElemMissing);
+            // i18n TRANSLATORS: This string will be followed by a list
+            // i18n of missing xml tags
+            std::string(_("Mandatory element(s) missing:")) + mandatoryElemMissing);
     }
 
     // m_challengerTakenSquares INTERSECTION m_opponentTakenSquares MUST
     // be an empty set
     STLCoordinateSet_t takenSquaresIntersectionSet;
-    // The function std::set_intersection() can be used to construct an 
-    // intersection of two sets. 
+    // The function std::set_intersection() can be used to construct an
+    // intersection of two sets.
     // The two sets are specified by iterator pairs, and the intersection is
     // copied into an output iterator that is supplied as a fifth argument
     // http://www.cplusplus.com/reference/algorithm/set_union/
@@ -231,7 +250,7 @@ void BlockemChallenge::LoadXMLChallenge(const std::string &a_path) throw (std::r
         m_challengerTakenSquares.begin(),
         m_challengerTakenSquares.end(),
         std::inserter(
-            takenSquaresIntersectionSet, 
+            takenSquaresIntersectionSet,
             takenSquaresIntersectionSet.begin()));
 
     if (takenSquaresIntersectionSet.empty() == false)
@@ -248,24 +267,30 @@ void BlockemChallenge::LoadXMLChallenge(const std::string &a_path) throw (std::r
         }
 
         XMLParsingFatalError(a_path,
-            std::string("Following coords are taken by both challenger and opponent:") + errorCoords.str());
+            // i18n TRANSLATORS: This string will be followed by a set of coordinates
+            // i18n for example: (x, y) (x2, y2)
+            std::string(_("Following coords are taken by both challenger and opponent:")) + errorCoords.str());
     }
-    
+
     // If challenger's coordinate has been set, ensure it is free, this is, it
-    // doesn't belong to any of the taken squares sets (m_opponentTakenSquares 
+    // doesn't belong to any of the taken squares sets (m_opponentTakenSquares
     // or m_challengerTakenSquares)
     if (IsChallengerStartingCoordSet())
     {
         if (m_opponentTakenSquares.isPresent(GetChallengerStartingCoord()))
         {
             XMLParsingFatalError(a_path,
-                std::string("Challenger's starting coordinate is taken by the opponent"));
+                // i18n TRANSLATORS: Please, leave quoted strings as they are since they
+                // i18n reference to xml tags
+                _("Challenger's starting coordinate is taken by the opponent"));
         }
-        
+
         if (m_challengerTakenSquares.isPresent(GetChallengerStartingCoord()))
         {
             XMLParsingFatalError(a_path,
-                std::string("Challenger's starting coordinate is taken by the challenger"));
+                // i18n TRANSLATORS: Please, leave quoted strings as they are since they
+                // i18n reference to xml tags
+                _("Challenger's starting coordinate is taken by the challenger"));
         }
     }
 
@@ -322,12 +347,16 @@ void BlockemChallenge::XMLParseTagBoard(
             if (!(iStrStream >> nRows))
             {
                 XMLParsingFatalError(a_xmlFile,
-                    std::string("Bad integer value in \"nrows\""));
+                    // i18n TRANSLATORS: Please, leave quoted strings as they are since they
+                    // i18n reference to xml tags
+                    _("Bad integer value in \"nrows\""));
             }
             if (nRows <= 0)
             {
                 XMLParsingFatalError(a_xmlFile,
-                    std::string("Bad integer value in \"nrows\". MUST be a positive number"));
+                    // i18n TRANSLATORS: Please, leave quoted strings as they are since they
+                    // i18n reference to xml tags
+                    _("Bad integer value in \"nrows\". MUST be a positive number"));
             }
 
             SetBoardRows(nRows);
@@ -355,12 +384,16 @@ void BlockemChallenge::XMLParseTagBoard(
             if (!(iStrStream >> nCols))
             {
                 XMLParsingFatalError(a_xmlFile,
-                    std::string("Bad integer value in \"ncolumns\""));
+                    // i18n TRANSLATORS: Please, leave quoted strings as they are since they
+                    // i18n reference to xml tags
+                    _("Bad integer value in \"ncolumns\""));
             }
             if (nCols <= 0)
             {
                 XMLParsingFatalError(a_xmlFile,
-                    std::string("Bad integer value in \"ncolumns\". MUST be a positive number"));
+                    // i18n TRANSLATORS: Please, leave quoted strings as they are since they
+                    // i18n reference to xml tags
+                    _("Bad integer value in \"ncolumns\". MUST be a positive number"));
             }
 
             SetBoardColumns(nCols);
@@ -382,7 +415,10 @@ void BlockemChallenge::XMLParseTagBoard(
         }
 
         XMLParsingFatalError(a_xmlFile,
-            std::string("Mandatory element(s) in \"board\" missing:") + mandatoryElemMissing);
+            // i18n TRANSLATORS: Please, leave quoted strings as they are since they
+            // i18n reference to xml tags. This string will be followed by a set of
+            // i18n missing mandatory xml tags
+            std::string(_("Mandatory element(s) in \"board\" missing:")) + mandatoryElemMissing);
     } // if ( (!nrowsPresent) || (!ncolumnsPresent) )
 }
 
@@ -399,7 +435,7 @@ void BlockemChallenge::XMLParseTagOpponent(
 #endif
 
     // opponent tag contains only a set of taken coordinates. They are marked
-    // as taken by this "virtual" player, so they can't be used by the 
+    // as taken by this "virtual" player, so they can't be used by the
     // challenger
 
     for (child_node = opponent_node->children; child_node != NULL; child_node = child_node->next)
@@ -419,7 +455,9 @@ void BlockemChallenge::XMLParseTagOpponent(
             {
                 // property not present
                 XMLParsingFatalError(a_xmlFile,
-                    std::string("\"opponent\" -> \"taken\" mandatory attribute \"row\" is missing"));
+                    // i18n TRANSLATORS: Please, leave quoted strings as they are since they
+                    // i18n reference to xml tags
+                    _("\"opponent\" -> \"taken\" mandatory attribute \"row\" is missing"));
             }
             std::istringstream iStrStream(std::string((const char*)strValue));
             xmlFree(strValue);
@@ -427,17 +465,23 @@ void BlockemChallenge::XMLParseTagOpponent(
             if (!(iStrStream >> takenCoord.m_row))
             {
                 XMLParsingFatalError(a_xmlFile,
-                    std::string("Bad integer value in opponent's \"row\" attribute (\"taken tag\")"));
+                    // i18n TRANSLATORS: Please, leave quoted strings as they are since they
+                    // i18n reference to xml tags
+                    _("Bad integer value in opponent's \"row\" attribute (\"taken tag\")"));
             }
             if (takenCoord.m_row < 0)
             {
                 XMLParsingFatalError(a_xmlFile,
-                    std::string("Bad integer value in opponent's \"row\" attribute (\"taken tag\"). MUST be >= 0"));
+                    // i18n TRANSLATORS: Please, leave quoted strings as they are since they
+                    // i18n reference to xml tags
+                    _("Bad integer value in opponent's \"row\" attribute (\"taken tag\"). MUST be >= 0"));
             }
             else if (takenCoord.m_row >= GetBoardRows())
             {
                 XMLParsingFatalError(a_xmlFile,
-                    std::string("Bad integer value in opponent's \"row\" attribute (\"taken tag\"). MUST be lower than the number of rows of the board"));
+                    // i18n TRANSLATORS: Please, leave quoted strings as they are since they
+                    // i18n reference to xml tags
+                    _("Bad integer value in opponent's \"row\" attribute (\"taken tag\"). MUST be lower than the number of rows of the board"));
             }
 
             //////////
@@ -447,7 +491,9 @@ void BlockemChallenge::XMLParseTagOpponent(
             {
                 // property not present
                 XMLParsingFatalError(a_xmlFile,
-                    std::string("\"opponent\" -> \"taken\" mandatory attribute \"col\" is missing"));
+                    // i18n TRANSLATORS: Please, leave quoted strings as they are since they
+                    // i18n reference to xml tags
+                    _("\"opponent\" -> \"taken\" mandatory attribute \"col\" is missing"));
             }
 
             iStrStream.clear(); // clear error flags. MUST be done first
@@ -457,17 +503,23 @@ void BlockemChallenge::XMLParseTagOpponent(
             if (!(iStrStream >> takenCoord.m_col))
             {
                 XMLParsingFatalError(a_xmlFile,
-                    std::string("Bad integer value in opponent's \"col\" attribute (\"taken tag\")"));
+                    // i18n TRANSLATORS: Please, leave quoted strings as they are since they
+                    // i18n reference to xml tags
+                    _("Bad integer value in opponent's \"col\" attribute (\"taken tag\")"));
             }
             if (takenCoord.m_col < 0)
             {
                 XMLParsingFatalError(a_xmlFile,
-                    std::string("Bad integer value in opponent's \"col\" attribute (\"taken tag\"). MUST be >= 0"));
+                    // i18n TRANSLATORS: Please, leave quoted strings as they are since they
+                    // i18n reference to xml tags
+                    _("Bad integer value in opponent's \"col\" attribute (\"taken tag\"). MUST be >= 0"));
             }
             else if (takenCoord.m_col >= GetBoardColumns())
             {
                 XMLParsingFatalError(a_xmlFile,
-                    std::string("Bad integer value in opponent's \"col\" attribute (\"taken tag\"). MUST be lower than the number of columns of the board"));
+                    // i18n TRANSLATORS: Please, leave quoted strings as they are since they
+                    // i18n reference to xml tags
+                    _("Bad integer value in opponent's \"col\" attribute (\"taken tag\"). MUST be lower than the number of columns of the board"));
             }
 
 #ifdef DEBUG_PRINT
@@ -779,9 +831,9 @@ void BlockemChallenge::XMLParseTagChallenger(
             XMLParsingFatalError(a_xmlFile,
                 std::string("Starting coordinate hasn't been set and there aren't any taken squares by the challenger either"));
         }
-        
+
         // we are happy with this. Challenger will start the challenge from one
-        // of the nuclation points defined by its taken squares. Up to the 
+        // of the nuclation points defined by its taken squares. Up to the
         // challenge designer to ensure at least one of them is valid
     }
 }
@@ -800,8 +852,8 @@ void BlockemChallenge::XMLParseTagInfochallenge(
 
     // infochallenge has no attributes. All elements are OPTIONAL:
     //     <author>, <email> and <description>
-    for (child_node = infochallenge_node->children; 
-         child_node != NULL; 
+    for (child_node = infochallenge_node->children;
+         child_node != NULL;
          child_node = child_node->next)
     {
         //////////////
@@ -876,8 +928,18 @@ void BlockemChallenge::XMLParsingFatalError(
     xmlCleanupParser();
 
     // throw the exception!
-    throw std::runtime_error(std::string("Fatal error parsing ") +
-        a_xmlFile + std::string(": ") + a_errorMsg);
+    char errorStringBuffer[ERROR_STRING_BUFFER_SIZE];
+    snprintf(errorStringBuffer,
+            ERROR_STRING_BUFFER_SIZE,
+            // i18n TRANSLATORS: Please, leave those %s
+            // i18n 1st %s will be replaced by the path to the file that could not be parsed
+            // i18n 2nd %s will be replaced by the error message
+            // i18n Thank you for contributing to this project
+            _("Fatal error parsing %s: %s"),
+            a_xmlFile.c_str(),
+            a_errorMsg.c_str());
+
+    throw std::runtime_error(errorStringBuffer);
 }
 
 void BlockemChallenge::SetChallengeName(const std::string &a_name)
