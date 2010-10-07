@@ -97,7 +97,7 @@ private:
 
     /// @brief mirror label
     Gtk::Label m_mirrorLabel;
-    
+
     /// @brief the drawing area where the piece is edited
     Gtk::DrawingArea m_editPieceDrawingArea;
 
@@ -107,7 +107,7 @@ private:
     Gtk::Arrow m_arrowXDown;
     Gtk::Arrow m_arrowRotateRight;
     Gtk::Arrow m_arrowRotateLeft;
-    
+
     /// @brief the rotate right button to edit the piece
     Gtk::Button m_rotateRightButton;
 
@@ -116,13 +116,13 @@ private:
 
     /// @brief the mirror over Y axis button to edit the piece
     Gtk::Button m_mirrorButtonYAxis;
-    
+
     /// @brief hbox to be inserted into m_mirrorButtonYAxis
     Gtk::HBox m_mirrorButtonYAxisHBox;
 
     /// @brief the mirror over X axis button to edit the piece
     Gtk::Button m_mirrorButtonXAxis;
-    
+
     /// @brief vbox to be inserted into m_mirrorButtonXAxis
     Gtk::VBox m_mirrorButtonXAxisVBox;
 
@@ -139,16 +139,6 @@ private:
 
     /// force the editPiece drawing area to be repainted
     bool InvalidateEditPieceDrawingArea();
-
-    /// Calls gettext per every static widget in the table. These strings
-    /// are those ones included in the .glade file that never change during the
-    /// execution of the application, for example a menu called "Game", or a
-    /// label that contains the word "rotate"
-    ///
-    /// So far this is only needed in win32 platform due to some unknown issue
-    /// that prevents those strings to be automatically translated. It works
-    /// fine in linux, so there's no need there to explicitly call to gettext
-    void ForceTranslationOfWidgets();
 
     // prevent the default constructors from being used
 	TableEditPiece(const TableEditPiece &a_src);

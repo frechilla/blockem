@@ -47,16 +47,22 @@ static const float EDIT_CIRCLE_LINE_WIDTH = 1.0;
 static const int32_t NSQUARES_EDIT_PIECES_BOARD = 5;
 
 /// @brief rotate label text
+// i18n Rotate in this context means a transformation of a piece that describes
+// i18n the motion of it around a fixed point
 static const char ROTATE_LABEL_TEXT[] = N_("Rotate");
 
 /// @brief mirror label text. It contains lots of \n chacters because it's vertical writing
+// i18n This string contains the word "mirror" written downwards. Mirror in this
+// i18n context means a reflection in any of the axis of a blockem piece
+// i18n This string MUST be translated using the same downwards way, that is, a
+// i18n new line character (\n) after every character
 static const char MIRROR_LABEL_TEXT[] = N_("M\ni\nr\nr\no\nr");
 
 TableEditPiece::TableEditPiece() :
         Gtk::Table(4, 4), //nrows and ncolumns
         m_thePiece(e_noPiece),
-        m_rotateLabel(ROTATE_LABEL_TEXT),
-        m_mirrorLabel(MIRROR_LABEL_TEXT),
+        m_rotateLabel(_(ROTATE_LABEL_TEXT)),
+        m_mirrorLabel(_(MIRROR_LABEL_TEXT)),
         m_arrowYLeft(Gtk::ARROW_LEFT,        Gtk::SHADOW_NONE),
         m_arrowYRight(Gtk::ARROW_RIGHT,      Gtk::SHADOW_NONE),
         m_arrowXUp(Gtk::ARROW_UP,            Gtk::SHADOW_OUT),
@@ -72,16 +78,16 @@ TableEditPiece::TableEditPiece() :
     this->set_size_request(180, -1);
     this->set_row_spacings(1);
     this->set_col_spacings(1);
-    
+
     m_editPieceDrawingArea.set_size_request(115, 115);
-    // attach ( Widget& child, 
-    //          guint left_attach, 
-    //          guint right_attach, 
-    //          guint top_attach, 
-    //          guint bottom_attach, 
-    //          AttachOptions xoptions=FILL|EXPAND, 
-    //          AttachOptions yoptions=FILL|EXPAND, 
-    //          guint xpadding=0, 
+    // attach ( Widget& child,
+    //          guint left_attach,
+    //          guint right_attach,
+    //          guint top_attach,
+    //          guint bottom_attach,
+    //          AttachOptions xoptions=FILL|EXPAND,
+    //          AttachOptions yoptions=FILL|EXPAND,
+    //          guint xpadding=0,
     //          guint ypadding=0)
     this->attach(
         m_editPieceDrawingArea,
@@ -89,7 +95,7 @@ TableEditPiece::TableEditPiece() :
         3,
         1,
         4);
-    
+
     // pack_start (Widget& child, bool expand, bool fill, guint padding=0)
     m_mirrorButtonYAxisHBox.pack_start(m_arrowYLeft);
     m_mirrorButtonYAxisHBox.pack_start(m_arrowYRight);
@@ -113,7 +119,7 @@ TableEditPiece::TableEditPiece() :
         2,
         Gtk::SHRINK,
         Gtk::FILL);
-    
+
     m_rotateRightButton.add(m_arrowRotateRight);
     this->attach(
             m_rotateRightButton,
@@ -122,8 +128,8 @@ TableEditPiece::TableEditPiece() :
             0,
             1,
             Gtk::FILL,
-            Gtk::SHRINK);            
-    
+            Gtk::SHRINK);
+
     m_rotateLeftButton.add(m_arrowRotateLeft);
     this->attach(
             m_rotateLeftButton,
@@ -133,7 +139,7 @@ TableEditPiece::TableEditPiece() :
             1,
             Gtk::FILL,
             Gtk::SHRINK);
-    
+
 
     m_rotateLabel.set_justify(Gtk::JUSTIFY_CENTER);
     this->attach(
@@ -144,7 +150,7 @@ TableEditPiece::TableEditPiece() :
             1,
             Gtk::FILL | Gtk::EXPAND,
             Gtk::SHRINK);
-            
+
     m_mirrorLabel.set_justify(Gtk::JUSTIFY_CENTER);
     this->attach(
             m_mirrorLabel,
@@ -155,9 +161,6 @@ TableEditPiece::TableEditPiece() :
             Gtk::SHRINK,
             Gtk::FILL | Gtk::EXPAND);
 
-
-    // this call will work in different ways depending on the current platform
-    ForceTranslationOfWidgets();
 
 	// connect the signals to the handlers
 	m_editPieceDrawingArea.signal_expose_event().connect(
@@ -395,31 +398,3 @@ bool TableEditPiece::InvalidateEditPieceDrawingArea()
 
     return false;
 }
-
-#ifdef WIN32
-void TableEditPiece::ForceTranslationOfWidgets()
-{
-    // in win32 systems gettext fails when the string is static and marked as
-    // translatable with N_() but _() is never called explicitely. Basically
-    // there are 2 kinds of strings that are not translated:
-    //  + Those included in the GOptionEntry list, which show the available
-    //    options that can be passed to the program through command line
-    //  + Strings included in the .glade file that never change during the
-    //    execution of the application, for example a menu called "Game", or a
-    //    label that contains the word "rotate"
-    //
-    // We'll be calling here to _() for every string found in the .glade file
-    // so it gets properly translated into the current domain (the 2nd case
-    // described above)
-
-    m_rotateLabel.set_label( _(m_rotateLabel.get_label().c_str()) );
-    m_mirrorLabel.set_label( _(m_mirrorLabel.get_label().c_str()) );
-}
-#else
-void TableEditPiece::ForceTranslationOfWidgets()
-{
-    // So far this is only needed in win32 platform due to some unknown issue
-    // that prevents those strings to be automatically translated. It works
-    // fine in linux, so there's no need there to explicitly call to gettext
-}
-#endif // WIN32
