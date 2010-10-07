@@ -467,21 +467,21 @@ void BlockemChallenge::XMLParseTagOpponent(
                 XMLParsingFatalError(a_xmlFile,
                     // i18n TRANSLATORS: Please, leave quoted strings as they are since they
                     // i18n reference to xml tags
-                    _("Bad integer value in opponent's \"row\" attribute (\"taken tag\")"));
+                    _("Bad integer value in opponent's \"row\" attribute (\"taken\" tag)"));
             }
             if (takenCoord.m_row < 0)
             {
                 XMLParsingFatalError(a_xmlFile,
                     // i18n TRANSLATORS: Please, leave quoted strings as they are since they
                     // i18n reference to xml tags
-                    _("Bad integer value in opponent's \"row\" attribute (\"taken tag\"). MUST be >= 0"));
+                    _("Bad integer value in opponent's \"row\" attribute (\"taken\" tag). MUST be >= 0"));
             }
             else if (takenCoord.m_row >= GetBoardRows())
             {
                 XMLParsingFatalError(a_xmlFile,
                     // i18n TRANSLATORS: Please, leave quoted strings as they are since they
                     // i18n reference to xml tags
-                    _("Bad integer value in opponent's \"row\" attribute (\"taken tag\"). MUST be lower than the number of rows of the board"));
+                    _("Bad integer value in opponent's \"row\" attribute (\"taken\" tag). MUST be lower than the number of rows of the board"));
             }
 
             //////////
@@ -505,21 +505,21 @@ void BlockemChallenge::XMLParseTagOpponent(
                 XMLParsingFatalError(a_xmlFile,
                     // i18n TRANSLATORS: Please, leave quoted strings as they are since they
                     // i18n reference to xml tags
-                    _("Bad integer value in opponent's \"col\" attribute (\"taken tag\")"));
+                    _("Bad integer value in opponent's \"col\" attribute (\"taken\" tag)"));
             }
             if (takenCoord.m_col < 0)
             {
                 XMLParsingFatalError(a_xmlFile,
                     // i18n TRANSLATORS: Please, leave quoted strings as they are since they
                     // i18n reference to xml tags
-                    _("Bad integer value in opponent's \"col\" attribute (\"taken tag\"). MUST be >= 0"));
+                    _("Bad integer value in opponent's \"col\" attribute (\"taken\" tag). MUST be >= 0"));
             }
             else if (takenCoord.m_col >= GetBoardColumns())
             {
                 XMLParsingFatalError(a_xmlFile,
                     // i18n TRANSLATORS: Please, leave quoted strings as they are since they
                     // i18n reference to xml tags
-                    _("Bad integer value in opponent's \"col\" attribute (\"taken tag\"). MUST be lower than the number of columns of the board"));
+                    _("Bad integer value in opponent's \"col\" attribute (\"taken\" tag). MUST be lower than the number of columns of the board"));
             }
 
 #ifdef DEBUG_PRINT
@@ -582,7 +582,9 @@ void BlockemChallenge::XMLParseTagChallenger(
             {
                 // property not present
                 XMLParsingFatalError(a_xmlFile,
-                    std::string("\"challenger\" -> \"taken\" mandatory attribute \"row\" is missing"));
+                    // i18n TRANSLATORS: Please, leave quoted strings as they are since they
+                    // i18n reference to xml tags
+                    _("\"challenger\" -> \"taken\" mandatory attribute \"row\" is missing"));
             }
             std::istringstream iStrStream(std::string((const char*)strValue));
             xmlFree(strValue);
@@ -590,17 +592,23 @@ void BlockemChallenge::XMLParseTagChallenger(
             if (!(iStrStream >> takenCoord.m_row))
             {
                 XMLParsingFatalError(a_xmlFile,
-                    std::string("Bad integer value in challenger's \"row\" attribute (\"taken tag\")"));
+                    // i18n TRANSLATORS: Please, leave quoted strings as they are since they
+                    // i18n reference to xml tags
+                    _("Bad integer value in challenger's \"row\" attribute (\"taken\" tag)"));
             }
             if (takenCoord.m_row < 0)
             {
                 XMLParsingFatalError(a_xmlFile,
-                    std::string("Bad integer value in challenger's \"row\" attribute (\"taken tag\"). MUST be >= 0"));
+                    // i18n TRANSLATORS: Please, leave quoted strings as they are since they
+                    // i18n reference to xml tags
+                    _("Bad integer value in challenger's \"row\" attribute (\"taken\" tag). MUST be >= 0"));
             }
             else if (takenCoord.m_row >= GetBoardRows())
             {
                 XMLParsingFatalError(a_xmlFile,
-                    std::string("Bad integer value in challenger's \"row\" attribute (\"taken tag\"). MUST be lower than the number of rows of the board"));
+                    // i18n TRANSLATORS: Please, leave quoted strings as they are since they
+                    // i18n reference to xml tags
+                    _("Bad integer value in challenger's \"row\" attribute (\"taken\" tag). MUST be lower than the number of rows of the board"));
             }
 
             //////////
@@ -610,7 +618,9 @@ void BlockemChallenge::XMLParseTagChallenger(
             {
                 // property not present
                 XMLParsingFatalError(a_xmlFile,
-                    std::string("\"challenger\" -> \"taken\" mandatory attribute \"col\" is missing"));
+                    // i18n TRANSLATORS: Please, leave quoted strings as they are since they
+                    // i18n reference to xml tags
+                    _("\"challenger\" -> \"taken\" mandatory attribute \"col\" is missing"));
             }
 
             iStrStream.clear(); // clear error flags. MUST be done first
@@ -620,17 +630,23 @@ void BlockemChallenge::XMLParseTagChallenger(
             if (!(iStrStream >> takenCoord.m_col))
             {
                 XMLParsingFatalError(a_xmlFile,
-                    std::string("Bad integer value in challenger's \"col\" attribute (\"taken tag\")"));
+                    // i18n TRANSLATORS: Please, leave quoted strings as they are since they
+                    // i18n reference to xml tags
+                    _("Bad integer value in challenger's \"col\" attribute (\"taken\" tag)"));
             }
             if (takenCoord.m_col < 0)
             {
                 XMLParsingFatalError(a_xmlFile,
-                    std::string("Bad integer value in challenger's \"col\" attribute (\"taken tag\"). MUST be >= 0"));
+                    // i18n TRANSLATORS: Please, leave quoted strings as they are since they
+                    // i18n reference to xml tags
+                    _("Bad integer value in challenger's \"col\" attribute (\"taken\" tag). MUST be >= 0"));
             }
             else if (takenCoord.m_col >= GetBoardColumns())
             {
                 XMLParsingFatalError(a_xmlFile,
-                    std::string("Bad integer value in challenger's \"col\" attribute (\"taken tag\"). MUST be lower than the number of columns of the board"));
+                    // i18n TRANSLATORS: Please, leave quoted strings as they are since they
+                    // i18n reference to xml tags
+                    _("Bad integer value in challenger's \"col\" attribute (\"taken\" tag). MUST be lower than the number of columns of the board"));
             }
 
 #ifdef DEBUG_PRINT
@@ -668,7 +684,9 @@ void BlockemChallenge::XMLParseTagChallenger(
             {
                 // property not present
                 XMLParsingFatalError(a_xmlFile,
-                    std::string("\"challenger\" -> \"piece\" mandatory attribute \"available\" is missing"));
+                    // i18n TRANSLATORS: Please, leave quoted strings as they are since they
+                    // i18n reference to xml tags
+                    _("\"challenger\" -> \"piece\" mandatory attribute \"available\" is missing"));
             }
 
             bool currentPieceAvailable = false;
@@ -686,7 +704,9 @@ void BlockemChallenge::XMLParseTagChallenger(
             {
                 // "active" property is neither "yes" nor "no". This is an error
                 XMLParsingFatalError(a_xmlFile,
-                    std::string("\"challenger\" -> \"piece\" mandatory attribute \"available\" must be set to either \"yes\" or \"no\""));
+                    // i18n TRANSLATORS: Please, leave quoted strings as they are since they
+                    // i18n reference to xml tags
+                    _("\"challenger\" -> \"piece\" mandatory attribute \"available\" must be set to either \"yes\" or \"no\""));
             }
 
             // look for the piece which description matches one of the
@@ -748,17 +768,23 @@ void BlockemChallenge::XMLParseTagChallenger(
             if (!(iStrStream >> startingRow))
             {
                 XMLParsingFatalError(a_xmlFile,
-                    std::string("Bad integer value in challenger's \"starting_row\""));
+                    // i18n TRANSLATORS: Please, leave quoted strings as they are since they
+                    // i18n reference to xml tags
+                    _("Bad integer value in challenger's \"starting_row\""));
             }
             if (startingRow < 0)
             {
                 XMLParsingFatalError(a_xmlFile,
-                    std::string("Bad integer value in challenger's \"starting_row\". MUST be >= 0"));
+                    // i18n TRANSLATORS: Please, leave quoted strings as they are since they
+                    // i18n reference to xml tags
+                    _("Bad integer value in challenger's \"starting_row\". MUST be >= 0"));
             }
             else if (startingRow >= GetBoardRows())
             {
                 XMLParsingFatalError(a_xmlFile,
-                    std::string("Bad integer value in challenger's \"starting_row\". MUST be lower than the number of rows of the board"));
+                    // i18n TRANSLATORS: Please, leave quoted strings as they are since they
+                    // i18n reference to xml tags
+                    _("Bad integer value in challenger's \"starting_row\". MUST be lower than the number of rows of the board"));
             }
 
             startingCord.m_row = startingRow;
@@ -785,17 +811,23 @@ void BlockemChallenge::XMLParseTagChallenger(
             if (!(iStrStream >> startingCol))
             {
                 XMLParsingFatalError(a_xmlFile,
-                    std::string("Bad integer value in challenger's \"starting_col\""));
+                    // i18n TRANSLATORS: Please, leave quoted strings as they are since they
+                    // i18n reference to xml tags
+                    _("Bad integer value in challenger's \"starting_col\""));
             }
             if (startingCol < 0)
             {
                 XMLParsingFatalError(a_xmlFile,
-                    std::string("Bad integer value in challenger's \"starting_col\". MUST be >= 0"));
+                    // i18n TRANSLATORS: Please, leave quoted strings as they are since they
+                    // i18n reference to xml tags
+                    _("Bad integer value in challenger's \"starting_col\". MUST be >= 0"));
             }
             else if (startingCol >= GetBoardColumns())
             {
                 XMLParsingFatalError(a_xmlFile,
-                    std::string("Bad integer value in challenger's \"starting_col\". MUST be lower than the number of columns of the board"));
+                    // i18n TRANSLATORS: Please, leave quoted strings as they are since they
+                    // i18n reference to xml tags
+                    _("Bad integer value in challenger's \"starting_col\". MUST be lower than the number of columns of the board"));
             }
 
             startingCord.m_col = startingCol;
@@ -812,13 +844,17 @@ void BlockemChallenge::XMLParseTagChallenger(
     {
         // if row is set, column should have been set too
         XMLParsingFatalError(a_xmlFile,
-            std::string("\"starting_row\" is present in \"challenger\", but \"starting_col\" is not"));
+            // i18n TRANSLATORS: Please, leave quoted strings as they are since they
+            // i18n reference to xml tags
+            _("\"starting_row\" is present in \"challenger\", but \"starting_col\" is not"));
     }
     else if (startingCord.m_col != COORD_UNINITIALISED)
     {
         // if column is set, row should have been set too
         XMLParsingFatalError(a_xmlFile,
-            std::string("\"starting_col\" is present in \"challenger\", but \"starting_row\" is not"));
+            // i18n TRANSLATORS: Please, leave quoted strings as they are since they
+            // i18n reference to xml tags
+            _("\"starting_col\" is present in \"challenger\", but \"starting_row\" is not"));
     }
     else
     {
@@ -829,7 +865,9 @@ void BlockemChallenge::XMLParseTagChallenger(
             // defined for the challenger either. Player wouldn't be able to
             // start in a challenge like this. This is an error!
             XMLParsingFatalError(a_xmlFile,
-                std::string("Starting coordinate hasn't been set and there aren't any taken squares by the challenger either"));
+                // i18n TRANSLATORS: Please, leave quoted strings as they are since they
+                // i18n reference to xml tags
+                _("Starting coordinate hasn't been set and there aren't any taken squares by the challenger either"));
         }
 
         // we are happy with this. Challenger will start the challenge from one
