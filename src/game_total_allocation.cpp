@@ -41,7 +41,7 @@ const char CHAR_PLAYER   = 'X';
 
 
 GameTotalAllocation::GameTotalAllocation(
-    int32_t a_rows, 
+    int32_t a_rows,
     int32_t a_columns,
     const Coordinate &a_startingCoord) :
     m_board(a_rows, a_columns, CHAR_EMPTY),
@@ -59,13 +59,13 @@ GameTotalAllocation::~GameTotalAllocation()
 }
 
 void GameTotalAllocation::Reset(
-    int32_t a_rows, 
+    int32_t a_rows,
     int32_t a_columns,
     const Coordinate &a_startingCoord)
 {
     m_startingCoord = a_startingCoord;
     m_player.Reset(m_startingCoord);
-    
+
     if ((a_rows    == m_board.GetNRows()) &&
         (a_columns == m_board.GetNColumns()) )
     {
@@ -74,7 +74,7 @@ void GameTotalAllocation::Reset(
     else
     {
         m_board = Board(a_rows, a_columns, CHAR_EMPTY);
-    }    
+    }
 }
 
 void GameTotalAllocation::RemovePiece(
@@ -84,7 +84,7 @@ void GameTotalAllocation::RemovePiece(
     RemovePiece(
         a_coord,
         a_piece.GetCurrentConfiguration());
-    
+
     m_player.SetPiece(a_piece.GetType());
 }
 
@@ -95,7 +95,7 @@ void GameTotalAllocation::PutDownPiece(
     PutDownPiece(
         a_coord,
         a_piece.GetCurrentConfiguration());
-    
+
     m_player.UnsetPiece(a_piece.GetType());
 }
 
@@ -351,14 +351,14 @@ bool GameTotalAllocation::Solve()
             } // if (m_startingCoord.Initialised())
             else
             {
-                // try to start from everywhere in the board till a solution 
+                // try to start from everywhere in the board till a solution
                 // is found
                 Coordinate thisStartingCoord(0, 0);
-                for (thisStartingCoord.m_row = 0; 
+                for (thisStartingCoord.m_row = 0;
                     thisStartingCoord.m_row < m_board.GetNRows();
                     thisStartingCoord.m_row++)
                 {
-                    for (thisStartingCoord.m_col = 0; 
+                    for (thisStartingCoord.m_col = 0;
                         thisStartingCoord.m_col < m_board.GetNColumns();
                         thisStartingCoord.m_col++)
                     {
@@ -379,11 +379,11 @@ bool GameTotalAllocation::Solve()
 
                             RemovePiece(validCoords[k], *pieceConfIt);
                         }
-                        
-                    } // for (thisStartingCoord.m_col = 0; 
-                } // for (thisStartingCoord.m_row = 0; 
-            } // else             
-            
+
+                    } // for (thisStartingCoord.m_col = 0;
+                } // for (thisStartingCoord.m_row = 0;
+            } // else
+
         } // for (pieceConfIt = pieceConfList.begin()
 
         m_player.SetPiece(static_cast<ePieceType_t>(currentPiece));

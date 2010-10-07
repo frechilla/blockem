@@ -60,9 +60,6 @@ GameTotalAllocationWidget::GameTotalAllocationWidget():
     m_editPieceTable(),
     m_statusBar(1, false) // 1 player. Without progress bar
 {
-    // this call will work in different ways depending on the current platform
-    ForceTranslationOfWidgets();
-
     // TODO setting default colours to the player
     // this should be done loading from some config class
     m_theTotalAllocationGame.SetPlayerColour(
@@ -313,29 +310,3 @@ void GameTotalAllocationWidget::GameFinished()
     // notify this game is finished sending the final score message
     signal_gameFinished().emit(std::string(theMessage));
 }
-
-#ifdef WIN32
-void GameTotalAllocationWidget::ForceTranslationOfWidgets()
-{
-    // in win32 systems gettext fails when the string is static and marked as
-    // translatable with N_() but _() is never called explicitely. Basically
-    // there are 2 kinds of strings that are not translated:
-    //  + Those included in the GOptionEntry list, which show the available
-    //    options that can be passed to the program through command line
-    //  + Strings included in the .glade file that never change during the
-    //    execution of the application, for example a menu called "Game", or a
-    //    label that contains the word "rotate"
-    //
-    // We'll be calling here to _() for every string found in the .glade file
-    // so it gets properly translated into the current domain (the 2nd case
-    // described above)
-
-}
-#else
-void GameTotalAllocationWidget::ForceTranslationOfWidgets()
-{
-    // So far this is only needed in win32 platform due to some unknown issue
-    // that prevents those strings to be automatically translated. It works
-    // fine in linux, so there's no need there to explicitly call to gettext
-}
-#endif // WIN32

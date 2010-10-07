@@ -47,20 +47,20 @@ GameStatusBar::GameStatusBar(uint32_t a_nPlayers, bool a_progressBarPresent):
     m_arrayScoreLabel(0),
     m_arrayStopwatchLabel(0),
     m_progressBar(NULL)
-{    
+{
     this->set_spacing(1);
     this->set_homogeneous(false);
-    
+
     // add the status bar separator
     this->pack_start(m_barSeparator, true, true);
-    
+
     // add now the horizontal box ehich contains the different widgets
     this->pack_start(m_elementsBox, true, true);
-    
+
     // custom settings for the hbox
     m_elementsBox.set_spacing(10);
     m_elementsBox.set_homogeneous(false);
-    
+
     if (a_nPlayers > 0)
     {
         m_arrayStatusBarSeparator.resize((m_nPlayers * 2) - 1, NULL);

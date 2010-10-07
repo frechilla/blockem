@@ -47,7 +47,7 @@ public:
     /// @param starting coordinate. If it is an uninitialised coord player
     ///        will be able to start from any place on the board
     GameTotalAllocation(
-        int32_t a_rows, 
+        int32_t a_rows,
         int32_t a_columns,
         const Coordinate &a_startingCoord);
     virtual ~GameTotalAllocation();
@@ -57,12 +57,12 @@ public:
 	{
 	    return m_board;
 	}
-    
+
     inline const Player& GetPlayer() const
     {
         return m_player;
     }
-    
+
     inline void SetPlayerColour(
 	        uint8_t a_red,
 	        uint8_t a_green,
@@ -70,12 +70,12 @@ public:
     {
         m_player.SetColour(a_red, a_green, a_blue);
     }
-    
+
     /// @brief reset current total allocation game
     /// @param number of rows
     /// @param number of columns
-    /// @param starting coordinate. If it isn't initialised player will be 
-    ///        able to start from any place on the board 
+    /// @param starting coordinate. If it isn't initialised player will be
+    ///        able to start from any place on the board
     void Reset(int32_t a_rows, int32_t a_columns, const Coordinate &a_startingCoord);
 
     /// put down a piece on the board. The user is supposed to check if there is space for it before calling
@@ -94,22 +94,22 @@ public:
 	void RemovePiece(
 			const Piece      &a_piece,
 			const Coordinate &a_coord);
-    
+
     /// @brief a backtracking algorithm will try to put all the pieces in the board.
     /// It will modify the player and board objects inside this instance
     /// They will contain how the calculations ended
     /// @return true if the game was solved. False if there is no solution to the problem
     bool Solve();
-    
+
 private:
     /// The blokus board where the game will be played
     Board m_board;
 
     /// The player who is supposed to allocate all the pieces in the board
     Player m_player;
-    
-    /// starting coordinate. If it isn't initialised player will be able to 
-    /// start from any coordinate on the board 
+
+    /// starting coordinate. If it isn't initialised player will be able to
+    /// start from any coordinate on the board
     Coordinate m_startingCoord;
 
     /// remove a piece from the board. The user is supposed to check if the piece was there
@@ -128,7 +128,7 @@ private:
     void PutDownPiece(
             const Coordinate         &a_coord,
             const PieceConfiguration &a_pieceConf);
-    
+
     /// once there is at least one piece put down in the board this function
     /// will try to put down all the pieces in the existing nk points in the board
     /// @param an array with piece types of the latest pieces set in previous

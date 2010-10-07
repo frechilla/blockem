@@ -68,7 +68,7 @@ public:
     {
         e_Game1v1Player1 = 0,
         e_Game1v1Player2,
-        
+
         e_Game1v1NoPlayer,
 
     } eGame1v1Player_t;
@@ -91,13 +91,13 @@ public:
 	/// @returns the board of the game
 	const Board& GetBoard() const;
 
-    /// access to the signal that will issued each time there's a progress 
+    /// access to the signal that will issued each time there's a progress
     /// update in the minimax algorithm
     /// float will be a value between 0.0 and 1.0
     /// instantiating an object that will be notified by this signal is as easy
     /// as this:
     ///     SignalProgress().connect(sigc::mem_fun(
-    ///         your_instance, 
+    ///         your_instance,
     ///         &YourClass::YourMethod));
     ///
     /// YourClass::YourMethod must be declared like this:
@@ -211,7 +211,7 @@ protected:
     /// minimax algorithm
     /// float will be a value between 0.0 and 1.0
     sigc::signal<void, float> m_signal_progress;
-    
+
     /// signal to be sent when the computing is finished
     sigc::signal<void, const Piece&, const Coordinate&, Game1v1::eGame1v1Player_t, int32_t> m_signal_computingFinished;
 

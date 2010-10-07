@@ -75,9 +75,6 @@ Game1v1Widget::Game1v1Widget():
     g_get_current_time(&timeNow);
     m_randomizer = g_rand_new_with_seed(static_cast<guint32>(timeNow.tv_sec ^ timeNow.tv_usec));
 
-    // this call will work in different ways depending on the current platform
-    ForceTranslationOfWidgets();
-
     // retrieve the default colour from the config class to apply it to the players
     uint8_t red, green, blue;
     Game1v1Config::Instance().GetPlayer1Colour(red, green, blue);
@@ -168,7 +165,7 @@ Game1v1Widget::~Game1v1Widget()
 void Game1v1Widget::ProgressUpdate(float a_progress)
 {
     // WARNING: this method is run by another thread.
-    // once the m_signal_moveComputed signal (which is a thread-safe dispatcher) 
+    // once the m_signal_moveComputed signal (which is a thread-safe dispatcher)
     // is emited the main thread will update the GUI widgets
 
     G_LOCK(s_computingCurrentProgress);
@@ -1034,29 +1031,3 @@ void Game1v1Widget::ResetCursor()
         topLevelWindow->set_cursor();
     }
 }
-
-#ifdef WIN32
-void Game1v1Widget::ForceTranslationOfWidgets()
-{
-    // in win32 systems gettext fails when the string is static and marked as
-    // translatable with N_() but _() is never called explicitely. Basically
-    // there are 2 kinds of strings that are not translated:
-    //  + Those included in the GOptionEntry list, which show the available
-    //    options that can be passed to the program through command line
-    //  + Strings included in the .glade file that never change during the
-    //    execution of the application, for example a menu called "Game", or a
-    //    label that contains the word "rotate"
-    //
-    // We'll be calling here to _() for every string found in the .glade file
-    // so it gets properly translated into the current domain (the 2nd case
-    // described above)
-
-}
-#else
-void Game1v1Widget::ForceTranslationOfWidgets()
-{
-    // So far this is only needed in win32 platform due to some unknown issue
-    // that prevents those strings to be automatically translated. It works
-    // fine in linux, so there's no need there to explicitly call to gettext
-}
-#endif // WIN32

@@ -114,7 +114,7 @@ DrawingAreaShowPieces::DrawingAreaShowPieces(const Player &a_player, eOrientatio
     	set_size_request(-1, MINIMUM_WIDGET_SIZE);
     	break;
     }
-    
+
     // configure tooltip signal handling
     this->set_has_tooltip();
     this->signal_query_tooltip().connect(sigc::mem_fun(
@@ -440,34 +440,33 @@ ePieceType_t DrawingAreaShowPieces::CoordinateToPieceType(
 			}
         } // if ( (m_orientation == eOrientation_leftToRight) ...
 
-        
+
         return pickPlayerPiecesArray[row-1][col-1];
     }
-    
+
     return e_noPiece;
 }
 
 bool DrawingAreaShowPieces::on_query_tooltip(
-    int x, 
-    int y, 
-    bool keyboard_tooltip, 
+    int x,
+    int y,
+    bool keyboard_tooltip,
     const Glib::RefPtr<Gtk::Tooltip>& tooltip)
-{    
+{
     ePieceType_t pieceType = CoordinateToPieceType(x, y);
-    
+
     if ( (pieceType != e_noPiece) &&
          (m_thePlayer->IsPieceAvailable(pieceType)) )
     {
         // mouse pointer is over an available piece. Show tooltip with
-        // the name of the piece (GetPieceDescription returns it already
-        // translated)
-        tooltip->set_text(Piece::GetPieceDescription(pieceType));
+        // the name of the piece (it must be internationalised first)
+        tooltip->set_text(_(Piece::GetPieceDescription(pieceType)));
 
         // true cos we want the tooltip to be shown right now
         return true;
     }
-    
-    // do not show the tooltip. Piece is not available or mouse is not 
+
+    // do not show the tooltip. Piece is not available or mouse is not
     // stopped over any piece
     return false;
 }

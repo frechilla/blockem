@@ -44,7 +44,7 @@ public:
     /// the label widget will be updated every a_periodMillis milliseconds
     /// a_prefix will be added in front of the elapsed time when the label is updated
     StopWatchLabel(
-        uint32_t a_periodMillis, 
+        uint32_t a_periodMillis,
         const std::string &a_prefix = std::string());
     ~StopWatchLabel();
 

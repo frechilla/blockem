@@ -784,7 +784,7 @@ int32_t Game1v1::ComputeFirstPiece(
         // Do an acceptable 1st move (quick and dirty solution).
         // The following piece of code will put the cross in a 'good'
         // place, for example in 9,8 -if starting coord is (9,9)-
-        // or 5,6 if starting coord is (4,4). 
+        // or 5,6 if starting coord is (4,4).
         // (4,4) and (9,9) are the standard starting coords
         out_resultPiece = Piece(e_5Piece_Cross);
         Coordinate startingCoord = a_playerMe.GetStartingCoordinate();

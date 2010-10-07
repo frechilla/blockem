@@ -121,7 +121,7 @@ public:
         return m_signal_gameFinished;
     }
 
-    /// @brief receives signals coming from Game1v1 when it  notifies the 
+    /// @brief receives signals coming from Game1v1 when it  notifies the
     ///        progress of the computing process for computer's next move
     /// this function can be called from a different thread because it uses signal dispatcher
     /// see: http://library.gnome.org/devel/glibmm/stable/thread_2dispatcher_8cc-example.html
@@ -240,16 +240,6 @@ private:
     /// sets mouse cursor to the default pointer in the areas where
     /// SetWaitCursor might have set it to a watch
     void ResetCursor();
-
-    /// Calls gettext per every static widget in the main window. These strings
-    /// are those ones included in the .glade file that never change during the
-    /// execution of the application, for example a menu called "Game", or a
-    /// label that contains the word "rotate"
-    ///
-    /// So far this is only needed in win32 platform due to some unknown issue
-    /// that prevents those strings to be automatically translated. It works
-    /// fine in linux, so there's no need there to explicitly call to gettext
-    void ForceTranslationOfWidgets();
 
     // prevent the default constructors to be used
     Game1v1Widget(const Game1v1Widget &a_src);

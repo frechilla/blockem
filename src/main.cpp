@@ -335,12 +335,12 @@ void ProcessCommandLine(int argc, char **argv)
     {
         optEntryIterator->description = _(optEntryIterator->description);
         optEntryIterator->arg_description = _(optEntryIterator->arg_description);
-        
+
         optEntryIterator++;
     }
-    
+
 #endif // WIN32
-    
+
     // to disable i18n write NULL instead of GETTEXT_PACKAGE in the 3rd parameter
     //     g_option_context_add_main_entries (cmdContext, g_cmdEntries, NULL);
     g_option_context_add_main_entries (
@@ -388,7 +388,7 @@ int main(int argc, char **argv)
     // before the app creates extra threads
     // BlockemConfig singleton contains general purpose configuration data that
     // will be loaded from the config xml file
-    // It MUST be instantiated before i18n in windows because it loads the 
+    // It MUST be instantiated before i18n in windows because it loads the
     // preferred language
     BlockemConfig::Instance();
 
@@ -563,11 +563,11 @@ int main(int argc, char **argv)
                     _("Both starting row and column must be set to configure a starting coordinate"),
                     TOTAL_ALLOC_BAD_OPTIONS_ERR);
             }
-            
+
             Coordinate startingCoord;
             if ( (g_startingRow != GOPTION_INT_NOT_SET) &&
                  (g_startingColumn != GOPTION_INT_NOT_SET) )
-            {            
+            {
                 if ( (g_startingRow >= g_rows) || (g_startingRow < 0) ||
                      (g_startingColumn >= g_columns) || (g_startingColumn < 0) )
                 {
@@ -576,8 +576,8 @@ int main(int argc, char **argv)
                         _("Application cannot start outside of the board boundaries"),
                         TOTAL_ALLOC_BAD_OPTIONS_ERR);
                 }
-                
-                // overwrite uninitialised starting coordinate with the 
+
+                // overwrite uninitialised starting coordinate with the
                 // user-selected one
                 startingCoord.m_row = g_startingRow;
                 startingCoord.m_col = g_startingColumn;

@@ -71,10 +71,10 @@ public:
     /// swap stopwatches. Stop the stopwatch currently running and starts
     /// the next one. For example, in a status bar for 4 players, the following
     /// list represents the sequence of events:
-    /// Running before: player1. Afterwards: player2 
-    /// Running before: player2. Afterwards: player3 
-    /// Running before: player3. Afterwards: player4 
-    /// Running before: player4. Afterwards: player1 
+    /// Running before: player1. Afterwards: player2
+    /// Running before: player2. Afterwards: player3
+    /// Running before: player3. Afterwards: player4
+    /// Running before: player4. Afterwards: player1
     ///
     /// WARNINGS:
     ///   + If no stopwatches are running it does nothing
@@ -87,7 +87,7 @@ public:
     /// @return true if it succesfully issued the command to the stopwatch.
     ///         false otherwise
     bool ContinueStopwatch(uint32_t a_playerIndex);
-    
+
     /// sets the fraction of the progress bar shown in the status bar
     /// It does nothing if the object has been instantiated without progress bar
     /// @param a floating point number between 0.0 to 1.0 (0% to 100%)
@@ -96,13 +96,13 @@ public:
 private:
     /// @brief number of players to be represented by this status bar
     uint32_t m_nPlayers;
-    
+
     /// @brief horizontal separator to be shown on top of the status bar
     Gtk::HSeparator m_barSeparator;
-    
+
     /// @brief horizontal box where all the elements to be displayed are added
     Gtk::HBox m_elementsBox;
-    
+
     /// @brief vertical separators to be used in the status bar
     //TODO that number 3 is magic!!
     std::vector<Gtk::VSeparator*> m_arrayStatusBarSeparator;
@@ -116,12 +116,12 @@ private:
     /// @brief progress bar for when the computer is "thinking".
     ///        To be shown in the status bar
     Gtk::ProgressBar* m_progressBar;
-    
+
     // prevent default constructors/operators from being accidentaly called
     GameStatusBar();
     GameStatusBar(const GameStatusBar &a_src);
     GameStatusBar& operator=(const GameStatusBar &a_src);
-    
+
 };
 
 #endif // GAME_STATUSBAR_H_

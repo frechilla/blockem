@@ -31,7 +31,7 @@
 #define _GUI_DRAWING_AREA_SHOW_PIECES_H_
 
 #include <gtkmm.h>
-
+#include "gettext.h" // i18n
 #include "player.h"
 #include "piece.h"
 
@@ -93,16 +93,16 @@ private:
 
     /// @brief it'll be called when a button is pressed inside the pick pieces drawing area
     bool on_button_press_event(GdkEventButton* event);
-    
+
     /// @brief handler for the query-tooltip
     /// @param x the x coordinate of the cursor position where the request has been emitted
     /// @param y the y coordinate of the cursor position where the request has been emitted
     /// @param keyboard_tooltip TRUE if the tooltip was trigged using the keyboard
     /// @param tooltip a GtkTooltip
     /// @return true if tooltip should be shown right now, false otherwise
-    bool on_query_tooltip(int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip);    
-    
-    /// given a coordinate on the drawing area it returns the piece that 
+    bool on_query_tooltip(int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip);
+
+    /// given a coordinate on the drawing area it returns the piece that
     /// corresponds to it
     /// It does not check if that piece is currently available, it just returns
     /// the piece that would be drawn in the corresponding coordinate if all

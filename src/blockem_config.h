@@ -56,7 +56,7 @@ private:
     /// will be done and the old value will be kept
     /// @return true if new language was successfully set. False otherwise
     bool SetLanguageISO(const std::string &a_lang);
-    
+
     /// Creates a default config file in the expected path
     /// WARNING: it overwrites the current data if the file exists
     /// @return false if the file could not be created. True otherwise

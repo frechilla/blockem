@@ -77,7 +77,7 @@ public:
     /// for new jobs. The caller is blocked until the worker thread is ready and waiting
     /// for another move to be computed
     void CancelComputing();
-            
+
     /// suspends execution of the calling thread until the target thread terminates
     void Join();
 
@@ -120,7 +120,7 @@ private:
 
     /// The routine that will be run by the gthread created in SpawnThread
     static void* ThreadRoutine(void *a_ThreadParam);
-    
+
     // no copy constructor or operator= allowed
     MainWindowWorkerThread(const MainWindowWorkerThread& a_src);
     MainWindowWorkerThread& operator= (const MainWindowWorkerThread& a_src);

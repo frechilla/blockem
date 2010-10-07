@@ -52,29 +52,29 @@ class GameTotalAllocationWidget :
 public:
     /// Instantiates the class
     GameTotalAllocationWidget();
-    virtual ~GameTotalAllocationWidget();   
- 
-    /// Launches a new game. 
+    virtual ~GameTotalAllocationWidget();
+
+    /// Launches a new game.
     /// WARNING: It must be used carefully since it cancels whatever the worker
-    /// thread is computing now and resets the game to the settigns stored in 
+    /// thread is computing now and resets the game to the settigns stored in
     /// the Game1v1Config singleton
     void LaunchNewGame();
-    
+
     /// @return a reference to the drawing area shown by this widget
     DrawingAreaBoard& BoardDrawingArea();
-    
+
     /// @brief shows the influence area of the player on the board
     /// @param a_show. influence area will be shown if true
     void ShowInfluenceAreaInBoard(bool a_show);
-    
+
     /// @brief shows forbidden area of the player on the board
     /// @param a_show. forbidden area will be shown if true
     void ShowForbiddenAreaInBoard(bool a_show);
-    
+
     /// @brief callback to be called when a button is pressed inside the board
     void BoardDrawingArea_BoardClicked(const Coordinate &, const Piece &, const Player &);
 
-    /// Access to the fatal error signal private member. Note this signal is 
+    /// Access to the fatal error signal private member. Note this signal is
     /// not thread safe so it must be processed by the same thread who
     /// handles the GUI
     /// It contains a HTML formatted error message describing the fatal error
@@ -82,16 +82,16 @@ public:
     {
         return m_signal_fatalError;
     }
-    
-    /// Access to the game finished signal private member. Note this signal is 
+
+    /// Access to the game finished signal private member. Note this signal is
     /// not thread safe so it must be processed by the same thread who
     /// handles the GUI
     /// It contains a HTML formated message describing the final score
     sigc::signal<void, const std::string&>& signal_gameFinished()
     {
         return m_signal_gameFinished;
-    }    
-   
+    }
+
 private:
 
     /// @brief current game is finished. It is set to false at the beginning of a game
@@ -119,22 +119,12 @@ private:
 
     /// Signal object to notify fatal errors
     sigc::signal<void, const std::string&> m_signal_fatalError;
-    
+
     /// Signal object to notify when game is finished
     sigc::signal<void, const std::string&> m_signal_gameFinished;
 
     /// @brief notifies to the user that the game is finished using m_signal_gameFinished
     void GameFinished();
-
-    /// Calls gettext per every static widget in the main window. These strings
-    /// are those ones included in the .glade file that never change during the
-    /// execution of the application, for example a menu called "Game", or a
-    /// label that contains the word "rotate"
-    ///
-    /// So far this is only needed in win32 platform due to some unknown issue
-    /// that prevents those strings to be automatically translated. It works
-    /// fine in linux, so there's no need there to explicitly call to gettext
-    void ForceTranslationOfWidgets();
 
     // prevent the default constructors to be used
     GameTotalAllocationWidget(const GameTotalAllocationWidget &a_src);

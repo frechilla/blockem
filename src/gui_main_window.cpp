@@ -240,9 +240,9 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     this->add_accel_group(m_accelGroup);
 
     // add game widgets into the window. Expand and fill!
-    m_vBoxMain->pack_start(m_game1v1Widget, true, true);    
+    m_vBoxMain->pack_start(m_game1v1Widget, true, true);
     m_vBoxMain->pack_start(m_gameTotalAllocation, true, true);
-    
+
     // set_visible doesn't work in 2.16 (which is used in windows). use show!
     m_game1v1Widget.show_all();
     //m_gameTotalAllocation.show_all();
