@@ -72,11 +72,10 @@ void Game1v1Widget::ProgressUpdate(float a_progress)
     }
 }
 
-Game1v1Widget::Game1v1Widget(Glib::RefPtr<Gtk::Builder> a_gtkBuilder) throw (GUIException):
+Game1v1Widget::Game1v1Widget():
     Gtk::VBox(), //Calls the base class constructor
     m_currentGameFinished(false),
     m_currentMovingPlayer(Game1v1::e_Game1v1Player1),
-    m_gtkBuilder(a_gtkBuilder),
     m_the1v1Game(
         Game1v1Config::Instance().GetPlayer1StartingCoord(),
         Game1v1Config::Instance().GetPlayer2StartingCoord()),
@@ -89,7 +88,7 @@ Game1v1Widget::Game1v1Widget(Glib::RefPtr<Gtk::Builder> a_gtkBuilder) throw (GUI
         m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2),
         DrawingAreaShowPieces::eOrientation_bottomToTop),
     m_boardDrawingArea(m_the1v1Game.GetBoard()),
-    m_editPieceTable(NULL),
+    m_editPieceTable(),
     m_statusBar(2, true) // 2 players, include progress bar
 {
     //TODO this is dirty (even though it works) the way Game1v1Widget::ProgressUpdate
@@ -104,14 +103,6 @@ Game1v1Widget::Game1v1Widget(Glib::RefPtr<Gtk::Builder> a_gtkBuilder) throw (GUI
     GTimeVal timeNow;
     g_get_current_time(&timeNow);
     m_randomizer = g_rand_new_with_seed(static_cast<guint32>(timeNow.tv_sec ^ timeNow.tv_usec));
-
-    // retrieve the editing piece table. It must be retrieved calling get_widget_derived
-    // otherwise app will core
-    m_gtkBuilder->get_widget_derived(GUI_TABLE_EDITING_PIECE_NAME, m_editPieceTable);
-    if (m_editPieceTable == NULL)
-    {
-        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
-    }
 
     // this call will work in different ways depending on the current platform
     ForceTranslationOfWidgets();
@@ -138,7 +129,7 @@ Game1v1Widget::Game1v1Widget(Glib::RefPtr<Gtk::Builder> a_gtkBuilder) throw (GUI
     m_hBoxOpponentPieces.pack_start(m_showOpponentPiecesDrawingArea, true, true); // expand and fill
     // pick pieces drawing area, edit pieces table and show opponent's pieces
     m_hBoxEditPieces.pack_start(m_pickPiecesDrawingArea, true, true);
-    m_hBoxEditPieces.pack_start(*m_editPieceTable, false, false);
+    m_hBoxEditPieces.pack_start(m_editPieceTable, false, false);
 
     this->pack_start(m_hBoxGameStatus, true, true);  // expand and fill
     this->pack_start(m_hBoxEditPieces, false, true); // not expand but fill
@@ -152,16 +143,6 @@ Game1v1Widget::Game1v1Widget(Glib::RefPtr<Gtk::Builder> a_gtkBuilder) throw (GUI
     // stopwatch must be initialised also
     m_statusBar.SetStopwatchPrefix(1, m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1));
     m_statusBar.SetStopwatchPrefix(2, m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player2));
-
-    // now that all widgets have been properly configured to their size
-    // show them
-    // set_visible doesn't work in 2.16 (which is used in windows). use show!
-    this->show_all();
-    //m_statusBar.show_all();
-    //m_boardDrawingArea.show_all();
-    //m_pickPiecesDrawingArea.show();
-    //m_showOpponentPiecesDrawingArea.show();
-    //m_hBoxOpponentPieces.show_all();
 
     // progress handler for the computing process of the MinMax algorithm
     m_the1v1Game.SetProgressHandler(&Game1v1Widget::ProgressUpdate);
@@ -182,11 +163,11 @@ Game1v1Widget::Game1v1Widget(Glib::RefPtr<Gtk::Builder> a_gtkBuilder) throw (GUI
 
     // connect the signal coming from the pickPiecesDrawingArea to update TableEditPiece
     m_pickPiecesDrawingArea.signal_piecePicked().connect(
-            sigc::mem_fun(*m_editPieceTable, &TableEditPiece::SetPiece));
+            sigc::mem_fun(m_editPieceTable, &TableEditPiece::SetPiece));
 
     // connect the signal coming from the editing piece table to process the change in the
     // currently editing piece
-    m_editPieceTable->signal_pieceChanged().connect(
+    m_editPieceTable.signal_pieceChanged().connect(
             sigc::mem_fun(m_boardDrawingArea, &DrawingAreaBoard::SetCurrentPiece));
 
     // connect the signal coming fromt he board drawing area to process when the user clicks
@@ -308,7 +289,7 @@ void Game1v1Widget::LaunchNewGame()
     uint8_t green = 0;
     uint8_t blue  = 0;
     m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1).GetColour(red, green, blue);
-    m_editPieceTable->SetPieceRGB(
+    m_editPieceTable.SetPieceRGB(
         static_cast<float>(red)   / 255,
         static_cast<float>(green) / 255,
         static_cast<float>(blue)  / 255);
@@ -332,7 +313,7 @@ void Game1v1Widget::LaunchNewGame()
 
     // reset and force redraw editPieceTable. It'll be set to sensitive
     // or unsensitive depending on the type of player1
-    m_editPieceTable->SetPiece(e_noPiece);
+    m_editPieceTable.SetPiece(e_noPiece);
 
     // new game just started. It can't be finished!
     m_currentGameFinished = false;
@@ -343,14 +324,14 @@ void Game1v1Widget::LaunchNewGame()
     {
         // next player is the computer. Disallow editing the edit piece
         // area while computer is processing next move
-        m_editPieceTable->set_sensitive(false);
+        m_editPieceTable.set_sensitive(false);
 
         RequestThreadToComputeNextMove(Game1v1::e_Game1v1Player1, false);
     }
     else
     {
         // a human being is allowed to edit next piece
-        m_editPieceTable->set_sensitive(true);
+        m_editPieceTable.set_sensitive(true);
 
         // player1 is a human and he/she will put down the next piece (player1 goes always first)
         m_boardDrawingArea.SetCurrentPlayer(m_the1v1Game.GetPlayer(Game1v1::e_Game1v1Player1));
@@ -385,7 +366,7 @@ bool Game1v1Widget::ProcessChangeInCurrentGame(Game1v1ConfigDialog& a_configDial
         // next move was being calculated by a human being, but now it has
         // been swapped to a computer player. Humans are not allowed to edit
         // pieces while computer is thinking
-        m_editPieceTable->set_sensitive(false);
+        m_editPieceTable.set_sensitive(false);
 
         // requesting the thread!!
         RequestThreadToComputeNextMove(m_currentMovingPlayer, true);
@@ -429,7 +410,7 @@ bool Game1v1Widget::ProcessChangeInCurrentGame(Game1v1ConfigDialog& a_configDial
             m_statusBar.SetFraction(0.0);
 
             // allow the new human user to put down pieces on the board
-            m_editPieceTable->set_sensitive(true);
+            m_editPieceTable.set_sensitive(true);
 
             // restore the mouse cursor so the human being who has to put down next piece
             // can do it
@@ -819,14 +800,14 @@ void Game1v1Widget::NotifyMoveComputed()
         uint8_t green = 0;
         uint8_t blue  = 0;
         latestOpponent.GetColour(red, green, blue);
-        m_editPieceTable->SetPieceRGB(
+        m_editPieceTable.SetPieceRGB(
             static_cast<float>(red)   / 255,
             static_cast<float>(green) / 255,
             static_cast<float>(blue)  / 255);
 
         // remove the actual piece being edited from the edit piece drawing area
         // and force the edit piece drawing area to be redraw
-        m_editPieceTable->SetPiece(e_noPiece);
+        m_editPieceTable.SetPiece(e_noPiece);
 
         // swap pieces being shown in pickPiecesDrawingArea and showOpponentPiecesDrawingArea
         // opponent will select pieces while currentPlayer's will be only shown
@@ -844,7 +825,7 @@ void Game1v1Widget::NotifyMoveComputed()
         {
             // next player is the computer. Disallow editing the edit piece
             // area while computer is processing next move
-            m_editPieceTable->set_sensitive(false);
+            m_editPieceTable.set_sensitive(false);
 
             // tell the worker thread to compute next move
             if (latestPlayerToMove == Game1v1::e_Game1v1Player1)
@@ -862,7 +843,7 @@ void Game1v1Widget::NotifyMoveComputed()
         {
             // allow next player to edit the piece to put down on the board
             // 'cos it's a human being
-            m_editPieceTable->set_sensitive(true);
+            m_editPieceTable.set_sensitive(true);
 
             // restore the mouse cursor so the human being who has to put down next piece
             // can do it
@@ -873,7 +854,7 @@ void Game1v1Widget::NotifyMoveComputed()
     {
         // remove the actual piece being edited from the edit piece drawing area
         // and force the edit piece drawing area to be redraw
-        m_editPieceTable->SetPiece(e_noPiece);
+        m_editPieceTable.SetPiece(e_noPiece);
 
         // latestPlayer can put down more pieces. Game is still on
         m_pickPiecesDrawingArea.Invalidate();
@@ -911,7 +892,7 @@ void Game1v1Widget::GameFinished()
     m_boardDrawingArea.UnsetCurrentPlayer();
 
     // allow a possible human user to play with the edit pieces area
-    m_editPieceTable->set_sensitive(true);
+    m_editPieceTable.set_sensitive(true);
 
     // restart the progress bar
     G_LOCK(s_computingCurrentProgress);

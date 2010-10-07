@@ -34,7 +34,6 @@
 #include <exception>
 #include <gtkmm.h>
 
-#include "gui_exception.h"
 #include "gui_drawing_area_show_pieces.h"
 #include "gui_drawing_area_board.h"
 #include "gui_stop_watch_label.h"
@@ -52,7 +51,7 @@ class GameTotalAllocationWidget :
 {
 public:
     /// Instantiates the class
-    GameTotalAllocationWidget(Glib::RefPtr<Gtk::Builder> a_gtkBuilder) throw (GUIException);
+    GameTotalAllocationWidget();
     virtual ~GameTotalAllocationWidget();   
  
     /// Launches a new game. 
@@ -100,9 +99,6 @@ private:
     /// it prevents GameFinished code to run twice for the same game
     bool m_currentGameFinished;
 
-    /// @brief used to retrieve the objects from the Glade design
-    Glib::RefPtr<Gtk::Builder> m_gtkBuilder;
-
     /// @brief the total allocation game which will be represented in the window
     GameTotalAllocation m_theTotalAllocationGame;
 
@@ -113,7 +109,7 @@ private:
     DrawingAreaBoard m_boardDrawingArea;
 
     /// @brieftable where the selected piece is edited
-    TableEditPiece* m_editPieceTable;
+    TableEditPiece m_editPieceTable;
 
     /// @brief the horizontal box where the pieces are picked + edited
     Gtk::HBox m_hBoxEditPieces;
@@ -141,7 +137,6 @@ private:
     void ForceTranslationOfWidgets();
 
     // prevent the default constructors to be used
-    GameTotalAllocationWidget();
     GameTotalAllocationWidget(const GameTotalAllocationWidget &a_src);
     GameTotalAllocationWidget& operator=(const GameTotalAllocationWidget &a_src);
 };

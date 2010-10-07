@@ -92,9 +92,25 @@
 
 // path to the pictures and logos
 #ifndef DATADIR
-#define DATADIR "."
+#error "DATADIR macro MUST be defined so blockem can find its data files"
 #endif
 
+// path to pixmaps. Windows is a special case here (doesn't contain package's
+// name in the path to the pixmaps)
+#ifdef WIN32
+const std::string GUI_PATH_TO_LOGO_STR
+        (std::string(DATADIR) + std::string("/pixmaps/blockemlogo.png"));
+
+const std::string GUI_PATH_TO_16PICTURE_STR
+        (std::string(DATADIR) + std::string("/pixmaps/blockemlogo16.png"));
+
+const std::string GUI_PATH_TO_48PICTURE_STR
+        (std::string(DATADIR) + std::string("/pixmaps/blockemlogo48.png"));
+
+const std::string GUI_PATH_TO_128PICTURE_STR
+        (std::string(DATADIR) + std::string("/pixmaps/blockemlogo128.png"));
+
+#else // not a win32 system
 const std::string GUI_PATH_TO_LOGO_STR
         (std::string(DATADIR) + std::string("/") +
          std::string(PACKAGE) + std::string("/pixmaps/blockemlogo.png"));
@@ -111,8 +127,10 @@ const std::string GUI_PATH_TO_128PICTURE_STR
         (std::string(DATADIR) + std::string("/") +
          std::string(PACKAGE) + std::string("/pixmaps/blockemlogo128.png"));
 
+#endif // WIN32
 
-// have a look at the name of the glade interfaces
+
+// have a look at the name of the widgets in gui.glade file
 const char GUI_MAIN_WINDOW_NAME[]          = "window_main";
 const char GUI_ABOUT_DIALOG_NAME[]         = "aboutdialog";
 const char GUI_CONFIG_DIALOG_NAME[]        = "configdialog";
@@ -134,15 +152,6 @@ const char GUI_MENU_ITEM_SETTINGS_PREFS[]  = "imagemenuitem_settings_preferences
 const char GUI_MENU_ITEM_HELP[]            = "menuitem_help";
 const char GUI_MENU_ITEM_HELP_ABOUT[]      = "imagemenuitem_help_about";
 const char GUI_VBOX_MAIN[]                 = "vbox_main";
-const char GUI_TABLE_EDITING_PIECE_NAME[]  = "table_editing_piece";
-const char GUI_LABEL_ROTATE_NAME[]         = "label_rotate";
-const char GUI_LABEL_MIRROR_NAME[]         = "label_mirror";
-const char GUI_BUTTON_ROTATE_LEFT_NAME[]   = "button_rotate_left";
-const char GUI_BUTTON_ROTATE_RIGHT_NAME[]  = "button_rotate_right";
-const char GUI_BUTTON_MIRROR_XAXIS_NAME[]  = "button_mirror_xaxis";
-const char GUI_BUTTON_MIRROR_YAXIS_NAME[]  = "button_mirror_yaxis";
-const char GUI_DRAWINGAREA_EDITING_PIECE[] = "drawingarea_editing_piece";
-const char GUI_HBOX_STATUSBAR_NAME[]       = "hbox_statusbar";
 const char GUI_CONFIG_TABLE_PLAYER1[]      = "config_table_player1";
 const char GUI_CONFIG_TABLE_PLAYER2[]      = "config_table_player2";
 const char GUI_CONFIG_SPINBUTTON_STARTROW1[] = "spinbutton_startingrow1";

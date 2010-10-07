@@ -49,25 +49,17 @@ static const int32_t BOARD_NROWS = 14;
 static const int32_t BOARD_NCOLS = 14;
 
 
-GameTotalAllocationWidget::GameTotalAllocationWidget(Glib::RefPtr<Gtk::Builder> a_gtkBuilder) throw (GUIException) :
+GameTotalAllocationWidget::GameTotalAllocationWidget():
     Gtk::VBox(), //Calls the base class constructor
     m_currentGameFinished(false),
-    m_gtkBuilder(a_gtkBuilder),
     m_theTotalAllocationGame(BOARD_NROWS, BOARD_NCOLS, Coordinate()),
     m_pickPiecesDrawingArea(
         m_theTotalAllocationGame.GetPlayer(),
         DrawingAreaShowPieces::eOrientation_leftToRight),
     m_boardDrawingArea(m_theTotalAllocationGame.GetBoard()),
+    m_editPieceTable(),
     m_statusBar(1, false) // 1 player. Without progress bar
 {
-    // retrieve the editing piece table. It must be retrieved calling get_widget_derived
-    // otherwise app will core
-    m_gtkBuilder->get_widget_derived(GUI_TABLE_EDITING_PIECE_NAME, m_editPieceTable);
-    if (m_editPieceTable == NULL)
-    {
-        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
-    }
-
     // this call will work in different ways depending on the current platform
     ForceTranslationOfWidgets();
 
@@ -82,7 +74,7 @@ GameTotalAllocationWidget::GameTotalAllocationWidget(Glib::RefPtr<Gtk::Builder> 
     m_hBoxEditPieces.set_spacing(10);
     m_hBoxEditPieces.set_size_request(-1, 200);
     m_hBoxEditPieces.pack_start(m_pickPiecesDrawingArea, true, true);
-    //m_hBoxEditPieces.pack_start(*m_editPieceTable, false, false);
+    m_hBoxEditPieces.pack_start(m_editPieceTable, false, false);
 
     // add widgets to this table
     // pack_start (Widget& child, bool expand, bool fill, guint padding=0)
@@ -97,21 +89,13 @@ GameTotalAllocationWidget::GameTotalAllocationWidget(Glib::RefPtr<Gtk::Builder> 
     // stopwatch must be initialised also
     m_statusBar.SetStopwatchPrefix(1, m_theTotalAllocationGame.GetPlayer());
 
-    // now that all widgets have been properly configured to their size
-    // show them. if we don't show them, nobody will be able to see them
-    // set_visible doesn't work in 2.16 (which is used in windows). use show!
-    //m_boardDrawingArea.show_all();
-    //m_pickPiecesDrawingArea.show_all();
-    //m_editPieceTable->show_all();
-    //m_statusBar.show_all();
-
     // connect the signal coming from the pickPiecesDrawingArea to update TableEditPiece
     m_pickPiecesDrawingArea.signal_piecePicked().connect(
-            sigc::mem_fun(*m_editPieceTable, &TableEditPiece::SetPiece));
+            sigc::mem_fun(m_editPieceTable, &TableEditPiece::SetPiece));
 
     // connect the signal coming from the editing piece table to process the change in the
     // currently editing piece
-    m_editPieceTable->signal_pieceChanged().connect(
+    m_editPieceTable.signal_pieceChanged().connect(
             sigc::mem_fun(m_boardDrawingArea, &DrawingAreaBoard::SetCurrentPiece));
 
     // connect the signal coming fromt he board drawing area to process when the user clicks
@@ -127,13 +111,13 @@ GameTotalAllocationWidget::GameTotalAllocationWidget(Glib::RefPtr<Gtk::Builder> 
     uint8_t green = 0;
     uint8_t blue  = 0;
     m_theTotalAllocationGame.GetPlayer().GetColour(red, green, blue);
-    m_editPieceTable->SetPieceRGB(
+    m_editPieceTable.SetPieceRGB(
         static_cast<float>(red)   / 255,
         static_cast<float>(green) / 255,
         static_cast<float>(blue)  / 255);
 
     // human beings are allowed to edit pieces
-    m_editPieceTable->set_sensitive(true);
+    m_editPieceTable.set_sensitive(true);
 
     // player is a human and he/she will put down a piece
     m_boardDrawingArea.SetCurrentPlayer(m_theTotalAllocationGame.GetPlayer());
@@ -144,11 +128,6 @@ GameTotalAllocationWidget::GameTotalAllocationWidget(Glib::RefPtr<Gtk::Builder> 
 
 GameTotalAllocationWidget::~GameTotalAllocationWidget()
 {
-    // http://library.gnome.org/devel/gtkmm/stable/classGtk_1_1Builder.html#ab8c6679c1296d6c4d8590ef907de4d5a
-    // Note that you are responsible for deleting top-level widgets (windows and dialogs) instantiated
-    // by the Builder object. Other widgets are instantiated as managed so they will be deleted
-    // automatically if you add them to a container widget
-    //delete m_editPieceTable;
 }
 
 DrawingAreaBoard& GameTotalAllocationWidget::BoardDrawingArea()
@@ -206,7 +185,7 @@ void GameTotalAllocationWidget::LaunchNewGame()
 
     // reset and force redraw editPieceTable. It'll be set to sensitive
     // or unsensitive depending on the type of player1
-    m_editPieceTable->SetPiece(e_noPiece);
+    m_editPieceTable.SetPiece(e_noPiece);
 
     // new game just started. It can't be finished!
     m_currentGameFinished = false;
@@ -267,7 +246,7 @@ void GameTotalAllocationWidget::BoardDrawingArea_BoardClicked(
 
     // remove the actual piece being edited from the edit piece drawing area
     // and force the edit piece drawing area to be redraw
-    m_editPieceTable->SetPiece(e_noPiece);
+    m_editPieceTable.SetPiece(e_noPiece);
 
     // update the list of available pieces too
     m_pickPiecesDrawingArea.Invalidate();
@@ -297,7 +276,7 @@ void GameTotalAllocationWidget::GameFinished()
     m_boardDrawingArea.UnsetCurrentPlayer();
 
     // allow a possible human user to play with the edit pieces area
-    m_editPieceTable->set_sensitive(true);
+    m_editPieceTable.set_sensitive(true);
 
     int32_t squaresLeft = 0;
     const Player &player = m_theTotalAllocationGame.GetPlayer();

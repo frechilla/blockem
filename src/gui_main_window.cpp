@@ -60,8 +60,8 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     m_gtkBuilder(a_gtkBuilder),
     m_aboutDialog(NULL),
     m_configDialog(NULL),
-    m_game1v1Widget(a_gtkBuilder),
-    m_gameTotalAllocation(a_gtkBuilder)
+    m_game1v1Widget(),
+    m_gameTotalAllocation()
 {
     // icon of the window
     Glib::RefPtr< Gdk::Pixbuf > icon;
@@ -239,17 +239,23 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     // accelerators for main_window menu
     this->add_accel_group(m_accelGroup);
 
-    // add the game1v1 widget into the window. Expand and fill!
-    m_vBoxMain->pack_start(m_game1v1Widget, true, true);
+    // add game widgets into the window. Expand and fill!
+    m_vBoxMain->pack_start(m_game1v1Widget, true, true);    
+    m_vBoxMain->pack_start(m_gameTotalAllocation, true, true);
+    
+    // set_visible doesn't work in 2.16 (which is used in windows). use show!
     m_game1v1Widget.show_all();
-    //m_vBoxMain->pack_start(m_gameTotalAllocation, true, true);
     //m_gameTotalAllocation.show_all();
 
     // connect also its handlers
     m_game1v1Widget.signal_fatalError().connect(
-            sigc::mem_fun(*this, &MainWindow::Game1v1Widget_FatalError));
+            sigc::mem_fun(*this, &MainWindow::Notify_FatalError));
     m_game1v1Widget.signal_gameFinished().connect(
-            sigc::mem_fun(*this, &MainWindow::Game1v1Widget_GameFinished));
+            sigc::mem_fun(*this, &MainWindow::Notify_GameFinished));
+    m_gameTotalAllocation.signal_fatalError().connect(
+            sigc::mem_fun(*this, &MainWindow::Notify_FatalError));
+    m_gameTotalAllocation.signal_gameFinished().connect(
+            sigc::mem_fun(*this, &MainWindow::Notify_GameFinished));
 
     // connect signals to handlers
     // if the handler is not part of an object use sigc::ptr_fun
@@ -377,10 +383,12 @@ void MainWindow::MenuItemSettingsViewNKPoints_Toggled()
     if (m_settingsNKPointsMenuItem->property_active())
     {
         m_game1v1Widget.BoardDrawingArea().ShowNucleationPoints();
+        m_gameTotalAllocation.BoardDrawingArea().ShowNucleationPoints();
     }
     else
     {
         m_game1v1Widget.BoardDrawingArea().HideNucleationPoints();
+        m_gameTotalAllocation.BoardDrawingArea().ShowNucleationPoints();
     }
 }
 
@@ -473,7 +481,7 @@ void MainWindow::MenuItemHelpAbout_Activate()
     m_aboutDialog->hide();
 }
 
-void MainWindow::Game1v1Widget_FatalError(const std::string& a_msg)
+void MainWindow::Notify_FatalError(const std::string& a_msg)
 {
     // show the error message and exit the aplication
     Gtk::MessageDialog::MessageDialog fatalErrorMessage(
@@ -493,9 +501,9 @@ void MainWindow::Game1v1Widget_FatalError(const std::string& a_msg)
     this->hide();
 }
 
-void MainWindow::Game1v1Widget_GameFinished(const std::string& a_msg)
+void MainWindow::Notify_GameFinished(const std::string& a_msg)
 {
-    // show the final score message and wait for the user to accept
+    // show the game finished message and wait for the user to accept
 
     //MessageDialog (
     //        Gtk::Window& parent,

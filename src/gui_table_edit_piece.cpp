@@ -25,6 +25,7 @@
 ///           Faustino Frechilla 30-Mar-2010  Original development
 ///           Faustino Frechilla 25-Apr-2010  libglade dependency removed. Code migrated to GtkBuilder
 ///           Faustino Frechilla 23-Jul-2010  i18n
+///           Faustino Frechilla 07-Oct-2010  Widgets are not loaded from glade file. GtkBuilder not needed
 /// @endhistory
 ///
 // ============================================================================
@@ -45,82 +46,140 @@ static const float EDIT_CIRCLE_LINE_WIDTH = 1.0;
 /// @brief number of squares of the edit piece board
 static const int32_t NSQUARES_EDIT_PIECES_BOARD = 5;
 
-TableEditPiece::TableEditPiece(
-    BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder) throw (GUIException):
-        Gtk::Table(cobject), //Calls the base class constructor
-        m_gtkBuilder(a_gtkBuilder),
+/// @brief rotate label text
+static const char ROTATE_LABEL_TEXT[] = N_("Rotate");
+
+/// @brief mirror label text. It contains lots of \n chacters because it's vertical writing
+static const char MIRROR_LABEL_TEXT[] = N_("M\ni\nr\nr\no\nr");
+
+TableEditPiece::TableEditPiece() :
+        Gtk::Table(4, 4), //nrows and ncolumns
         m_thePiece(e_noPiece),
+        m_rotateLabel(ROTATE_LABEL_TEXT),
+        m_mirrorLabel(MIRROR_LABEL_TEXT),
+        m_arrowYLeft(Gtk::ARROW_LEFT,        Gtk::SHADOW_NONE),
+        m_arrowYRight(Gtk::ARROW_RIGHT,      Gtk::SHADOW_NONE),
+        m_arrowXUp(Gtk::ARROW_UP,            Gtk::SHADOW_OUT),
+        m_arrowXDown(Gtk::ARROW_DOWN,        Gtk::SHADOW_OUT),
+        m_arrowRotateRight(Gtk::ARROW_RIGHT, Gtk::SHADOW_IN),
+        m_arrowRotateLeft(Gtk::ARROW_LEFT,   Gtk::SHADOW_ETCHED_IN),
         m_red(DEFAULT_PLAYER_RED),
         m_green(DEFAULT_PLAYER_GREEN),
         m_blue(DEFAULT_PLAYER_BLUE)
 {
-	// retrieve the objects from the GUI design
-	m_gtkBuilder->get_widget(GUI_DRAWINGAREA_EDITING_PIECE, m_editPieceDrawingArea);
-	if (m_editPieceDrawingArea == NULL)
-	{
-		throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
-	}
 
-	m_gtkBuilder->get_widget(GUI_BUTTON_ROTATE_LEFT_NAME, m_rotateLeftButton);
-    if (m_rotateLeftButton == NULL)
-    {
-        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
-    }
+    // configure the widgets and add them to this object one by one
+    this->set_size_request(180, -1);
+    this->set_row_spacings(1);
+    this->set_col_spacings(1);
+    
+    m_editPieceDrawingArea.set_size_request(115, 115);
+    // attach ( Widget& child, 
+    //          guint left_attach, 
+    //          guint right_attach, 
+    //          guint top_attach, 
+    //          guint bottom_attach, 
+    //          AttachOptions xoptions=FILL|EXPAND, 
+    //          AttachOptions yoptions=FILL|EXPAND, 
+    //          guint xpadding=0, 
+    //          guint ypadding=0)
+    this->attach(
+        m_editPieceDrawingArea,
+        0,
+        3,
+        1,
+        4);
+    
+    // pack_start (Widget& child, bool expand, bool fill, guint padding=0)
+    m_mirrorButtonYAxisHBox.pack_start(m_arrowYLeft);
+    m_mirrorButtonYAxisHBox.pack_start(m_arrowYRight);
+    m_mirrorButtonYAxis.add(m_mirrorButtonYAxisHBox);
+    this->attach(
+        m_mirrorButtonYAxis,
+        3,
+        4,
+        3,
+        4,
+        Gtk::SHRINK,
+        Gtk::FILL);
+    m_mirrorButtonXAxisVBox.pack_start(m_arrowXUp);
+    m_mirrorButtonXAxisVBox.pack_start(m_arrowXDown);
+    m_mirrorButtonXAxis.add(m_mirrorButtonXAxisVBox);
+    this->attach(
+        m_mirrorButtonXAxis,
+        3,
+        4,
+        1,
+        2,
+        Gtk::SHRINK,
+        Gtk::FILL);
+    
+    m_rotateRightButton.add(m_arrowRotateRight);
+    this->attach(
+            m_rotateRightButton,
+            2,
+            3,
+            0,
+            1,
+            Gtk::FILL,
+            Gtk::SHRINK);            
+    
+    m_rotateLeftButton.add(m_arrowRotateLeft);
+    this->attach(
+            m_rotateLeftButton,
+            0,
+            1,
+            0,
+            1,
+            Gtk::FILL,
+            Gtk::SHRINK);
+    
 
-    m_gtkBuilder->get_widget(GUI_BUTTON_ROTATE_RIGHT_NAME, m_rotateRightButton);
-	if (m_rotateRightButton == NULL)
-	{
-		throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
-	}
+    m_rotateLabel.set_justify(Gtk::JUSTIFY_CENTER);
+    this->attach(
+            m_rotateLabel,
+            1,
+            2,
+            0,
+            1,
+            Gtk::FILL | Gtk::EXPAND,
+            Gtk::SHRINK);
+            
+    m_mirrorLabel.set_justify(Gtk::JUSTIFY_CENTER);
+    this->attach(
+            m_mirrorLabel,
+            3,
+            4,
+            2,
+            3,
+            Gtk::SHRINK,
+            Gtk::FILL | Gtk::EXPAND);
 
-	m_gtkBuilder->get_widget(GUI_LABEL_ROTATE_NAME, m_rotateLabel);
-    if (m_rotateLabel == NULL)
-    {
-        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
-    }
-
-    m_gtkBuilder->get_widget(GUI_LABEL_MIRROR_NAME, m_mirrorLabel);
-    if (m_mirrorLabel == NULL)
-    {
-        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
-    }
-
-    m_gtkBuilder->get_widget(GUI_BUTTON_MIRROR_YAXIS_NAME, m_mirrorButtonYAxis);
-	if (m_mirrorButtonYAxis == NULL)
-	{
-		throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
-	}
-
-	m_gtkBuilder->get_widget(GUI_BUTTON_MIRROR_XAXIS_NAME, m_mirrorButtonXAxis);
-    if (m_mirrorButtonXAxis == NULL)
-    {
-        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
-    }
 
     // this call will work in different ways depending on the current platform
     ForceTranslationOfWidgets();
 
 	// connect the signals to the handlers
-	m_editPieceDrawingArea->signal_expose_event().connect(
+	m_editPieceDrawingArea.signal_expose_event().connect(
 			sigc::mem_fun(*this, &TableEditPiece::EditPieceDrawingArea_ExposeEvent));
 
-	m_rotateRightButton->signal_clicked().connect(
+	m_rotateRightButton.signal_clicked().connect(
 			sigc::mem_fun(*this, &TableEditPiece::RotateRightButton_ButtonPressed));
-	m_rotateLeftButton->signal_clicked().connect(
+	m_rotateLeftButton.signal_clicked().connect(
 	            sigc::mem_fun(*this, &TableEditPiece::RotateLeftButton_ButtonPressed));
-	m_mirrorButtonYAxis->signal_clicked().connect(
+	m_mirrorButtonYAxis.signal_clicked().connect(
 			sigc::mem_fun(*this, &TableEditPiece::MirrorYAxisButton_ButtonPressed));
-	m_mirrorButtonXAxis->signal_clicked().connect(
+	m_mirrorButtonXAxis.signal_clicked().connect(
             sigc::mem_fun(*this, &TableEditPiece::MirrorXAxisButton_ButtonPressed));
 
 	// set the rotate and mirror button to not sensitive, since at the beginning
 	// there's no piece loaded in the edit piece drawing area
-	m_rotateRightButton->set_sensitive(false);
-	m_rotateLeftButton->set_sensitive(false);
-	m_rotateLabel->set_sensitive(false); // nicer visual effect
-	m_mirrorLabel->set_sensitive(false); // nicer visual effect
-	m_mirrorButtonYAxis->set_sensitive(false);
-	m_mirrorButtonXAxis->set_sensitive(false);
+	m_rotateRightButton.set_sensitive(false);
+	m_rotateLeftButton.set_sensitive(false);
+	m_rotateLabel.set_sensitive(false); // nicer visual effect
+	m_mirrorLabel.set_sensitive(false); // nicer visual effect
+	m_mirrorButtonYAxis.set_sensitive(false);
+	m_mirrorButtonXAxis.set_sensitive(false);
 }
 
 TableEditPiece::~TableEditPiece()
@@ -162,21 +221,21 @@ void TableEditPiece::SetPiece(ePieceType_t a_newPiece)
 
 	if (m_thePiece.GetType() == e_noPiece)
 	{
-        m_rotateLabel->set_sensitive(false); // nicer visual effect
-        m_mirrorLabel->set_sensitive(false); // nicer visual effect
-        m_rotateRightButton->set_sensitive(false);
-        m_rotateLeftButton->set_sensitive(false);
-        m_mirrorButtonYAxis->set_sensitive(false);
-        m_mirrorButtonXAxis->set_sensitive(false);
+        m_rotateLabel.set_sensitive(false); // nicer visual effect
+        m_mirrorLabel.set_sensitive(false); // nicer visual effect
+        m_rotateRightButton.set_sensitive(false);
+        m_rotateLeftButton.set_sensitive(false);
+        m_mirrorButtonYAxis.set_sensitive(false);
+        m_mirrorButtonXAxis.set_sensitive(false);
 	}
 	else
 	{
-        m_rotateLabel->set_sensitive(true); // nicer visual effect
-        m_mirrorLabel->set_sensitive(true); // nicer visual effect
-        m_rotateRightButton->set_sensitive(true);
-        m_rotateLeftButton->set_sensitive(true);
-        m_mirrorButtonYAxis->set_sensitive(true);
-        m_mirrorButtonXAxis->set_sensitive(true);
+        m_rotateLabel.set_sensitive(true); // nicer visual effect
+        m_mirrorLabel.set_sensitive(true); // nicer visual effect
+        m_rotateRightButton.set_sensitive(true);
+        m_rotateLeftButton.set_sensitive(true);
+        m_mirrorButtonYAxis.set_sensitive(true);
+        m_mirrorButtonXAxis.set_sensitive(true);
 	}
 
     // notify to whoever is listening to the signal that the editing piece changed
@@ -189,10 +248,10 @@ void TableEditPiece::SetPiece(ePieceType_t a_newPiece)
 bool TableEditPiece::EditPieceDrawingArea_ExposeEvent(GdkEventExpose* event)
 {
 	// This is where we draw on the window
-	Glib::RefPtr<Gdk::Window> window = m_editPieceDrawingArea->get_window();
+	Glib::RefPtr<Gdk::Window> window = m_editPieceDrawingArea.get_window();
 	if(window)
 	{
-		Gtk::Allocation allocation = m_editPieceDrawingArea->get_allocation();
+		Gtk::Allocation allocation = m_editPieceDrawingArea.get_allocation();
 
 		int32_t width  = allocation.get_width();
 		int32_t height = allocation.get_height();
@@ -321,14 +380,14 @@ void TableEditPiece::MirrorXAxisButton_ButtonPressed()
 bool TableEditPiece::InvalidateEditPieceDrawingArea()
 {
     // force the drawing area to be redraw
-    Glib::RefPtr<Gdk::Window> window = m_editPieceDrawingArea->get_window();
+    Glib::RefPtr<Gdk::Window> window = m_editPieceDrawingArea.get_window();
     if(window)
     {
         Gdk::Rectangle rect(
                 0,
                 0,
-                m_editPieceDrawingArea->get_allocation().get_width(),
-                m_editPieceDrawingArea->get_allocation().get_height());
+                m_editPieceDrawingArea.get_allocation().get_width(),
+                m_editPieceDrawingArea.get_allocation().get_height());
 
         window->invalidate_rect(rect, false);
         return true;
@@ -353,8 +412,8 @@ void TableEditPiece::ForceTranslationOfWidgets()
     // so it gets properly translated into the current domain (the 2nd case
     // described above)
 
-    m_rotateLabel->set_label( _(m_rotateLabel->get_label().c_str()) );
-    m_mirrorLabel->set_label( _(m_mirrorLabel->get_label().c_str()) );
+    m_rotateLabel.set_label( _(m_rotateLabel.get_label().c_str()) );
+    m_mirrorLabel.set_label( _(m_mirrorLabel.get_label().c_str()) );
 }
 #else
 void TableEditPiece::ForceTranslationOfWidgets()

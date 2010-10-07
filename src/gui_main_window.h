@@ -55,11 +55,11 @@ public:
     virtual ~MainWindow();
 
 
-    /// @brief handle fatal errors coming from the Game1v1Widget
-    void Game1v1Widget_FatalError(const std::string& a_msg);
+    /// @brief handle fatal errors coming from Game widgets
+    void Notify_FatalError(const std::string& a_msg);
 
-    /// @brief handle game finished signals coming from the Game1v1Widget
-    void Game1v1Widget_GameFinished(const std::string& a_msg);
+    /// @brief handle game finished signals coming from Game widgets
+    void Notify_GameFinished(const std::string& a_msg);
 
     /// @brief callback to be called when the window is about to be closed
     ///        using the X on the corner

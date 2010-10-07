@@ -24,6 +24,7 @@
 /// Ref       Who                When         What
 ///           Faustino Frechilla 30-Mar-2010  Original development
 ///           Faustino Frechilla 25-Apr-2010  libglade dependency removed. Code migrated to GtkBuilder
+///           Faustino Frechilla 07-Oct-2010  Widgets are not loaded from glade file. GtkBuilder not needed
 /// @endhistory
 ///
 // ============================================================================
@@ -32,17 +33,14 @@
 #define _GUI_TABLE_EDIT_PIECE_H_
 
 #include <gtkmm.h>
-#include "gui_exception.h"
 #include "piece.h"
 
 class TableEditPiece :
     public Gtk::Table
 {
 public:
-	/// Instantiates the class. It needs a Gtk::Builder object to retrieve the
-	/// glade info
-    // to be used with m_gtkBuilder->get_widget_derived(GUI_ABOUT_DIALOG_NAME, m_aboutDialog)
-	TableEditPiece(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder) throw (GUIException);
+	/// Instantiates the class
+	TableEditPiece();
 	~TableEditPiece();
 
     /// @brief gray out the whole table and children widgets
@@ -91,32 +89,42 @@ public:
     void SetPieceRGB(float a_red, float a_green, float a_blue);
 
 private:
-    /// @brief the drawing area where the piece is edited
-    Gtk::DrawingArea* m_editPieceDrawingArea;
-
-    /// @brief rotate label
-    Gtk::Label* m_rotateLabel;
-
-    /// @brief mirror label
-    Gtk::Label* m_mirrorLabel;
-
-    /// @brief the rotate right button to edit the piece
-    Gtk::Button* m_rotateRightButton;
-
-    /// @brief the rotate left button to edit the piece
-    Gtk::Button* m_rotateLeftButton;
-
-    /// @brief the mirror over Y axis button to edit the piece
-    Gtk::Button* m_mirrorButtonYAxis;
-
-    /// @brief the mirror over X axis button to edit the piece
-    Gtk::Button* m_mirrorButtonXAxis;
-
-    /// @brief used to retrieve the objects from the Glade design using GtkBuilder
-    Glib::RefPtr<Gtk::Builder> m_gtkBuilder;
-
     /// @brief instance of a piece which is being edited by the user
     Piece m_thePiece;
+
+    /// @brief rotate label
+    Gtk::Label m_rotateLabel;
+
+    /// @brief mirror label
+    Gtk::Label m_mirrorLabel;
+    
+    /// @brief the drawing area where the piece is edited
+    Gtk::DrawingArea m_editPieceDrawingArea;
+
+    Gtk::Arrow m_arrowYLeft;
+    Gtk::Arrow m_arrowYRight;
+    Gtk::Arrow m_arrowXUp;
+    Gtk::Arrow m_arrowXDown;
+    Gtk::Arrow m_arrowRotateRight;
+    Gtk::Arrow m_arrowRotateLeft;
+    
+    /// @brief the rotate right button to edit the piece
+    Gtk::Button m_rotateRightButton;
+
+    /// @brief the rotate left button to edit the piece
+    Gtk::Button m_rotateLeftButton;
+
+    /// @brief the mirror over Y axis button to edit the piece
+    Gtk::Button m_mirrorButtonYAxis;
+    
+    /// @brief hbox to be inserted into m_mirrorButtonYAxis
+    Gtk::HBox m_mirrorButtonYAxisHBox;
+
+    /// @brief the mirror over X axis button to edit the piece
+    Gtk::Button m_mirrorButtonXAxis;
+    
+    /// @brief vbox to be inserted into m_mirrorButtonXAxis
+    Gtk::VBox m_mirrorButtonXAxisVBox;
 
     /// @brief Piece's colour: red channel
     float m_red;
@@ -143,7 +151,6 @@ private:
     void ForceTranslationOfWidgets();
 
     // prevent the default constructors from being used
-	TableEditPiece();
 	TableEditPiece(const TableEditPiece &a_src);
 	TableEditPiece& operator=(const TableEditPiece &a_src);
 };

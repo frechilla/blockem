@@ -37,7 +37,6 @@
 #include "g_blocking_queue.h"
 #include "gui_drawing_area_show_pieces.h"
 #include "gui_drawing_area_board.h"
-#include "gui_exception.h"
 #include "gui_main_window_worker_thread.h"
 #include "gui_stop_watch_label.h"
 #include "gui_table_edit_piece.h"
@@ -55,7 +54,7 @@ class Game1v1Widget :
 {
 public:
     /// Instantiates the class
-    Game1v1Widget(Glib::RefPtr<Gtk::Builder> a_gtkBuilder) throw (GUIException);
+    Game1v1Widget();
     virtual ~Game1v1Widget();
 
     /// Cancels computing thread and sets it to "waiting" state
@@ -151,9 +150,6 @@ private:
     /// this variables contains whose go it is
     Game1v1::eGame1v1Player_t m_currentMovingPlayer;
 
-    /// @brief used to retrieve the objects from the Glade design
-    Glib::RefPtr<Gtk::Builder> m_gtkBuilder;
-
     /// @brief the 1vs1 game which will be represented in the window
     Game1v1 m_the1v1Game;
 
@@ -176,7 +172,7 @@ private:
     DrawingAreaBoard m_boardDrawingArea;
 
     /// @brief the table where the selected piece is edited
-    TableEditPiece* m_editPieceTable;
+    TableEditPiece m_editPieceTable;
 
     /// @brief the table that contains the board + pieces left
     Gtk::HBox m_hBoxGameStatus;
@@ -256,7 +252,6 @@ private:
     void ForceTranslationOfWidgets();
 
     // prevent the default constructors to be used
-    Game1v1Widget();
     Game1v1Widget(const Game1v1Widget &a_src);
     Game1v1Widget& operator=(const Game1v1Widget &a_src);
 };
