@@ -42,7 +42,7 @@ const char* Piece::m_pieceDescription[e_numberOfPieces] =
     // some names are based on
     // http://www.boardgamegeek.com/image/112331/blokus
     // some others are based on hours and hours of playing :)
-    
+
     // marked to be translated, but they are static strings. If the string
     // is to be shown in another language gettext must be used, for example:
     //     _(Piece::m_pieceDescription[0])
@@ -194,7 +194,7 @@ void Piece::SetPiece(
 
 const char* Piece::GetPieceDescription(ePieceType_t a_pieceType)
 {
-    return _(Piece::m_pieceDescription[a_pieceType]);
+    return Piece::m_pieceDescription[a_pieceType];
 }
 
 void Piece::Reset()

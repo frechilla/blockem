@@ -116,8 +116,8 @@ public:
 	Piece(ePieceType_t a_type = e_noPiece);
     virtual ~Piece();
 
-    /// @return a string of characters that describes in some sort of human 
-    ///         language (internationalised) the piece 'a_pieceType'
+    /// @return a string of characters that describes in English
+    ///         the piece 'a_pieceType' (not internationalised)
     static const char* GetPieceDescription(ePieceType_t a_pieceType);
 
     /// Reset the piece to the original configuration
