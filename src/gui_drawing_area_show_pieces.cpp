@@ -114,6 +114,11 @@ DrawingAreaShowPieces::DrawingAreaShowPieces(const Player &a_player, eOrientatio
     	set_size_request(-1, MINIMUM_WIDGET_SIZE);
     	break;
     }
+    
+    // configure tooltip signal handling
+    this->set_has_tooltip();
+    this->signal_query_tooltip().connect(sigc::mem_fun(
+        *this, &DrawingAreaShowPieces::on_query_tooltip));
 }
 
 DrawingAreaShowPieces::~DrawingAreaShowPieces()
@@ -321,14 +326,9 @@ bool DrawingAreaShowPieces::on_expose_event(GdkEventExpose* event)
     return true;
 }
 
-bool DrawingAreaShowPieces::on_button_press_event(GdkEventButton *event)
+ePieceType_t DrawingAreaShowPieces::CoordinateToPieceType(
+    int32_t x, int32_t y)
 {
-    Glib::RefPtr<Gdk::Window> window = this->get_window();
-    if (!window)
-    {
-        return false;
-    }
-
     Gtk::Allocation allocation = this->get_allocation();
 
     int32_t width  = allocation.get_width();
@@ -377,8 +377,8 @@ bool DrawingAreaShowPieces::on_button_press_event(GdkEventButton *event)
     int32_t xc = width  / 2;
     int32_t yc = height / 2;
 
-    if ( ( ((event->x) > (xc - rectWidth/2))  && ((event->x) < (xc + rectWidth/2))  ) &&
-         ( ((event->y) > (yc - rectHeight/2)) && ((event->y) < (yc + rectHeight/2)) ) )
+    if ( ( ((x) > (xc - rectWidth/2))  && ((x) < (xc + rectWidth/2))  ) &&
+         ( ((y) > (yc - rectHeight/2)) && ((y) < (yc + rectHeight/2)) ) )
     {
         int32_t row, col;
 
@@ -387,7 +387,7 @@ bool DrawingAreaShowPieces::on_button_press_event(GdkEventButton *event)
         {
 			for (col = 1; col < PICK_PLAYER_PIECES_ARRAY_NCOLS; col++)
 			{
-				if (event->x < ((xc - rectWidth/2) + (littleSquare * col) + 1))
+				if (x < ((xc - rectWidth/2) + (littleSquare * col) + 1))
 				{
 					break;
 				}
@@ -395,7 +395,7 @@ bool DrawingAreaShowPieces::on_button_press_event(GdkEventButton *event)
 
 			for (row = 1; row < PICK_PLAYER_PIECES_ARRAY_NROWS; row++)
 			{
-				if (event->y < ((yc - rectHeight/2) + (littleSquare * row) + 1))
+				if (y < ((yc - rectHeight/2) + (littleSquare * row) + 1))
 				{
 					break;
 				}
@@ -412,7 +412,7 @@ bool DrawingAreaShowPieces::on_button_press_event(GdkEventButton *event)
         {
 			for (row = 1; row < PICK_PLAYER_PIECES_ARRAY_NROWS; row++)
 			{
-				if (event->x < ((xc - rectWidth/2) + (littleSquare * row) + 1))
+				if (x < ((xc - rectWidth/2) + (littleSquare * row) + 1))
 				{
 					break;
 				}
@@ -420,7 +420,7 @@ bool DrawingAreaShowPieces::on_button_press_event(GdkEventButton *event)
 
 			for (col = 1; col < PICK_PLAYER_PIECES_ARRAY_NCOLS; col++)
 			{
-				if (event->y < ((yc - rectHeight/2) + (littleSquare * col) + 1))
+				if (y < ((yc - rectHeight/2) + (littleSquare * col) + 1))
 				{
 					break;
 				}
@@ -440,21 +440,55 @@ bool DrawingAreaShowPieces::on_button_press_event(GdkEventButton *event)
 			}
         } // if ( (m_orientation == eOrientation_leftToRight) ...
 
-        ePieceType_t pieceType = pickPlayerPiecesArray[row-1][col-1];
-        if ( (pieceType != e_noPiece) &&
-             (m_thePlayer->IsPieceAvailable(pieceType)) )
-        {
-            // the user clicked where some piece was being shown
-            // notify it to whoever listens
-            m_signalPiecePicked.emit(pieceType);
-
-            return true;
-        }
+        
+        return pickPlayerPiecesArray[row-1][col-1];
     }
+    
+    return e_noPiece;
+}
 
-    // got to here. The User clicked in somewhere where there was no piece.
-    // selected piece is restarted (no piece will be shown)
-    m_signalPiecePicked.emit(e_noPiece);
+bool DrawingAreaShowPieces::on_query_tooltip(
+    int x, 
+    int y, 
+    bool keyboard_tooltip, 
+    const Glib::RefPtr<Gtk::Tooltip>& tooltip)
+{    
+    ePieceType_t pieceType = CoordinateToPieceType(x, y);
+    
+    if ( (pieceType != e_noPiece) &&
+         (m_thePlayer->IsPieceAvailable(pieceType)) )
+    {
+        // mouse pointer is over an available piece. Show tooltip with
+        // the name of the piece (GetPieceDescription returns it already
+        // translated)
+        tooltip->set_text(Piece::GetPieceDescription(pieceType));
+
+        // true cos we want the tooltip to be shown right now
+        return true;
+    }
+    
+    // do not show the tooltip. Piece is not available or mouse is not 
+    // stopped over any piece
+    return false;
+}
+
+bool DrawingAreaShowPieces::on_button_press_event(GdkEventButton *event)
+{
+    ePieceType_t pieceType = CoordinateToPieceType(event->x, event->y);
+
+    if ( (pieceType != e_noPiece) &&
+         (m_thePlayer->IsPieceAvailable(pieceType)) )
+    {
+        // the user clicked where some piece was being shown
+        // notify it to whoever listens
+        m_signalPiecePicked.emit(pieceType);
+    }
+    else
+    {
+        // User clicked in somewhere where there was no piece.
+        // selected piece is restarted (no piece will be shown)
+        m_signalPiecePicked.emit(e_noPiece);
+    }
 
     return true;
 }
