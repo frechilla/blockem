@@ -66,7 +66,7 @@ static const float    LAST_PIECE_EFFECT_INITIAL_ALPHA = 1.0;
 
 DrawingAreaBoard::DrawingAreaBoard(const Board &a_board) :
     Gtk::DrawingArea(),
-    m_theBoard(a_board),
+    m_theBoard(&a_board),
     m_currentPlayer(NULL),
     m_currentPiece(e_noPiece),
     m_currentCoord(COORD_UNINITIALISED, COORD_UNINITIALISED),
@@ -89,6 +89,12 @@ DrawingAreaBoard::~DrawingAreaBoard()
 {
 }
 
+void DrawingAreaBoard::ResetBoard(const Board &a_board)
+{
+    CancelLatestPieceDeployedEffect();
+    m_theBoard = &a_board;
+}
+
 void DrawingAreaBoard::AddPlayerToList(const Player &a_player)
 {
     m_playerList.push_back(&a_player);
@@ -96,6 +102,7 @@ void DrawingAreaBoard::AddPlayerToList(const Player &a_player)
 
 void DrawingAreaBoard::ResetPlayerList()
 {
+    CancelLatestPieceDeployedEffect();
     m_playerList.clear();
 }
 
@@ -188,11 +195,11 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
     int32_t squareSize = std::min(width, height);
 
     int32_t littleSquare = std::min(
-            squareSize / m_theBoard.GetNRows(),
-            squareSize / m_theBoard.GetNColumns());
+            squareSize / m_theBoard->GetNRows(),
+            squareSize / m_theBoard->GetNColumns());
 
-    int32_t squareHeight = littleSquare * m_theBoard.GetNRows();
-    int32_t squareWidth  = littleSquare * m_theBoard.GetNColumns();
+    int32_t squareHeight = littleSquare * m_theBoard->GetNRows();
+    int32_t squareWidth  = littleSquare * m_theBoard->GetNColumns();
 
     // coordinates for the centre of the window
     int32_t xc = width  / 2;
@@ -221,10 +228,10 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
         const Player* thisPlayer = *it;
         thisPlayer->GetColour(red, green, blue);
 
-        if ((thisPlayer->NumberOfPiecesAvailable() == e_numberOfPieces) &&
-            (thisPlayer->GetStartingCoordinate().Initialised()) )
+        if (thisPlayer->GetStartingCoordinate().Initialised() &&
+            m_theBoard->IsCoordEmpty(thisPlayer->GetStartingCoordinate()))
         {
-            // if this player put down no pieces yet, draw a small circle in the starting point
+            // draw a small circle in the starting point if it's empty
             cr->set_source_rgba(
                     static_cast<float>(red)  / 255,
                     static_cast<float>(green)/ 255,
@@ -241,30 +248,54 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
 
             cr->fill();
         }
-        else
-        {
-            // this player already put some pieces on the board.
-            // go through all the squares of the board drawing them all +
-            // some information that the board drawing area has been requested
-            // to draw too
-            cr->set_source_rgb(
-                    static_cast<float>(red)  / 255,
-                    static_cast<float>(green)/ 255,
-                    static_cast<float>(blue) / 255);
 
-            Coordinate thisCoord(0, 0);
-            for (thisCoord.m_row = 0;
-                 thisCoord.m_row < m_theBoard.GetNRows() ;
-                 thisCoord.m_row++)
+        // Go through all the squares of the board drawing them all +
+        // Check also if some information has been requested to be drawn
+        cr->set_source_rgb(
+                static_cast<float>(red)  / 255,
+                static_cast<float>(green)/ 255,
+                static_cast<float>(blue) / 255);
+
+        Coordinate thisCoord;
+        for (thisCoord.m_row = 0;
+             thisCoord.m_row < m_theBoard->GetNRows() ;
+             thisCoord.m_row++)
+        {
+            for (thisCoord.m_col = 0;
+                 thisCoord.m_col <  m_theBoard->GetNColumns() ;
+                 thisCoord.m_col++)
             {
-                for (thisCoord.m_col = 0;
-                     thisCoord.m_col <  m_theBoard.GetNColumns() ;
-                     thisCoord.m_col++)
+                if (m_theBoard->IsPlayerInCoord(
+                        thisCoord,
+                        *thisPlayer))
                 {
-                    if (m_theBoard.IsPlayerInCoord(
-                            thisCoord,
-                            *thisPlayer))
+                    cr->rectangle(
+                            (xc - squareWidth/2) +  (littleSquare * thisCoord.m_col) + 1,
+                            (yc - squareHeight/2) + (littleSquare * thisCoord.m_row) + 1,
+                            littleSquare - 1,
+                            littleSquare - 1);
+
+                    cr->fill();
+                }
+                else if ( m_theBoard->IsCoordEmpty(thisCoord) &&
+                          ( (m_forbiddenAreaPlayer == thisPlayer) ||
+                            (m_influenceAreaPlayer == thisPlayer) ) )
+
+                {
+                    // save current cairo context in an internal stack. This coord
+                    // might belong to current player's forbidden or influence area
+                    cr->save();
+
+                    // draw the influence area
+                    if ( (thisPlayer == m_influenceAreaPlayer) &&
+                         thisPlayer->IsCoordInfluencedByPlayer(thisCoord) )
                     {
+                        cr->set_source_rgba(
+                                static_cast<float>(red)  / 255,
+                                static_cast<float>(green)/ 255,
+                                static_cast<float>(blue) / 255,
+                                INFLUENCE_AREA_ALPHA);
+
                         cr->rectangle(
                                 (xc - squareWidth/2) +  (littleSquare * thisCoord.m_col) + 1,
                                 (yc - squareHeight/2) + (littleSquare * thisCoord.m_row) + 1,
@@ -273,122 +304,94 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
 
                         cr->fill();
                     }
-                    else if ( m_theBoard.IsCoordEmpty(thisCoord) &&
-                              ( (m_forbiddenAreaPlayer != NULL) ||
-                                (m_influenceAreaPlayer != NULL) ) )
 
+                    // mark the coords in the board where the current player can't go
+                    // if a coordinate belongs to the influenced area it can't belong
+                    // to the forbidden area (see definition of influenced area in rules.h)
+                    // it can save a few cycles cos IsCoordTouchingPlayer is not a trivial function
+                    if ( (thisPlayer == m_forbiddenAreaPlayer) &&
+                         (thisPlayer->IsCoordInfluencedByPlayer(thisCoord) == false) &&
+                         rules::IsCoordTouchingPlayerCompute(*m_theBoard, thisCoord, *thisPlayer) )
                     {
-                        // save current cairo context in an internal stack. This coord
-                        // might belong to current player's forbidden or influence area
-                        cr->save();
-
-                        // draw the influence area
-                        if ( (thisPlayer == m_influenceAreaPlayer) &&
-                             thisPlayer->IsCoordInfluencedByPlayer(thisCoord) )
-                        {
-                            cr->set_source_rgba(
-                                    static_cast<float>(red)  / 255,
-                                    static_cast<float>(green)/ 255,
-                                    static_cast<float>(blue) / 255,
-                                    INFLUENCE_AREA_ALPHA);
-
-                            cr->rectangle(
-                                    (xc - squareWidth/2) +  (littleSquare * thisCoord.m_col) + 1,
-                                    (yc - squareHeight/2) + (littleSquare * thisCoord.m_row) + 1,
-                                    littleSquare - 1,
-                                    littleSquare - 1);
-
-                            cr->fill();
-                        }
-
-                        // mark the coords in the board where the current player can't go
-                        // if a coordinate belongs to the influenced area it can't belong
-                        // to the forbidden area (see definition of influenced area in rules.h)
-                        // it can save a few cycles cos IsCoordTouchingPlayer is not a trivial function
-                        if ( (thisPlayer == m_forbiddenAreaPlayer) &&
-                             (thisPlayer->IsCoordInfluencedByPlayer(thisCoord) == false) &&
-                             rules::IsCoordTouchingPlayerCompute(m_theBoard, thisCoord, *thisPlayer) )
-                        {
-                            // forbidden areas are drawn with exactly the inverse colour
-                            cr->set_source_rgba(
-                                    1 - (static_cast<float>(red)  / 255),
-                                    1 - (static_cast<float>(green)/ 255),
-                                    1 - (static_cast<float>(blue) / 255),
-                                    FORBIDDEN_AREA_ALPHA);
-
-                            cr->rectangle(
-                                    (xc - squareWidth/2) +  (littleSquare * thisCoord.m_col) + 1,
-                                    (yc - squareHeight/2) + (littleSquare * thisCoord.m_row) + 1,
-                                    littleSquare - 1,
-                                    littleSquare - 1);
-
-                            cr->fill();
-                        }
-
-                        // restore the cairo context from the internal stack
-                        cr->restore();
-                    }
-                } // for (int32_t columnCount
-            } // for (int32_t rowCount
-
-            // draw a small little circle where nk points are (with a bit of transparency)
-            if (m_showNKPoints)
-            {
-                cr->set_source_rgba(
-                        static_cast<float>(red)  / 255,
-                        static_cast<float>(green)/ 255,
-                        static_cast<float>(blue) / 255,
-                        STARTING_COORD_ALPHA);
-
-                STLCoordinateSet_t nkPointSet;
-                thisPlayer->GetAllNucleationPoints(nkPointSet);
-                STLCoordinateSet_t::const_iterator nkIterator = nkPointSet.begin();
-                while(nkIterator != nkPointSet.end())
-                {
-                    const Coordinate &thisCoord = *nkIterator;
-                    STLCoordinateSet_t::iterator globalIterator = globalNKPointSet.find(thisCoord);
-                    if (globalIterator == globalNKPointSet.end())
-                    {
-                        // this nk point is not shared. Draw it with the default colour
-                        globalNKPointSet.insert(thisCoord);
-
-                        cr->arc(xc - squareWidth/2  +
-                                    (littleSquare * thisCoord.m_col) + littleSquare/2,
-                                yc - squareHeight/2 +
-                                    (littleSquare * thisCoord.m_row) + littleSquare/2,
-                                (littleSquare / 2) - (littleSquare / 3),
-                                0.0,
-                                2 * M_PI);
-                        cr->fill();
-                    }
-                    else
-                    {
-                        // shared nk point. Draw it black
-                        cr->save();
-
-                        cr->set_operator(Cairo::OPERATOR_CLEAR);
+                        // forbidden areas are drawn with exactly the inverse colour
                         cr->set_source_rgba(
-                                COLOUR_BLACK_CHANNEL_RED,
-                                COLOUR_BLACK_CHANNEL_GREEN,
-                                COLOUR_BLACK_CHANNEL_BLUE,
-                                STARTING_COORD_ALPHA);
+                                1 - (static_cast<float>(red)  / 255),
+                                1 - (static_cast<float>(green)/ 255),
+                                1 - (static_cast<float>(blue) / 255),
+                                FORBIDDEN_AREA_ALPHA);
 
-                        cr->arc(xc - squareWidth/2  +
-                                    (littleSquare * thisCoord.m_col) + littleSquare/2,
-                                yc - squareHeight/2 +
-                                    (littleSquare * thisCoord.m_row) + littleSquare/2,
-                                (littleSquare / 2) - (littleSquare / 3),
-                                0.0,
-                                2 * M_PI);
+                        cr->rectangle(
+                                (xc - squareWidth/2) +  (littleSquare * thisCoord.m_col) + 1,
+                                (yc - squareHeight/2) + (littleSquare * thisCoord.m_row) + 1,
+                                littleSquare - 1,
+                                littleSquare - 1);
+
                         cr->fill();
-
-                        cr->restore();
                     }
 
-                    nkIterator++;
-                } // while(nkIterator != nkPointSet.end())
-            } // if (m_showNKPoints)
-        } // else if ( thisPlayer->NumberOfPiecesAvailable() == e_numberOfPieces)
+                    // restore the cairo context from the internal stack
+                    cr->restore();
+                }
+            } // for (int32_t columnCount
+        } // for (int32_t rowCount
+
+        // draw a small little circle where nk points are (with a bit of transparency)
+        if (m_showNKPoints)
+        {
+            cr->set_source_rgba(
+                    static_cast<float>(red)  / 255,
+                    static_cast<float>(green)/ 255,
+                    static_cast<float>(blue) / 255,
+                    STARTING_COORD_ALPHA);
+
+            STLCoordinateSet_t nkPointSet;
+            thisPlayer->GetAllNucleationPoints(nkPointSet);
+            STLCoordinateSet_t::const_iterator nkIterator = nkPointSet.begin();
+            while(nkIterator != nkPointSet.end())
+            {
+                const Coordinate &thisCoord = *nkIterator;
+                STLCoordinateSet_t::iterator globalIterator = globalNKPointSet.find(thisCoord);
+                if (globalIterator == globalNKPointSet.end())
+                {
+                    // this nk point is not shared. Draw it with the default colour
+                    globalNKPointSet.insert(thisCoord);
+
+                    cr->arc(xc - squareWidth/2  +
+                                (littleSquare * thisCoord.m_col) + littleSquare/2,
+                            yc - squareHeight/2 +
+                                (littleSquare * thisCoord.m_row) + littleSquare/2,
+                            (littleSquare / 2) - (littleSquare / 3),
+                            0.0,
+                            2 * M_PI);
+                    cr->fill();
+                }
+                else
+                {
+                    // shared nk point. Draw it black
+                    cr->save();
+
+                    cr->set_operator(Cairo::OPERATOR_CLEAR);
+                    cr->set_source_rgba(
+                            COLOUR_BLACK_CHANNEL_RED,
+                            COLOUR_BLACK_CHANNEL_GREEN,
+                            COLOUR_BLACK_CHANNEL_BLUE,
+                            STARTING_COORD_ALPHA);
+
+                    cr->arc(xc - squareWidth/2  +
+                                (littleSquare * thisCoord.m_col) + littleSquare/2,
+                            yc - squareHeight/2 +
+                                (littleSquare * thisCoord.m_row) + littleSquare/2,
+                            (littleSquare / 2) - (littleSquare / 3),
+                            0.0,
+                            2 * M_PI);
+                    cr->fill();
+
+                    cr->restore();
+                }
+
+                nkIterator++;
+            } // while(nkIterator != nkPointSet.end())
+        } // if (m_showNKPoints)
 
         // next player...
         it++;
@@ -406,24 +409,21 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
         uint8_t blue  = 0;
         m_currentPlayer->GetColour(red, green, blue);
 
-        if (m_currentPlayer->NumberOfPiecesAvailable() == e_numberOfPieces)
+        if (!m_currentPlayer->GetStartingCoordinate().Initialised() &&
+            m_currentPlayer->NumberOfPiecesAvailable() == e_numberOfPieces)
         {
-            // piece can be deployed if starting coord of this player is not
-            // initialised (it can start from everywhere on the board) or
-            // if the piece is deployable in that starting coordinate (it has
-            // been previously initialised)
-            if ( (!m_currentPlayer->GetStartingCoordinate().Initialised() &&
-                   rules::IsPieceDeployableInStartingPoint(
-                       m_theBoard,
+            // player has no starting coordinate set, but it has all the pieces
+            // available. It can start from everywhere in the board, check if
+            // current location is valid
+            //
+            // use IsPieceDeployableInCoord instead of IsPieceDeployableInStartingPoint
+            // to support blockem challenges
+            if (rules::IsPieceDeployableInCoord(
+                       *m_theBoard,
                        m_currentPiece.GetCurrentConfiguration(),
                        m_currentCoord,
-                       m_currentCoord)) ||
-                 ( m_currentPlayer->GetStartingCoordinate().Initialised() &&
-                   rules::IsPieceDeployableInStartingPoint(
-                       m_theBoard,
-                       m_currentPiece.GetCurrentConfiguration(),
                        m_currentCoord,
-                       m_currentPlayer->GetStartingCoordinate())) )
+                       *m_currentPlayer))
             {
                 cr->set_source_rgba(
                         static_cast<float>(red)  / 255,
@@ -440,8 +440,43 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
                         GHOST_PIECE_ALPHA_WRONG);
             }
         }
+        else if (m_currentPlayer->GetStartingCoordinate().Initialised() &&
+                 m_theBoard->IsCoordEmpty(m_currentPlayer->GetStartingCoordinate()))
+        {
+            // check if the piece can be deployed on the starting coordinate
+            // or in any of the available nucleation points
+            //
+            // use IsPieceDeployableInCoord instead of IsPieceDeployableInStartingPoint
+            // to support blockem challenges
+            if ( rules::IsPieceDeployableInCoord(
+                       *m_theBoard,
+                       m_currentPiece.GetCurrentConfiguration(),
+                       m_currentCoord,
+                       m_currentPlayer->GetStartingCoordinate(),
+                       *m_currentPlayer) ||
+                 rules::IsPieceDeployableCompute(
+                        *m_theBoard,
+                        m_currentPiece.GetCurrentConfiguration(),
+                        m_currentCoord,
+                        *m_currentPlayer) )
+            {
+                cr->set_source_rgba(
+                        static_cast<float>(red)  / 255,
+                        static_cast<float>(green)/ 255,
+                        static_cast<float>(blue) / 255,
+                        GHOST_PIECE_ALPHA_RIGHT);
+            }
+            else
+            {
+                cr->set_source_rgba(
+                        static_cast<float>(red)  / 255,
+                        static_cast<float>(green)/ 255,
+                        static_cast<float>(blue) / 255,
+                        GHOST_PIECE_ALPHA_WRONG);
+            }
+        }        
         else if (rules::IsPieceDeployableCompute(
-                m_theBoard,
+                *m_theBoard,
                 m_currentPiece.GetCurrentConfiguration(),
                 m_currentCoord,
                 *m_currentPlayer))
@@ -491,7 +526,7 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
         // or maybe have a look at the operator CAIRO_OPERATOR_CLEAR instead of SOURCE
         // http://cairographics.org/operators/
 
-        // The second object is drawn as if nothing else were below
+        // The second object is drawn as if nothing else was below
         cr->set_operator(Cairo::OPERATOR_SOURCE);
 
         uint8_t red   = 0;
@@ -544,13 +579,13 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
             BOARD_BLUE);
 
     // draw the inside lines of the board
-    for (int32_t i = 1; i < m_theBoard.GetNRows(); i++)
+    for (int32_t i = 1; i < m_theBoard->GetNRows(); i++)
     {
         cr->move_to(xc - squareWidth/2 + littleSquare*i, yc - squareHeight/2);
         cr->line_to(xc - squareWidth/2 + littleSquare*i, yc + squareHeight/2);
     }
 
-    for (int32_t i = 1; i < m_theBoard.GetNColumns(); i++)
+    for (int32_t i = 1; i < m_theBoard->GetNColumns(); i++)
     {
         cr->move_to(xc - squareWidth/2, yc - squareHeight/2 + littleSquare*i);
         cr->line_to(xc + squareWidth/2, yc - squareHeight/2 + littleSquare*i);
@@ -661,11 +696,11 @@ bool DrawingAreaBoard::DrawingAreaToBoardCoord(
     int32_t squareSize = std::min(width, height);
 
     int32_t littleSquare = std::min(
-                squareSize / m_theBoard.GetNRows(),
-                squareSize / m_theBoard.GetNColumns());
+                squareSize / m_theBoard->GetNRows(),
+                squareSize / m_theBoard->GetNColumns());
 
-    int32_t squareHeight = littleSquare * m_theBoard.GetNRows();
-    int32_t squareWidth  = littleSquare * m_theBoard.GetNColumns();
+    int32_t squareHeight = littleSquare * m_theBoard->GetNRows();
+    int32_t squareWidth  = littleSquare * m_theBoard->GetNColumns();
 
     int32_t xc = width  / 2;
     int32_t yc = height / 2;
@@ -674,7 +709,7 @@ bool DrawingAreaBoard::DrawingAreaToBoardCoord(
          ( (a_windowY > (yc - squareHeight/2)) && (a_windowY < (yc + squareHeight/2)) ) )
     {
         int32_t row, col;
-        for (row = 0; row < m_theBoard.GetNRows(); row++)
+        for (row = 0; row < m_theBoard->GetNRows(); row++)
         {
             if (a_windowY < ((yc - squareHeight/2) + (littleSquare * row)))
             {
@@ -682,7 +717,7 @@ bool DrawingAreaBoard::DrawingAreaToBoardCoord(
             }
         }
 
-        for (col = 1; col < m_theBoard.GetNColumns(); col++)
+        for (col = 1; col < m_theBoard->GetNColumns(); col++)
         {
             if (a_windowX < ((xc - squareWidth/2) + (littleSquare * col)))
             {

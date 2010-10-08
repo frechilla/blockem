@@ -11,6 +11,7 @@
       could be easily expanded in future
     - Format of blockem challenges has been designed. Next version (0.3.1) is 
       expected to add support to play these challenges on the GUI
+    - Algorithm to draw the board status improved. It needs less processing now
     - Bug fixed in win32 platforms: Bogus handling of i18n in command line 
       arguments
 

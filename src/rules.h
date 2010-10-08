@@ -93,30 +93,31 @@ namespace rules
             const Player     &a_player,
             const Coordinate &a_coord);
 
-    /// return true if the piece can be deployed in the position defined by the 3rdparameter
-    /// it checks:
+    /// return true if the piece can be deployed in the position defined by the
+    /// 4rdparameter. It checks:
     ///   1) if the space that the piece will occupy is empty (and inside the board)
     ///   2) if the piece is not touching another piece of 'a_player'
-    ///   3) if the piece will be occupying the nucleation point defined by the 4th
+    ///   3) if the piece will be occupying thecoordinate defined by the 4th
     /// it doesn't rotate or mirror the piece
     /// @param the blokus board
     /// @param the piece configuration
     /// @param coord where the piece is going to be deployed
-    /// @param coord of the nucleation point the piece must make use of
+    /// @param coord that the piece must touch
     /// @param the player that owns the pieces
-    bool IsPieceDeployableInNKPoint(
+    bool IsPieceDeployableInCoord(
             const Board              &a_board,
             const PieceConfiguration &a_pieceConf,
             const Coordinate         &a_coord,
-            const Coordinate         &a_nkPoint,
+            const Coordinate         &a_mustTouchCoord,
             const Player             &a_player);
 
     /// return true if the piece can be deployed in the position defined by the 3rdparameter
     /// it checks:
     ///   1) if the space that the piece will occupy is empty (and inside the board)
     ///   2) if the piece will be occupying the starting point defined by the 4th
-    /// it doesn't
-    ///   1) check if the piece is not touching another piece of 'a_player' (board should be empty)
+    /// it doesn't 
+    ///   1) check if the piece is not touching another piece of 'a_player'
+    ///      (it assumes player has no pieces put down on the board)
     ///   2) rotate or mirror the piece
     /// @param the blokus board
     /// @param the piece configuration

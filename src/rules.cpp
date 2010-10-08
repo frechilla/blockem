@@ -248,18 +248,18 @@ bool rules::IsNucleationPointCompute(
     return isNucleationPoint;
 }
 
-bool rules::IsPieceDeployableInNKPoint(
+bool rules::IsPieceDeployableInCoord(
         const Board              &a_board,
         const PieceConfiguration &a_pieceConf,
         const Coordinate         &a_coord,
-        const Coordinate         &a_nkPoint,
+        const Coordinate         &a_mustTouchCoord,
         const Player             &a_player)
 {
 #ifdef DEBUG
-    assert(a_player.IsNucleationPoint(a_nkPoint));
+    assert(a_board.IsCoordEmpty(a_mustTouchCoord));
 #endif
 
-    bool touchesNKPoint = false;
+    bool touchesCoord = false;
 
     PieceConfigurationContainer_t::const_iterator it;
     for (it  = a_pieceConf.m_pieceSquares.begin();
@@ -278,14 +278,14 @@ bool rules::IsPieceDeployableInNKPoint(
             return false;
         }
 
-        if ( (currentCoord.m_row == a_nkPoint.m_row) &&
-             (currentCoord.m_col == a_nkPoint.m_col) )
+        if ( (currentCoord.m_row == a_mustTouchCoord.m_row) &&
+             (currentCoord.m_col == a_mustTouchCoord.m_col) )
         {
-        	touchesNKPoint = true;
+        	touchesCoord = true;
         }
     } // for (it  = a_pieceConf.m_pieceSquares.begin();
 
-    if (touchesNKPoint == false)
+    if (touchesCoord == false)
     {
         // if no square of the piece is touching the nk point
         // the piece can't be deployed in a_coord
@@ -400,7 +400,7 @@ bool rules::CalculateNextValidCoordInNucleationPoint(
         // check the actual row saved in thisCoord.m_row first
         while(thisCoord.m_col <= endCol)
         {
-            if (IsPieceDeployableInNKPoint(
+            if (IsPieceDeployableInCoord(
                     a_board, a_pieceConf, thisCoord, a_nkPointCoord, a_player))
             {
                 in_out_validCoord.m_row = thisCoord.m_row;
@@ -416,7 +416,7 @@ bool rules::CalculateNextValidCoordInNucleationPoint(
         {
             for (thisCoord.m_col = startCol; thisCoord.m_col <= endCol; thisCoord.m_col++)
             {
-				if (IsPieceDeployableInNKPoint(
+				if (IsPieceDeployableInCoord(
 						a_board, a_pieceConf, thisCoord, a_nkPointCoord, a_player))
 				{
                     in_out_validCoord.m_row = thisCoord.m_row;
@@ -473,7 +473,7 @@ int32_t rules::CalculateValidCoordsInNucleationPoint(
             a_nkPointCoord.m_row - it->m_row,
             a_nkPointCoord.m_col - it->m_col);
 
-        if (IsPieceDeployableInNKPoint(
+        if (IsPieceDeployableInCoord(
                 a_board, a_pieceConf, thisCoord, a_nkPointCoord, a_player))
         {
 #ifdef DEBUG

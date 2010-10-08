@@ -114,7 +114,7 @@ void RulesTest::DoTest()
     TestIsCoordTouchingPlayerCompute();
     TestIsPieceDeployableCompute();
     TestsNucleationPointCompute();
-    TestIsPieceDeployableInNKPoint();
+    TestIsPieceDeployableInCoord();
     TestIsPieceDeployableInStartingPoint();
     TestCalculateValidCoordsInNucleationPoint();
     TestCalculateNextValidCoordInNucleationPoint();
@@ -139,7 +139,7 @@ void RulesTest::TestsNucleationPointCompute()
 {
 }
 
-void RulesTest::TestIsPieceDeployableInNKPoint()
+void RulesTest::TestIsPieceDeployableInCoord()
 {
 }
 

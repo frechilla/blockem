@@ -1,5 +1,5 @@
 // ============================================================================
-// Copyright 2009 Faustino Frechilla
+// Copyright 2010 Faustino Frechilla
 //
 // This file is part of Blockem.
 //
@@ -16,41 +16,36 @@
 // You should have received a copy of the GNU General Public License along
 // with Blockem. If not, see http://www.gnu.org/licenses/.
 //
-/// @file  game_total_allocation.h
+/// @file  game_challenge.h
 /// @brief
 ///
 /// @author Faustino Frechilla
 /// @history
 /// Ref       Who                When         What
-///           Faustino Frechilla 13-Sep-2009  Original development
+///           Faustino Frechilla 08-Oct-2010  Original development
 /// @endhistory
 ///
 // ============================================================================
 
-#ifndef GAMETOTALALLOCATION_H_
-#define GAMETOTALALLOCATION_H_
+#ifndef __GAME_CHALLENGE_H__
+#define __GAME_CHALLENGE_H__
 
 #include "player.h"
 #include "board.h"
 #include "coordinate.h"
+#include "blockem_challenge.h"
 
-/// @brief A Game in which 1 player tries to allocate all the pieces in the board
-///        No opponent. Just one player, one board and the pieces
-class GameTotalAllocation
+/// @brief A Game in which 1 player tries to allocate all the pieces on a board
+///        Described by a challenge (see blockem challenge doc)
+class GameChallenge
 {
 public:
 	/// @brief builds the game
-	/// It creates a board and 1 players, 'me' and the board
+	/// It creates a board and a player (challenger), 'me' and the board
 	/// using a_rows and a_columns as size
-    /// @param number of rows
-    /// @param number of columns
-    /// @param starting coordinate. If it is an uninitialised coord player
-    ///        will be able to start from any place on the board
-    GameTotalAllocation(
-        int32_t a_rows,
-        int32_t a_columns,
-        const Coordinate &a_startingCoord);
-    virtual ~GameTotalAllocation();
+    /// @param description of this blockem challenge
+    GameChallenge(const BlockemChallenge& a_challenge);
+    virtual ~GameChallenge();
 
 	/// @returns the board of the game
 	inline const Board& GetBoard() const
@@ -58,25 +53,28 @@ public:
 	    return m_board;
 	}
 
-    inline const Player& GetPlayer() const
+    inline const Player& GetChallenger() const
     {
-        return m_player;
+        return m_challenger;
     }
 
-    inline void SetPlayerColour(
+    /// @brief set colour of challenger's pieces
+    void SetChallengerColour(
 	        uint8_t a_red,
 	        uint8_t a_green,
-	        uint8_t a_blue)
-    {
-        m_player.SetColour(a_red, a_green, a_blue);
-    }
+	        uint8_t a_blue);
+    
+    /// @brief set colour of squares taken by "opponent"
+    /// opponent is a virtual player, it owns spaces on the board but it does
+    /// not put down any pieces on the board
+    void SetOpponentTakenSquaresColour(
+	        uint8_t a_red,
+	        uint8_t a_green,
+	        uint8_t a_blue);
 
-    /// @brief reset current total allocation game
-    /// @param number of rows
-    /// @param number of columns
-    /// @param starting coordinate. If it isn't initialised player will be
-    ///        able to start from any place on the board
-    void Reset(int32_t a_rows, int32_t a_columns, const Coordinate &a_startingCoord);
+    /// @brief reset current blockem challenge game
+    /// @param description of the new blockem challenge
+    void Reset(const BlockemChallenge& a_blockemChallenge);
 
     /// put down a piece on the board. The user is supposed to check if there is space for it before calling
     /// It updates the internal player contained in the total allocation game
@@ -95,22 +93,24 @@ public:
 			const Piece      &a_piece,
 			const Coordinate &a_coord);
 
-    /// @brief a backtracking algorithm will try to put all the pieces in the board.
-    /// It will modify the player and board objects inside this instance
-    /// They will contain how the calculations ended
-    /// @return true if the game was solved. False if there is no solution to the problem
-    bool Solve();
-
 private:
     /// The blokus board where the game will be played
     Board m_board;
 
     /// The player who is supposed to allocate all the pieces in the board
-    Player m_player;
-
-    /// starting coordinate. If it isn't initialised player will be able to
-    /// start from any coordinate on the board
-    Coordinate m_startingCoord;
+    Player m_challenger;
+    
+    /// This player isn't supposed to put down any pieces, it just "takes"
+    /// a few squares on the board to make it difficult for the challenger to
+    /// allocate all its pieces
+    Player m_disturber;
+    
+    /// @brief load challenge data into this object attributes
+    /// @param a const reference to the challenge
+    void LoadChallenge(const BlockemChallenge& a_challenge);
+    
+    /// @brief recalculate the nucleation points using the whole board and save them into the challenger
+    void RecalculateNKInAllBoard();
 
     /// remove a piece from the board. The user is supposed to check if the piece was there
     /// before calling this function since it just will set to empty the squares
@@ -129,20 +129,9 @@ private:
             const Coordinate         &a_coord,
             const PieceConfiguration &a_pieceConf);
 
-    /// once there is at least one piece put down in the board this function
-    /// will try to put down all the pieces in the existing nk points in the board
-    /// @param an array with piece types of the latest pieces set in previous
-    ///        iterations of the game
-    /// @param an array with pointers to sets with the nucleation points of the previous
-    ///        itearations of the game
-    /// @return true if it succeeded. False otherwise
-    bool AllocateAllPieces(
-            ePieceType_t        a_lastPieces[e_numberOfPieces],
-            STLCoordinateSet_t* a_oldNkPoints[e_numberOfPieces]);
-
     // prevent this class to be instantiated without the proper arguments
-    GameTotalAllocation();
+    GameChallenge();
 };
 
-#endif /* GAMETOTALALLOCATION_H_ */
+#endif /* __GAME_CHALLENGE_H__ */
 

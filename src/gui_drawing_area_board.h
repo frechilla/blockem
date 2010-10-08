@@ -42,10 +42,18 @@ public:
     DrawingAreaBoard(const Board &a_board);
     ~DrawingAreaBoard();
 
+    /// @brief resets the board that this board prints on the screen
+    /// You might also want to have a look at ResetPlayerList
+    /// Once the board has been reset you MUST call invalidate (it is not called
+    /// internally)
+    /// It cancels the last piece deployed effect
+    void ResetBoard(const Board &a_board);
+    
     /// @brief adds a player whose pieces on the board must be represented accordingly
     void AddPlayerToList(const Player &a_player);
 
     /// @brief removes all the players from the list
+    /// It cancels the last piece deployed effect
     void ResetPlayerList();
 
     /// @brief force the drawing area to be reprinted
@@ -113,7 +121,7 @@ public:
 
 private:
     /// The blockem board represented by this drawing area
-    const Board &m_theBoard;
+    const Board* m_theBoard;
 
     /// List of players whose pieces are (or can be) on the board
     /// If a player has a piece on the Board instance and is not added to this list

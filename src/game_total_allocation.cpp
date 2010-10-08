@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License along
 // with Blockem. If not, see http://www.gnu.org/licenses/.
 //
-/// @file  GameTotalAllocation.cpp
+/// @file  game_total_allocation.cpp
 /// @brief
 ///
 /// @author Faustino Frechilla
@@ -35,9 +35,9 @@
 #include "rules.h"
 
 /// it will be used as an empty space in the board
-const char CHAR_EMPTY    = ' ';
+static const char CHAR_EMPTY    = ' ';
 /// it will be used as the character for the player in the board
-const char CHAR_PLAYER   = 'X';
+static const char CHAR_PLAYER   = 'X';
 
 
 GameTotalAllocation::GameTotalAllocation(
@@ -45,7 +45,7 @@ GameTotalAllocation::GameTotalAllocation(
     int32_t a_columns,
     const Coordinate &a_startingCoord) :
     m_board(a_rows, a_columns, CHAR_EMPTY),
-    m_player(std::string(_("The player")),
+    m_player(_("The player"),
              CHAR_PLAYER,
              a_rows,
              a_columns,
@@ -63,18 +63,22 @@ void GameTotalAllocation::Reset(
     int32_t a_columns,
     const Coordinate &a_startingCoord)
 {
-    m_startingCoord = a_startingCoord;
-    m_player.Reset(m_startingCoord);
-
-    if ((a_rows    == m_board.GetNRows()) &&
-        (a_columns == m_board.GetNColumns()) )
-    {
-        m_board.Reset();
-    }
-    else
+    if ((a_rows    != m_board.GetNRows()) ||
+        (a_columns != m_board.GetNColumns()) )
     {
         m_board = Board(a_rows, a_columns, CHAR_EMPTY);
+        m_player = Player(
+                    _("The player"),
+                    CHAR_PLAYER,
+                    a_rows,
+                    a_columns,
+                    a_startingCoord);
     }
+    
+    m_startingCoord = a_startingCoord;
+
+    m_board.Reset();
+    m_player.Reset(m_startingCoord);
 }
 
 void GameTotalAllocation::RemovePiece(

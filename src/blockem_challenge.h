@@ -54,8 +54,8 @@ public:
     } BlockemChallengeInfo_t;
 
     /// @brief instantiates an object with a default challenge
-    /// a default challenge is an empty board of 14x14 in which
-    /// no player has any pieces available
+    /// a default challenge is an empty board of 14x14 with no squares taken
+    /// and no pieces available to be put down
     BlockemChallenge();
     /// @brief instantiates an object loading the blockem challenge from a_path
     /// loads the .xml file 'a_path' content into the new object

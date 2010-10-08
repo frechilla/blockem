@@ -64,7 +64,7 @@ private:
     void TestIsCoordTouchingPlayerCompute();
     void TestIsPieceDeployableCompute();
     void TestsNucleationPointCompute();
-    void TestIsPieceDeployableInNKPoint();
+    void TestIsPieceDeployableInCoord();
     void TestIsPieceDeployableInStartingPoint();
     void TestCalculateValidCoordsInNucleationPoint();
     void TestCalculateNextValidCoordInNucleationPoint();
