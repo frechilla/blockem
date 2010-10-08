@@ -60,6 +60,43 @@ GameTotalAllocationWidget::GameTotalAllocationWidget():
     m_editPieceTable(),
     m_statusBar(1, false) // 1 player. Without progress bar
 {
+    // build up the GUI!
+    BuildGUI();
+    
+    // connect the signal coming fromt the board drawing area to process when
+    //  the user clicks on the board
+    m_boardDrawingArea.signal_boardPicked().connect(
+            sigc::mem_fun(*this, &GameTotalAllocationWidget::BoardDrawingArea_BoardClicked));
+
+    // initialise the list of players of the board drawing area
+    m_boardDrawingArea.AddPlayerToList(m_theTotalAllocationGame.GetPlayer());
+
+    // player is a human and he/she will put down a piece
+    m_boardDrawingArea.SetCurrentPlayer(m_theTotalAllocationGame.GetPlayer());
+    
+    // set piece colour to player's in the edit piece area
+    uint8_t red   = 0;
+    uint8_t green = 0;
+    uint8_t blue  = 0;
+    m_theTotalAllocationGame.GetPlayer().GetColour(red, green, blue);
+    m_editPieceTable.SetPieceRGB(
+        static_cast<float>(red)   / 255,
+        static_cast<float>(green) / 255,
+        static_cast<float>(blue)  / 255);
+
+    // human beings are allowed to edit pieces
+    m_editPieceTable.set_sensitive(true);
+
+    // launch the game!!
+    LaunchNewGame();
+}
+
+GameTotalAllocationWidget::~GameTotalAllocationWidget()
+{
+}
+
+void GameTotalAllocationWidget::BuildGUI()
+{
     // TODO setting default colours to the player
     // this should be done loading from some config class
     m_theTotalAllocationGame.SetPlayerColour(
@@ -94,37 +131,6 @@ GameTotalAllocationWidget::GameTotalAllocationWidget():
     // currently editing piece
     m_editPieceTable.signal_pieceChanged().connect(
             sigc::mem_fun(m_boardDrawingArea, &DrawingAreaBoard::SetCurrentPiece));
-
-    // connect the signal coming fromt he board drawing area to process when the user clicks
-    // on the board
-    m_boardDrawingArea.signal_boardPicked().connect(
-            sigc::mem_fun(*this, &GameTotalAllocationWidget::BoardDrawingArea_BoardClicked));
-
-    // initialise the list of players of the board drawing area
-    m_boardDrawingArea.AddPlayerToList(m_theTotalAllocationGame.GetPlayer());
-
-    // set piece colour to player's in the edit piece area
-    uint8_t red   = 0;
-    uint8_t green = 0;
-    uint8_t blue  = 0;
-    m_theTotalAllocationGame.GetPlayer().GetColour(red, green, blue);
-    m_editPieceTable.SetPieceRGB(
-        static_cast<float>(red)   / 255,
-        static_cast<float>(green) / 255,
-        static_cast<float>(blue)  / 255);
-
-    // human beings are allowed to edit pieces
-    m_editPieceTable.set_sensitive(true);
-
-    // player is a human and he/she will put down a piece
-    m_boardDrawingArea.SetCurrentPlayer(m_theTotalAllocationGame.GetPlayer());
-
-    // launch the game!!
-    LaunchNewGame();
-}
-
-GameTotalAllocationWidget::~GameTotalAllocationWidget()
-{
 }
 
 DrawingAreaBoard& GameTotalAllocationWidget::BoardDrawingArea()
@@ -165,9 +171,16 @@ void GameTotalAllocationWidget::LaunchNewGame()
     // uninitialised starting coord. Start from everywhere
     m_theTotalAllocationGame.Reset(BOARD_NROWS, BOARD_NCOLS, Coordinate());
 
-    // update the board view
-    m_boardDrawingArea.CancelLatestPieceDeployedEffect();
+    // reset board drawing area settings
+    m_boardDrawingArea.ResetBoard(m_theTotalAllocationGame.GetBoard());
+    m_boardDrawingArea.ResetPlayerList();
+    m_boardDrawingArea.AddPlayerToList(m_theTotalAllocationGame.GetPlayer());
+    m_boardDrawingArea.SetCurrentPlayer(m_theTotalAllocationGame.GetPlayer());
+        
+    // update the board view. Latest piece deployed effect has already 
+    // been cancelled
     m_boardDrawingArea.Invalidate();
+    
     // player1 will be picking next piece
     m_pickPiecesDrawingArea.Invalidate(m_theTotalAllocationGame.GetPlayer());
 

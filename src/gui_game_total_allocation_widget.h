@@ -55,9 +55,7 @@ public:
     virtual ~GameTotalAllocationWidget();
 
     /// Launches a new game.
-    /// WARNING: It must be used carefully since it cancels whatever the worker
-    /// thread is computing now and resets the game to the settigns stored in
-    /// the Game1v1Config singleton
+    /// WARNING: resets completely the game
     void LaunchNewGame();
 
     /// @return a reference to the drawing area shown by this widget
@@ -125,6 +123,9 @@ private:
 
     /// @brief notifies to the user that the game is finished using m_signal_gameFinished
     void GameFinished();
+    
+    /// @brief set up the widgets that make up this object and add them into it
+    void BuildGUI();
 
     // prevent the default constructors to be used
     GameTotalAllocationWidget(const GameTotalAllocationWidget &a_src);
