@@ -69,17 +69,20 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_blockem_OBJECTS = bitwise.$(OBJEXT) blockem_challenge.$(OBJEXT) \
 	blockem_config.$(OBJEXT) board.$(OBJEXT) game1v1.$(OBJEXT) \
-	game_total_allocation.$(OBJEXT) gui_exception.$(OBJEXT) \
-	gui_about_dialog.$(OBJEXT) gui_drawing_area_board.$(OBJEXT) \
+	game_challenge.$(OBJEXT) game_total_allocation.$(OBJEXT) \
+	gui_exception.$(OBJEXT) gui_about_dialog.$(OBJEXT) \
+	gui_drawing_area_board.$(OBJEXT) \
 	gui_drawing_area_show_pieces.$(OBJEXT) \
+	gui_game_challenge_widget.$(OBJEXT) \
 	gui_game_total_allocation_widget.$(OBJEXT) \
-	gui_game_statusbar.$(OBJEXT) gui_game1v1_config.$(OBJEXT) \
+	gui_game1v1_config.$(OBJEXT) \
 	gui_game1v1_config_dialog.$(OBJEXT) \
 	gui_game1v1_widget.$(OBJEXT) gui_main_window.$(OBJEXT) \
 	gui_main_window_worker_thread.$(OBJEXT) \
-	gui_table_edit_piece.$(OBJEXT) gui_stop_watch_label.$(OBJEXT) \
-	heuristic.$(OBJEXT) piece.$(OBJEXT) player.$(OBJEXT) \
-	rules.$(OBJEXT) main.$(OBJEXT)
+	gui_statusbar_game.$(OBJEXT) gui_table_edit_piece.$(OBJEXT) \
+	gui_stop_watch_label.$(OBJEXT) heuristic.$(OBJEXT) \
+	piece.$(OBJEXT) player.$(OBJEXT) rules.$(OBJEXT) \
+	main.$(OBJEXT)
 blockem_OBJECTS = $(am_blockem_OBJECTS)
 am__DEPENDENCIES_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
@@ -291,6 +294,8 @@ coordinate.h \
 coordinate_set.h \
 game1v1.cpp \
 game1v1.h \
+game_challenge.cpp \
+game_challenge.h \
 game_total_allocation.cpp \
 game_total_allocation.h \
 g_blocking_queue.h \
@@ -302,10 +307,10 @@ gui_drawing_area_board.h \
 gui_drawing_area_board.cpp \
 gui_drawing_area_show_pieces.cpp \
 gui_drawing_area_show_pieces.h   \
+gui_game_challenge_widget.cpp \
+gui_game_challenge_widget.h \
 gui_game_total_allocation_widget.cpp \
 gui_game_total_allocation_widget.h \
-gui_game_statusbar.cpp \
-gui_game_statusbar.h \
 gui_game1v1_config.cpp \
 gui_game1v1_config.h \
 gui_game1v1_config_dialog.cpp \
@@ -317,6 +322,8 @@ gui_main_window.cpp \
 gui_main_window.h \
 gui_main_window_worker_thread.cpp \
 gui_main_window_worker_thread.h \
+gui_statusbar_game.cpp \
+gui_statusbar_game.h \
 gui_table_edit_piece.cpp \
 gui_table_edit_piece.h   \
 gui_stop_watch_label.cpp \
@@ -418,6 +425,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/blockem_config.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/board.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/game1v1.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/game_challenge.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/game_total_allocation.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_about_dialog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_drawing_area_board.Po@am__quote@
@@ -426,10 +434,11 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_game1v1_config.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_game1v1_config_dialog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_game1v1_widget.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_game_statusbar.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_game_challenge_widget.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_game_total_allocation_widget.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_main_window.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_main_window_worker_thread.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_statusbar_game.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_stop_watch_label.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_table_edit_piece.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/heuristic.Po@am__quote@

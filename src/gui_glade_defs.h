@@ -132,8 +132,9 @@ const std::string GUI_PATH_TO_128PICTURE_STR
 
 // have a look at the name of the widgets in gui.glade file
 const char GUI_MAIN_WINDOW_NAME[]          = "window_main";
-const char GUI_ABOUT_DIALOG_NAME[]         = "aboutdialog";
-const char GUI_CONFIG_DIALOG_NAME[]        = "configdialog";
+const char GUI_DIALOG_ABOUT_NAME[]         = "aboutdialog";
+const char GUI_DIALOG_CONFIG_NAME[]        = "configdialog";
+const char GUI_DIALOG_NEW_GAME_NAME[]      = "newgamedialog";
 const char GUI_MENU_ITEM_ACCELERATOR[]     = "accelgroup1";
 const char GUI_MENU_ITEM_GAME[]            = "menuitem_game";
 const char GUI_MENU_ITEM_GAME_NEW[]        = "imagemenuitem_game_new";

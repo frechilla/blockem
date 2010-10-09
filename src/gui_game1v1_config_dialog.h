@@ -40,7 +40,7 @@ class Game1v1ConfigDialog :
     public Gtk::Dialog
 {
 public:
-    // to be used with m_gtkBuilder->get_widget_derived(GUI_ABOUT_DIALOG_NAME, m_aboutDialog);
+    // to be used with m_gtkBuilder->get_widget_derived(GUI_DIALOG_CONFIG_NAME, m_aboutDialog);
     Game1v1ConfigDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder) throw (GUIException);
     virtual ~Game1v1ConfigDialog();
 

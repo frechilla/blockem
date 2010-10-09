@@ -93,7 +93,7 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
 
     // retrieve the config dialog. It must be retrieved calling get_widget_derived
     // otherwise app will core
-    m_gtkBuilder->get_widget_derived(GUI_CONFIG_DIALOG_NAME, m_configDialog);
+    m_gtkBuilder->get_widget_derived(GUI_DIALOG_CONFIG_NAME, m_configDialog);
     if (m_configDialog == NULL)
     {
         throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
@@ -101,7 +101,7 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
 
     // retrieve the about dialog. It must be retrieved calling get_widget_derived
     // otherwise app will core
-    m_gtkBuilder->get_widget_derived(GUI_ABOUT_DIALOG_NAME, m_aboutDialog);
+    m_gtkBuilder->get_widget_derived(GUI_DIALOG_ABOUT_NAME, m_aboutDialog);
     if (m_aboutDialog == NULL)
     {
         throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);

@@ -83,6 +83,8 @@ coordinate.h \
 coordinate_set.h \
 game1v1.cpp \
 game1v1.h \
+game_challenge.cpp \
+game_challenge.h \
 game_total_allocation.cpp \
 game_total_allocation.h \
 g_blocking_queue.h \
@@ -94,10 +96,10 @@ gui_drawing_area_board.h \
 gui_drawing_area_board.cpp \
 gui_drawing_area_show_pieces.cpp \
 gui_drawing_area_show_pieces.h   \
+gui_game_challenge_widget.cpp \
+gui_game_challenge_widget.h \
 gui_game_total_allocation_widget.cpp \
 gui_game_total_allocation_widget.h \
-gui_game_statusbar.cpp \
-gui_game_statusbar.h \
 gui_game1v1_config.cpp \
 gui_game1v1_config.h \
 gui_game1v1_config_dialog.cpp \
@@ -109,6 +111,8 @@ gui_main_window.cpp \
 gui_main_window.h \
 gui_main_window_worker_thread.cpp \
 gui_main_window_worker_thread.h \
+gui_statusbar_game.cpp \
+gui_statusbar_game.h \
 gui_table_edit_piece.cpp \
 gui_table_edit_piece.h   \
 gui_stop_watch_label.cpp \

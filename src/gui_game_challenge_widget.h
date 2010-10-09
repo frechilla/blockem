@@ -38,7 +38,7 @@
 #include "gui_drawing_area_board.h"
 #include "gui_stop_watch_label.h"
 #include "gui_table_edit_piece.h"
-#include "gui_game_statusbar.h"
+#include "gui_statusbar_game.h"
 #include "game_challenge.h"
 #include "coordinate.h"
 #include "piece.h"
@@ -113,7 +113,7 @@ private:
     Gtk::HBox m_hBoxEditPieces;
 
     /// @brief hbox which serves as status bar
-    GameStatusBar m_statusBar;
+    StatusBarGame m_statusBar;
 
     /// Signal object to notify fatal errors
     sigc::signal<void, const std::string&> m_signal_fatalError;
@@ -123,7 +123,7 @@ private:
 
     /// @brief notifies to the user that the game is finished using m_signal_gameFinished
     void GameFinished();
-    
+
     /// @brief set up the widgets that make up this object and add them into it
     void BuildGUI();
 

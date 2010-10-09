@@ -37,7 +37,7 @@ class AboutDialog :
     public Gtk::AboutDialog
 {
 public:
-    // to be used with m_gtkBuilder->get_widget_derived(GUI_ABOUT_DIALOG_NAME, m_aboutDialog);
+    // to be used with m_gtkBuilder->get_widget_derived(GUI_DIALOG_ABOUT_NAME, m_aboutDialog);
     AboutDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder);
     virtual ~AboutDialog();
 

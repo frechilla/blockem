@@ -40,7 +40,7 @@
 #include "gui_main_window_worker_thread.h"
 #include "gui_stop_watch_label.h"
 #include "gui_table_edit_piece.h"
-#include "gui_game_statusbar.h"
+#include "gui_statusbar_game.h"
 #include "gui_game1v1_config_dialog.h"
 #include "game1v1.h"
 #include "coordinate.h"
@@ -187,7 +187,7 @@ private:
     Gtk::HBox m_hBoxEditPieces;
 
     /// @brief hbox which serves as status bar
-    GameStatusBar m_statusBar;
+    StatusBarGame m_statusBar;
 
     /// thread-safe signal object for inter-thread communication to
     /// notify the next move has been computed
