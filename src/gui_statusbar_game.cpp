@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License along
 // with Blockem. If not, see http://www.gnu.org/licenses/.
 //
-/// @file gui_game_statusbar.cpp
+/// @file gui_statusbar_game.cpp
 /// @brief
 ///
 /// @author Faustino Frechilla
@@ -31,7 +31,7 @@
 #include <stdint.h>  // uint32_t
 #include <iomanip>   // setw
 #include "gettext.h" // i18n
-#include "gui_game_statusbar.h"
+#include "gui_statusbar_game.h"
 
 /// maximum size of the string to apply to score labels
 static const uint32_t SCORE_LABEL_BUFFER_LENGTH = 64;
@@ -40,7 +40,7 @@ static const uint32_t SCORE_LABEL_BUFFER_LENGTH = 64;
 static const uint32_t STOPWATCH_UPDATE_PERIOD_MILLIS = 500; // 1000 = 1 second
 
 
-GameStatusBar::GameStatusBar(uint32_t a_nPlayers, bool a_progressBarPresent):
+StatusBarGame::StatusBarGame(uint32_t a_nPlayers, bool a_progressBarPresent):
     Gtk::VBox(),
     m_nPlayers(a_nPlayers),
     m_arrayStatusBarSeparator(0),
@@ -109,7 +109,7 @@ GameStatusBar::GameStatusBar(uint32_t a_nPlayers, bool a_progressBarPresent):
     }
 }
 
-GameStatusBar::~GameStatusBar()
+StatusBarGame::~StatusBarGame()
 {
     for (uint32_t i = 0; i < (m_nPlayers * 2) - 1; i++)
     {
@@ -137,7 +137,7 @@ GameStatusBar::~GameStatusBar()
     }
 }
 
-bool GameStatusBar::SetScoreStatus(
+bool StatusBarGame::SetScoreStatus(
     uint32_t a_playerIndex,
     const Player &a_player)
 {
@@ -187,7 +187,7 @@ bool GameStatusBar::SetScoreStatus(
     return false;
 }
 
-bool GameStatusBar::SetStopwatchPrefix(
+bool StatusBarGame::SetStopwatchPrefix(
     uint32_t a_playerIndex,
     const Player &a_player)
 {
@@ -220,7 +220,7 @@ bool GameStatusBar::SetStopwatchPrefix(
     return false;
 }
 
-void GameStatusBar::ResetAllStopwatches()
+void StatusBarGame::ResetAllStopwatches()
 {
     for (uint32_t i = 0; i < m_nPlayers; i++)
     {
@@ -228,7 +228,7 @@ void GameStatusBar::ResetAllStopwatches()
     }
 }
 
-void GameStatusBar::StopAllStopwatches()
+void StatusBarGame::StopAllStopwatches()
 {
     for (uint32_t i = 0; i < m_nPlayers; i++)
     {
@@ -236,7 +236,7 @@ void GameStatusBar::StopAllStopwatches()
     }
 }
 
-void GameStatusBar::SwapStopwatches()
+void StatusBarGame::SwapStopwatches()
 {
     if (m_nPlayers <= 1)
     {
@@ -267,7 +267,7 @@ void GameStatusBar::SwapStopwatches()
     }
 }
 
-bool GameStatusBar::ContinueStopwatch(uint32_t a_playerIndex)
+bool StatusBarGame::ContinueStopwatch(uint32_t a_playerIndex)
 {
 #ifdef DEBUG
     assert (a_playerIndex >= 1);
@@ -283,7 +283,7 @@ bool GameStatusBar::ContinueStopwatch(uint32_t a_playerIndex)
     return false;
 }
 
-void GameStatusBar::SetFraction(float a_fraction)
+void StatusBarGame::SetFraction(float a_fraction)
 {
     if (m_progressBar)
     {

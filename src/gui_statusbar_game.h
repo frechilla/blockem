@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License along
 // with Blockem. If not, see http://www.gnu.org/licenses/.
 //
-/// @file gui_game_statusbar.h
+/// @file gui_statusbar_game.h
 /// @brief
 ///
 /// @author Faustino Frechilla
@@ -29,8 +29,8 @@
 ///
 // ============================================================================
 
-#ifndef GAME_STATUSBAR_H_
-#define GAME_STATUSBAR_H_
+#ifndef _STATUSBAR_GAME_H_
+#define _STATUSBAR_GAME_H_
 
 #include <vector>
 #include <gtkmm.h>
@@ -39,14 +39,14 @@
 #include "gui_stop_watch_label.h"
 
 /// @brief class to handle the status bar to be shown on the main window
-class GameStatusBar :
+class StatusBarGame :
     public Gtk::VBox
 {
 public:
     /// @param amount of players to be represented by this status bar (positive)
     /// @param true if the status bar should contain a progress bar
-    GameStatusBar(uint32_t a_nPlayers, bool a_progressBarPresent);
-    ~GameStatusBar();
+    StatusBarGame(uint32_t a_nPlayers, bool a_progressBarPresent);
+    ~StatusBarGame();
 
     /// update score of a player
     /// @param index of the player. Valid range goes from 1 to the nPlayers
@@ -118,10 +118,10 @@ private:
     Gtk::ProgressBar* m_progressBar;
 
     // prevent default constructors/operators from being accidentaly called
-    GameStatusBar();
-    GameStatusBar(const GameStatusBar &a_src);
-    GameStatusBar& operator=(const GameStatusBar &a_src);
+    StatusBarGame();
+    StatusBarGame(const StatusBarGame &a_src);
+    StatusBarGame& operator=(const StatusBarGame &a_src);
 
 };
 
-#endif // GAME_STATUSBAR_H_
+#endif // _STATUSBAR_GAME_H_
