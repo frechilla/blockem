@@ -36,7 +36,6 @@
 #include "gettext.h" // i18n
 #include "gui_game1v1_widget.h"
 #include "gui_game1v1_config.h"
-#include "gui_glade_defs.h"
 
 /// maximum size of the string to notify the end of the game
 static const uint32_t GAME_FINISHED_BUFFER_LENGTH = 256;

@@ -35,7 +35,6 @@
 
 #include "gettext.h" // i18n
 #include "gui_game_total_allocation_widget.h"
-#include "gui_glade_defs.h"
 #include "rules.h"
 
 /// maximum size of the string to notify the end of the game
@@ -62,7 +61,7 @@ GameTotalAllocationWidget::GameTotalAllocationWidget():
 {
     // build up the GUI!
     BuildGUI();
-    
+
     // connect the signal coming fromt the board drawing area to process when
     //  the user clicks on the board
     m_boardDrawingArea.signal_boardPicked().connect(
@@ -73,7 +72,7 @@ GameTotalAllocationWidget::GameTotalAllocationWidget():
 
     // player is a human and he/she will put down a piece
     m_boardDrawingArea.SetCurrentPlayer(m_theTotalAllocationGame.GetPlayer());
-    
+
     // set piece colour to player's in the edit piece area
     uint8_t red   = 0;
     uint8_t green = 0;
@@ -176,11 +175,11 @@ void GameTotalAllocationWidget::LaunchNewGame()
     m_boardDrawingArea.ResetPlayerList();
     m_boardDrawingArea.AddPlayerToList(m_theTotalAllocationGame.GetPlayer());
     m_boardDrawingArea.SetCurrentPlayer(m_theTotalAllocationGame.GetPlayer());
-        
-    // update the board view. Latest piece deployed effect has already 
+
+    // update the board view. Latest piece deployed effect has already
     // been cancelled
     m_boardDrawingArea.Invalidate();
-    
+
     // player1 will be picking next piece
     m_pickPiecesDrawingArea.Invalidate(m_theTotalAllocationGame.GetPlayer());
 

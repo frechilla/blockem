@@ -35,7 +35,6 @@
 
 #include "gettext.h" // i18n
 #include "gui_game_challenge_widget.h"
-#include "gui_glade_defs.h"
 #include "rules.h"
 
 /// maximum size of the string to notify the end of the game
@@ -65,7 +64,7 @@ GameChallengeWidget::GameChallengeWidget():
 {
     // build up the GUI!
     BuildGUI();
-    
+
     // connect the signal coming fromt the board drawing area to process when
     //  the user clicks on the board
     m_boardDrawingArea.signal_boardPicked().connect(
@@ -76,7 +75,7 @@ GameChallengeWidget::GameChallengeWidget():
 
     // player is a human and he/she will put down a piece
     m_boardDrawingArea.SetCurrentPlayer(m_theChallengeGame.GetChallenger());
-    
+
     // set piece colour to player's in the edit piece area
     uint8_t red   = 0;
     uint8_t green = 0;
@@ -106,7 +105,7 @@ void GameChallengeWidget::BuildGUI()
         DEFAULT_CHALLENGER_COLOUR_R,
         DEFAULT_CHALLENGER_COLOUR_G,
         DEFAULT_CHALLENGER_COLOUR_B);
-    
+
     m_theChallengeGame.SetOpponentTakenSquaresColour(
         DEFAULT_OPPONENT_COLOUR_R,
         DEFAULT_OPPONENT_COLOUR_G,
@@ -176,14 +175,14 @@ void GameChallengeWidget::LaunchNewGame(const BlockemChallenge& a_challenge)
 {
     // this is a new challenge!
     m_theChallengeGame.Reset(a_challenge);
-    
+
     // reset board drawing area settings
     m_boardDrawingArea.ResetBoard(m_theChallengeGame.GetBoard());
     m_boardDrawingArea.ResetPlayerList();
     m_boardDrawingArea.AddPlayerToList(m_theChallengeGame.GetChallenger());
     m_boardDrawingArea.SetCurrentPlayer(m_theChallengeGame.GetChallenger());
-        
-    // update the board view. Latest piece deployed effect has already 
+
+    // update the board view. Latest piece deployed effect has already
     // been cancelled
     m_boardDrawingArea.Invalidate();
 

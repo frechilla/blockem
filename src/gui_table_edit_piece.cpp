@@ -32,7 +32,6 @@
 
 #include "gettext.h" // i18n
 #include "gui_table_edit_piece.h"
-#include "gui_glade_defs.h"
 
 //TODO this should go away at some stage
 // default colours to draw the pieces
