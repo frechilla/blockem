@@ -29,10 +29,10 @@
 
 #ifdef DEBUG_PRINT
 #include <iostream>
-#include <cstdio>    // printf/snprintf (needed for better i18n)
 #include <iomanip>   // setw
 #endif
 
+#include <cstdio>    // printf/snprintf (needed for better i18n)
 #include "gettext.h" // i18n
 #include "gui_game1v1_widget.h"
 #include "gui_game1v1_config.h"

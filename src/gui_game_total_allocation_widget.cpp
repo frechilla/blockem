@@ -35,6 +35,7 @@
 
 #include "gettext.h" // i18n
 #include "gui_game_total_allocation_widget.h"
+#include "gui_game_total_allocation_config.h"
 #include "rules.h"
 
 /// maximum size of the string to notify the end of the game
@@ -44,14 +45,14 @@ static const uint8_t DEFAULT_PLAYER_COLOUR_R  = 31;
 static const uint8_t DEFAULT_PLAYER_COLOUR_G  = 130;
 static const uint8_t DEFAULT_PLAYER_COLOUR_B  = 31;
 
-static const int32_t BOARD_NROWS = 14;
-static const int32_t BOARD_NCOLS = 14;
-
 
 GameTotalAllocationWidget::GameTotalAllocationWidget():
     Gtk::VBox(), //Calls the base class constructor
     m_currentGameFinished(false),
-    m_theTotalAllocationGame(BOARD_NROWS, BOARD_NCOLS, Coordinate()),
+    m_theTotalAllocationGame(
+        GameTotalAllocationConfig::Instance().GetNRows(),
+        GameTotalAllocationConfig::Instance().GetNColumns(),
+        GameTotalAllocationConfig::Instance().GetStartingCoord()),
     m_pickPiecesDrawingArea(
         m_theTotalAllocationGame.GetPlayer(),
         DrawingAreaShowPieces::eOrientation_leftToRight),
@@ -165,10 +166,10 @@ void GameTotalAllocationWidget::ShowForbiddenAreaInBoard(bool a_show)
 
 void GameTotalAllocationWidget::LaunchNewGame()
 {
-    //TODO size of the board should be stored in some configuration class
-    // reset the current game
-    // uninitialised starting coord. Start from everywhere
-    m_theTotalAllocationGame.Reset(BOARD_NROWS, BOARD_NCOLS, Coordinate());
+    m_theTotalAllocationGame.Reset(
+        GameTotalAllocationConfig::Instance().GetNRows(),
+        GameTotalAllocationConfig::Instance().GetNColumns(),
+        GameTotalAllocationConfig::Instance().GetStartingCoord());
 
     // reset board drawing area settings
     m_boardDrawingArea.ResetBoard(m_theTotalAllocationGame.GetBoard());

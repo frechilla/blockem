@@ -50,7 +50,8 @@
 #include "gui_main_window.h"
 #include "game1v1.h"
 #include "game_total_allocation.h"
-#include "gui_game1v1_config.h" // initialise singleton
+#include "gui_game1v1_config.h"               // initialise singleton
+#include "gui_game_total_allocation_config.h" // initialise singleton
 #include "heuristic.h"
 
 
@@ -423,6 +424,7 @@ int main(int argc, char **argv)
         // Singleton creation is not thread safe
         // Game1v1Config data. Used to store GUI related configuration for 1vs1 games
         Game1v1Config::Instance();
+        GameTotalAllocationConfig::Instance();
 
         // g_thread_supported returns TRUE if the thread system is initialised,
         // and FALSE if it is not. Initiliase gthreads only if they haven't been

@@ -252,7 +252,7 @@ You should have received a copy of the GNU General Public License along with blo
   </object>
   <object class="GtkDialog" id="config1v1dialog">
     <property name="border_width">5</property>
-    <property name="title" translatable="yes">Configure current game</property>
+    <property name="title" translatable="yes">Configure 1vs1 game</property>
     <property name="resizable">False</property>
     <property name="modal">True</property>
     <property name="window_position">center-on-parent</property>
@@ -1262,7 +1262,13 @@ You should have received a copy of the GNU General Public License along with blo
                   </packing>
                 </child>
                 <child>
-                  <placeholder/>
+                  <object class="GtkHBox" id="newgame_totalalloc_hbox">
+                    <property name="visible">True</property>
+                    <property name="spacing">2</property>
+                  </object>
+                  <packing>
+                    <property name="position">1</property>
+                  </packing>
                 </child>
                 <child>
                   <placeholder/>

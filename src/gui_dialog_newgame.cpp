@@ -30,15 +30,17 @@
 #ifdef DEBUG_PRINT
 #include <iostream>
 #endif
+
+#include "gui_dialog_newgame.h"
 #include "gettext.h" // i18n
 #include "game1v1.h"
 #include "gui_game1v1_config.h"
-#include "gui_dialog_newgame.h"
+#include "gui_game_total_allocation_config.h"
 #include "gui_glade_defs.h"
 
 // strings to describe each type of game
-static const char GAME_1V1_NAME[]         = N_("1 vs 1 Game");
-static const char GAME_TOTAL_ALLOC_NAME[] = N_("Total allocation (1 player)");
+static const char GAME_1V1_NAME[]         = N_("1 vs 1 Game (2 players)");
+static const char GAME_TOTAL_ALLOC_NAME[] = N_("Total deployment (solo play)");
 
 // strings for the user to choose the type of player in game 1v1
 static const char COMBO_PLAYER_TYPE_HUMAN[]    = N_("Human");
@@ -70,8 +72,14 @@ DialogNewGame::DialogNewGame(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Bu
     }
 
     // boxes with the actual widgets to configure new games
-    m_gtkBuilder->get_widget_derived(GUI_NEWGAME_1V1_HBOX, m_newGame1v1Table);
-    if (m_newGame1v1Table == NULL)
+    m_gtkBuilder->get_widget_derived(GUI_NEWGAME_1V1_HBOX, m_newGameTable1v1);
+    if (m_newGameTable1v1 == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+    
+    m_gtkBuilder->get_widget_derived(GUI_NEWGAME_TOTALALLOC_HBOX, m_newGameTableTotalAllocation);
+    if (m_newGameTableTotalAllocation == NULL)
     {
         throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
@@ -94,8 +102,16 @@ DialogNewGame::DialogNewGame(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Bu
 #endif
 
     // add now the elements to the icon view
-    AddEntry(e_gameType1vs1, GUI_PATH_TO_NEWGAME_1VS1GAME, _(GAME_1V1_NAME));
-    AddEntry(e_gameTypeTotalAllocation, GUI_PATH_TO_NEWGAME_TOTALALLOC, _(GAME_TOTAL_ALLOC_NAME));
+    AddEntry(
+        e_gameType1vs1, 
+        m_newGameTable1v1, 
+        GUI_PATH_TO_NEWGAME_1VS1GAME, 
+        _(GAME_1V1_NAME));
+    AddEntry(
+        e_gameTypeTotalAllocation, 
+        m_newGameTableTotalAllocation,
+        GUI_PATH_TO_NEWGAME_TOTALALLOC, 
+        _(GAME_TOTAL_ALLOC_NAME));
 
     // activate game1v1 as default
     Gtk::TreeNodeChildren allChildren = m_typeGameIconViewModel->children();
@@ -133,14 +149,16 @@ DialogNewGame::~DialogNewGame()
 }
 
 void DialogNewGame::AddEntry(
-        e_blockemGameType_t a_gametype,
-        const std::string& a_imgFilename,
+        e_blockemGameType_t  a_gametype,
+        NewGameTable*        a_newGameTableWidget,
+        const std::string&   a_imgFilename,
         const Glib::ustring& a_description)
 {
     Gtk::TreeModel::Row row = *(m_typeGameIconViewModel->append());
 
-    row[m_modelColumns.m_col_gametype]   = a_gametype;
-    row[m_modelColumns.m_col_description]= a_description;
+    row[m_modelColumns.m_col_gametype] = a_gametype;
+    row[m_modelColumns.m_col_newgame_table_widget] = a_newGameTableWidget;
+    row[m_modelColumns.m_col_description] = a_description;
 
     // try to set the set the pixmap contained in a_imgFilename
     if (g_file_test(a_imgFilename.c_str(), G_FILE_TEST_IS_REGULAR))
@@ -180,31 +198,43 @@ e_blockemGameType_t DialogNewGame::GetSelectedTypeOfGame()
 
 int DialogNewGame::run()
 {
-    // load current global configuration into the widgets before showing the dialog
-    m_newGame1v1Table->LoadCurrentConfigFromGlobalSettings();
-
+    Gtk::TreeModel::iterator iter;
+    Gtk::TreeModel::Row row;
+    
+    // load current global configuration into the widgets before showing
+    // anything
+    // also, hide those widgets that are not to be shown now
+    Gtk::TreeNodeChildren allChildren = m_typeGameIconViewModel->children();
+    if(!allChildren.empty())
+    {        
+        for (iter =  *allChildren.begin();
+             iter != *allChildren.end();
+             iter++)
+        {
+            row = *iter;
+            NewGameTable* newGameTableWidget = 
+                row[m_modelColumns.m_col_newgame_table_widget];
+            
+            // load global config into this widget
+            newGameTableWidget->LoadCurrentConfigFromGlobalSettings();
+            
+            e_blockemGameType_t thisGameType = row[m_modelColumns.m_col_gametype];
+            if (m_currentSelectedPath != thisGameType)
+            {                
+                newGameTableWidget->hide_all();
+            }
+        }        
+    }
+    
+    // show currently selected new game table
+    iter = m_typeGameIconViewModel->get_iter(m_currentSelectedPath);
+    row = *iter;
+    NewGameTable* currentGameTableWidget = row[m_modelColumns.m_col_newgame_table_widget];
+    currentGameTableWidget->show_all();
 
     // run the Gtk dialog once the custom widgets are configured properly
     return Gtk::Dialog::run();
 }
-
-#ifdef DEBUG
-void DialogNewGame::IconView_on_item_activated(const Gtk::TreeModel::Path& path)
-{
-    // http://git.gnome.org/browse/gtkmm-documentation/tree/examples/book/iconview
-    Gtk::TreeModel::iterator iter = m_typeGameIconViewModel->get_iter(path);
-    Gtk::TreeModel::Row row = *iter;
-
-    e_blockemGameType_t gametype = row[m_modelColumns.m_col_gametype];
-    const Glib::ustring description = row[m_modelColumns.m_col_description];
-
-    std::cout  << "Item activated: type="
-               << gametype
-               << ", description="
-               << description
-               << std::endl;
-}
-#endif
 
 void DialogNewGame::IconView_on_selection_changed()
 {
@@ -242,44 +272,72 @@ void DialogNewGame::IconView_on_selection_changed()
 
     Gtk::TreeModel::iterator iter = m_typeGameIconViewModel->get_iter(m_currentSelectedPath);
     Gtk::TreeModel::Row row = *iter;
-    e_blockemGameType_t gametype = row[m_modelColumns.m_col_gametype];
+    e_blockemGameType_t currentGametype  = row[m_modelColumns.m_col_gametype];
+    NewGameTable* currentGameTableWidget = row[m_modelColumns.m_col_newgame_table_widget];
 
-    switch (gametype)
+    Gtk::TreeNodeChildren allChildren = m_typeGameIconViewModel->children();
+    if(!allChildren.empty())
     {
-    case e_gameType1vs1:
-    {
-        m_newGame1v1Table->show_all();
-        break;
+        // hide the ones that are not to be shown now
+        for (iter =  *allChildren.begin();
+             iter != *allChildren.end();
+             iter++)
+        {
+            Gtk::TreeModel::Row row = *iter;
+            e_blockemGameType_t thisGameType = row[m_modelColumns.m_col_gametype];
+            if (currentGametype != thisGameType)
+            {
+                NewGameTable* newGameTableWidget = row[m_modelColumns.m_col_newgame_table_widget];
+                newGameTableWidget->hide_all();
+            }            
+        }
     }
-    default:
-    {
-        m_newGame1v1Table->hide_all();
-    }
-    } // switch (gametype)
+    
+    // use current game table widget to show the corresponding widgets
+    currentGameTableWidget->show_all();
 }
 
-void DialogNewGame::SaveCurrentConfigIntoGlobalSettings() const
+void DialogNewGame::SaveCurrentConfigIntoGlobalSettings(e_blockemGameType_t a_gameType) const
 {
     // retrieve user settings from dialog and use them to set up global configuration
-    // only save the one that is currently selected
+    // only save the one represented by a_gameType
 
-    Gtk::TreeModel::iterator iter = m_typeGameIconViewModel->get_iter(m_currentSelectedPath);
-    Gtk::TreeModel::Row row = *iter;
-    e_blockemGameType_t gametype = row[m_modelColumns.m_col_gametype];
-
-    switch (gametype)
+    Gtk::TreeNodeChildren allChildren = m_typeGameIconViewModel->children();
+    if(!allChildren.empty())
     {
-    case e_gameType1vs1:
-    {
-        m_newGame1v1Table->SaveCurrentConfigIntoGlobalSettings();
-        break;
+        Gtk::TreeModel::iterator iter;
+        for (iter =  *allChildren.begin();
+             iter != *allChildren.end();
+             iter++)
+        {
+            Gtk::TreeModel::Row row = *iter;
+            e_blockemGameType_t gametype = row[m_modelColumns.m_col_gametype];
+            if (gametype == a_gameType)
+            {
+                NewGameTable* newGameTableWidget = row[m_modelColumns.m_col_newgame_table_widget];
+                newGameTableWidget->SaveCurrentConfigIntoGlobalSettings();
+            }            
+        }
     }
-    default:
-    {
-        break;
-    }
-    } // switch (gametype)
 }
+
+#ifdef DEBUG
+void DialogNewGame::IconView_on_item_activated(const Gtk::TreeModel::Path& path)
+{
+    // http://git.gnome.org/browse/gtkmm-documentation/tree/examples/book/iconview
+    Gtk::TreeModel::iterator iter = m_typeGameIconViewModel->get_iter(path);
+    Gtk::TreeModel::Row row = *iter;
+
+    e_blockemGameType_t gametype = row[m_modelColumns.m_col_gametype];
+    const Glib::ustring description = row[m_modelColumns.m_col_description];
+
+    std::cout  << "Item activated: type="
+               << gametype
+               << ", description="
+               << description
+               << std::endl;
+}
+#endif
 
 #ifdef WIN32
 void DialogNewGame::ForceTranslationOfWidgets()
@@ -298,7 +356,6 @@ void DialogNewGame::ForceTranslationOfWidgets()
     // described above)
 
     set_title( _(get_title().c_str()) );
-
 }
 #else
 void DialogNewGame::ForceTranslationOfWidgets()
@@ -311,10 +368,41 @@ void DialogNewGame::ForceTranslationOfWidgets()
 
 
 
+//////////////////////////////////////////////////////////////////////////////
+// NewGameTableTotalAllocation methods
+
+NewGameTableTotalAllocation::NewGameTableTotalAllocation(
+    BaseObjectType* cobject, 
+    const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder)  throw (GUIException) :
+        NewGameTable(cobject), //Calls the base class constructor
+        m_gtkBuilder(a_gtkBuilder)
+{
+}
+
+NewGameTableTotalAllocation::~NewGameTableTotalAllocation()
+{
+}
+
+void NewGameTableTotalAllocation::SaveCurrentConfigIntoGlobalSettings() const
+{
+    // retrieve user settings from dialog and use them to set up global configuration
+
+    // Use GameTotalAllocationConfig to save the settings from the widgets
+    GameTotalAllocationConfig::Instance();
+}
+
+void NewGameTableTotalAllocation::LoadCurrentConfigFromGlobalSettings()
+{
+    // load current global configuration into the widgets before showing the dialog
+    
+    // Use GameTotalAllocationConfig to load the settings into the widgets
+    GameTotalAllocationConfig::Instance();
+}
 
 
-///////////////////
-// NewGame1v1Table methods
+
+//////////////////////////////////////////////////////////////////////////////
+// NewGameTable1v1 methods
 
 // maximum and minimum coordinate values for the starting coordinate spinbuttons
 // they start by 1.0 'cos is more user friendly than the c-style 0
@@ -323,27 +411,29 @@ static const double MAXIMUM_GAME1V1_STARTING_COORD_ROW = BOARD_1VS1_ROWS;
 static const double MINIMUM_GAME1V1_STARTING_COORD_COL = 1;
 static const double MAXIMUM_GAME1V1_STARTING_COORD_COL = BOARD_1VS1_COLUMNS;
 
-NewGame1v1Table::NewGame1v1Table(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder)  throw (GUIException) :
-    Gtk::HBox(cobject), //Calls the base class constructor
-    m_gtkBuilder(a_gtkBuilder),
-    m_spinbuttonStartingRowPlayer1Adj(
-        Game1v1Config::Instance().GetPlayer1StartingCoord().m_row,
-        MINIMUM_GAME1V1_STARTING_COORD_ROW,
-        MAXIMUM_GAME1V1_STARTING_COORD_ROW),
-    m_spinbuttonStartingColumnPlayer1Adj(
-        Game1v1Config::Instance().GetPlayer1StartingCoord().m_col,
-        MINIMUM_GAME1V1_STARTING_COORD_COL,
-        MAXIMUM_GAME1V1_STARTING_COORD_COL),
-    m_spinbuttonStartingRowPlayer2Adj(
-        Game1v1Config::Instance().GetPlayer2StartingCoord().m_row,
-        MINIMUM_GAME1V1_STARTING_COORD_ROW,
-        MAXIMUM_GAME1V1_STARTING_COORD_ROW),
-    m_spinbuttonStartingColumnPlayer2Adj(
-        Game1v1Config::Instance().GetPlayer2StartingCoord().m_col,
-        MINIMUM_GAME1V1_STARTING_COORD_COL,
-        MAXIMUM_GAME1V1_STARTING_COORD_COL),
-    m_spinbuttonDepthPlayer1Adj(0.0, 0.0, e_numberOfPieces * 2), // maximum depth is putting down all the pieces
-    m_spinbuttonDepthPlayer2Adj(0.0, 0.0, e_numberOfPieces * 2)  // maximum depth is putting down all the pieces
+NewGameTable1v1::NewGameTable1v1(
+    BaseObjectType* cobject, 
+    const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder)  throw (GUIException) :
+        NewGameTable(cobject), //Calls the base class constructor
+        m_gtkBuilder(a_gtkBuilder),
+        m_spinbuttonStartingRowPlayer1Adj(
+            Game1v1Config::Instance().GetPlayer1StartingCoord().m_row,
+            MINIMUM_GAME1V1_STARTING_COORD_ROW,
+            MAXIMUM_GAME1V1_STARTING_COORD_ROW),
+        m_spinbuttonStartingColumnPlayer1Adj(
+            Game1v1Config::Instance().GetPlayer1StartingCoord().m_col,
+            MINIMUM_GAME1V1_STARTING_COORD_COL,
+            MAXIMUM_GAME1V1_STARTING_COORD_COL),
+        m_spinbuttonStartingRowPlayer2Adj(
+            Game1v1Config::Instance().GetPlayer2StartingCoord().m_row,
+            MINIMUM_GAME1V1_STARTING_COORD_ROW,
+            MAXIMUM_GAME1V1_STARTING_COORD_ROW),
+        m_spinbuttonStartingColumnPlayer2Adj(
+            Game1v1Config::Instance().GetPlayer2StartingCoord().m_col,
+            MINIMUM_GAME1V1_STARTING_COORD_COL,
+            MAXIMUM_GAME1V1_STARTING_COORD_COL),
+        m_spinbuttonDepthPlayer1Adj(0.0, 0.0, e_numberOfPieces * 2), // maximum depth is putting down all the pieces
+        m_spinbuttonDepthPlayer2Adj(0.0, 0.0, e_numberOfPieces * 2)  // maximum depth is putting down all the pieces
 {
     // retrieve widgets from the .glade file
     m_gtkBuilder->get_widget(GUI_NEWGAME_1V1_TABLE_PLAYER1, m_tablePlayer1);
@@ -625,25 +715,25 @@ NewGame1v1Table::NewGame1v1Table(BaseObjectType* cobject, const Glib::RefPtr<Gtk
 
     //signal handling
     m_comboTypePlayer1.signal_changed().connect(
-            sigc::mem_fun(*this, &NewGame1v1Table::ComboPlayer1Type_signalChanged));
+            sigc::mem_fun(*this, &NewGameTable1v1::ComboPlayer1Type_signalChanged));
     m_comboTypePlayer2.signal_changed().connect(
-            sigc::mem_fun(*this, &NewGame1v1Table::ComboPlayer2Type_signalChanged));
+            sigc::mem_fun(*this, &NewGameTable1v1::ComboPlayer2Type_signalChanged));
     m_comboHeuristicPlayer1.signal_changed().connect(
-            sigc::mem_fun(*this, &NewGame1v1Table::ComboHeuristicPlayer1_signalChanged));
+            sigc::mem_fun(*this, &NewGameTable1v1::ComboHeuristicPlayer1_signalChanged));
     m_comboHeuristicPlayer2.signal_changed().connect(
-            sigc::mem_fun(*this, &NewGame1v1Table::ComboHeuristicPlayer2_signalChanged));
+            sigc::mem_fun(*this, &NewGameTable1v1::ComboHeuristicPlayer2_signalChanged));
 
     m_spinbuttonDepthPlayer1->signal_value_changed().connect(
-            sigc::mem_fun(*this, &NewGame1v1Table::SpinButtonDepthPlayer1_SignalValueChanged));
+            sigc::mem_fun(*this, &NewGameTable1v1::SpinButtonDepthPlayer1_SignalValueChanged));
     m_spinbuttonDepthPlayer2->signal_value_changed().connect(
-            sigc::mem_fun(*this, &NewGame1v1Table::SpinButtonDepthPlayer2_SignalValueChanged));
+            sigc::mem_fun(*this, &NewGameTable1v1::SpinButtonDepthPlayer2_SignalValueChanged));
 }
 
-NewGame1v1Table::~NewGame1v1Table()
+NewGameTable1v1::~NewGameTable1v1()
 {
 }
 
-bool NewGame1v1Table::on_expose_event (GdkEventExpose* event)
+bool NewGameTable1v1::on_expose_event (GdkEventExpose* event)
 {
     // workaround to show the "Auto" string in the depth spin buttons
     // m_spinbuttonDepthPlayer1->set_text("Auto") doesn't work until
@@ -659,7 +749,7 @@ bool NewGame1v1Table::on_expose_event (GdkEventExpose* event)
     return Gtk::HBox::on_expose_event(event);
 }
 
-void NewGame1v1Table::SpinButtonDepthPlayer1_SignalValueChanged()
+void NewGameTable1v1::SpinButtonDepthPlayer1_SignalValueChanged()
 {
     if (static_cast<int32_t>(m_spinbuttonDepthPlayer1Adj.get_value()) == 0)
     {
@@ -679,7 +769,7 @@ void NewGame1v1Table::SpinButtonDepthPlayer1_SignalValueChanged()
     }
 }
 
-void NewGame1v1Table::SpinButtonDepthPlayer2_SignalValueChanged()
+void NewGameTable1v1::SpinButtonDepthPlayer2_SignalValueChanged()
 {
     if (static_cast<int32_t>(m_spinbuttonDepthPlayer2Adj.get_value()) == 0)
     {
@@ -699,7 +789,7 @@ void NewGame1v1Table::SpinButtonDepthPlayer2_SignalValueChanged()
     }
 }
 
-void NewGame1v1Table::ComboPlayer1Type_signalChanged()
+void NewGameTable1v1::ComboPlayer1Type_signalChanged()
 {
     if (IsPlayer1TypeComputer())
     {
@@ -711,7 +801,7 @@ void NewGame1v1Table::ComboPlayer1Type_signalChanged()
     }
 }
 
-void NewGame1v1Table::ComboPlayer2Type_signalChanged()
+void NewGameTable1v1::ComboPlayer2Type_signalChanged()
 {
     if (IsPlayer2TypeComputer())
     {
@@ -723,7 +813,7 @@ void NewGame1v1Table::ComboPlayer2Type_signalChanged()
     }
 }
 
-void NewGame1v1Table::ComboHeuristicPlayer1_signalChanged()
+void NewGameTable1v1::ComboHeuristicPlayer1_signalChanged()
 {
     const Heuristic::sHeuristicData_t &heuristicData =
                 Heuristic::m_heuristicData[GetPlayer1Heuristic()];
@@ -756,7 +846,7 @@ void NewGame1v1Table::ComboHeuristicPlayer1_signalChanged()
 
 }
 
-void NewGame1v1Table::ComboHeuristicPlayer2_signalChanged()
+void NewGameTable1v1::ComboHeuristicPlayer2_signalChanged()
 {
     const Heuristic::sHeuristicData_t &heuristicData =
                 Heuristic::m_heuristicData[GetPlayer2Heuristic()];
@@ -789,17 +879,17 @@ void NewGame1v1Table::ComboHeuristicPlayer2_signalChanged()
     }
 }
 
-bool NewGame1v1Table::IsPlayer1TypeComputer() const
+bool NewGameTable1v1::IsPlayer1TypeComputer() const
 {
     return (m_comboTypePlayer1.get_active_text().compare(_(COMBO_PLAYER_TYPE_COMPUTER)) == 0);
 }
 
-bool NewGame1v1Table::IsPlayer2TypeComputer() const
+bool NewGameTable1v1::IsPlayer2TypeComputer() const
 {
     return (m_comboTypePlayer2.get_active_text().compare(_(COMBO_PLAYER_TYPE_COMPUTER)) == 0);
 }
 
-void NewGame1v1Table::GetPlayer1StartingCoord(Coordinate &a_coord) const
+void NewGameTable1v1::GetPlayer1StartingCoord(Coordinate &a_coord) const
 {
     // -1 because coordinates are shown to the user starting by 1 (not 0)
     a_coord = Coordinate(
@@ -807,7 +897,7 @@ void NewGame1v1Table::GetPlayer1StartingCoord(Coordinate &a_coord) const
                 static_cast<int32_t>(m_spinbuttonStartingColumnPlayer1Adj.get_value()) - 1);
 }
 
-void NewGame1v1Table::GetPlayer2StartingCoord(Coordinate &a_coord) const
+void NewGameTable1v1::GetPlayer2StartingCoord(Coordinate &a_coord) const
 {
     // -1 because coordinates are shown to the user starting by 1 (not 0)
     a_coord = Coordinate(
@@ -815,17 +905,17 @@ void NewGame1v1Table::GetPlayer2StartingCoord(Coordinate &a_coord) const
                 static_cast<int32_t>(m_spinbuttonStartingColumnPlayer2Adj.get_value()) - 1);
 }
 
-int32_t NewGame1v1Table::GetPlayer1SearchTreeDepth() const
+int32_t NewGameTable1v1::GetPlayer1SearchTreeDepth() const
 {
     return static_cast<uint32_t>(m_spinbuttonDepthPlayer1Adj.get_value());
 }
 
-int32_t NewGame1v1Table::GetPlayer2SearchTreeDepth() const
+int32_t NewGameTable1v1::GetPlayer2SearchTreeDepth() const
 {
     return static_cast<uint32_t>(m_spinbuttonDepthPlayer2Adj.get_value());
 }
 
-Heuristic::eHeuristicType_t NewGame1v1Table::GetPlayer1Heuristic() const
+Heuristic::eHeuristicType_t NewGameTable1v1::GetPlayer1Heuristic() const
 {
     for (int32_t i = Heuristic::e_heuristicStartCount;
          i < Heuristic::e_heuristicCount;
@@ -846,7 +936,7 @@ Heuristic::eHeuristicType_t NewGame1v1Table::GetPlayer1Heuristic() const
     return Heuristic::e_heuristicStartCount;
 }
 
-Heuristic::eHeuristicType_t NewGame1v1Table::GetPlayer2Heuristic() const
+Heuristic::eHeuristicType_t NewGameTable1v1::GetPlayer2Heuristic() const
 {
     for (int32_t i = Heuristic::e_heuristicStartCount;
          i < Heuristic::e_heuristicCount;
@@ -867,7 +957,7 @@ Heuristic::eHeuristicType_t NewGame1v1Table::GetPlayer2Heuristic() const
     return Heuristic::e_heuristicStartCount;
 }
 
-void NewGame1v1Table::SaveCurrentConfigIntoGlobalSettings() const
+void NewGameTable1v1::SaveCurrentConfigIntoGlobalSettings() const
 {
     // retrieve user settings from dialog and use them to set up global configuration
 
@@ -907,7 +997,7 @@ void NewGame1v1Table::SaveCurrentConfigIntoGlobalSettings() const
     Game1v1Config::Instance().SetMinimaxDepthPlayer2(this->GetPlayer2SearchTreeDepth());
 }
 
-void NewGame1v1Table::LoadCurrentConfigFromGlobalSettings()
+void NewGameTable1v1::LoadCurrentConfigFromGlobalSettings()
 {
     // load current global configuration into the widgets before showing the dialog
 
@@ -954,7 +1044,7 @@ void NewGame1v1Table::LoadCurrentConfigFromGlobalSettings()
 }
 
 #ifdef WIN32
-void NewGame1v1Table::ForceTranslationOfWidgets()
+void NewGameTable1v1::ForceTranslationOfWidgets()
 {
     // in win32 systems gettext fails when the string is static and marked as
     // translatable with N_() but _() is never called explicitely. Basically
@@ -1012,7 +1102,7 @@ void NewGame1v1Table::ForceTranslationOfWidgets()
             _(m_player2AIDepthLabel->get_text().c_str()) );
 }
 #else
-void NewGame1v1Table::ForceTranslationOfWidgets()
+void NewGameTable1v1::ForceTranslationOfWidgets()
 {
     // So far this is only needed in win32 platform due to some unknown issue
     // that prevents those strings to be automatically translated. It works

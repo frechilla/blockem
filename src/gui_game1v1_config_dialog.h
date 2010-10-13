@@ -44,10 +44,6 @@ public:
     Game1v1ConfigDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder) throw (GUIException);
     virtual ~Game1v1ConfigDialog();
 
-    /// set starting coords spinbuttons to sensitive or unsensitive so they can/cannot be edited
-    /// @param true will set it to sensitive. false will blur them so they cannot be edited
-    void SetStartingCoordEditionSensitive(bool action);
-
     // override Dialog::run. It will call Dialog::run internally to show the dialog on the screen
     int run();
 
@@ -162,7 +158,12 @@ private:
     void SpinButtonDepthPlayer1_SignalValueChanged();
     void SpinButtonDepthPlayer2_SignalValueChanged();
 
+    /// will get called when the dialog is shown / reprinted on the screen
     bool on_expose_event (GdkEventExpose* event);
+    
+    /// set starting coords spinbuttons to sensitive or unsensitive so they can/cannot be edited
+    /// @param true will set it to sensitive. false will blur them so they cannot be edited
+    void SetStartingCoordEditionSensitive(bool action);
 
     /// Calls gettext per every static widget in the dialog. These strings
     /// are those ones included in the .glade file that never change during the

@@ -36,9 +36,9 @@
 
 #ifdef DEBUG_PRINT
 #include <iostream>
-#include <cstdio>    // printf/snprintf (needed for better i18n)
 #endif
 
+#include <cstdio>    // printf/snprintf (needed for better i18n)
 #include "gettext.h" // i18n
 #include "gui_main_window.h"
 #include "gui_game1v1_config.h"
@@ -57,7 +57,7 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     m_config1v1Dialog(NULL),
     m_newGameDialog(NULL),
     m_game1v1Widget(),
-    m_gameTotalAllocation()
+    m_gameTotalAllocationWidget()
 {
     // icon of the window
     Glib::RefPtr< Gdk::Pixbuf > icon;
@@ -246,20 +246,16 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
 
     // add game widgets into the window. Expand and fill!
     m_vBoxMain->pack_start(m_game1v1Widget, true, true);
-    m_vBoxMain->pack_start(m_gameTotalAllocation, true, true);
-
-    // set_visible doesn't work in 2.16 (which is used in windows). use show!
-    m_game1v1Widget.show_all();
-    //m_gameTotalAllocation.show_all();
+    m_vBoxMain->pack_start(m_gameTotalAllocationWidget, true, true);
 
     // connect also its handlers
     m_game1v1Widget.signal_fatalError().connect(
             sigc::mem_fun(*this, &MainWindow::Notify_FatalError));
     m_game1v1Widget.signal_gameFinished().connect(
             sigc::mem_fun(*this, &MainWindow::Notify_GameFinished));
-    m_gameTotalAllocation.signal_fatalError().connect(
+    m_gameTotalAllocationWidget.signal_fatalError().connect(
             sigc::mem_fun(*this, &MainWindow::Notify_FatalError));
-    m_gameTotalAllocation.signal_gameFinished().connect(
+    m_gameTotalAllocationWidget.signal_gameFinished().connect(
             sigc::mem_fun(*this, &MainWindow::Notify_GameFinished));
 
     // connect signals to handlers
@@ -289,6 +285,9 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     m_settingsInfluenceAreaNoShowMenuItem->signal_toggled().connect(
             sigc::mem_fun(*this, &MainWindow::MenuItemSettingsShowNoneInfluenceArea_Toggled));
 
+    // set up window to show a 1vs1 game by default
+    SetupWindowForNewGame(e_gameType1vs1);
+            
     // launch the 1v1 game by default!!
     m_game1v1Widget.LaunchNewGame();
 }
@@ -359,33 +358,33 @@ void MainWindow::MenuItemGameQuit_Activate()
 
 void MainWindow::MenuItemGameNew_Activate()
 {
-
     Gtk::ResponseType result =
         static_cast<Gtk::ResponseType>(m_newGameDialog->run());
 
     if (result == Gtk::RESPONSE_OK)
     {
         // save configuration shown by the dialog into global config singleton
-        // it only saves the one regarding the selected game type
-        m_newGameDialog->SaveCurrentConfigIntoGlobalSettings();
+        // it only saves the one regarding the selected game type (it is passed
+        // as a parameter)
+        m_newGameDialog->SaveCurrentConfigIntoGlobalSettings(
+            m_newGameDialog->GetSelectedTypeOfGame());
+        
+        // set up main window widgets for this new game
+        SetupWindowForNewGame(m_newGameDialog->GetSelectedTypeOfGame());
 
         // go for a new game with the new settings. Gotta check type of game first!!
         switch(m_newGameDialog->GetSelectedTypeOfGame())
         {
         case e_gameType1vs1:
         {
-            // hide what is not to be shown
-            m_gameTotalAllocation.hide_all();
-
-            // show current game widget
-            m_game1v1Widget.show_all();
-
             // launch this new game!!
             m_game1v1Widget.LaunchNewGame();
             break;
         }
         case e_gameTypeTotalAllocation:
         {
+            // launch this new game!!
+            m_gameTotalAllocationWidget.LaunchNewGame();
             break;
         }
         } // switch(m_newGameDialog->GetSelectedTypeOfGame())
@@ -407,12 +406,12 @@ void MainWindow::MenuItemSettingsViewNKPoints_Toggled()
     if (m_settingsNKPointsMenuItem->property_active())
     {
         m_game1v1Widget.BoardDrawingArea().ShowNucleationPoints();
-        m_gameTotalAllocation.BoardDrawingArea().ShowNucleationPoints();
+        m_gameTotalAllocationWidget.BoardDrawingArea().ShowNucleationPoints();
     }
     else
     {
         m_game1v1Widget.BoardDrawingArea().HideNucleationPoints();
-        m_gameTotalAllocation.BoardDrawingArea().ShowNucleationPoints();
+        m_gameTotalAllocationWidget.BoardDrawingArea().ShowNucleationPoints();
     }
 }
 
@@ -421,6 +420,7 @@ void MainWindow::MenuItemSettingsShowPlayer1ForbiddenArea_Toggled()
     if (m_settingsForbiddenAreaPlayer1MenuItem->property_active())
     {
         m_game1v1Widget.ShowForbiddenAreaInBoard(Game1v1::e_Game1v1Player1);
+        m_gameTotalAllocationWidget.ShowForbiddenAreaInBoard(true);
     }
 }
 
@@ -437,6 +437,7 @@ void MainWindow::MenuItemSettingsShowNoneForbiddenArea_Toggled()
     if (m_settingsForbiddenAreaNoShowMenuItem->property_active())
     {
         m_game1v1Widget.ShowForbiddenAreaInBoard(Game1v1::e_Game1v1NoPlayer);
+        m_gameTotalAllocationWidget.ShowForbiddenAreaInBoard(false);
     }
 }
 
@@ -445,6 +446,7 @@ void MainWindow::MenuItemSettingsShowPlayer1InfluenceArea_Toggled()
     if (m_settingsInfluenceAreaPlayer1MenuItem->property_active())
     {
         m_game1v1Widget.ShowInfluenceAreaInBoard(Game1v1::e_Game1v1Player1);
+        m_gameTotalAllocationWidget.ShowInfluenceAreaInBoard(true);
     }
 }
 
@@ -461,14 +463,12 @@ void MainWindow::MenuItemSettingsShowNoneInfluenceArea_Toggled()
     if (m_settingsInfluenceAreaNoShowMenuItem->property_active())
     {
         m_game1v1Widget.ShowInfluenceAreaInBoard(Game1v1::e_Game1v1NoPlayer);
+        m_gameTotalAllocationWidget.ShowInfluenceAreaInBoard(false);
     }
 }
 
 void MainWindow::MenuItemSettingsPreferences_Activate()
 {
-    //TODO starting coords cannot be edited through the configuration dialog yet
-    m_config1v1Dialog->SetStartingCoordEditionSensitive(false);
-
     // show a message informing the user a move was cancelled?
     bool showInfoMessage = false;
     Gtk::ResponseType result =
@@ -546,6 +546,49 @@ void MainWindow::Notify_GameFinished(const std::string& a_msg)
     {
         ; // the dialog only has 1 button
     }
+}
+
+void MainWindow::SetupWindowForNewGame(e_blockemGameType_t a_gametype)
+{
+    switch(a_gametype)
+    {
+    case e_gameType1vs1:
+    {
+        // show player2's menus
+        m_settingsForbiddenAreaPlayer2MenuItem->show();
+        m_settingsInfluenceAreaPlayer2MenuItem->show();
+        
+        // settings menu is clickable in 1vs1 games
+        m_settingsPrefsMenuItem->set_sensitive(true);
+        
+        // configure now which game wisget will be shown 
+        // set_visible doesn't work in 2.16 (which is used in windows)
+        // show_all must be used instead!
+        m_game1v1Widget.show_all();
+        m_gameTotalAllocationWidget.hide_all();
+        
+        break;
+    }
+    
+    case e_gameTypeTotalAllocation:
+    {
+        // hide player2's menus since there is no player2 in
+        // total allocation games
+        m_settingsForbiddenAreaPlayer2MenuItem->hide();
+        m_settingsInfluenceAreaPlayer2MenuItem->hide();
+        
+        // total allocation games cannot be configured
+        m_settingsPrefsMenuItem->set_sensitive(false);
+        
+        // configure now which game wisget will be shown 
+        // set_visible doesn't work in 2.16 (which is used in windows)
+        // show_all must be used instead!
+        m_game1v1Widget.hide_all();
+        m_gameTotalAllocationWidget.show_all();
+        
+        break;
+    }
+    } // switch(a_gametype)
 }
 
 #ifdef WIN32

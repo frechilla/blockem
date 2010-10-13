@@ -36,7 +36,9 @@
 #include "heuristic.h"
 
 // forward declarations...
-class NewGame1v1Table;
+class NewGameTable;
+class NewGameTable1v1;
+class NewGameTableTotalAllocation;
 
 /// @brief the new game dialog!!
 class DialogNewGame :
@@ -47,10 +49,9 @@ public:
     DialogNewGame(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder) throw (GUIException);
     virtual ~DialogNewGame();
 
-    /// saves all the configuration showed in the widgets of this dialog
-    /// into the corresponding config singleton. it only saves the widgets
-    /// of the currently selected game into global settings
-    void SaveCurrentConfigIntoGlobalSettings() const;
+    /// saves all the configuration showed in the widgets related to a_gameType
+    /// into the corresponding config singleton
+    void SaveCurrentConfigIntoGlobalSettings(e_blockemGameType_t a_gameType) const;
 
     /// override Dialog::run. It will call Dialog::run internally to show the dialog on the screen
     int run();
@@ -69,11 +70,13 @@ private:
         ModelColumns()
         {
             add(m_col_gametype);
+            add(m_col_newgame_table_widget);
             add(m_col_description);
             add(m_col_pixbuf);
         }
 
         Gtk::TreeModelColumn<e_blockemGameType_t> m_col_gametype;
+        Gtk::TreeModelColumn<NewGameTable*> m_col_newgame_table_widget;
         Gtk::TreeModelColumn<Glib::ustring>  m_col_description;
         Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf> > m_col_pixbuf;
     };
@@ -90,7 +93,8 @@ private:
     Gtk::TreeModel::Path         m_currentSelectedPath;
 
     // the boxes with the widgets to set up new games
-    NewGame1v1Table* m_newGame1v1Table;
+    NewGameTable1v1* m_newGameTable1v1;
+    NewGameTableTotalAllocation* m_newGameTableTotalAllocation;
 
     /// double click (or click + enter) on an item of the icon view
     void IconView_on_item_activated(const Gtk::TreeModel::Path& path);
@@ -110,8 +114,9 @@ private:
 
     /// Adds an entry to the icon view
     void AddEntry(
-        e_blockemGameType_t a_gametype,
-        const std::string& a_imgFilename,
+        e_blockemGameType_t  a_gametype,
+        NewGameTable*        a_newGameTableWidget,
+        const std::string&   a_imgFilename,
         const Glib::ustring& a_description);
 
     // prevent the default constructors to be used
@@ -120,19 +125,73 @@ private:
     DialogNewGame& operator=(const DialogNewGame &a_src);
 };
 
-/// @brief table to be shown on the new game dialog when the user selects 1vs1 game
-class NewGame1v1Table :
+
+/// @brief abstract class to be inherited from by those classes (Gtk::HBox) 
+///        that hold the widgets which configure new games
+class NewGameTable :
     public Gtk::HBox
 {
 public:
+    NewGameTable(BaseObjectType* cobject) : Gtk::HBox(cobject)
+    {};    
+    virtual ~NewGameTable()
+    {};
+    
+    /// @brief load current global configuration corresponding to the type of
+    ///        gamer epresented by the derived classts
+    virtual void LoadCurrentConfigFromGlobalSettings() = 0;
+    /// @brief save info contained in the derived class' widgets into current 
+    ///        global configuration
+    virtual void SaveCurrentConfigIntoGlobalSettings() const = 0;
+
+private:
+    NewGameTable();
+    NewGameTable(const NewGameTable &a_src);
+    NewGameTable& operator=(const NewGameTable &a_src);
+};
+
+
+
+/// @brief table to be shown on the new game dialog when the user selects
+///        total allocation game
+class NewGameTableTotalAllocation :
+    public NewGameTable
+{
+public:
     // to be used with m_gtkBuilder->get_widget_derived(GUI_NEWGAME_1V1_HBOX, m_table);
-    NewGame1v1Table(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder) throw (GUIException);
-    virtual ~NewGame1v1Table();
+    NewGameTableTotalAllocation(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder) throw (GUIException);
+    virtual ~NewGameTableTotalAllocation();
 
     /// @brief load current global configuration into the widgets
-    void LoadCurrentConfigFromGlobalSettings();
+    virtual void LoadCurrentConfigFromGlobalSettings();
     /// @brief save info saved in the widgets into current global configuration
-    void SaveCurrentConfigIntoGlobalSettings() const;
+    virtual void SaveCurrentConfigIntoGlobalSettings() const;
+    
+private:
+    /// @brief used to retrieve the objects from the Glade design
+    Glib::RefPtr<Gtk::Builder> m_gtkBuilder;
+    
+    NewGameTableTotalAllocation();
+    NewGameTableTotalAllocation(const NewGameTableTotalAllocation &a_src);
+    NewGameTableTotalAllocation& operator=(const NewGameTableTotalAllocation &a_src);
+};
+
+
+
+/// @brief table to be shown on the new game dialog when the user selects 
+///        1vs1 game
+class NewGameTable1v1 :
+    public NewGameTable
+{
+public:
+    // to be used with m_gtkBuilder->get_widget_derived(GUI_NEWGAME_1V1_HBOX, m_table);
+    NewGameTable1v1(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder) throw (GUIException);
+    virtual ~NewGameTable1v1();
+
+    /// @brief load current global configuration into the widgets
+    virtual void LoadCurrentConfigFromGlobalSettings();
+    /// @brief save info saved in the widgets into current global configuration
+    virtual void SaveCurrentConfigIntoGlobalSettings() const;
 
 private:
     /// @brief used to retrieve the objects from the Glade design
@@ -254,9 +313,9 @@ private:
     void ForceTranslationOfWidgets();
 
     // prevent the default constructors to be used
-    NewGame1v1Table();
-    NewGame1v1Table(const NewGame1v1Table &a_src);
-    NewGame1v1Table& operator=(const NewGame1v1Table &a_src);
+    NewGameTable1v1();
+    NewGameTable1v1(const NewGameTable1v1 &a_src);
+    NewGameTable1v1& operator=(const NewGameTable1v1 &a_src);
 };
 
 #endif /* _GUI_DIALOG_NEWGAME_H_ */

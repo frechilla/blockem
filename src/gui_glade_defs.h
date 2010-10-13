@@ -122,10 +122,10 @@ const std::string GUI_PATH_TO_128PICTURE_STR
         (PATH_TO_PIXMAPS + std::string("blockemlogo128.png"));
 
 const std::string GUI_PATH_TO_NEWGAME_1VS1GAME
-        (PATH_TO_PIXMAPS + std::string("blockemgame1vs1.png"));
+        (PATH_TO_PIXMAPS + std::string("game1vs1.png"));
 
 const std::string GUI_PATH_TO_NEWGAME_TOTALALLOC
-        (PATH_TO_PIXMAPS + std::string("blockemlogo48.png"));
+        (PATH_TO_PIXMAPS + std::string("gametotalalloc.png"));
 
 
 // have a look at the name of the widgets in gui.glade file
@@ -182,6 +182,7 @@ const char GUI_CONFIG_1V1_PLAYER2_AI_DEPTH_LABEL[]     = "config_1v1_label_ai_de
 const char GUI_NEWGAME_TYPE_ICONVIEW[]                  = "newgame_iconview";
 const char GUI_NEWGAME_VBOX_GAMEDIALOGS[]               = "newgame_vbox_gamedialogs";
 const char GUI_NEWGAME_1V1_HBOX[]                       = "newgame_1v1_hbox";
+const char GUI_NEWGAME_TOTALALLOC_HBOX[]                = "newgame_totalalloc_hbox";
 const char GUI_NEWGAME_1V1_TABLE_PLAYER1[]              = "newgame_1v1_table_player1";
 const char GUI_NEWGAME_1V1_TABLE_PLAYER2[]              = "newgame_1v1_table_player2";
 const char GUI_NEWGAME_1V1_SPINBUTTON_STARTROW1[]       = "newgame_1v1_spinbutton_startingrow1";

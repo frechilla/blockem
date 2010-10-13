@@ -100,6 +100,8 @@ gui_exception.cpp \
 gui_exception.h \
 gui_game_challenge_widget.cpp \
 gui_game_challenge_widget.h \
+gui_game_total_allocation_config.cpp \
+gui_game_total_allocation_config.h \
 gui_game_total_allocation_widget.cpp \
 gui_game_total_allocation_widget.h \
 gui_game1v1_config.cpp \

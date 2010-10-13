@@ -5,5 +5,7 @@ cb9ec6312f8834be36435fea9c05f7e1  usr/local/share/blockem/pixmaps/blockemicon.ic
 f2d31807da845fffaf43fe687972378d  usr/local/share/blockem/pixmaps/blockemlogo32.xpm
 6cc90acd286ae1e88d617ed2703cf58e  usr/local/share/blockem/pixmaps/blockemlogo48.png
 68fb94c65debcc4545853772cfaab357  usr/local/share/blockem/pixmaps/blockemlogo.png
+48d98c138ce6ff87d77d3ffc65d3300e  usr/local/share/blockem/pixmaps/game1vs1.png
+e96eea923ccad365bec694c70f8cf4b9  usr/local/share/blockem/pixmaps/gametotalalloc.png
 0bddafebd2a356f5ffd05eb20ead8f2d  usr/share/applications/blockem.desktop
 b5fe343400421dd0940b14dacefde10d  usr/share/locale/es/LC_MESSAGES/blockem.mo

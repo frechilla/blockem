@@ -359,6 +359,10 @@ Game1v1ConfigDialog::Game1v1ConfigDialog(BaseObjectType* cobject, const Glib::Re
             0,
             0);
     m_comboHeuristicPlayer2.show();
+    
+    // starting coords cannot be configured. They must be set up before the
+    // new game is launched
+    SetStartingCoordEditionSensitive(false);
 
     //signal handling
     m_comboTypePlayer1.signal_changed().connect(

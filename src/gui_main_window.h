@@ -118,7 +118,7 @@ private:
     Game1v1Widget m_game1v1Widget;
 
     /// @brief the total allocation game widget
-    GameTotalAllocationWidget m_gameTotalAllocation;
+    GameTotalAllocationWidget m_gameTotalAllocationWidget;
 
     // accel group + menu items
     Glib::RefPtr<Gtk::AccelGroup> m_accelGroup;
@@ -141,6 +141,12 @@ private:
 
     /// @brief Main vertical box (It's got the menu, vbox drawing plus status bar)
     Gtk::VBox* m_vBoxMain;
+    
+    /// @brief configure the main window for a new game
+    /// it sets to active/inactive different widgets that will be shown to the
+    /// user depending on the game
+    /// @param game type
+    void SetupWindowForNewGame(e_blockemGameType_t a_gametype);
 
     /// Calls gettext per every static widget in the main window. These strings
     /// are those ones included in the .glade file that never change during the
