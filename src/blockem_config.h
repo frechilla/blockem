@@ -32,6 +32,13 @@
 
 #include "singleton.h"
 
+/// types of game available in blockem
+typedef enum
+{
+    e_gameType1vs1 = 0, // see game1v1.h
+    e_gameTypeTotalAllocation, // see game_total_allocation.h
+} e_blockemGameType_t;
+
 /// singleton which stores the general configuration to apply to blockem
 class BlockemConfig :
     public Singleton<BlockemConfig>

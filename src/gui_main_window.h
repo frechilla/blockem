@@ -38,6 +38,7 @@
 
 #include "gui_about_dialog.h"
 #include "gui_game1v1_config_dialog.h"
+#include "gui_dialog_newgame.h"
 #include "gui_exception.h"
 #include "gui_game1v1_widget.h"
 #include "gui_game_total_allocation_widget.h"
@@ -108,7 +109,10 @@ private:
     AboutDialog* m_aboutDialog;
 
     /// @brief the config dialog class
-    Game1v1ConfigDialog* m_configDialog;
+    Game1v1ConfigDialog* m_config1v1Dialog;
+
+    /// @brief the new game dialog class
+    DialogNewGame* m_newGameDialog;
 
     /// @brief the game1v1 widget
     Game1v1Widget m_game1v1Widget;

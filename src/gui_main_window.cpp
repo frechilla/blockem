@@ -29,6 +29,7 @@
 ///           Faustino Frechilla 27-Apr-2010  2 human players allowed. Computer can start from both player1 and 2
 ///           Faustino Frechilla 21-Jul-2010  i18n
 ///           Faustino Frechilla 06-Oct-2010  Adapted to Game1v1Widget
+///           Faustino Frechilla 11-Oct-2010  New Game dialog
 /// @endhistory
 ///
 // ============================================================================
@@ -48,18 +49,13 @@
 static const char MESSAGE_ASK_BEFORE_CLOSE[] =
         N_("The game is computing the next move. Are you sure do you want to close the application?");
 
-/// title of the new 1vs1 game dialog box
-static const char MESSAGE_NEW_1V1GAME_DIALOG_TITLE[] = N_("New 1vs1 game");
-
-/// title of the configure current game dialog box
-static const char MESSAGE_CONFIGURE_GAME_DIALOG_TITLE[] = N_("Configure current game");
-
 
 MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder) throw (GUIException):
     Gtk::Window(cobject), //Calls the base class constructor
     m_gtkBuilder(a_gtkBuilder),
     m_aboutDialog(NULL),
-    m_configDialog(NULL),
+    m_config1v1Dialog(NULL),
+    m_newGameDialog(NULL),
     m_game1v1Widget(),
     m_gameTotalAllocation()
 {
@@ -91,14 +87,6 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
         }
     }
 
-    // retrieve the config dialog. It must be retrieved calling get_widget_derived
-    // otherwise app will core
-    m_gtkBuilder->get_widget_derived(GUI_DIALOG_CONFIG_NAME, m_configDialog);
-    if (m_configDialog == NULL)
-    {
-        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
-    }
-
     // retrieve the about dialog. It must be retrieved calling get_widget_derived
     // otherwise app will core
     m_gtkBuilder->get_widget_derived(GUI_DIALOG_ABOUT_NAME, m_aboutDialog);
@@ -106,6 +94,23 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     {
         throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
+
+    // retrieve the config dialog. It must be retrieved calling get_widget_derived
+    // otherwise app will core
+    m_gtkBuilder->get_widget_derived(GUI_DIALOG_CONFIG_1V1_NAME, m_config1v1Dialog);
+    if (m_config1v1Dialog == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
+    // retrieve the new game dialog. It must be retrieved calling get_widget_derived
+    // otherwise app will core
+    m_gtkBuilder->get_widget_derived(GUI_DIALOG_NEW_GAME_NAME, m_newGameDialog);
+    if (m_newGameDialog == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
 
     // retrieve the rest of objects from the GUI design
     m_accelGroup = Glib::RefPtr<Gtk::AccelGroup>::cast_dynamic(
@@ -295,7 +300,8 @@ MainWindow::~MainWindow()
     // by the Builder object. Other widgets are instantiated as managed so they will be deleted
     // automatically if you add them to a container widget
     delete(m_aboutDialog);
-    delete(m_configDialog);
+    delete(m_config1v1Dialog);
+    delete(m_newGameDialog);
     //delete(m_editPieceTable);
 }
 
@@ -353,19 +359,37 @@ void MainWindow::MenuItemGameQuit_Activate()
 
 void MainWindow::MenuItemGameNew_Activate()
 {
-    m_configDialog->set_title(_(MESSAGE_NEW_1V1GAME_DIALOG_TITLE));
-    // starting coords can always be edited when a new game is launched
-    m_configDialog->SetStartingCoordEditionSensitive(true);
 
     Gtk::ResponseType result =
-        static_cast<Gtk::ResponseType>(m_configDialog->run());
+        static_cast<Gtk::ResponseType>(m_newGameDialog->run());
+
     if (result == Gtk::RESPONSE_OK)
     {
         // save configuration shown by the dialog into global config singleton
-        m_configDialog->SaveCurrentConfigIntoGlobalSettings();
+        // it only saves the one regarding the selected game type
+        m_newGameDialog->SaveCurrentConfigIntoGlobalSettings();
 
-        // go for the brand new game with the new settings!!
-        m_game1v1Widget.LaunchNewGame();
+        // go for a new game with the new settings. Gotta check type of game first!!
+        switch(m_newGameDialog->GetSelectedTypeOfGame())
+        {
+        case e_gameType1vs1:
+        {
+            // hide what is not to be shown
+            m_gameTotalAllocation.hide_all();
+
+            // show current game widget
+            m_game1v1Widget.show_all();
+
+            // launch this new game!!
+            m_game1v1Widget.LaunchNewGame();
+            break;
+        }
+        case e_gameTypeTotalAllocation:
+        {
+            break;
+        }
+        } // switch(m_newGameDialog->GetSelectedTypeOfGame())
+
     }
 #ifdef DEBUG
     else if ( (result != Gtk::RESPONSE_CANCEL) && (result != Gtk::RESPONSE_DELETE_EVENT))
@@ -375,7 +399,7 @@ void MainWindow::MenuItemGameNew_Activate()
     }
 #endif // DEBUG
 
-    m_configDialog->hide();
+    m_newGameDialog->hide();
 }
 
 void MainWindow::MenuItemSettingsViewNKPoints_Toggled()
@@ -442,22 +466,20 @@ void MainWindow::MenuItemSettingsShowNoneInfluenceArea_Toggled()
 
 void MainWindow::MenuItemSettingsPreferences_Activate()
 {
-    m_configDialog->set_title(_(MESSAGE_CONFIGURE_GAME_DIALOG_TITLE));
-
     //TODO starting coords cannot be edited through the configuration dialog yet
-    m_configDialog->SetStartingCoordEditionSensitive(false);
+    m_config1v1Dialog->SetStartingCoordEditionSensitive(false);
 
     // show a message informing the user a move was cancelled?
     bool showInfoMessage = false;
     Gtk::ResponseType result =
-        static_cast<Gtk::ResponseType>(m_configDialog->run());
+        static_cast<Gtk::ResponseType>(m_config1v1Dialog->run());
     if (result == Gtk::RESPONSE_OK)
     {
         showInfoMessage =
-            m_game1v1Widget.ProcessChangeInCurrentGame(*m_configDialog);
+            m_game1v1Widget.ProcessChangeInCurrentGame(*m_config1v1Dialog);
     } // if (result == Gtk::RESPONSE_OK)
 
-    m_configDialog->hide();
+    m_config1v1Dialog->hide();
 
     if (showInfoMessage)
     {

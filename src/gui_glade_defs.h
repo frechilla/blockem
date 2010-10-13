@@ -98,49 +98,48 @@
 // path to pixmaps. Windows is a special case here (doesn't contain package's
 // name in the path to the pixmaps)
 #ifdef WIN32
-const std::string GUI_PATH_TO_LOGO_STR
-        (std::string(DATADIR) + std::string("/pixmaps/blockemlogo.png"));
-
-const std::string GUI_PATH_TO_16PICTURE_STR
-        (std::string(DATADIR) + std::string("/pixmaps/blockemlogo16.png"));
-
-const std::string GUI_PATH_TO_48PICTURE_STR
-        (std::string(DATADIR) + std::string("/pixmaps/blockemlogo48.png"));
-
-const std::string GUI_PATH_TO_128PICTURE_STR
-        (std::string(DATADIR) + std::string("/pixmaps/blockemlogo128.png"));
+const std::string PATH_TO_PIXMAPS(
+        std::string(DATADIR) + std::string("/pixmaps/"));
 
 #else // not a win32 system
-const std::string GUI_PATH_TO_LOGO_STR
-        (std::string(DATADIR) + std::string("/") +
-         std::string(PACKAGE) + std::string("/pixmaps/blockemlogo.png"));
 
-const std::string GUI_PATH_TO_16PICTURE_STR
-        (std::string(DATADIR) + std::string("/") +
-         std::string(PACKAGE) + std::string("/pixmaps/blockemlogo16.png"));
-
-const std::string GUI_PATH_TO_48PICTURE_STR
-        (std::string(DATADIR) + std::string("/") +
-         std::string(PACKAGE) + std::string("/pixmaps/blockemlogo48.png"));
-
-const std::string GUI_PATH_TO_128PICTURE_STR
-        (std::string(DATADIR) + std::string("/") +
-         std::string(PACKAGE) + std::string("/pixmaps/blockemlogo128.png"));
+const std::string PATH_TO_PIXMAPS(
+        std::string(DATADIR) + std::string("/") +
+        std::string(PACKAGE) + std::string("/pixmaps/"));
 
 #endif // WIN32
 
+const std::string GUI_PATH_TO_LOGO_STR
+        (PATH_TO_PIXMAPS + std::string("blockemlogo.png"));
+
+const std::string GUI_PATH_TO_16PICTURE_STR
+        (PATH_TO_PIXMAPS + std::string("blockemlogo16.png"));
+
+const std::string GUI_PATH_TO_48PICTURE_STR
+        (PATH_TO_PIXMAPS + std::string("blockemlogo48.png"));
+
+const std::string GUI_PATH_TO_128PICTURE_STR
+        (PATH_TO_PIXMAPS + std::string("blockemlogo128.png"));
+
+const std::string GUI_PATH_TO_NEWGAME_1VS1GAME
+        (PATH_TO_PIXMAPS + std::string("blockemgame1vs1.png"));
+
+const std::string GUI_PATH_TO_NEWGAME_TOTALALLOC
+        (PATH_TO_PIXMAPS + std::string("blockemlogo48.png"));
+
 
 // have a look at the name of the widgets in gui.glade file
-const char GUI_MAIN_WINDOW_NAME[]          = "window_main";
-const char GUI_DIALOG_ABOUT_NAME[]         = "aboutdialog";
-const char GUI_DIALOG_CONFIG_NAME[]        = "configdialog";
-const char GUI_DIALOG_NEW_GAME_NAME[]      = "newgamedialog";
-const char GUI_MENU_ITEM_ACCELERATOR[]     = "accelgroup1";
-const char GUI_MENU_ITEM_GAME[]            = "menuitem_game";
-const char GUI_MENU_ITEM_GAME_NEW[]        = "imagemenuitem_game_new";
-const char GUI_MENU_ITEM_GAME_QUIT[]       = "imagemenuitem_game_quit";
-const char GUI_MENU_ITEM_SETTINGS[]        = "menuitem_settings";
-const char GUI_MENU_ITEM_SETTINGS_NKPOINTS[] = "checkmenuitem_settings_nkpoints";
+const char GUI_MAIN_WINDOW_NAME[]       = "window_main";
+const char GUI_DIALOG_ABOUT_NAME[]      = "aboutdialog";
+const char GUI_DIALOG_CONFIG_1V1_NAME[] = "config1v1dialog";
+const char GUI_DIALOG_NEW_GAME_NAME[]   = "newgamedialog";
+const char GUI_VBOX_MAIN[]              = "vbox_main";
+const char GUI_MENU_ITEM_ACCELERATOR[]                    = "accelgroup1";
+const char GUI_MENU_ITEM_GAME[]                           = "menuitem_game";
+const char GUI_MENU_ITEM_GAME_NEW[]                       = "imagemenuitem_game_new";
+const char GUI_MENU_ITEM_GAME_QUIT[]                      = "imagemenuitem_game_quit";
+const char GUI_MENU_ITEM_SETTINGS[]                       = "menuitem_settings";
+const char GUI_MENU_ITEM_SETTINGS_NKPOINTS[]              = "checkmenuitem_settings_nkpoints";
 const char GUI_MENU_ITEM_SETTINGS_FORBIDDENAREA[]         = "menuitem_forbidden_areas";
 const char GUI_MENU_ITEM_SETTINGS_FORBIDDENAREA_NOSHOW[]  = "radiomenuitem_settings_forbidden_noshow";
 const char GUI_MENU_ITEM_SETTINGS_FORBIDDENAREA_PLAYER1[] = "radiomenuitem_settings_forbidden_player1";
@@ -149,38 +148,68 @@ const char GUI_MENU_ITEM_SETTINGS_INFLUENCEAREA[]         = "menuitem_influence_
 const char GUI_MENU_ITEM_SETTINGS_INFLUENCEAREA_NOSHOW[]  = "radiomenuitem_settings_influence_noshow";
 const char GUI_MENU_ITEM_SETTINGS_INFLUENCEAREA_PLAYER1[] = "radiomenuitem_settings_influence_player1";
 const char GUI_MENU_ITEM_SETTINGS_INFLUENCEAREA_PLAYER2[] = "radiomenuitem_settings_influence_player2";
-const char GUI_MENU_ITEM_SETTINGS_PREFS[]  = "imagemenuitem_settings_preferences";
-const char GUI_MENU_ITEM_HELP[]            = "menuitem_help";
-const char GUI_MENU_ITEM_HELP_ABOUT[]      = "imagemenuitem_help_about";
-const char GUI_VBOX_MAIN[]                 = "vbox_main";
-const char GUI_CONFIG_TABLE_PLAYER1[]      = "config_table_player1";
-const char GUI_CONFIG_TABLE_PLAYER2[]      = "config_table_player2";
-const char GUI_CONFIG_SPINBUTTON_STARTROW1[] = "spinbutton_startingrow1";
-const char GUI_CONFIG_SPINBUTTON_STARTCOL1[] = "spinbutton_startingcol1";
-const char GUI_CONFIG_SPINBUTTON_STARTROW2[] = "spinbutton_startingrow2";
-const char GUI_CONFIG_SPINBUTTON_STARTCOL2[] = "spinbutton_startingcol2";
-const char GUI_CONFIG_AI_FRAME_PLAYER1[]   = "config_frame_ai_player1";
-const char GUI_CONFIG_AI_FRAME_PLAYER2[]   = "config_frame_ai_player2";
-const char GUI_CONFIG_AI_TABLE_PLAYER1[]   = "config_table_ai_player1";
-const char GUI_CONFIG_AI_TABLE_PLAYER2[]   = "config_table_ai_player2";
-const char GUI_CONFIG_AI_SPINBUTTON_DEPTH1[] = "spinbutton_depth1";
-const char GUI_CONFIG_AI_SPINBUTTON_DEPTH2[] = "spinbutton_depth2";
-const char GUI_CONFIG_AI_TEXTVIEW_HEURISTIC1[] = "textview_heuristic_player1";
-const char GUI_CONFIG_AI_TEXTVIEW_HEURISTIC2[] = "textview_heuristic_player2";
-const char GUI_CONFIG_PLAYER1_LABEL[] = "config_label_player1";
-const char GUI_CONFIG_PLAYER2_LABEL[] = "config_label_player2";
-const char GUI_CONFIG_PLAYER1_TYPE_LABEL[] = "config_label_type1";
-const char GUI_CONFIG_PLAYER2_TYPE_LABEL[] = "config_label_type2";
-const char GUI_CONFIG_PLAYER1_STARTING_ROW_LABEL[] = "config_label_startingrow1";
-const char GUI_CONFIG_PLAYER2_STARTING_ROW_LABEL[] = "config_label_startingrow2";
-const char GUI_CONFIG_PLAYER1_STARTING_COL_LABEL[] = "config_label_startingcol1";
-const char GUI_CONFIG_PLAYER2_STARTING_COL_LABEL[] = "config_label_startingcol2";
-const char GUI_CONFIG_PLAYER1_AI_HEADER_LABEL[] = "config_label_ai_header1";
-const char GUI_CONFIG_PLAYER2_AI_HEADER_LABEL[] = "config_label_ai_header2";
-const char GUI_CONFIG_PLAYER1_AI_TYPE_LABEL[] = "config_label_ai_type1";
-const char GUI_CONFIG_PLAYER2_AI_TYPE_LABEL[] = "config_label_ai_type2";
-const char GUI_CONFIG_PLAYER1_AI_DEPTH_LABEL[] = "config_label_ai_depth1";
-const char GUI_CONFIG_PLAYER2_AI_DEPTH_LABEL[] = "config_label_ai_depth2";
+const char GUI_MENU_ITEM_SETTINGS_PREFS[]                 = "imagemenuitem_settings_preferences";
+const char GUI_MENU_ITEM_HELP[]                           = "menuitem_help";
+const char GUI_MENU_ITEM_HELP_ABOUT[]                     = "imagemenuitem_help_about";
+const char GUI_CONFIG_1V1_TABLE_PLAYER1[]              = "config_1v1_table_player1";
+const char GUI_CONFIG_1V1_TABLE_PLAYER2[]              = "config_1v1_table_player2";
+const char GUI_CONFIG_1V1_SPINBUTTON_STARTROW1[]       = "config_1v1_spinbutton_startingrow1";
+const char GUI_CONFIG_1V1_SPINBUTTON_STARTCOL1[]       = "config_1v1_spinbutton_startingcol1";
+const char GUI_CONFIG_1V1_SPINBUTTON_STARTROW2[]       = "config_1v1_spinbutton_startingrow2";
+const char GUI_CONFIG_1V1_SPINBUTTON_STARTCOL2[]       = "config_1v1_spinbutton_startingcol2";
+const char GUI_CONFIG_1V1_AI_FRAME_PLAYER1[]           = "config_1v1_frame_ai_player1";
+const char GUI_CONFIG_1V1_AI_FRAME_PLAYER2[]           = "config_1v1_frame_ai_player2";
+const char GUI_CONFIG_1V1_AI_TABLE_PLAYER1[]           = "config_1v1_table_ai_player1";
+const char GUI_CONFIG_1V1_AI_TABLE_PLAYER2[]           = "config_1v1_table_ai_player2";
+const char GUI_CONFIG_1V1_AI_SPINBUTTON_DEPTH1[]       = "config_1v1_spinbutton_depth1";
+const char GUI_CONFIG_1V1_AI_SPINBUTTON_DEPTH2[]       = "config_1v1_spinbutton_depth2";
+const char GUI_CONFIG_1V1_AI_TEXTVIEW_HEURISTIC1[]     = "config_1v1_textview_heuristic_player1";
+const char GUI_CONFIG_1V1_AI_TEXTVIEW_HEURISTIC2[]     = "config_1v1_textview_heuristic_player2";
+const char GUI_CONFIG_1V1_PLAYER1_LABEL[]              = "config_1v1_label_player1";
+const char GUI_CONFIG_1V1_PLAYER2_LABEL[]              = "config_1v1_label_player2";
+const char GUI_CONFIG_1V1_PLAYER1_TYPE_LABEL[]         = "config_1v1_label_type1";
+const char GUI_CONFIG_1V1_PLAYER2_TYPE_LABEL[]         = "config_1v1_label_type2";
+const char GUI_CONFIG_1V1_PLAYER1_STARTING_ROW_LABEL[] = "config_1v1_label_startingrow1";
+const char GUI_CONFIG_1V1_PLAYER2_STARTING_ROW_LABEL[] = "config_1v1_label_startingrow2";
+const char GUI_CONFIG_1V1_PLAYER1_STARTING_COL_LABEL[] = "config_1v1_label_startingcol1";
+const char GUI_CONFIG_1V1_PLAYER2_STARTING_COL_LABEL[] = "config_1v1_label_startingcol2";
+const char GUI_CONFIG_1V1_PLAYER1_AI_HEADER_LABEL[]    = "config_1v1_label_ai_header1";
+const char GUI_CONFIG_1V1_PLAYER2_AI_HEADER_LABEL[]    = "config_1v1_label_ai_header2";
+const char GUI_CONFIG_1V1_PLAYER1_AI_TYPE_LABEL[]      = "config_1v1_label_ai_type1";
+const char GUI_CONFIG_1V1_PLAYER2_AI_TYPE_LABEL[]      = "config_1v1_label_ai_type2";
+const char GUI_CONFIG_1V1_PLAYER1_AI_DEPTH_LABEL[]     = "config_1v1_label_ai_depth1";
+const char GUI_CONFIG_1V1_PLAYER2_AI_DEPTH_LABEL[]     = "config_1v1_label_ai_depth2";
+const char GUI_NEWGAME_TYPE_ICONVIEW[]                  = "newgame_iconview";
+const char GUI_NEWGAME_VBOX_GAMEDIALOGS[]               = "newgame_vbox_gamedialogs";
+const char GUI_NEWGAME_1V1_HBOX[]                       = "newgame_1v1_hbox";
+const char GUI_NEWGAME_1V1_TABLE_PLAYER1[]              = "newgame_1v1_table_player1";
+const char GUI_NEWGAME_1V1_TABLE_PLAYER2[]              = "newgame_1v1_table_player2";
+const char GUI_NEWGAME_1V1_SPINBUTTON_STARTROW1[]       = "newgame_1v1_spinbutton_startingrow1";
+const char GUI_NEWGAME_1V1_SPINBUTTON_STARTCOL1[]       = "newgame_1v1_spinbutton_startingcol1";
+const char GUI_NEWGAME_1V1_SPINBUTTON_STARTROW2[]       = "newgame_1v1_spinbutton_startingrow2";
+const char GUI_NEWGAME_1V1_SPINBUTTON_STARTCOL2[]       = "newgame_1v1_spinbutton_startingcol2";
+const char GUI_NEWGAME_1V1_AI_FRAME_PLAYER1[]           = "newgame_1v1_frame_ai_player1";
+const char GUI_NEWGAME_1V1_AI_FRAME_PLAYER2[]           = "newgame_1v1_frame_ai_player2";
+const char GUI_NEWGAME_1V1_AI_TABLE_PLAYER1[]           = "newgame_1v1_table_ai_player1";
+const char GUI_NEWGAME_1V1_AI_TABLE_PLAYER2[]           = "newgame_1v1_table_ai_player2";
+const char GUI_NEWGAME_1V1_AI_SPINBUTTON_DEPTH1[]       = "newgame_1v1_spinbutton_depth1";
+const char GUI_NEWGAME_1V1_AI_SPINBUTTON_DEPTH2[]       = "newgame_1v1_spinbutton_depth2";
+const char GUI_NEWGAME_1V1_AI_TEXTVIEW_HEURISTIC1[]     = "newgame_1v1_textview_heuristic_player1";
+const char GUI_NEWGAME_1V1_AI_TEXTVIEW_HEURISTIC2[]     = "newgame_1v1_textview_heuristic_player2";
+const char GUI_NEWGAME_1V1_PLAYER1_LABEL[]              = "newgame_1v1_label_player1";
+const char GUI_NEWGAME_1V1_PLAYER2_LABEL[]              = "newgame_1v1_label_player2";
+const char GUI_NEWGAME_1V1_PLAYER1_TYPE_LABEL[]         = "newgame_1v1_label_type1";
+const char GUI_NEWGAME_1V1_PLAYER2_TYPE_LABEL[]         = "newgame_1v1_label_type2";
+const char GUI_NEWGAME_1V1_PLAYER1_STARTING_ROW_LABEL[] = "newgame_1v1_label_startingrow1";
+const char GUI_NEWGAME_1V1_PLAYER2_STARTING_ROW_LABEL[] = "newgame_1v1_label_startingrow2";
+const char GUI_NEWGAME_1V1_PLAYER1_STARTING_COL_LABEL[] = "newgame_1v1_label_startingcol1";
+const char GUI_NEWGAME_1V1_PLAYER2_STARTING_COL_LABEL[] = "newgame_1v1_label_startingcol2";
+const char GUI_NEWGAME_1V1_PLAYER1_AI_HEADER_LABEL[]    = "newgame_1v1_label_ai_header1";
+const char GUI_NEWGAME_1V1_PLAYER2_AI_HEADER_LABEL[]    = "newgame_1v1_label_ai_header2";
+const char GUI_NEWGAME_1V1_PLAYER1_AI_TYPE_LABEL[]      = "newgame_1v1_label_ai_type1";
+const char GUI_NEWGAME_1V1_PLAYER2_AI_TYPE_LABEL[]      = "newgame_1v1_label_ai_type2";
+const char GUI_NEWGAME_1V1_PLAYER1_AI_DEPTH_LABEL[]     = "newgame_1v1_label_ai_depth1";
+const char GUI_NEWGAME_1V1_PLAYER2_AI_DEPTH_LABEL[]     = "newgame_1v1_label_ai_depth2";
 
 
 #endif /* GUI_GLADE_H_ */

@@ -16,63 +16,122 @@
 // You should have received a copy of the GNU General Public License along
 // with Blockem. If not, see http://www.gnu.org/licenses/.
 //
-/// @file  gui_game1v1_config_dialog.h
+/// @file  gui_dialog_newgame.h
 /// @brief
 ///
 /// @author Faustino Frechilla
 /// @history
 /// Ref       Who                When         What
-///           Faustino Frechilla 01-May-2010  Original development
-///           Faustino Frechilla 23-Sep-2010  Renamed to gui_game1v1_config_dialog
+///           Faustino Frechilla 02-Oct-2010  Original development
 /// @endhistory
 ///
 // ============================================================================
 
-#ifndef _GUI_GAME1V1_CONFIG_DIALOG_H_
-#define _GUI_GAME1V1_CONFIG_DIALOG_H_
+#ifndef _GUI_DIALOG_NEWGAME_H_
+#define _GUI_DIALOG_NEWGAME_H_
 
 #include <gtkmm.h>
+#include "blockem_config.h"
 #include "gui_exception.h"
-#include "coordinate.h"
 #include "heuristic.h"
 
-class Game1v1ConfigDialog :
+// forward declarations...
+class NewGame1v1Table;
+
+/// @brief the new game dialog!!
+class DialogNewGame :
     public Gtk::Dialog
 {
 public:
-    // to be used with m_gtkBuilder->get_widget_derived(GUI_DIALOG_CONFIG_1V1_NAME, m_aboutDialog);
-    Game1v1ConfigDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder) throw (GUIException);
-    virtual ~Game1v1ConfigDialog();
+    // to be used with m_gtkBuilder->get_widget_derived(GUI_DIALOG_NEW_GAME_NAME, m_newDialog);
+    DialogNewGame(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder) throw (GUIException);
+    virtual ~DialogNewGame();
 
-    /// set starting coords spinbuttons to sensitive or unsensitive so they can/cannot be edited
-    /// @param true will set it to sensitive. false will blur them so they cannot be edited
-    void SetStartingCoordEditionSensitive(bool action);
+    /// saves all the configuration showed in the widgets of this dialog
+    /// into the corresponding config singleton. it only saves the widgets
+    /// of the currently selected game into global settings
+    void SaveCurrentConfigIntoGlobalSettings() const;
 
-    // override Dialog::run. It will call Dialog::run internally to show the dialog on the screen
+    /// override Dialog::run. It will call Dialog::run internally to show the dialog on the screen
     int run();
 
-    /// @return true if player1 has been set to computer within the dialog
-    bool IsPlayer1TypeComputer() const;
-    /// @return true if player2 has been set to computer within the dialog
-    bool IsPlayer2TypeComputer() const;
+    /// returns type of game currently selected
+    e_blockemGameType_t GetSelectedTypeOfGame();
 
-    /// @return player1's starting coordinate in the dialog
-    void GetPlayer1StartingCoord(Coordinate &a_coord) const;
-    /// @return player2's starting coordinate in the dialog
-    void GetPlayer2StartingCoord(Coordinate &a_coord) const;
+private:
 
-    /// @return player1's search tree depth shown in the dialog
-    int32_t GetPlayer1SearchTreeDepth() const;
-    /// @return player2's search tree depth shown in the dialog
-    int32_t GetPlayer2SearchTreeDepth() const;
+    // Tree model columns:
+    //
+    class ModelColumns : public Gtk::TreeModel::ColumnRecord
+    {
+    public:
 
-    /// @return selected player1's heuristic
-    Heuristic::eHeuristicType_t GetPlayer1Heuristic() const;
-    /// @return selected player2's heuristic
-    Heuristic::eHeuristicType_t GetPlayer2Heuristic() const;
+        ModelColumns()
+        {
+            add(m_col_gametype);
+            add(m_col_description);
+            add(m_col_pixbuf);
+        }
 
-    /// saves all the configuration shows in the widgets of this dialog
-    /// into the game1v1 config singleton
+        Gtk::TreeModelColumn<e_blockemGameType_t> m_col_gametype;
+        Gtk::TreeModelColumn<Glib::ustring>  m_col_description;
+        Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf> > m_col_pixbuf;
+    };
+
+    // columns model
+    ModelColumns m_modelColumns;
+
+    /// @brief used to retrieve the objects from the Glade design
+    Glib::RefPtr<Gtk::Builder> m_gtkBuilder;
+
+    // widgets
+    Glib::RefPtr<Gtk::IconView>  m_typeGameIconView;
+    Glib::RefPtr<Gtk::ListStore> m_typeGameIconViewModel;
+    Gtk::TreeModel::Path         m_currentSelectedPath;
+
+    // the boxes with the widgets to set up new games
+    NewGame1v1Table* m_newGame1v1Table;
+
+    /// double click (or click + enter) on an item of the icon view
+    void IconView_on_item_activated(const Gtk::TreeModel::Path& path);
+
+    /// click (single) on an item of the icon view. Item gets selected
+    void IconView_on_selection_changed();
+
+    /// Calls gettext per every static widget in the dialog. These strings
+    /// are those ones included in the .glade file that never change during the
+    /// execution of the application, for example a menu called "Game", or a
+    /// label that contains the word "rotate"
+    ///
+    /// So far this is only needed in win32 platform due to some unknown issue
+    /// that prevents those strings to be automatically translated. It works
+    /// fine in linux, so there's no need there to explicitly call to gettext
+    void ForceTranslationOfWidgets();
+
+    /// Adds an entry to the icon view
+    void AddEntry(
+        e_blockemGameType_t a_gametype,
+        const std::string& a_imgFilename,
+        const Glib::ustring& a_description);
+
+    // prevent the default constructors to be used
+    DialogNewGame();
+    DialogNewGame(const DialogNewGame &a_src);
+    DialogNewGame& operator=(const DialogNewGame &a_src);
+};
+
+/// @brief table to be shown on the new game dialog when the user selects 1vs1 game
+class NewGame1v1Table :
+    public Gtk::HBox
+{
+public:
+    // to be used with m_gtkBuilder->get_widget_derived(GUI_NEWGAME_1V1_HBOX, m_table);
+    NewGame1v1Table(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder) throw (GUIException);
+    virtual ~NewGame1v1Table();
+
+    /// @brief load current global configuration into the widgets
+    void LoadCurrentConfigFromGlobalSettings();
+    /// @brief save info saved in the widgets into current global configuration
     void SaveCurrentConfigIntoGlobalSettings() const;
 
 private:
@@ -164,6 +223,26 @@ private:
 
     bool on_expose_event (GdkEventExpose* event);
 
+    /// @return true if player1 has been set to computer within the dialog
+    bool IsPlayer1TypeComputer() const;
+    /// @return true if player2 has been set to computer within the dialog
+    bool IsPlayer2TypeComputer() const;
+
+    /// @return player1's starting coordinate in the dialog
+    void GetPlayer1StartingCoord(Coordinate &a_coord) const;
+    /// @return player2's starting coordinate in the dialog
+    void GetPlayer2StartingCoord(Coordinate &a_coord) const;
+
+    /// @return player1's search tree depth shown in the dialog
+    int32_t GetPlayer1SearchTreeDepth() const;
+    /// @return player2's search tree depth shown in the dialog
+    int32_t GetPlayer2SearchTreeDepth() const;
+
+    /// @return selected player1's heuristic
+    Heuristic::eHeuristicType_t GetPlayer1Heuristic() const;
+    /// @return selected player2's heuristic
+    Heuristic::eHeuristicType_t GetPlayer2Heuristic() const;
+
     /// Calls gettext per every static widget in the dialog. These strings
     /// are those ones included in the .glade file that never change during the
     /// execution of the application, for example a menu called "Game", or a
@@ -175,9 +254,9 @@ private:
     void ForceTranslationOfWidgets();
 
     // prevent the default constructors to be used
-    Game1v1ConfigDialog();
-    Game1v1ConfigDialog(const Game1v1ConfigDialog &a_src);
-    Game1v1ConfigDialog& operator=(const Game1v1ConfigDialog &a_src);
+    NewGame1v1Table();
+    NewGame1v1Table(const NewGame1v1Table &a_src);
+    NewGame1v1Table& operator=(const NewGame1v1Table &a_src);
 };
 
-#endif /* _GUI_GAME1V1_CONFIG_DIALOG_H_ */
+#endif /* _GUI_DIALOG_NEWGAME_H_ */

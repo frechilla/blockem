@@ -250,8 +250,9 @@ You should have received a copy of the GNU General Public License along with blo
       </object>
     </child>
   </object>
-  <object class="GtkDialog" id="configdialog">
+  <object class="GtkDialog" id="config1v1dialog">
     <property name="border_width">5</property>
+    <property name="title" translatable="yes">Configure current game</property>
     <property name="resizable">False</property>
     <property name="modal">True</property>
     <property name="window_position">center-on-parent</property>
@@ -262,11 +263,11 @@ You should have received a copy of the GNU General Public License along with blo
         <property name="visible">True</property>
         <property name="spacing">2</property>
         <child>
-          <object class="GtkHBox" id="hbox1">
+          <object class="GtkHBox" id="config_1v1_hbox">
             <property name="visible">True</property>
             <property name="spacing">2</property>
             <child>
-              <object class="GtkFrame" id="frame_player1">
+              <object class="GtkFrame" id="config_1v1_frame_player1">
                 <property name="visible">True</property>
                 <property name="label_xalign">0</property>
                 <child>
@@ -274,14 +275,14 @@ You should have received a copy of the GNU General Public License along with blo
                     <property name="visible">True</property>
                     <property name="left_padding">12</property>
                     <child>
-                      <object class="GtkTable" id="config_table_player1">
+                      <object class="GtkTable" id="config_1v1_table_player1">
                         <property name="visible">True</property>
                         <property name="n_rows">4</property>
                         <property name="n_columns">4</property>
                         <property name="column_spacing">2</property>
                         <property name="row_spacing">5</property>
                         <child>
-                          <object class="GtkLabel" id="config_label_type1">
+                          <object class="GtkLabel" id="config_1v1_label_type1">
                             <property name="visible">True</property>
                             <property name="label" translatable="yes">Type: </property>
                           </object>
@@ -291,7 +292,7 @@ You should have received a copy of the GNU General Public License along with blo
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkLabel" id="config_label_startingrow1">
+                          <object class="GtkLabel" id="config_1v1_label_startingrow1">
                             <property name="visible">True</property>
                             <property name="label" translatable="yes">Starting Row: </property>
                           </object>
@@ -303,7 +304,7 @@ You should have received a copy of the GNU General Public License along with blo
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkLabel" id="config_label_startingcol1">
+                          <object class="GtkLabel" id="config_1v1_label_startingcol1">
                             <property name="visible">True</property>
                             <property name="label" translatable="yes">Column: </property>
                           </object>
@@ -317,7 +318,7 @@ You should have received a copy of the GNU General Public License along with blo
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkSpinButton" id="spinbutton_startingcol1">
+                          <object class="GtkSpinButton" id="config_1v1_spinbutton_startingcol1">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="max_length">2</property>
@@ -337,7 +338,7 @@ You should have received a copy of the GNU General Public License along with blo
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkSpinButton" id="spinbutton_startingrow1">
+                          <object class="GtkSpinButton" id="config_1v1_spinbutton_startingrow1">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="max_length">2</property>
@@ -357,7 +358,7 @@ You should have received a copy of the GNU General Public License along with blo
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkFrame" id="config_frame_ai_player1">
+                          <object class="GtkFrame" id="config_1v1_frame_ai_player1">
                             <property name="visible">True</property>
                             <property name="sensitive">False</property>
                             <property name="label_xalign">0</property>
@@ -369,14 +370,14 @@ You should have received a copy of the GNU General Public License along with blo
                                 <property name="left_padding">5</property>
                                 <property name="right_padding">5</property>
                                 <child>
-                                  <object class="GtkTable" id="config_table_ai_player1">
+                                  <object class="GtkTable" id="config_1v1_table_ai_player1">
                                     <property name="visible">True</property>
                                     <property name="n_rows">3</property>
                                     <property name="n_columns">4</property>
                                     <property name="column_spacing">2</property>
                                     <property name="row_spacing">5</property>
                                     <child>
-                                      <object class="GtkLabel" id="config_label_ai_type1">
+                                      <object class="GtkLabel" id="config_1v1_label_ai_type1">
                                         <property name="visible">True</property>
                                         <property name="xalign">0</property>
                                         <property name="label" translatable="yes">AI type: </property>
@@ -388,7 +389,7 @@ You should have received a copy of the GNU General Public License along with blo
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GtkLabel" id="config_label_ai_depth1">
+                                      <object class="GtkLabel" id="config_1v1_label_ai_depth1">
                                         <property name="visible">True</property>
                                         <property name="xalign">0</property>
                                         <property name="label" translatable="yes">Depth: </property>
@@ -401,7 +402,7 @@ You should have received a copy of the GNU General Public License along with blo
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GtkSpinButton" id="spinbutton_depth1">
+                                      <object class="GtkSpinButton" id="config_1v1_spinbutton_depth1">
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="max_length">4</property>
@@ -422,7 +423,7 @@ You should have received a copy of the GNU General Public License along with blo
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GtkTextView" id="textview_heuristic_player1">
+                                      <object class="GtkTextView" id="config_1v1_textview_heuristic_player1">
                                         <property name="height_request">75</property>
                                         <property name="visible">True</property>
                                         <property name="sensitive">False</property>
@@ -456,7 +457,7 @@ You should have received a copy of the GNU General Public License along with blo
                               </object>
                             </child>
                             <child type="label">
-                              <object class="GtkLabel" id="config_label_ai_header1">
+                              <object class="GtkLabel" id="config_1v1_label_ai_header1">
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">Artificial Intelligence</property>
                                 <property name="use_markup">True</property>
@@ -485,7 +486,7 @@ You should have received a copy of the GNU General Public License along with blo
                   </object>
                 </child>
                 <child type="label">
-                  <object class="GtkLabel" id="config_label_player1">
+                  <object class="GtkLabel" id="config_1v1_label_player1">
                     <property name="visible">True</property>
                     <property name="label" translatable="yes">&lt;b&gt;Green&lt;/b&gt;</property>
                     <property name="use_markup">True</property>
@@ -497,7 +498,7 @@ You should have received a copy of the GNU General Public License along with blo
               </packing>
             </child>
             <child>
-              <object class="GtkFrame" id="frame_player2">
+              <object class="GtkFrame" id="config_1v1_frame_player2">
                 <property name="visible">True</property>
                 <property name="label_xalign">0</property>
                 <child>
@@ -505,14 +506,14 @@ You should have received a copy of the GNU General Public License along with blo
                     <property name="visible">True</property>
                     <property name="left_padding">12</property>
                     <child>
-                      <object class="GtkTable" id="config_table_player2">
+                      <object class="GtkTable" id="config_1v1_table_player2">
                         <property name="visible">True</property>
                         <property name="n_rows">4</property>
                         <property name="n_columns">4</property>
                         <property name="column_spacing">2</property>
                         <property name="row_spacing">5</property>
                         <child>
-                          <object class="GtkLabel" id="config_label_type2">
+                          <object class="GtkLabel" id="config_1v1_label_type2">
                             <property name="visible">True</property>
                             <property name="label" translatable="yes">Type: </property>
                           </object>
@@ -522,7 +523,7 @@ You should have received a copy of the GNU General Public License along with blo
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkLabel" id="config_label_startingrow2">
+                          <object class="GtkLabel" id="config_1v1_label_startingrow2">
                             <property name="visible">True</property>
                             <property name="label" translatable="yes">Starting Row: </property>
                           </object>
@@ -534,7 +535,7 @@ You should have received a copy of the GNU General Public License along with blo
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkSpinButton" id="spinbutton_startingrow2">
+                          <object class="GtkSpinButton" id="config_1v1_spinbutton_startingrow2">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="max_length">2</property>
@@ -554,7 +555,7 @@ You should have received a copy of the GNU General Public License along with blo
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkLabel" id="config_label_startingcol2">
+                          <object class="GtkLabel" id="config_1v1_label_startingcol2">
                             <property name="visible">True</property>
                             <property name="label" translatable="yes">Column: </property>
                           </object>
@@ -568,7 +569,7 @@ You should have received a copy of the GNU General Public License along with blo
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkSpinButton" id="spinbutton_startingcol2">
+                          <object class="GtkSpinButton" id="config_1v1_spinbutton_startingcol2">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="max_length">2</property>
@@ -588,7 +589,7 @@ You should have received a copy of the GNU General Public License along with blo
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkFrame" id="config_frame_ai_player2">
+                          <object class="GtkFrame" id="config_1v1_frame_ai_player2">
                             <property name="visible">True</property>
                             <property name="label_xalign">0</property>
                             <child>
@@ -599,14 +600,14 @@ You should have received a copy of the GNU General Public License along with blo
                                 <property name="left_padding">5</property>
                                 <property name="right_padding">5</property>
                                 <child>
-                                  <object class="GtkTable" id="config_table_ai_player2">
+                                  <object class="GtkTable" id="config_1v1_table_ai_player2">
                                     <property name="visible">True</property>
                                     <property name="n_rows">3</property>
                                     <property name="n_columns">4</property>
                                     <property name="column_spacing">2</property>
                                     <property name="row_spacing">5</property>
                                     <child>
-                                      <object class="GtkLabel" id="config_label_ai_type2">
+                                      <object class="GtkLabel" id="config_1v1_label_ai_type2">
                                         <property name="visible">True</property>
                                         <property name="xalign">0</property>
                                         <property name="label" translatable="yes">AI type: </property>
@@ -618,7 +619,7 @@ You should have received a copy of the GNU General Public License along with blo
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GtkLabel" id="config_label_ai_depth2">
+                                      <object class="GtkLabel" id="config_1v1_label_ai_depth2">
                                         <property name="visible">True</property>
                                         <property name="xalign">0</property>
                                         <property name="label" translatable="yes">Depth: </property>
@@ -631,7 +632,7 @@ You should have received a copy of the GNU General Public License along with blo
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GtkSpinButton" id="spinbutton_depth2">
+                                      <object class="GtkSpinButton" id="config_1v1_spinbutton_depth2">
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="max_length">4</property>
@@ -652,7 +653,7 @@ You should have received a copy of the GNU General Public License along with blo
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GtkTextView" id="textview_heuristic_player2">
+                                      <object class="GtkTextView" id="config_1v1_textview_heuristic_player2">
                                         <property name="height_request">75</property>
                                         <property name="visible">True</property>
                                         <property name="sensitive">False</property>
@@ -686,7 +687,7 @@ You should have received a copy of the GNU General Public License along with blo
                               </object>
                             </child>
                             <child type="label">
-                              <object class="GtkLabel" id="config_label_ai_header2">
+                              <object class="GtkLabel" id="config_1v1_label_ai_header2">
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">Artificial Intelligence</property>
                                 <property name="use_markup">True</property>
@@ -715,7 +716,7 @@ You should have received a copy of the GNU General Public License along with blo
                   </object>
                 </child>
                 <child type="label">
-                  <object class="GtkLabel" id="config_label_player2">
+                  <object class="GtkLabel" id="config_1v1_label_player2">
                     <property name="visible">True</property>
                     <property name="label" translatable="yes">&lt;b&gt;Blue&lt;/b&gt;</property>
                     <property name="use_markup">True</property>
@@ -752,4 +753,548 @@ You should have received a copy of the GNU General Public License along with blo
     </child>
   </object>
   <object class="GtkAccelGroup" id="accelgroup1"/>
+  <object class="GtkDialog" id="newgamedialog">
+    <property name="border_width">5</property>
+    <property name="title" translatable="yes">New Game</property>
+    <property name="modal">True</property>
+    <property name="window_position">center-on-parent</property>
+    <property name="type_hint">dialog</property>
+    <property name="has_separator">False</property>
+    <child internal-child="vbox">
+      <object class="GtkVBox" id="dialog-vbox3">
+        <property name="visible">True</property>
+        <property name="spacing">2</property>
+        <child>
+          <object class="GtkHBox" id="hbox2">
+            <property name="visible">True</property>
+            <child>
+              <object class="GtkScrolledWindow" id="newgame_scrolledwindow_imgs">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="hscrollbar_policy">never</property>
+                <property name="vscrollbar_policy">automatic</property>
+                <child>
+                  <object class="GtkIconView" id="newgame_iconview">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="columns">1</property>
+                    <property name="row_spacing">2</property>
+                    <property name="column_spacing">2</property>
+                    <property name="item_padding">4</property>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkVBox" id="newgame_vbox_gamedialogs">
+                <property name="visible">True</property>
+                <child>
+                  <object class="GtkHBox" id="newgame_1v1_hbox">
+                    <property name="visible">True</property>
+                    <property name="spacing">2</property>
+                    <child>
+                      <object class="GtkFrame" id="newgame_1v1_frame_player1">
+                        <property name="visible">True</property>
+                        <property name="label_xalign">0</property>
+                        <child>
+                          <object class="GtkAlignment" id="alignment5">
+                            <property name="visible">True</property>
+                            <property name="left_padding">12</property>
+                            <child>
+                              <object class="GtkTable" id="newgame_1v1_table_player1">
+                                <property name="visible">True</property>
+                                <property name="n_rows">4</property>
+                                <property name="n_columns">4</property>
+                                <property name="column_spacing">2</property>
+                                <property name="row_spacing">5</property>
+                                <child>
+                                  <object class="GtkLabel" id="newgame_1v1_label_type1">
+                                    <property name="visible">True</property>
+                                    <property name="label" translatable="yes">Type: </property>
+                                  </object>
+                                  <packing>
+                                    <property name="x_options"></property>
+                                    <property name="y_options">GTK_FILL</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel" id="newgame_1v1_label_startingrow1">
+                                    <property name="visible">True</property>
+                                    <property name="label" translatable="yes">Starting Row: </property>
+                                  </object>
+                                  <packing>
+                                    <property name="top_attach">1</property>
+                                    <property name="bottom_attach">2</property>
+                                    <property name="x_options"></property>
+                                    <property name="y_options">GTK_FILL</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel" id="newgame_1v1_label_startingcol1">
+                                    <property name="visible">True</property>
+                                    <property name="label" translatable="yes">Column: </property>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">2</property>
+                                    <property name="right_attach">3</property>
+                                    <property name="top_attach">1</property>
+                                    <property name="bottom_attach">2</property>
+                                    <property name="x_options"></property>
+                                    <property name="y_options">GTK_FILL</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkSpinButton" id="newgame_1v1_spinbutton_startingcol1">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="max_length">2</property>
+                                    <property name="invisible_char">&#x25CF;</property>
+                                    <property name="width_chars">2</property>
+                                    <property name="snap_to_ticks">True</property>
+                                    <property name="numeric">True</property>
+                                    <property name="wrap">True</property>
+                                    <property name="update_policy">if-valid</property>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">3</property>
+                                    <property name="right_attach">4</property>
+                                    <property name="top_attach">1</property>
+                                    <property name="bottom_attach">2</property>
+                                    <property name="x_options">GTK_FILL</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkSpinButton" id="newgame_1v1_spinbutton_startingrow1">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="max_length">2</property>
+                                    <property name="invisible_char">&#x25CF;</property>
+                                    <property name="width_chars">2</property>
+                                    <property name="snap_to_ticks">True</property>
+                                    <property name="numeric">True</property>
+                                    <property name="wrap">True</property>
+                                    <property name="update_policy">if-valid</property>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">1</property>
+                                    <property name="right_attach">2</property>
+                                    <property name="top_attach">1</property>
+                                    <property name="bottom_attach">2</property>
+                                    <property name="x_options">GTK_FILL</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkFrame" id="newgame_1v1_frame_ai_player1">
+                                    <property name="visible">True</property>
+                                    <property name="sensitive">False</property>
+                                    <property name="label_xalign">0</property>
+                                    <child>
+                                      <object class="GtkAlignment" id="alignment6">
+                                        <property name="visible">True</property>
+                                        <property name="top_padding">5</property>
+                                        <property name="bottom_padding">5</property>
+                                        <property name="left_padding">5</property>
+                                        <property name="right_padding">5</property>
+                                        <child>
+                                          <object class="GtkTable" id="newgame_1v1_table_ai_player1">
+                                            <property name="visible">True</property>
+                                            <property name="n_rows">3</property>
+                                            <property name="n_columns">4</property>
+                                            <property name="column_spacing">2</property>
+                                            <property name="row_spacing">5</property>
+                                            <child>
+                                              <object class="GtkLabel" id="newgame_1v1_label_ai_type1">
+                                                <property name="visible">True</property>
+                                                <property name="xalign">0</property>
+                                                <property name="label" translatable="yes">AI type: </property>
+                                              </object>
+                                              <packing>
+                                                <property name="right_attach">2</property>
+                                                <property name="x_options">GTK_FILL</property>
+                                                <property name="y_options">GTK_FILL</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <object class="GtkLabel" id="newgame_1v1_label_ai_depth1">
+                                                <property name="visible">True</property>
+                                                <property name="xalign">0</property>
+                                                <property name="label" translatable="yes">Depth: </property>
+                                              </object>
+                                              <packing>
+                                                <property name="left_attach">2</property>
+                                                <property name="right_attach">3</property>
+                                                <property name="x_options">GTK_FILL</property>
+                                                <property name="y_options">GTK_FILL</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <object class="GtkSpinButton" id="newgame_1v1_spinbutton_depth1">
+                                                <property name="visible">True</property>
+                                                <property name="can_focus">True</property>
+                                                <property name="max_length">4</property>
+                                                <property name="invisible_char">&#x25CF;</property>
+                                                <property name="width_chars">4</property>
+                                                <property name="snap_to_ticks">True</property>
+                                                <property name="numeric">True</property>
+                                                <property name="wrap">True</property>
+                                                <property name="update_policy">if-valid</property>
+                                              </object>
+                                              <packing>
+                                                <property name="left_attach">2</property>
+                                                <property name="right_attach">3</property>
+                                                <property name="top_attach">1</property>
+                                                <property name="bottom_attach">2</property>
+                                                <property name="x_options">GTK_FILL</property>
+                                                <property name="y_options">GTK_FILL</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <object class="GtkTextView" id="newgame_1v1_textview_heuristic_player1">
+                                                <property name="height_request">75</property>
+                                                <property name="visible">True</property>
+                                                <property name="sensitive">False</property>
+                                                <property name="can_focus">True</property>
+                                                <property name="editable">False</property>
+                                                <property name="wrap_mode">word</property>
+                                                <property name="cursor_visible">False</property>
+                                              </object>
+                                              <packing>
+                                                <property name="right_attach">4</property>
+                                                <property name="top_attach">2</property>
+                                                <property name="bottom_attach">3</property>
+                                                <property name="x_padding">2</property>
+                                                <property name="y_padding">10</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+                                    <child type="label">
+                                      <object class="GtkLabel" id="newgame_1v1_label_ai_header1">
+                                        <property name="visible">True</property>
+                                        <property name="label" translatable="yes">Artificial Intelligence</property>
+                                        <property name="use_markup">True</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="right_attach">4</property>
+                                    <property name="top_attach">2</property>
+                                    <property name="bottom_attach">4</property>
+                                    <property name="x_padding">2</property>
+                                    <property name="y_padding">5</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <placeholder/>
+                                </child>
+                                <child>
+                                  <placeholder/>
+                                </child>
+                                <child>
+                                  <placeholder/>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <child type="label">
+                          <object class="GtkLabel" id="newgame_1v1_label_player1">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">&lt;b&gt;Green&lt;/b&gt;</property>
+                            <property name="use_markup">True</property>
+                          </object>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkFrame" id="newgame_1v1_frame_player2">
+                        <property name="visible">True</property>
+                        <property name="label_xalign">0</property>
+                        <child>
+                          <object class="GtkAlignment" id="alignment7">
+                            <property name="visible">True</property>
+                            <property name="left_padding">12</property>
+                            <child>
+                              <object class="GtkTable" id="newgame_1v1_table_player2">
+                                <property name="visible">True</property>
+                                <property name="n_rows">4</property>
+                                <property name="n_columns">4</property>
+                                <property name="column_spacing">2</property>
+                                <property name="row_spacing">5</property>
+                                <child>
+                                  <object class="GtkLabel" id="newgame_1v1_label_type2">
+                                    <property name="visible">True</property>
+                                    <property name="label" translatable="yes">Type: </property>
+                                  </object>
+                                  <packing>
+                                    <property name="x_options"></property>
+                                    <property name="y_options">GTK_FILL</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel" id="newgame_1v1_label_startingrow2">
+                                    <property name="visible">True</property>
+                                    <property name="label" translatable="yes">Starting Row: </property>
+                                  </object>
+                                  <packing>
+                                    <property name="top_attach">1</property>
+                                    <property name="bottom_attach">2</property>
+                                    <property name="x_options"></property>
+                                    <property name="y_options">GTK_FILL</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkSpinButton" id="newgame_1v1_spinbutton_startingrow2">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="max_length">2</property>
+                                    <property name="invisible_char">&#x25CF;</property>
+                                    <property name="width_chars">2</property>
+                                    <property name="snap_to_ticks">True</property>
+                                    <property name="numeric">True</property>
+                                    <property name="wrap">True</property>
+                                    <property name="update_policy">if-valid</property>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">1</property>
+                                    <property name="right_attach">2</property>
+                                    <property name="top_attach">1</property>
+                                    <property name="bottom_attach">2</property>
+                                    <property name="x_options">GTK_FILL</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel" id="newgame_1v1_label_startingcol2">
+                                    <property name="visible">True</property>
+                                    <property name="label" translatable="yes">Column: </property>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">2</property>
+                                    <property name="right_attach">3</property>
+                                    <property name="top_attach">1</property>
+                                    <property name="bottom_attach">2</property>
+                                    <property name="x_options"></property>
+                                    <property name="y_options">GTK_FILL</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkSpinButton" id="newgame_1v1_spinbutton_startingcol2">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="max_length">2</property>
+                                    <property name="invisible_char">&#x25CF;</property>
+                                    <property name="width_chars">2</property>
+                                    <property name="snap_to_ticks">True</property>
+                                    <property name="numeric">True</property>
+                                    <property name="wrap">True</property>
+                                    <property name="update_policy">if-valid</property>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">3</property>
+                                    <property name="right_attach">4</property>
+                                    <property name="top_attach">1</property>
+                                    <property name="bottom_attach">2</property>
+                                    <property name="x_options">GTK_FILL</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkFrame" id="newgame_1v1_frame_ai_player2">
+                                    <property name="visible">True</property>
+                                    <property name="label_xalign">0</property>
+                                    <child>
+                                      <object class="GtkAlignment" id="alignment8">
+                                        <property name="visible">True</property>
+                                        <property name="top_padding">5</property>
+                                        <property name="bottom_padding">5</property>
+                                        <property name="left_padding">5</property>
+                                        <property name="right_padding">5</property>
+                                        <child>
+                                          <object class="GtkTable" id="newgame_1v1_table_ai_player2">
+                                            <property name="visible">True</property>
+                                            <property name="n_rows">3</property>
+                                            <property name="n_columns">4</property>
+                                            <property name="column_spacing">2</property>
+                                            <property name="row_spacing">5</property>
+                                            <child>
+                                              <object class="GtkLabel" id="newgame_1v1_label_ai_type2">
+                                                <property name="visible">True</property>
+                                                <property name="xalign">0</property>
+                                                <property name="label" translatable="yes">AI type: </property>
+                                              </object>
+                                              <packing>
+                                                <property name="right_attach">2</property>
+                                                <property name="x_options">GTK_FILL</property>
+                                                <property name="y_options">GTK_FILL</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <object class="GtkLabel" id="newgame_1v1_label_ai_depth2">
+                                                <property name="visible">True</property>
+                                                <property name="xalign">0</property>
+                                                <property name="label" translatable="yes">Depth: </property>
+                                              </object>
+                                              <packing>
+                                                <property name="left_attach">2</property>
+                                                <property name="right_attach">3</property>
+                                                <property name="x_options">GTK_FILL</property>
+                                                <property name="y_options">GTK_FILL</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <object class="GtkSpinButton" id="newgame_1v1_spinbutton_depth2">
+                                                <property name="visible">True</property>
+                                                <property name="can_focus">True</property>
+                                                <property name="max_length">4</property>
+                                                <property name="invisible_char">&#x25CF;</property>
+                                                <property name="width_chars">4</property>
+                                                <property name="snap_to_ticks">True</property>
+                                                <property name="numeric">True</property>
+                                                <property name="wrap">True</property>
+                                                <property name="update_policy">if-valid</property>
+                                              </object>
+                                              <packing>
+                                                <property name="left_attach">2</property>
+                                                <property name="right_attach">3</property>
+                                                <property name="top_attach">1</property>
+                                                <property name="bottom_attach">2</property>
+                                                <property name="x_options">GTK_FILL</property>
+                                                <property name="y_options">GTK_FILL</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <object class="GtkTextView" id="newgame_1v1_textview_heuristic_player2">
+                                                <property name="height_request">75</property>
+                                                <property name="visible">True</property>
+                                                <property name="sensitive">False</property>
+                                                <property name="can_focus">True</property>
+                                                <property name="editable">False</property>
+                                                <property name="wrap_mode">word</property>
+                                                <property name="cursor_visible">False</property>
+                                              </object>
+                                              <packing>
+                                                <property name="right_attach">4</property>
+                                                <property name="top_attach">2</property>
+                                                <property name="bottom_attach">3</property>
+                                                <property name="x_padding">2</property>
+                                                <property name="y_padding">10</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+                                    <child type="label">
+                                      <object class="GtkLabel" id="newgame_1v1_label_ai_header2">
+                                        <property name="visible">True</property>
+                                        <property name="label" translatable="yes">Artificial Intelligence</property>
+                                        <property name="use_markup">True</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="right_attach">4</property>
+                                    <property name="top_attach">2</property>
+                                    <property name="bottom_attach">4</property>
+                                    <property name="x_padding">2</property>
+                                    <property name="y_padding">5</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <placeholder/>
+                                </child>
+                                <child>
+                                  <placeholder/>
+                                </child>
+                                <child>
+                                  <placeholder/>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <child type="label">
+                          <object class="GtkLabel" id="newgame_1v1_label_player2">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">&lt;b&gt;Blue&lt;/b&gt;</property>
+                            <property name="use_markup">True</property>
+                          </object>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+              </object>
+              <packing>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child internal-child="action_area">
+          <object class="GtkHButtonBox" id="dialog-action_area3">
+            <property name="visible">True</property>
+            <property name="layout_style">end</property>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
 </interface>
