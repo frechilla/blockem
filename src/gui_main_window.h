@@ -55,6 +55,47 @@ public:
     MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder) throw (GUIException);
     virtual ~MainWindow();
 
+private:
+
+    /// @brief used to retrieve the objects from the Glade design
+    Glib::RefPtr<Gtk::Builder> m_gtkBuilder;
+
+    /// @brief the about dialog class
+    AboutDialog* m_aboutDialog;
+
+    /// @brief the config dialog class
+    Game1v1ConfigDialog* m_config1v1Dialog;
+
+    /// @brief the new game dialog class
+    DialogNewGame* m_newGameDialog;
+
+    /// @brief the game1v1 widget
+    Game1v1Widget m_game1v1Widget;
+
+    /// @brief the total allocation game widget
+    GameTotalAllocationWidget m_gameTotalAllocationWidget;
+
+    // accel group + menu items
+    Glib::RefPtr<Gtk::AccelGroup> m_accelGroup;
+    Glib::RefPtr<Gtk::MenuItem> m_gameMenuItem;
+    Glib::RefPtr<Gtk::MenuItem> m_settingsMenuItem;
+    Glib::RefPtr<Gtk::MenuItem> m_helpMenuItem;
+    Glib::RefPtr<Gtk::MenuItem> m_newMenuItem;
+    Glib::RefPtr<Gtk::MenuItem> m_quitMenuItem;
+    Glib::RefPtr<Gtk::MenuItem> m_helpAboutMenuItem;
+    Glib::RefPtr<Gtk::MenuItem> m_settingsPrefsMenuItem;
+    Glib::RefPtr<Gtk::CheckMenuItem> m_settingsNKPointsMenuItem;
+    Glib::RefPtr<Gtk::MenuItem> m_settingsForbiddenAreaMenuItem;
+    Glib::RefPtr<Gtk::RadioMenuItem> m_settingsForbiddenAreaPlayer1MenuItem;
+    Glib::RefPtr<Gtk::RadioMenuItem> m_settingsForbiddenAreaPlayer2MenuItem;
+    Glib::RefPtr<Gtk::RadioMenuItem> m_settingsForbiddenAreaNoShowMenuItem;
+    Glib::RefPtr<Gtk::MenuItem> m_settingsInfluenceAreaMenuItem;
+    Glib::RefPtr<Gtk::RadioMenuItem> m_settingsInfluenceAreaPlayer1MenuItem;
+    Glib::RefPtr<Gtk::RadioMenuItem> m_settingsInfluenceAreaPlayer2MenuItem;
+    Glib::RefPtr<Gtk::RadioMenuItem> m_settingsInfluenceAreaNoShowMenuItem;
+
+    /// @brief Main vertical box (It's got the menu, vbox drawing plus status bar)
+    Gtk::VBox* m_vBoxMain;
 
     /// @brief handle fatal errors coming from Game widgets
     void Notify_FatalError(const std::string& a_msg);
@@ -100,48 +141,6 @@ public:
     /// @brief  callback to be called when the menuitem Settings->areas->do not show influence area is toggled
     void MenuItemSettingsShowNoneInfluenceArea_Toggled();
 
-private:
-
-    /// @brief used to retrieve the objects from the Glade design
-    Glib::RefPtr<Gtk::Builder> m_gtkBuilder;
-
-    /// @brief the about dialog class
-    AboutDialog* m_aboutDialog;
-
-    /// @brief the config dialog class
-    Game1v1ConfigDialog* m_config1v1Dialog;
-
-    /// @brief the new game dialog class
-    DialogNewGame* m_newGameDialog;
-
-    /// @brief the game1v1 widget
-    Game1v1Widget m_game1v1Widget;
-
-    /// @brief the total allocation game widget
-    GameTotalAllocationWidget m_gameTotalAllocationWidget;
-
-    // accel group + menu items
-    Glib::RefPtr<Gtk::AccelGroup> m_accelGroup;
-    Glib::RefPtr<Gtk::MenuItem> m_gameMenuItem;
-    Glib::RefPtr<Gtk::MenuItem> m_settingsMenuItem;
-    Glib::RefPtr<Gtk::MenuItem> m_helpMenuItem;
-    Glib::RefPtr<Gtk::MenuItem> m_newMenuItem;
-    Glib::RefPtr<Gtk::MenuItem> m_quitMenuItem;
-    Glib::RefPtr<Gtk::MenuItem> m_helpAboutMenuItem;
-    Glib::RefPtr<Gtk::MenuItem> m_settingsPrefsMenuItem;
-    Glib::RefPtr<Gtk::CheckMenuItem> m_settingsNKPointsMenuItem;
-    Glib::RefPtr<Gtk::MenuItem> m_settingsForbiddenAreaMenuItem;
-    Glib::RefPtr<Gtk::RadioMenuItem> m_settingsForbiddenAreaPlayer1MenuItem;
-    Glib::RefPtr<Gtk::RadioMenuItem> m_settingsForbiddenAreaPlayer2MenuItem;
-    Glib::RefPtr<Gtk::RadioMenuItem> m_settingsForbiddenAreaNoShowMenuItem;
-    Glib::RefPtr<Gtk::MenuItem> m_settingsInfluenceAreaMenuItem;
-    Glib::RefPtr<Gtk::RadioMenuItem> m_settingsInfluenceAreaPlayer1MenuItem;
-    Glib::RefPtr<Gtk::RadioMenuItem> m_settingsInfluenceAreaPlayer2MenuItem;
-    Glib::RefPtr<Gtk::RadioMenuItem> m_settingsInfluenceAreaNoShowMenuItem;
-
-    /// @brief Main vertical box (It's got the menu, vbox drawing plus status bar)
-    Gtk::VBox* m_vBoxMain;
-    
     /// @brief configure the main window for a new game
     /// it sets to active/inactive different widgets that will be shown to the
     /// user depending on the game

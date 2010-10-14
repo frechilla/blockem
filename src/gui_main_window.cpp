@@ -287,7 +287,7 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
 
     // set up window to show a 1vs1 game by default
     SetupWindowForNewGame(e_gameType1vs1);
-            
+
     // launch the 1v1 game by default!!
     m_game1v1Widget.LaunchNewGame();
 }
@@ -368,7 +368,7 @@ void MainWindow::MenuItemGameNew_Activate()
         // as a parameter)
         m_newGameDialog->SaveCurrentConfigIntoGlobalSettings(
             m_newGameDialog->GetSelectedTypeOfGame());
-        
+
         // set up main window widgets for this new game
         SetupWindowForNewGame(m_newGameDialog->GetSelectedTypeOfGame());
 
@@ -383,6 +383,10 @@ void MainWindow::MenuItemGameNew_Activate()
         }
         case e_gameTypeTotalAllocation:
         {
+            // stop game1v1 computing process (it does nothing if it wasn't
+            // processing anything)
+            m_game1v1Widget.CancelComputing();
+
             // launch this new game!!
             m_gameTotalAllocationWidget.LaunchNewGame();
             break;
@@ -557,35 +561,35 @@ void MainWindow::SetupWindowForNewGame(e_blockemGameType_t a_gametype)
         // show player2's menus
         m_settingsForbiddenAreaPlayer2MenuItem->show();
         m_settingsInfluenceAreaPlayer2MenuItem->show();
-        
+
         // settings menu is clickable in 1vs1 games
         m_settingsPrefsMenuItem->set_sensitive(true);
-        
-        // configure now which game wisget will be shown 
+
+        // configure now which game widget will be shown
         // set_visible doesn't work in 2.16 (which is used in windows)
         // show_all must be used instead!
         m_game1v1Widget.show_all();
         m_gameTotalAllocationWidget.hide_all();
-        
+
         break;
     }
-    
+
     case e_gameTypeTotalAllocation:
     {
         // hide player2's menus since there is no player2 in
         // total allocation games
         m_settingsForbiddenAreaPlayer2MenuItem->hide();
         m_settingsInfluenceAreaPlayer2MenuItem->hide();
-        
+
         // total allocation games cannot be configured
         m_settingsPrefsMenuItem->set_sensitive(false);
-        
-        // configure now which game wisget will be shown 
+
+        // configure now which game widget will be shown
         // set_visible doesn't work in 2.16 (which is used in windows)
         // show_all must be used instead!
         m_game1v1Widget.hide_all();
         m_gameTotalAllocationWidget.show_all();
-        
+
         break;
     }
     } // switch(a_gametype)

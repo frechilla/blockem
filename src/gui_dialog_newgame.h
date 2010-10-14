@@ -126,21 +126,21 @@ private:
 };
 
 
-/// @brief abstract class to be inherited from by those classes (Gtk::HBox) 
+/// @brief abstract class to be inherited from by those classes (Gtk::HBox)
 ///        that hold the widgets which configure new games
 class NewGameTable :
     public Gtk::HBox
 {
 public:
     NewGameTable(BaseObjectType* cobject) : Gtk::HBox(cobject)
-    {};    
+    {};
     virtual ~NewGameTable()
     {};
-    
+
     /// @brief load current global configuration corresponding to the type of
     ///        gamer epresented by the derived classts
     virtual void LoadCurrentConfigFromGlobalSettings() = 0;
-    /// @brief save info contained in the derived class' widgets into current 
+    /// @brief save info contained in the derived class' widgets into current
     ///        global configuration
     virtual void SaveCurrentConfigIntoGlobalSettings() const = 0;
 
@@ -166,11 +166,57 @@ public:
     virtual void LoadCurrentConfigFromGlobalSettings();
     /// @brief save info saved in the widgets into current global configuration
     virtual void SaveCurrentConfigIntoGlobalSettings() const;
-    
+
 private:
     /// @brief used to retrieve the objects from the Glade design
     Glib::RefPtr<Gtk::Builder> m_gtkBuilder;
-    
+
+    /// starting row spin button
+    Gtk::SpinButton* m_spinbuttonStartingRow;
+    Gtk::Adjustment  m_spinbuttonStartingRowAdj;
+    /// starting column spin button
+    Gtk::SpinButton* m_spinbuttonStartingColumn;
+    Gtk::Adjustment  m_spinbuttonStartingColumnAdj;
+
+    /// spin button for the number of rows
+    Gtk::SpinButton* m_spinbuttonNRows;
+    Gtk::Adjustment  m_spinbuttonNRowsAdj;
+    /// spin button for for the number of columns
+    Gtk::SpinButton* m_spinbuttonNCols;
+    Gtk::Adjustment  m_spinbuttonNColsAdj;
+
+    /// start from anywhere check button
+    Gtk::CheckButton* m_checkbuttonStartFromAnywhere;
+
+    // labels loaded here because they need to be translated at startup on win32 platform
+    // have a look at ForceTranslationOfWidgets
+    Gtk::Label* m_boardSizeLabel;
+    Gtk::Label* m_startingPosLabel;
+    Gtk::Label* m_startingRowLabel;
+    Gtk::Label* m_startingColLabel;
+    Gtk::Label* m_nRowsLabel;
+    Gtk::Label* m_nColsLabel;
+
+    /// @brief callback for whenever the spinbutton for the number of rows is changed
+    void SpinButtonNRows_SignalValueChanged();
+    /// @brief callback for whenever the spinbutton for the number of columns is changed
+    void SpinButtonNCols_SignalValueChanged();
+    /// @brief callback to be called when the "start from anywhere" checkbutton is toggled
+    void CheckbuttonStartFromAnywhere_Toggled();
+
+    /// @return the starting coordinate configured by the displayed widgets
+    void GetStartingCoord(Coordinate &a_coord) const;
+
+    /// Calls gettext per every static widget in the dialog. These strings
+    /// are those ones included in the .glade file that never change during the
+    /// execution of the application, for example a menu called "Game", or a
+    /// label that contains the word "rotate"
+    ///
+    /// So far this is only needed in win32 platform due to some unknown issue
+    /// that prevents those strings to be automatically translated. It works
+    /// fine in linux, so there's no need there to explicitly call to gettext
+    void ForceTranslationOfWidgets();
+
     NewGameTableTotalAllocation();
     NewGameTableTotalAllocation(const NewGameTableTotalAllocation &a_src);
     NewGameTableTotalAllocation& operator=(const NewGameTableTotalAllocation &a_src);
@@ -178,7 +224,7 @@ private:
 
 
 
-/// @brief table to be shown on the new game dialog when the user selects 
+/// @brief table to be shown on the new game dialog when the user selects
 ///        1vs1 game
 class NewGameTable1v1 :
     public NewGameTable

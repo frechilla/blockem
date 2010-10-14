@@ -39,13 +39,15 @@ static const char CHAR_EMPTY    = ' ';
 /// it will be used as the character for the player in the board
 static const char CHAR_PLAYER   = 'X';
 
+/// player's name
+static const char PLAYER_NAME[] = N_("Mr Green");
 
 GameTotalAllocation::GameTotalAllocation(
     int32_t a_rows,
     int32_t a_columns,
     const Coordinate &a_startingCoord) :
     m_board(a_rows, a_columns, CHAR_EMPTY),
-    m_player(_("The player"),
+    m_player(_(PLAYER_NAME),
              CHAR_PLAYER,
              a_rows,
              a_columns,
@@ -66,15 +68,21 @@ void GameTotalAllocation::Reset(
     if ((a_rows    != m_board.GetNRows()) ||
         (a_columns != m_board.GetNColumns()) )
     {
+        uint8_t red, green, blue;
+        m_player.GetColour(red, green, blue);
+
         m_board = Board(a_rows, a_columns, CHAR_EMPTY);
         m_player = Player(
-                    _("The player"),
+                    _(PLAYER_NAME),
                     CHAR_PLAYER,
                     a_rows,
                     a_columns,
                     a_startingCoord);
+
+        // this is a new player. colour must be reset
+        m_player.SetColour(red, green, blue);
     }
-    
+
     m_startingCoord = a_startingCoord;
 
     m_board.Reset();

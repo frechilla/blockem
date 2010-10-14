@@ -50,6 +50,8 @@ public:
     int32_t GetNColumns() const;
 
     /// @brief set starting coordinate
+    /// set it to an uninitialised coordinate if game can start from
+    /// anywhere on the board
     void SetStartingCoord(const Coordinate &a_startingCoord);
     /// @brief set amount of rows of this game's board
     void SetNRows(int32_t a_nRows);
@@ -61,10 +63,10 @@ private:
     int32_t m_nRows;
     /// number of columns of the board
     int32_t m_nColumns;
-    /// starting coordinate. If uninitialised game could start from 
+    /// starting coordinate. If uninitialised game could start from
     /// anywhere in the board
     Coordinate m_startingCoord;
-    
+
     friend class Singleton<GameTotalAllocationConfig>;
     GameTotalAllocationConfig();
     ~GameTotalAllocationConfig();

@@ -211,6 +211,17 @@ const char GUI_NEWGAME_1V1_PLAYER1_AI_TYPE_LABEL[]      = "newgame_1v1_label_ai_
 const char GUI_NEWGAME_1V1_PLAYER2_AI_TYPE_LABEL[]      = "newgame_1v1_label_ai_type2";
 const char GUI_NEWGAME_1V1_PLAYER1_AI_DEPTH_LABEL[]     = "newgame_1v1_label_ai_depth1";
 const char GUI_NEWGAME_1V1_PLAYER2_AI_DEPTH_LABEL[]     = "newgame_1v1_label_ai_depth2";
+const char GUI_NEWGAME_TOTALALLOC_SPINBUTTON_STARTROW[] = "newgame_totalalloc_spinbutton_startingrow";
+const char GUI_NEWGAME_TOTALALLOC_SPINBUTTON_STARTCOL[] = "newgame_totalalloc_spinbutton_startingcol";
+const char GUI_NEWGAME_TOTALALLOC_SPINBUTTON_NROWS[]    = "newgame_totalalloc_spinbutton_nrows";
+const char GUI_NEWGAME_TOTALALLOC_SPINBUTTON_NCOLS[]    = "newgame_totalalloc_spinbutton_ncols";
+const char GUI_NEWGAME_TOTALALLOC_LABEL_BOARD[]         = "newgame_totalalloc_label_board";
+const char GUI_NEWGAME_TOTALALLOC_LABEL_STARTINGCOORD[] = "newgame_totalalloc_label_starting";
+const char GUI_NEWGAME_TOTALALLOC_LABEL_STARTROW[]      = "newgame_totalalloc_label_startingrow";
+const char GUI_NEWGAME_TOTALALLOC_LABEL_STARTCOL[]      = "newgame_totalalloc_label_startingcol";
+const char GUI_NEWGAME_TOTALALLOC_LABEL_NROWS[]         = "newgame_totalalloc_label_nrows";
+const char GUI_NEWGAME_TOTALALLOC_LABEL_NCOLS[]         = "newgame_totalalloc_label_ncols";
+const char GUI_NEWGAME_TOTALALLOC_CHECKBUTTON_START[]   = "newgame_totalalloc_checkbutton_startingpos";
 
 
 #endif /* GUI_GLADE_H_ */
