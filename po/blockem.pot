@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: blockem 0.2.4\n"
+"Project-Id-Version: blockem 0.3.0\n"
 "Report-Msgid-Bugs-To: frechilla@gmail.com\n"
-"POT-Creation-Date: 2010-08-03 00:52+0200\n"
+"POT-Creation-Date: 2010-10-15 00:58+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,290 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: src/game1v1.cpp:40
+#. i18n TRANSLATORS: Please, leave that %s as it is. It will be replaced
+#. i18n by the path to the file that could not be loaded
+#. i18n Thank you for contributing to this project
+#: src/blockem_challenge.cpp:112
+#, c-format
+msgid "Challenge .xml file doesn't exist: %s"
+msgstr ""
+
+#: src/blockem_challenge.cpp:122
+msgid "XML syntax error"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave quoted strings as they are since they
+#. i18n reference to xml tags
+#: src/blockem_challenge.cpp:136
+msgid "Root element does not exist or is not called \"blockem_challenge\""
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave quoted strings as they are since they
+#. i18n reference to xml tags
+#: src/blockem_challenge.cpp:146
+msgid "Root element does not have mandatory property \"name\""
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave quoted strings as they are since they
+#. i18n reference to xml tags
+#: src/blockem_challenge.cpp:156
+msgid "Root element's property \"name\" can't be empty"
+msgstr ""
+
+#. i18n TRANSLATORS: This string will be followed by a list
+#. i18n of missing xml tags
+#: src/blockem_challenge.cpp:235
+msgid "Mandatory element(s) missing:"
+msgstr ""
+
+#. i18n TRANSLATORS: This string will be followed by a set of coordinates
+#. i18n for example: (x, y) (x2, y2)
+#: src/blockem_challenge.cpp:272
+msgid "Following coords are taken by both challenger and opponent:"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave quoted strings as they are since they
+#. i18n reference to xml tags
+#: src/blockem_challenge.cpp:285
+msgid "Challenger's starting coordinate is taken by the opponent"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave quoted strings as they are since they
+#. i18n reference to xml tags
+#: src/blockem_challenge.cpp:293
+msgid "Challenger's starting coordinate is taken by the challenger"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave quoted strings as they are since they
+#. i18n reference to xml tags
+#: src/blockem_challenge.cpp:352
+msgid "Bad integer value in \"nrows\""
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave quoted strings as they are since they
+#. i18n reference to xml tags
+#: src/blockem_challenge.cpp:359
+msgid "Bad integer value in \"nrows\". MUST be a positive number"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave quoted strings as they are since they
+#. i18n reference to xml tags
+#: src/blockem_challenge.cpp:389
+msgid "Bad integer value in \"ncolumns\""
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave quoted strings as they are since they
+#. i18n reference to xml tags
+#: src/blockem_challenge.cpp:396
+msgid "Bad integer value in \"ncolumns\". MUST be a positive number"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave quoted strings as they are since they
+#. i18n reference to xml tags. This string will be followed by a set of
+#. i18n missing mandatory xml tags
+#: src/blockem_challenge.cpp:421
+msgid "Mandatory element(s) in \"board\" missing:"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave quoted strings as they are since they
+#. i18n reference to xml tags
+#: src/blockem_challenge.cpp:460
+msgid "\"opponent\" -> \"taken\" mandatory attribute \"row\" is missing"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave quoted strings as they are since they
+#. i18n reference to xml tags
+#: src/blockem_challenge.cpp:470
+msgid "Bad integer value in opponent's \"row\" attribute (\"taken\" tag)"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave quoted strings as they are since they
+#. i18n reference to xml tags
+#: src/blockem_challenge.cpp:477
+msgid ""
+"Bad integer value in opponent's \"row\" attribute (\"taken\" tag). MUST be "
+">= 0"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave quoted strings as they are since they
+#. i18n reference to xml tags
+#: src/blockem_challenge.cpp:484
+msgid ""
+"Bad integer value in opponent's \"row\" attribute (\"taken\" tag). MUST be "
+"lower than the number of rows of the board"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave quoted strings as they are since they
+#. i18n reference to xml tags
+#: src/blockem_challenge.cpp:496
+msgid "\"opponent\" -> \"taken\" mandatory attribute \"col\" is missing"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave quoted strings as they are since they
+#. i18n reference to xml tags
+#: src/blockem_challenge.cpp:508
+msgid "Bad integer value in opponent's \"col\" attribute (\"taken\" tag)"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave quoted strings as they are since they
+#. i18n reference to xml tags
+#: src/blockem_challenge.cpp:515
+msgid ""
+"Bad integer value in opponent's \"col\" attribute (\"taken\" tag). MUST be "
+">= 0"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave quoted strings as they are since they
+#. i18n reference to xml tags
+#: src/blockem_challenge.cpp:522
+msgid ""
+"Bad integer value in opponent's \"col\" attribute (\"taken\" tag). MUST be "
+"lower than the number of columns of the board"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave quoted strings as they are since they
+#. i18n reference to xml tags
+#: src/blockem_challenge.cpp:587
+msgid "\"challenger\" -> \"taken\" mandatory attribute \"row\" is missing"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave quoted strings as they are since they
+#. i18n reference to xml tags
+#: src/blockem_challenge.cpp:597
+msgid "Bad integer value in challenger's \"row\" attribute (\"taken\" tag)"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave quoted strings as they are since they
+#. i18n reference to xml tags
+#: src/blockem_challenge.cpp:604
+msgid ""
+"Bad integer value in challenger's \"row\" attribute (\"taken\" tag). MUST be "
+">= 0"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave quoted strings as they are since they
+#. i18n reference to xml tags
+#: src/blockem_challenge.cpp:611
+msgid ""
+"Bad integer value in challenger's \"row\" attribute (\"taken\" tag). MUST be "
+"lower than the number of rows of the board"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave quoted strings as they are since they
+#. i18n reference to xml tags
+#: src/blockem_challenge.cpp:623
+msgid "\"challenger\" -> \"taken\" mandatory attribute \"col\" is missing"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave quoted strings as they are since they
+#. i18n reference to xml tags
+#: src/blockem_challenge.cpp:635
+msgid "Bad integer value in challenger's \"col\" attribute (\"taken\" tag)"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave quoted strings as they are since they
+#. i18n reference to xml tags
+#: src/blockem_challenge.cpp:642
+msgid ""
+"Bad integer value in challenger's \"col\" attribute (\"taken\" tag). MUST be "
+">= 0"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave quoted strings as they are since they
+#. i18n reference to xml tags
+#: src/blockem_challenge.cpp:649
+msgid ""
+"Bad integer value in challenger's \"col\" attribute (\"taken\" tag). MUST be "
+"lower than the number of columns of the board"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave quoted strings as they are since they
+#. i18n reference to xml tags
+#: src/blockem_challenge.cpp:689
+msgid ""
+"\"challenger\" -> \"piece\" mandatory attribute \"available\" is missing"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave quoted strings as they are since they
+#. i18n reference to xml tags
+#: src/blockem_challenge.cpp:709
+msgid ""
+"\"challenger\" -> \"piece\" mandatory attribute \"available\" must be set to "
+"either \"yes\" or \"no\""
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave quoted strings as they are since they
+#. i18n reference to xml tags
+#: src/blockem_challenge.cpp:773
+msgid "Bad integer value in challenger's \"starting_row\""
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave quoted strings as they are since they
+#. i18n reference to xml tags
+#: src/blockem_challenge.cpp:780
+msgid "Bad integer value in challenger's \"starting_row\". MUST be >= 0"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave quoted strings as they are since they
+#. i18n reference to xml tags
+#: src/blockem_challenge.cpp:787
+msgid ""
+"Bad integer value in challenger's \"starting_row\". MUST be lower than the "
+"number of rows of the board"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave quoted strings as they are since they
+#. i18n reference to xml tags
+#: src/blockem_challenge.cpp:816
+msgid "Bad integer value in challenger's \"starting_col\""
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave quoted strings as they are since they
+#. i18n reference to xml tags
+#: src/blockem_challenge.cpp:823
+msgid "Bad integer value in challenger's \"starting_col\". MUST be >= 0"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave quoted strings as they are since they
+#. i18n reference to xml tags
+#: src/blockem_challenge.cpp:830
+msgid ""
+"Bad integer value in challenger's \"starting_col\". MUST be lower than the "
+"number of columns of the board"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave quoted strings as they are since they
+#. i18n reference to xml tags
+#: src/blockem_challenge.cpp:849
+msgid ""
+"\"starting_row\" is present in \"challenger\", but \"starting_col\" is not"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave quoted strings as they are since they
+#. i18n reference to xml tags
+#: src/blockem_challenge.cpp:857
+msgid ""
+"\"starting_col\" is present in \"challenger\", but \"starting_row\" is not"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave quoted strings as they are since they
+#. i18n reference to xml tags
+#: src/blockem_challenge.cpp:870
+msgid ""
+"Starting coordinate hasn't been set and there aren't any taken squares by "
+"the challenger either"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, leave those %s
+#. i18n 1st %s will be replaced by the path to the file that could not be parsed
+#. i18n 2nd %s will be replaced by the error message
+#. i18n Thank you for contributing to this project
+#: src/blockem_challenge.cpp:976
+#, c-format
+msgid "Fatal error parsing %s: %s"
+msgstr ""
+
+#: src/game1v1.cpp:40 src/game_total_allocation.cpp:43
 msgid "Mr Green"
 msgstr ""
 
@@ -25,20 +308,60 @@ msgstr ""
 msgid "Mr Blue"
 msgstr ""
 
-#: src/game1v1.cpp:599
+#: src/game1v1.cpp:598
 msgid "Nucleation points"
 msgstr ""
 
 #. i18n %d represents the amount of times the function has been called
-#: src/game1v1.cpp:751
+#: src/game1v1.cpp:749
 #, c-format
 msgid "Minimax function called once\n"
 msgid_plural "Minimax function called %d times\n"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/game_total_allocation.cpp:44
-msgid "The player"
+#: src/game_challenge.cpp:36
+msgid "Challenger"
+msgstr ""
+
+#: src/gui_dialog_newgame.cpp:42
+msgid "1 vs 1 Game (2 players)"
+msgstr ""
+
+#: src/gui_dialog_newgame.cpp:43
+msgid "Total deployment (solo play)"
+msgstr ""
+
+#: src/gui_dialog_newgame.cpp:46 src/gui_game1v1_config_dialog.cpp:41
+msgid "Human"
+msgstr ""
+
+#: src/gui_dialog_newgame.cpp:47 src/gui_game1v1_config_dialog.cpp:42
+msgid "Computer"
+msgstr ""
+
+#. i18n This string shouldn't be bigger than 4 characters long
+#. i18n strings bigger than those 4 characters will be stripped out
+#. i18n Thank you for contributing to this project
+#: src/gui_dialog_newgame.cpp:1012 src/gui_dialog_newgame.cpp:1032
+#: src/gui_game1v1_config_dialog.cpp:423 src/gui_game1v1_config_dialog.cpp:443
+msgid "Auto"
+msgstr ""
+
+#. i18n both %d respectively represent the X and Y pixel where the user clicked
+#. i18n Please leave them there because they are needed by the program
+#. i18n Thank you for contributing to this project
+#: src/gui_drawing_area_board.cpp:606
+#, c-format
+msgid "User clicked in pixel (%d, %d)\n"
+msgstr ""
+
+#. i18n both %d respectively represent the row and column of the square in the board
+#. i18n where the user clicked. Please leave them there because they are needed by the program
+#. i18n Thank you for contributing to this project
+#: src/gui_drawing_area_board.cpp:623
+#, c-format
+msgid "Square in board: Row %d. Column %d)\n"
 msgstr ""
 
 #. i18n Please, leave GtkBuilder as it is here since it is the name of the
@@ -56,118 +379,26 @@ msgstr ""
 msgid "GUI Exception happened"
 msgstr ""
 
-#. i18n Bear in mind this string will be printed followed by the path to logo file
-#. i18n The extra space at the end is necessary
-#. i18n Thank you for contributing to this project
-#: src/gui_about_dialog.cpp:64
-msgid ""
-"WARNING: Exception occurred when setting the logo into the AboutDialog from "
-msgstr ""
-
-#. i18n Bear in mind this string will be printed followed by the path to 16x16 icon file
-#. i18n The extra space at the end is necessary
-#. i18n Thank you for contributing to this project
-#: src/gui_about_dialog.cpp:91
-msgid ""
-"WARNING: Exception occurred when setting the 16x16 icon into the AboutDialog "
-"from "
-msgstr ""
-
-#: src/gui_config_dialog.cpp:40
-msgid "Human"
-msgstr ""
-
-#: src/gui_config_dialog.cpp:41
-msgid "Computer"
-msgstr ""
-
-#. i18n This string shouldn't be bigger than 4 characters long
-#. i18n strings bigger than those 4 characters will be stripped out
-#. i18n Thank you for contributing to this project
-#: src/gui_config_dialog.cpp:330 src/gui_config_dialog.cpp:350
-msgid "Auto"
-msgstr ""
-
-#. i18n both %d respectively represent the X and Y pixel where the user clicked
-#. i18n Please leave them there because they are needed by the program
-#. i18n Thank you for contributing to this project
-#: src/gui_drawing_area_board.cpp:560
-#, c-format
-msgid "User clicked in pixel (%d, %d)\n"
-msgstr ""
-
-#. i18n both %d respectively represent the row and column of the square in the board
-#. i18n where the user clicked. Please leave them there because they are needed by the program
-#. i18n Thank you for contributing to this project
-#: src/gui_drawing_area_board.cpp:577
-#, c-format
-msgid "Square in board: Row %d. Column %d)\n"
-msgstr ""
-
-#: src/gui_main_window.cpp:49
-msgid ""
-"The game is computing the next move. Are you sure do you want to close the "
-"application?"
-msgstr ""
-
-#: src/gui_main_window.cpp:52
-msgid "New 1vs1 game"
-msgstr ""
-
-#: src/gui_main_window.cpp:55
-msgid "Configure current game"
-msgstr ""
-
-#. i18n TRANSLATORS: Bear in mind this string will be printed followed by the path to the 16x16 icon file
-#. i18n Thank you for contributing to this project
-#: src/gui_main_window.cpp:149
-msgid ""
-"WARNING: Exception occurred when setting the 16x16 icon into the Main Window "
-"from "
-msgstr ""
-
-#: src/gui_main_window.cpp:531
-msgid "Configuration Dialog cancelled"
-msgstr ""
-
-#: src/gui_main_window.cpp:763
-msgid "Previous move had to be cancelled before applying new settings"
-msgstr ""
-
-#: src/gui_main_window.cpp:944
-msgid ""
-"Error while telling the thread to start computing. Worker thread is busy"
-msgstr ""
-
 #. i18n TRANSLATORS: Please, leave <b> and </b> tags sorrounding the translation of "Fatal error"
 #. i18n Thank you for contributing to this project
-#: src/gui_main_window.cpp:950
+#: src/gui_game1v1_widget.cpp:545
 msgid ""
 "<b>Fatal Error:</b> Could not communicate with worker thread. Application "
 "will exit now!"
 msgstr ""
 
-#: src/gui_main_window.cpp:993
+#: src/gui_game1v1_widget.cpp:575
 msgid "Computer can't move"
 msgstr ""
 
-#: src/gui_main_window.cpp:1012
-msgid ""
-"Worker thread is busy. Please be patient while it is calculating next move"
-msgstr ""
-
-#: src/gui_main_window.cpp:1032
-msgid "Cheeky you! Don't try to deploy a piece where it's not allowed to"
-msgstr ""
-
-#: src/gui_main_window.cpp:1052
-msgid "Human move could not be added to the queue"
-msgstr ""
-
-#: src/gui_main_window.cpp:1057
+#: src/gui_game1v1_widget.cpp:647
 msgid ""
 "Internal Error: Move could not be processed. Please click on the board "
 "normally to try again"
+msgstr ""
+
+#: src/gui_game1v1_widget.cpp:662
+msgid "Main Window could not be retrieved from a child GUI element"
 msgstr ""
 
 #. i18n TRANSLATORS: Please, leave the translated word DRAW between the <b> and </b> tags
@@ -180,7 +411,7 @@ msgstr ""
 #. i18n A typical complete message:
 #. i18n That was a <b>DRAW</b>!\nBoth <span color="#012345">Eddie</span> and <span color="#678901">John</span> have <b>5</b> squares left
 #. i18n Thank you for contributing to this project
-#: src/gui_main_window.cpp:1327
+#: src/gui_game1v1_widget.cpp:916
 #, c-format
 msgid ""
 "That was a <b>DRAW</b>!\n"
@@ -199,7 +430,7 @@ msgstr ""
 #. i18n A typical complete message:
 #. i18n <b><span color="#012345">Eddie</span></b>!\n<span color="#012345">Eddie</span> has <b>5</b> squares left and <span color="#678901">John</span> has <b>7</b>
 #. i18n Thank you for contributing to this project
-#: src/gui_main_window.cpp:1380
+#: src/gui_game1v1_widget.cpp:969
 #, c-format
 msgid ""
 "<b><span color=\"#%02X%02X%02X\">%s</span></b> won!\n"
@@ -207,22 +438,74 @@ msgid ""
 "color=\"#%02X%02X%02X\">%s</span> has <b>%d</b>"
 msgstr ""
 
-#. i18n TRANSLATORS: the first 3 %02X  will be replaced by the
-#. i18n colour of the current player. The '%s' will be replaced
-#. i18n by this player's name and the '%2d' his/her score
-#. i18n For a better GUI experience both strings should take
-#. i18n the same amount of characters
+#: src/gui_game_challenge_widget.cpp:313
+#: src/gui_game_total_allocation_widget.cpp:306
+#, c-format
+msgid "Done! You managed to allocate all your pieces"
+msgstr ""
+
+#. i18n TRANSLATORS: Please, respect the HTML formatting as much as possible
+#. i18n Note translations depend also on whether there is only 1 or more than
+#. i18n one squares left
+#. i18n Thank you for contributing to this project
+#: src/gui_game_challenge_widget.cpp:324
+#: src/gui_game_total_allocation_widget.cpp:317
+#, c-format
+msgid "You can't put down more pieces, but you still have the baby piece left"
+msgid_plural ""
+"You can't put down more pieces, but you still have <b>%d</b> squares left"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/gui_main_window.cpp:50
+msgid ""
+"The game is computing the next move. Are you sure do you want to close the "
+"application?"
+msgstr ""
+
+#. i18n TRANSLATORS: Bear in mind this string will be printed followed by the path to the 16x16 icon file
+#. i18n Thank you for contributing to this project
+#: src/gui_main_window.cpp:78
+msgid ""
+"WARNING: Exception occurred when setting the 16x16 icon into the Main Window "
+"from "
+msgstr ""
+
+#: src/gui_main_window.cpp:494
+msgid "Previous move had to be cancelled before applying new settings"
+msgstr ""
+
 #. i18n TRANSLATORS: the first 3 %02X  will be replaced by the
 #. i18n colour of the current player. The '%s' will be replaced
 #. i18n by this player's name and the '%2d' his/her score
 #. i18n For a better GUI experience all these strings should take
 #. i18n the same amount of characters
-#: src/gui_main_window.cpp:1469 src/gui_main_window.cpp:1488
+#: src/gui_statusbar_game.cpp:172
 #, c-format
 msgid "<span color=\"#%02X%02X%02X\">%s</span>: %2d left"
 msgid_plural "<span color=\"#%02X%02X%02X\">%s</span>: %2d left"
 msgstr[0] ""
 msgstr[1] ""
+
+#. i18n Rotate in this context means a transformation of a piece that describes
+#. i18n the motion of it around a fixed point
+#: src/gui_table_edit_piece.cpp:51
+msgid "Rotate"
+msgstr ""
+
+#. i18n This string contains the word "mirror" written downwards. Mirror in this
+#. i18n context means a reflection in any of the axis of a blockem piece
+#. i18n This string MUST be translated using the same downwards way, that is, a
+#. i18n new line character (\n) after every character
+#: src/gui_table_edit_piece.cpp:58
+msgid ""
+"M\n"
+"i\n"
+"r\n"
+"r\n"
+"o\n"
+"r"
+msgstr ""
 
 #. i18n TRANSLATORS: This is the name given to a type of heuristic. Should be as small as possible
 #: src/heuristic.cpp:51
@@ -301,140 +584,142 @@ msgid ""
 "heuristic can be checked against it"
 msgstr ""
 
-#: src/piece.cpp:45
+#: src/piece.cpp:49
 msgid "Baby piece"
 msgstr ""
 
-#: src/piece.cpp:46
+#: src/piece.cpp:50
 msgid "Two piece"
 msgstr ""
 
-#: src/piece.cpp:47
+#: src/piece.cpp:51
 msgid "Three piece"
 msgstr ""
 
-#: src/piece.cpp:48
+#: src/piece.cpp:52
 msgid "Little V"
 msgstr ""
 
-#: src/piece.cpp:49
+#: src/piece.cpp:53
 msgid "Full square"
 msgstr ""
 
-#: src/piece.cpp:50
+#: src/piece.cpp:54
 msgid "Four long piece"
 msgstr ""
 
-#: src/piece.cpp:51
+#: src/piece.cpp:55
 msgid "Little L"
 msgstr ""
 
-#: src/piece.cpp:52
+#: src/piece.cpp:56
 msgid "Little S"
 msgstr ""
 
-#: src/piece.cpp:53
+#: src/piece.cpp:57
 msgid "Little T"
 msgstr ""
 
-#: src/piece.cpp:54
+#: src/piece.cpp:58
 msgid "Big long piece"
 msgstr ""
 
-#: src/piece.cpp:55
+#: src/piece.cpp:59
 msgid "Square++"
 msgstr ""
 
-#: src/piece.cpp:56
+#: src/piece.cpp:60
 msgid "Big V (aka Half square)"
 msgstr ""
 
-#: src/piece.cpp:57
+#: src/piece.cpp:61
 msgid "U piece"
 msgstr ""
 
-#: src/piece.cpp:58
+#: src/piece.cpp:62
 msgid "Big L"
 msgstr ""
 
-#: src/piece.cpp:59
+#: src/piece.cpp:63
 msgid "Y piece"
 msgstr ""
 
-#: src/piece.cpp:60
+#: src/piece.cpp:64
 msgid "Big S"
 msgstr ""
 
-#: src/piece.cpp:61
+#: src/piece.cpp:65
 msgid "Mr T"
 msgstr ""
 
-#: src/piece.cpp:62
+#: src/piece.cpp:66
 msgid "N piece (aka the ultimate)"
 msgstr ""
 
-#: src/piece.cpp:63
+#: src/piece.cpp:67
 msgid "Saf piece"
 msgstr ""
 
-#: src/piece.cpp:64
+#: src/piece.cpp:68
 msgid "W piece"
 msgstr ""
 
-#: src/piece.cpp:65
+#: src/piece.cpp:69
 msgid "Cross piece"
 msgstr ""
 
-#: src/main.cpp:123
+#: src/main.cpp:126
 msgid "Prints current version of the software and exists"
 msgstr ""
 
-#: src/main.cpp:127
+#: src/main.cpp:130
 msgid ""
 "Specifies the mode blockem runs. Valid options are: '0' GUI is shown "
 "(Default); '1' one player total-allocation; '2' 1vs1 Game"
 msgstr ""
 
-#: src/main.cpp:133
+#: src/main.cpp:136
 msgid ""
 "1 player total allocation game's board will have N rows. This is a MANDATORY "
 "parameter for --mode=1"
 msgstr ""
 
-#: src/main.cpp:138
+#: src/main.cpp:141
 msgid ""
 "1 player total allocation game's board will have N columns. This is a "
 "MANDATORY parameter for --mode=1"
 msgstr ""
 
-#: src/main.cpp:143
+#: src/main.cpp:146
 msgid ""
 "Computer will start to allocate pieces in column X (when running with --"
 "mode=1). 1st valid column is 0, so maximum allowed column will be "
-"(number_of_columns - 1). This is a MANDATORY parameter for --mode=1"
+"(number_of_columns - 1). This is an optional parameter for --mode=1 but if "
+"it is set --starting-row must be set too"
 msgstr ""
 
-#: src/main.cpp:149
+#: src/main.cpp:152
 msgid ""
 "Computer will start to allocate pieces in row Y (when running with --"
 "mode=1). 1st valid row is 0, so maximum allowed row will be (number_of_rows "
-"- 1). This is a MANDATORY parameter for --mode=1"
+"- 1). This is an optional parameter for --mode=1 but if it is set --starting-"
+"column must be set too"
 msgstr ""
 
-#: src/main.cpp:155
+#: src/main.cpp:158
 msgid ""
 "Sets the maximum depth of search tree to D when 1vs1 Game is selected. This "
 "is a MANDATORY parameter for --mode=2"
 msgstr ""
 
-#: src/main.cpp:160
+#: src/main.cpp:163
 msgid ""
 "Heuristic to be used when mode is set to 1v1 game (--mode=2). Valid options: "
 "'0' \"Influence Area\" (Default); '1' \"Mr. Eastwood\"; '2' \"NK weighted\"; "
 "'3' \"Centre focused\"; '4' \"Simple\"; '5' \"Random\""
 msgstr ""
 
-#: src/main.cpp:166
+#: src/main.cpp:169
 msgid ""
 "Paths to 1vs1game files (mode 2). Blockem will calculate next move per each "
 "one of them and print out the result in console. Specifying at least 1 file "
@@ -444,7 +729,7 @@ msgstr ""
 #. i18n TRANSLATORS: This string is supposed to mean that one or more
 #. i18n files might be specified
 #. i18n Thank you for contributing to this project
-#: src/main.cpp:172
+#: src/main.cpp:175
 msgid "[FILE(S)]"
 msgstr ""
 
@@ -469,39 +754,42 @@ msgstr ""
 #. i18n TRANSLATORS: Please leave the starting dash as it is part of the glib command line
 #. i18n parsing formatting
 #. i18n Thank you for contributing to this project
-#: src/main.cpp:252
+#: src/main.cpp:317
 msgid "- The GNU polyominoes board game"
 msgstr ""
 
-#: src/main.cpp:269
+#: src/main.cpp:367
 msgid "Error parsing command line"
 msgstr ""
 
 #. i18n TRANSLATORS: Please leave the word Gtkbuilder as it is since it's the name
 #. i18n of the component that failed
 #. i18n Thank you for contributing to this project
-#: src/main.cpp:337
+#: src/main.cpp:473
 msgid "Could not load Gtkbuilder definitions"
 msgstr ""
 
-#: src/main.cpp:409
-msgid ""
-"Number of rows, number of columns, starting row and starting column must be "
-"specified in mode '1'"
+#: src/main.cpp:546
+msgid "Number of rows and number of columns must be specified in mode '1'"
 msgstr ""
 
-#: src/main.cpp:417
+#: src/main.cpp:554
 msgid "Number of rows and number of columns must be a greater than 1"
 msgstr ""
 
-#: src/main.cpp:426
+#: src/main.cpp:565
+msgid ""
+"Both starting row and column must be set to configure a starting coordinate"
+msgstr ""
+
+#: src/main.cpp:578
 msgid "Application cannot start outside of the board boundaries"
 msgstr ""
 
 #. i18n TRANSLATORS: This string is to be printed when the applications finds
 #. i18n a solution to a one-player total-allocation game
 #. i18n Thank you for contributing to this project
-#: src/main.cpp:439
+#: src/main.cpp:595
 msgid "SOLVED!"
 msgstr ""
 
@@ -511,21 +799,21 @@ msgstr ""
 #. i18n A typical string to be printed:
 #. i18n "Could not allocate all the pieces in this 8x8 board, starting from row 0, column 2"
 #. i18n Thank you for contributing to this project
-#: src/main.cpp:453
+#: src/main.cpp:609
 #, c-format
 msgid ""
 "Could not allocate all the pieces in this %dx%d board, starting from row %d, "
 "columnd %d\n"
 msgstr ""
 
-#: src/main.cpp:468
+#: src/main.cpp:624
 msgid "At least one file with a 1vs1Game saved must be specified"
 msgstr ""
 
 #. i18n TRANSLATORS: Please, leave that %d as it is. It will be replaced
 #. i18n by the type of heuristic used by the user
 #. i18n Thank you for contributing to this project
-#: src/main.cpp:480
+#: src/main.cpp:636
 #, c-format
 msgid "Invalid heuristic type (%d)"
 msgstr ""
@@ -533,16 +821,16 @@ msgstr ""
 #. i18n TRANSLATORS: This string shows the chosen heuristic's name to the user
 #. i18n the 1st %s will be replaced by the heuristic's name, and %d by its index
 #. i18n Thank you for contributing to this project
-#: src/main.cpp:495
+#: src/main.cpp:651
 #, c-format
 msgid "Evaluation function set to %s (%d)\n"
 msgstr ""
 
-#: src/main.cpp:503
+#: src/main.cpp:659
 msgid "Depth in 1vs1Game mode must be set to a positive value"
 msgstr ""
 
-#: src/main.cpp:510
+#: src/main.cpp:666
 msgid ""
 "Warning: For better results you might want to set the depth to an odd number"
 msgstr ""
@@ -553,7 +841,7 @@ msgstr ""
 #. i18n the file that couldn't be accessed. Bear in mind the '\n' character should be there
 #. i18n in the translated version of the string too
 #. i18n Thank you for contributing to this project
-#: src/main.cpp:528
+#: src/main.cpp:684
 #, c-format
 msgid "%s: Error: '%s' doesn't exist. Trying next file...\n"
 msgstr ""
@@ -564,7 +852,7 @@ msgstr ""
 #. i18n the file that couldn't be opened. Bear in mind the '\n' character should be there
 #. i18n in the translated version of the string too
 #. i18n Thank you for contributing to this project
-#: src/main.cpp:546
+#: src/main.cpp:702
 #, c-format
 msgid "%s: Error: '%s' could not be opened. Trying next file...\n"
 msgstr ""
@@ -575,7 +863,7 @@ msgstr ""
 #. i18n the file that couldn't be opened. Bear in mind the '\n' character should be there
 #. i18n in the translated version of the string too
 #. i18n Thank you for contributing to this project
-#: src/main.cpp:563
+#: src/main.cpp:719
 #, c-format
 msgid ""
 "%s: Error: '%s' does not contain a valid 1vs1Game. Trying next file...\n"
@@ -585,7 +873,7 @@ msgstr ""
 #. i18n successfully loaded. Bear in mind the '\n' character should be there
 #. i18n in the translated version of the string too
 #. i18n Thank you for contributing to this project
-#: src/main.cpp:576
+#: src/main.cpp:732
 #, c-format
 msgid "Game succesfully loaded from '%s'\n"
 msgstr ""
@@ -594,7 +882,7 @@ msgstr ""
 #. i18n move calculated by the minimax engine. Bear in mind the '\n' character
 #. i18n should be there in the translated version of the string too
 #. i18n Thank you for contributing to this project
-#: src/main.cpp:608
+#: src/main.cpp:764
 #, c-format
 msgid "Winning evaluation function value: %d\n"
 msgstr ""
@@ -604,7 +892,7 @@ msgstr ""
 #. i18n to decide the formatting of the message, though this english version
 #. i18n could be used as the template
 #. i18n Thank you for contributing to this project
-#: src/main.cpp:618
+#: src/main.cpp:774
 msgid ""
 " ===================================================\n"
 " === END OF THE GAME. NO PIECE COULD BE PUT DOWN ===\n"
@@ -614,135 +902,76 @@ msgstr ""
 #. i18n TRANSLATORS: Please, leave that %d as it is. It will be replaced
 #. i18n by the mode picked by the user
 #. i18n Thank you for contributing to this project
-#: src/main.cpp:646
+#: src/main.cpp:802
 #, c-format
 msgid "Invalid --mode option (%d)"
 msgstr ""
 
-# TRANSLATORS: This is what is shown as the name of the main window.
-# It should be the name of the application
 #: src/gui.glade:6
 msgid "Block'em"
 msgstr ""
 
-# TRANSLATORS: The underscore character is to be located just before the
-# letter which will be underlined. This underlined character represents which
-# letter can be presed to select this menu option when the keyboard is used to 
-# navigate through the archive menu
-#: src/gui.glade:20
+#: src/gui.glade:19
 msgid "_Game"
 msgstr ""
 
-# TRANSLATORS: The underscore character is to be located just before the
-# letter which will be underlined. This underlined character represents which
-# letter can be presed to select this menu option when the keyboard is used to 
-# navigate through the archive menu
-#: src/gui.glade:79
+#: src/gui.glade:78
 msgid "_Settings"
 msgstr ""
 
-# TRANSLATORS: The underscore character is to be located just before the
-# letter which will be underlined. This underlined character represents which
-# letter can be presed to select this menu option when the keyboard is used to 
-# navigate through the archive menu
-#: src/gui.glade:87
+#: src/gui.glade:86
 msgid "_Forbidden areas"
 msgstr ""
 
-# TRANSLATORS: The underscore character is to be located just before the
-# letter which will be underlined. This underlined character represents which
-# letter can be presed to select this menu option when the keyboard is used to 
-# navigate through the archive menu
-#: src/gui.glade:95
+#: src/gui.glade:94
 msgid "Do _not show forbidden area"
 msgstr ""
 
-# TRANSLATORS: The underscore character is to be located just before the
-# letter which will be underlined. This underlined character represents which
-# letter can be presed to select this menu option when the keyboard is used to 
-# navigate through the archive menu
-#: src/gui.glade:104
+#: src/gui.glade:103
 msgid "Show Mr _Green's forbidden area"
 msgstr ""
 
-# TRANSLATORS: The underscore character is to be located just before the
-# letter which will be underlined. This underlined character represents which
-# letter can be presed to select this menu option when the keyboard is used to 
-# navigate through the archive menu
-#: src/gui.glade:113
+#: src/gui.glade:112
 msgid "Show Mr _Blue's forbidden area"
 msgstr ""
 
-# TRANSLATORS: The underscore character is to be located just before the
-# letter which will be underlined. This underlined character represents which
-# letter can be presed to select this menu option when the keyboard is used to 
-# navigate through the archive menu
-#: src/gui.glade:125
+#: src/gui.glade:124
 msgid "_Influence areas"
 msgstr ""
 
-# TRANSLATORS: The underscore character is to be located just before the
-# letter which will be underlined. This underlined character represents which
-# letter can be presed to select this menu option when the keyboard is used to 
-# navigate through the archive menu
-#: src/gui.glade:133
+#: src/gui.glade:132
 msgid "Do _not show influence area"
 msgstr ""
 
-# TRANSLATORS: The underscore character is to be located just before the
-# letter which will be underlined. This underlined character represents which
-# letter can be presed to select this menu option when the keyboard is used to 
-# navigate through the archive menu
-#: src/gui.glade:142
+#: src/gui.glade:141
 msgid "Show Mr _Green's influence area"
 msgstr ""
 
-# TRANSLATORS: The underscore character is to be located just before the
-# letter which will be underlined. This underlined character represents which
-# letter can be presed to select this menu option when the keyboard is used to 
-# navigate through the archive menu
-#: src/gui.glade:151
+#: src/gui.glade:150
 msgid "Show Mr _Blue's influence area"
 msgstr ""
 
-# TRANSLATORS: The underscore character is to be located just before the
-# letter which will be underlined. This underlined character represents which
-# letter can be presed to select this menu option when the keyboard is used to 
-# navigate through the archive menu
-#: src/gui.glade:164
+#: src/gui.glade:163
 msgid "Show _nucleation points"
 msgstr ""
 
-# TRANSLATORS: The underscore character is to be located just before the
-# letter which will be underlined. This underlined character represents which
-# letter can be presed to select this menu option when the keyboard is used to 
-# navigate through the archive menu
-#: src/gui.glade:183
+#: src/gui.glade:182
 msgid "_Help"
 msgstr ""
 
-# This is the title of the about dialog of the game
-#: src/gui.glade:309
+#: src/gui.glade:213
 msgid "About Block'em"
 msgstr ""
 
-# The copyright notice
-#: src/gui.glade:317
+#: src/gui.glade:221
 msgid "Copyright © 2009-2010 Faustino Frechilla"
 msgstr ""
 
-# This is the short description of what this game is supposed to be
-#: src/gui.glade:318
+#: src/gui.glade:222
 msgid "A board strategy game against the computer"
 msgstr ""
 
-# This is the GNU GPL version 3 license text.
-# You can find lots of already translated versions of this text along with
-# the instructions of how to translate it in
-# http://www.gnu.org/licenses/translations.html
-# Please, read very carefully the instructions of how to translate this text
-# since those translated version of the license are unofficial
-#: src/gui.glade:319
+#: src/gui.glade:224
 msgid ""
 "blockem is free software; you can redistribute it and/or modify it under the "
 "terms of the GNU General Public License as published by the Free Software "
@@ -759,75 +988,64 @@ msgid ""
 "Street, Fifth Floor, Boston, MA  02110-1301  USA"
 msgstr ""
 
-# Rotate in this context means a transformation of a piece that describes the
-# motion of it around a fixed point
-#: src/gui.glade:442
-msgid "Rotate"
+#: src/gui.glade:255
+msgid "Configure 1vs1 game"
 msgstr ""
 
-# This string contains the word "mirror" written downwards. Mirror in this
-# context means a reflection in any of the axis of a blockem piece
-# This string MUST be translated using the same downwards way, that is, a
-# new line character (\n) after every character
-#: src/gui.glade:456
-msgid ""
-"M\n"
-"i\n"
-"r\n"
-"r\n"
-"o\n"
-"r"
-msgstr ""
-
-# Please leave the final ": " characters at the end to keep format on
-# the screen
-# This string is to be followed by a combobox where the user can edit the 
-# type of player of the next game (Human or computer)
-#: src/gui.glade:550 src/gui.glade:781
+#: src/gui.glade:287 src/gui.glade:518 src/gui.glade:816 src/gui.glade:1047
 msgid "Type: "
 msgstr ""
 
-# Please leave the final ": " characters at the end to keep format on
-# the screen
-# This string is to be followed by a textbox where the user can edit the 
-# starting row for the next game
-#: src/gui.glade:560 src/gui.glade:791
-msgid "Starting Row: "
+#: src/gui.glade:297 src/gui.glade:528 src/gui.glade:826 src/gui.glade:1057
+#: src/gui.glade:1374
+msgid "Starting row: "
 msgstr ""
 
-# Please leave the final ": " characters at the end to keep format on
-# the screen
-# This string is to be followed by a textbox where the user can edit the 
-# starting column for the next game
-#: src/gui.glade:572 src/gui.glade:823
-msgid "Column: "
+#: src/gui.glade:309 src/gui.glade:560 src/gui.glade:838 src/gui.glade:1089
+#: src/gui.glade:1407
+msgid "column: "
 msgstr ""
 
-# Please leave the final ": " characters at the end to keep format on
-# the screen. AI stands for Artificial Intelligence. The acronym was chosen
-# because a long string did not fit properly on the screen
-#: src/gui.glade:646 src/gui.glade:876
+#: src/gui.glade:383 src/gui.glade:613 src/gui.glade:912 src/gui.glade:1142
 msgid "AI type: "
 msgstr ""
 
-# Please leave the final ": " characters at the end to keep format on
-# the screen
-#: src/gui.glade:658 src/gui.glade:888
+#: src/gui.glade:395 src/gui.glade:625 src/gui.glade:924 src/gui.glade:1154
 msgid "Depth: "
 msgstr ""
 
-#: src/gui.glade:725 src/gui.glade:955
+#: src/gui.glade:462 src/gui.glade:692 src/gui.glade:991 src/gui.glade:1221
 msgid "Artificial Intelligence"
 msgstr ""
 
-# Please leave this string surrounded by the HTML <b> and </b> tags
-# it represents player1 (green)
-#: src/gui.glade:754
+#: src/gui.glade:491 src/gui.glade:1020
 msgid "<b>Green</b>"
 msgstr ""
 
-# Please leave this string surrounded by the HTML <b> and </b> tags
-# it represents player2 (blue)
-#: src/gui.glade:984
+#: src/gui.glade:721 src/gui.glade:1250
 msgid "<b>Blue</b>"
+msgstr ""
+
+#: src/gui.glade:758
+msgid "New Game"
+msgstr ""
+
+#: src/gui.glade:1285
+msgid "Number of rows: "
+msgstr ""
+
+#: src/gui.glade:1313
+msgid "columns: "
+msgstr ""
+
+#: src/gui.glade:1347
+msgid "<b>Board size</b>"
+msgstr ""
+
+#: src/gui.glade:1441
+msgid "Start from anywhere"
+msgstr ""
+
+#: src/gui.glade:1459
+msgid "<b>Starting position</b>"
 msgstr ""
