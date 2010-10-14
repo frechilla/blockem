@@ -12,8 +12,6 @@ supposed to be integrated in blockem at some point in the future:
  + Installer for the windows platform
  + keep history of the moves and offer the user the possibility to go back
    and resume an old game
- + Add option to play a game which aim is allocating all the pieces on the 
-   board, with no opponent
  + There should be puzzles. give somebody a set situation and get them to put 
    down all their pieces. you know hte way with those puzzle games. the first 
    one is very easy. e.g. give an empty 5x5 board and get them to put down 
@@ -24,3 +22,7 @@ supposed to be integrated in blockem at some point in the future:
  + Convert std::lists to standard arrays in Piece
  + cachegrind to profile (instead of gprof)
  + complete rules_test
+ + stopwatches in total allocation game and 1vs1 game are counting even if 
+   the widget is showing nothing. It doesn't really affect performance, but
+   it's an ugly thing to do
+ + support for non-square shaped boards (is it even good?)

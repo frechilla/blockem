@@ -12,8 +12,11 @@ m4/ChangeLog \
 pixmaps/blockemicon.ico    \
 pixmaps/blockemlogo128.png \
 pixmaps/blockemlogo16.png  \
+pixmaps/blockemlogo32.xpm  \
 pixmaps/blockemlogo48.png  \
-pixmaps/blockemlogo.png
+pixmaps/blockemlogo.png    \
+pixmaps/game1vs1.png       \
+pixmaps/gametotalalloc.png
 
 # Note pixmapsdir contains @PACKAGE@. This must be taken into account
 # by the binary sources (see gui_glade_defs.h)
@@ -25,8 +28,12 @@ pixmaps_DATA = \
 pixmaps/blockemicon.ico    \
 pixmaps/blockemlogo128.png \
 pixmaps/blockemlogo16.png  \
+pixmaps/blockemlogo32.xpm  \
 pixmaps/blockemlogo48.png  \
-pixmaps/blockemlogo.png
+pixmaps/blockemlogo.png    \
+pixmaps/game1vs1.png       \
+pixmaps/gametotalalloc.png
+
 
 
 ACLOCAL_AMFLAGS = -I m4

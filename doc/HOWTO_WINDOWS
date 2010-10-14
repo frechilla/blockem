@@ -71,14 +71,14 @@ in English, or Spanish, etc.
 In win32 gtk retrieves the system default language, but it cannot be set
 as easily as in Linux in case you want to change the language. So a decission
 had to be made on how blockem will be handling languages on win32 platforms.
-For the moment there is a call to putenv in main.cpp that decides which 
-language blockem will run with. It is hardcoded and it can only be changed
-at compile time.
-
-So for the moment blockem is compiled as many times as languages are supported,
-therefore one package is released per language and the user can pick which
-version he/she wants. In the future language will be picked using the menus of
-the application, but this is doing the trick for now
+Right now there is a call to putenv in main.cpp that decides which language
+blockem will run with. It retrieves the value from a configuration .xml file
+located at ${path-to-blockem-dir}/etc/blockem.conf between the tags
+<language></language>. If blockem can't find that file at startup it creates
+a default one (in the former path) with the value "en_UK" and launches the
+application in English (localised to the UK). If you set the language to 
+something you can't understand simply remove this config file and blockem 
+will start up in English next time.
 
 
 ---------------------
