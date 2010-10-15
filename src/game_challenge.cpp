@@ -190,6 +190,8 @@ void GameChallenge::Reset(const BlockemChallenge& a_challenge)
             a_challenge.GetBoardColumns(), 
             CHAR_EMPTY);
         
+        uint8_t red, green, blue;
+        m_challenger.GetColour(red, green, blue);        
         m_challenger = Player(
             _(PLAYER_CHALLENGER_NAME),
             CHAR_CHALLENGER,
@@ -198,12 +200,17 @@ void GameChallenge::Reset(const BlockemChallenge& a_challenge)
             (a_challenge.IsChallengerStartingCoordSet()) ? 
                 a_challenge.GetChallengerStartingCoord() : Coordinate() );
                 
+        // this is a new player instance. colour must be reset
+        m_challenger.SetColour(red, green, blue);
+        
+        m_disturber.GetColour(red, green, blue);
         m_disturber = Player(
             PLAYER_DISTURBER_NAME,
             CHAR_DISTURBER,
             a_challenge.GetBoardRows(),
             a_challenge.GetBoardColumns(),
             Coordinate());
+        m_disturber.SetColour(red, green, blue);
     }
     
     // load challenge data into this object attributes

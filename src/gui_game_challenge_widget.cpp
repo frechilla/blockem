@@ -186,7 +186,7 @@ void GameChallengeWidget::LaunchNewGame(const BlockemChallenge& a_challenge)
     // been cancelled
     m_boardDrawingArea.Invalidate();
 
-    // player1 will be picking next piece
+    // challenger will be picking next piece
     m_pickPiecesDrawingArea.Invalidate(m_theChallengeGame.GetChallenger());
 
     // update score

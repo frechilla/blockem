@@ -181,7 +181,7 @@ void GameTotalAllocationWidget::LaunchNewGame()
     // been cancelled
     m_boardDrawingArea.Invalidate();
 
-    // player1 will be picking next piece
+    // player will be picking next piece
     m_pickPiecesDrawingArea.Invalidate(m_theTotalAllocationGame.GetPlayer());
 
     // update score
