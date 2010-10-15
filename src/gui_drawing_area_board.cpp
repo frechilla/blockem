@@ -600,10 +600,7 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
 bool DrawingAreaBoard::on_button_press_event(GdkEventButton* event)
 {
 #ifdef DEBUG_PRINT
-    // i18n both %d respectively represent the X and Y pixel where the user clicked
-    // i18n Please leave them there because they are needed by the program
-    // i18n Thank you for contributing to this project
-    printf(_("User clicked in pixel (%d, %d)\n"),
+    printf("User clicked in pixel (%d, %d)\n",
             static_cast<int32_t>(event->x),
             static_cast<int32_t>(event->y));
 #endif
@@ -617,10 +614,7 @@ bool DrawingAreaBoard::on_button_press_event(GdkEventButton* event)
     }
 
 #ifdef DEBUG_PRINT
-    // i18n both %d respectively represent the row and column of the square in the board
-    // i18n where the user clicked. Please leave them there because they are needed by the program
-    // i18n Thank you for contributing to this project
-    printf(_("Square in board: Row %d. Column %d)\n"), thisCoord.m_row, thisCoord.m_col);
+    printf("Square in board: Row %d. Column %d)\n", thisCoord.m_row, thisCoord.m_col);
 #endif
 
     // someone clicked on the board. Notify the coordinate, the piece and the player who did it
