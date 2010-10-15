@@ -415,7 +415,7 @@ void MainWindow::MenuItemSettingsViewNKPoints_Toggled()
     else
     {
         m_game1v1Widget.BoardDrawingArea().HideNucleationPoints();
-        m_gameTotalAllocationWidget.BoardDrawingArea().ShowNucleationPoints();
+        m_gameTotalAllocationWidget.BoardDrawingArea().HideNucleationPoints();
     }
 }
 
