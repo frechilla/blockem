@@ -44,8 +44,10 @@ public:
     Game1v1ConfigDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder) throw (GUIException);
     virtual ~Game1v1ConfigDialog();
 
-    // override Dialog::run. It will call Dialog::run internally to show the dialog on the screen
-    int run();
+    /// @brief override Dialog::run. 
+    /// It will call Dialog::run internally to show the dialog on the screen
+    /// @param if set to false the ok button will be deactivated
+    int run(bool a_dialogCanBeAccepted = true);
 
     /// @return true if player1 has been set to computer within the dialog
     bool IsPlayer1TypeComputer() const;

@@ -616,9 +616,13 @@ Heuristic::eHeuristicType_t Game1v1ConfigDialog::GetPlayer2Heuristic() const
     return Heuristic::e_heuristicStartCount;
 }
 
-int Game1v1ConfigDialog::run()
+int Game1v1ConfigDialog::run(bool a_dialogCanBeAccepted)
 {
-    // load current global configuration into the widgets before showing the dialog
+    // set OK button to active or inactive
+    this->set_response_sensitive(Gtk::RESPONSE_OK, a_dialogCanBeAccepted);
+    
+    // load now current global configuration into the widgets before showing 
+    // the dialog
 
     // type of players
     if (Game1v1Config::Instance().IsPlayer1Computer())
