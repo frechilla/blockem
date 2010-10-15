@@ -767,6 +767,7 @@ You should have received a copy of the GNU General Public License along with blo
         <child>
           <object class="GtkHBox" id="hbox2">
             <property name="visible">True</property>
+            <property name="spacing">2</property>
             <child>
               <object class="GtkScrolledWindow" id="newgame_scrolledwindow_imgs">
                 <property name="visible">True</property>
@@ -785,6 +786,7 @@ You should have received a copy of the GNU General Public License along with blo
                 </child>
               </object>
               <packing>
+                <property name="expand">False</property>
                 <property name="position">0</property>
               </packing>
             </child>
@@ -1279,6 +1281,7 @@ You should have received a copy of the GNU General Public License along with blo
                               <object class="GtkTable" id="newgame_totalalloc_table_board">
                                 <property name="visible">True</property>
                                 <property name="n_columns">4</property>
+                                <property name="column_spacing">1</property>
                                 <child>
                                   <object class="GtkLabel" id="newgame_totalalloc_label_nrows">
                                     <property name="visible">True</property>
@@ -1368,6 +1371,7 @@ You should have received a copy of the GNU General Public License along with blo
                                 <property name="visible">True</property>
                                 <property name="n_rows">2</property>
                                 <property name="n_columns">4</property>
+                                <property name="column_spacing">1</property>
                                 <child>
                                   <object class="GtkLabel" id="newgame_totalalloc_label_startingrow">
                                     <property name="visible">True</property>
