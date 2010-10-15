@@ -488,7 +488,7 @@ You should have received a copy of the GNU General Public License along with blo
                 <child type="label">
                   <object class="GtkLabel" id="config_1v1_label_player1">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">&lt;b&gt;Green&lt;/b&gt;</property>
+                    <property name="label" translatable="yes">Green</property>
                     <property name="use_markup">True</property>
                   </object>
                 </child>
@@ -718,7 +718,7 @@ You should have received a copy of the GNU General Public License along with blo
                 <child type="label">
                   <object class="GtkLabel" id="config_1v1_label_player2">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">&lt;b&gt;Blue&lt;/b&gt;</property>
+                    <property name="label" translatable="yes">Blue</property>
                     <property name="use_markup">True</property>
                   </object>
                 </child>
@@ -1017,7 +1017,7 @@ You should have received a copy of the GNU General Public License along with blo
                         <child type="label">
                           <object class="GtkLabel" id="newgame_1v1_label_player1">
                             <property name="visible">True</property>
-                            <property name="label" translatable="yes">&lt;b&gt;Green&lt;/b&gt;</property>
+                            <property name="label" translatable="yes">Green</property>
                             <property name="use_markup">True</property>
                           </object>
                         </child>
@@ -1247,7 +1247,7 @@ You should have received a copy of the GNU General Public License along with blo
                         <child type="label">
                           <object class="GtkLabel" id="newgame_1v1_label_player2">
                             <property name="visible">True</property>
-                            <property name="label" translatable="yes">&lt;b&gt;Blue&lt;/b&gt;</property>
+                            <property name="label" translatable="yes">Blue</property>
                             <property name="use_markup">True</property>
                           </object>
                         </child>
@@ -1344,7 +1344,7 @@ You should have received a copy of the GNU General Public License along with blo
                         <child type="label">
                           <object class="GtkLabel" id="newgame_totalalloc_label_board">
                             <property name="visible">True</property>
-                            <property name="label" translatable="yes">&lt;b&gt;Board size&lt;/b&gt;</property>
+                            <property name="label" translatable="yes">Board size</property>
                             <property name="use_markup">True</property>
                           </object>
                         </child>
@@ -1456,7 +1456,7 @@ You should have received a copy of the GNU General Public License along with blo
                         <child type="label">
                           <object class="GtkLabel" id="newgame_totalalloc_label_starting">
                             <property name="visible">True</property>
-                            <property name="label" translatable="yes">&lt;b&gt;Starting position&lt;/b&gt;</property>
+                            <property name="label" translatable="yes">Starting position</property>
                             <property name="use_markup">True</property>
                           </object>
                         </child>

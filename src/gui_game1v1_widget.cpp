@@ -174,6 +174,11 @@ void Game1v1Widget::ProgressUpdate(float a_progress)
     m_signal_computingProgressUpdated.emit();
 }
 
+bool Game1v1Widget::IsGameFinished() const
+{
+    return m_currentGameFinished;
+}
+
 void Game1v1Widget::CancelComputing()
 {
     // cancel the worker thread
@@ -572,7 +577,7 @@ void Game1v1Widget::WorkerThread_computingFinished(
 #ifdef DEBUG_PRINT
     if (a_piece.GetType() == e_noPiece)
     {
-        std::cout << _("Computer can't move") << std::endl;
+        std::cout << "Computer can't move" << std::endl;
     }
 #endif
 

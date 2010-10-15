@@ -232,7 +232,7 @@ void BlockemChallenge::LoadXMLChallenge(const std::string &a_path) throw (std::r
         XMLParsingFatalError(a_path,
             // i18n TRANSLATORS: This string will be followed by a list
             // i18n of missing xml tags
-            std::string(_("Mandatory element(s) missing:")) + mandatoryElemMissing);
+            std::string(_("Mandatory elements missing:")) + mandatoryElemMissing);
     }
 
     // m_challengerTakenSquares INTERSECTION m_opponentTakenSquares MUST
@@ -418,7 +418,7 @@ void BlockemChallenge::XMLParseTagBoard(
             // i18n TRANSLATORS: Please, leave quoted strings as they are since they
             // i18n reference to xml tags. This string will be followed by a set of
             // i18n missing mandatory xml tags
-            std::string(_("Mandatory element(s) in \"board\" missing:")) + mandatoryElemMissing);
+            std::string(_("Mandatory elements in \"board\" missing:")) + mandatoryElemMissing);
     } // if ( (!nrowsPresent) || (!ncolumnsPresent) )
 }
 

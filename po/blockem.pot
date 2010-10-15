@@ -50,7 +50,7 @@ msgstr ""
 #. i18n TRANSLATORS: This string will be followed by a list
 #. i18n of missing xml tags
 #: src/blockem_challenge.cpp:235
-msgid "Mandatory element(s) missing:"
+msgid "Mandatory elements missing:"
 msgstr ""
 
 #. i18n TRANSLATORS: This string will be followed by a set of coordinates
@@ -99,7 +99,7 @@ msgstr ""
 #. i18n reference to xml tags. This string will be followed by a set of
 #. i18n missing mandatory xml tags
 #: src/blockem_challenge.cpp:421
-msgid "Mandatory element(s) in \"board\" missing:"
+msgid "Mandatory elements in \"board\" missing:"
 msgstr ""
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
@@ -348,22 +348,6 @@ msgstr ""
 msgid "Auto"
 msgstr ""
 
-#. i18n both %d respectively represent the X and Y pixel where the user clicked
-#. i18n Please leave them there because they are needed by the program
-#. i18n Thank you for contributing to this project
-#: src/gui_drawing_area_board.cpp:606
-#, c-format
-msgid "User clicked in pixel (%d, %d)\n"
-msgstr ""
-
-#. i18n both %d respectively represent the row and column of the square in the board
-#. i18n where the user clicked. Please leave them there because they are needed by the program
-#. i18n Thank you for contributing to this project
-#: src/gui_drawing_area_board.cpp:623
-#, c-format
-msgid "Square in board: Row %d. Column %d)\n"
-msgstr ""
-
 #. i18n Please, leave GtkBuilder as it is here since it is the name of the
 #. i18n programming toold that failed
 #. i18n Thank you for contributing to this project
@@ -385,10 +369,6 @@ msgstr ""
 msgid ""
 "<b>Fatal Error:</b> Could not communicate with worker thread. Application "
 "will exit now!"
-msgstr ""
-
-#: src/gui_game1v1_widget.cpp:575
-msgid "Computer can't move"
 msgstr ""
 
 #: src/gui_game1v1_widget.cpp:647
@@ -530,7 +510,7 @@ msgstr ""
 #: src/heuristic.cpp:62
 msgid ""
 "Modified version of \"Influence Area\". When in doubt it will try to block "
-"you"
+"you out"
 msgstr ""
 
 #. i18n TRANSLATORS: This is the name given to a type of heuristic. Should be as small as possible
@@ -783,7 +763,7 @@ msgid ""
 msgstr ""
 
 #: src/main.cpp:578
-msgid "Application cannot start outside of the board boundaries"
+msgid "Application cannot start outside the board boundaries"
 msgstr ""
 
 #. i18n TRANSLATORS: This string is to be printed when the applications finds
@@ -799,11 +779,21 @@ msgstr ""
 #. i18n A typical string to be printed:
 #. i18n "Could not allocate all the pieces in this 8x8 board, starting from row 0, column 2"
 #. i18n Thank you for contributing to this project
-#: src/main.cpp:609
+#: src/main.cpp:611
 #, c-format
 msgid ""
 "Could not allocate all the pieces in this %dx%d board, starting from row %d, "
 "columnd %d\n"
+msgstr ""
+
+#. i18n TRANSLATORS: This string is to be printed when the applications cannot find
+#. i18n a solution to a one-player total-allocation game starting from anywhere in the board
+#. i18n Thank you for contributing to this project
+#: src/main.cpp:622
+#, c-format
+msgid ""
+"Could not allocate all the pieces in this %dx%d board starting from anywhere "
+"in the board\n"
 msgstr ""
 
 #: src/main.cpp:624
@@ -1019,11 +1009,11 @@ msgid "Artificial Intelligence"
 msgstr ""
 
 #: src/gui.glade:491 src/gui.glade:1020
-msgid "<b>Green</b>"
+msgid "Green"
 msgstr ""
 
 #: src/gui.glade:721 src/gui.glade:1250
-msgid "<b>Blue</b>"
+msgid "Blue"
 msgstr ""
 
 #: src/gui.glade:758
@@ -1039,7 +1029,7 @@ msgid "columns: "
 msgstr ""
 
 #: src/gui.glade:1347
-msgid "<b>Board size</b>"
+msgid "Board size"
 msgstr ""
 
 #: src/gui.glade:1441
@@ -1047,5 +1037,5 @@ msgid "Start from anywhere"
 msgstr ""
 
 #: src/gui.glade:1459
-msgid "<b>Starting position</b>"
+msgid "Starting position"
 msgstr ""

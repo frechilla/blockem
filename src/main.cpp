@@ -254,8 +254,10 @@ void I18nInit()
 
 #endif // WIN32
 
+
     // this call must be done whatever the platform it is
-    setlocale (LC_ALL, "");
+    setlocale (LC_ALL, "");    
+    
 
 #ifdef WIN32
     // win32 is a bit special again in the call to bindtextdomain
@@ -575,7 +577,7 @@ int main(int argc, char **argv)
                 {
                     FatalError(
                         argv[0],
-                        _("Application cannot start outside of the board boundaries"),
+                        _("Application cannot start outside the board boundaries"),
                         TOTAL_ALLOC_BAD_OPTIONS_ERR);
                 }
 
@@ -600,17 +602,29 @@ int main(int argc, char **argv)
             else
             {
                 std::cout << std::endl;
-                // i18n TRANSLATORS: This string is to be printed when the applications cannot find
-                // i18n a solution to a one-player total-allocation game. The integers printed on the screen
-                // i18n are (respectively) number of rows, number of columns, starting row and starting column
-                // i18n A typical string to be printed:
-                // i18n "Could not allocate all the pieces in this 8x8 board, starting from row 0, column 2"
-                // i18n Thank you for contributing to this project
-                printf(_("Could not allocate all the pieces in this %dx%d board, starting from row %d, columnd %d\n"),
-                    g_rows,
-                    g_columns,
-                    g_startingRow,
-                    g_startingColumn);
+                if (startingCoord.Initialised())
+                {
+                    // i18n TRANSLATORS: This string is to be printed when the applications cannot find
+                    // i18n a solution to a one-player total-allocation game. The integers printed on the screen
+                    // i18n are (respectively) number of rows, number of columns, starting row and starting column
+                    // i18n A typical string to be printed:
+                    // i18n "Could not allocate all the pieces in this 8x8 board, starting from row 0, column 2"
+                    // i18n Thank you for contributing to this project
+                    printf(_("Could not allocate all the pieces in this %dx%d board, starting from row %d, columnd %d\n"),
+                        g_rows,
+                        g_columns,
+                        g_startingRow,
+                        g_startingColumn);
+                }
+                else
+                {
+                    // i18n TRANSLATORS: This string is to be printed when the applications cannot find
+                    // i18n a solution to a one-player total-allocation game starting from anywhere in the board
+                    // i18n Thank you for contributing to this project
+                    printf(_("Could not allocate all the pieces in this %dx%d board starting from anywhere in the board\n"),
+                        g_rows,
+                        g_columns);
+                }
             }
         }
         else if (g_mode == 2)

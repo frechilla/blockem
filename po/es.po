@@ -5,7 +5,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: blockem 0.2.4\n"
+"Project-Id-Version: blockem 0.3.0\n"
 "Report-Msgid-Bugs-To: frechilla@gmail.com\n"
 "POT-Creation-Date: 2010-10-15 00:58+0200\n"
 "PO-Revision-Date: 2010-07-31 12:18+0200\n"
@@ -22,97 +22,99 @@ msgstr ""
 #: src/blockem_challenge.cpp:112
 #, c-format
 msgid "Challenge .xml file doesn't exist: %s"
-msgstr ""
+msgstr "El archivo .xml de desafío no existe: %s"
 
 #: src/blockem_challenge.cpp:122
-#, fuzzy
 msgid "XML syntax error"
-msgstr ": Error fatal"
+msgstr "Error the sintaxis XML"
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
 #: src/blockem_challenge.cpp:136
 msgid "Root element does not exist or is not called \"blockem_challenge\""
-msgstr ""
+msgstr "El elemento XML raíz no existe o no se llama \"blockem_challenge\""
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
 #: src/blockem_challenge.cpp:146
 msgid "Root element does not have mandatory property \"name\""
-msgstr ""
+msgstr "El elemento XML raíz no contiene la propiedad obligatoria \"name\""
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
 #: src/blockem_challenge.cpp:156
 msgid "Root element's property \"name\" can't be empty"
-msgstr ""
+msgstr "La propiedad \"name\" del elemento XML raíz no puede estar vacía"
 
 #. i18n TRANSLATORS: This string will be followed by a list
 #. i18n of missing xml tags
 #: src/blockem_challenge.cpp:235
-msgid "Mandatory element(s) missing:"
-msgstr ""
+msgid "Mandatory elements missing:"
+msgstr "Elementos obligatorios no están presentes:"
 
 #. i18n TRANSLATORS: This string will be followed by a set of coordinates
 #. i18n for example: (x, y) (x2, y2)
 #: src/blockem_challenge.cpp:272
 msgid "Following coords are taken by both challenger and opponent:"
 msgstr ""
+"La coordenadas siguientes están ocupadas por el aspirante y el oponente"
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
 #: src/blockem_challenge.cpp:285
 msgid "Challenger's starting coordinate is taken by the opponent"
-msgstr ""
+msgstr "La coordenada inicial del aspirante está ocupada por el oponente"
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
 #: src/blockem_challenge.cpp:293
 msgid "Challenger's starting coordinate is taken by the challenger"
 msgstr ""
+"La coordenada inicial del aspirante está ocupada por el propio aspirante"
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
 #: src/blockem_challenge.cpp:352
 msgid "Bad integer value in \"nrows\""
-msgstr ""
+msgstr "Entero incorrecto en \"nrows\""
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
 #: src/blockem_challenge.cpp:359
 msgid "Bad integer value in \"nrows\". MUST be a positive number"
-msgstr ""
+msgstr "Entero incorrecto en \"nrows\". DEBE ser un número positivo"
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
 #: src/blockem_challenge.cpp:389
 msgid "Bad integer value in \"ncolumns\""
-msgstr ""
+msgstr "Entero incorrecto en \"ncolumns\""
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
 #: src/blockem_challenge.cpp:396
 msgid "Bad integer value in \"ncolumns\". MUST be a positive number"
-msgstr ""
+msgstr "Entero incorrecto en \"ncolumns\". DEBE ser un número positivo"
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags. This string will be followed by a set of
 #. i18n missing mandatory xml tags
 #: src/blockem_challenge.cpp:421
-msgid "Mandatory element(s) in \"board\" missing:"
-msgstr ""
+msgid "Mandatory elements in \"board\" missing:"
+msgstr "Elementos obligatorios en \"board\" no están presentes:"
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
 #: src/blockem_challenge.cpp:460
 msgid "\"opponent\" -> \"taken\" mandatory attribute \"row\" is missing"
-msgstr ""
+msgstr "\"opponent\" -> \"taken\": Falta atributo obligatorio \"row\""
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
 #: src/blockem_challenge.cpp:470
 msgid "Bad integer value in opponent's \"row\" attribute (\"taken\" tag)"
 msgstr ""
+"Entero incorrecto en el atributo \"row\" del oponente (tag \"taken\")"
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
@@ -121,6 +123,8 @@ msgid ""
 "Bad integer value in opponent's \"row\" attribute (\"taken\" tag). MUST be "
 ">= 0"
 msgstr ""
+"Entero incorrecto en el atributo \"row\" del oponente (tag \"taken\"). DEBE "
+"ser mayor o igual a 0"
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
@@ -129,18 +133,21 @@ msgid ""
 "Bad integer value in opponent's \"row\" attribute (\"taken\" tag). MUST be "
 "lower than the number of rows of the board"
 msgstr ""
+"Entero incorrecto en el atributo \"row\" del oponente (tag \"taken\"). DEBE "
+"ser menor que el número de filas del tablero"
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
 #: src/blockem_challenge.cpp:496
 msgid "\"opponent\" -> \"taken\" mandatory attribute \"col\" is missing"
-msgstr ""
+msgstr "\"opponent\" -> \"taken\": Falta atributo obligatorio \"col\""
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
 #: src/blockem_challenge.cpp:508
 msgid "Bad integer value in opponent's \"col\" attribute (\"taken\" tag)"
 msgstr ""
+"Entero incorrecto en el atributo \"col\" del oponente (tag \"taken\")"
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
@@ -149,6 +156,8 @@ msgid ""
 "Bad integer value in opponent's \"col\" attribute (\"taken\" tag). MUST be "
 ">= 0"
 msgstr ""
+"Entero incorrecto en el atributo \"col\" del oponente (tag \"taken\"). DEBE "
+"ser mayor o igual a 0"
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
@@ -157,18 +166,21 @@ msgid ""
 "Bad integer value in opponent's \"col\" attribute (\"taken\" tag). MUST be "
 "lower than the number of columns of the board"
 msgstr ""
+"Entero incorrecto en el atributo \"col\" del oponente (tag \"taken\"). DEBE "
+"ser menor que el número de columnas del tablero"
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
 #: src/blockem_challenge.cpp:587
 msgid "\"challenger\" -> \"taken\" mandatory attribute \"row\" is missing"
-msgstr ""
+msgstr "\"challenger\" -> \"taken\": Falta atributo obligatorio \"row\""
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
 #: src/blockem_challenge.cpp:597
 msgid "Bad integer value in challenger's \"row\" attribute (\"taken\" tag)"
 msgstr ""
+"Entero incorrecto en el atributo \"row\" del aspirante (tag \"taken\")"
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
@@ -177,6 +189,8 @@ msgid ""
 "Bad integer value in challenger's \"row\" attribute (\"taken\" tag). MUST be "
 ">= 0"
 msgstr ""
+"Entero incorrecto en el atributo \"row\" del aspirante (tag \"taken\"). DEBE "
+"ser mayor o igual a 0"
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
@@ -185,18 +199,21 @@ msgid ""
 "Bad integer value in challenger's \"row\" attribute (\"taken\" tag). MUST be "
 "lower than the number of rows of the board"
 msgstr ""
+"Entero incorrecto en el atributo \"row\" del aspirante (tag \"taken\"). DEBE "
+"ser menor que el número de filas del tablero"
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
 #: src/blockem_challenge.cpp:623
 msgid "\"challenger\" -> \"taken\" mandatory attribute \"col\" is missing"
-msgstr ""
+msgstr "\"challenger\" -> \"taken\": Falta atributo obligatorio \"col\""
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
 #: src/blockem_challenge.cpp:635
 msgid "Bad integer value in challenger's \"col\" attribute (\"taken\" tag)"
 msgstr ""
+"Entero incorrecto en el atributo \"col\" del aspirante (tag \"taken\")"
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
@@ -205,6 +222,8 @@ msgid ""
 "Bad integer value in challenger's \"col\" attribute (\"taken\" tag). MUST be "
 ">= 0"
 msgstr ""
+"Entero incorrecto en el atributo \"col\" del aspirante (tag \"taken\"). DEBE "
+"ser mayor o igual a 0"
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
@@ -213,6 +232,8 @@ msgid ""
 "Bad integer value in challenger's \"col\" attribute (\"taken\" tag). MUST be "
 "lower than the number of columns of the board"
 msgstr ""
+"Entero incorrecto en el atributo \"col\" del aspirante (tag \"taken\"). DEBE "
+"ser menor que el número de columnas del tablero"
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
@@ -220,6 +241,7 @@ msgstr ""
 msgid ""
 "\"challenger\" -> \"piece\" mandatory attribute \"available\" is missing"
 msgstr ""
+"\"challenger\" -> \"piece\": Falta el atributo obligatorio \"available\""
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
@@ -228,18 +250,22 @@ msgid ""
 "\"challenger\" -> \"piece\" mandatory attribute \"available\" must be set to "
 "either \"yes\" or \"no\""
 msgstr ""
+"\"challenger\" -> \"piece\": El atributo obligatorio \"available\" debe "
+"tener como valor \"yes\" o \"no\""
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
 #: src/blockem_challenge.cpp:773
 msgid "Bad integer value in challenger's \"starting_row\""
-msgstr ""
+msgstr "Entero incorrecto en el tag \"starting_row\" del aspirante"
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
 #: src/blockem_challenge.cpp:780
 msgid "Bad integer value in challenger's \"starting_row\". MUST be >= 0"
 msgstr ""
+"Entero incorrecto en el tag \"starting_row\" del aspirante. DEBE ser mayor "
+"o igual a 0"
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
@@ -248,18 +274,22 @@ msgid ""
 "Bad integer value in challenger's \"starting_row\". MUST be lower than the "
 "number of rows of the board"
 msgstr ""
+"Entero incorrecto en el tag \"starting_row\" del aspirante. DEBE ser menor "
+"que el número de filas del tablero"
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
 #: src/blockem_challenge.cpp:816
 msgid "Bad integer value in challenger's \"starting_col\""
-msgstr ""
+msgstr "Entero incorrecto en el tag \"starting_col\" del aspirante"
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
 #: src/blockem_challenge.cpp:823
 msgid "Bad integer value in challenger's \"starting_col\". MUST be >= 0"
 msgstr ""
+"Entero incorrecto en el tag \"starting_col\" del aspirante. DEBE ser mayor "
+"o igual a 0"
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
@@ -268,6 +298,8 @@ msgid ""
 "Bad integer value in challenger's \"starting_col\". MUST be lower than the "
 "number of columns of the board"
 msgstr ""
+"Entero incorrecto en el tag \"starting_col\" del aspirante. DEBE ser menor "
+"que el número de columnas del tablero"
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
@@ -275,6 +307,8 @@ msgstr ""
 msgid ""
 "\"starting_row\" is present in \"challenger\", but \"starting_col\" is not"
 msgstr ""
+"\"starting_row\" está presente en el tag \"challenger\", pero "
+"\"starting_col\" no"
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
@@ -282,6 +316,8 @@ msgstr ""
 msgid ""
 "\"starting_col\" is present in \"challenger\", but \"starting_row\" is not"
 msgstr ""
+"\"starting_col\" está presente en el tag \"challenger\", pero "
+"\"starting_row\" no"
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
@@ -290,6 +326,8 @@ msgid ""
 "Starting coordinate hasn't been set and there aren't any taken squares by "
 "the challenger either"
 msgstr ""
+"La coordenada de inicio del aspirante no ha sido configurada y tampoco "
+"tiene ningún cuadrado del tablero ocupado"
 
 #. i18n TRANSLATORS: Please, leave those %s
 #. i18n 1st %s will be replaced by the path to the file that could not be parsed
@@ -298,7 +336,7 @@ msgstr ""
 #: src/blockem_challenge.cpp:976
 #, c-format
 msgid "Fatal error parsing %s: %s"
-msgstr ""
+msgstr "Error fatal analizando sintácticamente %s: %s"
 
 #: src/game1v1.cpp:40 src/game_total_allocation.cpp:43
 msgid "Mr Green"
@@ -322,15 +360,15 @@ msgstr[1] "La función minimax ha sido llamada %d veces\n"
 
 #: src/game_challenge.cpp:36
 msgid "Challenger"
-msgstr ""
+msgstr "Aspirante"
 
 #: src/gui_dialog_newgame.cpp:42
 msgid "1 vs 1 Game (2 players)"
-msgstr ""
+msgstr "1 contra 1 (2 jugadores)"
 
 #: src/gui_dialog_newgame.cpp:43
 msgid "Total deployment (solo play)"
-msgstr ""
+msgstr "Despliegue total (1 jugador)"
 
 #: src/gui_dialog_newgame.cpp:46 src/gui_game1v1_config_dialog.cpp:41
 msgid "Human"
@@ -347,22 +385,6 @@ msgstr "PC"
 #: src/gui_game1v1_config_dialog.cpp:423 src/gui_game1v1_config_dialog.cpp:443
 msgid "Auto"
 msgstr "Auto"
-
-#. i18n both %d respectively represent the X and Y pixel where the user clicked
-#. i18n Please leave them there because they are needed by the program
-#. i18n Thank you for contributing to this project
-#: src/gui_drawing_area_board.cpp:606
-#, c-format
-msgid "User clicked in pixel (%d, %d)\n"
-msgstr "El usuario hico clic en el píxel (%d, %d)\n"
-
-#. i18n both %d respectively represent the row and column of the square in the board
-#. i18n where the user clicked. Please leave them there because they are needed by the program
-#. i18n Thank you for contributing to this project
-#: src/gui_drawing_area_board.cpp:623
-#, c-format
-msgid "Square in board: Row %d. Column %d)\n"
-msgstr "Cuadrado del tablero: File %d, columna %d\n"
 
 #. i18n Please, leave GtkBuilder as it is here since it is the name of the
 #. i18n programming toold that failed
@@ -386,12 +408,8 @@ msgid ""
 "<b>Fatal Error:</b> Could not communicate with worker thread. Application "
 "will exit now!"
 msgstr ""
-"<b>Error Fatal:</b> No se pudo comuncar con el hilo de procesamiento. La "
+"<b>Error Fatal:</b> No se pudo comunicar con el hilo de procesamiento. La "
 "aplicación se cerrará cuando acepte este mensaje"
-
-#: src/gui_game1v1_widget.cpp:575
-msgid "Computer can't move"
-msgstr "El PC no puede poner ninguna pieza"
 
 #: src/gui_game1v1_widget.cpp:647
 msgid ""
@@ -404,6 +422,8 @@ msgstr ""
 #: src/gui_game1v1_widget.cpp:662
 msgid "Main Window could not be retrieved from a child GUI element"
 msgstr ""
+"No se pudo acceder a la ventana principal desde un elemento hijo de la "
+"interfaz"
 
 #. i18n TRANSLATORS: Please, leave the translated word DRAW between the <b> and </b> tags
 #. i18n Bear in mind the first ' color=\"#%02X%02X%02X\" ' will be replaced by player1's colour,
@@ -452,7 +472,7 @@ msgstr ""
 #: src/gui_game_total_allocation_widget.cpp:306
 #, c-format
 msgid "Done! You managed to allocate all your pieces"
-msgstr ""
+msgstr "¡Conseguido! Todas tus piezas están puestas en el tablero"
 
 #. i18n TRANSLATORS: Please, respect the HTML formatting as much as possible
 #. i18n Note translations depend also on whether there is only 1 or more than
@@ -465,7 +485,10 @@ msgid "You can't put down more pieces, but you still have the baby piece left"
 msgid_plural ""
 "You can't put down more pieces, but you still have <b>%d</b> squares left"
 msgstr[0] ""
+"No puedes poner más piezas, pero todavía te queda la pieza de 1 cuadrado"
 msgstr[1] ""
+"No puedes poner más piezas, pero todavía te quedan <b>%d</b> cuadrados por "
+"poner"
 
 #: src/gui_main_window.cpp:50
 msgid ""
@@ -560,7 +583,7 @@ msgstr "Clint Eastwood"
 #: src/heuristic.cpp:62
 msgid ""
 "Modified version of \"Influence Area\". When in doubt it will try to block "
-"you"
+"you out"
 msgstr ""
 "Versión modificada de \"Áreas de influencia\". Cuando hay duda la heurística "
 "tratará de bloquearte"
@@ -606,7 +629,7 @@ msgstr "Simple"
 #: src/heuristic.cpp:96
 msgid "Takes into account only the amount of squares of the deployed pieces"
 msgstr ""
-"Sólo tiene en cuenta la cantidad de cuadrados de las pieces puestas en el "
+"Sólo tiene en cuenta la cantidad de cuadrados de las piezas puestas en el "
 "tablero"
 
 #. i18n TRANSLATORS: This is the name given to a type of heuristic. Should be as small as possible
@@ -738,7 +761,6 @@ msgstr ""
 "parámetro es obligatorio en modo 1 (--mode=1)"
 
 #: src/main.cpp:146
-#, fuzzy
 msgid ""
 "Computer will start to allocate pieces in column X (when running with --"
 "mode=1). 1st valid column is 0, so maximum allowed column will be "
@@ -747,10 +769,10 @@ msgid ""
 msgstr ""
 "La aplicación empezará a poner piezas en la columna X (en modo 1). La mínima "
 "columna válida es 0, así que la máxima será el número de columnas menos 1. "
-"Este parámetro es obligatorio en modo 1 (--mode=1)"
+"Este parámetro es opcional en modo 1 (--mode=1), pero si esta opción se usa "
+"--starting-row debe configurarse también"
 
 #: src/main.cpp:152
-#, fuzzy
 msgid ""
 "Computer will start to allocate pieces in row Y (when running with --"
 "mode=1). 1st valid row is 0, so maximum allowed row will be (number_of_rows "
@@ -759,7 +781,8 @@ msgid ""
 msgstr ""
 "La aplicación empezará a poner piezas en la fila Y (en modo 1). La mínima "
 "fila válida es 0, así que la máxima será el número de filas menos 1. Este "
-"parámetro es obligatorio en modo 1 (--mode=1)"
+"parámetro es opcional en modo 1 (--mode=1), pero si esta opción se usa "
+"--starting-column debe configurarse también"
 
 #: src/main.cpp:158
 msgid ""
@@ -835,9 +858,8 @@ msgid "Could not load Gtkbuilder definitions"
 msgstr "No se pudieron cargar las definiciones de GtkBuilder"
 
 #: src/main.cpp:546
-#, fuzzy
 msgid "Number of rows and number of columns must be specified in mode '1'"
-msgstr "El número de filas y columnas debe ser mayor o igual a 1"
+msgstr "El número de filas y columnas es obligatorio en modo '1'"
 
 #: src/main.cpp:554
 msgid "Number of rows and number of columns must be a greater than 1"
@@ -847,9 +869,10 @@ msgstr "El número de filas y columnas debe ser mayor o igual a 1"
 msgid ""
 "Both starting row and column must be set to configure a starting coordinate"
 msgstr ""
+"Para configurar la coordenada inicial debe especificar la fila y la columna"
 
 #: src/main.cpp:578
-msgid "Application cannot start outside of the board boundaries"
+msgid "Application cannot start outside the board boundaries"
 msgstr "La aplicación no puede empezar fuera de los límites del tablero"
 
 #. i18n TRANSLATORS: This string is to be printed when the applications finds
@@ -857,7 +880,7 @@ msgstr "La aplicación no puede empezar fuera de los límites del tablero"
 #. i18n Thank you for contributing to this project
 #: src/main.cpp:595
 msgid "SOLVED!"
-msgstr "RESUELTO!"
+msgstr "¡RESUELTO!"
 
 #. i18n TRANSLATORS: This string is to be printed when the applications cannot find
 #. i18n a solution to a one-player total-allocation game. The integers printed on the screen
@@ -865,7 +888,7 @@ msgstr "RESUELTO!"
 #. i18n A typical string to be printed:
 #. i18n "Could not allocate all the pieces in this 8x8 board, starting from row 0, column 2"
 #. i18n Thank you for contributing to this project
-#: src/main.cpp:609
+#: src/main.cpp:611
 #, c-format
 msgid ""
 "Could not allocate all the pieces in this %dx%d board, starting from row %d, "
@@ -873,6 +896,18 @@ msgid ""
 msgstr ""
 "No se pudieron colocar todas las piezas en este tablero de %dx%d, empezando "
 "en la fila %d y la columna %d\n"
+
+#. i18n TRANSLATORS: This string is to be printed when the applications cannot find
+#. i18n a solution to a one-player total-allocation game starting from anywhere in the board
+#. i18n Thank you for contributing to this project
+#: src/main.cpp:622
+#, c-format
+msgid ""
+"Could not allocate all the pieces in this %dx%d board starting from anywhere "
+"in the board\n"
+msgstr ""
+"No se pudieron colocar todas las piezas en este tablero de %dx%d, empezando "
+"desde cualquier coordenada del tablero\n"
 
 #: src/main.cpp:624
 msgid "At least one file with a 1vs1Game saved must be specified"
@@ -1085,17 +1120,14 @@ msgstr "Mostrar _esquinas válidas"
 msgid "_Help"
 msgstr "_Ayuda"
 
-# This is the title of the about dialog of the game
 #: src/gui.glade:213
 msgid "About Block'em"
 msgstr "Acerca de Block'em"
 
-# The copyright notice
 #: src/gui.glade:221
 msgid "Copyright © 2009-2010 Faustino Frechilla"
 msgstr "Copyright © 2009-2010 Faustino Frechilla"
 
-# This is the short description of what this game is supposed to be
 #: src/gui.glade:222
 msgid "A board strategy game against the computer"
 msgstr "Un juego de tablero de estrategia contra el ordenador"
@@ -1132,51 +1164,31 @@ msgstr ""
 "PROPÓSITO DETERMINADO. Consulte los detalles de la Licencia Pública General "
 "GNU para obtener una información más detallada.\n"
 "\n"
-"YDebería haber recibido una copia de la Licencia Pública General GNU junto a "
+"Debería haber recibido una copia de la Licencia Pública General GNU junto a "
 "este programa. En caso contrario, consulte <http://www.gnu.org/licenses/>."
 
 #: src/gui.glade:255
-#, fuzzy
 msgid "Configure 1vs1 game"
-msgstr "Configurar juego actual"
+msgstr "Configurar juego de 1 contra 1"
 
-# Please leave the final ": " characters at the end to keep format on
-# the screen
-# This string is to be followed by a combobox where the user can edit the 
-# type of player of the next game (Human or computer)
 #: src/gui.glade:287 src/gui.glade:518 src/gui.glade:816 src/gui.glade:1047
 msgid "Type: "
 msgstr "Tipo: "
 
-# Please leave the final ": " characters at the end to keep format on
-# the screen
-# This string is to be followed by a textbox where the user can edit the 
-# starting row for the next game
 #: src/gui.glade:297 src/gui.glade:528 src/gui.glade:826 src/gui.glade:1057
 #: src/gui.glade:1374
-#, fuzzy
 msgid "Starting row: "
 msgstr "Fila inicial: "
 
-# Please leave the final ": " characters at the end to keep format on
-# the screen
-# This string is to be followed by a textbox where the user can edit the 
-# starting column for the next game
 #: src/gui.glade:309 src/gui.glade:560 src/gui.glade:838 src/gui.glade:1089
 #: src/gui.glade:1407
-#, fuzzy
 msgid "column: "
-msgstr "Columna: "
+msgstr "columna: "
 
-# Please leave the final ": " characters at the end to keep format on
-# the screen. AI stands for Artificial Intelligence. The acronym was chosen
-# because a long string did not fit properly on the screen
 #: src/gui.glade:383 src/gui.glade:613 src/gui.glade:912 src/gui.glade:1142
 msgid "AI type: "
-msgstr "typo de IA: "
+msgstr "Tipo de IA: "
 
-# Please leave the final ": " characters at the end to keep format on
-# the screen
 #: src/gui.glade:395 src/gui.glade:625 src/gui.glade:924 src/gui.glade:1154
 msgid "Depth: "
 msgstr "Profundidad: "
@@ -1185,245 +1197,34 @@ msgstr "Profundidad: "
 msgid "Artificial Intelligence"
 msgstr "Inteligencia Artificial"
 
-# Please leave this string surrounded by the HTML <b> and </b> tags
-# it represents player1 (green)
 #: src/gui.glade:491 src/gui.glade:1020
-msgid "<b>Green</b>"
-msgstr "<b>Verde</b>"
+msgid "Green"
+msgstr "Verde"
 
-# Please leave this string surrounded by the HTML <b> and </b> tags
-# it represents player2 (blue)
 #: src/gui.glade:721 src/gui.glade:1250
-msgid "<b>Blue</b>"
-msgstr "<b>Azul</b>"
+msgid "Blue"
+msgstr "Azul"
 
 #: src/gui.glade:758
-#, fuzzy
 msgid "New Game"
-msgstr "Nuevo juego 1 contra 1"
+msgstr "Juego nuevo"
 
 #: src/gui.glade:1285
 msgid "Number of rows: "
-msgstr ""
+msgstr "Número de filas: "
 
-# Please leave the final ": " characters at the end to keep format on
-# the screen
-# This string is to be followed by a textbox where the user can edit the 
-# starting column for the next game
 #: src/gui.glade:1313
-#, fuzzy
 msgid "columns: "
-msgstr "Columna: "
+msgstr "columnas: "
 
-# Please leave this string surrounded by the HTML <b> and </b> tags
-# it represents player2 (blue)
 #: src/gui.glade:1347
-#, fuzzy
-msgid "<b>Board size</b>"
-msgstr "<b>Azul</b>"
+msgid "Board size"
+msgstr "Tamaño del tablero"
 
 #: src/gui.glade:1441
 msgid "Start from anywhere"
-msgstr ""
+msgstr "Empezar desde cualquier lugar"
 
 #: src/gui.glade:1459
-msgid "<b>Starting position</b>"
-msgstr ""
-
-#~ msgid "The player"
-#~ msgstr "El jugador"
-
-#~ msgid ""
-#~ "WARNING: Exception occurred when setting the logo into the AboutDialog "
-#~ "from "
-#~ msgstr ""
-#~ "AVISO: Ocurrió una excepción mientras se cargaba el logo del diálogo "
-#~ "Acerca de desde "
-
-#~ msgid ""
-#~ "WARNING: Exception occurred when setting the 16x16 icon into the "
-#~ "AboutDialog from "
-#~ msgstr ""
-#~ "AVISO: Ocurrió una excepción mientras se cargaba el icono de 16x16 "
-#~ "píxeles en el diálogo Acerca de desde "
-
-#~ msgid "Configuration Dialog cancelled"
-#~ msgstr "Diálogo de configuración cancelado"
-
-#~ msgid ""
-#~ "Error while telling the thread to start computing. Worker thread is busy"
-#~ msgstr ""
-#~ "Hubo un error mientras se le comunicaba al hilo de procesamiento que "
-#~ "debía empezar el cálculo. El hilo está ocupado con otro cálculo"
-
-#~ msgid ""
-#~ "Worker thread is busy. Please be patient while it is calculating next move"
-#~ msgstr ""
-#~ "El hilo de procesamiento está ocupado. Por favor espere mientras calcula "
-#~ "el siguiente movimiento"
-
-#~ msgid "Cheeky you! Don't try to deploy a piece where it's not allowed to"
-#~ msgstr "¡Tramposo! No intentes poner una pieza donde no esta permitido"
-
-#~ msgid "Human move could not be added to the queue"
-#~ msgstr "El movimiento del jugador humano no se pudo añadir a la cola"
-
-#~ msgid ""
-#~ "Number of rows, number of columns, starting row and starting column must "
-#~ "be specified in mode '1'"
-#~ msgstr ""
-#~ "El número de files y columnas así como la fila y columna inicial debe ser "
-#~ "especificado en modo '1'"
-
-#~ msgid "Could not load gtk::Table (player1) in ConfigDialog"
-#~ msgstr ""
-#~ "No se pudo cargar el objeto de tipo gtk::Table (player1) en ConfigDialog"
-
-#~ msgid "Could not load gtk::Table (player2) in ConfigDialog"
-#~ msgstr ""
-#~ "No se pudo cargar el objeto de tipo gtk::Table (player2) en ConfigDialog"
-
-#~ msgid ""
-#~ "Could not load gtk::SpinButton (player1) for starting row in ConfigDialog"
-#~ msgstr ""
-#~ "No se pudo cargar el objeto de tipo gtk::SpinButton (player1) para la "
-#~ "fila inicial en ConfigDialog"
-
-#~ msgid ""
-#~ "Could not load gtk::SpinButton (player1) for starting column in "
-#~ "ConfigDialog"
-#~ msgstr ""
-#~ "No se pudo cargar el objeto de tipo gtk::SpinButton (player1) para la "
-#~ "columna inicial en ConfigDialog"
-
-#~ msgid ""
-#~ "Could not load gtk::SpinButton (player2) for starting row in ConfigDialog"
-#~ msgstr ""
-#~ "No se pudo cargar el objeto de tipo gtk::SpinButton (player2) para la "
-#~ "fila inicial en ConfigDialog"
-
-#~ msgid ""
-#~ "Could not load gtk::SpinButton (player2) for starting column in "
-#~ "ConfigDialog"
-#~ msgstr ""
-#~ "No se pudo cargar el objeto de tipo gtk::SpinButton (player2) para la "
-#~ "columna inicial en ConfigDialog"
-
-#~ msgid "Could not load AI gtk::Frame (player1) in ConfigDialog"
-#~ msgstr ""
-#~ "No se pudo cargar el objeto de tipo gtk::Frame (player1) en ConfigDialog"
-
-#~ msgid "Could not load AI gtk::Frame (player2) in ConfigDialog"
-#~ msgstr ""
-#~ "No se pudo cargar el objeto de tipo gtk::Frame (player2) en ConfigDialog"
-
-#~ msgid "Could not load AI gtk::Table (player1) in ConfigDialog"
-#~ msgstr ""
-#~ "No se pudo cargar el objeto de tipo gtk::Table (player1) en ConfigDialog"
-
-#~ msgid "Could not load AI gtk::Table (player2) in ConfigDialog"
-#~ msgstr ""
-#~ "No se pudo cargar el objeto de tipo gtk::Table (player2) en ConfigDialog"
-
-#~ msgid ""
-#~ "Could not load gtk::SpinButton for search-tree depth (player1) in "
-#~ "ConfigDialog"
-#~ msgstr ""
-#~ "No se pudo cargar el objeto de tipo gtk::SpinButton (player1) para la "
-#~ "profundidad del árbol de búsqueda en ConfigDialog"
-
-#~ msgid ""
-#~ "Could not load gtk::SpinButton for search-tree depth (player2) in "
-#~ "ConfigDialog"
-#~ msgstr ""
-#~ "No se pudo cargar el objeto de tipo gtk::SpinButton (player2) para la "
-#~ "profundidad del árbol de búsqueda en ConfigDialog"
-
-#~ msgid "Could not load gtk::TextView for heuristic (player1) in ConfigDialog"
-#~ msgstr ""
-#~ "No se pudo cargar el objeto de tipo gtk::TextView (player1) para la "
-#~ "heurística en ConfigDialog"
-
-#~ msgid "Could not load gtk::TextView for heuristic (player2) in ConfigDialog"
-#~ msgstr ""
-#~ "No se pudo cargar el objeto de tipo gtk::TextView (player2) para la "
-#~ "heurística en ConfigDialog"
-
-#~ msgid "Could not load the ConfigDialog class in MainWindow"
-#~ msgstr "No se pudo cargar ConfigDialog en la ventana principal (MainWindow)"
-
-#~ msgid "Could not load the AboutDialog class in MainWindow"
-#~ msgstr "No se pudo cargar AboutDialog en la ventana principal (MainWindow)"
-
-#~ msgid "Could not load the edit pieces gtk::Table in MainWindow"
-#~ msgstr ""
-#~ "No se pudo cargar el objeto de tipo gtk::Table para editar piezas en la "
-#~ "ventana principal (MainWindow)"
-
-#~ msgid "Could not load the menu accelerator for MainWindow"
-#~ msgstr ""
-#~ "No se pudieron cargar los aceleradores de teclado en la ventana principal "
-#~ "(MainWindow)"
-
-#~ msgid "Could not load the menu item \"new\" in MainWindow"
-#~ msgstr ""
-#~ "No se pudo cargar el elemento de menú \"nuevo\" en la ventana principal "
-#~ "(MainWindow)"
-
-#~ msgid "Could not load the menu item \"quit\" in MainWindow"
-#~ msgstr ""
-#~ "No se pudo cargar el elemento de menú \"salir\" en la ventana principal "
-#~ "(MainWindow)"
-
-#~ msgid ""
-#~ "Could not load the menu item \"View nucleation points\" in MainWindow"
-#~ msgstr ""
-#~ "No se pudo cargar el elemento de menú \"Mostrar esquinas válidas\" en la "
-#~ "ventana principal (MainWindow)"
-
-#~ msgid "Mutex in worker thread couldn't be initialised"
-#~ msgstr "El Mutex del hilo de procesamiento no pudo ser iniciada"
-
-#~ msgid "Conditional variable in worker thread couldn't be initialised"
-#~ msgstr ""
-#~ "La variable condicional del hilo de procesamiento no pudo ser iniciada"
-
-#~ msgid "Worker Thread creation failed. "
-#~ msgstr "El hilo de procesamiento no pudo crearse. "
-
-#~ msgid "Could not load Edit pieces Gtk::DrawingArea in TableEditPiece"
-#~ msgstr ""
-#~ "No se pudo cargar el objeto de tipo gtk::DrawingArea para editar las "
-#~ "piezas en TableEditPiece"
-
-#~ msgid "Could not load rotate left Gtk::Button in TableEditPiece"
-#~ msgstr ""
-#~ "No se pudo cargar el objeto de tipo gtk::Button para rotar las piezas a "
-#~ "la izquierda en TableEditPiece"
-
-#~ msgid "Could not load rotate right Gtk::Button in TableEditPiece"
-#~ msgstr ""
-#~ "No se pudo cargar el objeto de tipo gtk::Button para rotar las piezas a "
-#~ "la derecha en TableEditPiece"
-
-#~ msgid "Could not load rotate Gtk::Label in TableEditPiece"
-#~ msgstr ""
-#~ "No se pudo cargar el objeto de tipo gtk::Label \"rotar\" en TableEditPiece"
-
-#~ msgid "Could not load mirror Gtk::Label in TableEditPiece"
-#~ msgstr ""
-#~ "No se pudo cargar el objeto de tipo gtk::Label \"espejo\" en "
-#~ "TableEditPiece"
-
-#~ msgid "Could not load mirror on Y-Axis Gtk::Button in TableEditPiece"
-#~ msgstr ""
-#~ "No se pudo cargar el objeto de tipo gtk::Button para calcular la imagen "
-#~ "especular sobre el eje Y de las piezas en TableEditPiece"
-
-#~ msgid "Could not load mirror on X-Axis Gtk::Button in TableEditPiece"
-#~ msgstr ""
-#~ "No se pudo cargar el objeto de tipo gtk::Button para calcular la imagen "
-#~ "especular sobre el eje X de las piezas en TableEditPiece"
-
-#~ msgid "Could not load the Main Window from the .glade file"
-#~ msgstr "No se pudo cargar la ventana principal del archivo .glade"
+msgid "Starting position"
+msgstr "Posición inicial"

@@ -59,7 +59,7 @@ const Heuristic::sHeuristicData_t Heuristic::m_heuristicData[e_heuristicCount] =
      N_("Mr. Eastwood"),
      // i18n TRANSLATORS: This is a quick explanation of what the "Mr. Eastwood" heuristic is supposed
      // i18n to do. Shouldn't be too long since it will have to fit nicely on the GUI widgets
-     N_("Modified version of \"Influence Area\". When in doubt it will try to block you")
+     N_("Modified version of \"Influence Area\". When in doubt it will try to block you out")
     },
     {e_heuristicNKWeightedv1,
      Heuristic::CalculateNKWeightedv1,

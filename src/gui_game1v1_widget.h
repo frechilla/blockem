@@ -57,6 +57,10 @@ public:
     Game1v1Widget();
     virtual ~Game1v1Widget();
 
+    /// @return true if current game is finished (that is, no player can put 
+    ///         down any piece). False otherwise
+    bool IsGameFinished() const;
+    
     /// Cancels computing thread and sets it to "waiting" state
     /// It is a blocking call (it gets blocked until the thread cancels its
     /// current calculation process)
