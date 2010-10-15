@@ -1,5 +1,5 @@
 Package: blockem
-Version: 0.2.4-1
+Version: 0.3.0-1
 Section: games
 Priority: optional
 Maintainer: Faustino Frechilla <frechilla@gmail.com>
@@ -25,7 +25,7 @@ Description: The GNU polyominoes board game
  play continues as normal. The game ends when no one can place
  a piece
  .
- A lot of effort has been invested on letting possible 
+ A lot of effort has been put on making it possible to
  developers to add new heuristics. This package contains only
  the binary package, but if you are interested on this part of
  blockem have a look at 

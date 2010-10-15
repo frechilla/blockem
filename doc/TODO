@@ -26,3 +26,5 @@ supposed to be integrated in blockem at some point in the future:
    the widget is showing nothing. It doesn't really affect performance, but
    it's an ugly thing to do
  + support for non-square shaped boards (is it even good?)
+ + scripts should store results into scripts/ directory. Should gprof and
+   gcov output be uploaded into the svn repository?
