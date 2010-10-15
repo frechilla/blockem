@@ -79,6 +79,12 @@ BlockemConfig::BlockemConfig() throw (std::runtime_error):
         std::string(CONFIG_FILE_NAME);
 #endif // WIN32
 
+
+// config file is only needed in win32 for now, since it is used to set the
+// locale of the application (for i18n)
+// no need to do anything in any other OS's for now since their locale are
+// set differently (through the LANG environment variable)
+#ifdef WIN32
     // try to load configuration from config file. If it doesn't exist create
     // a default one
     if ( (g_file_test(m_configFileFull.c_str(), G_FILE_TEST_IS_REGULAR)) ||
@@ -97,7 +103,9 @@ BlockemConfig::BlockemConfig() throw (std::runtime_error):
         std::cerr << "Could not create default configuration file" << std::endl;
         std::cerr << "Loading default settings..." << std::endl;
     }
-#endif
+#endif // DEBUG_PRINT
+
+#endif // WIN32
 }
 
 BlockemConfig::~BlockemConfig()

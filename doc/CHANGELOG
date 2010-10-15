@@ -6,9 +6,10 @@
     - Tooltip with each piece's name has been added to the available pieces 
       shown to the user. It is shown when the mouse is stopped over a currently
       available piece
-    - New configuration file in xml format which is loaded at start-up. At the
-      moment it is only used to set the language on windows platforms but it 
-      could be easily expanded in future
+    - New configuration file in xml format which is loaded at start-up in win32
+      platforms. At the moment it is only used to set the language on these 
+      platforms but it could be easily expanded in future (and created in and
+      loaded from $HOME directories under *nix)
     - Algorithm to draw the board status improved. It needs less processing now
     - Bug fixed in win32 platforms: Bogus handling of i18n in command line 
       arguments
