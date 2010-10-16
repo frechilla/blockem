@@ -35,6 +35,7 @@
 #include <libxml/xmlmemory.h>
 #include <libxml/parser.h>
 #include <libxml/tree.h>
+#include <string.h> // strcmp
 
 #include "blockem_config.h"
 #include "config.h" // PACKAGE
