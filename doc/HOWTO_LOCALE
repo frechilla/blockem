@@ -86,7 +86,11 @@ locale-gen fr_FR@euro
 ##########
 # where to install the .mo files in ubuntu 9.04 (and ubuntu 9.10 LTS)
 # this is the directory where localedir must point at so it works in my ubuntu 9.04
-./configure --localedir="/usr/share/locale"
+./configure --localedir="/usr/share/locale" --datadir="/usr/share"
+
+# you can make a cleaner installation running, which sets up both locale
+# and datadir to the default directorties under ubuntu
+./configure --localedir="/usr/share/locale" --datadir="/usr/share"
 
 # have a look at po/en@quot.header and po/en@boldquot.header
 make en@quot.po-create

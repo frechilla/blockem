@@ -28,7 +28,7 @@ chmod u=rwx,g=rx,o=rx $TMPDIR/debian/usr/local/bin/blockem
 
 # update the md5sums file
 cd $TMPDIR/debian
-cat DEBIAN/md5sums | sed -e "s|^[0123456789abcdef]\{32\}  usr\/local\/bin\/blockem|`md5sum usr/local/bin/blockem`|g" > DEBIAN/md5sums
+cat DEBIAN/md5sums | sed -e "s|^[0123456789abcdef]\{32\}  usr\/bin\/blockem|`md5sum usr/bin/blockem`|g" > DEBIAN/md5sums
 
 # build the package
 cd ../..

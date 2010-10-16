@@ -11,6 +11,8 @@
       platforms but it could be easily expanded in future (and created in and
       loaded from $HOME directories under *nix)
     - Algorithm to draw the board status improved. It needs less processing now
+    - Directories used by the debian package have been changed to the ones
+      most commonly used
     - Bug fixed in win32 platforms: Bogus handling of i18n in command line 
       arguments
 
