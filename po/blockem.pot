@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: blockem 0.3.0\n"
 "Report-Msgid-Bugs-To: frechilla@gmail.com\n"
-"POT-Creation-Date: 2010-10-15 00:58+0200\n"
+"POT-Creation-Date: 2010-10-15 15:54+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -365,19 +365,19 @@ msgstr ""
 
 #. i18n TRANSLATORS: Please, leave <b> and </b> tags sorrounding the translation of "Fatal error"
 #. i18n Thank you for contributing to this project
-#: src/gui_game1v1_widget.cpp:545
+#: src/gui_game1v1_widget.cpp:550
 msgid ""
 "<b>Fatal Error:</b> Could not communicate with worker thread. Application "
 "will exit now!"
 msgstr ""
 
-#: src/gui_game1v1_widget.cpp:647
+#: src/gui_game1v1_widget.cpp:652
 msgid ""
 "Internal Error: Move could not be processed. Please click on the board "
 "normally to try again"
 msgstr ""
 
-#: src/gui_game1v1_widget.cpp:662
+#: src/gui_game1v1_widget.cpp:667
 msgid "Main Window could not be retrieved from a child GUI element"
 msgstr ""
 
@@ -391,7 +391,7 @@ msgstr ""
 #. i18n A typical complete message:
 #. i18n That was a <b>DRAW</b>!\nBoth <span color="#012345">Eddie</span> and <span color="#678901">John</span> have <b>5</b> squares left
 #. i18n Thank you for contributing to this project
-#: src/gui_game1v1_widget.cpp:916
+#: src/gui_game1v1_widget.cpp:921
 #, c-format
 msgid ""
 "That was a <b>DRAW</b>!\n"
@@ -410,7 +410,7 @@ msgstr ""
 #. i18n A typical complete message:
 #. i18n <b><span color="#012345">Eddie</span></b>!\n<span color="#012345">Eddie</span> has <b>5</b> squares left and <span color="#678901">John</span> has <b>7</b>
 #. i18n Thank you for contributing to this project
-#: src/gui_game1v1_widget.cpp:969
+#: src/gui_game1v1_widget.cpp:974
 #, c-format
 msgid ""
 "<b><span color=\"#%02X%02X%02X\">%s</span></b> won!\n"
@@ -451,7 +451,7 @@ msgid ""
 "from "
 msgstr ""
 
-#: src/gui_main_window.cpp:494
+#: src/gui_main_window.cpp:497
 msgid "Previous move had to be cancelled before applying new settings"
 msgstr ""
 
@@ -734,42 +734,42 @@ msgstr ""
 #. i18n TRANSLATORS: Please leave the starting dash as it is part of the glib command line
 #. i18n parsing formatting
 #. i18n Thank you for contributing to this project
-#: src/main.cpp:317
+#: src/main.cpp:319
 msgid "- The GNU polyominoes board game"
 msgstr ""
 
-#: src/main.cpp:367
+#: src/main.cpp:369
 msgid "Error parsing command line"
 msgstr ""
 
 #. i18n TRANSLATORS: Please leave the word Gtkbuilder as it is since it's the name
 #. i18n of the component that failed
 #. i18n Thank you for contributing to this project
-#: src/main.cpp:473
+#: src/main.cpp:475
 msgid "Could not load Gtkbuilder definitions"
 msgstr ""
 
-#: src/main.cpp:546
+#: src/main.cpp:548
 msgid "Number of rows and number of columns must be specified in mode '1'"
 msgstr ""
 
-#: src/main.cpp:554
+#: src/main.cpp:556
 msgid "Number of rows and number of columns must be a greater than 1"
 msgstr ""
 
-#: src/main.cpp:565
+#: src/main.cpp:567
 msgid ""
 "Both starting row and column must be set to configure a starting coordinate"
 msgstr ""
 
-#: src/main.cpp:578
+#: src/main.cpp:580
 msgid "Application cannot start outside the board boundaries"
 msgstr ""
 
 #. i18n TRANSLATORS: This string is to be printed when the applications finds
 #. i18n a solution to a one-player total-allocation game
 #. i18n Thank you for contributing to this project
-#: src/main.cpp:595
+#: src/main.cpp:597
 msgid "SOLVED!"
 msgstr ""
 
@@ -779,7 +779,7 @@ msgstr ""
 #. i18n A typical string to be printed:
 #. i18n "Could not allocate all the pieces in this 8x8 board, starting from row 0, column 2"
 #. i18n Thank you for contributing to this project
-#: src/main.cpp:611
+#: src/main.cpp:613
 #, c-format
 msgid ""
 "Could not allocate all the pieces in this %dx%d board, starting from row %d, "
@@ -789,21 +789,21 @@ msgstr ""
 #. i18n TRANSLATORS: This string is to be printed when the applications cannot find
 #. i18n a solution to a one-player total-allocation game starting from anywhere in the board
 #. i18n Thank you for contributing to this project
-#: src/main.cpp:622
+#: src/main.cpp:624
 #, c-format
 msgid ""
 "Could not allocate all the pieces in this %dx%d board starting from anywhere "
 "in the board\n"
 msgstr ""
 
-#: src/main.cpp:624
+#: src/main.cpp:638
 msgid "At least one file with a 1vs1Game saved must be specified"
 msgstr ""
 
 #. i18n TRANSLATORS: Please, leave that %d as it is. It will be replaced
 #. i18n by the type of heuristic used by the user
 #. i18n Thank you for contributing to this project
-#: src/main.cpp:636
+#: src/main.cpp:650
 #, c-format
 msgid "Invalid heuristic type (%d)"
 msgstr ""
@@ -811,16 +811,16 @@ msgstr ""
 #. i18n TRANSLATORS: This string shows the chosen heuristic's name to the user
 #. i18n the 1st %s will be replaced by the heuristic's name, and %d by its index
 #. i18n Thank you for contributing to this project
-#: src/main.cpp:651
+#: src/main.cpp:665
 #, c-format
 msgid "Evaluation function set to %s (%d)\n"
 msgstr ""
 
-#: src/main.cpp:659
+#: src/main.cpp:673
 msgid "Depth in 1vs1Game mode must be set to a positive value"
 msgstr ""
 
-#: src/main.cpp:666
+#: src/main.cpp:680
 msgid ""
 "Warning: For better results you might want to set the depth to an odd number"
 msgstr ""
@@ -831,7 +831,7 @@ msgstr ""
 #. i18n the file that couldn't be accessed. Bear in mind the '\n' character should be there
 #. i18n in the translated version of the string too
 #. i18n Thank you for contributing to this project
-#: src/main.cpp:684
+#: src/main.cpp:698
 #, c-format
 msgid "%s: Error: '%s' doesn't exist. Trying next file...\n"
 msgstr ""
@@ -842,7 +842,7 @@ msgstr ""
 #. i18n the file that couldn't be opened. Bear in mind the '\n' character should be there
 #. i18n in the translated version of the string too
 #. i18n Thank you for contributing to this project
-#: src/main.cpp:702
+#: src/main.cpp:716
 #, c-format
 msgid "%s: Error: '%s' could not be opened. Trying next file...\n"
 msgstr ""
@@ -853,7 +853,7 @@ msgstr ""
 #. i18n the file that couldn't be opened. Bear in mind the '\n' character should be there
 #. i18n in the translated version of the string too
 #. i18n Thank you for contributing to this project
-#: src/main.cpp:719
+#: src/main.cpp:733
 #, c-format
 msgid ""
 "%s: Error: '%s' does not contain a valid 1vs1Game. Trying next file...\n"
@@ -863,7 +863,7 @@ msgstr ""
 #. i18n successfully loaded. Bear in mind the '\n' character should be there
 #. i18n in the translated version of the string too
 #. i18n Thank you for contributing to this project
-#: src/main.cpp:732
+#: src/main.cpp:746
 #, c-format
 msgid "Game succesfully loaded from '%s'\n"
 msgstr ""
@@ -872,7 +872,7 @@ msgstr ""
 #. i18n move calculated by the minimax engine. Bear in mind the '\n' character
 #. i18n should be there in the translated version of the string too
 #. i18n Thank you for contributing to this project
-#: src/main.cpp:764
+#: src/main.cpp:778
 #, c-format
 msgid "Winning evaluation function value: %d\n"
 msgstr ""
@@ -882,7 +882,7 @@ msgstr ""
 #. i18n to decide the formatting of the message, though this english version
 #. i18n could be used as the template
 #. i18n Thank you for contributing to this project
-#: src/main.cpp:774
+#: src/main.cpp:788
 msgid ""
 " ===================================================\n"
 " === END OF THE GAME. NO PIECE COULD BE PUT DOWN ===\n"
@@ -892,7 +892,7 @@ msgstr ""
 #. i18n TRANSLATORS: Please, leave that %d as it is. It will be replaced
 #. i18n by the mode picked by the user
 #. i18n Thank you for contributing to this project
-#: src/main.cpp:802
+#: src/main.cpp:816
 #, c-format
 msgid "Invalid --mode option (%d)"
 msgstr ""
@@ -982,37 +982,37 @@ msgstr ""
 msgid "Configure 1vs1 game"
 msgstr ""
 
-#: src/gui.glade:287 src/gui.glade:518 src/gui.glade:816 src/gui.glade:1047
+#: src/gui.glade:287 src/gui.glade:518 src/gui.glade:818 src/gui.glade:1049
 msgid "Type: "
 msgstr ""
 
-#: src/gui.glade:297 src/gui.glade:528 src/gui.glade:826 src/gui.glade:1057
-#: src/gui.glade:1374
+#: src/gui.glade:297 src/gui.glade:528 src/gui.glade:828 src/gui.glade:1059
+#: src/gui.glade:1378
 msgid "Starting row: "
 msgstr ""
 
-#: src/gui.glade:309 src/gui.glade:560 src/gui.glade:838 src/gui.glade:1089
-#: src/gui.glade:1407
+#: src/gui.glade:309 src/gui.glade:560 src/gui.glade:840 src/gui.glade:1091
+#: src/gui.glade:1411
 msgid "column: "
 msgstr ""
 
-#: src/gui.glade:383 src/gui.glade:613 src/gui.glade:912 src/gui.glade:1142
+#: src/gui.glade:383 src/gui.glade:613 src/gui.glade:914 src/gui.glade:1144
 msgid "AI type: "
 msgstr ""
 
-#: src/gui.glade:395 src/gui.glade:625 src/gui.glade:924 src/gui.glade:1154
+#: src/gui.glade:395 src/gui.glade:625 src/gui.glade:926 src/gui.glade:1156
 msgid "Depth: "
 msgstr ""
 
-#: src/gui.glade:462 src/gui.glade:692 src/gui.glade:991 src/gui.glade:1221
+#: src/gui.glade:462 src/gui.glade:692 src/gui.glade:993 src/gui.glade:1223
 msgid "Artificial Intelligence"
 msgstr ""
 
-#: src/gui.glade:491 src/gui.glade:1020
+#: src/gui.glade:491 src/gui.glade:1022
 msgid "Green"
 msgstr ""
 
-#: src/gui.glade:721 src/gui.glade:1250
+#: src/gui.glade:721 src/gui.glade:1252
 msgid "Blue"
 msgstr ""
 
@@ -1020,22 +1020,22 @@ msgstr ""
 msgid "New Game"
 msgstr ""
 
-#: src/gui.glade:1285
+#: src/gui.glade:1288
 msgid "Number of rows: "
 msgstr ""
 
-#: src/gui.glade:1313
+#: src/gui.glade:1316
 msgid "columns: "
 msgstr ""
 
-#: src/gui.glade:1347
+#: src/gui.glade:1350
 msgid "Board size"
 msgstr ""
 
-#: src/gui.glade:1441
+#: src/gui.glade:1445
 msgid "Start from anywhere"
 msgstr ""
 
-#: src/gui.glade:1459
+#: src/gui.glade:1463
 msgid "Starting position"
 msgstr ""
