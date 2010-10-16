@@ -23,8 +23,8 @@ for THISFILE in $LIST_OF_FILES; do
 done
 
 # copy the brand new binary into the tmp dir and apply rights
-cp -f ../src/blockem $TMPDIR/debian/usr/local/bin
-chmod u=rwx,g=rx,o=rx $TMPDIR/debian/usr/local/bin/blockem
+cp -f ../src/blockem $TMPDIR/debian/usr/bin
+chmod u=rwx,g=rx,o=rx $TMPDIR/debian/usr/bin/blockem
 
 # update the md5sums file
 cd $TMPDIR/debian
