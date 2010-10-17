@@ -1,8 +1,40 @@
 #!/bin/bash
 
+#############################################################################
+# This script generates a debian package (.deb) which contains blockem.     #
+# It retrieves the binary blockem file from '../src/blockem' and copies it  #
+# in the directory 'debian' (which resides in this directory). It then      #
+# calculates the md5sum to update the md4sums file of the debian package    #
+# and calls the expected utilities to build it.                             #
+#                                                                           #
+# IMPORTANT: make sure you've run the script 'configure' with the following #
+# options before building blockem (running make). Otherwise the app won't   #
+# work properly once the debian package is installed                        #
+#   './configure --localedir="/usr/share/locale" --datadir="/usr/share"'    #
+#############################################################################
+
+if [ $# -eq 1 ]; then
+    if [ $1 = "--help" ]; then
+        echo "This script generates a debian package (.deb) which contains blockem."
+        echo "It retrieves the binary blockem file from '../src/blockem' and copies it"
+        echo "in the directory 'debian' (which resides in this directory). It then"
+        echo "calculates the md5sum to update the md5sums file of the debian package"
+        echo "and calls the expected utilities to build it."
+        echo ""
+        echo "IMPORTANT: make sure you've run the script 'configure' with the following"
+        echo "options before building blockem (running make). Otherwise the app won't"
+        echo "work properly once the debian package is installed "
+        echo "  './configure --localedir=\"/usr/share/locale\" --datadir=\"/usr/share\"'"
+    else
+        echo "bad parameter. Try '$0 --help'"
+    fi
+
+    exit 0
+fi
+
 if [ ! -f ../src/blockem ] 
 then
-	echo "You must compile blockem before packaging it man..."
+	echo "You must compile blockem before packaging it. Run '$0 --help' for more help"
 	exit
 fi
 

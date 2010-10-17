@@ -14,7 +14,7 @@ if [ $# -eq 1 ]; then
         echo "You can browse it opening the index.html file stored in that path"
         echo "This script doesn't take any parameters by command line"
     else
-        echo "bad parameter. Try '--help'"
+        echo "bad parameter. Try '$0 --help'"
     fi
     
     exit 0
