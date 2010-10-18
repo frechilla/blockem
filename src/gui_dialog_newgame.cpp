@@ -23,6 +23,7 @@
 /// @history
 /// Ref       Who                When         What
 ///           Faustino Frechilla 02-Oct-2010  Original development
+///           Faustino Frechilla 18-Oct-2010  default buttons
 /// @endhistory
 ///
 // ============================================================================
@@ -503,12 +504,6 @@ void NewGameTableTotalAllocation::SpinButtonNRows_SignalValueChanged()
     {
         m_spinbuttonStartingRowAdj.set_value(currentNRows);
     }
-
-    // ensure board is square shaped (same amount of cols and rows)
-    if (currentNRows != curentNCols)
-    {
-        m_spinbuttonNColsAdj.set_value(currentNRows);
-    }
 }
 
 void NewGameTableTotalAllocation::SpinButtonNCols_SignalValueChanged()
@@ -521,12 +516,6 @@ void NewGameTableTotalAllocation::SpinButtonNCols_SignalValueChanged()
     if (currentStartingCol > curentNCols)
     {
         m_spinbuttonStartingColumnAdj.set_value(curentNCols);
-    }
-
-    // ensure board is square shaped (same amount of cols and rows)
-    if (currentNRows != curentNCols)
-    {
-        m_spinbuttonNRowsAdj.set_value(curentNCols);
     }
 }
 

@@ -53,6 +53,10 @@ public:
     /// Instantiates the class
     GameTotalAllocationWidget();
     virtual ~GameTotalAllocationWidget();
+    
+    /// @brief Recursively hides a widget and any child widgets
+    /// stops all glib timers owned by the object
+    void hide_all();
 
     /// Launches a new game.
     /// WARNING: resets completely the game
@@ -71,7 +75,7 @@ public:
 
     /// @brief callback to be called when a button is pressed inside the board
     void BoardDrawingArea_BoardClicked(const Coordinate &, const Piece &, const Player &);
-
+    
     /// Access to the fatal error signal private member. Note this signal is
     /// not thread safe so it must be processed by the same thread who
     /// handles the GUI

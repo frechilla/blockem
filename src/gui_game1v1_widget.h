@@ -56,6 +56,10 @@ public:
     /// Instantiates the class
     Game1v1Widget();
     virtual ~Game1v1Widget();
+    
+    /// @brief Recursively hides a widget and any child widgets
+    /// stops all glib timers owned by the object
+    void hide_all();
 
     /// @return true if current game is finished (that is, no player can put 
     ///         down any piece). False otherwise

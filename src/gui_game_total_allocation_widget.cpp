@@ -95,6 +95,16 @@ GameTotalAllocationWidget::~GameTotalAllocationWidget()
 {
 }
 
+void GameTotalAllocationWidget::hide_all()
+{
+    // stop all glib timers before hiding the widget
+    m_boardDrawingArea.CancelLatestPieceDeployedEffect();
+    m_statusBar.StopAllStopwatches();
+    
+    // hide the widget
+    Gtk::VBox::hide_all();
+}
+
 void GameTotalAllocationWidget::BuildGUI()
 {
     // TODO setting default colours to the player

@@ -198,8 +198,8 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
             squareSize / m_theBoard->GetNRows(),
             squareSize / m_theBoard->GetNColumns());
 
-    int32_t squareHeight = littleSquare * m_theBoard->GetNRows();
-    int32_t squareWidth  = littleSquare * m_theBoard->GetNColumns();
+    int32_t boardHeight = littleSquare * m_theBoard->GetNRows();
+    int32_t boardWidth  = littleSquare * m_theBoard->GetNColumns();
 
     // coordinates for the centre of the window
     int32_t xc = width  / 2;
@@ -216,7 +216,7 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
     cr->clip();
 
     // set with all the nk points of the players. if a nk point is shared
-    // between players it'll draw with another colour
+    // between players it'll be drawn with another colour
     STLCoordinateSet_t globalNKPointSet;
 
     std::list<const Player*>::const_iterator it = m_playerList.begin();
@@ -238,9 +238,10 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
                     static_cast<float>(blue) / 255,
                     STARTING_COORD_ALPHA);
 
-            cr->arc(xc - squareWidth/2  +
+            cr->arc(
+                    xc - boardWidth/2 +
                         (littleSquare * thisPlayer->GetStartingCoordinate().m_col) + littleSquare/2,
-                    yc - squareHeight/2 +
+                    yc - boardHeight/2  +
                         (littleSquare * thisPlayer->GetStartingCoordinate().m_row) + littleSquare/2,
                     (littleSquare / 2) - (littleSquare / 4),
                     0.0,
@@ -270,8 +271,8 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
                         *thisPlayer))
                 {
                     cr->rectangle(
-                            (xc - squareWidth/2) +  (littleSquare * thisCoord.m_col) + 1,
-                            (yc - squareHeight/2) + (littleSquare * thisCoord.m_row) + 1,
+                            (xc - boardWidth/2)  + (littleSquare * thisCoord.m_col) + 1,
+                            (yc - boardHeight/2) + (littleSquare * thisCoord.m_row) + 1,
                             littleSquare - 1,
                             littleSquare - 1);
 
@@ -297,8 +298,8 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
                                 INFLUENCE_AREA_ALPHA);
 
                         cr->rectangle(
-                                (xc - squareWidth/2) +  (littleSquare * thisCoord.m_col) + 1,
-                                (yc - squareHeight/2) + (littleSquare * thisCoord.m_row) + 1,
+                                (xc - boardWidth/2)  + (littleSquare * thisCoord.m_col) + 1,
+                                (yc - boardHeight/2) + (littleSquare * thisCoord.m_row) + 1,
                                 littleSquare - 1,
                                 littleSquare - 1);
 
@@ -321,8 +322,8 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
                                 FORBIDDEN_AREA_ALPHA);
 
                         cr->rectangle(
-                                (xc - squareWidth/2) +  (littleSquare * thisCoord.m_col) + 1,
-                                (yc - squareHeight/2) + (littleSquare * thisCoord.m_row) + 1,
+                                (xc - boardWidth/2)  + (littleSquare * thisCoord.m_col) + 1,
+                                (yc - boardHeight/2) + (littleSquare * thisCoord.m_row) + 1,
                                 littleSquare - 1,
                                 littleSquare - 1);
 
@@ -356,9 +357,10 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
                     // this nk point is not shared. Draw it with the default colour
                     globalNKPointSet.insert(thisCoord);
 
-                    cr->arc(xc - squareWidth/2  +
+                    cr->arc(
+                            xc - boardWidth/2 +
                                 (littleSquare * thisCoord.m_col) + littleSquare/2,
-                            yc - squareHeight/2 +
+                            yc - boardHeight/2 +
                                 (littleSquare * thisCoord.m_row) + littleSquare/2,
                             (littleSquare / 2) - (littleSquare / 3),
                             0.0,
@@ -377,9 +379,10 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
                             COLOUR_BLACK_CHANNEL_BLUE,
                             STARTING_COORD_ALPHA);
 
-                    cr->arc(xc - squareWidth/2  +
+                    cr->arc(
+                            xc - boardWidth/2 +
                                 (littleSquare * thisCoord.m_col) + littleSquare/2,
-                            yc - squareHeight/2 +
+                            yc - boardHeight/2  +
                                 (littleSquare * thisCoord.m_row) + littleSquare/2,
                             (littleSquare / 2) - (littleSquare / 3),
                             0.0,
@@ -504,8 +507,8 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
                     m_currentCoord.m_col + m_currentPiece.GetCoord(i).m_col);
 
             cr->rectangle(
-                    (xc - squareWidth /2) + (littleSquare * coord.m_col) + 1,
-                    (yc - squareHeight/2) + (littleSquare * coord.m_row) + 1,
+                    (xc - boardWidth/2)  + (littleSquare * coord.m_col) + 1,
+                    (yc - boardHeight/2) + (littleSquare * coord.m_row) + 1,                    
                     littleSquare - 1,
                     littleSquare - 1);
 
@@ -548,8 +551,8 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
                     m_latestPieceDeployedCoord.m_col + m_latestPieceDeployed.GetCoord(i).m_col);
 
             cr->rectangle(
-                    (xc - squareWidth /2) + (littleSquare * coord.m_col) + 1,
-                    (yc - squareHeight/2) + (littleSquare * coord.m_row) + 1,
+                    (xc - boardWidth/2)  + (littleSquare * coord.m_col) + 1,
+                    (yc - boardHeight/2) + (littleSquare * coord.m_row) + 1,
                     littleSquare - 1,
                     littleSquare - 1);
 
@@ -565,11 +568,11 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
             BOARD_BORDER_BLUE);
 
     // draw the border of the board
-    cr->move_to(xc - squareWidth/2, yc - squareHeight/2);
-    cr->line_to(xc + squareWidth/2, yc - squareHeight/2);
-    cr->line_to(xc + squareWidth/2, yc + squareHeight/2);
-    cr->line_to(xc - squareWidth/2, yc + squareHeight/2);
-    cr->line_to(xc - squareWidth/2, yc - squareHeight/2);
+    cr->move_to(xc - boardWidth/2, yc - boardHeight/2);
+    cr->line_to(xc - boardWidth/2, yc + boardHeight/2);
+    cr->line_to(xc + boardWidth/2, yc + boardHeight/2);
+    cr->line_to(xc + boardWidth/2, yc - boardHeight/2);
+    cr->line_to(xc - boardWidth/2, yc - boardHeight/2);
 
     // line for the insides of the board
     cr->set_line_width(BOARD_LINE_WIDTH);
@@ -581,14 +584,14 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
     // draw the inside lines of the board
     for (int32_t i = 1; i < m_theBoard->GetNRows(); i++)
     {
-        cr->move_to(xc - squareWidth/2 + littleSquare*i, yc - squareHeight/2);
-        cr->line_to(xc - squareWidth/2 + littleSquare*i, yc + squareHeight/2);
+        cr->move_to(xc - boardWidth/2, yc - boardHeight/2 + littleSquare*i);
+        cr->line_to(xc + boardWidth/2, yc - boardHeight/2 + littleSquare*i);
     }
 
     for (int32_t i = 1; i < m_theBoard->GetNColumns(); i++)
     {
-        cr->move_to(xc - squareWidth/2, yc - squareHeight/2 + littleSquare*i);
-        cr->line_to(xc + squareWidth/2, yc - squareHeight/2 + littleSquare*i);
+        cr->move_to(xc - boardWidth/2 + littleSquare*i, yc - boardHeight/2);
+        cr->line_to(xc - boardWidth/2 + littleSquare*i, yc + boardHeight/2);
     }
 
     // commit the changes to the screen!

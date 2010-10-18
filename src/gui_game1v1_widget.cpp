@@ -161,6 +161,16 @@ Game1v1Widget::~Game1v1Widget()
     g_rand_free(m_randomizer);
 }
 
+void Game1v1Widget::hide_all()
+{
+    // stop all glib timers before hiding the widget
+    m_boardDrawingArea.CancelLatestPieceDeployedEffect();
+    m_statusBar.StopAllStopwatches();
+    
+    // hide the widget
+    Gtk::VBox::hide_all();
+}
+
 void Game1v1Widget::ProgressUpdate(float a_progress)
 {
     // WARNING: this method is run by another thread.
@@ -181,7 +191,8 @@ bool Game1v1Widget::IsGameFinished() const
 
 void Game1v1Widget::CancelComputing()
 {
-    // cancel the worker thread
+    // reset the cursor and cancel the worker thread
+    ResetCursor();
     m_workerThread.CancelComputing();
 }
 
