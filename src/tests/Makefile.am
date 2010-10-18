@@ -18,6 +18,8 @@ board_test.cpp \
 board_test.h \
 game1v1_test.cpp \
 game1v1_test.h \
+game_total_allocation_test.cpp \
+game_total_allocation_test.h \
 g_blocking_queue_test.cpp \
 g_blocking_queue_test.h \
 main_test.cpp \

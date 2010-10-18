@@ -24,6 +24,7 @@
 /// Ref       Who                When         What
 ///           Faustino Frechilla 27-Nov-2009  Original development
 ///           Faustino Frechilla 28-Sep-2010  Blockem challenge test
+///           Faustino Frechilla 18-Oct-2010  total allocation test
 /// @endhistory
 ///
 // ============================================================================
@@ -34,11 +35,11 @@
 #include "board_test.h"
 #include "g_blocking_queue_test.h"
 #include "game1v1_test.h"
+#include "game_total_allocation_test.h"
 #include "piece_test.h"
 #include "player_test.h"
 #include "rules_test.h"
 
-#include "game_total_allocation.h"
 
 /// @brief a simple test with a well-known configuration
 void simpleTest();
@@ -99,6 +100,13 @@ int main(int argc, char** argv)
     Game1v1Test the1v1Test;
     the1v1Test.DoTest();
     std::cout << "  [Passed]" << std::endl << std::endl;
+    
+    // Game total allocation test
+    std::cout << "Game total allocation test started... ";
+    std::cout.flush();
+    GameTotalAllocationTest theTotalAllocationTest;
+    theTotalAllocationTest.DoTest();
+    std::cout << "  [Passed]" << std::endl << std::endl;
 
     // Blockem challenge test
     std::cout << "Blockem challenge test started... ";
@@ -107,18 +115,7 @@ int main(int argc, char** argv)
     theChallengeTest.DoTest();
     std::cout << "  [Passed]" << std::endl << std::endl;
 
-
-    // run a total allocation test
-    std::cout << "GameTotalAllocation test started... ";
-
-    // start from anywhere in the board
-    GameTotalAllocation totalAllocation1PlayerGame(14, 14, Coordinate());
-    assert(totalAllocation1PlayerGame.Solve());
-    //totalAllocation1PlayerGame.GetBoard().PrintBoard(std::cout);
-
-    std::cout << "  [Passed]" << std::endl << std::endl;
-
-
+    // everything went well!
     return 0;
 }
 
