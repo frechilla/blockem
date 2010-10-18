@@ -9,7 +9,7 @@
 # others)                                                                   #
 # Profiling allows you to learn where your program spent its time and which #
 # functions called which other functions while it was executing             #
-# 
+#                                                                           #
 # IMPORTANT: Make sure you compiled blockem with support for gprof. This is #
 # done running the configure script with the following parameter:           #
 #     './configure --enable-gprof'                                          #
