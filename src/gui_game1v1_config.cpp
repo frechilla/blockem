@@ -28,20 +28,14 @@
 // ============================================================================
 
 #include "gui_game1v1_config.h"
-#include "game1v1.h" // DEFAULT_STARTING_COORD_PLAYER1 and 2
 
-static const Heuristic::eHeuristicType_t  DEFAULT_CURRENT_HEURISTIC = Heuristic::e_heuristicInfluenceArea;
-static const Game1v1Config::ePlayerType_t DEFAULT_PLAYER1_TYPE      = Game1v1Config::e_playerHuman;
-static const Game1v1Config::ePlayerType_t DEFAULT_PLAYER2_TYPE      = Game1v1Config::e_playerComputer;
-static const int32_t                      DEFAULT_MINIMAX_DEPTH     = GAME1V1CONFIG_DEPTH_AUTOADJUST;
-static const uint8_t                      DEFAULT_PLAYER1_COLOUR_R  = 31;
-static const uint8_t                      DEFAULT_PLAYER1_COLOUR_G  = 130;
-static const uint8_t                      DEFAULT_PLAYER1_COLOUR_B  = 31;
-static const uint8_t                      DEFAULT_PLAYER2_COLOUR_R  = 0;
-static const uint8_t                      DEFAULT_PLAYER2_COLOUR_G  = 0;
-static const uint8_t                      DEFAULT_PLAYER2_COLOUR_B  = 229;
-static const Coordinate                   DEFAULT_STARTING_COORD_1  = DEFAULT_STARTING_COORD_PLAYER1;
-static const Coordinate                   DEFAULT_STARTING_COORD_2  = DEFAULT_STARTING_COORD_PLAYER2;
+// colours are here so they can't be accesed from elsewhere
+static const uint8_t DEFAULT_PLAYER1_COLOUR_R  = 31;
+static const uint8_t DEFAULT_PLAYER1_COLOUR_G  = 130;
+static const uint8_t DEFAULT_PLAYER1_COLOUR_B  = 31;
+static const uint8_t DEFAULT_PLAYER2_COLOUR_R  = 0;
+static const uint8_t DEFAULT_PLAYER2_COLOUR_G  = 0;
+static const uint8_t DEFAULT_PLAYER2_COLOUR_B  = 229;
 
 Game1v1Config::Game1v1Config() :
     Singleton<Game1v1Config>(),
@@ -57,8 +51,8 @@ Game1v1Config::Game1v1Config() :
     m_player2Red(DEFAULT_PLAYER2_COLOUR_R),
     m_player2Green(DEFAULT_PLAYER2_COLOUR_G),
     m_player2Blue(DEFAULT_PLAYER2_COLOUR_B),
-    m_player1StartingCoord(DEFAULT_STARTING_COORD_1),
-    m_player2StartingCoord(DEFAULT_STARTING_COORD_2)
+    m_player1StartingCoord(DEFAULT_STARTING_ROW_1, DEFAULT_STARTING_COL_1),
+    m_player2StartingCoord(DEFAULT_STARTING_ROW_2, DEFAULT_STARTING_COL_2)
 {
 }
 

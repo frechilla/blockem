@@ -25,6 +25,7 @@
 ///           Faustino Frechilla 01-May-2010  Original development
 ///           Faustino Frechilla 21-Jul-2010  i18n
 ///           Faustino Frechilla 23-Sep-2010  Renamed to gui_game1v1_config_dialog
+///           Faustino Frechilla 18-Oct-2010  default button
 /// @endhistory
 ///
 // ============================================================================
@@ -33,7 +34,7 @@
 #include "gui_game1v1_config_dialog.h"
 #include "gui_glade_defs.h"
 #include "gui_game1v1_config.h"
-#include "game1v1.h" // BOARD_1VS1_ROWS and DEFAULT_STARTING_COORD_PLAYER[1-2]
+#include "game1v1.h" // BOARD_1VS1_ROWS
 #include "piece.h"   // e_numberOfPieces
 
 
@@ -536,6 +537,60 @@ void Game1v1ConfigDialog::ComboHeuristicPlayer2_signalChanged()
         }
         m_spinbuttonDepthPlayer2->set_sensitive(true);
     }
+}
+
+void Game1v1ConfigDialog::DefaultButtonPlayer1_SignalReleased()
+{
+    // player type
+    switch(Game1v1Config::DEFAULT_PLAYER1_TYPE)
+    {
+    case Game1v1Config::e_playerHuman:
+        m_comboTypePlayer1.set_active_text( _(COMBO_PLAYER_TYPE_HUMAN) );
+        break;
+    case Game1v1Config::e_playerComputer:
+        m_comboTypePlayer1.set_active_text( _(COMBO_PLAYER_TYPE_COMPUTER) );
+        break;
+    }
+    
+    // heuristic
+    const Heuristic::sHeuristicData_t &selectedHeuristicData1 =
+        Heuristic::m_heuristicData[Game1v1Config::DEFAULT_CURRENT_HEURISTIC];
+    m_comboHeuristicPlayer1.set_active_text(_(selectedHeuristicData1.m_name));
+    m_textViewHeuristic1->set_buffer(m_refHeuristicDescriptionBuffer[selectedHeuristicData1.m_type]);
+    
+    // depth
+    m_spinbuttonDepthPlayer1Adj.set_value(Game1v1Config::DEFAULT_MINIMAX_DEPTH);
+    
+    // starting coordinate
+    m_spinbuttonStartingRowPlayer1Adj.set_value(Game1v1Config::DEFAULT_STARTING_ROW_1);
+    m_spinbuttonStartingColumnPlayer1Adj.set_value(Game1v1Config::DEFAULT_STARTING_COL_1);
+}
+
+void Game1v1ConfigDialog::DefaultButtonPlayer2_SignalReleased()
+{
+    // player type
+    switch(Game1v1Config::DEFAULT_PLAYER2_TYPE)
+    {
+    case Game1v1Config::e_playerHuman:
+        m_comboTypePlayer2.set_active_text( _(COMBO_PLAYER_TYPE_HUMAN) );
+        break;
+    case Game1v1Config::e_playerComputer:
+        m_comboTypePlayer2.set_active_text( _(COMBO_PLAYER_TYPE_COMPUTER) );
+        break;
+    }
+    
+    // heuristic
+    const Heuristic::sHeuristicData_t &selectedHeuristicData2 =
+        Heuristic::m_heuristicData[Game1v1Config::DEFAULT_CURRENT_HEURISTIC];
+    m_comboHeuristicPlayer2.set_active_text(_(selectedHeuristicData2.m_name));
+    m_textViewHeuristic2->set_buffer(m_refHeuristicDescriptionBuffer[selectedHeuristicData2.m_type]);
+    
+    // depth
+    m_spinbuttonDepthPlayer2Adj.set_value(Game1v1Config::DEFAULT_MINIMAX_DEPTH);
+    
+    // starting coordinate
+    m_spinbuttonStartingRowPlayer2Adj.set_value(Game1v1Config::DEFAULT_STARTING_ROW_2);
+    m_spinbuttonStartingColumnPlayer2Adj.set_value(Game1v1Config::DEFAULT_STARTING_COL_2);
 }
 
 bool Game1v1ConfigDialog::IsPlayer1TypeComputer() const

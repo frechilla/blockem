@@ -1,3 +1,17 @@
+: Version 0.3.1
+    - Added support for non-square shaped boards (they can be used now in total
+      deployment games)
+    - Added default buttons to both new game dialog and configure 1 vs 1 game
+      dialog
+    - Fixed bug in GUI. If a new total deployment game was launched while the
+      computer was calculating a move for the 1 vs 1 game the mouse cursor 
+      never came back to the default arrow (it kept showing the busy icon)
+    - Fixed bug in GUI. Latest deployed piece glowing effect didn't work when
+      two types of game where played before restarting the application. This 
+      was due to the way g_timeout_add works
+    - Whenever a game is cancelled its corresponding GLib timers are stopped so
+      they don't keep counting forever
+
 16/10/2010: Version 0.3.0
     - Major refactoring on GUI handling. New games can be added easier into 
       the Main Window. New Game dialog redesigned too.

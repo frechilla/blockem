@@ -176,6 +176,7 @@ public:
     /// is the same as the vectors of the piece
     void SetCurrentConfiguration(const PieceConfiguration &a_newConf);
 
+    /// @return current configuration of this piece object
     const PieceConfiguration& GetCurrentConfiguration() const;
 
     /// gives access to the current coords of the squares that make up the piece

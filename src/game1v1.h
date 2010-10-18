@@ -51,10 +51,12 @@ const int32_t BOARD_1VS1_ROWS    = 14;
 const int32_t BOARD_1VS1_COLUMNS = 14;
 
 /// initial coordinate for player 2
-static const Coordinate DEFAULT_STARTING_COORD_PLAYER2 = Coordinate(9, 9);
+static const int32_t DEFAULT_STARTING_ROW_PLAYER2 = 9;
+static const int32_t DEFAULT_STARTING_COL_PLAYER2 = 9;
 
 /// initial coordinate for player 1
-static const Coordinate DEFAULT_STARTING_COORD_PLAYER1 = Coordinate(4, 4);
+static const int32_t DEFAULT_STARTING_ROW_PLAYER1 = 4;
+static const int32_t DEFAULT_STARTING_COL_PLAYER1 = 4;
 
 
 /// @brief contains the definition of a game 1vs1 of blokus
@@ -84,8 +86,12 @@ public:
     /// @param player1 starting coordinate
     /// @param player2 starting coordinate
     Game1v1(
-        const Coordinate &a_player1StartingCoord = DEFAULT_STARTING_COORD_PLAYER1,
-        const Coordinate &a_player2StartingCoord = DEFAULT_STARTING_COORD_PLAYER2);
+        const Coordinate &a_player1StartingCoord = Coordinate(
+            DEFAULT_STARTING_ROW_PLAYER1,
+            DEFAULT_STARTING_COL_PLAYER1),
+        const Coordinate &a_player2StartingCoord = Coordinate(
+            DEFAULT_STARTING_ROW_PLAYER2,
+            DEFAULT_STARTING_COL_PLAYER2));
 	virtual ~Game1v1();
 
 	/// @returns the board of the game
@@ -177,8 +183,12 @@ public:
     /// @param player1 starting coordinate for the new game
     /// @param player2 starting coordinate for the new game
     void Reset(
-        const Coordinate &a_player1StartingCoord = DEFAULT_STARTING_COORD_PLAYER1,
-        const Coordinate &a_player2StartingCoord = DEFAULT_STARTING_COORD_PLAYER2);
+        const Coordinate &a_player1StartingCoord = Coordinate(
+            DEFAULT_STARTING_ROW_PLAYER1,
+            DEFAULT_STARTING_COL_PLAYER1),
+        const Coordinate &a_player2StartingCoord = Coordinate(
+            DEFAULT_STARTING_ROW_PLAYER2,
+            DEFAULT_STARTING_COL_PLAYER2));
 
     /// @brief load a game from an in_stream
     /// the in_stream has to contain the output of a game as it is done by Blokus1v1Game::SaveGame

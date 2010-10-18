@@ -33,6 +33,7 @@
 #include "singleton.h"
 #include "heuristic.h"
 #include "coordinate.h"
+#include "game1v1.h" // DEFAULT_STARTING_COORD_PLAYER1 and 2
 
 /// depth should be set to this value whenever search tree depth is
 /// left up to the Application
@@ -43,12 +44,23 @@ class Game1v1Config :
     public Singleton<Game1v1Config>
 {
 public:
-    // types of players. I can only think of 2 types. Human being and computer
+    // types of players. I can only think of 2 types: Human being and computer
     typedef enum
     {
         e_playerComputer,
         e_playerHuman,
     } ePlayerType_t;
+    
+    // consts used to set default values of 1vs1 games. They are declared here
+    // so they can be accesed from other files/classes
+    static const Heuristic::eHeuristicType_t  DEFAULT_CURRENT_HEURISTIC = Heuristic::e_heuristicInfluenceArea;
+    static const Game1v1Config::ePlayerType_t DEFAULT_PLAYER1_TYPE      = Game1v1Config::e_playerHuman;
+    static const Game1v1Config::ePlayerType_t DEFAULT_PLAYER2_TYPE      = Game1v1Config::e_playerComputer;
+    static const int32_t                      DEFAULT_MINIMAX_DEPTH     = GAME1V1CONFIG_DEPTH_AUTOADJUST;
+    static const int32_t                      DEFAULT_STARTING_ROW_1    = DEFAULT_STARTING_ROW_PLAYER1;
+    static const int32_t                      DEFAULT_STARTING_COL_1    = DEFAULT_STARTING_COL_PLAYER1;
+    static const int32_t                      DEFAULT_STARTING_ROW_2    = DEFAULT_STARTING_ROW_PLAYER2;
+    static const int32_t                      DEFAULT_STARTING_COL_2    = DEFAULT_STARTING_COL_PLAYER2;
 
     /// @brief returns player1's heuristic type
     Heuristic::eHeuristicType_t GetHeuristicTypePlayer1() const;

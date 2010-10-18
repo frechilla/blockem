@@ -18,17 +18,9 @@ supposed to be integrated in blockem at some point in the future:
    three pieces...
  + Improve evaluation function through bitwise representations of boards and 
    pieces. There's already some code done but it is too slow
- + Add default button to the new/config dialog
  + Convert std::lists to standard arrays in Piece
  + cachegrind to profile (instead of gprof)
  + complete rules_test
- + board drqwing area can't handle non square boards. Fix that
- + stopwatches in total allocation game and 1vs1 game are counting even if 
-   the widget is showing nothing. It doesn't really affect performance, but
-   it's an ugly thing to do
- + support for non-square shaped boards (is it even good?)
- + scripts should store results into scripts/ directory. Should gprof and
-   gcov output be uploaded into the svn repository?
  + WARNINGS compiling:
        game1v1.cpp:510: warning: enumeration value ‘e_Game1v1NoPlayer’ not handled in switch
        gui_game1v1_widget.cpp:477: warning: enumeration value ‘e_Game1v1NoPlayer’ not handled in switch
