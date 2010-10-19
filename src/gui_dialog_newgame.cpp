@@ -496,7 +496,6 @@ NewGameTableTotalAllocation::~NewGameTableTotalAllocation()
 void NewGameTableTotalAllocation::SpinButtonNRows_SignalValueChanged()
 {
     int32_t currentNRows = static_cast<int32_t>(m_spinbuttonNRowsAdj.get_value());
-    int32_t curentNCols = static_cast<int32_t>(m_spinbuttonNColsAdj.get_value());
     int32_t currentStartingRow = static_cast<int32_t>(m_spinbuttonStartingRowAdj.get_value());
 
     m_spinbuttonStartingRowAdj.set_upper(currentNRows);
@@ -508,7 +507,6 @@ void NewGameTableTotalAllocation::SpinButtonNRows_SignalValueChanged()
 
 void NewGameTableTotalAllocation::SpinButtonNCols_SignalValueChanged()
 {
-    int32_t currentNRows = static_cast<int32_t>(m_spinbuttonNRowsAdj.get_value());
     int32_t curentNCols = static_cast<int32_t>(m_spinbuttonNColsAdj.get_value());
     int32_t currentStartingCol = static_cast<int32_t>(m_spinbuttonStartingColumnAdj.get_value());
 

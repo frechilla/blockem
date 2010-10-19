@@ -539,9 +539,12 @@ void Game1v1ConfigDialog::ComboHeuristicPlayer2_signalChanged()
     }
 }
 
-void Game1v1ConfigDialog::DefaultButtonPlayer1_SignalReleased()
+void Game1v1ConfigDialog::DefaultButton_SignalReleased()
 {
-    // player type
+    //////////////////
+    // player 1
+    
+    //type
     switch(Game1v1Config::DEFAULT_PLAYER1_TYPE)
     {
     case Game1v1Config::e_playerHuman:
@@ -564,11 +567,12 @@ void Game1v1ConfigDialog::DefaultButtonPlayer1_SignalReleased()
     // starting coordinate
     m_spinbuttonStartingRowPlayer1Adj.set_value(Game1v1Config::DEFAULT_STARTING_ROW_1);
     m_spinbuttonStartingColumnPlayer1Adj.set_value(Game1v1Config::DEFAULT_STARTING_COL_1);
-}
-
-void Game1v1ConfigDialog::DefaultButtonPlayer2_SignalReleased()
-{
-    // player type
+    
+    
+    //////////////////
+    // player 2
+    
+    // type
     switch(Game1v1Config::DEFAULT_PLAYER2_TYPE)
     {
     case Game1v1Config::e_playerHuman:

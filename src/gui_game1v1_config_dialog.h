@@ -159,8 +159,7 @@ private:
     void ComboHeuristicPlayer2_signalChanged();
     void SpinButtonDepthPlayer1_SignalValueChanged();
     void SpinButtonDepthPlayer2_SignalValueChanged();
-    void DefaultButtonPlayer1_SignalReleased();
-    void DefaultButtonPlayer2_SignalReleased();
+    void DefaultButton_SignalReleased();
 
     /// will get called when the dialog is shown / reprinted on the screen
     bool on_expose_event (GdkEventExpose* event);
