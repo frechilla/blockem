@@ -63,17 +63,17 @@ private:
 
     void TestIsCoordTouchingPlayerCompute();
     void TestIsPieceDeployableCompute();
-    void TestsNucleationPointCompute();
+    void TestIsNucleationPointCompute();
     void TestIsPieceDeployableInCoord();
     void TestIsPieceDeployableInStartingPoint();
-    void TestCalculateValidCoordsInNucleationPoint();
-    void TestCalculateNextValidCoordInNucleationPoint();
+    void TestCalculateValidCoordsInNucleationPoint();    // missing
+    void TestCalculateNextValidCoordInNucleationPoint(); // missing
     void TestHasValidCoordInNucleationPoint();
-    void TestCalculateValidCoordsInStartingPoint();
-    void TestRecalculateNKAroundCoord();
-    void TestRecalculateInfluenceAreaAroundPieceFast();
-    void TestIsCoordInfluencedByPlayerFastCompute();
-    void TestRecalculateInfluenceAreaInBoard();
+    void TestCalculateValidCoordsInStartingPoint();      // missing
+    void TestRecalculateNKAroundCoord();                 // missing
+    void TestRecalculateInfluenceAreaAroundPieceFast();  // missing
+    void TestIsCoordInfluencedByPlayerFastCompute();     // missing
+    void TestRecalculateInfluenceAreaInBoard();          // missing
     void TestCanPlayerGo();
 };
 

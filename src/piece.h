@@ -96,7 +96,8 @@ public:
         m_nkPoints(0),
         m_forbiddenArea(0)
     {};
-    ~PieceConfiguration() {};
+    ~PieceConfiguration() 
+    {};
 
     // Stores one coordinate per square occupied by the piece
     PieceConfigurationContainer_t m_pieceSquares;

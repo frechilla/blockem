@@ -362,7 +362,7 @@ bool rules::CalculateNextValidCoordInNucleationPoint(
         Coordinate               &in_out_validCoord)
 {
 #ifdef DEBUG
-    assert(a_player.IsNucleationPoint(a_nkPointCoord));
+    assert(rules::IsNucleationPointCompute(a_board, a_player, a_nkPointCoord));
 #endif
 
     if (a_pieceRadius > 0)
@@ -376,8 +376,7 @@ bool rules::CalculateNextValidCoordInNucleationPoint(
         // thisCoord will point to the first place that will be checked out for valid coords
         // to deploy the piece in a_nkPointCoord
         Coordinate thisCoord(startRow, startCol);
-        if ( (in_out_validCoord.m_row != COORD_UNINITIALISED) &&
-             (in_out_validCoord.m_col != COORD_UNINITIALISED) )
+        if (in_out_validCoord.Initialised())
         {
             // we don't have to start from (0, 0)
             // try to start from next column
@@ -433,8 +432,7 @@ bool rules::CalculateNextValidCoordInNucleationPoint(
         // we must ensure in_out_validCoord is not initialised or is smaller
         // than a_nkPointCoord because this might be the 2nd time this function
         // is called to retrieve the valid coords of this baby piece
-        if ( (in_out_validCoord.m_row == COORD_UNINITIALISED) ||
-             (in_out_validCoord.m_col == COORD_UNINITIALISED) ||
+        if ( (!in_out_validCoord.Initialised())               ||
              (in_out_validCoord.m_row < a_nkPointCoord.m_row) ||
              ( (in_out_validCoord.m_row == a_nkPointCoord.m_row) &&
                  (in_out_validCoord.m_col <  a_nkPointCoord.m_col) ) )
@@ -456,7 +454,7 @@ int32_t rules::CalculateValidCoordsInNucleationPoint(
         std::vector<Coordinate>  &out_validCoords)
 {
 #ifdef DEBUG
-    assert(a_player.IsNucleationPoint(a_nkPointCoord));
+    assert(rules::IsNucleationPointCompute(a_board, a_player, a_nkPointCoord));
 #endif
 
     int32_t nValidCoords = 0;
@@ -498,7 +496,7 @@ bool rules::HasValidCoordInNucleationPoint(
     // If CalculateNextValidCoordInNucleationPoint finds a valid coord
     // (returns true) there is at least a valid coord in this nucleation
     // point
-    Coordinate tmpCoord;
+    Coordinate tmpCoord; // uninitialised coord
     return rules::CalculateNextValidCoordInNucleationPoint(
                     a_board,
                     a_player,
@@ -738,7 +736,6 @@ bool rules::IsCoordInfluencedByPlayerFastCompute(
     assert(a_coord.m_row >= 0 && a_coord.m_col >= 0);
     assert(a_coord.m_row < a_board.GetNRows());
     assert(a_coord.m_col < a_board.GetNColumns());
-
 #endif // DEBUG
 
     // if a_coord is not empty or is touching a_player cannot be part
@@ -870,7 +867,8 @@ bool rules::CanPlayerGo(const Board &a_board, const Player &a_player)
              pieceConfIt != pieceConfList.end();
              pieceConfIt++)
         {
-            if (a_player.NumberOfPiecesAvailable() == e_numberOfPieces)
+            if (a_player.GetStartingCoordinate().Initialised() &&
+                a_board.IsCoordEmpty(a_player.GetStartingCoordinate()))
             {
                 std::vector<Coordinate> validCoords(VALID_COORDS_SIZE);
                 int32_t nValidCoords = CalculateValidCoordsInStartingPoint(

@@ -47,6 +47,7 @@ namespace rules
     /// note that touching a corner is not 'touching' for this function
     /// Note also that it is called "xxxCompute" because it doesn't read the value from a
     /// variable, it has to calculate it reading from the actual board
+    /// It doesn't check if the offending coordinate is empty or not
     /// @param the blokus board
     /// @param coord (x, y) of the piece
     /// @param the player that owns the pieces
@@ -97,8 +98,17 @@ namespace rules
     /// 4rdparameter. It checks:
     ///   1) if the space that the piece will occupy is empty (and inside the board)
     ///   2) if the piece is not touching another piece of 'a_player'
-    ///   3) if the piece will be occupying thecoordinate defined by the 4th
+    ///   3) if the piece will be occupying the coordinate defined by the 4th
     /// it doesn't rotate or mirror the piece
+    /// You MUST ensure a_mustTouchCoord is empty before calling this function
+    /// This function does not use any property stored in player (it only uses
+    /// the piece configuration and the current status of the board)
+    /// Note it doesn't check if the piece touches a nucleation point, if you
+    /// need to ensure the piece would be touching a nk point have a look at 
+    /// IsPieceDeployableCompute. 
+    /// You can also use this function to ensure a piece touches a nk point 
+    /// using the nk point's coordinate as 4th parameter but you MUST ensure
+    /// before calling the function that coordinate really is a nk point
     /// @param the blokus board
     /// @param the piece configuration
     /// @param coord where the piece is going to be deployed
@@ -162,6 +172,12 @@ namespace rules
     /// The result will be saved in the 5th parameter. The user should have initialised the vector to a big enough size
     /// so that inserting elements in vector won't step on random memory locations
     /// A size of PIECE_MAX_SQUARES will do it, since a piece can only be deployed in as many ways as squares it has
+    ///
+    /// Bear in mind using CalculateNextValidCoordInNucleationPoint is 
+    /// DISCOURAGED. This function should be used instead since it tests much 
+    /// less positions
+    ///
+    /// It doesn't use any of the properties stored in player (2nd parameter)
     /// @param the blokus board
     /// @param the player who needs the valid coords
     /// @param coord of the nucleation point
@@ -193,6 +209,8 @@ namespace rules
     /// way, the results should be the same
     /// the use of this function is DISCOURAGED since CalculateValidCoordsInNucleationPoint
     /// is expected to be faster because it tests much less positions
+    ///
+    /// It doesn't use any of the properties stored in player (2nd parameter)
     /// @param the board
     /// @param the player who owns the piece
     /// @param the nucleation point coordinate
@@ -321,6 +339,7 @@ namespace rules
         Player      &a_player);
 
     /// @return true if the 'a_player' can put down at least one piece on the board
+    /// bear in mind it uses some of the properties saved in the 2nd parameter (a_player)
     bool CanPlayerGo(const Board &a_board, const Player &a_player);
 };
 
