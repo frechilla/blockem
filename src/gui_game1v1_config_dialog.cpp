@@ -360,7 +360,7 @@ Game1v1ConfigDialog::Game1v1ConfigDialog(BaseObjectType* cobject, const Glib::Re
             0,
             0);
     m_comboHeuristicPlayer2.show();
-    
+
     // starting coords cannot be configured. They must be set up before the
     // new game is launched
     SetStartingCoordEditionSensitive(false);
@@ -539,11 +539,11 @@ void Game1v1ConfigDialog::ComboHeuristicPlayer2_signalChanged()
     }
 }
 
-void Game1v1ConfigDialog::DefaultButton_SignalReleased()
+void Game1v1ConfigDialog::LoadDefaultSettings()
 {
     //////////////////
     // player 1
-    
+
     //type
     switch(Game1v1Config::DEFAULT_PLAYER1_TYPE)
     {
@@ -554,24 +554,24 @@ void Game1v1ConfigDialog::DefaultButton_SignalReleased()
         m_comboTypePlayer1.set_active_text( _(COMBO_PLAYER_TYPE_COMPUTER) );
         break;
     }
-    
+
     // heuristic
     const Heuristic::sHeuristicData_t &selectedHeuristicData1 =
         Heuristic::m_heuristicData[Game1v1Config::DEFAULT_CURRENT_HEURISTIC];
     m_comboHeuristicPlayer1.set_active_text(_(selectedHeuristicData1.m_name));
     m_textViewHeuristic1->set_buffer(m_refHeuristicDescriptionBuffer[selectedHeuristicData1.m_type]);
-    
+
     // depth
     m_spinbuttonDepthPlayer1Adj.set_value(Game1v1Config::DEFAULT_MINIMAX_DEPTH);
-    
+
     // starting coordinate
     m_spinbuttonStartingRowPlayer1Adj.set_value(Game1v1Config::DEFAULT_STARTING_ROW_1);
     m_spinbuttonStartingColumnPlayer1Adj.set_value(Game1v1Config::DEFAULT_STARTING_COL_1);
-    
-    
+
+
     //////////////////
     // player 2
-    
+
     // type
     switch(Game1v1Config::DEFAULT_PLAYER2_TYPE)
     {
@@ -582,16 +582,16 @@ void Game1v1ConfigDialog::DefaultButton_SignalReleased()
         m_comboTypePlayer2.set_active_text( _(COMBO_PLAYER_TYPE_COMPUTER) );
         break;
     }
-    
+
     // heuristic
     const Heuristic::sHeuristicData_t &selectedHeuristicData2 =
         Heuristic::m_heuristicData[Game1v1Config::DEFAULT_CURRENT_HEURISTIC];
     m_comboHeuristicPlayer2.set_active_text(_(selectedHeuristicData2.m_name));
     m_textViewHeuristic2->set_buffer(m_refHeuristicDescriptionBuffer[selectedHeuristicData2.m_type]);
-    
+
     // depth
     m_spinbuttonDepthPlayer2Adj.set_value(Game1v1Config::DEFAULT_MINIMAX_DEPTH);
-    
+
     // starting coordinate
     m_spinbuttonStartingRowPlayer2Adj.set_value(Game1v1Config::DEFAULT_STARTING_ROW_2);
     m_spinbuttonStartingColumnPlayer2Adj.set_value(Game1v1Config::DEFAULT_STARTING_COL_2);
@@ -679,8 +679,8 @@ int Game1v1ConfigDialog::run(bool a_dialogCanBeAccepted)
 {
     // set OK button to active or inactive
     this->set_response_sensitive(Gtk::RESPONSE_OK, a_dialogCanBeAccepted);
-    
-    // load now current global configuration into the widgets before showing 
+
+    // load now current global configuration into the widgets before showing
     // the dialog
 
     // type of players

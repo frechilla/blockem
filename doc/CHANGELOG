@@ -1,8 +1,6 @@
 : Version 0.3.1
     - Added support for non-square shaped boards (they can be used now in total
       deployment games)
-    - Added default buttons to both new game dialog and configure 1 vs 1 game
-      dialog
     - Fixed bug in GUI. If a new total deployment game was launched while the
       computer was calculating a move for the 1 vs 1 game the mouse cursor 
       never came back to the default arrow (it kept showing the busy icon)
