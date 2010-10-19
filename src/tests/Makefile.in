@@ -64,8 +64,9 @@ CONFIG_CLEAN_VPATH_FILES =
 PROGRAMS = $(noinst_PROGRAMS)
 am_blockemtest_OBJECTS = bitwise_test.$(OBJEXT) \
 	blockem_challenge_test.$(OBJEXT) board_test.$(OBJEXT) \
-	game1v1_test.$(OBJEXT) g_blocking_queue_test.$(OBJEXT) \
-	main_test.$(OBJEXT) piece_test.$(OBJEXT) player_test.$(OBJEXT) \
+	game1v1_test.$(OBJEXT) game_total_allocation_test.$(OBJEXT) \
+	g_blocking_queue_test.$(OBJEXT) main_test.$(OBJEXT) \
+	piece_test.$(OBJEXT) player_test.$(OBJEXT) \
 	rules_test.$(OBJEXT)
 blockemtest_OBJECTS = $(am_blockemtest_OBJECTS)
 am__DEPENDENCIES_1 =
@@ -261,6 +262,8 @@ board_test.cpp \
 board_test.h \
 game1v1_test.cpp \
 game1v1_test.h \
+game_total_allocation_test.cpp \
+game_total_allocation_test.h \
 g_blocking_queue_test.cpp \
 g_blocking_queue_test.h \
 main_test.cpp \
@@ -340,6 +343,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/board_test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/g_blocking_queue_test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/game1v1_test.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/game_total_allocation_test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main_test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/piece_test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/player_test.Po@am__quote@
