@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License along
 // with Blockem. If not, see http://www.gnu.org/licenses/.
 //
-/// @file  gui_about_dialog.h
+/// @file  gui_dialog_about.h
 /// @brief
 ///
 /// @author Faustino Frechilla
@@ -28,8 +28,8 @@
 ///
 // ============================================================================
 
-#ifndef ABOUTDIALOG_H_
-#define ABOUTDIALOG_H_
+#ifndef _DIALOG_ABOUT_H_
+#define _DIALOG_ABOUT_H_
 
 #include <gtkmm.h>
 
@@ -61,4 +61,4 @@ private:
     AboutDialog& operator=(const AboutDialog &a_src);
 };
 
-#endif /* ABOUTDIALOG_H_ */
+#endif /* _DIALOG_ABOUT_H_ */

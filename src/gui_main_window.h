@@ -36,9 +36,9 @@
 #include <exception>
 #include <gtkmm.h>
 
-#include "gui_about_dialog.h"
-#include "gui_game1v1_config_dialog.h"
+#include "gui_dialog_about.h"
 #include "gui_dialog_newgame.h"
+#include "gui_game1v1_config_dialog.h"
 #include "gui_exception.h"
 #include "gui_game1v1_widget.h"
 #include "gui_game_total_allocation_widget.h"

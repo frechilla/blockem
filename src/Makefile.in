@@ -70,7 +70,7 @@ PROGRAMS = $(bin_PROGRAMS)
 am_blockem_OBJECTS = bitwise.$(OBJEXT) blockem_challenge.$(OBJEXT) \
 	blockem_config.$(OBJEXT) board.$(OBJEXT) game1v1.$(OBJEXT) \
 	game_challenge.$(OBJEXT) game_total_allocation.$(OBJEXT) \
-	gui_about_dialog.$(OBJEXT) gui_dialog_newgame.$(OBJEXT) \
+	gui_dialog_about.$(OBJEXT) gui_dialog_newgame.$(OBJEXT) \
 	gui_drawing_area_board.$(OBJEXT) \
 	gui_drawing_area_show_pieces.$(OBJEXT) gui_exception.$(OBJEXT) \
 	gui_game_challenge_widget.$(OBJEXT) \
@@ -300,8 +300,8 @@ game_challenge.h \
 game_total_allocation.cpp \
 game_total_allocation.h \
 g_blocking_queue.h \
-gui_about_dialog.cpp \
-gui_about_dialog.h \
+gui_dialog_about.cpp \
+gui_dialog_about.h \
 gui_dialog_newgame.cpp \
 gui_dialog_newgame.h \
 gui_drawing_area_board.h \
@@ -432,7 +432,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/game1v1.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/game_challenge.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/game_total_allocation.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_about_dialog.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_dialog_about.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_dialog_newgame.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_drawing_area_board.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_drawing_area_show_pieces.Po@am__quote@

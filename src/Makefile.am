@@ -88,8 +88,8 @@ game_challenge.h \
 game_total_allocation.cpp \
 game_total_allocation.h \
 g_blocking_queue.h \
-gui_about_dialog.cpp \
-gui_about_dialog.h \
+gui_dialog_about.cpp \
+gui_dialog_about.h \
 gui_dialog_newgame.cpp \
 gui_dialog_newgame.h \
 gui_drawing_area_board.h \

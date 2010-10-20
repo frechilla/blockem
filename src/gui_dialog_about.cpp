@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License along
 // with Blockem. If not, see http://www.gnu.org/licenses/.
 //
-/// @file  gui_about_dialog.cpp
+/// @file  gui_dialog_about.cpp
 /// @brief
 ///
 /// @author Faustino Frechilla
@@ -34,7 +34,7 @@
 #endif
 #include "config.h"  // PACKAGE_VERSION
 #include "gettext.h" // i18n
-#include "gui_about_dialog.h"
+#include "gui_dialog_about.h"
 #include "gui_glade_defs.h"
 
 AboutDialog::AboutDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder) :
