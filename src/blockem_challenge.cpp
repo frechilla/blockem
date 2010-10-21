@@ -48,8 +48,8 @@
 static const uint32_t   ERROR_STRING_BUFFER_SIZE = 128;
 
 static const char       DEFAULT_CHALLENGE_NAME[] = "default challenge";
-static const int32_t    DEFAULT_NROWS = 14;
-static const int32_t    DEFAULT_NCOLS = 14;
+static const int32_t    DEFAULT_NROWS = 0;
+static const int32_t    DEFAULT_NCOLS = 0;
 static const Coordinate DEFAULT_CHALLENGER_STARTING_COORD = Coordinate(COORD_UNINITIALISED, COORD_UNINITIALISED);
 
 BlockemChallenge::BlockemChallenge() :
@@ -70,6 +70,13 @@ BlockemChallenge::BlockemChallenge(const std::string &a_path) throw (std::runtim
 
 BlockemChallenge::~BlockemChallenge()
 {
+}
+
+bool BlockemChallenge::Initialised()
+{
+    // when a new challenge is loaded, the board has to have at least 1 square
+    // an uninitialised challenge sets up its board to 0x0 (impossible to play)
+    return ((m_nRows != DEFAULT_NROWS) && (m_nColumns != DEFAULT_NCOLS));
 }
 
 void BlockemChallenge::Reset()
@@ -970,11 +977,11 @@ void BlockemChallenge::XMLParsingFatalError(
     snprintf(errorStringBuffer,
             ERROR_STRING_BUFFER_SIZE,
             // i18n TRANSLATORS: Please, leave those %s
-            // i18n 1st %s will be replaced by the path to the file that could not be parsed
+            // i18n 1st %s will be replaced by filename (without path) that could not be parsed
             // i18n 2nd %s will be replaced by the error message
             // i18n Thank you for contributing to this project
             _("Fatal error parsing %s: %s"),
-            a_xmlFile.c_str(),
+            Glib::path_get_basename(a_xmlFile).c_str(), // http://library.gnome.org/devel/glibmm/2.23/group__MiscUtils.html
             a_errorMsg.c_str());
 
     throw std::runtime_error(errorStringBuffer);
@@ -990,9 +997,9 @@ void BlockemChallenge::SetBoardRows(int32_t a_nRows)
     m_nRows = a_nRows;
 }
 
-void BlockemChallenge::SetBoardColumns(int32_t a_nRows)
+void BlockemChallenge::SetBoardColumns(int32_t a_nColumns)
 {
-    m_nRows = a_nRows;
+    m_nColumns = a_nColumns;
 }
 
 void BlockemChallenge::SetChallengerStartingCoord(const Coordinate &a_coord)

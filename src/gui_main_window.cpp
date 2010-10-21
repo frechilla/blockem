@@ -475,7 +475,7 @@ void MainWindow::MenuItemSettingsPreferences_Activate()
 {
     // accept button must be deactivated if current game1v1 is finished
     bool dialogCanBeAccepted = !m_game1v1Widget.IsGameFinished();
-    
+
     // show a message informing the user a move was cancelled?
     bool showInfoMessage = false;
     Gtk::ResponseType result =

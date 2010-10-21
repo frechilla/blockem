@@ -127,6 +127,9 @@ const std::string GUI_PATH_TO_NEWGAME_1VS1GAME
 const std::string GUI_PATH_TO_NEWGAME_TOTALALLOC
         (PATH_TO_PIXMAPS + std::string("gametotalalloc.png"));
 
+const std::string GUI_PATH_TO_NEWGAME_CHALLENGE
+        (PATH_TO_PIXMAPS + std::string("gamechallenge.png"));
+
 
 // have a look at the name of the widgets in gui.glade file
 const char GUI_MAIN_WINDOW_NAME[]       = "window_main";
@@ -183,6 +186,7 @@ const char GUI_NEWGAME_TYPE_ICONVIEW[]                  = "newgame_iconview";
 const char GUI_NEWGAME_VBOX_GAMEDIALOGS[]               = "newgame_vbox_gamedialogs";
 const char GUI_NEWGAME_1V1_HBOX[]                       = "newgame_1v1_hbox";
 const char GUI_NEWGAME_TOTALALLOC_HBOX[]                = "newgame_totalalloc_hbox";
+const char GUI_NEWGAME_CHALLENGE_HBOX[]                 = "newgame_challenge_hbox";
 const char GUI_NEWGAME_1V1_TABLE_PLAYER1[]              = "newgame_1v1_table_player1";
 const char GUI_NEWGAME_1V1_TABLE_PLAYER2[]              = "newgame_1v1_table_player2";
 const char GUI_NEWGAME_1V1_SPINBUTTON_STARTROW1[]       = "newgame_1v1_spinbutton_startingrow1";
@@ -222,6 +226,16 @@ const char GUI_NEWGAME_TOTALALLOC_LABEL_STARTCOL[]      = "newgame_totalalloc_la
 const char GUI_NEWGAME_TOTALALLOC_LABEL_NROWS[]         = "newgame_totalalloc_label_nrows";
 const char GUI_NEWGAME_TOTALALLOC_LABEL_NCOLS[]         = "newgame_totalalloc_label_ncols";
 const char GUI_NEWGAME_TOTALALLOC_CHECKBUTTON_START[]   = "newgame_totalalloc_checkbutton_startingpos";
+const char GUI_NEWGAME_CHALLENGE_RBUTTON_LIST[]         = "newgame_challenge_radiobutton_list";
+const char GUI_NEWGAME_CHALLENGE_RBUTTON_FILE[]         = "newgame_challenge_radiobutton_loadfile";
+const char GUI_NEWGAME_CHALLENGE_TREEVIEW_FILELIST[]    = "newgame_challenge_treeview";
+const char GUI_NEWGAME_CHALLENGE_FILECHOOSER[]          = "newgame_challenge_filechooserbutton";
+const char GUI_NEWGAME_CHALLENGE_TEXTVIEW_DESCRIPTION[] = "newgame_challenge_textview_description";
+const char GUI_NEWGAME_CHALLENGE_ENTRY_AUTHOR[]         = "newgame_challenge_entry_author";
+const char GUI_NEWGAME_CHALLENGE_ENTRY_EMAIL[]          = "newgame_challenge_entry_email";
+const char GUI_NEWGAME_CHALLENGE_LABEL_AUTHOR[]         = "newgame_challenge_label_author";
+const char GUI_NEWGAME_CHALLENGE_LABEL_EMAIL[]          = "newgame_challenge_label_email";
+const char GUI_NEWGAME_CHALLENGE_LABEL_DESCRIPTION[]    = "newgame_challenge_label_description";
 
 
 #endif /* GUI_GLADE_H_ */

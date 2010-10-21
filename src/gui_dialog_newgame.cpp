@@ -42,6 +42,7 @@
 // strings to describe each type of game
 static const char GAME_1V1_NAME[]         = N_("1 vs 1 Game (2 players)");
 static const char GAME_TOTAL_ALLOC_NAME[] = N_("Total deployment (solo play)");
+static const char GAME_CHALLENGE_NAME[]   = N_("Challenge (solo play)");
 
 // strings for the user to choose the type of player in game 1v1
 static const char COMBO_PLAYER_TYPE_HUMAN[]    = N_("Human");
@@ -85,12 +86,20 @@ DialogNewGame::DialogNewGame(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Bu
         throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
 
+    m_gtkBuilder->get_widget_derived(GUI_NEWGAME_CHALLENGE_HBOX, m_newGameTableChallenge);
+    if (m_newGameTableChallenge == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
 
     // set up icon view to store the type of games. Based on:
     // http://git.gnome.org/browse/gtkmm-documentation/tree/examples/book/iconview
     m_typeGameIconViewModel = Gtk::ListStore::create(m_modelColumns);
-    m_typeGameIconViewModel->set_sort_column(
-            m_modelColumns.m_col_description, Gtk::SORT_ASCENDING);
+    // uncomment these lines if you want the gametype icon view to be ordered
+    // by the description. Otherwise it will be ordered from firstly inserted to last
+    //m_typeGameIconViewModel->set_sort_column(
+    //        m_modelColumns.m_col_description, Gtk::SORT_ASCENDING);
 
     m_typeGameIconView->set_model(m_typeGameIconViewModel);
     m_typeGameIconView->set_markup_column(m_modelColumns.m_col_description);
@@ -103,6 +112,8 @@ DialogNewGame::DialogNewGame(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Bu
 #endif
 
     // add now the elements to the icon view
+    // if you'd like to add a new element to the gametype icon view, just add a new call
+    // to AddEntry. The rest of the callbacks will take care of what widget will be shown
     AddEntry(
         e_gameType1vs1,
         m_newGameTable1v1,
@@ -113,6 +124,11 @@ DialogNewGame::DialogNewGame(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Bu
         m_newGameTableTotalAllocation,
         GUI_PATH_TO_NEWGAME_TOTALALLOC,
         _(GAME_TOTAL_ALLOC_NAME));
+    AddEntry(
+        e_gameTypeChallenge,
+        m_newGameTableChallenge,
+        GUI_PATH_TO_NEWGAME_CHALLENGE,
+        _(GAME_CHALLENGE_NAME));
 
     // activate game1v1 as default
     Gtk::TreeNodeChildren allChildren = m_typeGameIconViewModel->children();
@@ -360,273 +376,6 @@ void DialogNewGame::ForceTranslationOfWidgets()
 }
 #else
 void DialogNewGame::ForceTranslationOfWidgets()
-{
-    // So far this is only needed in win32 platform due to some unknown issue
-    // that prevents those strings to be automatically translated. It works
-    // fine in linux, so there's no need there to explicitly call to gettext
-}
-#endif // WIN32
-
-
-
-//////////////////////////////////////////////////////////////////////////////
-// NewGameTableTotalAllocation methods
-
-// maximum and minimum values for size of the total allocation board
-static const double MINIMUM_TOTAL_ALLOC_BOARD_NROWS = 1;
-static const double MAXIMUM_TOTAL_ALLOC_BOARD_NROWS = 99;
-static const double MINIMUM_TOTAL_ALLOC_BOARD_NCOLS = 1;
-static const double MAXIMUM_TOTAL_ALLOC_BOARD_NCOLS = 99;
-
-NewGameTableTotalAllocation::NewGameTableTotalAllocation(
-    BaseObjectType* cobject,
-    const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder)  throw (GUIException) :
-        NewGameTable(cobject), //Calls the base class constructor
-        m_gtkBuilder(a_gtkBuilder),
-        m_spinbuttonStartingRowAdj(
-            (GameTotalAllocationConfig::Instance().IsStartingCoordSet()) ?
-                    // +1 'cause coords are shown to the user starting by 1 (not 0)
-                    GameTotalAllocationConfig::Instance().GetStartingCoord().m_row + 1 : 1,
-            1,
-            GameTotalAllocationConfig::Instance().GetNRows()),
-        m_spinbuttonStartingColumnAdj(
-            (GameTotalAllocationConfig::Instance().IsStartingCoordSet()) ?
-                    // +1 'cause coords are shown to the user starting by 1 (not 0)
-                    GameTotalAllocationConfig::Instance().GetStartingCoord().m_col + 1 : 1,
-            1,
-            GameTotalAllocationConfig::Instance().GetNColumns()),
-        m_spinbuttonNRowsAdj(
-            GameTotalAllocationConfig::Instance().GetNRows(),
-            MINIMUM_TOTAL_ALLOC_BOARD_NROWS,
-            MAXIMUM_TOTAL_ALLOC_BOARD_NROWS),
-        m_spinbuttonNColsAdj(
-            GameTotalAllocationConfig::Instance().GetNColumns(),
-            MINIMUM_TOTAL_ALLOC_BOARD_NCOLS,
-            MAXIMUM_TOTAL_ALLOC_BOARD_NCOLS)
-{
-    m_gtkBuilder->get_widget(GUI_NEWGAME_TOTALALLOC_SPINBUTTON_STARTROW, m_spinbuttonStartingRow);
-    if (m_spinbuttonStartingRow == NULL)
-    {
-        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
-    }
-
-    m_gtkBuilder->get_widget(GUI_NEWGAME_TOTALALLOC_SPINBUTTON_STARTCOL, m_spinbuttonStartingColumn);
-    if (m_spinbuttonStartingColumn == NULL)
-    {
-        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
-    }
-
-    m_gtkBuilder->get_widget(GUI_NEWGAME_TOTALALLOC_SPINBUTTON_NROWS, m_spinbuttonNRows);
-    if (m_spinbuttonNRows == NULL)
-    {
-        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
-    }
-
-    m_gtkBuilder->get_widget(GUI_NEWGAME_TOTALALLOC_SPINBUTTON_NCOLS, m_spinbuttonNCols);
-    if (m_spinbuttonNCols == NULL)
-    {
-        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
-    }
-
-    m_gtkBuilder->get_widget(GUI_NEWGAME_TOTALALLOC_LABEL_BOARD, m_boardSizeLabel);
-    if (m_boardSizeLabel == NULL)
-    {
-        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
-    }
-
-    m_gtkBuilder->get_widget(GUI_NEWGAME_TOTALALLOC_LABEL_STARTINGCOORD, m_startingPosLabel);
-    if (m_startingPosLabel == NULL)
-    {
-        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
-    }
-
-    m_gtkBuilder->get_widget(GUI_NEWGAME_TOTALALLOC_LABEL_STARTROW, m_startingRowLabel);
-    if (m_spinbuttonNRows == NULL)
-    {
-        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
-    }
-
-    m_gtkBuilder->get_widget(GUI_NEWGAME_TOTALALLOC_LABEL_STARTCOL, m_startingColLabel);
-    if (m_spinbuttonNCols == NULL)
-    {
-        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
-    }
-
-    m_gtkBuilder->get_widget(GUI_NEWGAME_TOTALALLOC_LABEL_NROWS, m_nRowsLabel);
-    if (m_boardSizeLabel == NULL)
-    {
-        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
-    }
-
-    m_gtkBuilder->get_widget(GUI_NEWGAME_TOTALALLOC_LABEL_NCOLS, m_nColsLabel);
-    if (m_startingPosLabel == NULL)
-    {
-        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
-    }
-
-    m_gtkBuilder->get_widget(GUI_NEWGAME_TOTALALLOC_CHECKBUTTON_START, m_checkbuttonStartFromAnywhere);
-    if (m_checkbuttonStartFromAnywhere == NULL)
-    {
-        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
-    }
-
-    // this call will work in different ways depending on the current platform
-    ForceTranslationOfWidgets();
-
-    // adjustments for spinbuttons
-    m_spinbuttonStartingRow->set_adjustment(m_spinbuttonStartingRowAdj);
-    m_spinbuttonStartingColumn->set_adjustment(m_spinbuttonStartingColumnAdj);
-    m_spinbuttonNRows->set_adjustment(m_spinbuttonNRowsAdj);
-    m_spinbuttonNCols->set_adjustment(m_spinbuttonNColsAdj);
-
-    // connect the signals
-    m_spinbuttonNRows->signal_value_changed().connect(
-        sigc::mem_fun(*this, &NewGameTableTotalAllocation::SpinButtonNRows_SignalValueChanged));
-    m_spinbuttonNCols->signal_value_changed().connect(
-        sigc::mem_fun(*this, &NewGameTableTotalAllocation::SpinButtonNCols_SignalValueChanged));
-    m_checkbuttonStartFromAnywhere->signal_toggled().connect(
-        sigc::mem_fun(*this, &NewGameTableTotalAllocation::CheckbuttonStartFromAnywhere_Toggled));
-
-}
-
-NewGameTableTotalAllocation::~NewGameTableTotalAllocation()
-{
-}
-
-void NewGameTableTotalAllocation::SpinButtonNRows_SignalValueChanged()
-{
-    int32_t currentNRows = static_cast<int32_t>(m_spinbuttonNRowsAdj.get_value());
-    int32_t currentStartingRow = static_cast<int32_t>(m_spinbuttonStartingRowAdj.get_value());
-
-    m_spinbuttonStartingRowAdj.set_upper(currentNRows);
-    if (currentStartingRow > currentNRows)
-    {
-        m_spinbuttonStartingRowAdj.set_value(currentNRows);
-    }
-}
-
-void NewGameTableTotalAllocation::SpinButtonNCols_SignalValueChanged()
-{
-    int32_t curentNCols = static_cast<int32_t>(m_spinbuttonNColsAdj.get_value());
-    int32_t currentStartingCol = static_cast<int32_t>(m_spinbuttonStartingColumnAdj.get_value());
-
-    m_spinbuttonStartingColumnAdj.set_upper(curentNCols);
-    if (currentStartingCol > curentNCols)
-    {
-        m_spinbuttonStartingColumnAdj.set_value(curentNCols);
-    }
-}
-
-void NewGameTableTotalAllocation::CheckbuttonStartFromAnywhere_Toggled()
-{
-    if (m_checkbuttonStartFromAnywhere->property_active())
-    {
-        m_spinbuttonStartingRow->set_sensitive(false);
-        m_spinbuttonStartingColumn->set_sensitive(false);
-    }
-    else
-    {
-        m_spinbuttonStartingRow->set_sensitive(true);
-        m_spinbuttonStartingColumn->set_sensitive(true);
-    }
-}
-
-void NewGameTableTotalAllocation::GetStartingCoord(Coordinate &a_coord) const
-{
-    if (m_checkbuttonStartFromAnywhere->property_active())
-    {
-        // uninitialised coord
-        a_coord = Coordinate();
-    }
-    else
-    {
-        // -1 because coordinates are shown to the user starting by 1 (not 0)
-        a_coord = Coordinate(
-                    static_cast<int32_t>(m_spinbuttonStartingRowAdj.get_value())    - 1,
-                    static_cast<int32_t>(m_spinbuttonStartingColumnAdj.get_value()) - 1);
-    }
-}
-
-void NewGameTableTotalAllocation::SaveCurrentConfigIntoGlobalSettings() const
-{
-    // retrieve user settings from dialog and use them to set up global configuration
-
-    Coordinate startingCoord;
-    GetStartingCoord(startingCoord);
-    GameTotalAllocationConfig::Instance().SetStartingCoord(startingCoord);
-
-    GameTotalAllocationConfig::Instance().SetNRows(
-            static_cast<int32_t>(m_spinbuttonNRowsAdj.get_value()));
-    GameTotalAllocationConfig::Instance().SetNColumns(
-        static_cast<int32_t>(m_spinbuttonNColsAdj.get_value()));
-}
-
-void NewGameTableTotalAllocation::LoadCurrentConfigFromGlobalSettings()
-{
-    // load current global configuration into the widgets
-
-    m_spinbuttonNRowsAdj.set_value(
-            GameTotalAllocationConfig::Instance().GetNRows());
-    m_spinbuttonNColsAdj.set_value(
-            GameTotalAllocationConfig::Instance().GetNColumns());
-
-    if (GameTotalAllocationConfig::Instance().IsStartingCoordSet())
-    {
-        m_checkbuttonStartFromAnywhere->set_active(false);
-
-        m_spinbuttonStartingRowAdj.set_value(
-                GameTotalAllocationConfig::Instance().GetStartingCoord().m_row);
-        m_spinbuttonStartingColumnAdj.set_value(
-                GameTotalAllocationConfig::Instance().GetStartingCoord().m_col);
-    }
-    else
-    {
-        m_checkbuttonStartFromAnywhere->set_active(true);
-
-        m_spinbuttonStartingRowAdj.set_value(MINIMUM_TOTAL_ALLOC_BOARD_NROWS);
-        m_spinbuttonStartingColumnAdj.set_value(MINIMUM_TOTAL_ALLOC_BOARD_NCOLS);
-    }
-}
-
-#ifdef WIN32
-void NewGameTableTotalAllocation::ForceTranslationOfWidgets()
-{
-    // in win32 systems gettext fails when the string is static and marked as
-    // translatable with N_() but _() is never called explicitely. Basically
-    // there are 2 kinds of strings that are not translated:
-    //  + Those included in the GOptionEntry list, which show the available
-    //    options that can be passed to the program through command line
-    //  + Strings included in the .glade file that never change during the
-    //    execution of the application, for example a menu called "Game", or a
-    //    label that contains the word "rotate"
-    //
-    // We'll be calling here to _() for every string found in the .glade file
-    // so it gets properly translated into the current domain (the 2nd case
-    // described above)
-
-    m_boardSizeLabel->set_text(
-            _(m_boardSizeLabel->get_text().c_str()) );
-
-    m_startingPosLabel->set_text(
-            _(m_startingPosLabel->get_text().c_str()) );
-
-    m_startingRowLabel->set_text(
-            _(m_startingRowLabel->get_text().c_str()) );
-
-    m_startingColLabel->set_text(
-            _(m_startingColLabel->get_text().c_str()) );
-
-    m_nRowsLabel->set_text(
-            _(m_nRowsLabel->get_text().c_str()) );
-
-    m_nColsLabel->set_text(
-            _(m_nColsLabel->get_text().c_str()) );
-
-    m_checkbuttonStartFromAnywhere->set_label(
-            _(m_checkbuttonStartFromAnywhere->get_label().c_str()));
-}
-#else
-void NewGameTableTotalAllocation::ForceTranslationOfWidgets()
 {
     // So far this is only needed in win32 platform due to some unknown issue
     // that prevents those strings to be automatically translated. It works
@@ -1338,6 +1087,580 @@ void NewGameTable1v1::ForceTranslationOfWidgets()
 }
 #else
 void NewGameTable1v1::ForceTranslationOfWidgets()
+{
+    // So far this is only needed in win32 platform due to some unknown issue
+    // that prevents those strings to be automatically translated. It works
+    // fine in linux, so there's no need there to explicitly call to gettext
+}
+#endif // WIN32
+
+
+
+//////////////////////////////////////////////////////////////////////////////
+// NewGameTableTotalAllocation methods
+
+// maximum and minimum values for size of the total allocation board
+static const double MINIMUM_TOTAL_ALLOC_BOARD_NROWS = 1;
+static const double MAXIMUM_TOTAL_ALLOC_BOARD_NROWS = 99;
+static const double MINIMUM_TOTAL_ALLOC_BOARD_NCOLS = 1;
+static const double MAXIMUM_TOTAL_ALLOC_BOARD_NCOLS = 99;
+
+NewGameTableTotalAllocation::NewGameTableTotalAllocation(
+    BaseObjectType* cobject,
+    const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder)  throw (GUIException) :
+        NewGameTable(cobject), //Calls the base class constructor
+        m_gtkBuilder(a_gtkBuilder),
+        m_spinbuttonStartingRowAdj(
+            (GameTotalAllocationConfig::Instance().IsStartingCoordSet()) ?
+                    // +1 'cause coords are shown to the user starting by 1 (not 0)
+                    GameTotalAllocationConfig::Instance().GetStartingCoord().m_row + 1 : 1,
+            1,
+            GameTotalAllocationConfig::Instance().GetNRows()),
+        m_spinbuttonStartingColumnAdj(
+            (GameTotalAllocationConfig::Instance().IsStartingCoordSet()) ?
+                    // +1 'cause coords are shown to the user starting by 1 (not 0)
+                    GameTotalAllocationConfig::Instance().GetStartingCoord().m_col + 1 : 1,
+            1,
+            GameTotalAllocationConfig::Instance().GetNColumns()),
+        m_spinbuttonNRowsAdj(
+            GameTotalAllocationConfig::Instance().GetNRows(),
+            MINIMUM_TOTAL_ALLOC_BOARD_NROWS,
+            MAXIMUM_TOTAL_ALLOC_BOARD_NROWS),
+        m_spinbuttonNColsAdj(
+            GameTotalAllocationConfig::Instance().GetNColumns(),
+            MINIMUM_TOTAL_ALLOC_BOARD_NCOLS,
+            MAXIMUM_TOTAL_ALLOC_BOARD_NCOLS)
+{
+    m_gtkBuilder->get_widget(GUI_NEWGAME_TOTALALLOC_SPINBUTTON_STARTROW, m_spinbuttonStartingRow);
+    if (m_spinbuttonStartingRow == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
+    m_gtkBuilder->get_widget(GUI_NEWGAME_TOTALALLOC_SPINBUTTON_STARTCOL, m_spinbuttonStartingColumn);
+    if (m_spinbuttonStartingColumn == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
+    m_gtkBuilder->get_widget(GUI_NEWGAME_TOTALALLOC_SPINBUTTON_NROWS, m_spinbuttonNRows);
+    if (m_spinbuttonNRows == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
+    m_gtkBuilder->get_widget(GUI_NEWGAME_TOTALALLOC_SPINBUTTON_NCOLS, m_spinbuttonNCols);
+    if (m_spinbuttonNCols == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
+    m_gtkBuilder->get_widget(GUI_NEWGAME_TOTALALLOC_LABEL_BOARD, m_boardSizeLabel);
+    if (m_boardSizeLabel == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
+    m_gtkBuilder->get_widget(GUI_NEWGAME_TOTALALLOC_LABEL_STARTINGCOORD, m_startingPosLabel);
+    if (m_startingPosLabel == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
+    m_gtkBuilder->get_widget(GUI_NEWGAME_TOTALALLOC_LABEL_STARTROW, m_startingRowLabel);
+    if (m_spinbuttonNRows == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
+    m_gtkBuilder->get_widget(GUI_NEWGAME_TOTALALLOC_LABEL_STARTCOL, m_startingColLabel);
+    if (m_spinbuttonNCols == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
+    m_gtkBuilder->get_widget(GUI_NEWGAME_TOTALALLOC_LABEL_NROWS, m_nRowsLabel);
+    if (m_boardSizeLabel == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
+    m_gtkBuilder->get_widget(GUI_NEWGAME_TOTALALLOC_LABEL_NCOLS, m_nColsLabel);
+    if (m_startingPosLabel == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
+    m_gtkBuilder->get_widget(GUI_NEWGAME_TOTALALLOC_CHECKBUTTON_START, m_checkbuttonStartFromAnywhere);
+    if (m_checkbuttonStartFromAnywhere == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
+    // this call will work in different ways depending on the current platform
+    ForceTranslationOfWidgets();
+
+    // adjustments for spinbuttons
+    m_spinbuttonStartingRow->set_adjustment(m_spinbuttonStartingRowAdj);
+    m_spinbuttonStartingColumn->set_adjustment(m_spinbuttonStartingColumnAdj);
+    m_spinbuttonNRows->set_adjustment(m_spinbuttonNRowsAdj);
+    m_spinbuttonNCols->set_adjustment(m_spinbuttonNColsAdj);
+
+    // connect the signals
+    m_spinbuttonNRows->signal_value_changed().connect(
+        sigc::mem_fun(*this, &NewGameTableTotalAllocation::SpinButtonNRows_SignalValueChanged));
+    m_spinbuttonNCols->signal_value_changed().connect(
+        sigc::mem_fun(*this, &NewGameTableTotalAllocation::SpinButtonNCols_SignalValueChanged));
+    m_checkbuttonStartFromAnywhere->signal_toggled().connect(
+        sigc::mem_fun(*this, &NewGameTableTotalAllocation::CheckbuttonStartFromAnywhere_Toggled));
+
+}
+
+NewGameTableTotalAllocation::~NewGameTableTotalAllocation()
+{
+}
+
+void NewGameTableTotalAllocation::SpinButtonNRows_SignalValueChanged()
+{
+    int32_t currentNRows = static_cast<int32_t>(m_spinbuttonNRowsAdj.get_value());
+    int32_t currentStartingRow = static_cast<int32_t>(m_spinbuttonStartingRowAdj.get_value());
+
+    m_spinbuttonStartingRowAdj.set_upper(currentNRows);
+    if (currentStartingRow > currentNRows)
+    {
+        m_spinbuttonStartingRowAdj.set_value(currentNRows);
+    }
+}
+
+void NewGameTableTotalAllocation::SpinButtonNCols_SignalValueChanged()
+{
+    int32_t curentNCols = static_cast<int32_t>(m_spinbuttonNColsAdj.get_value());
+    int32_t currentStartingCol = static_cast<int32_t>(m_spinbuttonStartingColumnAdj.get_value());
+
+    m_spinbuttonStartingColumnAdj.set_upper(curentNCols);
+    if (currentStartingCol > curentNCols)
+    {
+        m_spinbuttonStartingColumnAdj.set_value(curentNCols);
+    }
+}
+
+void NewGameTableTotalAllocation::CheckbuttonStartFromAnywhere_Toggled()
+{
+    if (m_checkbuttonStartFromAnywhere->property_active())
+    {
+        m_spinbuttonStartingRow->set_sensitive(false);
+        m_spinbuttonStartingColumn->set_sensitive(false);
+    }
+    else
+    {
+        m_spinbuttonStartingRow->set_sensitive(true);
+        m_spinbuttonStartingColumn->set_sensitive(true);
+    }
+}
+
+void NewGameTableTotalAllocation::GetStartingCoord(Coordinate &a_coord) const
+{
+    if (m_checkbuttonStartFromAnywhere->property_active())
+    {
+        // uninitialised coord
+        a_coord = Coordinate();
+    }
+    else
+    {
+        // -1 because coordinates are shown to the user starting by 1 (not 0)
+        a_coord = Coordinate(
+                    static_cast<int32_t>(m_spinbuttonStartingRowAdj.get_value())    - 1,
+                    static_cast<int32_t>(m_spinbuttonStartingColumnAdj.get_value()) - 1);
+    }
+}
+
+void NewGameTableTotalAllocation::SaveCurrentConfigIntoGlobalSettings() const
+{
+    // retrieve user settings from dialog and use them to set up global configuration
+
+    Coordinate startingCoord;
+    GetStartingCoord(startingCoord);
+    GameTotalAllocationConfig::Instance().SetStartingCoord(startingCoord);
+
+    GameTotalAllocationConfig::Instance().SetNRows(
+            static_cast<int32_t>(m_spinbuttonNRowsAdj.get_value()));
+    GameTotalAllocationConfig::Instance().SetNColumns(
+        static_cast<int32_t>(m_spinbuttonNColsAdj.get_value()));
+}
+
+void NewGameTableTotalAllocation::LoadCurrentConfigFromGlobalSettings()
+{
+    // load current global configuration into the widgets
+
+    m_spinbuttonNRowsAdj.set_value(
+            GameTotalAllocationConfig::Instance().GetNRows());
+    m_spinbuttonNColsAdj.set_value(
+            GameTotalAllocationConfig::Instance().GetNColumns());
+
+    if (GameTotalAllocationConfig::Instance().IsStartingCoordSet())
+    {
+        m_checkbuttonStartFromAnywhere->set_active(false);
+
+        m_spinbuttonStartingRowAdj.set_value(
+                GameTotalAllocationConfig::Instance().GetStartingCoord().m_row);
+        m_spinbuttonStartingColumnAdj.set_value(
+                GameTotalAllocationConfig::Instance().GetStartingCoord().m_col);
+    }
+    else
+    {
+        m_checkbuttonStartFromAnywhere->set_active(true);
+
+        m_spinbuttonStartingRowAdj.set_value(MINIMUM_TOTAL_ALLOC_BOARD_NROWS);
+        m_spinbuttonStartingColumnAdj.set_value(MINIMUM_TOTAL_ALLOC_BOARD_NCOLS);
+    }
+}
+
+#ifdef WIN32
+void NewGameTableTotalAllocation::ForceTranslationOfWidgets()
+{
+    // in win32 systems gettext fails when the string is static and marked as
+    // translatable with N_() but _() is never called explicitely. Basically
+    // there are 2 kinds of strings that are not translated:
+    //  + Those included in the GOptionEntry list, which show the available
+    //    options that can be passed to the program through command line
+    //  + Strings included in the .glade file that never change during the
+    //    execution of the application, for example a menu called "Game", or a
+    //    label that contains the word "rotate"
+    //
+    // We'll be calling here to _() for every string found in the .glade file
+    // so it gets properly translated into the current domain (the 2nd case
+    // described above)
+
+    m_boardSizeLabel->set_text(
+            _(m_boardSizeLabel->get_text().c_str()) );
+
+    m_startingPosLabel->set_text(
+            _(m_startingPosLabel->get_text().c_str()) );
+
+    m_startingRowLabel->set_text(
+            _(m_startingRowLabel->get_text().c_str()) );
+
+    m_startingColLabel->set_text(
+            _(m_startingColLabel->get_text().c_str()) );
+
+    m_nRowsLabel->set_text(
+            _(m_nRowsLabel->get_text().c_str()) );
+
+    m_nColsLabel->set_text(
+            _(m_nColsLabel->get_text().c_str()) );
+
+    m_checkbuttonStartFromAnywhere->set_label(
+            _(m_checkbuttonStartFromAnywhere->get_label().c_str()));
+}
+#else
+void NewGameTableTotalAllocation::ForceTranslationOfWidgets()
+{
+    // So far this is only needed in win32 platform due to some unknown issue
+    // that prevents those strings to be automatically translated. It works
+    // fine in linux, so there's no need there to explicitly call to gettext
+}
+#endif // WIN32
+
+
+
+//////////////////////////////////////////////////////////////////////////////
+// NewGameTableChallenge methods
+
+NewGameTableChallenge::NewGameTableChallenge(
+    BaseObjectType* cobject,
+    const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder)  throw (GUIException) :
+        NewGameTable(cobject), //Calls the base class constructor
+        m_gtkBuilder(a_gtkBuilder),
+        m_currentSelectedChallenge()
+{
+    // retrieve widgets from the .glade file
+    m_gtkBuilder->get_widget(GUI_NEWGAME_CHALLENGE_RBUTTON_LIST, m_radioButtonList);
+    if (m_radioButtonList == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
+    m_gtkBuilder->get_widget(GUI_NEWGAME_CHALLENGE_RBUTTON_FILE, m_radioButtonFileChooser);
+    if (m_radioButtonFileChooser == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
+    m_gtkBuilder->get_widget(GUI_NEWGAME_CHALLENGE_FILECHOOSER, m_buttonChallengeFileChooser);
+    if (m_buttonChallengeFileChooser == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
+    m_gtkBuilder->get_widget(GUI_NEWGAME_CHALLENGE_TEXTVIEW_DESCRIPTION, m_descriptionTextView);
+    if (m_descriptionTextView == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
+    m_gtkBuilder->get_widget(GUI_NEWGAME_CHALLENGE_LABEL_AUTHOR, m_infoAuthorLabel);
+    if (m_infoAuthorLabel == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
+    m_gtkBuilder->get_widget(GUI_NEWGAME_CHALLENGE_LABEL_EMAIL, m_infoEmailLabel);
+    if (m_infoEmailLabel == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
+    m_gtkBuilder->get_widget(GUI_NEWGAME_CHALLENGE_LABEL_DESCRIPTION, m_infoDescriptionLabel);
+    if (m_infoDescriptionLabel == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
+    m_treeViewListOfChallenges = Glib::RefPtr<Gtk::IconView>::cast_dynamic(
+            m_gtkBuilder->get_object(GUI_NEWGAME_CHALLENGE_TREEVIEW_FILELIST));
+    if (!m_treeViewListOfChallenges)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
+    // set up icon view to store the type of games. Based on:
+    // http://git.gnome.org/browse/gtkmm-documentation/tree/examples/book/iconview
+    m_treeViewListOfChallengesModel = Gtk::ListStore::create(m_modelColumns);
+    m_treeViewListOfChallengesModel->set_sort_column(
+            m_modelColumns.m_col_challengename, Gtk::SORT_ASCENDING);
+
+    m_treeViewListOfChallenges->set_model(m_treeViewListOfChallengesModel);
+    m_treeViewListOfChallenges->set_text_column(m_modelColumns.m_col_challengename);
+    m_treeViewListOfChallenges->signal_selection_changed().connect(sigc::mem_fun(*this,
+            &NewGameTableChallenge::ChallengeList_on_selection_changed)); // item selected by a single click
+
+
+    // configure file chooser dialog
+    Gtk::FileFilter xmlFilter;// = Gtk::FileFilter::create();
+    xmlFilter.set_name(_("XML Files"));
+    //xmlFilter.add_pattern("*.[Xx][Mm][Ll]");
+    xmlFilter.add_mime_type("text/xml");
+
+    Gtk::FileFilter allFilesFilter;// = Gtk::FileFilter::create();
+    allFilesFilter.set_name(_("All Files"));
+    allFilesFilter.add_pattern("*.*");
+
+    m_buttonChallengeFileChooser->add_filter(allFilesFilter);
+    m_buttonChallengeFileChooser->add_filter(xmlFilter);
+
+
+    // this call will work in different ways depending on the current platform
+    ForceTranslationOfWidgets();
+
+    // connect the signals
+    m_radioButtonList->signal_toggled().connect(
+            sigc::mem_fun(*this, &NewGameTableChallenge::RadioButtonBuiltInList_Toggled));
+    m_radioButtonFileChooser->signal_toggled().connect(
+            sigc::mem_fun(*this, &NewGameTableChallenge::RadioButtonFileChooser_Toggled));
+    m_buttonChallengeFileChooser->signal_file_set().connect(
+            sigc::mem_fun(*this, &NewGameTableChallenge::ChallengeFileChooser_on_file_set));
+}
+
+NewGameTableChallenge::~NewGameTableChallenge()
+{
+}
+
+void NewGameTableChallenge::ChallengeFileChooser_on_file_set()
+{
+    if (m_buttonChallengeFileChooser->get_filename().empty())
+    {
+        return;
+    }
+
+    std::string exceptionMessage;
+
+    try
+    {
+        m_currentSelectedChallenge.LoadXMLChallenge(
+                m_buttonChallengeFileChooser->get_filename());
+    }
+    catch (const std::runtime_error &ex)
+    {
+        // could not load challenge from file
+        m_currentSelectedChallenge.Reset();
+
+        // unselect file being showed on the file chooser
+        m_buttonChallengeFileChooser->unselect_filename(
+                m_buttonChallengeFileChooser->get_filename());
+
+        exceptionMessage = ex.what();
+
+#ifdef DEBUG_PRINT
+        std::cout << "Exception happened trying to load challenge file: " << std::endl
+                  << "    " << ex.what() << std::endl;
+#endif
+    } // catch
+
+    if (!m_currentSelectedChallenge.Initialised())
+    {
+        // tell the user something went wrong (outside the catch statement)
+        Gtk::Window* topLevelWindow = NULL;
+        topLevelWindow = static_cast<Gtk::Window*>(this->get_toplevel());
+
+        if (topLevelWindow)
+        {
+            Gtk::MessageDialog::MessageDialog errorMsg(
+                    *topLevelWindow,
+                    exceptionMessage,
+                    true,
+                    Gtk::MESSAGE_ERROR,
+                    Gtk::BUTTONS_OK,
+                    true);
+
+            if (errorMsg.run())
+            {
+                ; // the dialog has only 1 button
+            }
+        }
+#ifdef DEBUG
+        else
+        {
+            // could not show error message. assert here
+            assert(0);
+        }
+#endif
+    } // if (!m_currentSelectedChallenge.Initialised())
+#ifdef DEBUG_PRINT
+    else
+    {
+        std::cout << "Challenge successfully loaded" << std::endl;
+    }
+#endif
+
+    UpdateSelectedChallengeInfo();
+}
+
+void NewGameTableChallenge::ChallengeList_on_selection_changed()
+{
+    // http://git.gnome.org/browse/gtkmm-documentation/tree/examples/book/iconview
+    typedef std::list<Gtk::TreeModel::Path> type_list_paths;
+    type_list_paths selected = m_treeViewListOfChallenges->get_selected_items();
+    if(!selected.empty())
+    {
+        // save the last path picked so whenever the user clicked somewhere
+        // where no rows get selected it can be used to restore the latest
+        // selection
+        m_currentSelectedPath = *selected.begin();
+    }
+    else if (m_currentSelectedPath)
+    {
+        // there must be a row ALWAYS selected. The user picked somewhere were no
+        // rows got selected. Select back the last one picked by him/her
+        m_treeViewListOfChallenges->select_path(m_currentSelectedPath);
+    }
+
+    if (m_currentSelectedPath)
+    {
+        Gtk::TreeModel::iterator iter = m_treeViewListOfChallengesModel->get_iter(m_currentSelectedPath);
+        Gtk::TreeModel::Row row = *iter;
+        m_currentSelectedChallenge = row[m_modelColumns.m_blockem_challenge];
+    }
+    else
+    {
+        // no selected challenge since there i no row selected on the tree view
+        m_currentSelectedChallenge.Reset();
+    }
+
+    UpdateSelectedChallengeInfo();
+}
+
+void NewGameTableChallenge::RadioButtonBuiltInList_Toggled()
+{
+    m_treeViewListOfChallenges->set_sensitive(
+            m_radioButtonList->property_active());
+
+    if (m_radioButtonList->property_active())
+    {
+        if (m_currentSelectedPath)
+        {
+            Gtk::TreeModel::iterator iter = m_treeViewListOfChallengesModel->get_iter(m_currentSelectedPath);
+            Gtk::TreeModel::Row row = *iter;
+            m_currentSelectedChallenge = row[m_modelColumns.m_blockem_challenge];
+        }
+        else
+        {
+            // no selected challenge since there i no row selected on the tree view
+            m_currentSelectedChallenge.Reset();
+        }
+    }
+
+    UpdateSelectedChallengeInfo();
+}
+
+void NewGameTableChallenge::RadioButtonFileChooser_Toggled()
+{
+    m_buttonChallengeFileChooser->set_sensitive(
+            m_radioButtonFileChooser->property_active());
+
+    if (m_radioButtonFileChooser->property_active())
+    {
+        // check if current selected file in the file chooser button is a valid
+        // challenge. If so save it into the m_currentSelectedChallenge attribute
+        ChallengeFileChooser_on_file_set();
+    }
+
+    UpdateSelectedChallengeInfo();
+}
+
+void NewGameTableChallenge::UpdateSelectedChallengeInfo()
+{
+    if (m_currentSelectedChallenge.Initialised())
+    {
+        m_descriptionTextView->get_buffer()->set_text(m_currentSelectedChallenge.GetChallengeInfo().description);
+    }
+    else
+    {
+        m_descriptionTextView->get_buffer()->set_text("");
+    }
+
+    std::cout << m_descriptionTextView->get_buffer()->get_text() << std::endl;
+
+    //m_descriptionTextView->set_buffer(m_descriptionTextViewBuffer);
+}
+
+void NewGameTableChallenge::SaveCurrentConfigIntoGlobalSettings() const
+{
+    // retrieve user settings from dialog and use them to set up global configuration
+}
+
+void NewGameTableChallenge::LoadCurrentConfigFromGlobalSettings()
+{
+    // load current global configuration into the widgets
+}
+
+#ifdef WIN32
+void NewGameTableChallenge::ForceTranslationOfWidgets()
+{
+    // in win32 systems gettext fails when the string is static and marked as
+    // translatable with N_() but _() is never called explicitely. Basically
+    // there are 2 kinds of strings that are not translated:
+    //  + Those included in the GOptionEntry list, which show the available
+    //    options that can be passed to the program through command line
+    //  + Strings included in the .glade file that never change during the
+    //    execution of the application, for example a menu called "Game", or a
+    //    label that contains the word "rotate"
+    //
+    // We'll be calling here to _() for every string found in the .glade file
+    // so it gets properly translated into the current domain (the 2nd case
+    // described above)
+
+    m_radioButtonList->set_label(
+            _(m_radioButtonList->get_label().c_str()));
+
+    m_radioButtonFileChooser->set_label(
+            _(m_radioButtonFileChooser->get_label().c_str()));
+
+    m_infoAuthorLabel->set_text(_(m_infoAuthorLabel->get_text().c_str()));
+    m_infoEmailLabel->set_text(_(m_infoEmailLabel->get_text().c_str()));
+    m_infoDescriptionLabel->set_text(_(m_infoDescriptionLabel->get_text().c_str()));
+}
+#else
+void NewGameTableChallenge::ForceTranslationOfWidgets()
 {
     // So far this is only needed in win32 platform due to some unknown issue
     // that prevents those strings to be automatically translated. It works
