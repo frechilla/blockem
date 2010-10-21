@@ -23,7 +23,6 @@
 /// @history
 /// Ref       Who                When         What
 ///           Faustino Frechilla 02-Oct-2010  Original development
-///           Faustino Frechilla 18-Oct-2010  default buttons
 /// @endhistory
 ///
 // ============================================================================
@@ -336,6 +335,11 @@ void DialogNewGame::SaveCurrentConfigIntoGlobalSettings(e_blockemGameType_t a_ga
             }
         }
     }
+}
+
+const BlockemChallenge& DialogNewGame::GetCurrentBlockemChallenge() const
+{
+    return m_newGameTableChallenge->GetCurrentBlockemChallenge();
 }
 
 #ifdef DEBUG
@@ -1391,6 +1395,18 @@ NewGameTableChallenge::NewGameTableChallenge(
     {
         throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
+    
+    m_gtkBuilder->get_widget(GUI_NEWGAME_CHALLENGE_ENTRY_AUTHOR, m_authorEntry);
+    if (m_authorEntry == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+    
+    m_gtkBuilder->get_widget(GUI_NEWGAME_CHALLENGE_ENTRY_EMAIL, m_emailEntry);
+    if (m_emailEntry == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }    
 
     m_gtkBuilder->get_widget(GUI_NEWGAME_CHALLENGE_TEXTVIEW_DESCRIPTION, m_descriptionTextView);
     if (m_descriptionTextView == NULL)
@@ -1433,6 +1449,9 @@ NewGameTableChallenge::NewGameTableChallenge(
     m_treeViewListOfChallenges->set_text_column(m_modelColumns.m_col_challengename);
     m_treeViewListOfChallenges->signal_selection_changed().connect(sigc::mem_fun(*this,
             &NewGameTableChallenge::ChallengeList_on_selection_changed)); // item selected by a single click
+    
+    // fill the list with the built-in challenges
+    UpdateBuiltInChallengesList();
 
 
     // configure file chooser dialog
@@ -1465,15 +1484,108 @@ NewGameTableChallenge::~NewGameTableChallenge()
 {
 }
 
+void NewGameTableChallenge::UpdateBuiltInChallengesList()
+{
+    // go through the PATH_TO_BUILTIN_CHALLENGES directory
+    // looking for challenges to be shown on the list
+    GDir* builtInChallegePath;
+    GError* error = NULL;
+    const gchar* fileName;
+    BlockemChallenge tmpChallenge;
+    
+    builtInChallegePath = g_dir_open (
+                                PATH_TO_BUILTIN_CHALLENGES.c_str(),
+                                0,
+                                &error);
+    
+    if (!builtInChallegePath)
+    {
+#ifdef DEBUG
+        std::cout << "Error accesing built-in challenge directory: "
+                  << error->message << std::endl;
+#endif
+        g_error_free(error);
+    }
+    
+    fileName = g_dir_read_name(builtInChallegePath);
+    while (fileName != NULL)
+    {
+        std::string fullFileName(
+            PATH_TO_BUILTIN_CHALLENGES + static_cast<const char*>(fileName));
+        
+        if (!g_file_test(fullFileName.c_str(), G_FILE_TEST_IS_REGULAR))
+        {
+#ifdef DEBUG
+            std::cout << "Loading challenges from built-in challenge dir"
+                      << std::endl
+                      << "    "
+                      << fullFileName << " is not a regular file" 
+                      << std::endl;
+#endif
+            fileName = g_dir_read_name(builtInChallegePath);
+            continue;
+        }
+        
+        tmpChallenge.Reset();        
+        try
+        {
+            tmpChallenge.LoadXMLChallenge(fullFileName);
+        }
+        catch (const std::runtime_error &ex)
+        {
+            // challenge could not be loaded
+#ifdef DEBUG
+            std::cout << "Challenge could not be loaded from built-in challenge dir"
+                      << std::endl << "    " << ex.what() << std::endl;
+#endif
+            fileName = g_dir_read_name(builtInChallegePath);
+            continue;
+        }
+        
+        // tmpChallenge must contain a valid challenge
+        // is a challenge with this name already in the list?
+        std::set<Glib::ustring>::const_iterator it;
+        it = m_treeViewListOfChallengesNamesSet.find(tmpChallenge.GetChallengeName());
+        if (it == m_treeViewListOfChallengesNamesSet.end())
+        {
+            // Brand new challenge name. Insert it into the list
+            Gtk::TreeModel::Row row = *(m_treeViewListOfChallengesModel->append());
+            row[m_modelColumns.m_blockem_challenge] = tmpChallenge;
+            row[m_modelColumns.m_col_challengename] = tmpChallenge.GetChallengeName();
+            
+            // update also the challenge's names set
+            m_treeViewListOfChallengesNamesSet.insert(tmpChallenge.GetChallengeName());
+        }
+#ifdef DEBUG
+        else
+        {
+            std::cout << "Duplicated challenge name \"" 
+                      << tmpChallenge.GetChallengeName() 
+                      << "\" at "
+                      << static_cast<const char*>(fileName)
+                      << std::endl;
+        }
+#endif
+    
+        // keep going. we must chck all files in that directory
+        fileName = g_dir_read_name(builtInChallegePath);
+    }
+    
+    g_dir_close(builtInChallegePath);
+}
+
 void NewGameTableChallenge::ChallengeFileChooser_on_file_set()
 {
     if (m_buttonChallengeFileChooser->get_filename().empty())
     {
+        // ensure info widgets get blanked out before returning
+        m_currentSelectedChallenge.Reset();
+        CurrentChallengeToWidgets();
+        
         return;
     }
 
     std::string exceptionMessage;
-
     try
     {
         m_currentSelectedChallenge.LoadXMLChallenge(
@@ -1532,7 +1644,7 @@ void NewGameTableChallenge::ChallengeFileChooser_on_file_set()
     }
 #endif
 
-    UpdateSelectedChallengeInfo();
+    CurrentChallengeToWidgets();
 }
 
 void NewGameTableChallenge::ChallengeList_on_selection_changed()
@@ -1566,7 +1678,7 @@ void NewGameTableChallenge::ChallengeList_on_selection_changed()
         m_currentSelectedChallenge.Reset();
     }
 
-    UpdateSelectedChallengeInfo();
+    CurrentChallengeToWidgets();
 }
 
 void NewGameTableChallenge::RadioButtonBuiltInList_Toggled()
@@ -1587,9 +1699,9 @@ void NewGameTableChallenge::RadioButtonBuiltInList_Toggled()
             // no selected challenge since there i no row selected on the tree view
             m_currentSelectedChallenge.Reset();
         }
+        
+        CurrentChallengeToWidgets();
     }
-
-    UpdateSelectedChallengeInfo();
 }
 
 void NewGameTableChallenge::RadioButtonFileChooser_Toggled()
@@ -1601,26 +1713,27 @@ void NewGameTableChallenge::RadioButtonFileChooser_Toggled()
     {
         // check if current selected file in the file chooser button is a valid
         // challenge. If so save it into the m_currentSelectedChallenge attribute
-        ChallengeFileChooser_on_file_set();
+        ChallengeFileChooser_on_file_set(); // CurrentChallengeToWidgets is called from that function
     }
-
-    UpdateSelectedChallengeInfo();
 }
 
-void NewGameTableChallenge::UpdateSelectedChallengeInfo()
+void NewGameTableChallenge::CurrentChallengeToWidgets()
 {
     if (m_currentSelectedChallenge.Initialised())
     {
-        m_descriptionTextView->get_buffer()->set_text(m_currentSelectedChallenge.GetChallengeInfo().description);
+        m_authorEntry->get_buffer()->set_text(
+            m_currentSelectedChallenge.GetChallengeInfo().authorName);
+        m_emailEntry->get_buffer()->set_text(
+            m_currentSelectedChallenge.GetChallengeInfo().authorEmail);
+        m_descriptionTextView->get_buffer()->set_text(
+            m_currentSelectedChallenge.GetChallengeInfo().description);
     }
     else
     {
+        m_authorEntry->get_buffer()->set_text("");
+        m_emailEntry->get_buffer()->set_text("");
         m_descriptionTextView->get_buffer()->set_text("");
     }
-
-    std::cout << m_descriptionTextView->get_buffer()->get_text() << std::endl;
-
-    //m_descriptionTextView->set_buffer(m_descriptionTextViewBuffer);
 }
 
 void NewGameTableChallenge::SaveCurrentConfigIntoGlobalSettings() const
@@ -1631,6 +1744,11 @@ void NewGameTableChallenge::SaveCurrentConfigIntoGlobalSettings() const
 void NewGameTableChallenge::LoadCurrentConfigFromGlobalSettings()
 {
     // load current global configuration into the widgets
+}
+
+const BlockemChallenge& NewGameTableChallenge::GetCurrentBlockemChallenge() const
+{
+    return m_currentSelectedChallenge;
 }
 
 #ifdef WIN32

@@ -244,9 +244,14 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     // accelerators for main_window menu
     this->add_accel_group(m_accelGroup);
 
-    // add game widgets into the window. Expand and fill!
+    // add game widgets into the window. (hide them all before hand)
+    // Expand and fill!
+    m_game1v1Widget.hide_all();
+    m_gameTotalAllocationWidget.hide_all();
+    m_gameChallengeWidget.hide_all();
     m_vBoxMain->pack_start(m_game1v1Widget, true, true);
     m_vBoxMain->pack_start(m_gameTotalAllocationWidget, true, true);
+    m_vBoxMain->pack_start(m_gameChallengeWidget, true, true);
 
     // connect also its handlers
     m_game1v1Widget.signal_fatalError().connect(
@@ -256,6 +261,10 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     m_gameTotalAllocationWidget.signal_fatalError().connect(
             sigc::mem_fun(*this, &MainWindow::Notify_FatalError));
     m_gameTotalAllocationWidget.signal_gameFinished().connect(
+            sigc::mem_fun(*this, &MainWindow::Notify_GameFinished));
+    m_gameChallengeWidget.signal_fatalError().connect(
+            sigc::mem_fun(*this, &MainWindow::Notify_FatalError));
+    m_gameChallengeWidget.signal_gameFinished().connect(
             sigc::mem_fun(*this, &MainWindow::Notify_GameFinished));
 
     // connect signals to handlers
@@ -358,11 +367,42 @@ void MainWindow::MenuItemGameQuit_Activate()
 
 void MainWindow::MenuItemGameNew_Activate()
 {
-    Gtk::ResponseType result =
-        static_cast<Gtk::ResponseType>(m_newGameDialog->run());
+    Gtk::ResponseType result;
+    bool dialogStaysOnScreen = true;
+    
+    while (dialogStaysOnScreen == true)
+    {
+        result = static_cast<Gtk::ResponseType>(m_newGameDialog->run());        
+        
+        if ( (result == Gtk::RESPONSE_OK) &&
+             (m_newGameDialog->GetSelectedTypeOfGame() == e_gameTypeChallenge) &&
+             (m_newGameDialog->GetCurrentBlockemChallenge().Initialised() == false) )
+        {
+            // handling of challenge games is a bit special
+            // if current selected challenge is not valid we'll be showing
+            // a message box telling the user he/she can't start a challenge
+            // game from an invalid blockem challenge file.
+            // afterwards the function will return without hiding the dialog
+            Gtk::MessageDialog::MessageDialog infoMessage(
+                *m_newGameDialog,
+                _("A challenge game can't start without a valid blockem challenge file"),
+                true,
+                Gtk::MESSAGE_ERROR,
+                Gtk::BUTTONS_OK,
+                true);
+
+            infoMessage.run(); // there will be only one type of value returned            
+            
+            // newGameDialog must stay. settings weren't correct to be able to
+            // launch a new game. stay in the loop
+            continue; 
+        }
+    
+        dialogStaysOnScreen = false;
+    } // while (dialogStaysOnScreen == true)
 
     if (result == Gtk::RESPONSE_OK)
-    {
+    {        
         // save configuration shown by the dialog into global config singleton
         // it only saves the one regarding the selected game type (it is passed
         // as a parameter)
@@ -383,17 +423,24 @@ void MainWindow::MenuItemGameNew_Activate()
         }
         case e_gameTypeTotalAllocation:
         {
-            // stop game1v1 computing process (it does nothing if it wasn't
-            // processing anything)
-            m_game1v1Widget.CancelComputing();
-
             // launch this new game!!
             m_gameTotalAllocationWidget.LaunchNewGame();
             break;
         }
+        case e_gameTypeChallenge:
+        {
+            // launch the new challenge!!
+            m_gameChallengeWidget.LaunchNewGame(
+                m_newGameDialog->GetCurrentBlockemChallenge());
+            break;
+        }
+#ifdef DEBUG
+        default:
+            assert(0);
+#endif
         } // switch(m_newGameDialog->GetSelectedTypeOfGame())
 
-    }
+    } // if (result == Gtk::RESPONSE_OK)
 #ifdef DEBUG
     else if ( (result != Gtk::RESPONSE_CANCEL) && (result != Gtk::RESPONSE_DELETE_EVENT))
     {
@@ -402,6 +449,7 @@ void MainWindow::MenuItemGameNew_Activate()
     }
 #endif // DEBUG
 
+    // hide the new game dialog. New game has been launched 
     m_newGameDialog->hide();
 }
 
@@ -411,11 +459,13 @@ void MainWindow::MenuItemSettingsViewNKPoints_Toggled()
     {
         m_game1v1Widget.BoardDrawingArea().ShowNucleationPoints();
         m_gameTotalAllocationWidget.BoardDrawingArea().ShowNucleationPoints();
+        m_gameChallengeWidget.BoardDrawingArea().ShowNucleationPoints();
     }
     else
     {
         m_game1v1Widget.BoardDrawingArea().HideNucleationPoints();
         m_gameTotalAllocationWidget.BoardDrawingArea().HideNucleationPoints();
+        m_gameChallengeWidget.BoardDrawingArea().HideNucleationPoints();
     }
 }
 
@@ -425,6 +475,7 @@ void MainWindow::MenuItemSettingsShowPlayer1ForbiddenArea_Toggled()
     {
         m_game1v1Widget.ShowForbiddenAreaInBoard(Game1v1::e_Game1v1Player1);
         m_gameTotalAllocationWidget.ShowForbiddenAreaInBoard(true);
+        m_gameChallengeWidget.ShowForbiddenAreaInBoard(true);
     }
 }
 
@@ -442,6 +493,7 @@ void MainWindow::MenuItemSettingsShowNoneForbiddenArea_Toggled()
     {
         m_game1v1Widget.ShowForbiddenAreaInBoard(Game1v1::e_Game1v1NoPlayer);
         m_gameTotalAllocationWidget.ShowForbiddenAreaInBoard(false);
+        m_gameChallengeWidget.ShowForbiddenAreaInBoard(false);
     }
 }
 
@@ -451,6 +503,7 @@ void MainWindow::MenuItemSettingsShowPlayer1InfluenceArea_Toggled()
     {
         m_game1v1Widget.ShowInfluenceAreaInBoard(Game1v1::e_Game1v1Player1);
         m_gameTotalAllocationWidget.ShowInfluenceAreaInBoard(true);
+        m_gameChallengeWidget.ShowInfluenceAreaInBoard(true);
     }
 }
 
@@ -468,6 +521,7 @@ void MainWindow::MenuItemSettingsShowNoneInfluenceArea_Toggled()
     {
         m_game1v1Widget.ShowInfluenceAreaInBoard(Game1v1::e_Game1v1NoPlayer);
         m_gameTotalAllocationWidget.ShowInfluenceAreaInBoard(false);
+        m_gameChallengeWidget.ShowInfluenceAreaInBoard(false);
     }
 }
 
@@ -571,9 +625,11 @@ void MainWindow::SetupWindowForNewGame(e_blockemGameType_t a_gametype)
         // configure now which game widget will be shown
         // set_visible doesn't work in 2.16 (which is used in windows)
         // show_all must be used instead!
-        m_game1v1Widget.show_all();
         m_gameTotalAllocationWidget.hide_all();
-
+        m_gameChallengeWidget.hide_all();
+        
+        m_game1v1Widget.show_all();
+        
         break;
     }
 
@@ -587,14 +643,46 @@ void MainWindow::SetupWindowForNewGame(e_blockemGameType_t a_gametype)
         // total allocation games cannot be configured
         m_settingsPrefsMenuItem->set_sensitive(false);
 
+        // stop game1v1 computing process (it does nothing if it wasn't
+        // processing anything)
+        m_game1v1Widget.CancelComputing();
+
         // configure now which game widget will be shown
         // set_visible doesn't work in 2.16 (which is used in windows)
         // show_all must be used instead!
         m_game1v1Widget.hide_all();
+        m_gameChallengeWidget.hide_all();
+        
         m_gameTotalAllocationWidget.show_all();
 
         break;
     }
+    
+    case e_gameTypeChallenge:
+    {
+        // hide player2's menus since there is no player2 in
+        // challenge games
+        m_settingsForbiddenAreaPlayer2MenuItem->hide();
+        m_settingsInfluenceAreaPlayer2MenuItem->hide();
+
+        // challenge games cannot be configured
+        m_settingsPrefsMenuItem->set_sensitive(false);
+
+        // stop game1v1 computing process (it does nothing if it wasn't
+        // processing anything)
+        m_game1v1Widget.CancelComputing();
+        
+        // configure now which game widget will be shown
+        // set_visible doesn't work in 2.16 (which is used in windows)
+        // show_all must be used instead!
+        m_game1v1Widget.hide_all();
+        m_gameTotalAllocationWidget.hide_all();
+        
+        m_gameChallengeWidget.show_all();
+
+        break;
+    }
+    
     } // switch(a_gametype)
 }
 

@@ -412,15 +412,17 @@ bool DrawingAreaBoard::on_expose_event(GdkEventExpose* event)
         uint8_t blue  = 0;
         m_currentPlayer->GetColour(red, green, blue);
 
-        if (!m_currentPlayer->GetStartingCoordinate().Initialised() &&
-            m_currentPlayer->NumberOfPiecesAvailable() == e_numberOfPieces)
+        if ( !m_currentPlayer->GetStartingCoordinate().Initialised()         &&
+            (m_currentPlayer->NumberOfPiecesAvailable() == e_numberOfPieces) &&
+            (m_currentPlayer->NumberOfNucleationPoints() == 0) )
         {
             // player has no starting coordinate set, but it has all the pieces
-            // available. It can start from everywhere in the board, check if
+            // available and there is no nucleation points on the board. 
+            // It can start from everywhere (total allocation games), check if
             // current location is valid
             //
             // use IsPieceDeployableInCoord instead of IsPieceDeployableInStartingPoint
-            // to support blockem challenges
+            // to support total allocation games
             if (rules::IsPieceDeployableInCoord(
                        *m_theBoard,
                        m_currentPiece.GetCurrentConfiguration(),

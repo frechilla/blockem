@@ -100,12 +100,19 @@
 #ifdef WIN32
 const std::string PATH_TO_PIXMAPS(
         std::string(DATADIR) + std::string("/pixmaps/"));
+        
+const std::string PATH_TO_BUILTIN_CHALLENGES(
+        std::string(DATADIR) + std::string("/challenges/"));
 
 #else // not a win32 system
 
 const std::string PATH_TO_PIXMAPS(
         std::string(DATADIR) + std::string("/") +
         std::string(PACKAGE) + std::string("/pixmaps/"));
+        
+const std::string PATH_TO_BUILTIN_CHALLENGES(
+        std::string(DATADIR) + std::string("/") +
+        std::string(PACKAGE) + std::string("/challenges/"));
 
 #endif // WIN32
 

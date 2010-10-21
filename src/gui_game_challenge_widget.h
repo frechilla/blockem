@@ -51,7 +51,9 @@ class GameChallengeWidget :
 {
 public:
     /// Instantiates the class
-    GameChallengeWidget();
+    /// @param a challenge to be shown. It is an optional parameter
+    ///        (if it is not specified it will get set to a default challenge)
+    GameChallengeWidget(const BlockemChallenge& a_challenge = BlockemChallenge());
     virtual ~GameChallengeWidget();
 
     /// Launches a new game.
@@ -68,9 +70,6 @@ public:
     /// @brief shows forbidden area of the player on the board
     /// @param a_show. forbidden area will be shown if true
     void ShowForbiddenAreaInBoard(bool a_show);
-
-    /// @brief callback to be called when a button is pressed inside the board
-    void BoardDrawingArea_BoardClicked(const Coordinate &, const Piece &, const Player &);
 
     /// Access to the fatal error signal private member. Note this signal is
     /// not thread safe so it must be processed by the same thread who
@@ -126,6 +125,9 @@ private:
 
     /// @brief set up the widgets that make up this object and add them into it
     void BuildGUI();
+
+    /// @brief callback to be called when a button is pressed inside the board
+    void BoardDrawingArea_BoardClicked(const Coordinate &, const Piece &, const Player &);
 
     // prevent the default constructors to be used
     GameChallengeWidget(const GameChallengeWidget &a_src);

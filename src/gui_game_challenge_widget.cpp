@@ -51,10 +51,10 @@ static const int32_t BOARD_NROWS = 14;
 static const int32_t BOARD_NCOLS = 14;
 
 
-GameChallengeWidget::GameChallengeWidget():
+GameChallengeWidget::GameChallengeWidget(const BlockemChallenge& a_challenge):
     Gtk::VBox(), //Calls the base class constructor
     m_currentGameFinished(false),
-    m_theChallengeGame(BlockemChallenge()), // a default dummy challenge
+    m_theChallengeGame(a_challenge), // a default dummy challenge
     m_pickPiecesDrawingArea(
         m_theChallengeGame.GetChallenger(),
         DrawingAreaShowPieces::eOrientation_leftToRight),
@@ -89,8 +89,9 @@ GameChallengeWidget::GameChallengeWidget():
     // human beings are allowed to edit pieces
     m_editPieceTable.set_sensitive(true);
 
-    // launch the game!!
-    LaunchNewGame(BlockemChallenge()); // a default dummy challenge
+    // No need to launch the new game since it will be always
+    // launched with a brand new challenge
+    //LaunchNewGame(a_challenge); 
 }
 
 GameChallengeWidget::~GameChallengeWidget()
@@ -180,6 +181,7 @@ void GameChallengeWidget::LaunchNewGame(const BlockemChallenge& a_challenge)
     m_boardDrawingArea.ResetBoard(m_theChallengeGame.GetBoard());
     m_boardDrawingArea.ResetPlayerList();
     m_boardDrawingArea.AddPlayerToList(m_theChallengeGame.GetChallenger());
+    m_boardDrawingArea.AddPlayerToList(m_theChallengeGame.GetOpponent());
     m_boardDrawingArea.SetCurrentPlayer(m_theChallengeGame.GetChallenger());
 
     // update the board view. Latest piece deployed effect has already

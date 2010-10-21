@@ -58,8 +58,11 @@ public:
     /// override Dialog::run. It will call Dialog::run internally to show the dialog on the screen
     int run();
 
-    /// returns type of game currently selected
+    /// @return type of game currently selected
     e_blockemGameType_t GetSelectedTypeOfGame();
+    
+    /// @return currenttle selected blockem challenge
+    const BlockemChallenge& GetCurrentBlockemChallenge() const;
 
 private:
 
@@ -385,6 +388,8 @@ public:
     /// @brief save info saved in the widgets into current global configuration
     virtual void SaveCurrentConfigIntoGlobalSettings() const;
 
+    /// @return currenttle selected blockem challenge
+    const BlockemChallenge& GetCurrentBlockemChallenge() const;
 
 private:
     /// @brief used to retrieve the objects from the Glade design
@@ -411,6 +416,7 @@ private:
     // tree views for the list of challenges
     Glib::RefPtr<Gtk::IconView>  m_treeViewListOfChallenges;
     Glib::RefPtr<Gtk::ListStore> m_treeViewListOfChallengesModel;
+    std::set<Glib::ustring>      m_treeViewListOfChallengesNamesSet;
     Gtk::TreeModel::Path         m_currentSelectedPath;
 
     // radio buttons and file chooser
@@ -419,6 +425,8 @@ private:
     Gtk::FileChooserButton* m_buttonChallengeFileChooser;
 
     // challenge's misc info
+    Gtk::Entry*    m_authorEntry;
+    Gtk::Entry*    m_emailEntry;
     Gtk::TextView* m_descriptionTextView;
 
     // labels loaded here because they need to be translated at startup on win32 platform
@@ -426,7 +434,6 @@ private:
     Gtk::Label* m_infoAuthorLabel;
     Gtk::Label* m_infoEmailLabel;
     Gtk::Label* m_infoDescriptionLabel;
-
 
     // current selected challenge by either the tree view or the file chooser
     BlockemChallenge m_currentSelectedChallenge;
@@ -437,8 +444,11 @@ private:
     void ChallengeList_on_selection_changed();
     void ChallengeFileChooser_on_file_set();
 
+    /// @brief updates list of built-in challenges
+    void UpdateBuiltInChallengesList();
+    
     /// @brief loads selected challenge's info into the info widgets
-    void UpdateSelectedChallengeInfo();
+    void CurrentChallengeToWidgets();
 
     /// Calls gettext per every static widget in the dialog. These strings
     /// are those ones included in the .glade file that never change during the

@@ -70,6 +70,7 @@ BlockemConfig::BlockemConfig() throw (std::runtime_error):
 #else
     // $HOME/.blockem/
     char *home;
+    //TODO have a look at Glib::get_home_dir    
     home = getenv("HOME");
 
     m_configFileFull =

@@ -101,16 +101,6 @@ public:
     /// @param a_game1v1Player if it is e_Game1v1NoPlayer no forbidden area will be shown
     void ShowForbiddenAreaInBoard(Game1v1::eGame1v1Player_t a_game1v1Player);
 
-    /// @brief callback to be called whenever the worker thread finishes computing a move
-    void WorkerThread_computingFinished(
-            const Piece              &a_piece,
-            const Coordinate         &a_coord,
-            Game1v1::eGame1v1Player_t a_playerToMove,
-            int32_t                   a_returnValue);
-
-    /// @brief callback to be called when a button is pressed inside the board
-    void BoardDrawingArea_BoardClicked(const Coordinate &, const Piece &, const Player &);
-
     /// Access to the fatal error signal private member. Note this signal is
     /// not thread safe so it must be processed by the same thread who
     /// handles the GUI
@@ -211,6 +201,16 @@ private:
     /// Signal object to notify when game is finished
     sigc::signal<void, const std::string&> m_signal_gameFinished;
 
+    /// @brief callback to be called when a button is pressed inside the board
+    void BoardDrawingArea_BoardClicked(const Coordinate &, const Piece &, const Player &);
+    
+    /// @brief callback to be called whenever the worker thread finishes computing a move
+    void WorkerThread_computingFinished(
+            const Piece              &a_piece,
+            const Coordinate         &a_coord,
+            Game1v1::eGame1v1Player_t a_playerToMove,
+            int32_t                   a_returnValue);
+    
     /// @brief requests the worker thread to compute a move
     /// It finishes the app if there's an error communicating with this thread
     /// @param player whose move will be calculated by the worker thread

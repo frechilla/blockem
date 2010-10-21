@@ -33,7 +33,7 @@
 #include "rules.h"
 
 /// challenger's name
-static const char PLAYER_CHALLENGER_NAME[] = N_("Challenger");
+static const char PLAYER_CHALLENGER_NAME[] = N_("Mr Green");
 /// opponents's name 
 /// (this player won't be externally visible. No need to translate its name)
 static const char PLAYER_DISTURBER_NAME[] = "disturber";
@@ -133,21 +133,28 @@ void GameChallenge::LoadChallenge(const BlockemChallenge& a_challenge)
         }
     }
     
-    for (int32_t thisPiece = e_minimumPieceIndex; 
-         thisPiece < e_numberOfPieces;
-         thisPiece++)
+    for (int32_t i = e_minimumPieceIndex; 
+         i < e_numberOfPieces;
+         i++)
     {
-        // disturber has no pieces at all. it doesn't need them
-        m_disturber.UnsetPiece(static_cast<ePieceType_t>(thisPiece));
+        ePieceType_t thisPiece = static_cast<ePieceType_t>(i);
         
-        if (a_challenge.IsChallengerPieceAvailable(
-                static_cast<ePieceType_t>(thisPiece)))
+        // disturber has no pieces at all. it doesn't need them
+        if (m_disturber.IsPieceAvailable(thisPiece))
         {
-            m_challenger.SetPiece(static_cast<ePieceType_t>(thisPiece));
+            m_disturber.UnsetPiece(thisPiece);
         }
-        else
+        
+        // is this piece avilable for the challenger?
+        if (a_challenge.IsChallengerPieceAvailable(thisPiece) && 
+            !m_challenger.IsPieceAvailable(thisPiece))
         {
-            m_challenger.UnsetPiece(static_cast<ePieceType_t>(thisPiece));
+            m_challenger.SetPiece(thisPiece);
+        }
+        else if (!a_challenge.IsChallengerPieceAvailable(thisPiece) && 
+                 m_challenger.IsPieceAvailable(thisPiece))
+        {
+            m_challenger.UnsetPiece(thisPiece);
         }
     }
     

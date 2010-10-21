@@ -1515,7 +1515,7 @@ You should have received a copy of the GNU General Public License along with blo
                         </child>
                         <child>
                           <object class="GtkRadioButton" id="newgame_challenge_radiobutton_loadfile">
-                            <property name="label" translatable="yes">Load a challenge from an .xml file</property>
+                            <property name="label" translatable="yes">Load a challenge from a .xml file</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>

@@ -76,7 +76,7 @@ public:
     void Reset();
 
     /// @return true if this object contains a valid challenge. false otherwise
-    bool Initialised();
+    bool Initialised() const;
 
     /// @return name of this challenge
     const std::string& GetChallengeName() const

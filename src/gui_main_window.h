@@ -25,6 +25,7 @@
 ///           Faustino Frechilla 12-Nov-2009  Original development
 ///           Faustino Frechilla 25-Apr-2010  libglade dependency removed. Code migrated to GtkBuilder
 ///           Faustino Frechilla 06-Oct-2010  Adapted to Game1v1Widget
+///           Faustino Frechilla 21-Oct-2010  GameChallengeWidget added
 /// @endhistory
 ///
 // ============================================================================
@@ -42,6 +43,7 @@
 #include "gui_exception.h"
 #include "gui_game1v1_widget.h"
 #include "gui_game_total_allocation_widget.h"
+#include "gui_game_challenge_widget.h"
 
 
 /// @brief class to handle the main window in the GUI
@@ -75,6 +77,9 @@ private:
     /// @brief the total allocation game widget
     GameTotalAllocationWidget m_gameTotalAllocationWidget;
 
+    /// @brief the challenge game widget
+    GameChallengeWidget m_gameChallengeWidget;
+    
     // accel group + menu items
     Glib::RefPtr<Gtk::AccelGroup> m_accelGroup;
     Glib::RefPtr<Gtk::MenuItem> m_gameMenuItem;

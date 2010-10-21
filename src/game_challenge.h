@@ -53,9 +53,18 @@ public:
 	    return m_board;
 	}
 
+    /// The player who is supposed to allocate all the pieces in the board
     inline const Player& GetChallenger() const
     {
         return m_challenger;
+    }
+    
+    /// This player isn't supposed to put down any pieces, it just "takes"
+    /// a few squares on the board to make it difficult for the challenger to
+    /// allocate all its pieces
+    inline const Player& GetOpponent() const
+    {
+        return m_disturber;
     }
 
     /// @brief set colour of challenger's pieces

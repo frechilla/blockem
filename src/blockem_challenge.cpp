@@ -45,7 +45,7 @@
 #include "gettext.h" // i18n
 #include "blockem_challenge.h"
 
-static const uint32_t   ERROR_STRING_BUFFER_SIZE = 128;
+static const uint32_t   ERROR_STRING_BUFFER_SIZE = 256;
 
 static const char       DEFAULT_CHALLENGE_NAME[] = "default challenge";
 static const int32_t    DEFAULT_NROWS = 0;
@@ -72,7 +72,7 @@ BlockemChallenge::~BlockemChallenge()
 {
 }
 
-bool BlockemChallenge::Initialised()
+bool BlockemChallenge::Initialised() const
 {
     // when a new challenge is loaded, the board has to have at least 1 square
     // an uninitialised challenge sets up its board to 0x0 (impossible to play)
@@ -880,6 +880,7 @@ void BlockemChallenge::XMLParseTagChallenger(
         // we are happy with this. Challenger will start the challenge from one
         // of the nuclation points defined by its taken squares. Up to the
         // challenge designer to ensure at least one of them is valid
+        SetChallengerStartingCoord(Coordinate());
     }
 }
 

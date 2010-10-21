@@ -59,7 +59,7 @@ public:
     void hide_all();
 
     /// Launches a new game.
-    /// WARNING: resets completely the game
+    /// WARNING: resets the game completely
     void LaunchNewGame();
 
     /// @return a reference to the drawing area shown by this widget
@@ -73,9 +73,6 @@ public:
     /// @param a_show. forbidden area will be shown if true
     void ShowForbiddenAreaInBoard(bool a_show);
 
-    /// @brief callback to be called when a button is pressed inside the board
-    void BoardDrawingArea_BoardClicked(const Coordinate &, const Piece &, const Player &);
-    
     /// Access to the fatal error signal private member. Note this signal is
     /// not thread safe so it must be processed by the same thread who
     /// handles the GUI
@@ -130,6 +127,9 @@ private:
 
     /// @brief set up the widgets that make up this object and add them into it
     void BuildGUI();
+    
+    /// @brief callback to be called when a button is pressed inside the board
+    void BoardDrawingArea_BoardClicked(const Coordinate &, const Piece &, const Player &);
 
     // prevent the default constructors to be used
     GameTotalAllocationWidget(const GameTotalAllocationWidget &a_src);

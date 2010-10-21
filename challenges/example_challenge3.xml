@@ -13,7 +13,7 @@
     An easy way to ensure your challenges are unique is to add a small unique
     prefix before the real name.
 -->
-<blockem_challenge name="tpl: Example 1">
+<blockem_challenge name="tpl: Example 3">
     
     <!--
         Board specification  
@@ -24,13 +24,13 @@
             It MUST be a positive number (bigger than 0).
              Massive boards can be hard to hadle by blockem GUI, so be sensible 
         -->
-        <nrows>13</nrows>
+        <nrows>15</nrows>
         <!-- 
             Number of comuns of the board for this challenge.
             It MUST be a positive number (bigger than 0).
             Massive boards can be hard to hadle by blockem GUI, so be sensible 
         -->
-        <ncolumns>13</ncolumns>
+        <ncolumns>15</ncolumns>
     </board>
   
     <!-- 
@@ -58,10 +58,37 @@
                      board is taken by both opponent and challenger
         -->
 
-        <taken row="6"  col="5"/>
-        <taken row="6"  col="7"/>
-        <taken row="7"  col="6"/>
-        <taken row="5"  col="6"/>
+        <taken row="0"  col="0" />
+        <taken row="1"  col="1" />
+        <taken row="2"  col="2" />
+        <taken row="3"  col="3" />
+        <taken row="4"  col="4" />
+        <taken row="5"  col="5" />
+        <taken row="6"  col="6"/>
+        
+        <taken row="8"  col="8"/>
+        <taken row="9"  col="9"/>
+        <taken row="10" col="10"/>
+        <taken row="11" col="11"/>
+        <taken row="12" col="12"/>
+        <taken row="13" col="13"/>
+        <taken row="14" col="14"/>
+        
+        <taken row="0"  col="14"/>
+        <taken row="1"  col="13"/>
+        <taken row="2"  col="12"/>
+        <taken row="3"  col="11"/>
+        <taken row="4"  col="10"/>
+        <taken row="5"  col="9"/>
+        <taken row="6"  col="8"/>
+        
+        <taken row="8"  col="6"/>
+        <taken row="9"  col="5"/>
+        <taken row="10" col="4"/>
+        <taken row="11" col="3"/>
+        <taken row="12" col="2"/>
+        <taken row="13" col="1"/>
+        <taken row="14" col="0"/>
 
     </opponent>
     
@@ -88,10 +115,6 @@
             WARNING: Blockem won't load the challenge if the same square on the
                      board is taken by both opponent and challenger
         -->
-        <taken row="0"  col="0" />
-        <taken row="0"  col="12"/>
-        <taken row="12" col="0" />
-        <taken row="12" col="12"/>
         
         <!--
             The following list contains the full set of available pieces in
@@ -106,10 +129,10 @@
             
             Name of pieces is case sensitive and MUST be left as it is here
         -->
-        <piece available="yes">Baby piece</piece>
-        <piece available="no">Two piece</piece>    <!-- not present -->
-        <piece available="no">Three piece</piece>  <!-- not present -->
-        <piece available="no">Little V</piece>     <!-- not present -->
+        <piece available="yes">Baby piece</piece> <!-- the only one available -->
+        <piece available="yes">Two piece</piece>    
+        <piece available="yes">Three piece</piece>
+        <piece available="yes">Little V</piece>
         <piece available="yes">Full square</piece>
         <piece available="yes">Four long piece</piece>
         <piece available="yes">Little L</piece>
@@ -153,8 +176,8 @@
                      valid row or column is the amount of rows/columns defined
                      under the "board" tag minus 1
         -->
-        <starting_row>6</starting_row>
-        <starting_col>6</starting_col>
+        <starting_row>7</starting_row>
+        <starting_col>7</starting_col>
     </challenger>
     
     <!--
@@ -177,7 +200,7 @@
             WARNING: It will be parsed with all new line and space characters
                      contained here
         -->
-        <description>This is not a smart challenge, It is just an example</description>
+        <description>A funny-looking challenge in a 15x15 board</description>
     </infochallenge>
     
 </blockem_challenge>
