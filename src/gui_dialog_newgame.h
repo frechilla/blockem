@@ -60,7 +60,7 @@ public:
 
     /// @return type of game currently selected
     e_blockemGameType_t GetSelectedTypeOfGame();
-    
+
     /// @return currenttle selected blockem challenge
     const BlockemChallenge& GetCurrentBlockemChallenge() const;
 
@@ -425,12 +425,20 @@ private:
     Gtk::FileChooserButton* m_buttonChallengeFileChooser;
 
     // challenge's misc info
+    Gtk::Entry*    m_nRowsEntry;
+    Gtk::Entry*    m_nColsEntry;
+    Gtk::Entry*    m_nTakenSquaresEntry;
+    Gtk::Entry*    m_nTakenSquaresChallengerEntry;
     Gtk::Entry*    m_authorEntry;
     Gtk::Entry*    m_emailEntry;
     Gtk::TextView* m_descriptionTextView;
 
     // labels loaded here because they need to be translated at startup on win32 platform
     // have a look at ForceTranslationOfWidgets
+    Gtk::Label* m_nRowsLabel;
+    Gtk::Label* m_nColsLabel;
+    Gtk::Label* m_nTakenSquaresLabel;
+    Gtk::Label* m_nTakenSquaresChallengerLabel;
     Gtk::Label* m_infoAuthorLabel;
     Gtk::Label* m_infoEmailLabel;
     Gtk::Label* m_infoDescriptionLabel;
@@ -446,7 +454,7 @@ private:
 
     /// @brief updates list of built-in challenges
     void UpdateBuiltInChallengesList();
-    
+
     /// @brief loads selected challenge's info into the info widgets
     void CurrentChallengeToWidgets();
 

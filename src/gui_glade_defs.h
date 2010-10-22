@@ -100,16 +100,15 @@
 #ifdef WIN32
 const std::string PATH_TO_PIXMAPS(
         std::string(DATADIR) + std::string("/pixmaps/"));
-        
+
 const std::string PATH_TO_BUILTIN_CHALLENGES(
         std::string(DATADIR) + std::string("/challenges/"));
 
 #else // not a win32 system
-
 const std::string PATH_TO_PIXMAPS(
         std::string(DATADIR) + std::string("/") +
         std::string(PACKAGE) + std::string("/pixmaps/"));
-        
+
 const std::string PATH_TO_BUILTIN_CHALLENGES(
         std::string(DATADIR) + std::string("/") +
         std::string(PACKAGE) + std::string("/challenges/"));
@@ -238,8 +237,16 @@ const char GUI_NEWGAME_CHALLENGE_RBUTTON_FILE[]         = "newgame_challenge_rad
 const char GUI_NEWGAME_CHALLENGE_TREEVIEW_FILELIST[]    = "newgame_challenge_treeview";
 const char GUI_NEWGAME_CHALLENGE_FILECHOOSER[]          = "newgame_challenge_filechooserbutton";
 const char GUI_NEWGAME_CHALLENGE_TEXTVIEW_DESCRIPTION[] = "newgame_challenge_textview_description";
+const char GUI_NEWGAME_CHALLENGE_ENTRY_NROWS[]          = "newgame_challenge_entry_nrows";
+const char GUI_NEWGAME_CHALLENGE_ENTRY_NCOLS[]          = "newgame_challenge_entry_ncols";
+const char GUI_NEWGAME_CHALLENGE_ENTRY_TAKEN[]          = "newgame_challenge_entry_taken";
+const char GUI_NEWGAME_CHALLENGE_ENTRY_TAKENCHALLENGER[]= "newgame_challenge_entry_taken_challenger";
 const char GUI_NEWGAME_CHALLENGE_ENTRY_AUTHOR[]         = "newgame_challenge_entry_author";
 const char GUI_NEWGAME_CHALLENGE_ENTRY_EMAIL[]          = "newgame_challenge_entry_email";
+const char GUI_NEWGAME_CHALLENGE_LABEL_NROWS[]          = "newgame_challenge_label_nrows";
+const char GUI_NEWGAME_CHALLENGE_LABEL_NCOLS[]          = "newgame_challenge_label_ncols";
+const char GUI_NEWGAME_CHALLENGE_LABEL_TAKEN[]          = "newgame_challenge_label_taken";
+const char GUI_NEWGAME_CHALLENGE_LABEL_TAKENCHALLENGER[]= "newgame_challenge_label_taken_challenger";
 const char GUI_NEWGAME_CHALLENGE_LABEL_AUTHOR[]         = "newgame_challenge_label_author";
 const char GUI_NEWGAME_CHALLENGE_LABEL_EMAIL[]          = "newgame_challenge_label_email";
 const char GUI_NEWGAME_CHALLENGE_LABEL_DESCRIPTION[]    = "newgame_challenge_label_description";

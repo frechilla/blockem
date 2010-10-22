@@ -1395,21 +1395,69 @@ NewGameTableChallenge::NewGameTableChallenge(
     {
         throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
-    
+
+    m_gtkBuilder->get_widget(GUI_NEWGAME_CHALLENGE_ENTRY_NROWS, m_nRowsEntry);
+    if (m_nRowsEntry == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
+    m_gtkBuilder->get_widget(GUI_NEWGAME_CHALLENGE_ENTRY_NCOLS, m_nColsEntry);
+    if (m_nColsEntry == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
+    m_gtkBuilder->get_widget(GUI_NEWGAME_CHALLENGE_ENTRY_TAKEN, m_nTakenSquaresEntry);
+    if (m_nTakenSquaresEntry == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
+    m_gtkBuilder->get_widget(GUI_NEWGAME_CHALLENGE_ENTRY_TAKENCHALLENGER, m_nTakenSquaresChallengerEntry);
+    if (m_nTakenSquaresChallengerEntry == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
     m_gtkBuilder->get_widget(GUI_NEWGAME_CHALLENGE_ENTRY_AUTHOR, m_authorEntry);
     if (m_authorEntry == NULL)
     {
         throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
-    
+
     m_gtkBuilder->get_widget(GUI_NEWGAME_CHALLENGE_ENTRY_EMAIL, m_emailEntry);
     if (m_emailEntry == NULL)
     {
         throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
-    }    
+    }
 
     m_gtkBuilder->get_widget(GUI_NEWGAME_CHALLENGE_TEXTVIEW_DESCRIPTION, m_descriptionTextView);
     if (m_descriptionTextView == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
+    m_gtkBuilder->get_widget(GUI_NEWGAME_CHALLENGE_LABEL_NROWS, m_nRowsLabel);
+    if (m_nRowsLabel == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
+    m_gtkBuilder->get_widget(GUI_NEWGAME_CHALLENGE_LABEL_NCOLS, m_nColsLabel);
+    if (m_nColsLabel == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
+    m_gtkBuilder->get_widget(GUI_NEWGAME_CHALLENGE_LABEL_TAKEN, m_nTakenSquaresLabel);
+    if (m_nTakenSquaresLabel == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
+    m_gtkBuilder->get_widget(GUI_NEWGAME_CHALLENGE_LABEL_TAKENCHALLENGER, m_nTakenSquaresChallengerLabel);
+    if (m_nTakenSquaresChallengerLabel == NULL)
     {
         throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
@@ -1449,7 +1497,7 @@ NewGameTableChallenge::NewGameTableChallenge(
     m_treeViewListOfChallenges->set_text_column(m_modelColumns.m_col_challengename);
     m_treeViewListOfChallenges->signal_selection_changed().connect(sigc::mem_fun(*this,
             &NewGameTableChallenge::ChallengeList_on_selection_changed)); // item selected by a single click
-    
+
     // fill the list with the built-in challenges
     UpdateBuiltInChallengesList();
 
@@ -1492,12 +1540,12 @@ void NewGameTableChallenge::UpdateBuiltInChallengesList()
     GError* error = NULL;
     const gchar* fileName;
     BlockemChallenge tmpChallenge;
-    
+
     builtInChallegePath = g_dir_open (
                                 PATH_TO_BUILTIN_CHALLENGES.c_str(),
                                 0,
                                 &error);
-    
+
     if (!builtInChallegePath)
     {
 #ifdef DEBUG
@@ -1505,28 +1553,29 @@ void NewGameTableChallenge::UpdateBuiltInChallengesList()
                   << error->message << std::endl;
 #endif
         g_error_free(error);
+        return;
     }
-    
+
     fileName = g_dir_read_name(builtInChallegePath);
     while (fileName != NULL)
     {
         std::string fullFileName(
             PATH_TO_BUILTIN_CHALLENGES + static_cast<const char*>(fileName));
-        
+
         if (!g_file_test(fullFileName.c_str(), G_FILE_TEST_IS_REGULAR))
         {
 #ifdef DEBUG
             std::cout << "Loading challenges from built-in challenge dir"
                       << std::endl
                       << "    "
-                      << fullFileName << " is not a regular file" 
+                      << fullFileName << " is not a regular file"
                       << std::endl;
 #endif
             fileName = g_dir_read_name(builtInChallegePath);
             continue;
         }
-        
-        tmpChallenge.Reset();        
+
+        tmpChallenge.Reset();
         try
         {
             tmpChallenge.LoadXMLChallenge(fullFileName);
@@ -1541,7 +1590,7 @@ void NewGameTableChallenge::UpdateBuiltInChallengesList()
             fileName = g_dir_read_name(builtInChallegePath);
             continue;
         }
-        
+
         // tmpChallenge must contain a valid challenge
         // is a challenge with this name already in the list?
         std::set<Glib::ustring>::const_iterator it;
@@ -1552,25 +1601,25 @@ void NewGameTableChallenge::UpdateBuiltInChallengesList()
             Gtk::TreeModel::Row row = *(m_treeViewListOfChallengesModel->append());
             row[m_modelColumns.m_blockem_challenge] = tmpChallenge;
             row[m_modelColumns.m_col_challengename] = tmpChallenge.GetChallengeName();
-            
+
             // update also the challenge's names set
             m_treeViewListOfChallengesNamesSet.insert(tmpChallenge.GetChallengeName());
         }
 #ifdef DEBUG
         else
         {
-            std::cout << "Duplicated challenge name \"" 
-                      << tmpChallenge.GetChallengeName() 
+            std::cout << "Duplicated challenge name \""
+                      << tmpChallenge.GetChallengeName()
                       << "\" at "
                       << static_cast<const char*>(fileName)
                       << std::endl;
         }
 #endif
-    
+
         // keep going. we must chck all files in that directory
         fileName = g_dir_read_name(builtInChallegePath);
     }
-    
+
     g_dir_close(builtInChallegePath);
 }
 
@@ -1581,7 +1630,7 @@ void NewGameTableChallenge::ChallengeFileChooser_on_file_set()
         // ensure info widgets get blanked out before returning
         m_currentSelectedChallenge.Reset();
         CurrentChallengeToWidgets();
-        
+
         return;
     }
 
@@ -1699,7 +1748,7 @@ void NewGameTableChallenge::RadioButtonBuiltInList_Toggled()
             // no selected challenge since there i no row selected on the tree view
             m_currentSelectedChallenge.Reset();
         }
-        
+
         CurrentChallengeToWidgets();
     }
 }
@@ -1721,6 +1770,28 @@ void NewGameTableChallenge::CurrentChallengeToWidgets()
 {
     if (m_currentSelectedChallenge.Initialised())
     {
+        std::ostringstream outputStr;
+
+        outputStr << static_cast<int32_t>(m_currentSelectedChallenge.GetBoardRows());
+        m_nRowsEntry->get_buffer()->set_text(outputStr.str());
+
+        outputStr.clear(); // clear error flags. MUST be done first
+        outputStr.str("");
+        outputStr << static_cast<int32_t>(m_currentSelectedChallenge.GetBoardColumns());
+        m_nColsEntry->get_buffer()->set_text(outputStr.str());
+
+        outputStr.clear(); // clear error flags. MUST be done first
+        outputStr.str("");
+        outputStr << static_cast<int32_t>(
+                         m_currentSelectedChallenge.GetChallengerTakenSquares().size() +
+                         m_currentSelectedChallenge.GetOpponentTakenSquares().size());
+        m_nTakenSquaresEntry->get_buffer()->set_text(outputStr.str());
+
+        outputStr.clear(); // clear error flags. MUST be done first
+        outputStr.str("");
+        outputStr << static_cast<int32_t>(m_currentSelectedChallenge.GetChallengerTakenSquares().size());
+        m_nTakenSquaresChallengerEntry->get_buffer()->set_text(outputStr.str());
+
         m_authorEntry->get_buffer()->set_text(
             m_currentSelectedChallenge.GetChallengeInfo().authorName);
         m_emailEntry->get_buffer()->set_text(
@@ -1730,6 +1801,10 @@ void NewGameTableChallenge::CurrentChallengeToWidgets()
     }
     else
     {
+        m_nRowsEntry->get_buffer()->set_text("");
+        m_nColsEntry->get_buffer()->set_text("");
+        m_nTakenSquaresEntry->get_buffer()->set_text("");
+        m_nTakenSquaresChallengerEntry->get_buffer()->set_text("");
         m_authorEntry->get_buffer()->set_text("");
         m_emailEntry->get_buffer()->set_text("");
         m_descriptionTextView->get_buffer()->set_text("");
@@ -1773,6 +1848,10 @@ void NewGameTableChallenge::ForceTranslationOfWidgets()
     m_radioButtonFileChooser->set_label(
             _(m_radioButtonFileChooser->get_label().c_str()));
 
+    m_nRowsLabel->set_text(_(m_nRowsLabel->get_text().c_str()));
+    m_nColsLabel->set_text(_(m_nColsLabel->get_text().c_str()));
+    m_nTakenSquaresLabel->set_text(_(m_nTakenSquaresLabel->get_text().c_str()));
+    m_nTakenSquaresChallengerLabel->set_text(_(m_nTakenSquaresChallengerLabel->get_text().c_str()));
     m_infoAuthorLabel->set_text(_(m_infoAuthorLabel->get_text().c_str()));
     m_infoEmailLabel->set_text(_(m_infoEmailLabel->get_text().c_str()));
     m_infoDescriptionLabel->set_text(_(m_infoDescriptionLabel->get_text().c_str()));

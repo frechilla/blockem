@@ -8,32 +8,6 @@ EXTRA_DIST = \
 ABOUT-NLS \
 config.rpath \
 gettext.h \
-m4/ChangeLog \
-pixmaps/blockemicon.ico    \
-pixmaps/blockemlogo128.png \
-pixmaps/blockemlogo16.png  \
-pixmaps/blockemlogo32.xpm  \
-pixmaps/blockemlogo48.png  \
-pixmaps/blockemlogo.png    \
-pixmaps/game1vs1.png       \
-pixmaps/gametotalalloc.png
-
-# Note pixmapsdir contains @PACKAGE@. This must be taken into account
-# by the binary sources (see gui_glade_defs.h)
-pixmapsdir = $(datadir)/@PACKAGE@/pixmaps
-
-# note that 'pixmaps/' must be added in front because it is the directory
-# where these files are stored (relative path from the root of the package)
-pixmaps_DATA = \
-pixmaps/blockemicon.ico    \
-pixmaps/blockemlogo128.png \
-pixmaps/blockemlogo16.png  \
-pixmaps/blockemlogo32.xpm  \
-pixmaps/blockemlogo48.png  \
-pixmaps/blockemlogo.png    \
-pixmaps/game1vs1.png       \
-pixmaps/gametotalalloc.png
-
-
+m4/ChangeLog 
 
 ACLOCAL_AMFLAGS = -I m4
