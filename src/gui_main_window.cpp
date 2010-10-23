@@ -369,11 +369,11 @@ void MainWindow::MenuItemGameNew_Activate()
 {
     Gtk::ResponseType result;
     bool dialogStaysOnScreen = true;
-    
+
     while (dialogStaysOnScreen == true)
     {
-        result = static_cast<Gtk::ResponseType>(m_newGameDialog->run());        
-        
+        result = static_cast<Gtk::ResponseType>(m_newGameDialog->run());
+
         if ( (result == Gtk::RESPONSE_OK) &&
              (m_newGameDialog->GetSelectedTypeOfGame() == e_gameTypeChallenge) &&
              (m_newGameDialog->GetCurrentBlockemChallenge().Initialised() == false) )
@@ -391,18 +391,18 @@ void MainWindow::MenuItemGameNew_Activate()
                 Gtk::BUTTONS_OK,
                 true);
 
-            infoMessage.run(); // there will be only one type of value returned            
-            
+            infoMessage.run(); // there will be only one type of value returned
+
             // newGameDialog must stay. settings weren't correct to be able to
             // launch a new game. stay in the loop
-            continue; 
+            continue;
         }
-    
+
         dialogStaysOnScreen = false;
     } // while (dialogStaysOnScreen == true)
 
     if (result == Gtk::RESPONSE_OK)
-    {        
+    {
         // save configuration shown by the dialog into global config singleton
         // it only saves the one regarding the selected game type (it is passed
         // as a parameter)
@@ -449,7 +449,7 @@ void MainWindow::MenuItemGameNew_Activate()
     }
 #endif // DEBUG
 
-    // hide the new game dialog. New game has been launched 
+    // hide the new game dialog. New game has been launched
     m_newGameDialog->hide();
 }
 
@@ -611,6 +611,10 @@ void MainWindow::Notify_GameFinished(const std::string& a_msg)
 
 void MainWindow::SetupWindowForNewGame(e_blockemGameType_t a_gametype)
 {
+    // stop game1v1 computing process (it does nothing if it wasn't
+    // processing anything)
+    m_game1v1Widget.CancelComputing();
+
     switch(a_gametype)
     {
     case e_gameType1vs1:
@@ -627,9 +631,9 @@ void MainWindow::SetupWindowForNewGame(e_blockemGameType_t a_gametype)
         // show_all must be used instead!
         m_gameTotalAllocationWidget.hide_all();
         m_gameChallengeWidget.hide_all();
-        
+
         m_game1v1Widget.show_all();
-        
+
         break;
     }
 
@@ -643,21 +647,17 @@ void MainWindow::SetupWindowForNewGame(e_blockemGameType_t a_gametype)
         // total allocation games cannot be configured
         m_settingsPrefsMenuItem->set_sensitive(false);
 
-        // stop game1v1 computing process (it does nothing if it wasn't
-        // processing anything)
-        m_game1v1Widget.CancelComputing();
-
         // configure now which game widget will be shown
         // set_visible doesn't work in 2.16 (which is used in windows)
         // show_all must be used instead!
         m_game1v1Widget.hide_all();
         m_gameChallengeWidget.hide_all();
-        
+
         m_gameTotalAllocationWidget.show_all();
 
         break;
     }
-    
+
     case e_gameTypeChallenge:
     {
         // hide player2's menus since there is no player2 in
@@ -668,21 +668,17 @@ void MainWindow::SetupWindowForNewGame(e_blockemGameType_t a_gametype)
         // challenge games cannot be configured
         m_settingsPrefsMenuItem->set_sensitive(false);
 
-        // stop game1v1 computing process (it does nothing if it wasn't
-        // processing anything)
-        m_game1v1Widget.CancelComputing();
-        
         // configure now which game widget will be shown
         // set_visible doesn't work in 2.16 (which is used in windows)
         // show_all must be used instead!
         m_game1v1Widget.hide_all();
         m_gameTotalAllocationWidget.hide_all();
-        
+
         m_gameChallengeWidget.show_all();
 
         break;
     }
-    
+
     } // switch(a_gametype)
 }
 

@@ -56,6 +56,10 @@ public:
     GameChallengeWidget(const BlockemChallenge& a_challenge = BlockemChallenge());
     virtual ~GameChallengeWidget();
 
+    /// @brief Recursively hides a widget and any child widgets
+    /// stops all glib timers owned by the object
+    void hide_all();
+
     /// Launches a new game.
     /// @brief challenge to be shown on the widget
     void LaunchNewGame(const BlockemChallenge& a_challenge);

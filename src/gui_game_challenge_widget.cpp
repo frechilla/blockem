@@ -91,11 +91,21 @@ GameChallengeWidget::GameChallengeWidget(const BlockemChallenge& a_challenge):
 
     // No need to launch the new game since it will be always
     // launched with a brand new challenge
-    //LaunchNewGame(a_challenge); 
+    //LaunchNewGame(a_challenge);
 }
 
 GameChallengeWidget::~GameChallengeWidget()
 {
+}
+
+void GameChallengeWidget::hide_all()
+{
+    // stop all glib timers before hiding the widget
+    m_boardDrawingArea.CancelLatestPieceDeployedEffect();
+    m_statusBar.StopAllStopwatches();
+
+    // hide the widget
+    Gtk::VBox::hide_all();
 }
 
 void GameChallengeWidget::BuildGUI()

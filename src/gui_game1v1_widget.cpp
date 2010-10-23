@@ -166,7 +166,7 @@ void Game1v1Widget::hide_all()
     // stop all glib timers before hiding the widget
     m_boardDrawingArea.CancelLatestPieceDeployedEffect();
     m_statusBar.StopAllStopwatches();
-    
+
     // hide the widget
     Gtk::VBox::hide_all();
 }
@@ -741,12 +741,12 @@ void Game1v1Widget::NotifyMoveComputed()
     {
     case Game1v1::e_Game1v1Player1:
     {
-        followingPlayer   = Game1v1::e_Game1v1Player2;
+        followingPlayer = Game1v1::e_Game1v1Player2;
         break;
     }
     case Game1v1::e_Game1v1Player2:
     {
-        followingPlayer   = Game1v1::e_Game1v1Player1;
+        followingPlayer = Game1v1::e_Game1v1Player1;
         break;
     }
 
