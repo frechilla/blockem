@@ -2,9 +2,9 @@ This directory contains a set of .xml. Each one of them defines a specific
 challenge that can be loaded on the application to be played
 
 Format of these XML files is defined in blockem_challenge.dtd, in this
-directory. There is also an example challenge in the file 
-"example_challenge.xml" which can be used as a starting point to write your 
-own blockem challenges. It contains quite a lot of comments that are 
+directory. There is also a set of example challenges in files 
+example_challenge[0-9]*.xml which can be used as a starting point to write
+your own blockem challenges. It contains quite a lot of comments that are 
 supposed to explain each one of the options that define a blockem challenge
 
 If you want to validate your xml you can use the xmllint program included 
@@ -17,4 +17,3 @@ the .xml file or through the DOCTYPE SYSTEM directive, there is no need for
 this option since it will be automatically checked
 
 have fun!
- 

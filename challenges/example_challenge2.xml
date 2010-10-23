@@ -13,7 +13,7 @@
     An easy way to ensure your challenges are unique is to add a small unique
     prefix before the real name.
 -->
-<blockem_challenge name="tpl: Example 2">
+<blockem_challenge name="xpl: Example 2">
     
     <!--
         Board specification  
