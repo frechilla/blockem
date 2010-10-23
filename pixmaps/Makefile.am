@@ -6,7 +6,8 @@ EXTRA_DIST= \
     blockemlogo48.png  \
     blockemlogo.png    \
     game1vs1.png       \
-    gametotalalloc.png
+    gametotalalloc.png \
+    gamechallenge.png
 
 # Note pixmapsdir contains @PACKAGE@. This must be taken into account
 # by the binary sources (see gui_glade_defs.h)
@@ -22,4 +23,5 @@ pixmaps_DATA = \
     blockemlogo48.png  \
     blockemlogo.png    \
     game1vs1.png       \
-    gametotalalloc.png
+    gametotalalloc.png \
+    gamechallenge.png
