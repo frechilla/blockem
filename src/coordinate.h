@@ -41,64 +41,40 @@ const int32_t COORD_UNINITIALISED = -2147483647; // -2147483648
 class Coordinate
 {
 public:
+    /// @brief builds an uninitialised coordinate
     Coordinate():
         m_row(COORD_UNINITIALISED),
         m_col(COORD_UNINITIALISED)
-    {};
+    {}
+
+    /// @brief builds a coordiante and initialises it with parameters
+    /// @param a_row
+    /// @param a_column
     Coordinate(int32_t a_row, int32_t a_column):
         m_row(a_row),
         m_col(a_column)
-    {};
+    {}
+
     virtual ~Coordinate()
     {}
 
     /// @brief sets the value of the coordinate
-    inline void Set(int32_t a_row, int32_t a_column)
-    {
-        m_row = a_row;
-        m_col = a_column;
-    };
+    inline void Set(int32_t a_row, int32_t a_column);
 
     /// @return true if both coords have been initialised
-    inline bool Initialised() const
-    {
-        return ( (m_row != COORD_UNINITIALISED) &&
-                 (m_col != COORD_UNINITIALISED) );
-    };
+    inline bool Initialised() const;
 
-    inline bool operator== (const Coordinate &a_src) const
-    {
-        return ((this->m_row == a_src.m_row) &&
-                (this->m_col == a_src.m_col) );
-    }
+    inline bool operator== (const Coordinate &a_src) const;
 
-    inline bool operator!= (const Coordinate &a_src) const
-    {
-        return ((this->m_row != a_src.m_row) ||
-                (this->m_col != a_src.m_col) );
-    }
+    inline bool operator!= (const Coordinate &a_src) const;
 
-    inline bool operator>= (const Coordinate &a_src) const
-    {
-        return ( (this->m_row > a_src.m_row) ||
-                 ((this->m_row == a_src.m_row) && (this->m_col >= a_src.m_col)) );
-    }
+    inline bool operator>= (const Coordinate &a_src) const;
 
-    inline bool operator> (const Coordinate &a_src) const
-    {
-        return ( (this->m_row > a_src.m_row) ||
-                 ((this->m_row == a_src.m_row) && (this->m_col > a_src.m_col)) );
-    }
+    inline bool operator> (const Coordinate &a_src) const;
 
-    inline bool operator<= (const Coordinate &a_src) const
-    {
-        return (! (*this > a_src));
-    }
+    inline bool operator<= (const Coordinate &a_src) const;
 
-    inline bool operator< (const Coordinate &a_src) const
-    {
-        return (! (*this >= a_src));
-    }
+    inline bool operator< (const Coordinate &a_src) const;
 
     ///@brief struct to be used as a comparator.
     /// Implements an operator() which returns true if its first argument is less than its second argument,
@@ -125,6 +101,10 @@ public:
     /// column of this coordinate
     int32_t m_col;
 };
+
+// include implementation details of inline functions
+#include "impl/coordinate_impl.h"
+
 
 #if 0
 /// @brief a magical array of coordinates to be used with STL
@@ -157,5 +137,6 @@ private:
     Coordinate m_coords[NCOORDS];
 };
 #endif // #if 0
+
 
 #endif /* COORDINATE_H_ */

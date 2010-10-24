@@ -67,6 +67,7 @@ blockem.rc
 
 blockem_SOURCES = \
 impl/board_impl.h \
+impl/coordinate_impl.h \
 impl/g_blocking_queue_impl.h \
 impl/game1v1_impl.h \
 impl/piece_impl.h \
