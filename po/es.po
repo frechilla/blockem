@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: blockem 0.3.0\n"
 "Report-Msgid-Bugs-To: frechilla@gmail.com\n"
-"POT-Creation-Date: 2010-10-15 15:54+0200\n"
-"PO-Revision-Date: 2010-07-31 12:18+0200\n"
-"Last-Translator:  <frechilla@gmail.com>\n"
+"POT-Creation-Date: 2010-10-23 11:52+0200\n"
+"PO-Revision-Date: 2010-10-29 20:31+0100\n"
+"Last-Translator: Faustino Frechilla <frechilla@gmail.com>\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,117 +19,117 @@ msgstr ""
 #. i18n TRANSLATORS: Please, leave that %s as it is. It will be replaced
 #. i18n by the path to the file that could not be loaded
 #. i18n Thank you for contributing to this project
-#: src/blockem_challenge.cpp:112
+#: src/blockem_challenge.cpp:119
 #, c-format
 msgid "Challenge .xml file doesn't exist: %s"
 msgstr "El archivo .xml de desafío no existe: %s"
 
-#: src/blockem_challenge.cpp:122
+#: src/blockem_challenge.cpp:129
 msgid "XML syntax error"
 msgstr "Error the sintaxis XML"
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
-#: src/blockem_challenge.cpp:136
+#: src/blockem_challenge.cpp:143
 msgid "Root element does not exist or is not called \"blockem_challenge\""
 msgstr "El elemento XML raíz no existe o no se llama \"blockem_challenge\""
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
-#: src/blockem_challenge.cpp:146
+#: src/blockem_challenge.cpp:153
 msgid "Root element does not have mandatory property \"name\""
 msgstr "El elemento XML raíz no contiene la propiedad obligatoria \"name\""
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
-#: src/blockem_challenge.cpp:156
+#: src/blockem_challenge.cpp:163
 msgid "Root element's property \"name\" can't be empty"
 msgstr "La propiedad \"name\" del elemento XML raíz no puede estar vacía"
 
 #. i18n TRANSLATORS: This string will be followed by a list
 #. i18n of missing xml tags
-#: src/blockem_challenge.cpp:235
+#: src/blockem_challenge.cpp:242
 msgid "Mandatory elements missing:"
 msgstr "Elementos obligatorios no están presentes:"
 
 #. i18n TRANSLATORS: This string will be followed by a set of coordinates
 #. i18n for example: (x, y) (x2, y2)
-#: src/blockem_challenge.cpp:272
+#: src/blockem_challenge.cpp:279
 msgid "Following coords are taken by both challenger and opponent:"
 msgstr ""
 "La coordenadas siguientes están ocupadas por el aspirante y el oponente"
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
-#: src/blockem_challenge.cpp:285
+#: src/blockem_challenge.cpp:292
 msgid "Challenger's starting coordinate is taken by the opponent"
 msgstr "La coordenada inicial del aspirante está ocupada por el oponente"
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
-#: src/blockem_challenge.cpp:293
+#: src/blockem_challenge.cpp:300
 msgid "Challenger's starting coordinate is taken by the challenger"
 msgstr ""
 "La coordenada inicial del aspirante está ocupada por el propio aspirante"
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
-#: src/blockem_challenge.cpp:352
+#: src/blockem_challenge.cpp:359
 msgid "Bad integer value in \"nrows\""
 msgstr "Entero incorrecto en \"nrows\""
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
-#: src/blockem_challenge.cpp:359
+#: src/blockem_challenge.cpp:366
 msgid "Bad integer value in \"nrows\". MUST be a positive number"
 msgstr "Entero incorrecto en \"nrows\". DEBE ser un número positivo"
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
-#: src/blockem_challenge.cpp:389
+#: src/blockem_challenge.cpp:396
 msgid "Bad integer value in \"ncolumns\""
 msgstr "Entero incorrecto en \"ncolumns\""
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
-#: src/blockem_challenge.cpp:396
+#: src/blockem_challenge.cpp:403
 msgid "Bad integer value in \"ncolumns\". MUST be a positive number"
 msgstr "Entero incorrecto en \"ncolumns\". DEBE ser un número positivo"
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags. This string will be followed by a set of
 #. i18n missing mandatory xml tags
-#: src/blockem_challenge.cpp:421
+#: src/blockem_challenge.cpp:428
 msgid "Mandatory elements in \"board\" missing:"
 msgstr "Elementos obligatorios en \"board\" no están presentes:"
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
-#: src/blockem_challenge.cpp:460
+#: src/blockem_challenge.cpp:467
 msgid "\"opponent\" -> \"taken\" mandatory attribute \"row\" is missing"
 msgstr "\"opponent\" -> \"taken\": Falta atributo obligatorio \"row\""
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
-#: src/blockem_challenge.cpp:470
+#: src/blockem_challenge.cpp:477
 msgid "Bad integer value in opponent's \"row\" attribute (\"taken\" tag)"
 msgstr "Entero incorrecto en el atributo \"row\" del oponente (tag \"taken\")"
-
-#. i18n TRANSLATORS: Please, leave quoted strings as they are since they
-#. i18n reference to xml tags
-#: src/blockem_challenge.cpp:477
-msgid ""
-"Bad integer value in opponent's \"row\" attribute (\"taken\" tag). MUST be "
-">= 0"
-msgstr ""
-"Entero incorrecto en el atributo \"row\" del oponente (tag \"taken\"). DEBE "
-"ser mayor o igual a 0"
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
 #: src/blockem_challenge.cpp:484
 msgid ""
 "Bad integer value in opponent's \"row\" attribute (\"taken\" tag). MUST be "
+">= 0"
+msgstr ""
+"Entero incorrecto en el atributo \"row\" del oponente (tag \"taken\"). DEBE "
+"ser mayor o igual a 0"
+
+#. i18n TRANSLATORS: Please, leave quoted strings as they are since they
+#. i18n reference to xml tags
+#: src/blockem_challenge.cpp:491
+msgid ""
+"Bad integer value in opponent's \"row\" attribute (\"taken\" tag). MUST be "
 "lower than the number of rows of the board"
 msgstr ""
 "Entero incorrecto en el atributo \"row\" del oponente (tag \"taken\"). DEBE "
@@ -137,19 +137,19 @@ msgstr ""
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
-#: src/blockem_challenge.cpp:496
+#: src/blockem_challenge.cpp:503
 msgid "\"opponent\" -> \"taken\" mandatory attribute \"col\" is missing"
 msgstr "\"opponent\" -> \"taken\": Falta atributo obligatorio \"col\""
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
-#: src/blockem_challenge.cpp:508
+#: src/blockem_challenge.cpp:515
 msgid "Bad integer value in opponent's \"col\" attribute (\"taken\" tag)"
 msgstr "Entero incorrecto en el atributo \"col\" del oponente (tag \"taken\")"
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
-#: src/blockem_challenge.cpp:515
+#: src/blockem_challenge.cpp:522
 msgid ""
 "Bad integer value in opponent's \"col\" attribute (\"taken\" tag). MUST be "
 ">= 0"
@@ -159,7 +159,7 @@ msgstr ""
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
-#: src/blockem_challenge.cpp:522
+#: src/blockem_challenge.cpp:529
 msgid ""
 "Bad integer value in opponent's \"col\" attribute (\"taken\" tag). MUST be "
 "lower than the number of columns of the board"
@@ -169,19 +169,19 @@ msgstr ""
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
-#: src/blockem_challenge.cpp:587
+#: src/blockem_challenge.cpp:594
 msgid "\"challenger\" -> \"taken\" mandatory attribute \"row\" is missing"
 msgstr "\"challenger\" -> \"taken\": Falta atributo obligatorio \"row\""
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
-#: src/blockem_challenge.cpp:597
+#: src/blockem_challenge.cpp:604
 msgid "Bad integer value in challenger's \"row\" attribute (\"taken\" tag)"
 msgstr "Entero incorrecto en el atributo \"row\" del aspirante (tag \"taken\")"
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
-#: src/blockem_challenge.cpp:604
+#: src/blockem_challenge.cpp:611
 msgid ""
 "Bad integer value in challenger's \"row\" attribute (\"taken\" tag). MUST be "
 ">= 0"
@@ -191,7 +191,7 @@ msgstr ""
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
-#: src/blockem_challenge.cpp:611
+#: src/blockem_challenge.cpp:618
 msgid ""
 "Bad integer value in challenger's \"row\" attribute (\"taken\" tag). MUST be "
 "lower than the number of rows of the board"
@@ -201,19 +201,19 @@ msgstr ""
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
-#: src/blockem_challenge.cpp:623
+#: src/blockem_challenge.cpp:630
 msgid "\"challenger\" -> \"taken\" mandatory attribute \"col\" is missing"
 msgstr "\"challenger\" -> \"taken\": Falta atributo obligatorio \"col\""
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
-#: src/blockem_challenge.cpp:635
+#: src/blockem_challenge.cpp:642
 msgid "Bad integer value in challenger's \"col\" attribute (\"taken\" tag)"
 msgstr "Entero incorrecto en el atributo \"col\" del aspirante (tag \"taken\")"
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
-#: src/blockem_challenge.cpp:642
+#: src/blockem_challenge.cpp:649
 msgid ""
 "Bad integer value in challenger's \"col\" attribute (\"taken\" tag). MUST be "
 ">= 0"
@@ -223,7 +223,7 @@ msgstr ""
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
-#: src/blockem_challenge.cpp:649
+#: src/blockem_challenge.cpp:656
 msgid ""
 "Bad integer value in challenger's \"col\" attribute (\"taken\" tag). MUST be "
 "lower than the number of columns of the board"
@@ -233,7 +233,7 @@ msgstr ""
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
-#: src/blockem_challenge.cpp:689
+#: src/blockem_challenge.cpp:696
 msgid ""
 "\"challenger\" -> \"piece\" mandatory attribute \"available\" is missing"
 msgstr ""
@@ -241,7 +241,7 @@ msgstr ""
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
-#: src/blockem_challenge.cpp:709
+#: src/blockem_challenge.cpp:716
 msgid ""
 "\"challenger\" -> \"piece\" mandatory attribute \"available\" must be set to "
 "either \"yes\" or \"no\""
@@ -251,13 +251,13 @@ msgstr ""
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
-#: src/blockem_challenge.cpp:773
+#: src/blockem_challenge.cpp:780
 msgid "Bad integer value in challenger's \"starting_row\""
 msgstr "Entero incorrecto en el tag \"starting_row\" del aspirante"
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
-#: src/blockem_challenge.cpp:780
+#: src/blockem_challenge.cpp:787
 msgid "Bad integer value in challenger's \"starting_row\". MUST be >= 0"
 msgstr ""
 "Entero incorrecto en el tag \"starting_row\" del aspirante. DEBE ser mayor o "
@@ -265,7 +265,7 @@ msgstr ""
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
-#: src/blockem_challenge.cpp:787
+#: src/blockem_challenge.cpp:794
 msgid ""
 "Bad integer value in challenger's \"starting_row\". MUST be lower than the "
 "number of rows of the board"
@@ -275,13 +275,13 @@ msgstr ""
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
-#: src/blockem_challenge.cpp:816
+#: src/blockem_challenge.cpp:823
 msgid "Bad integer value in challenger's \"starting_col\""
 msgstr "Entero incorrecto en el tag \"starting_col\" del aspirante"
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
-#: src/blockem_challenge.cpp:823
+#: src/blockem_challenge.cpp:830
 msgid "Bad integer value in challenger's \"starting_col\". MUST be >= 0"
 msgstr ""
 "Entero incorrecto en el tag \"starting_col\" del aspirante. DEBE ser mayor o "
@@ -289,7 +289,7 @@ msgstr ""
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
-#: src/blockem_challenge.cpp:830
+#: src/blockem_challenge.cpp:837
 msgid ""
 "Bad integer value in challenger's \"starting_col\". MUST be lower than the "
 "number of columns of the board"
@@ -299,7 +299,7 @@ msgstr ""
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
-#: src/blockem_challenge.cpp:849
+#: src/blockem_challenge.cpp:856
 msgid ""
 "\"starting_row\" is present in \"challenger\", but \"starting_col\" is not"
 msgstr ""
@@ -308,7 +308,7 @@ msgstr ""
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
-#: src/blockem_challenge.cpp:857
+#: src/blockem_challenge.cpp:864
 msgid ""
 "\"starting_col\" is present in \"challenger\", but \"starting_row\" is not"
 msgstr ""
@@ -317,7 +317,7 @@ msgstr ""
 
 #. i18n TRANSLATORS: Please, leave quoted strings as they are since they
 #. i18n reference to xml tags
-#: src/blockem_challenge.cpp:870
+#: src/blockem_challenge.cpp:877
 msgid ""
 "Starting coordinate hasn't been set and there aren't any taken squares by "
 "the challenger either"
@@ -326,15 +326,16 @@ msgstr ""
 "ningún cuadrado del tablero ocupado"
 
 #. i18n TRANSLATORS: Please, leave those %s
-#. i18n 1st %s will be replaced by the path to the file that could not be parsed
+#. i18n 1st %s will be replaced by filename (without path) that could not be parsed
 #. i18n 2nd %s will be replaced by the error message
 #. i18n Thank you for contributing to this project
-#: src/blockem_challenge.cpp:976
+#: src/blockem_challenge.cpp:984
 #, c-format
 msgid "Fatal error parsing %s: %s"
 msgstr "Error fatal analizando sintácticamente %s: %s"
 
-#: src/game1v1.cpp:40 src/game_total_allocation.cpp:43
+#: src/game1v1.cpp:40 src/game_challenge.cpp:36
+#: src/game_total_allocation.cpp:43
 msgid "Mr Green"
 msgstr "Sr Verde"
 
@@ -354,10 +355,6 @@ msgid_plural "Minimax function called %d times\n"
 msgstr[0] "La función minimax ha sido llamada una vez\n"
 msgstr[1] "La función minimax ha sido llamada %d veces\n"
 
-#: src/game_challenge.cpp:36
-msgid "Challenger"
-msgstr "Aspirante"
-
 #: src/gui_dialog_newgame.cpp:42
 msgid "1 vs 1 Game (2 players)"
 msgstr "1 contra 1 (2 jugadores)"
@@ -366,21 +363,33 @@ msgstr "1 contra 1 (2 jugadores)"
 msgid "Total deployment (solo play)"
 msgstr "Despliegue total (1 jugador)"
 
-#: src/gui_dialog_newgame.cpp:46 src/gui_game1v1_config_dialog.cpp:41
+#: src/gui_dialog_newgame.cpp:44
+msgid "Challenge (solo play)"
+msgstr "Reto (1 jugador)"
+
+#: src/gui_dialog_newgame.cpp:47 src/gui_game1v1_config_dialog.cpp:42
 msgid "Human"
 msgstr "Humano"
 
-#: src/gui_dialog_newgame.cpp:47 src/gui_game1v1_config_dialog.cpp:42
+#: src/gui_dialog_newgame.cpp:48 src/gui_game1v1_config_dialog.cpp:43
 msgid "Computer"
 msgstr "PC"
 
 #. i18n This string shouldn't be bigger than 4 characters long
 #. i18n strings bigger than those 4 characters will be stripped out
 #. i18n Thank you for contributing to this project
-#: src/gui_dialog_newgame.cpp:1012 src/gui_dialog_newgame.cpp:1032
-#: src/gui_game1v1_config_dialog.cpp:423 src/gui_game1v1_config_dialog.cpp:443
+#: src/gui_dialog_newgame.cpp:752 src/gui_dialog_newgame.cpp:772
+#: src/gui_game1v1_config_dialog.cpp:424 src/gui_game1v1_config_dialog.cpp:444
 msgid "Auto"
 msgstr "Auto"
+
+#: src/gui_dialog_newgame.cpp:1507
+msgid "XML Files"
+msgstr "Archivos XML"
+
+#: src/gui_dialog_newgame.cpp:1512
+msgid "All Files"
+msgstr "Todos los archivos"
 
 #. i18n Please, leave GtkBuilder as it is here since it is the name of the
 #. i18n programming toold that failed
@@ -399,7 +408,7 @@ msgstr "Ha ocurrido una excepción de tipo GUI"
 
 #. i18n TRANSLATORS: Please, leave <b> and </b> tags sorrounding the translation of "Fatal error"
 #. i18n Thank you for contributing to this project
-#: src/gui_game1v1_widget.cpp:550
+#: src/gui_game1v1_widget.cpp:561
 msgid ""
 "<b>Fatal Error:</b> Could not communicate with worker thread. Application "
 "will exit now!"
@@ -407,7 +416,7 @@ msgstr ""
 "<b>Error Fatal:</b> No se pudo comunicar con el hilo de procesamiento. La "
 "aplicación se cerrará cuando acepte este mensaje"
 
-#: src/gui_game1v1_widget.cpp:652
+#: src/gui_game1v1_widget.cpp:663
 msgid ""
 "Internal Error: Move could not be processed. Please click on the board "
 "normally to try again"
@@ -415,7 +424,7 @@ msgstr ""
 "Error interno: El movimiento no se pudo procesar. Por favor haga clic en el "
 "tablero de forma normal para intentarlo otra vez"
 
-#: src/gui_game1v1_widget.cpp:667
+#: src/gui_game1v1_widget.cpp:678
 msgid "Main Window could not be retrieved from a child GUI element"
 msgstr ""
 "No se pudo acceder a la ventana principal desde un elemento hijo de la "
@@ -431,7 +440,7 @@ msgstr ""
 #. i18n A typical complete message:
 #. i18n That was a <b>DRAW</b>!\nBoth <span color="#012345">Eddie</span> and <span color="#678901">John</span> have <b>5</b> squares left
 #. i18n Thank you for contributing to this project
-#: src/gui_game1v1_widget.cpp:921
+#: src/gui_game1v1_widget.cpp:932
 #, c-format
 msgid ""
 "That was a <b>DRAW</b>!\n"
@@ -453,7 +462,7 @@ msgstr ""
 #. i18n A typical complete message:
 #. i18n <b><span color="#012345">Eddie</span></b>!\n<span color="#012345">Eddie</span> has <b>5</b> squares left and <span color="#678901">John</span> has <b>7</b>
 #. i18n Thank you for contributing to this project
-#: src/gui_game1v1_widget.cpp:974
+#: src/gui_game1v1_widget.cpp:985
 #, c-format
 msgid ""
 "<b><span color=\"#%02X%02X%02X\">%s</span></b> won!\n"
@@ -464,8 +473,8 @@ msgstr ""
 "A <span color=\"#%02X%02X%02X\">%s</span> le quedaron <b>%d</b> cuadrados y "
 "a <span color=\"#%02X%02X%02X\">%s</span> <b>%d</b>"
 
-#: src/gui_game_challenge_widget.cpp:313
-#: src/gui_game_total_allocation_widget.cpp:306
+#: src/gui_game_challenge_widget.cpp:325
+#: src/gui_game_total_allocation_widget.cpp:316
 #, c-format
 msgid "Done! You managed to allocate all your pieces"
 msgstr "¡Conseguido! Todas tus piezas están puestas en el tablero"
@@ -474,8 +483,8 @@ msgstr "¡Conseguido! Todas tus piezas están puestas en el tablero"
 #. i18n Note translations depend also on whether there is only 1 or more than
 #. i18n one squares left
 #. i18n Thank you for contributing to this project
-#: src/gui_game_challenge_widget.cpp:324
-#: src/gui_game_total_allocation_widget.cpp:317
+#: src/gui_game_challenge_widget.cpp:336
+#: src/gui_game_total_allocation_widget.cpp:327
 #, c-format
 msgid "You can't put down more pieces, but you still have the baby piece left"
 msgid_plural ""
@@ -504,7 +513,12 @@ msgstr ""
 "AVISO: Ocurrió una excepción mientras se cargaba el icono de 16x16 píxeles "
 "en la ventana principal desde "
 
-#: src/gui_main_window.cpp:497
+#: src/gui_main_window.cpp:388
+msgid "A challenge game can't start without a valid blockem challenge file"
+msgstr ""
+"Un juego de reto no puede comenzar sin un archivo de reto blockem válido"
+
+#: src/gui_main_window.cpp:551
 msgid "Previous move had to be cancelled before applying new settings"
 msgstr ""
 "El procesamiento del movimiento anterior ha tenido que ser cancelado antes "
@@ -1022,7 +1036,7 @@ msgstr "Block'em"
 
 # TRANSLATORS: The underscore character is to be located just before the
 # letter which will be underlined. This underlined character represents which
-# letter can be presed to select this menu option when the keyboard is used to 
+# letter can be presed to select this menu option when the keyboard is used to
 # navigate through the archive menu
 #: src/gui.glade:19
 msgid "_Game"
@@ -1030,7 +1044,7 @@ msgstr "_Juego"
 
 # TRANSLATORS: The underscore character is to be located just before the
 # letter which will be underlined. This underlined character represents which
-# letter can be presed to select this menu option when the keyboard is used to 
+# letter can be presed to select this menu option when the keyboard is used to
 # navigate through the archive menu
 #: src/gui.glade:78
 msgid "_Settings"
@@ -1038,7 +1052,7 @@ msgstr "_Preferencias"
 
 # TRANSLATORS: The underscore character is to be located just before the
 # letter which will be underlined. This underlined character represents which
-# letter can be presed to select this menu option when the keyboard is used to 
+# letter can be presed to select this menu option when the keyboard is used to
 # navigate through the archive menu
 #: src/gui.glade:86
 msgid "_Forbidden areas"
@@ -1046,7 +1060,7 @@ msgstr "Áreas _prohibidas"
 
 # TRANSLATORS: The underscore character is to be located just before the
 # letter which will be underlined. This underlined character represents which
-# letter can be presed to select this menu option when the keyboard is used to 
+# letter can be presed to select this menu option when the keyboard is used to
 # navigate through the archive menu
 #: src/gui.glade:94
 msgid "Do _not show forbidden area"
@@ -1054,7 +1068,7 @@ msgstr "_No mostrar áreas prohibidas"
 
 # TRANSLATORS: The underscore character is to be located just before the
 # letter which will be underlined. This underlined character represents which
-# letter can be presed to select this menu option when the keyboard is used to 
+# letter can be presed to select this menu option when the keyboard is used to
 # navigate through the archive menu
 #: src/gui.glade:103
 msgid "Show Mr _Green's forbidden area"
@@ -1062,7 +1076,7 @@ msgstr "Mostrar área prohibida del Sr _Verde"
 
 # TRANSLATORS: The underscore character is to be located just before the
 # letter which will be underlined. This underlined character represents which
-# letter can be presed to select this menu option when the keyboard is used to 
+# letter can be presed to select this menu option when the keyboard is used to
 # navigate through the archive menu
 #: src/gui.glade:112
 msgid "Show Mr _Blue's forbidden area"
@@ -1070,7 +1084,7 @@ msgstr "Mostrar área prohibida del Sr A_zul"
 
 # TRANSLATORS: The underscore character is to be located just before the
 # letter which will be underlined. This underlined character represents which
-# letter can be presed to select this menu option when the keyboard is used to 
+# letter can be presed to select this menu option when the keyboard is used to
 # navigate through the archive menu
 #: src/gui.glade:124
 msgid "_Influence areas"
@@ -1078,7 +1092,7 @@ msgstr "Areas de _Influencia"
 
 # TRANSLATORS: The underscore character is to be located just before the
 # letter which will be underlined. This underlined character represents which
-# letter can be presed to select this menu option when the keyboard is used to 
+# letter can be presed to select this menu option when the keyboard is used to
 # navigate through the archive menu
 #: src/gui.glade:132
 msgid "Do _not show influence area"
@@ -1086,7 +1100,7 @@ msgstr "_No mostrar áreas de influencia"
 
 # TRANSLATORS: The underscore character is to be located just before the
 # letter which will be underlined. This underlined character represents which
-# letter can be presed to select this menu option when the keyboard is used to 
+# letter can be presed to select this menu option when the keyboard is used to
 # navigate through the archive menu
 #: src/gui.glade:141
 msgid "Show Mr _Green's influence area"
@@ -1094,7 +1108,7 @@ msgstr "Mostrar área de influencia del Sr _Verde"
 
 # TRANSLATORS: The underscore character is to be located just before the
 # letter which will be underlined. This underlined character represents which
-# letter can be presed to select this menu option when the keyboard is used to 
+# letter can be presed to select this menu option when the keyboard is used to
 # navigate through the archive menu
 #: src/gui.glade:150
 msgid "Show Mr _Blue's influence area"
@@ -1102,7 +1116,7 @@ msgstr "Mostrar área de influencia del Sr A_zul"
 
 # TRANSLATORS: The underscore character is to be located just before the
 # letter which will be underlined. This underlined character represents which
-# letter can be presed to select this menu option when the keyboard is used to 
+# letter can be presed to select this menu option when the keyboard is used to
 # navigate through the archive menu
 #: src/gui.glade:163
 msgid "Show _nucleation points"
@@ -1110,7 +1124,7 @@ msgstr "Mostrar _esquinas válidas"
 
 # TRANSLATORS: The underscore character is to be located just before the
 # letter which will be underlined. This underlined character represents which
-# letter can be presed to select this menu option when the keyboard is used to 
+# letter can be presed to select this menu option when the keyboard is used to
 # navigate through the archive menu
 #: src/gui.glade:182
 msgid "_Help"
@@ -1224,3 +1238,47 @@ msgstr "Empezar desde cualquier lugar"
 #: src/gui.glade:1463
 msgid "Starting position"
 msgstr "Posición inicial"
+
+#: src/gui.glade:1488
+msgid "Pick a built-in challenge"
+msgstr "Seleccionar un reto incorporado"
+
+#: src/gui.glade:1526
+msgid "Load a challenge from a .xml file"
+msgstr "Cargar un reto desde un archivo .xml"
+
+#: src/gui.glade:1542
+msgid "Select A Blockem Challenge .xml File"
+msgstr "Selecciona un archivo .xml de reto blockem"
+
+#: src/gui.glade:1608
+msgid "Author:"
+msgstr "Autor"
+
+#: src/gui.glade:1620
+msgid "E-Mail:"
+msgstr "E-Mail:"
+
+#: src/gui.glade:1632
+msgid "Description:"
+msgstr "Descripción:"
+
+#: src/gui.glade:1669
+msgid "Number of rows:"
+msgstr "Número de filas:"
+
+#: src/gui.glade:1679
+msgid "columns:"
+msgstr "columnas:"
+
+#: src/gui.glade:1691
+msgid "Taken squares:"
+msgstr "Posiciones ocupadas:"
+
+#: src/gui.glade:1704
+msgid "challenger's:"
+msgstr "aspirante"
+
+#: src/gui.glade:1785
+msgid "Challenge's info"
+msgstr "Datos del aspirante"
