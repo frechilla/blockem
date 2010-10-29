@@ -1,4 +1,4 @@
-: Version 0.3.1
+29/10/2010: Version 0.3.1
     - Added support for non-square shaped boards (they can be used now in total
       deployment games)
     - Challenge game mode added to the GUI. A blockem challenge is a special 

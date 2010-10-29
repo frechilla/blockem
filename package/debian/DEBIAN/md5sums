@@ -1,4 +1,9 @@
 2330eb4b671d909b29a1a80bdf392620  usr/bin/blockem
+800ec989f73a429cdbc487d45cb5cea3  usr/share/applications/blockem.desktop
+84ac4f4878987ef5f3f815f6ad6ed5f4  usr/share/blockem/challenges/blockem_challenge.dtd
+913889c8e94946ae1ddad2a2e503e428  usr/share/blockem/challenges/example_challenge2.xml
+ef3d30c159f9b15bf886ea4dfe7d8c78  usr/share/blockem/challenges/example_challenge3.xml
+45ad63b9fd5fd3136187a96b5f28795f  usr/share/blockem/challenges/example_challenge.xml
 cb9ec6312f8834be36435fea9c05f7e1  usr/share/blockem/pixmaps/blockemicon.ico
 7f03df3fde5d21543de9ecb2321b4a96  usr/share/blockem/pixmaps/blockemlogo128.png
 6bdd5be25368b9a843d4764e2f192297  usr/share/blockem/pixmaps/blockemlogo16.png
@@ -6,6 +11,6 @@ f2d31807da845fffaf43fe687972378d  usr/share/blockem/pixmaps/blockemlogo32.xpm
 6cc90acd286ae1e88d617ed2703cf58e  usr/share/blockem/pixmaps/blockemlogo48.png
 68fb94c65debcc4545853772cfaab357  usr/share/blockem/pixmaps/blockemlogo.png
 48d98c138ce6ff87d77d3ffc65d3300e  usr/share/blockem/pixmaps/game1vs1.png
+44a5255b501392ef516adb9fd2fdf2af  usr/share/blockem/pixmaps/gamechallenge.png
 e96eea923ccad365bec694c70f8cf4b9  usr/share/blockem/pixmaps/gametotalalloc.png
-0bddafebd2a356f5ffd05eb20ead8f2d  usr/share/applications/blockem.desktop
-444af0f373b532ef95871f88626662be  usr/share/locale/es/LC_MESSAGES/blockem.mo
+fdecd5445a32937b7af38c8ae24a501a  usr/share/locale/es/LC_MESSAGES/blockem.mo

@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE blockem_challenge SYSTEM "blockem_challenge.dtd">
+
+<!--
+    There is no real need for the previous line (locate the .dtd for this .xml
+    file)
+-->
+
+<!--
+    Attribute "name" MUST be present and MUST be different from any other
+    challenge. It can contain space characters no problem though
+
+    An easy way to ensure your challenges are unique is to add a small unique
+    prefix before the real name.
+-->
+<blockem_challenge name="xpl: Example 2">
+    
+    <!--
+        Board specification  
+    -->
+    <board>
+        <!-- 
+            Number of rows of the board for this challenge.
+            It MUST be a positive number (bigger than 0).
+             Massive boards can be hard to hadle by blockem GUI, so be sensible 
+        -->
+        <nrows>12</nrows>
+        <!-- 
+            Number of comuns of the board for this challenge.
+            It MUST be a positive number (bigger than 0).
+            Massive boards can be hard to hadle by blockem GUI, so be sensible 
+        -->
+        <ncolumns>12</ncolumns>
+    </board>
+  
+    <!-- 
+        "opponent" represents a "virtual" player who can own squares on the
+        board but never puts down a piece. It's the way a blockem challenge 
+        sets squares to unavailable for the challenger.
+        
+        This tag MUST be present even if "opponent" does not have any 
+        coordinate taken
+    -->
+    <opponent>
+        <!--
+            Each square on the board taken by 'opponent' player will be
+            described using the taken tag:
+                <taken row="N" col="M"/>
+            
+            Where row N and column M exist on the board. All squares are free
+            by default until they are configured as taken by this tag
+            
+            WARNING: Bear in mind the first row or column is 0, and the latest
+                     valid row or column is the amount of rows/columns defined
+                     under the "board" tag minus 1
+                     
+            WARNING: Blockem won't load the challenge if the same square on the
+                     board is taken by both opponent and challenger
+        -->
+
+        <taken row="4"  col="5"/>
+        <taken row="4"  col="6"/>
+        <taken row="5"  col="4"/>
+        <taken row="5"  col="7"/>
+        <taken row="6"  col="4"/>
+        <taken row="6"  col="7"/>
+        <taken row="7"  col="5"/>
+        <taken row="7"  col="6"/>
+
+    </opponent>
+    
+    <!-- 
+        "challenger" represents the player who loads and plays the challenge.
+        It defines:
+            Squares already taken by him on the board
+            Which pieces are available
+            Starting coordinate
+    -->
+    <challenger>
+        <!--
+            Each square on the board taken by the challenger will be described
+            using the 'taken' tag here:
+                <taken row="N" col="M"/>
+            
+            Where row N and column M exist on the board. All squares are free
+            by default until they are configured as taken by this tag
+            
+            WARNING: Bear in mind the first row or column is 0, and the latest
+                     valid row or column is the amount of rows/columns defined
+                     under the "board" tag minus 1
+            
+            WARNING: Blockem won't load the challenge if the same square on the
+                     board is taken by both opponent and challenger
+        -->
+        <taken row="5" col="5"/>
+        <taken row="5" col="6"/>
+        <taken row="6" col="5"/>
+        <taken row="6" col="6"/>
+        
+        <!--
+            The following list contains the full set of available pieces in
+            blockem. If a piece is available for the challenger the
+            "available" tag should be set to "yes". Otherwise set it to "no"
+            
+            Default is NOT available, so if a piece is not found in one of these
+            tags it won't be available
+            
+            Format of a piece tag is:
+                <piece available="yes|no">piece's description</piece>
+            
+            Name of pieces is case sensitive and MUST be left as it is here
+        -->
+        <piece available="yes">Baby piece</piece>
+        <piece available="yes">Two piece</piece>
+        <piece available="yes">Three piece</piece>
+        <piece available="yes">Little V</piece>
+        <piece available="yes">Full square</piece>
+        <piece available="yes">Four long piece</piece>
+        <piece available="yes">Little L</piece>
+        <piece available="yes">Little S</piece>
+        <piece available="yes">Little T</piece>
+        <piece available="yes">Big long piece</piece>
+        <piece available="yes">Square++</piece>
+        <piece available="yes">Big V (aka Half square)</piece>
+        <piece available="yes">U piece</piece>
+        <piece available="yes">Big L</piece>
+        <piece available="yes">Y piece</piece>
+        <piece available="yes">Big S</piece>
+        <piece available="yes">Mr T</piece>
+        <piece available="yes">N piece (aka the ultimate)</piece>
+        <piece available="yes">Saf piece</piece>
+        <piece available="yes">W piece</piece>
+        <piece available="yes">Cross piece</piece>
+    
+        <!--
+            Starting row and starting column. This is an optional parameter:
+            
+              + MUST be set if the challenger has no taken squares on the board
+              + If challenger has squares taken AND this starting coordinate is
+                not set, the nucleation points generated by the taken squares
+                will represent all possible starting points. You MUST ensure
+                that there is at least one valid nucleation point or the 
+                challenger won't be able to start            
+              + If the challenger has squares taken and this option is set, 
+                valid starting coordinates at the beginning of the challenge 
+                will be all nucleation points plus the starting coordinate 
+                described here
+            
+            You also must ensure this starting coordinate:
+              + exists on the board,
+              + is valid,
+              + is not taken by either the opponent or the challenger itself,
+              + does not belong to the forbidden area around challenger's taken
+                squares.
+            
+            WARNING: Bear in mind the first row or column is 0, and the latest
+                     valid row or column is the amount of rows/columns defined
+                     under the "board" tag minus 1
+        -->
+    </challenger>
+    
+    <!--
+        Miscellaneous data about this challenge
+        
+        This is an OPTIONAL tag. All tags contained in it are also OPTIONAL
+    -->
+    <infochallenge>
+        <!-- 
+            Author's name
+        -->
+        <author>Faustino Frechilla</author>
+        <!--
+            Author's e-mail 
+        -->
+        <email></email>
+        <!-- 
+            challenge description. 
+            
+            WARNING: It will be parsed with all new line and space characters
+                     contained here
+        -->
+        <description>This is an example challenge similar to Example 1. It doesn't have a starting point but there are 4 nucleation points to start up</description>
+    </infochallenge>
+    
+</blockem_challenge>
