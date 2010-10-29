@@ -1773,40 +1773,40 @@ void NewGameTableChallenge::CurrentChallengeToWidgets()
         std::ostringstream outputStr;
 
         outputStr << static_cast<int32_t>(m_currentSelectedChallenge.GetBoardRows());
-        m_nRowsEntry->get_buffer()->set_text(outputStr.str());
+        m_nRowsEntry->set_text(outputStr.str());
 
         outputStr.clear(); // clear error flags. MUST be done first
         outputStr.str("");
         outputStr << static_cast<int32_t>(m_currentSelectedChallenge.GetBoardColumns());
-        m_nColsEntry->get_buffer()->set_text(outputStr.str());
+        m_nColsEntry->set_text(outputStr.str());
 
         outputStr.clear(); // clear error flags. MUST be done first
         outputStr.str("");
         outputStr << static_cast<int32_t>(
                          m_currentSelectedChallenge.GetChallengerTakenSquares().size() +
                          m_currentSelectedChallenge.GetOpponentTakenSquares().size());
-        m_nTakenSquaresEntry->get_buffer()->set_text(outputStr.str());
+        m_nTakenSquaresEntry->set_text(outputStr.str());
 
         outputStr.clear(); // clear error flags. MUST be done first
         outputStr.str("");
         outputStr << static_cast<int32_t>(m_currentSelectedChallenge.GetChallengerTakenSquares().size());
-        m_nTakenSquaresChallengerEntry->get_buffer()->set_text(outputStr.str());
+        m_nTakenSquaresChallengerEntry->set_text(outputStr.str());
 
-        m_authorEntry->get_buffer()->set_text(
+        m_authorEntry->set_text(
             m_currentSelectedChallenge.GetChallengeInfo().authorName);
-        m_emailEntry->get_buffer()->set_text(
+        m_emailEntry->set_text(
             m_currentSelectedChallenge.GetChallengeInfo().authorEmail);
         m_descriptionTextView->get_buffer()->set_text(
             m_currentSelectedChallenge.GetChallengeInfo().description);
     }
     else
     {
-        m_nRowsEntry->get_buffer()->set_text("");
-        m_nColsEntry->get_buffer()->set_text("");
-        m_nTakenSquaresEntry->get_buffer()->set_text("");
-        m_nTakenSquaresChallengerEntry->get_buffer()->set_text("");
-        m_authorEntry->get_buffer()->set_text("");
-        m_emailEntry->get_buffer()->set_text("");
+        m_nRowsEntry->set_text("");
+        m_nColsEntry->set_text("");
+        m_nTakenSquaresEntry->set_text("");
+        m_nTakenSquaresChallengerEntry->set_text("");
+        m_authorEntry->set_text("");
+        m_emailEntry->set_text("");
         m_descriptionTextView->get_buffer()->set_text("");
     }
 }
