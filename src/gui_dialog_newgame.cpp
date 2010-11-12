@@ -1562,6 +1562,23 @@ void NewGameTableChallenge::UpdateBuiltInChallengesList()
         std::string fullFileName(
             PATH_TO_BUILTIN_CHALLENGES + static_cast<const char*>(fileName));
 
+        // retrieve last 4 characters of filename. They must be equal to ".xml"
+        std::string extension(std::string(fileName).substr(strlen(fileName) - 4));
+        std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
+        if (extension != ".xml")
+        {
+#ifdef DEBUG
+            std::cout << "File "
+                      << fileName
+                      << " (extension "
+                      << extension
+                      << ") was found in challenges directory and extension is not .xml"  << std::endl;
+#endif
+            // try out next file
+            fileName = g_dir_read_name(builtInChallegePath);
+            continue;
+        }
+
         if (!g_file_test(fullFileName.c_str(), G_FILE_TEST_IS_REGULAR))
         {
 #ifdef DEBUG
@@ -1571,6 +1588,7 @@ void NewGameTableChallenge::UpdateBuiltInChallengesList()
                       << fullFileName << " is not a regular file"
                       << std::endl;
 #endif
+            // try out next file
             fileName = g_dir_read_name(builtInChallegePath);
             continue;
         }
@@ -1616,9 +1634,10 @@ void NewGameTableChallenge::UpdateBuiltInChallengesList()
         }
 #endif
 
-        // keep going. we must chck all files in that directory
+        // keep going. we must check all files in that directory
         fileName = g_dir_read_name(builtInChallegePath);
-    }
+
+    } // while (fileName != NULL)
 
     g_dir_close(builtInChallegePath);
 }
