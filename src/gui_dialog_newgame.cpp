@@ -1549,7 +1549,7 @@ void NewGameTableChallenge::UpdateBuiltInChallengesList()
     if (!builtInChallegePath)
     {
 #ifdef DEBUG
-        std::cout << "Error accesing built-in challenge directory: "
+        std::cout << "Error accessing built-in challenge directory: "
                   << error->message << std::endl;
 #endif
         g_error_free(error);
