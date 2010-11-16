@@ -69,10 +69,11 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_blockem_OBJECTS = bitwise.$(OBJEXT) blockem_challenge.$(OBJEXT) \
 	blockem_config.$(OBJEXT) board.$(OBJEXT) game1v1.$(OBJEXT) \
-	game_challenge.$(OBJEXT) game_total_allocation.$(OBJEXT) \
-	gui_dialog_about.$(OBJEXT) gui_dialog_newgame.$(OBJEXT) \
-	gui_drawing_area_board.$(OBJEXT) \
+	game_4players.$(OBJEXT) game_challenge.$(OBJEXT) \
+	game_total_allocation.$(OBJEXT) gui_dialog_about.$(OBJEXT) \
+	gui_dialog_newgame.$(OBJEXT) gui_drawing_area_board.$(OBJEXT) \
 	gui_drawing_area_show_pieces.$(OBJEXT) gui_exception.$(OBJEXT) \
+	gui_game_challenge_config.$(OBJEXT) \
 	gui_game_challenge_widget.$(OBJEXT) \
 	gui_game_total_allocation_config.$(OBJEXT) \
 	gui_game_total_allocation_widget.$(OBJEXT) \
@@ -296,6 +297,8 @@ coordinate.h \
 coordinate_set.h \
 game1v1.cpp \
 game1v1.h \
+game_4players.cpp \
+game_4players.h \
 game_challenge.cpp \
 game_challenge.h \
 game_total_allocation.cpp \
@@ -311,6 +314,8 @@ gui_drawing_area_show_pieces.cpp \
 gui_drawing_area_show_pieces.h   \
 gui_exception.cpp \
 gui_exception.h \
+gui_game_challenge_config.cpp \
+gui_game_challenge_config.h \
 gui_game_challenge_widget.cpp \
 gui_game_challenge_widget.h \
 gui_game_total_allocation_config.cpp \
@@ -431,6 +436,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/blockem_config.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/board.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/game1v1.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/game_4players.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/game_challenge.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/game_total_allocation.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_dialog_about.Po@am__quote@
@@ -441,6 +447,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_game1v1_config.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_game1v1_config_dialog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_game1v1_widget.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_game_challenge_config.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_game_challenge_widget.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_game_total_allocation_config.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_game_total_allocation_widget.Po@am__quote@
