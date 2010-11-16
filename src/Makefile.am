@@ -84,6 +84,8 @@ coordinate.h \
 coordinate_set.h \
 game1v1.cpp \
 game1v1.h \
+game_4players.cpp \
+game_4players.h \
 game_challenge.cpp \
 game_challenge.h \
 game_total_allocation.cpp \
@@ -99,6 +101,8 @@ gui_drawing_area_show_pieces.cpp \
 gui_drawing_area_show_pieces.h   \
 gui_exception.cpp \
 gui_exception.h \
+gui_game_challenge_config.cpp \
+gui_game_challenge_config.h \
 gui_game_challenge_widget.cpp \
 gui_game_challenge_widget.h \
 gui_game_total_allocation_config.cpp \
