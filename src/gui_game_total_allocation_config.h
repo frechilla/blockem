@@ -17,7 +17,7 @@
 // with Blockem. If not, see http://www.gnu.org/licenses/.
 //
 /// @file  gui_game_total_allocation_config.h
-/// @brief Singleton which stores GUI related configuration data for 1vs1 games
+/// @brief Singleton which stores GUI related configuration data for total allocation games
 ///
 /// @author Faustino Frechilla
 /// @history
@@ -34,7 +34,7 @@
 #include "coordinate.h"
 
 
-/// singleton which stores the configuration to apply to Game1v1
+/// singleton which stores the configuration to apply to total allocation games
 class GameTotalAllocationConfig :
     public Singleton<GameTotalAllocationConfig>
 {

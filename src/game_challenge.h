@@ -86,7 +86,7 @@ public:
     void Reset(const BlockemChallenge& a_blockemChallenge);
 
     /// put down a piece on the board. The user is supposed to check if there is space for it before calling
-    /// It updates the internal player contained in the total allocation game
+    /// It updates the internal player contained in the challenge game
     /// @param the piece
     /// @param the ABSOLUTE coord
 	void PutDownPiece(
@@ -95,7 +95,7 @@ public:
 
     /// remove a piece from the board. The user is supposed to check if the piece was there
     /// before calling this function since it will just set to empty the squares
-    /// It updates the internal player contained in the total allocation game
+    /// It updates the internal player contained in the challenge game
     /// @param the piece
     /// @param the ABSOLUTE coord
 	void RemovePiece(

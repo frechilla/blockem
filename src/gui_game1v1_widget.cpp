@@ -286,6 +286,7 @@ void Game1v1Widget::LaunchNewGame()
         static_cast<float>(green) / 255,
         static_cast<float>(blue)  / 255);
 
+    // players have been reset, score will be reset too
     UpdateScoreStatus();
 
     // reset the cursor (even if it's been already done)
@@ -770,7 +771,12 @@ void Game1v1Widget::NotifyMoveComputed()
             latestCoord,
             latestPlayer);
 
+    // update score after this set of pieces has been put down
 	UpdateScoreStatus();
+    
+    // remove the actual piece being edited from the edit piece drawing area
+    // and force the edit piece drawing area to be redraw
+    m_editPieceTable.SetPiece(e_noPiece);
 
     // there's a few things that have to be done if the opponent of the latest
     // player to put down a piece can move
@@ -796,10 +802,6 @@ void Game1v1Widget::NotifyMoveComputed()
             static_cast<float>(red)   / 255,
             static_cast<float>(green) / 255,
             static_cast<float>(blue)  / 255);
-
-        // remove the actual piece being edited from the edit piece drawing area
-        // and force the edit piece drawing area to be redraw
-        m_editPieceTable.SetPiece(e_noPiece);
 
         // swap pieces being shown in pickPiecesDrawingArea and showOpponentPiecesDrawingArea
         // opponent will select pieces while currentPlayer's will be only shown
@@ -844,10 +846,6 @@ void Game1v1Widget::NotifyMoveComputed()
     }
     else
     {
-        // remove the actual piece being edited from the edit piece drawing area
-        // and force the edit piece drawing area to be redraw
-        m_editPieceTable.SetPiece(e_noPiece);
-
         // latestPlayer can put down more pieces. Game is still on
         m_pickPiecesDrawingArea.Invalidate();
 

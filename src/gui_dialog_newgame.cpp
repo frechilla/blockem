@@ -36,6 +36,7 @@
 #include "game1v1.h"
 #include "gui_game1v1_config.h"
 #include "gui_game_total_allocation_config.h"
+#include "gui_game_challenge_config.h"
 #include "gui_glade_defs.h"
 
 // strings to describe each type of game
@@ -1833,6 +1834,7 @@ void NewGameTableChallenge::CurrentChallengeToWidgets()
 void NewGameTableChallenge::SaveCurrentConfigIntoGlobalSettings() const
 {
     // retrieve user settings from dialog and use them to set up global configuration
+    GameChallengeConfig::Instance().SetBlockemChallenge(m_currentSelectedChallenge);
 }
 
 void NewGameTableChallenge::LoadCurrentConfigFromGlobalSettings()

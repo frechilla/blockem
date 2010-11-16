@@ -41,7 +41,6 @@
 #include <cstdio>    // printf/snprintf (needed for better i18n)
 #include "gettext.h" // i18n
 #include "gui_main_window.h"
-#include "gui_game1v1_config.h"
 #include "gui_glade_defs.h"
 
 /// message to be shown to the user when he/she requested the
@@ -430,8 +429,7 @@ void MainWindow::MenuItemGameNew_Activate()
         case e_gameTypeChallenge:
         {
             // launch the new challenge!!
-            m_gameChallengeWidget.LaunchNewGame(
-                m_newGameDialog->GetCurrentBlockemChallenge());
+            m_gameChallengeWidget.LaunchNewGame();
             break;
         }
 #ifdef DEBUG

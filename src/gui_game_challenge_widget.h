@@ -60,9 +60,9 @@ public:
     /// stops all glib timers owned by the object
     void hide_all();
 
-    /// Launches a new game.
-    /// @brief challenge to be shown on the widget
-    void LaunchNewGame(const BlockemChallenge& a_challenge);
+    /// Launches a new game. It will load the challenge from the config singleton
+    /// called GameChallengeConfig (see gui_game_challenge_config.h)
+    void LaunchNewGame();
 
     /// @return a reference to the drawing area shown by this widget
     DrawingAreaBoard& BoardDrawingArea();

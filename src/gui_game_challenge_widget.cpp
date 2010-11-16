@@ -35,6 +35,7 @@
 
 #include "gettext.h" // i18n
 #include "gui_game_challenge_widget.h"
+#include "gui_game_challenge_config.h"
 #include "rules.h"
 
 /// maximum size of the string to notify the end of the game
@@ -91,7 +92,7 @@ GameChallengeWidget::GameChallengeWidget(const BlockemChallenge& a_challenge):
 
     // No need to launch the new game since it will be always
     // launched with a brand new challenge
-    //LaunchNewGame(a_challenge);
+    //LaunchNewGame();
 }
 
 GameChallengeWidget::~GameChallengeWidget()
@@ -182,10 +183,10 @@ void GameChallengeWidget::ShowForbiddenAreaInBoard(bool a_show)
     }
 }
 
-void GameChallengeWidget::LaunchNewGame(const BlockemChallenge& a_challenge)
-{
+void GameChallengeWidget::LaunchNewGame()
+{    
     // this is a new challenge!
-    m_theChallengeGame.Reset(a_challenge);
+    m_theChallengeGame.Reset(GameChallengeConfig::Instance().GetBlockemChallenge());
 
     // reset board drawing area settings
     m_boardDrawingArea.ResetBoard(m_theChallengeGame.GetBoard());

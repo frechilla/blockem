@@ -52,6 +52,7 @@
 #include "game_total_allocation.h"
 #include "gui_game1v1_config.h"               // initialise singleton
 #include "gui_game_total_allocation_config.h" // initialise singleton
+#include "gui_game_challenge_config.h"        // initialise singleton
 #include "heuristic.h"
 
 
@@ -427,6 +428,7 @@ int main(int argc, char **argv)
         // Game1v1Config data. Used to store GUI related configuration for 1vs1 games
         Game1v1Config::Instance();
         GameTotalAllocationConfig::Instance();
+        GameChallengeConfig::Instance();
 
         // g_thread_supported returns TRUE if the thread system is initialised,
         // and FALSE if it is not. Initiliase gthreads only if they haven't been

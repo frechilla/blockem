@@ -43,9 +43,9 @@ static const char PLAYER_2_NAME[] = N_("Mr Blue");
 
 /// it will be used as an empty space in the board
 static const char CHAR_EMPTY   = ' ';
-/// it will be used as the character for 'me' in the board
+/// it will be used as the character for 'player1' in the board
 static const char CHAR_PLAYER1 = 'X';
-/// it will be used as the character for 'opponent' in the board
+/// it will be used as the character for 'player2' in the board
 static const char CHAR_PLAYER2 = 'O';
 
 /// Assume makes an ass out of u and me, but sometimes assumptions must be made
@@ -138,7 +138,7 @@ const Player& Game1v1::GetOpponent(eGame1v1Player_t a_playerType) const
 
 Game1v1::eGame1v1Player_t Game1v1::GetPlayerType(const Player &a_player) const
 {
-    eGame1v1Player_t rValue = Game1v1::e_Game1v1Player1;
+    eGame1v1Player_t rValue = Game1v1::e_Game1v1NoPlayer;
 
     if (a_player.PresentationChar() == m_player1.PresentationChar())
     {
