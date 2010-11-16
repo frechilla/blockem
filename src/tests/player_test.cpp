@@ -95,7 +95,7 @@ void PlayerTest::TestNKPoints()
 #endif
 
     m_board.Reset();
-    m_player.Reset();
+    m_player.Reset(Coordinate());
     Player a_tmpPlayer(std::string("someone else"), 'O', ROWS, COLUMNS, Coordinate());
 
     // 0: empty
@@ -126,8 +126,8 @@ void PlayerTest::TestNKPoints()
 
     // reset the board to launch next test (where only 2 baby pieces are deployed)
     m_board.Reset();
-    m_player.Reset();
-    a_tmpPlayer.Reset();
+    m_player.Reset(Coordinate());
+    a_tmpPlayer.Reset(Coordinate());
 
     // 0: empty
     // +: a_tmpPlayer
@@ -158,8 +158,8 @@ void PlayerTest::TestNKPoints()
 
     // reset the board to launch next test (where only 2 baby pieces are deployed)
     m_board.Reset();
-    m_player.Reset();
-    a_tmpPlayer.Reset();
+    m_player.Reset(Coordinate());
+    a_tmpPlayer.Reset(Coordinate());
 
     // 0: empty
     // +: m_player

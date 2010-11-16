@@ -325,7 +325,7 @@ void PieceTest::DoTest()
     std::cout.flush();
 
     m_board.Reset();
-    m_player.Reset();
+    m_player.Reset(Coordinate());
     for (int32_t i = e_minimumPieceIndex; i < e_numberOfPieces ; i++)
     {
         // this set will ensure coordinates used to describe pieces are
@@ -475,7 +475,7 @@ void PieceTest::DoTest()
     std::cout << __FUNCTION__ << ": Testing rotation and mirroring of pieces...";
     std::cout.flush();
 
-    m_player.Reset();
+    m_player.Reset(Coordinate());
     for (int32_t i = e_minimumPieceIndex; i < e_numberOfPieces ; i++)
     {
         Piece tmpPiece(e_noPiece);
