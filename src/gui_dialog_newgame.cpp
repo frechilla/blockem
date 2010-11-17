@@ -43,6 +43,7 @@
 static const char GAME_1V1_NAME[]         = N_("1 vs 1 Game (2 players)");
 static const char GAME_TOTAL_ALLOC_NAME[] = N_("Total deployment (solo play)");
 static const char GAME_CHALLENGE_NAME[]   = N_("Challenge (solo play)");
+static const char GAME_4PLAYERS_NAME[]   = N_("4 players game");
 
 // strings for the user to choose the type of player in game 1v1
 static const char COMBO_PLAYER_TYPE_HUMAN[]    = N_("Human");
@@ -92,6 +93,11 @@ DialogNewGame::DialogNewGame(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Bu
         throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
 
+    m_gtkBuilder->get_widget_derived(GUI_NEWGAME_4PLAYERS_HBOX, m_newGameTable4Players);
+    if (m_newGameTable4Players == NULL)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
 
     // set up icon view to store the type of games. Based on:
     // http://git.gnome.org/browse/gtkmm-documentation/tree/examples/book/iconview
@@ -129,6 +135,11 @@ DialogNewGame::DialogNewGame(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Bu
         m_newGameTableChallenge,
         GUI_PATH_TO_NEWGAME_CHALLENGE,
         _(GAME_CHALLENGE_NAME));
+    AddEntry(
+        e_gameType4Players,
+        m_newGameTable4Players,
+        GUI_PATH_TO_NEWGAME_4PLAYERS,
+        _(GAME_4PLAYERS_NAME));
 
     // activate game1v1 as default
     Gtk::TreeNodeChildren allChildren = m_typeGameIconViewModel->children();
@@ -1879,6 +1890,60 @@ void NewGameTableChallenge::ForceTranslationOfWidgets()
 }
 #else
 void NewGameTableChallenge::ForceTranslationOfWidgets()
+{
+    // So far this is only needed in win32 platform due to some unknown issue
+    // that prevents those strings to be automatically translated. It works
+    // fine in linux, so there's no need there to explicitly call to gettext
+}
+#endif // WIN32
+
+
+
+//////////////////////////////////////////////////////////////////////////////
+// NewGameTable4Players methods
+
+NewGameTable4Players::NewGameTable4Players(
+    BaseObjectType* cobject,
+    const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder)  throw (GUIException) :
+        NewGameTable(cobject), //Calls the base class constructor
+        m_gtkBuilder(a_gtkBuilder)
+{
+    // this call will work in different ways depending on the current platform
+    ForceTranslationOfWidgets();
+}
+
+NewGameTable4Players::~NewGameTable4Players()
+{
+}
+
+void NewGameTable4Players::SaveCurrentConfigIntoGlobalSettings() const
+{
+    // retrieve user settings from dialog and use them to set up global configuration
+}
+
+void NewGameTable4Players::LoadCurrentConfigFromGlobalSettings()
+{
+    // load current global configuration into the widgets
+}
+
+#ifdef WIN32
+void NewGameTable4Players::ForceTranslationOfWidgets()
+{
+    // in win32 systems gettext fails when the string is static and marked as
+    // translatable with N_() but _() is never called explicitely. Basically
+    // there are 2 kinds of strings that are not translated:
+    //  + Those included in the GOptionEntry list, which show the available
+    //    options that can be passed to the program through command line
+    //  + Strings included in the .glade file that never change during the
+    //    execution of the application, for example a menu called "Game", or a
+    //    label that contains the word "rotate"
+    //
+    // We'll be calling here to _() for every string found in the .glade file
+    // so it gets properly translated into the current domain (the 2nd case
+    // described above)
+}
+#else
+void NewGameTable4Players::ForceTranslationOfWidgets()
 {
     // So far this is only needed in win32 platform due to some unknown issue
     // that prevents those strings to be automatically translated. It works

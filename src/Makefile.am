@@ -101,6 +101,10 @@ gui_drawing_area_show_pieces.cpp \
 gui_drawing_area_show_pieces.h   \
 gui_exception.cpp \
 gui_exception.h \
+gui_game_4players_config.cpp \
+gui_game_4players_config.h \
+gui_game_4players_widget.cpp \
+gui_game_4players_widget.h \
 gui_game_challenge_config.cpp \
 gui_game_challenge_config.h \
 gui_game_challenge_widget.cpp \

@@ -56,7 +56,9 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     m_config1v1Dialog(NULL),
     m_newGameDialog(NULL),
     m_game1v1Widget(),
-    m_gameTotalAllocationWidget()
+    m_gameTotalAllocationWidget(),
+    m_gameChallengeWidget(),
+    m_game4PlayersWidget()
 {
     // icon of the window
     Glib::RefPtr< Gdk::Pixbuf > icon;
@@ -248,9 +250,11 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     m_game1v1Widget.hide_all();
     m_gameTotalAllocationWidget.hide_all();
     m_gameChallengeWidget.hide_all();
+    m_game4PlayersWidget.hide_all();
     m_vBoxMain->pack_start(m_game1v1Widget, true, true);
     m_vBoxMain->pack_start(m_gameTotalAllocationWidget, true, true);
     m_vBoxMain->pack_start(m_gameChallengeWidget, true, true);
+    m_vBoxMain->pack_start(m_game4PlayersWidget, true, true);
 
     // connect also its handlers
     m_game1v1Widget.signal_fatalError().connect(
@@ -264,6 +268,10 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     m_gameChallengeWidget.signal_fatalError().connect(
             sigc::mem_fun(*this, &MainWindow::Notify_FatalError));
     m_gameChallengeWidget.signal_gameFinished().connect(
+            sigc::mem_fun(*this, &MainWindow::Notify_GameFinished));
+    m_game4PlayersWidget.signal_fatalError().connect(
+            sigc::mem_fun(*this, &MainWindow::Notify_FatalError));
+    m_game4PlayersWidget.signal_gameFinished().connect(
             sigc::mem_fun(*this, &MainWindow::Notify_GameFinished));
 
     // connect signals to handlers
@@ -432,6 +440,12 @@ void MainWindow::MenuItemGameNew_Activate()
             m_gameChallengeWidget.LaunchNewGame();
             break;
         }
+        case e_gameType4Players:
+        {
+            // launch the new 4players game!!
+            m_game4PlayersWidget.LaunchNewGame();
+            break;
+        }
 #ifdef DEBUG
         default:
             assert(0);
@@ -458,12 +472,14 @@ void MainWindow::MenuItemSettingsViewNKPoints_Toggled()
         m_game1v1Widget.BoardDrawingArea().ShowNucleationPoints();
         m_gameTotalAllocationWidget.BoardDrawingArea().ShowNucleationPoints();
         m_gameChallengeWidget.BoardDrawingArea().ShowNucleationPoints();
+        m_game4PlayersWidget.BoardDrawingArea().ShowNucleationPoints();
     }
     else
     {
         m_game1v1Widget.BoardDrawingArea().HideNucleationPoints();
         m_gameTotalAllocationWidget.BoardDrawingArea().HideNucleationPoints();
         m_gameChallengeWidget.BoardDrawingArea().HideNucleationPoints();
+        m_game4PlayersWidget.BoardDrawingArea().HideNucleationPoints();
     }
 }
 
@@ -474,6 +490,7 @@ void MainWindow::MenuItemSettingsShowPlayer1ForbiddenArea_Toggled()
         m_game1v1Widget.ShowForbiddenAreaInBoard(Game1v1::e_Game1v1Player1);
         m_gameTotalAllocationWidget.ShowForbiddenAreaInBoard(true);
         m_gameChallengeWidget.ShowForbiddenAreaInBoard(true);
+        //TODO m_game4PlayersWidget
     }
 }
 
@@ -482,6 +499,7 @@ void MainWindow::MenuItemSettingsShowPlayer2ForbiddenArea_Toggled()
     if (m_settingsForbiddenAreaPlayer2MenuItem->property_active())
     {
         m_game1v1Widget.ShowForbiddenAreaInBoard(Game1v1::e_Game1v1Player2);
+        //TODO m_game4PlayersWidget
     }
 }
 
@@ -492,6 +510,7 @@ void MainWindow::MenuItemSettingsShowNoneForbiddenArea_Toggled()
         m_game1v1Widget.ShowForbiddenAreaInBoard(Game1v1::e_Game1v1NoPlayer);
         m_gameTotalAllocationWidget.ShowForbiddenAreaInBoard(false);
         m_gameChallengeWidget.ShowForbiddenAreaInBoard(false);
+        //TODO m_game4PlayersWidget
     }
 }
 
@@ -502,6 +521,7 @@ void MainWindow::MenuItemSettingsShowPlayer1InfluenceArea_Toggled()
         m_game1v1Widget.ShowInfluenceAreaInBoard(Game1v1::e_Game1v1Player1);
         m_gameTotalAllocationWidget.ShowInfluenceAreaInBoard(true);
         m_gameChallengeWidget.ShowInfluenceAreaInBoard(true);
+        //TODO m_game4PlayersWidget
     }
 }
 
@@ -510,6 +530,7 @@ void MainWindow::MenuItemSettingsShowPlayer2InfluenceArea_Toggled()
     if (m_settingsInfluenceAreaPlayer2MenuItem->property_active())
     {
         m_game1v1Widget.ShowInfluenceAreaInBoard(Game1v1::e_Game1v1Player2);
+        //TODO m_game4PlayersWidget
     }
 }
 
@@ -520,6 +541,7 @@ void MainWindow::MenuItemSettingsShowNoneInfluenceArea_Toggled()
         m_game1v1Widget.ShowInfluenceAreaInBoard(Game1v1::e_Game1v1NoPlayer);
         m_gameTotalAllocationWidget.ShowInfluenceAreaInBoard(false);
         m_gameChallengeWidget.ShowInfluenceAreaInBoard(false);
+        //TODO m_game4PlayersWidget
     }
 }
 
@@ -629,12 +651,12 @@ void MainWindow::SetupWindowForNewGame(e_blockemGameType_t a_gametype)
         // show_all must be used instead!
         m_gameTotalAllocationWidget.hide_all();
         m_gameChallengeWidget.hide_all();
+        m_game4PlayersWidget.hide_all();
 
         m_game1v1Widget.show_all();
 
         break;
     }
-
     case e_gameTypeTotalAllocation:
     {
         // hide player2's menus since there is no player2 in
@@ -650,12 +672,12 @@ void MainWindow::SetupWindowForNewGame(e_blockemGameType_t a_gametype)
         // show_all must be used instead!
         m_game1v1Widget.hide_all();
         m_gameChallengeWidget.hide_all();
+        m_game4PlayersWidget.hide_all();
 
         m_gameTotalAllocationWidget.show_all();
 
         break;
     }
-
     case e_gameTypeChallenge:
     {
         // hide player2's menus since there is no player2 in
@@ -671,12 +693,37 @@ void MainWindow::SetupWindowForNewGame(e_blockemGameType_t a_gametype)
         // show_all must be used instead!
         m_game1v1Widget.hide_all();
         m_gameTotalAllocationWidget.hide_all();
+        m_game4PlayersWidget.hide_all();
 
         m_gameChallengeWidget.show_all();
 
         break;
     }
+    case e_gameType4Players:
+    {
+        // hide player2's menus since there is no player2 in
+        // challenge games
+        m_settingsForbiddenAreaPlayer2MenuItem->show();
+        m_settingsInfluenceAreaPlayer2MenuItem->show();
 
+        // 4players games cannot be configured
+        m_settingsPrefsMenuItem->set_sensitive(false);
+
+        // configure now which game widget will be shown
+        // set_visible doesn't work in 2.16 (which is used in windows)
+        // show_all must be used instead!
+        m_game1v1Widget.hide_all();
+        m_gameTotalAllocationWidget.hide_all();
+        m_gameChallengeWidget.hide_all();
+
+        m_game4PlayersWidget.show_all();
+
+        break;
+    }
+#ifdef DEBUG
+    default:
+        assert(0);
+#endif
     } // switch(a_gametype)
 }
 

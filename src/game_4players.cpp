@@ -584,3 +584,34 @@ void Game4Players::PutDownPiece(
     rules::RecalculateInfluenceAreaAroundPieceFast(a_theBoard, a_coord, a_pieceConf, a_playerMe);
 }
 
+Game4Players::eGame4_Player_t Game4Players::GetNextPlayerType(eGame4_Player_t &a_player)
+{
+#ifdef DEBUG
+    assert(a_player >= e_Game4_Player1 && a_player <= e_Game4_Player4);        
+#endif
+    
+    if (a_player == e_Game4_Player1)
+    {
+        return e_Game4_Player2;
+    }
+    else if (a_player == e_Game4_Player2)
+    {
+        return e_Game4_Player3;
+    }
+    else if (a_player == e_Game4_Player3)
+    {
+        return e_Game4_Player4;
+    }
+    else if (a_player == e_Game4_Player4)
+    {
+        return e_Game4_Player1;
+    }
+    else
+    {
+#ifdef DEBUG
+        assert(0);
+#endif
+        // avoid warnings. This does nothing really
+        return e_Game4_NoPlayer;
+    }
+}

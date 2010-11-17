@@ -1796,6 +1796,16 @@ You should have received a copy of the GNU General Public License along with blo
                     <property name="position">2</property>
                   </packing>
                 </child>
+                <child>
+                  <object class="GtkHBox" id="newgame_4players_hbox">
+                    <property name="visible">True</property>
+                    <property name="spacing">2</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="position">3</property>
+                  </packing>
+                </child>                
               </object>
               <packing>
                 <property name="position">1</property>

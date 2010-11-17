@@ -116,6 +116,13 @@ public:
 			const Piece      &a_piece,
 			const Coordinate &a_coord,
             eGame4_Player_t   a_player);
+    
+    /// @param a_player
+    /// @return player who must put down a piece after a_player
+    /// Basically Player 2 moves after 1, 3 after 2, 4 after 1 and finally, 1 after 4
+    /// WARNING: ensure a_player is e_Game4_Player[1-4]. Any other value will
+    /// lead to unexpected behaviour
+    static eGame4_Player_t GetNextPlayerType(eGame4_Player_t &a_player);
 
 private:
     /// The blockem board where the game will be played

@@ -135,6 +135,9 @@ const std::string GUI_PATH_TO_NEWGAME_TOTALALLOC
 
 const std::string GUI_PATH_TO_NEWGAME_CHALLENGE
         (PATH_TO_PIXMAPS + std::string("gamechallenge.png"));
+        
+const std::string GUI_PATH_TO_NEWGAME_4PLAYERS
+        (PATH_TO_PIXMAPS + std::string("game4players.png"));
 
 
 // have a look at the name of the widgets in gui.glade file
@@ -193,6 +196,7 @@ const char GUI_NEWGAME_VBOX_GAMEDIALOGS[]               = "newgame_vbox_gamedial
 const char GUI_NEWGAME_1V1_HBOX[]                       = "newgame_1v1_hbox";
 const char GUI_NEWGAME_TOTALALLOC_HBOX[]                = "newgame_totalalloc_hbox";
 const char GUI_NEWGAME_CHALLENGE_HBOX[]                 = "newgame_challenge_hbox";
+const char GUI_NEWGAME_4PLAYERS_HBOX[]                  = "newgame_4players_hbox";
 const char GUI_NEWGAME_1V1_TABLE_PLAYER1[]              = "newgame_1v1_table_player1";
 const char GUI_NEWGAME_1V1_TABLE_PLAYER2[]              = "newgame_1v1_table_player2";
 const char GUI_NEWGAME_1V1_SPINBUTTON_STARTROW1[]       = "newgame_1v1_spinbutton_startingrow1";

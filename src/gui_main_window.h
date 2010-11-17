@@ -44,6 +44,7 @@
 #include "gui_game1v1_widget.h"
 #include "gui_game_total_allocation_widget.h"
 #include "gui_game_challenge_widget.h"
+#include "gui_game_4players_widget.h"
 
 
 /// @brief class to handle the main window in the GUI
@@ -79,6 +80,9 @@ private:
 
     /// @brief the challenge game widget
     GameChallengeWidget m_gameChallengeWidget;
+    
+    /// @brief the 4players game widget
+    Game4PlayersWidget m_game4PlayersWidget;
     
     // accel group + menu items
     Glib::RefPtr<Gtk::AccelGroup> m_accelGroup;

@@ -23,6 +23,7 @@
 /// @history
 /// Ref       Who                When         What
 ///           Faustino Frechilla 02-Oct-2010  Original development
+///           Faustino Frechilla 17-Nov-2010  4players game
 /// @endhistory
 ///
 // ============================================================================
@@ -41,6 +42,7 @@ class NewGameTable;
 class NewGameTable1v1;
 class NewGameTableTotalAllocation;
 class NewGameTableChallenge;
+class NewGameTable4Players;
 
 /// @brief the new game dialog!!
 class DialogNewGame :
@@ -101,6 +103,7 @@ private:
     NewGameTable1v1*             m_newGameTable1v1;
     NewGameTableTotalAllocation* m_newGameTableTotalAllocation;
     NewGameTableChallenge*       m_newGameTableChallenge;
+    NewGameTable4Players*        m_newGameTable4Players;
 
     /// double click (or click + enter) on an item of the icon view
     void IconView_on_item_activated(const Gtk::TreeModel::Path& path);
@@ -473,5 +476,43 @@ private:
     NewGameTableChallenge& operator=(const NewGameTableChallenge &a_src);
 
 }; // class NewGameTableChallenge
+
+
+/// @brief table to be shown on the new game dialog when the user selects
+///        a 4 players game
+class NewGameTable4Players:
+    public NewGameTable
+{
+public:
+    // to be used with m_gtkBuilder->get_widget_derived(GUI_NEWGAME_4PLAYERS_HBOX, m_table);
+    NewGameTable4Players(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& a_gtkBuilder) throw (GUIException);
+    virtual ~NewGameTable4Players();
+
+    /// @brief load current global configuration corresponding to the type of
+    ///        gamer epresented by the derived classes
+    virtual void LoadCurrentConfigFromGlobalSettings();
+    /// @brief save info contained in the derived class' widgets into current
+    ///        global configuration
+    virtual void SaveCurrentConfigIntoGlobalSettings() const;
+
+private:
+    /// @brief used to retrieve the objects from the Glade design
+    Glib::RefPtr<Gtk::Builder> m_gtkBuilder;
+    
+    /// Calls gettext per every static widget in the dialog. These strings
+    /// are those ones included in the .glade file that never change during the
+    /// execution of the application, for example a menu called "Game", or a
+    /// label that contains the word "rotate"
+    ///
+    /// So far this is only needed in win32 platform due to some unknown issue
+    /// that prevents those strings to be automatically translated. It works
+    /// fine in linux, so there's no need there to explicitly call to gettext
+    void ForceTranslationOfWidgets();
+    
+    NewGameTable4Players();
+    NewGameTable4Players(const NewGameTable4Players &a_src);
+    NewGameTable4Players& operator=(const NewGameTable4Players &a_src);
+};
+
 
 #endif /* _GUI_DIALOG_NEWGAME_H_ */
