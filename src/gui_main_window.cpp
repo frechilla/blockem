@@ -184,6 +184,20 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
         throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
 
+    m_settingsForbiddenAreaPlayer3MenuItem = Glib::RefPtr<Gtk::RadioMenuItem>::cast_dynamic(
+            m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_FORBIDDENAREA_PLAYER3));
+    if (!m_settingsForbiddenAreaPlayer3MenuItem)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
+    m_settingsForbiddenAreaPlayer4MenuItem = Glib::RefPtr<Gtk::RadioMenuItem>::cast_dynamic(
+            m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_FORBIDDENAREA_PLAYER4));
+    if (!m_settingsForbiddenAreaPlayer4MenuItem)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
     m_settingsForbiddenAreaNoShowMenuItem = Glib::RefPtr<Gtk::RadioMenuItem>::cast_dynamic(
             m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_FORBIDDENAREA_NOSHOW));
     if (!m_settingsForbiddenAreaNoShowMenuItem)
@@ -208,6 +222,20 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     m_settingsInfluenceAreaPlayer2MenuItem = Glib::RefPtr<Gtk::RadioMenuItem>::cast_dynamic(
             m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_INFLUENCEAREA_PLAYER2));
     if (!m_settingsInfluenceAreaPlayer2MenuItem)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
+    m_settingsInfluenceAreaPlayer3MenuItem = Glib::RefPtr<Gtk::RadioMenuItem>::cast_dynamic(
+            m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_INFLUENCEAREA_PLAYER3));
+    if (!m_settingsInfluenceAreaPlayer3MenuItem)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
+    m_settingsInfluenceAreaPlayer4MenuItem = Glib::RefPtr<Gtk::RadioMenuItem>::cast_dynamic(
+            m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS_INFLUENCEAREA_PLAYER4));
+    if (!m_settingsInfluenceAreaPlayer4MenuItem)
     {
         throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
@@ -289,17 +317,25 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     m_settingsNKPointsMenuItem->signal_toggled().connect(
             sigc::mem_fun(*this, &MainWindow::MenuItemSettingsViewNKPoints_Toggled));
     m_settingsForbiddenAreaPlayer1MenuItem->signal_toggled().connect(
-            sigc::mem_fun(*this, &MainWindow::MenuItemSettingsShowPlayer1ForbiddenArea_Toggled));
+            sigc::mem_fun(*this, &MainWindow::MenuItemSettingsShowForbiddenArea_Toggled));
     m_settingsForbiddenAreaPlayer2MenuItem->signal_toggled().connect(
-            sigc::mem_fun(*this, &MainWindow::MenuItemSettingsShowPlayer2ForbiddenArea_Toggled));
+            sigc::mem_fun(*this, &MainWindow::MenuItemSettingsShowForbiddenArea_Toggled));
+    m_settingsForbiddenAreaPlayer3MenuItem->signal_toggled().connect(
+            sigc::mem_fun(*this, &MainWindow::MenuItemSettingsShowForbiddenArea_Toggled));
+    m_settingsForbiddenAreaPlayer4MenuItem->signal_toggled().connect(
+            sigc::mem_fun(*this, &MainWindow::MenuItemSettingsShowForbiddenArea_Toggled));
     m_settingsForbiddenAreaNoShowMenuItem->signal_toggled().connect(
-            sigc::mem_fun(*this, &MainWindow::MenuItemSettingsShowNoneForbiddenArea_Toggled));
+            sigc::mem_fun(*this, &MainWindow::MenuItemSettingsShowForbiddenArea_Toggled));
     m_settingsInfluenceAreaPlayer1MenuItem->signal_toggled().connect(
-            sigc::mem_fun(*this, &MainWindow::MenuItemSettingsShowPlayer1InfluenceArea_Toggled));
+            sigc::mem_fun(*this, &MainWindow::MenuItemSettingsShowInfluenceArea_Toggled));
     m_settingsInfluenceAreaPlayer2MenuItem->signal_toggled().connect(
-            sigc::mem_fun(*this, &MainWindow::MenuItemSettingsShowPlayer2InfluenceArea_Toggled));
+            sigc::mem_fun(*this, &MainWindow::MenuItemSettingsShowInfluenceArea_Toggled));
+    m_settingsInfluenceAreaPlayer3MenuItem->signal_toggled().connect(
+            sigc::mem_fun(*this, &MainWindow::MenuItemSettingsShowInfluenceArea_Toggled));
+    m_settingsInfluenceAreaPlayer4MenuItem->signal_toggled().connect(
+            sigc::mem_fun(*this, &MainWindow::MenuItemSettingsShowInfluenceArea_Toggled));
     m_settingsInfluenceAreaNoShowMenuItem->signal_toggled().connect(
-            sigc::mem_fun(*this, &MainWindow::MenuItemSettingsShowNoneInfluenceArea_Toggled));
+            sigc::mem_fun(*this, &MainWindow::MenuItemSettingsShowInfluenceArea_Toggled));
 
     // set up window to show a 1vs1 game by default
     SetupWindowForNewGame(e_gameType1vs1);
@@ -483,65 +519,65 @@ void MainWindow::MenuItemSettingsViewNKPoints_Toggled()
     }
 }
 
-void MainWindow::MenuItemSettingsShowPlayer1ForbiddenArea_Toggled()
-{
-    if (m_settingsForbiddenAreaPlayer1MenuItem->property_active())
-    {
-        m_game1v1Widget.ShowForbiddenAreaInBoard(Game1v1::e_Game1v1Player1);
-        m_gameTotalAllocationWidget.ShowForbiddenAreaInBoard(true);
-        m_gameChallengeWidget.ShowForbiddenAreaInBoard(true);
-        //TODO m_game4PlayersWidget
-    }
-}
-
-void MainWindow::MenuItemSettingsShowPlayer2ForbiddenArea_Toggled()
-{
-    if (m_settingsForbiddenAreaPlayer2MenuItem->property_active())
-    {
-        m_game1v1Widget.ShowForbiddenAreaInBoard(Game1v1::e_Game1v1Player2);
-        //TODO m_game4PlayersWidget
-    }
-}
-
-void MainWindow::MenuItemSettingsShowNoneForbiddenArea_Toggled()
+void MainWindow::MenuItemSettingsShowForbiddenArea_Toggled()
 {
     if (m_settingsForbiddenAreaNoShowMenuItem->property_active())
     {
         m_game1v1Widget.ShowForbiddenAreaInBoard(Game1v1::e_Game1v1NoPlayer);
         m_gameTotalAllocationWidget.ShowForbiddenAreaInBoard(false);
         m_gameChallengeWidget.ShowForbiddenAreaInBoard(false);
-        //TODO m_game4PlayersWidget
+        m_game4PlayersWidget.ShowForbiddenAreaInBoard(Game4Players::e_Game4_NoPlayer);
     }
-}
-
-void MainWindow::MenuItemSettingsShowPlayer1InfluenceArea_Toggled()
-{
-    if (m_settingsInfluenceAreaPlayer1MenuItem->property_active())
+    else if (m_settingsForbiddenAreaPlayer1MenuItem->property_active())
     {
-        m_game1v1Widget.ShowInfluenceAreaInBoard(Game1v1::e_Game1v1Player1);
-        m_gameTotalAllocationWidget.ShowInfluenceAreaInBoard(true);
-        m_gameChallengeWidget.ShowInfluenceAreaInBoard(true);
-        //TODO m_game4PlayersWidget
+        m_game1v1Widget.ShowForbiddenAreaInBoard(Game1v1::e_Game1v1Player1);
+        m_gameTotalAllocationWidget.ShowForbiddenAreaInBoard(true);
+        m_gameChallengeWidget.ShowForbiddenAreaInBoard(true);
+        m_game4PlayersWidget.ShowForbiddenAreaInBoard(Game4Players::e_Game4_Player1);
     }
-}
-
-void MainWindow::MenuItemSettingsShowPlayer2InfluenceArea_Toggled()
-{
-    if (m_settingsInfluenceAreaPlayer2MenuItem->property_active())
+    else if (m_settingsForbiddenAreaPlayer2MenuItem->property_active())
     {
-        m_game1v1Widget.ShowInfluenceAreaInBoard(Game1v1::e_Game1v1Player2);
-        //TODO m_game4PlayersWidget
+        m_game1v1Widget.ShowForbiddenAreaInBoard(Game1v1::e_Game1v1Player2);
+        m_game4PlayersWidget.ShowForbiddenAreaInBoard(Game4Players::e_Game4_Player2);
+    }
+    else if (m_settingsForbiddenAreaPlayer3MenuItem->property_active())
+    {
+        m_game4PlayersWidget.ShowForbiddenAreaInBoard(Game4Players::e_Game4_Player3);
+    }
+    else if (m_settingsForbiddenAreaPlayer4MenuItem->property_active())
+    {
+        m_game4PlayersWidget.ShowForbiddenAreaInBoard(Game4Players::e_Game4_Player4);
     }
 }
 
-void MainWindow::MenuItemSettingsShowNoneInfluenceArea_Toggled()
+void MainWindow::MenuItemSettingsShowInfluenceArea_Toggled()
 {
     if (m_settingsInfluenceAreaNoShowMenuItem->property_active())
     {
         m_game1v1Widget.ShowInfluenceAreaInBoard(Game1v1::e_Game1v1NoPlayer);
         m_gameTotalAllocationWidget.ShowInfluenceAreaInBoard(false);
         m_gameChallengeWidget.ShowInfluenceAreaInBoard(false);
-        //TODO m_game4PlayersWidget
+        m_game4PlayersWidget.ShowInfluenceAreaInBoard(Game4Players::e_Game4_NoPlayer);
+    }
+    else if (m_settingsInfluenceAreaPlayer1MenuItem->property_active())
+    {
+        m_game1v1Widget.ShowInfluenceAreaInBoard(Game1v1::e_Game1v1Player1);
+        m_gameTotalAllocationWidget.ShowInfluenceAreaInBoard(true);
+        m_gameChallengeWidget.ShowInfluenceAreaInBoard(true);
+        m_game4PlayersWidget.ShowInfluenceAreaInBoard(Game4Players::e_Game4_Player1);
+    }
+    else if (m_settingsInfluenceAreaPlayer2MenuItem->property_active())
+    {
+        m_game1v1Widget.ShowInfluenceAreaInBoard(Game1v1::e_Game1v1Player2);
+        m_game4PlayersWidget.ShowInfluenceAreaInBoard(Game4Players::e_Game4_Player2);
+    }
+    else if (m_settingsInfluenceAreaPlayer3MenuItem->property_active())
+    {
+        m_game4PlayersWidget.ShowInfluenceAreaInBoard(Game4Players::e_Game4_Player3);
+    }
+    else if (m_settingsInfluenceAreaPlayer4MenuItem->property_active())
+    {
+        m_game4PlayersWidget.ShowInfluenceAreaInBoard(Game4Players::e_Game4_Player4);
     }
 }
 
@@ -642,6 +678,12 @@ void MainWindow::SetupWindowForNewGame(e_blockemGameType_t a_gametype)
         // show player2's menus
         m_settingsForbiddenAreaPlayer2MenuItem->show();
         m_settingsInfluenceAreaPlayer2MenuItem->show();
+        
+        // hide player3 and player'4 menus
+        m_settingsForbiddenAreaPlayer3MenuItem->hide();
+        m_settingsForbiddenAreaPlayer4MenuItem->hide();
+        m_settingsInfluenceAreaPlayer3MenuItem->hide();
+        m_settingsInfluenceAreaPlayer4MenuItem->hide();
 
         // settings menu is clickable in 1vs1 games
         m_settingsPrefsMenuItem->set_sensitive(true);
@@ -663,6 +705,11 @@ void MainWindow::SetupWindowForNewGame(e_blockemGameType_t a_gametype)
         // total allocation games
         m_settingsForbiddenAreaPlayer2MenuItem->hide();
         m_settingsInfluenceAreaPlayer2MenuItem->hide();
+        // hide also player3 and player'4 menus
+        m_settingsForbiddenAreaPlayer3MenuItem->hide();
+        m_settingsForbiddenAreaPlayer4MenuItem->hide();
+        m_settingsInfluenceAreaPlayer3MenuItem->hide();
+        m_settingsInfluenceAreaPlayer4MenuItem->hide();
 
         // total allocation games cannot be configured
         m_settingsPrefsMenuItem->set_sensitive(false);
@@ -684,6 +731,11 @@ void MainWindow::SetupWindowForNewGame(e_blockemGameType_t a_gametype)
         // challenge games
         m_settingsForbiddenAreaPlayer2MenuItem->hide();
         m_settingsInfluenceAreaPlayer2MenuItem->hide();
+        // hide also player3 and player'4 menus
+        m_settingsForbiddenAreaPlayer3MenuItem->hide();
+        m_settingsForbiddenAreaPlayer4MenuItem->hide();
+        m_settingsInfluenceAreaPlayer3MenuItem->hide();
+        m_settingsInfluenceAreaPlayer4MenuItem->hide();
 
         // challenge games cannot be configured
         m_settingsPrefsMenuItem->set_sensitive(false);
@@ -701,10 +753,13 @@ void MainWindow::SetupWindowForNewGame(e_blockemGameType_t a_gametype)
     }
     case e_gameType4Players:
     {
-        // hide player2's menus since there is no player2 in
-        // challenge games
+        // show player2, player3 and player4's menus
         m_settingsForbiddenAreaPlayer2MenuItem->show();
+        m_settingsForbiddenAreaPlayer3MenuItem->show();
+        m_settingsForbiddenAreaPlayer4MenuItem->show();
         m_settingsInfluenceAreaPlayer2MenuItem->show();
+        m_settingsInfluenceAreaPlayer3MenuItem->show();
+        m_settingsInfluenceAreaPlayer4MenuItem->show();
 
         // 4players games cannot be configured
         m_settingsPrefsMenuItem->set_sensitive(false);
@@ -767,6 +822,12 @@ void MainWindow::ForceTranslationOfWidgets()
     m_settingsForbiddenAreaPlayer2MenuItem->set_label(
         _(m_settingsForbiddenAreaPlayer2MenuItem->get_label().c_str()));
 
+    m_settingsForbiddenAreaPlayer3MenuItem->set_label(
+        _(m_settingsForbiddenAreaPlayer3MenuItem->get_label().c_str()));
+
+    m_settingsForbiddenAreaPlayer4MenuItem->set_label(
+        _(m_settingsForbiddenAreaPlayer4MenuItem->get_label().c_str()));
+
     m_settingsForbiddenAreaNoShowMenuItem->set_label(
         _(m_settingsForbiddenAreaNoShowMenuItem->get_label().c_str()));
 
@@ -778,6 +839,12 @@ void MainWindow::ForceTranslationOfWidgets()
 
     m_settingsInfluenceAreaPlayer2MenuItem->set_label(
         _(m_settingsInfluenceAreaPlayer2MenuItem->get_label().c_str()));
+
+    m_settingsInfluenceAreaPlayer3MenuItem->set_label(
+        _(m_settingsInfluenceAreaPlayer3MenuItem->get_label().c_str()));
+
+    m_settingsInfluenceAreaPlayer4MenuItem->set_label(
+        _(m_settingsInfluenceAreaPlayer4MenuItem->get_label().c_str()));
 
     m_settingsInfluenceAreaNoShowMenuItem->set_label(
         _(m_settingsInfluenceAreaNoShowMenuItem->get_label().c_str()));

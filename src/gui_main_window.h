@@ -26,6 +26,7 @@
 ///           Faustino Frechilla 25-Apr-2010  libglade dependency removed. Code migrated to GtkBuilder
 ///           Faustino Frechilla 06-Oct-2010  Adapted to Game1v1Widget
 ///           Faustino Frechilla 21-Oct-2010  GameChallengeWidget added
+///           Faustino Frechilla 18-Nov-2010  Game4PlayersWidget added
 /// @endhistory
 ///
 // ============================================================================
@@ -97,10 +98,14 @@ private:
     Glib::RefPtr<Gtk::MenuItem> m_settingsForbiddenAreaMenuItem;
     Glib::RefPtr<Gtk::RadioMenuItem> m_settingsForbiddenAreaPlayer1MenuItem;
     Glib::RefPtr<Gtk::RadioMenuItem> m_settingsForbiddenAreaPlayer2MenuItem;
+    Glib::RefPtr<Gtk::RadioMenuItem> m_settingsForbiddenAreaPlayer3MenuItem;
+    Glib::RefPtr<Gtk::RadioMenuItem> m_settingsForbiddenAreaPlayer4MenuItem;
     Glib::RefPtr<Gtk::RadioMenuItem> m_settingsForbiddenAreaNoShowMenuItem;
     Glib::RefPtr<Gtk::MenuItem> m_settingsInfluenceAreaMenuItem;
     Glib::RefPtr<Gtk::RadioMenuItem> m_settingsInfluenceAreaPlayer1MenuItem;
     Glib::RefPtr<Gtk::RadioMenuItem> m_settingsInfluenceAreaPlayer2MenuItem;
+    Glib::RefPtr<Gtk::RadioMenuItem> m_settingsInfluenceAreaPlayer3MenuItem;
+    Glib::RefPtr<Gtk::RadioMenuItem> m_settingsInfluenceAreaPlayer4MenuItem;
     Glib::RefPtr<Gtk::RadioMenuItem> m_settingsInfluenceAreaNoShowMenuItem;
 
     /// @brief Main vertical box (It's got the menu, vbox drawing plus status bar)
@@ -132,23 +137,12 @@ private:
     /// @brief  callback to be called when the menuitem Settings->view nk points is toggled
     void MenuItemSettingsViewNKPoints_Toggled();
 
-    /// @brief  callback to be called when the menuitem Settings->areas->show player1's forbidden area is toggled
-    void MenuItemSettingsShowPlayer1ForbiddenArea_Toggled();
+    /// @brief callback to be called when the menuitems in Settings->forbidden areas are toggled
+    void MenuItemSettingsShowForbiddenArea_Toggled();
 
-    /// @brief  callback to be called when the menuitem Settings->areas->show player2 forbidden area is toggled
-    void MenuItemSettingsShowPlayer2ForbiddenArea_Toggled();
+    /// @brief  callback to be called when the menuitems Settings->influece areas are toggled
+    void MenuItemSettingsShowInfluenceArea_Toggled();
 
-    /// @brief  callback to be called when the menuitem Settings->areas->do not show forbidden area is toggled
-    void MenuItemSettingsShowNoneForbiddenArea_Toggled();
-
-    /// @brief  callback to be called when the menuitem Settings->areas->show player1's influence area is toggled
-    void MenuItemSettingsShowPlayer1InfluenceArea_Toggled();
-
-    /// @brief  callback to be called when the menuitem Settings->areas->show player2 influence area is toggled
-    void MenuItemSettingsShowPlayer2InfluenceArea_Toggled();
-
-    /// @brief  callback to be called when the menuitem Settings->areas->do not show influence area is toggled
-    void MenuItemSettingsShowNoneInfluenceArea_Toggled();
 
     /// @brief configure the main window for a new game
     /// it sets to active/inactive different widgets that will be shown to the

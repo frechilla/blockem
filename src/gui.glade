@@ -114,7 +114,25 @@
                                 <property name="draw_as_radio">True</property>
                                 <property name="group">radiomenuitem_settings_forbidden_noshow</property>
                               </object>
-                            </child>
+                            </child>                            
+                            <child>
+                              <object class="GtkRadioMenuItem" id="radiomenuitem_settings_forbidden_player3">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Show Mr _Yellow's forbidden area</property>
+                                <property name="use_underline">True</property>
+                                <property name="draw_as_radio">True</property>
+                                <property name="group">radiomenuitem_settings_forbidden_noshow</property>
+                              </object>
+                            </child>                            
+                            <child>
+                              <object class="GtkRadioMenuItem" id="radiomenuitem_settings_forbidden_player4">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Show Mr _Red's forbidden area</property>
+                                <property name="use_underline">True</property>
+                                <property name="draw_as_radio">True</property>
+                                <property name="group">radiomenuitem_settings_forbidden_noshow</property>
+                              </object>
+                            </child>                            
                           </object>
                         </child>
                       </object>
@@ -148,6 +166,24 @@
                               <object class="GtkRadioMenuItem" id="radiomenuitem_settings_influence_player2">
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">Show Mr _Blue's influence area</property>
+                                <property name="use_underline">True</property>
+                                <property name="draw_as_radio">True</property>
+                                <property name="group">radiomenuitem_settings_influence_noshow</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkRadioMenuItem" id="radiomenuitem_settings_influence_player3">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Show Mr _Yellow's influence area</property>
+                                <property name="use_underline">True</property>
+                                <property name="draw_as_radio">True</property>
+                                <property name="group">radiomenuitem_settings_influence_noshow</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkRadioMenuItem" id="radiomenuitem_settings_influence_player4">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Show Mr _Red's influence area</property>
                                 <property name="use_underline">True</property>
                                 <property name="draw_as_radio">True</property>
                                 <property name="group">radiomenuitem_settings_influence_noshow</property>

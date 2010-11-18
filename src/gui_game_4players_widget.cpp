@@ -38,8 +38,10 @@
 #include "gui_game_4players_config.h"
 #include "rules.h"
 
+/// size of the winner message
+static const uint32_t WINNER_MESSAGE_LENGTH = 128;
 /// maximum size of the string to notify the end of the game
-static const uint32_t GAME_FINISHED_BUFFER_LENGTH = 256;
+static const uint32_t GAME_FINISHED_BUFFER_LENGTH = 512;
 
 Game4PlayersWidget::Game4PlayersWidget():
     Gtk::VBox(), //Calls the base class constructor
@@ -365,7 +367,15 @@ void Game4PlayersWidget::BoardDrawingArea_BoardClicked(
     {
         // game is finished. No player can put down a piece
         m_statusBar.StopAllStopwatches();
+        
+        // current moving player's pieces will be shown. widget must be updated beforehand
+        m_pickPiecesDrawingArea.Invalidate(m_the4PlayersGame.GetPlayer(thisPlayerType));
+        
+        // notify end of the game
         GameFinished();
+        
+        // no further processing
+        return;
     }
     
     // notify the board widget who is the next player top move
@@ -471,27 +481,55 @@ void Game4PlayersWidget::GameFinished()
     // it will contain the game finished message
     char theMessage[GAME_FINISHED_BUFFER_LENGTH];
     // winner message. It will be empty if there is no winner
-    char winnerMessage[GAME_FINISHED_BUFFER_LENGTH];
-    winnerMessage[0] = '\0';
+    char winnerMessage[WINNER_MESSAGE_LENGTH];
+    winnerMessage[0] = '\0'; // set winnerMessage to empty string
     if (winner != NULL)
     {
         uint8_t red, green, blue;
         winner->GetColour(red, green, blue);
             
         snprintf(winnerMessage,
-                GAME_FINISHED_BUFFER_LENGTH,
+                WINNER_MESSAGE_LENGTH,
                 // i18n TRANSLATORS: Please, respect the HTML formatting as much as possible
                 // i18n Bear in mind that ' color=\"#%02X%02X%02X\" ' will be replaced by the winner's colour,
                 // i18n and the first %s will be replaced by the winner's name
-                // i18n Please, leave the \n character at the end of the string
+                // i18n Please, leave the \n\n characters at the end of the string so this string
+                // i18n can preceed the one which contains the final score
                 // i18n Thank you for contributing to this project
-                _("<b><span color=\"#%02X%02X%02X\">%s</span></b> won!\n"),
+                _("<b><span color=\"#%02X%02X%02X\">%s</span></b> won!\n\n"),
                 red,
                 green,
                 blue,
                 winner->GetName().c_str());
-
     }
+    else
+    {
+        // find out who won. There must have been a draw, but who made it?
+        
+        // 1st of all calculate the winer score
+        int32_t winnerScore;
+        winnerScore = std::min(squaresLeftPlayer1, squaresLeftPlayer2);
+        winnerScore = std::min(winnerScore, squaresLeftPlayer3);
+        winnerScore = std::min(winnerScore, squaresLeftPlayer4);
+        
+        // find out whose score is equal to this minimum
+        snprintf(winnerMessage,
+                WINNER_MESSAGE_LENGTH,
+                // i18n TRANSLATORS: Please, respect the HTML formatting as much as possible
+                // i18n Bear in mind the final %d will be replaced by the winner score 
+                // i18n Thank you for contributing to this project
+                _("It ended in a <b>draw</b>! Two or more player's score is %d\n\n"),
+                winnerScore);        
+    }
+    
+    uint8_t red1, green1, blue1;
+    uint8_t red2, green2, blue2;
+    uint8_t red3, green3, blue3;
+    uint8_t red4, green4, blue4;
+    player1.GetColour(red1, green1, blue1);
+    player2.GetColour(red2, green2, blue2);
+    player3.GetColour(red3, green3, blue3);
+    player4.GetColour(red4, green4, blue4);
     
     snprintf(theMessage,
             GAME_FINISHED_BUFFER_LENGTH,
@@ -500,18 +538,14 @@ void Game4PlayersWidget::GameFinished()
             // i18n <span> HTML tags to set up its colour plus the score
             // i18n Thank you for contributing to this project
             _("Final score: \n"
-              "  <b><span color=\"#%02X%02X%02X\">%s</span></b> %d\n"
-              "  <b><span color=\"#%02X%02X%02X\">%s</span></b> %d\n"
-              "  <b><span color=\"#%02X%02X%02X\">%s</span></b> %d\n"
-              "  <b><span color=\"#%02X%02X%02X\">%s</span></b> %d\n"),
-            player1.GetName().c_str(),
-            squaresLeftPlayer1,
-            player2.GetName().c_str(),
-            squaresLeftPlayer2,
-            player3.GetName().c_str(),
-            squaresLeftPlayer3,
-            player4.GetName().c_str(),
-            squaresLeftPlayer4);
+              " <b><span color=\"#%02X%02X%02X\">%s</span></b> %d |"
+              " <b><span color=\"#%02X%02X%02X\">%s</span></b> %d |"
+              " <b><span color=\"#%02X%02X%02X\">%s</span></b> %d |"
+              " <b><span color=\"#%02X%02X%02X\">%s</span></b> %d"),
+            red1, green1, blue1, player1.GetName().c_str(), squaresLeftPlayer1,
+            red2, green2, blue2, player2.GetName().c_str(), squaresLeftPlayer2,
+            red3, green3, blue3, player3.GetName().c_str(), squaresLeftPlayer3,
+            red4, green4, blue4, player4.GetName().c_str(), squaresLeftPlayer4);
 
 
     // notify this game is finished sending the final score message

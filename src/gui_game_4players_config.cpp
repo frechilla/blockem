@@ -30,18 +30,18 @@
 #include "gui_game_4players_config.h"
 
 // colours are here so they can't be accesed from elsewhere
-static const uint8_t DEFAULT_PLAYER1_COLOUR_R  =  31;
+static const uint8_t DEFAULT_PLAYER1_COLOUR_R  =  31; // green
 static const uint8_t DEFAULT_PLAYER1_COLOUR_G  = 130;
 static const uint8_t DEFAULT_PLAYER1_COLOUR_B  =  31;
-static const uint8_t DEFAULT_PLAYER2_COLOUR_R  =   0;
+static const uint8_t DEFAULT_PLAYER2_COLOUR_R  =   0; // blue
 static const uint8_t DEFAULT_PLAYER2_COLOUR_G  =   0;
 static const uint8_t DEFAULT_PLAYER2_COLOUR_B  = 229;
-static const uint8_t DEFAULT_PLAYER3_COLOUR_R  = 180;
-static const uint8_t DEFAULT_PLAYER3_COLOUR_G  =   4;
-static const uint8_t DEFAULT_PLAYER3_COLOUR_B  =  95;
-static const uint8_t DEFAULT_PLAYER4_COLOUR_R  = 223;
-static const uint8_t DEFAULT_PLAYER4_COLOUR_G  = 116;
-static const uint8_t DEFAULT_PLAYER4_COLOUR_B  =   1;
+static const uint8_t DEFAULT_PLAYER3_COLOUR_R  = 134; // yellow
+static const uint8_t DEFAULT_PLAYER3_COLOUR_G  = 138;
+static const uint8_t DEFAULT_PLAYER3_COLOUR_B  =   8;
+static const uint8_t DEFAULT_PLAYER4_COLOUR_R  = 180; // red
+static const uint8_t DEFAULT_PLAYER4_COLOUR_G  =   4;
+static const uint8_t DEFAULT_PLAYER4_COLOUR_B  =   4;
 
 static const int32_t DEFAULT_NROWS = 20;
 static const int32_t DEFAULT_NCOLS = 20;

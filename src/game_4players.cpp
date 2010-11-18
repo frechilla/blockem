@@ -37,9 +37,9 @@ static const char PLAYER_1_NAME[] = N_("Mr Green");
 /// player2's name
 static const char PLAYER_2_NAME[] = N_("Mr Blue");
 /// player3's name
-static const char PLAYER_3_NAME[] = N_("Mr Pink");
+static const char PLAYER_3_NAME[] = N_("Mr Yellow");
 /// player4's name
-static const char PLAYER_4_NAME[] = N_("Mr Orange");
+static const char PLAYER_4_NAME[] = N_("Mr Red");
 
 /// it will be used as an empty space in the board
 static const char CHAR_EMPTY   = ' ';
