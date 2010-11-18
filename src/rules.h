@@ -48,7 +48,7 @@ namespace rules
     /// Note also that it is called "xxxCompute" because it doesn't read the value from a
     /// variable, it has to calculate it reading from the actual board
     /// It doesn't check if the offending coordinate is empty or not
-    /// @param the blokus board
+    /// @param the blockem board
     /// @param coord (x, y) of the piece
     /// @param the player that owns the pieces
     bool IsCoordTouchingPlayerCompute(
@@ -69,7 +69,7 @@ namespace rules
     /// Note that it is called 'xxxCompute' because it doesn't read any value from any
     /// variable, it has to calculate it reading from the actual board (it works calling
     /// to other "xxxCompute" functions)
-    /// @param the blokus board
+    /// @param the blockem board
     /// @param the piece configuration
     /// @param coord (x, y) of the piece
     /// @param the player that owns the pieces
@@ -83,7 +83,7 @@ namespace rules
     /// a nucleation point for a specific player
     /// Note that it is called Compute because it doesn't read the value from a variable
     /// It has to calculate it reading from the actual board
-    /// This function should only be called when the blokus board changes (putting down
+    /// This function should only be called when the blockem board changes (putting down
     /// or removing a piece). If you want to know if a specific point of the board
     /// is a nk for a determined player use the accesor IsNucleationPoint in the class Player
     /// @param the player whose nucleation points are being calculated
@@ -109,7 +109,7 @@ namespace rules
     /// You can also use this function to ensure a piece touches a nk point 
     /// using the nk point's coordinate as 4th parameter but you MUST ensure
     /// before calling the function that coordinate really is a nk point
-    /// @param the blokus board
+    /// @param the blockem board
     /// @param the piece configuration
     /// @param coord where the piece is going to be deployed
     /// @param coord that the piece must touch
@@ -129,7 +129,7 @@ namespace rules
     ///   1) check if the piece is not touching another piece of 'a_player'
     ///      (it assumes player has no pieces put down on the board)
     ///   2) rotate or mirror the piece
-    /// @param the blokus board
+    /// @param the blockem board
     /// @param the piece configuration
     /// @param coord of the piece
     /// @param coord of the starting point the piece must make use of
@@ -178,7 +178,7 @@ namespace rules
     /// less positions
     ///
     /// It doesn't use any of the properties stored in player (2nd parameter)
-    /// @param the blokus board
+    /// @param the blockem board
     /// @param the player who needs the valid coords
     /// @param coord of the nucleation point
     /// @param the piece configuration
@@ -249,7 +249,7 @@ namespace rules
     /// so that inserting elements in vector won't step on random memory locations
     /// A size of PIECE_MAX_SQUARES will do it, since a piece can only be deployed in as many ways as squares it has
     /// the user must check a_startingPointCoord is empty before calling the function
-    /// @param the blokus board
+    /// @param the blockem board
     /// @param coord of the starting point
     /// @param the piece
     /// @param vector where the list of absolute coords where the piece can be deployed in that nucleation point will be saved

@@ -915,7 +915,7 @@ bool rules::CanPlayerGo(const Board &a_board, const Player &a_player)
 /*
 void rules::GetNKCorrespondingToPiece(
 		const Board &a_board,
-        const BlokusPiece* a_piece,
+        const Piece* a_piece,
         int32_t a_coordX,
         int32_t a_coordY,
         const Player& a_player,

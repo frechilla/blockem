@@ -113,7 +113,7 @@ class Piece
 {
 public:
 	/// @brief constructor
-	/// @param a_type type of blokus piece
+	/// @param a_type type of blockem piece
 	Piece(ePieceType_t a_type = e_noPiece);
     virtual ~Piece();
 

@@ -103,7 +103,7 @@ public:
 			const Coordinate &a_coord);
 
 private:
-    /// The blokus board where the game will be played
+    /// The blockem board where the game will be played
     Board m_board;
 
     /// The player who is supposed to allocate all the pieces in the board

@@ -59,8 +59,8 @@ static const int32_t DEFAULT_STARTING_ROW_PLAYER1 = 4;
 static const int32_t DEFAULT_STARTING_COL_PLAYER1 = 4;
 
 
-/// @brief contains the definition of a game 1vs1 of blokus
-/// This class is meant to contain all the rules about blokus 1vs1
+/// @brief contains the definition of a game 1vs1 of blockem
+/// This class is meant to contain all the rules about blockem 1vs1
 class Game1v1
 {
 public:
@@ -191,7 +191,7 @@ public:
             DEFAULT_STARTING_COL_PLAYER2));
 
     /// @brief load a game from an in_stream
-    /// the in_stream has to contain the output of a game as it is done by Blokus1v1Game::SaveGame
+    /// the in_stream has to contain the output of a game as it is done by Game1v1::SaveGame
     ///
     /// it doesn't check for dodgy games to be loaded, so the function might have unexpected
     /// results if the game saved in a_inStream is not in the expected format
@@ -208,7 +208,7 @@ public:
     bool SaveGame(std::ostream& a_outStream);
 
 protected:
-    /// The blokus board where the game will be played
+    /// The blockem board where the game will be played
 	Board m_board;
 
 	/// one of the players that take part in the game. It's called 1, but it's not more (or less) important
@@ -225,7 +225,7 @@ protected:
     /// signal to be sent when the computing is finished
     sigc::signal<void, const Piece&, const Coordinate&, Game1v1::eGame1v1Player_t, int32_t> m_signal_computingFinished;
 
-    /// @brief recalculate the nucleation points using the whole blokus board and save them into the players
+    /// @brief recalculate the nucleation points using the whole blockem board and save them into the players
     void RecalculateNKInAllBoard();
 
     /// @brief recalculate the influence area (for both player1 and 2) in the wholse board

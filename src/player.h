@@ -118,7 +118,7 @@ public:
 
     /// returns true if a_coord is influenced by the player. Definition of "influenced"
     /// is a bit vague. Have a look at rules::RecalculateInfluenceAreaAroundPiece
-    /// to know what "influence" in blokus
+    /// to know what "influence" in blockem
     bool IsCoordInfluencedByPlayer(const Coordinate &a_coord) const;
 
     /// sets a specific coord as "influenced" by this player
