@@ -46,13 +46,13 @@ static const uint8_t DEFAULT_PLAYER4_COLOUR_B  =   4;
 static const int32_t DEFAULT_NROWS = 20;
 static const int32_t DEFAULT_NCOLS = 20;
 
-static const Coordinate PLAYER1_DEFAULT_STARTING_COORD = 
+static const Coordinate PLAYER1_DEFAULT_STARTING_COORD =
     Coordinate(0, 0);
-static const Coordinate PLAYER2_DEFAULT_STARTING_COORD = 
+static const Coordinate PLAYER2_DEFAULT_STARTING_COORD =
     Coordinate(0, DEFAULT_NCOLS - 1);
-static const Coordinate PLAYER3_DEFAULT_STARTING_COORD = 
+static const Coordinate PLAYER3_DEFAULT_STARTING_COORD =
     Coordinate(DEFAULT_NROWS - 1, DEFAULT_NCOLS - 1);
-static const Coordinate PLAYER4_DEFAULT_STARTING_COORD = 
+static const Coordinate PLAYER4_DEFAULT_STARTING_COORD =
     Coordinate(DEFAULT_NROWS - 1, 0);
 
 
@@ -70,7 +70,7 @@ Game4PlayersConfig::Game4PlayersConfig() :
     // set player1's colour
     m_redArray[0]   = DEFAULT_PLAYER1_COLOUR_R;
     m_greenArray[0] = DEFAULT_PLAYER1_COLOUR_G;
-    m_blueArray[0]  = DEFAULT_PLAYER1_COLOUR_B;    
+    m_blueArray[0]  = DEFAULT_PLAYER1_COLOUR_B;
     // set player2's colour
     m_redArray[1]   = DEFAULT_PLAYER2_COLOUR_R;
     m_greenArray[1] = DEFAULT_PLAYER2_COLOUR_G;
@@ -102,7 +102,7 @@ int32_t Game4PlayersConfig::GetNColumns() const
 const Coordinate& Game4PlayersConfig::GetStartingCoord(
     Game4Players::eGame4_Player_t a_player) const
 {
-    int32_t index = GetInternalIndex(a_player);    
+    int32_t index = GetInternalIndex(a_player);
     return m_startingCoords[index];
 }
 
@@ -114,15 +114,23 @@ bool Game4PlayersConfig::IsStartingCoordSet(
 
 void Game4PlayersConfig::GetPlayerColour(
         Game4Players::eGame4_Player_t a_player,
-        uint8_t &red, 
-        uint8_t &green, 
+        uint8_t &red,
+        uint8_t &green,
         uint8_t &blue) const
 {
     int32_t colourIndex = GetInternalIndex(a_player);
-    
+
     red   = m_redArray[colourIndex];
     green = m_greenArray[colourIndex];
     blue  = m_blueArray[colourIndex];
+}
+
+void Game4PlayersConfig::SetStartingCoord(
+        Game4Players::eGame4_Player_t a_player,
+        const Coordinate &a_startingCoord)
+{
+    int32_t index = GetInternalIndex(a_player);
+    m_startingCoords[index] = a_startingCoord;
 }
 
 void Game4PlayersConfig::SetNRows(int32_t a_nRows)
@@ -145,23 +153,23 @@ int32_t Game4PlayersConfig::GetInternalIndex(
         {
             index = 0;
             break;
-        }            
+        }
         case Game4Players::e_Game4_Player2:
         {
             index = 1;
             break;
-        }            
+        }
         case Game4Players::e_Game4_Player3:
         {
             index = 2;
             break;
-        }            
+        }
         case Game4Players::e_Game4_Player4:
         {
             index = 3;
             break;
-        }            
-        case Game4Players::e_Game4_NoPlayer: // let it fall through        
+        }
+        case Game4Players::e_Game4_NoPlayer: // let it fall through
         default:
         {
 #ifdef DEBUG
@@ -170,6 +178,6 @@ int32_t Game4PlayersConfig::GetInternalIndex(
             break;
         }
     } // switch(a_player)
-    
+
     return index;
 }

@@ -135,7 +135,7 @@ const std::string GUI_PATH_TO_NEWGAME_TOTALALLOC
 
 const std::string GUI_PATH_TO_NEWGAME_CHALLENGE
         (PATH_TO_PIXMAPS + std::string("gamechallenge.png"));
-        
+
 const std::string GUI_PATH_TO_NEWGAME_4PLAYERS
         (PATH_TO_PIXMAPS + std::string("game4players.png"));
 
@@ -258,6 +258,29 @@ const char GUI_NEWGAME_CHALLENGE_LABEL_TAKENCHALLENGER[]= "newgame_challenge_lab
 const char GUI_NEWGAME_CHALLENGE_LABEL_AUTHOR[]         = "newgame_challenge_label_author";
 const char GUI_NEWGAME_CHALLENGE_LABEL_EMAIL[]          = "newgame_challenge_label_email";
 const char GUI_NEWGAME_CHALLENGE_LABEL_DESCRIPTION[]    = "newgame_challenge_label_description";
-
+const char GUI_NEWGAME_4PLAYERS_SPINBUTTON_NROWS[]           = "newgame_4players_spinbutton_nrows";
+const char GUI_NEWGAME_4PLAYERS_SPINBUTTON_NCOLS[]           = "newgame_4players_spinbutton_ncols";
+const char GUI_NEWGAME_4PLAYERS_LABEL_NROWS[]                = "newgame_4players_label_nrows";
+const char GUI_NEWGAME_4PLAYERS_LABEL_NCOLS[]                = "newgame_4players_label_ncols";
+const char GUI_NEWGAME_4PLAYERS_SPINBUTTON_STARTROW1[]       = "newgame_4players_spinbutton_startingrow1";
+const char GUI_NEWGAME_4PLAYERS_SPINBUTTON_STARTCOL1[]       = "newgame_4players_spinbutton_startingcol1";
+const char GUI_NEWGAME_4PLAYERS_PLAYER1_LABEL[]              = "newgame_4players_label_player1";
+const char GUI_NEWGAME_4PLAYERS_PLAYER1_STARTING_ROW_LABEL[] = "newgame_4players_label_startingrow1";
+const char GUI_NEWGAME_4PLAYERS_PLAYER1_STARTING_COL_LABEL[] = "newgame_4players_label_startingcol1";
+const char GUI_NEWGAME_4PLAYERS_SPINBUTTON_STARTROW2[]       = "newgame_4players_spinbutton_startingrow2";
+const char GUI_NEWGAME_4PLAYERS_SPINBUTTON_STARTCOL2[]       = "newgame_4players_spinbutton_startingcol2";
+const char GUI_NEWGAME_4PLAYERS_PLAYER2_LABEL[]              = "newgame_4players_label_player2";
+const char GUI_NEWGAME_4PLAYERS_PLAYER2_STARTING_ROW_LABEL[] = "newgame_4players_label_startingrow2";
+const char GUI_NEWGAME_4PLAYERS_PLAYER2_STARTING_COL_LABEL[] = "newgame_4players_label_startingcol2";
+const char GUI_NEWGAME_4PLAYERS_SPINBUTTON_STARTROW3[]       = "newgame_4players_spinbutton_startingrow3";
+const char GUI_NEWGAME_4PLAYERS_SPINBUTTON_STARTCOL3[]       = "newgame_4players_spinbutton_startingcol3";
+const char GUI_NEWGAME_4PLAYERS_PLAYER3_LABEL[]              = "newgame_4players_label_player3";
+const char GUI_NEWGAME_4PLAYERS_PLAYER3_STARTING_ROW_LABEL[] = "newgame_4players_label_startingrow3";
+const char GUI_NEWGAME_4PLAYERS_PLAYER3_STARTING_COL_LABEL[] = "newgame_4players_label_startingcol3";
+const char GUI_NEWGAME_4PLAYERS_SPINBUTTON_STARTROW4[]       = "newgame_4players_spinbutton_startingrow4";
+const char GUI_NEWGAME_4PLAYERS_SPINBUTTON_STARTCOL4[]       = "newgame_4players_spinbutton_startingcol4";
+const char GUI_NEWGAME_4PLAYERS_PLAYER4_LABEL[]              = "newgame_4players_label_player4";
+const char GUI_NEWGAME_4PLAYERS_PLAYER4_STARTING_ROW_LABEL[] = "newgame_4players_label_startingrow4";
+const char GUI_NEWGAME_4PLAYERS_PLAYER4_STARTING_COL_LABEL[] = "newgame_4players_label_startingcol4";
 
 #endif /* GUI_GLADE_H_ */
