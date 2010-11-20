@@ -27,7 +27,7 @@
 ///
 // ============================================================================
 
-#ifdef DEBUG_PRINT
+#if (defined DEBUG_PRINT) || (defined DEBUG)
 #include <iostream>
 #endif
 

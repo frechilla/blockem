@@ -121,13 +121,16 @@ AC_TYPE_UINT64_T
 # Checks for library functions.
 
 USER_CFLAGS=
-CXXFLAGS="-Wall -O3 -g3 -DNDEBUG"
 LDFLAGS=
+#CXXFLAGS="${USER_CFLAGS} -Wall -O3 -g3 -DNDEBUG"
+# no debug symbols by default (decreases final binary size)
+CXXFLAGS="${USER_CFLAGS} -Wall -O3 -g0 -DNDEBUG"
 
-# if in win32 debug symbols won't be added to executable to decrease its size
-if test "$os_win32" = "yes"; then
-    CXXFLAGS="-Wall -O3 -g0 -DNDEBUG"
-fi
+# back in the days debug symbols were not added to the final executable 
+# only in win32 platforms
+#if test "$os_win32" = "yes"; then
+#    CXXFLAGS="-Wall -O3 -g0 -DNDEBUG"
+#fi
 
 AC_ARG_ENABLE(debug,
     AC_HELP_STRING([--enable-debug], [Enable debugging code]),
@@ -150,19 +153,37 @@ AC_ARG_ENABLE(debug-printing,
 # information for standard library functions such as read and open
 AC_ARG_ENABLE(gprof,
     AC_HELP_STRING([--enable-gprof], [Enable code profiling. You might get better results enabling debugging code too]),
-    [ if test x$enableval = xyes; then
+    [ if test x$enableval = xyes; then        
+        # check if debug info should be enabled in the binary. This
+        # happens when DEBUG hasn't been enabled by the user
+        if test "$debug" != "yes"; then
+            CXXFLAGS="${USER_CFLAGS} -Wall -O3 -g3 -DNDEBUG"
+            if test "$debugprinting" = "yes"; then
+                CXXFLAGS+=" -DDEBUG_PRINT"
+            fi
+        fi
+        
         debugprof=yes
         CXXFLAGS+=" -pg"
         LDFLAGS+=" -lc"
     fi])
 
-# prevent gcov and grpof from being activated at the same time
+# prevent gcov and gprof from being activated at the same time
 AC_ARG_ENABLE(gcov,
     AC_HELP_STRING([--enable-gcov], [Enable code coverage support. You'll get better code coverage results enabling debugging code too. gprof and gcov can't be activated at the same time]),
     [ if test x$enableval = xyes; then
         if test "$debugprof" = "yes"; then
             AC_MSG_ERROR([Invalid options: gprof and gcov can't be activated at the same time. Use --help to see good help stuff])
         else
+            # check if debug info should be enabled in the binary. This
+            # happens when DEBUG hasn't been enabled by the user
+            if test "$debug" != "yes"; then
+                CXXFLAGS="${USER_CFLAGS} -Wall -O3 -g3 -DNDEBUG"
+                if test "$debugprinting" = "yes"; then
+                    CXXFLAGS+=" -DDEBUG_PRINT"
+                fi
+            fi
+            
             debugcov=yes
             CXXFLAGS+=" -ftest-coverage -fprofile-arcs"
             LDFLAGS=" -lgcov"

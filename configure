@@ -3151,7 +3151,7 @@ am__tar='${AMTAR} chof - "$$tardir"'; am__untar='${AMTAR} xf -'
 ac_config_headers="$ac_config_headers config.h"
 
 
-$as_echo "#define SVN_REVISION \"390\"" >>confdefs.h
+$as_echo "#define SVN_REVISION \"406:407M\"" >>confdefs.h
 
 
 # Checks for programs.
@@ -11013,13 +11013,16 @@ _ACEOF
 # Checks for library functions.
 
 USER_CFLAGS=
-CXXFLAGS="-Wall -O3 -g3 -DNDEBUG"
 LDFLAGS=
+#CXXFLAGS="${USER_CFLAGS} -Wall -O3 -g3 -DNDEBUG"
+# no debug symbols by default (decreases final binary size)
+CXXFLAGS="${USER_CFLAGS} -Wall -O3 -g0 -DNDEBUG"
 
-# if in win32 debug symbols won't be added to executable to decrease its size
-if test "$os_win32" = "yes"; then
-    CXXFLAGS="-Wall -O3 -g0 -DNDEBUG"
-fi
+# back in the days debug symbols were not added to the final executable
+# only in win32 platforms
+#if test "$os_win32" = "yes"; then
+#    CXXFLAGS="-Wall -O3 -g0 -DNDEBUG"
+#fi
 
 # Check whether --enable-debug was given.
 if test "${enable_debug+set}" = set; then :
@@ -11047,6 +11050,15 @@ fi
 # Check whether --enable-gprof was given.
 if test "${enable_gprof+set}" = set; then :
   enableval=$enable_gprof;  if test x$enableval = xyes; then
+        # check if debug info should be enabled in the binary. This
+        # happens when DEBUG hasn't been enabled by the user
+        if test "$debug" != "yes"; then
+            CXXFLAGS="${USER_CFLAGS} -Wall -O3 -g3 -DNDEBUG"
+            if test "$debugprinting" = "yes"; then
+                CXXFLAGS+=" -DDEBUG_PRINT"
+            fi
+        fi
+
         debugprof=yes
         CXXFLAGS+=" -pg"
         LDFLAGS+=" -lc"
@@ -11054,13 +11066,22 @@ if test "${enable_gprof+set}" = set; then :
 fi
 
 
-# prevent gcov and grpof from being activated at the same time
+# prevent gcov and gprof from being activated at the same time
 # Check whether --enable-gcov was given.
 if test "${enable_gcov+set}" = set; then :
   enableval=$enable_gcov;  if test x$enableval = xyes; then
         if test "$debugprof" = "yes"; then
             as_fn_error "Invalid options: gprof and gcov can't be activated at the same time. Use --help to see good help stuff" "$LINENO" 5
         else
+            # check if debug info should be enabled in the binary. This
+            # happens when DEBUG hasn't been enabled by the user
+            if test "$debug" != "yes"; then
+                CXXFLAGS="${USER_CFLAGS} -Wall -O3 -g3 -DNDEBUG"
+                if test "$debugprinting" = "yes"; then
+                    CXXFLAGS+=" -DDEBUG_PRINT"
+                fi
+            fi
+
             debugcov=yes
             CXXFLAGS+=" -ftest-coverage -fprofile-arcs"
             LDFLAGS=" -lgcov"

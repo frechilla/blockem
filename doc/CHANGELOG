@@ -1,12 +1,15 @@
 : Version 0.3.2
-    - removed "parser error" messages shown at startup when blockem wrongly 
+    - Removed "parser error" messages shown at startup when blockem wrongly 
       tries to load a .dtd file as .xml. Blockem will only try to load
       those files located at $(extension)/blockem/challenges which end up 
       with ".xml"
-    - 4 players game supported. All players must be humans since there is no
+    - 4 players game added. All players must be humans since there is no
       AI implemented yet. 
-    - Fixed error transferring starting coords settings showed in the new 
-      total allocation game dialog to the actual game engine
+    - Fixed error transferring starting coords settings from the "new 
+      total allocation game dialog" to the actual game engine
+    - Stripped out debug information when compiling without all the DEBUG
+      flags. Binary size has been decreased to less than 10% of the original
+      size under GNU/Linux
 
 29/10/2010: Version 0.3.1
     - Added support for non-square shaped boards (they can be used now in total
