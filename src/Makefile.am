@@ -95,6 +95,15 @@ gui_dialog_about.cpp \
 gui_dialog_about.h \
 gui_dialog_newgame.cpp \
 gui_dialog_newgame.h \
+gui_dialog_newgame_widget.h \
+gui_dialog_newgame_widget_1v1.cpp \
+gui_dialog_newgame_widget_1v1.h \
+gui_dialog_newgame_widget_4players.cpp \
+gui_dialog_newgame_widget_4players.h \
+gui_dialog_newgame_widget_challenge.cpp \
+gui_dialog_newgame_widget_challenge.h \
+gui_dialog_newgame_widget_totalallocation.cpp \
+gui_dialog_newgame_widget_totalallocation.h \
 gui_drawing_area_board.h \
 gui_drawing_area_board.cpp \
 gui_drawing_area_show_pieces.cpp \
