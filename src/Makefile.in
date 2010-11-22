@@ -71,7 +71,12 @@ am_blockem_OBJECTS = bitwise.$(OBJEXT) blockem_challenge.$(OBJEXT) \
 	blockem_config.$(OBJEXT) board.$(OBJEXT) game1v1.$(OBJEXT) \
 	game_4players.$(OBJEXT) game_challenge.$(OBJEXT) \
 	game_total_allocation.$(OBJEXT) gui_dialog_about.$(OBJEXT) \
-	gui_dialog_newgame.$(OBJEXT) gui_drawing_area_board.$(OBJEXT) \
+	gui_dialog_newgame.$(OBJEXT) \
+	gui_dialog_newgame_widget_1v1.$(OBJEXT) \
+	gui_dialog_newgame_widget_4players.$(OBJEXT) \
+	gui_dialog_newgame_widget_challenge.$(OBJEXT) \
+	gui_dialog_newgame_widget_totalallocation.$(OBJEXT) \
+	gui_drawing_area_board.$(OBJEXT) \
 	gui_drawing_area_show_pieces.$(OBJEXT) gui_exception.$(OBJEXT) \
 	gui_game_4players_config.$(OBJEXT) \
 	gui_game_4players_widget.$(OBJEXT) \
@@ -310,6 +315,15 @@ gui_dialog_about.cpp \
 gui_dialog_about.h \
 gui_dialog_newgame.cpp \
 gui_dialog_newgame.h \
+gui_dialog_newgame_widget.h \
+gui_dialog_newgame_widget_1v1.cpp \
+gui_dialog_newgame_widget_1v1.h \
+gui_dialog_newgame_widget_4players.cpp \
+gui_dialog_newgame_widget_4players.h \
+gui_dialog_newgame_widget_challenge.cpp \
+gui_dialog_newgame_widget_challenge.h \
+gui_dialog_newgame_widget_totalallocation.cpp \
+gui_dialog_newgame_widget_totalallocation.h \
 gui_drawing_area_board.h \
 gui_drawing_area_board.cpp \
 gui_drawing_area_show_pieces.cpp \
@@ -447,6 +461,10 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/game_total_allocation.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_dialog_about.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_dialog_newgame.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_dialog_newgame_widget_1v1.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_dialog_newgame_widget_4players.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_dialog_newgame_widget_challenge.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_dialog_newgame_widget_totalallocation.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_drawing_area_board.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_drawing_area_show_pieces.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_exception.Po@am__quote@
