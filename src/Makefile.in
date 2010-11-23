@@ -67,31 +67,28 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_blockem_OBJECTS = bitwise.$(OBJEXT) blockem_challenge.$(OBJEXT) \
-	blockem_config.$(OBJEXT) board.$(OBJEXT) game1v1.$(OBJEXT) \
-	game_4players.$(OBJEXT) game_challenge.$(OBJEXT) \
-	game_total_allocation.$(OBJEXT) gui_dialog_about.$(OBJEXT) \
-	gui_dialog_newgame.$(OBJEXT) \
-	gui_dialog_newgame_widget_1v1.$(OBJEXT) \
-	gui_dialog_newgame_widget_4players.$(OBJEXT) \
-	gui_dialog_newgame_widget_challenge.$(OBJEXT) \
-	gui_dialog_newgame_widget_totalallocation.$(OBJEXT) \
-	gui_drawing_area_board.$(OBJEXT) \
-	gui_drawing_area_show_pieces.$(OBJEXT) gui_exception.$(OBJEXT) \
-	gui_game_4players_config.$(OBJEXT) \
-	gui_game_4players_widget.$(OBJEXT) \
-	gui_game_challenge_config.$(OBJEXT) \
-	gui_game_challenge_widget.$(OBJEXT) \
-	gui_game_total_allocation_config.$(OBJEXT) \
-	gui_game_total_allocation_widget.$(OBJEXT) \
-	gui_game1v1_config.$(OBJEXT) \
-	gui_game1v1_config_dialog.$(OBJEXT) \
-	gui_game1v1_widget.$(OBJEXT) gui_main_window.$(OBJEXT) \
-	gui_main_window_worker_thread.$(OBJEXT) \
-	gui_statusbar_game.$(OBJEXT) gui_table_edit_piece.$(OBJEXT) \
-	gui_stop_watch_label.$(OBJEXT) heuristic.$(OBJEXT) \
-	piece.$(OBJEXT) player.$(OBJEXT) rules.$(OBJEXT) \
-	main.$(OBJEXT)
+am_blockem_OBJECTS = dialog_about.$(OBJEXT) dialog_newgame.$(OBJEXT) \
+	dialog_newgame_widget_1v1.$(OBJEXT) \
+	dialog_newgame_widget_4players.$(OBJEXT) \
+	dialog_newgame_widget_challenge.$(OBJEXT) \
+	dialog_newgame_widget_totalallocation.$(OBJEXT) \
+	drawing_area_board.$(OBJEXT) \
+	drawing_area_show_pieces.$(OBJEXT) \
+	game_4players_config.$(OBJEXT) game_4players_widget.$(OBJEXT) \
+	game_challenge_config.$(OBJEXT) \
+	game_challenge_widget.$(OBJEXT) \
+	game_total_allocation_config.$(OBJEXT) \
+	game_total_allocation_widget.$(OBJEXT) \
+	game1v1_config.$(OBJEXT) game1v1_config_dialog.$(OBJEXT) \
+	game1v1_widget.$(OBJEXT) gui_exception.$(OBJEXT) \
+	main_window.$(OBJEXT) main_window_worker_thread.$(OBJEXT) \
+	statusbar_game.$(OBJEXT) table_edit_piece.$(OBJEXT) \
+	stop_watch_label.$(OBJEXT) bitwise.$(OBJEXT) \
+	blockem_challenge.$(OBJEXT) blockem_config.$(OBJEXT) \
+	board.$(OBJEXT) game1v1.$(OBJEXT) game_4players.$(OBJEXT) \
+	game_challenge.$(OBJEXT) game_total_allocation.$(OBJEXT) \
+	heuristic.$(OBJEXT) piece.$(OBJEXT) player.$(OBJEXT) \
+	rules.$(OBJEXT) main.$(OBJEXT)
 blockem_OBJECTS = $(am_blockem_OBJECTS)
 am__DEPENDENCIES_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
@@ -272,20 +269,68 @@ AM_CXXFLAGS = $(GTKMM_CFLAGS) $(GTHREAD_CFLAGS) $(LIBXML_CFLAGS) \
 	-DDATADIR=\"$(BLOCKEM_DATADIR)\" \
 	-DLOCALEDIR=\"$(BLOCKEM_LOCALEDIR)\"
 AM_LDFLAGS = 
-blockem_DEPENDENCIES = gui_glade_obj.o $(am__append_2)
+blockem_DEPENDENCIES = glade_obj.o $(am__append_2)
 
 # there is no need for @LIBICONV@:
 # libiconv is used to convert between a given text encoding and the user's 
 # encoding (...) for use on systems which don't have one, or whose implementation 
 # cannot convert from/to Unicode
-blockem_LDADD = gui_glade_obj.o @LIBINTL@ $(GTKMM_LIBS) \
-	$(GTHREAD_LIBS) $(LIBXML_LIBS) $(am__append_3)
-CLEANFILES = gui_glade_obj.o compiletime.h $(am__append_1)
+blockem_LDADD = glade_obj.o @LIBINTL@ $(GTKMM_LIBS) $(GTHREAD_LIBS) \
+	$(LIBXML_LIBS) $(am__append_3)
+CLEANFILES = glade_obj.o compiletime.h $(am__append_1)
 EXTRA_DIST = \
-gui.glade    \
+gui/gui.glade \
 blockem.rc
 
 blockem_SOURCES = \
+gui/dialog_about.cpp \
+gui/dialog_about.h \
+gui/dialog_newgame.cpp \
+gui/dialog_newgame.h \
+gui/dialog_newgame_widget.h \
+gui/dialog_newgame_widget_1v1.cpp \
+gui/dialog_newgame_widget_1v1.h \
+gui/dialog_newgame_widget_4players.cpp \
+gui/dialog_newgame_widget_4players.h \
+gui/dialog_newgame_widget_challenge.cpp \
+gui/dialog_newgame_widget_challenge.h \
+gui/dialog_newgame_widget_totalallocation.cpp \
+gui/dialog_newgame_widget_totalallocation.h \
+gui/drawing_area_board.h \
+gui/drawing_area_board.cpp \
+gui/drawing_area_show_pieces.cpp \
+gui/drawing_area_show_pieces.h   \
+gui/game_4players_config.cpp \
+gui/game_4players_config.h \
+gui/game_4players_widget.cpp \
+gui/game_4players_widget.h \
+gui/game_challenge_config.cpp \
+gui/game_challenge_config.h \
+gui/game_challenge_widget.cpp \
+gui/game_challenge_widget.h \
+gui/game_total_allocation_config.cpp \
+gui/game_total_allocation_config.h \
+gui/game_total_allocation_widget.cpp \
+gui/game_total_allocation_widget.h \
+gui/game1v1_config.cpp \
+gui/game1v1_config.h \
+gui/game1v1_config_dialog.cpp \
+gui/game1v1_config_dialog.h \
+gui/game1v1_widget.cpp \
+gui/game1v1_widget.h \
+gui/glade_defs.h \
+gui/gui_exception.cpp \
+gui/gui_exception.h \
+gui/main_window.cpp \
+gui/main_window.h \
+gui/main_window_worker_thread.cpp \
+gui/main_window_worker_thread.h \
+gui/statusbar_game.cpp \
+gui/statusbar_game.h \
+gui/table_edit_piece.cpp \
+gui/table_edit_piece.h   \
+gui/stop_watch_label.cpp \
+gui/stop_watch_label.h \
 impl/board_impl.h \
 impl/coordinate_impl.h \
 impl/g_blocking_queue_impl.h \
@@ -311,54 +356,6 @@ game_challenge.h \
 game_total_allocation.cpp \
 game_total_allocation.h \
 g_blocking_queue.h \
-gui_dialog_about.cpp \
-gui_dialog_about.h \
-gui_dialog_newgame.cpp \
-gui_dialog_newgame.h \
-gui_dialog_newgame_widget.h \
-gui_dialog_newgame_widget_1v1.cpp \
-gui_dialog_newgame_widget_1v1.h \
-gui_dialog_newgame_widget_4players.cpp \
-gui_dialog_newgame_widget_4players.h \
-gui_dialog_newgame_widget_challenge.cpp \
-gui_dialog_newgame_widget_challenge.h \
-gui_dialog_newgame_widget_totalallocation.cpp \
-gui_dialog_newgame_widget_totalallocation.h \
-gui_drawing_area_board.h \
-gui_drawing_area_board.cpp \
-gui_drawing_area_show_pieces.cpp \
-gui_drawing_area_show_pieces.h   \
-gui_exception.cpp \
-gui_exception.h \
-gui_game_4players_config.cpp \
-gui_game_4players_config.h \
-gui_game_4players_widget.cpp \
-gui_game_4players_widget.h \
-gui_game_challenge_config.cpp \
-gui_game_challenge_config.h \
-gui_game_challenge_widget.cpp \
-gui_game_challenge_widget.h \
-gui_game_total_allocation_config.cpp \
-gui_game_total_allocation_config.h \
-gui_game_total_allocation_widget.cpp \
-gui_game_total_allocation_widget.h \
-gui_game1v1_config.cpp \
-gui_game1v1_config.h \
-gui_game1v1_config_dialog.cpp \
-gui_game1v1_config_dialog.h \
-gui_game1v1_widget.cpp \
-gui_game1v1_widget.h \
-gui_glade_defs.h \
-gui_main_window.cpp \
-gui_main_window.h \
-gui_main_window_worker_thread.cpp \
-gui_main_window_worker_thread.h \
-gui_statusbar_game.cpp \
-gui_statusbar_game.h \
-gui_table_edit_piece.cpp \
-gui_table_edit_piece.h   \
-gui_stop_watch_label.cpp \
-gui_stop_watch_label.h \
 heuristic.cpp \
 heuristic.h \
 piece.cpp \
@@ -455,38 +452,38 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/blockem_challenge.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/blockem_config.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/board.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dialog_about.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dialog_newgame.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dialog_newgame_widget_1v1.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dialog_newgame_widget_4players.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dialog_newgame_widget_challenge.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dialog_newgame_widget_totalallocation.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/drawing_area_board.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/drawing_area_show_pieces.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/game1v1.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/game1v1_config.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/game1v1_config_dialog.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/game1v1_widget.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/game_4players.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/game_4players_config.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/game_4players_widget.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/game_challenge.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/game_challenge_config.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/game_challenge_widget.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/game_total_allocation.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_dialog_about.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_dialog_newgame.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_dialog_newgame_widget_1v1.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_dialog_newgame_widget_4players.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_dialog_newgame_widget_challenge.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_dialog_newgame_widget_totalallocation.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_drawing_area_board.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_drawing_area_show_pieces.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/game_total_allocation_config.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/game_total_allocation_widget.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_exception.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_game1v1_config.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_game1v1_config_dialog.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_game1v1_widget.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_game_4players_config.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_game_4players_widget.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_game_challenge_config.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_game_challenge_widget.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_game_total_allocation_config.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_game_total_allocation_widget.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_main_window.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_main_window_worker_thread.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_statusbar_game.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_stop_watch_label.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_table_edit_piece.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/heuristic.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main_window.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main_window_worker_thread.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/piece.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/player.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rules.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/statusbar_game.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stop_watch_label.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/table_edit_piece.Po@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -501,6 +498,328 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXXCOMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
+
+dialog_about.o: gui/dialog_about.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT dialog_about.o -MD -MP -MF $(DEPDIR)/dialog_about.Tpo -c -o dialog_about.o `test -f 'gui/dialog_about.cpp' || echo '$(srcdir)/'`gui/dialog_about.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/dialog_about.Tpo $(DEPDIR)/dialog_about.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='gui/dialog_about.cpp' object='dialog_about.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o dialog_about.o `test -f 'gui/dialog_about.cpp' || echo '$(srcdir)/'`gui/dialog_about.cpp
+
+dialog_about.obj: gui/dialog_about.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT dialog_about.obj -MD -MP -MF $(DEPDIR)/dialog_about.Tpo -c -o dialog_about.obj `if test -f 'gui/dialog_about.cpp'; then $(CYGPATH_W) 'gui/dialog_about.cpp'; else $(CYGPATH_W) '$(srcdir)/gui/dialog_about.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/dialog_about.Tpo $(DEPDIR)/dialog_about.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='gui/dialog_about.cpp' object='dialog_about.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o dialog_about.obj `if test -f 'gui/dialog_about.cpp'; then $(CYGPATH_W) 'gui/dialog_about.cpp'; else $(CYGPATH_W) '$(srcdir)/gui/dialog_about.cpp'; fi`
+
+dialog_newgame.o: gui/dialog_newgame.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT dialog_newgame.o -MD -MP -MF $(DEPDIR)/dialog_newgame.Tpo -c -o dialog_newgame.o `test -f 'gui/dialog_newgame.cpp' || echo '$(srcdir)/'`gui/dialog_newgame.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/dialog_newgame.Tpo $(DEPDIR)/dialog_newgame.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='gui/dialog_newgame.cpp' object='dialog_newgame.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o dialog_newgame.o `test -f 'gui/dialog_newgame.cpp' || echo '$(srcdir)/'`gui/dialog_newgame.cpp
+
+dialog_newgame.obj: gui/dialog_newgame.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT dialog_newgame.obj -MD -MP -MF $(DEPDIR)/dialog_newgame.Tpo -c -o dialog_newgame.obj `if test -f 'gui/dialog_newgame.cpp'; then $(CYGPATH_W) 'gui/dialog_newgame.cpp'; else $(CYGPATH_W) '$(srcdir)/gui/dialog_newgame.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/dialog_newgame.Tpo $(DEPDIR)/dialog_newgame.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='gui/dialog_newgame.cpp' object='dialog_newgame.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o dialog_newgame.obj `if test -f 'gui/dialog_newgame.cpp'; then $(CYGPATH_W) 'gui/dialog_newgame.cpp'; else $(CYGPATH_W) '$(srcdir)/gui/dialog_newgame.cpp'; fi`
+
+dialog_newgame_widget_1v1.o: gui/dialog_newgame_widget_1v1.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT dialog_newgame_widget_1v1.o -MD -MP -MF $(DEPDIR)/dialog_newgame_widget_1v1.Tpo -c -o dialog_newgame_widget_1v1.o `test -f 'gui/dialog_newgame_widget_1v1.cpp' || echo '$(srcdir)/'`gui/dialog_newgame_widget_1v1.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/dialog_newgame_widget_1v1.Tpo $(DEPDIR)/dialog_newgame_widget_1v1.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='gui/dialog_newgame_widget_1v1.cpp' object='dialog_newgame_widget_1v1.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o dialog_newgame_widget_1v1.o `test -f 'gui/dialog_newgame_widget_1v1.cpp' || echo '$(srcdir)/'`gui/dialog_newgame_widget_1v1.cpp
+
+dialog_newgame_widget_1v1.obj: gui/dialog_newgame_widget_1v1.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT dialog_newgame_widget_1v1.obj -MD -MP -MF $(DEPDIR)/dialog_newgame_widget_1v1.Tpo -c -o dialog_newgame_widget_1v1.obj `if test -f 'gui/dialog_newgame_widget_1v1.cpp'; then $(CYGPATH_W) 'gui/dialog_newgame_widget_1v1.cpp'; else $(CYGPATH_W) '$(srcdir)/gui/dialog_newgame_widget_1v1.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/dialog_newgame_widget_1v1.Tpo $(DEPDIR)/dialog_newgame_widget_1v1.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='gui/dialog_newgame_widget_1v1.cpp' object='dialog_newgame_widget_1v1.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o dialog_newgame_widget_1v1.obj `if test -f 'gui/dialog_newgame_widget_1v1.cpp'; then $(CYGPATH_W) 'gui/dialog_newgame_widget_1v1.cpp'; else $(CYGPATH_W) '$(srcdir)/gui/dialog_newgame_widget_1v1.cpp'; fi`
+
+dialog_newgame_widget_4players.o: gui/dialog_newgame_widget_4players.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT dialog_newgame_widget_4players.o -MD -MP -MF $(DEPDIR)/dialog_newgame_widget_4players.Tpo -c -o dialog_newgame_widget_4players.o `test -f 'gui/dialog_newgame_widget_4players.cpp' || echo '$(srcdir)/'`gui/dialog_newgame_widget_4players.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/dialog_newgame_widget_4players.Tpo $(DEPDIR)/dialog_newgame_widget_4players.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='gui/dialog_newgame_widget_4players.cpp' object='dialog_newgame_widget_4players.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o dialog_newgame_widget_4players.o `test -f 'gui/dialog_newgame_widget_4players.cpp' || echo '$(srcdir)/'`gui/dialog_newgame_widget_4players.cpp
+
+dialog_newgame_widget_4players.obj: gui/dialog_newgame_widget_4players.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT dialog_newgame_widget_4players.obj -MD -MP -MF $(DEPDIR)/dialog_newgame_widget_4players.Tpo -c -o dialog_newgame_widget_4players.obj `if test -f 'gui/dialog_newgame_widget_4players.cpp'; then $(CYGPATH_W) 'gui/dialog_newgame_widget_4players.cpp'; else $(CYGPATH_W) '$(srcdir)/gui/dialog_newgame_widget_4players.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/dialog_newgame_widget_4players.Tpo $(DEPDIR)/dialog_newgame_widget_4players.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='gui/dialog_newgame_widget_4players.cpp' object='dialog_newgame_widget_4players.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o dialog_newgame_widget_4players.obj `if test -f 'gui/dialog_newgame_widget_4players.cpp'; then $(CYGPATH_W) 'gui/dialog_newgame_widget_4players.cpp'; else $(CYGPATH_W) '$(srcdir)/gui/dialog_newgame_widget_4players.cpp'; fi`
+
+dialog_newgame_widget_challenge.o: gui/dialog_newgame_widget_challenge.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT dialog_newgame_widget_challenge.o -MD -MP -MF $(DEPDIR)/dialog_newgame_widget_challenge.Tpo -c -o dialog_newgame_widget_challenge.o `test -f 'gui/dialog_newgame_widget_challenge.cpp' || echo '$(srcdir)/'`gui/dialog_newgame_widget_challenge.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/dialog_newgame_widget_challenge.Tpo $(DEPDIR)/dialog_newgame_widget_challenge.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='gui/dialog_newgame_widget_challenge.cpp' object='dialog_newgame_widget_challenge.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o dialog_newgame_widget_challenge.o `test -f 'gui/dialog_newgame_widget_challenge.cpp' || echo '$(srcdir)/'`gui/dialog_newgame_widget_challenge.cpp
+
+dialog_newgame_widget_challenge.obj: gui/dialog_newgame_widget_challenge.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT dialog_newgame_widget_challenge.obj -MD -MP -MF $(DEPDIR)/dialog_newgame_widget_challenge.Tpo -c -o dialog_newgame_widget_challenge.obj `if test -f 'gui/dialog_newgame_widget_challenge.cpp'; then $(CYGPATH_W) 'gui/dialog_newgame_widget_challenge.cpp'; else $(CYGPATH_W) '$(srcdir)/gui/dialog_newgame_widget_challenge.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/dialog_newgame_widget_challenge.Tpo $(DEPDIR)/dialog_newgame_widget_challenge.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='gui/dialog_newgame_widget_challenge.cpp' object='dialog_newgame_widget_challenge.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o dialog_newgame_widget_challenge.obj `if test -f 'gui/dialog_newgame_widget_challenge.cpp'; then $(CYGPATH_W) 'gui/dialog_newgame_widget_challenge.cpp'; else $(CYGPATH_W) '$(srcdir)/gui/dialog_newgame_widget_challenge.cpp'; fi`
+
+dialog_newgame_widget_totalallocation.o: gui/dialog_newgame_widget_totalallocation.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT dialog_newgame_widget_totalallocation.o -MD -MP -MF $(DEPDIR)/dialog_newgame_widget_totalallocation.Tpo -c -o dialog_newgame_widget_totalallocation.o `test -f 'gui/dialog_newgame_widget_totalallocation.cpp' || echo '$(srcdir)/'`gui/dialog_newgame_widget_totalallocation.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/dialog_newgame_widget_totalallocation.Tpo $(DEPDIR)/dialog_newgame_widget_totalallocation.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='gui/dialog_newgame_widget_totalallocation.cpp' object='dialog_newgame_widget_totalallocation.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o dialog_newgame_widget_totalallocation.o `test -f 'gui/dialog_newgame_widget_totalallocation.cpp' || echo '$(srcdir)/'`gui/dialog_newgame_widget_totalallocation.cpp
+
+dialog_newgame_widget_totalallocation.obj: gui/dialog_newgame_widget_totalallocation.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT dialog_newgame_widget_totalallocation.obj -MD -MP -MF $(DEPDIR)/dialog_newgame_widget_totalallocation.Tpo -c -o dialog_newgame_widget_totalallocation.obj `if test -f 'gui/dialog_newgame_widget_totalallocation.cpp'; then $(CYGPATH_W) 'gui/dialog_newgame_widget_totalallocation.cpp'; else $(CYGPATH_W) '$(srcdir)/gui/dialog_newgame_widget_totalallocation.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/dialog_newgame_widget_totalallocation.Tpo $(DEPDIR)/dialog_newgame_widget_totalallocation.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='gui/dialog_newgame_widget_totalallocation.cpp' object='dialog_newgame_widget_totalallocation.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o dialog_newgame_widget_totalallocation.obj `if test -f 'gui/dialog_newgame_widget_totalallocation.cpp'; then $(CYGPATH_W) 'gui/dialog_newgame_widget_totalallocation.cpp'; else $(CYGPATH_W) '$(srcdir)/gui/dialog_newgame_widget_totalallocation.cpp'; fi`
+
+drawing_area_board.o: gui/drawing_area_board.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT drawing_area_board.o -MD -MP -MF $(DEPDIR)/drawing_area_board.Tpo -c -o drawing_area_board.o `test -f 'gui/drawing_area_board.cpp' || echo '$(srcdir)/'`gui/drawing_area_board.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/drawing_area_board.Tpo $(DEPDIR)/drawing_area_board.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='gui/drawing_area_board.cpp' object='drawing_area_board.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o drawing_area_board.o `test -f 'gui/drawing_area_board.cpp' || echo '$(srcdir)/'`gui/drawing_area_board.cpp
+
+drawing_area_board.obj: gui/drawing_area_board.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT drawing_area_board.obj -MD -MP -MF $(DEPDIR)/drawing_area_board.Tpo -c -o drawing_area_board.obj `if test -f 'gui/drawing_area_board.cpp'; then $(CYGPATH_W) 'gui/drawing_area_board.cpp'; else $(CYGPATH_W) '$(srcdir)/gui/drawing_area_board.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/drawing_area_board.Tpo $(DEPDIR)/drawing_area_board.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='gui/drawing_area_board.cpp' object='drawing_area_board.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o drawing_area_board.obj `if test -f 'gui/drawing_area_board.cpp'; then $(CYGPATH_W) 'gui/drawing_area_board.cpp'; else $(CYGPATH_W) '$(srcdir)/gui/drawing_area_board.cpp'; fi`
+
+drawing_area_show_pieces.o: gui/drawing_area_show_pieces.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT drawing_area_show_pieces.o -MD -MP -MF $(DEPDIR)/drawing_area_show_pieces.Tpo -c -o drawing_area_show_pieces.o `test -f 'gui/drawing_area_show_pieces.cpp' || echo '$(srcdir)/'`gui/drawing_area_show_pieces.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/drawing_area_show_pieces.Tpo $(DEPDIR)/drawing_area_show_pieces.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='gui/drawing_area_show_pieces.cpp' object='drawing_area_show_pieces.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o drawing_area_show_pieces.o `test -f 'gui/drawing_area_show_pieces.cpp' || echo '$(srcdir)/'`gui/drawing_area_show_pieces.cpp
+
+drawing_area_show_pieces.obj: gui/drawing_area_show_pieces.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT drawing_area_show_pieces.obj -MD -MP -MF $(DEPDIR)/drawing_area_show_pieces.Tpo -c -o drawing_area_show_pieces.obj `if test -f 'gui/drawing_area_show_pieces.cpp'; then $(CYGPATH_W) 'gui/drawing_area_show_pieces.cpp'; else $(CYGPATH_W) '$(srcdir)/gui/drawing_area_show_pieces.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/drawing_area_show_pieces.Tpo $(DEPDIR)/drawing_area_show_pieces.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='gui/drawing_area_show_pieces.cpp' object='drawing_area_show_pieces.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o drawing_area_show_pieces.obj `if test -f 'gui/drawing_area_show_pieces.cpp'; then $(CYGPATH_W) 'gui/drawing_area_show_pieces.cpp'; else $(CYGPATH_W) '$(srcdir)/gui/drawing_area_show_pieces.cpp'; fi`
+
+game_4players_config.o: gui/game_4players_config.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT game_4players_config.o -MD -MP -MF $(DEPDIR)/game_4players_config.Tpo -c -o game_4players_config.o `test -f 'gui/game_4players_config.cpp' || echo '$(srcdir)/'`gui/game_4players_config.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/game_4players_config.Tpo $(DEPDIR)/game_4players_config.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='gui/game_4players_config.cpp' object='game_4players_config.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o game_4players_config.o `test -f 'gui/game_4players_config.cpp' || echo '$(srcdir)/'`gui/game_4players_config.cpp
+
+game_4players_config.obj: gui/game_4players_config.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT game_4players_config.obj -MD -MP -MF $(DEPDIR)/game_4players_config.Tpo -c -o game_4players_config.obj `if test -f 'gui/game_4players_config.cpp'; then $(CYGPATH_W) 'gui/game_4players_config.cpp'; else $(CYGPATH_W) '$(srcdir)/gui/game_4players_config.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/game_4players_config.Tpo $(DEPDIR)/game_4players_config.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='gui/game_4players_config.cpp' object='game_4players_config.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o game_4players_config.obj `if test -f 'gui/game_4players_config.cpp'; then $(CYGPATH_W) 'gui/game_4players_config.cpp'; else $(CYGPATH_W) '$(srcdir)/gui/game_4players_config.cpp'; fi`
+
+game_4players_widget.o: gui/game_4players_widget.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT game_4players_widget.o -MD -MP -MF $(DEPDIR)/game_4players_widget.Tpo -c -o game_4players_widget.o `test -f 'gui/game_4players_widget.cpp' || echo '$(srcdir)/'`gui/game_4players_widget.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/game_4players_widget.Tpo $(DEPDIR)/game_4players_widget.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='gui/game_4players_widget.cpp' object='game_4players_widget.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o game_4players_widget.o `test -f 'gui/game_4players_widget.cpp' || echo '$(srcdir)/'`gui/game_4players_widget.cpp
+
+game_4players_widget.obj: gui/game_4players_widget.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT game_4players_widget.obj -MD -MP -MF $(DEPDIR)/game_4players_widget.Tpo -c -o game_4players_widget.obj `if test -f 'gui/game_4players_widget.cpp'; then $(CYGPATH_W) 'gui/game_4players_widget.cpp'; else $(CYGPATH_W) '$(srcdir)/gui/game_4players_widget.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/game_4players_widget.Tpo $(DEPDIR)/game_4players_widget.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='gui/game_4players_widget.cpp' object='game_4players_widget.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o game_4players_widget.obj `if test -f 'gui/game_4players_widget.cpp'; then $(CYGPATH_W) 'gui/game_4players_widget.cpp'; else $(CYGPATH_W) '$(srcdir)/gui/game_4players_widget.cpp'; fi`
+
+game_challenge_config.o: gui/game_challenge_config.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT game_challenge_config.o -MD -MP -MF $(DEPDIR)/game_challenge_config.Tpo -c -o game_challenge_config.o `test -f 'gui/game_challenge_config.cpp' || echo '$(srcdir)/'`gui/game_challenge_config.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/game_challenge_config.Tpo $(DEPDIR)/game_challenge_config.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='gui/game_challenge_config.cpp' object='game_challenge_config.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o game_challenge_config.o `test -f 'gui/game_challenge_config.cpp' || echo '$(srcdir)/'`gui/game_challenge_config.cpp
+
+game_challenge_config.obj: gui/game_challenge_config.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT game_challenge_config.obj -MD -MP -MF $(DEPDIR)/game_challenge_config.Tpo -c -o game_challenge_config.obj `if test -f 'gui/game_challenge_config.cpp'; then $(CYGPATH_W) 'gui/game_challenge_config.cpp'; else $(CYGPATH_W) '$(srcdir)/gui/game_challenge_config.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/game_challenge_config.Tpo $(DEPDIR)/game_challenge_config.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='gui/game_challenge_config.cpp' object='game_challenge_config.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o game_challenge_config.obj `if test -f 'gui/game_challenge_config.cpp'; then $(CYGPATH_W) 'gui/game_challenge_config.cpp'; else $(CYGPATH_W) '$(srcdir)/gui/game_challenge_config.cpp'; fi`
+
+game_challenge_widget.o: gui/game_challenge_widget.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT game_challenge_widget.o -MD -MP -MF $(DEPDIR)/game_challenge_widget.Tpo -c -o game_challenge_widget.o `test -f 'gui/game_challenge_widget.cpp' || echo '$(srcdir)/'`gui/game_challenge_widget.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/game_challenge_widget.Tpo $(DEPDIR)/game_challenge_widget.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='gui/game_challenge_widget.cpp' object='game_challenge_widget.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o game_challenge_widget.o `test -f 'gui/game_challenge_widget.cpp' || echo '$(srcdir)/'`gui/game_challenge_widget.cpp
+
+game_challenge_widget.obj: gui/game_challenge_widget.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT game_challenge_widget.obj -MD -MP -MF $(DEPDIR)/game_challenge_widget.Tpo -c -o game_challenge_widget.obj `if test -f 'gui/game_challenge_widget.cpp'; then $(CYGPATH_W) 'gui/game_challenge_widget.cpp'; else $(CYGPATH_W) '$(srcdir)/gui/game_challenge_widget.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/game_challenge_widget.Tpo $(DEPDIR)/game_challenge_widget.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='gui/game_challenge_widget.cpp' object='game_challenge_widget.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o game_challenge_widget.obj `if test -f 'gui/game_challenge_widget.cpp'; then $(CYGPATH_W) 'gui/game_challenge_widget.cpp'; else $(CYGPATH_W) '$(srcdir)/gui/game_challenge_widget.cpp'; fi`
+
+game_total_allocation_config.o: gui/game_total_allocation_config.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT game_total_allocation_config.o -MD -MP -MF $(DEPDIR)/game_total_allocation_config.Tpo -c -o game_total_allocation_config.o `test -f 'gui/game_total_allocation_config.cpp' || echo '$(srcdir)/'`gui/game_total_allocation_config.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/game_total_allocation_config.Tpo $(DEPDIR)/game_total_allocation_config.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='gui/game_total_allocation_config.cpp' object='game_total_allocation_config.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o game_total_allocation_config.o `test -f 'gui/game_total_allocation_config.cpp' || echo '$(srcdir)/'`gui/game_total_allocation_config.cpp
+
+game_total_allocation_config.obj: gui/game_total_allocation_config.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT game_total_allocation_config.obj -MD -MP -MF $(DEPDIR)/game_total_allocation_config.Tpo -c -o game_total_allocation_config.obj `if test -f 'gui/game_total_allocation_config.cpp'; then $(CYGPATH_W) 'gui/game_total_allocation_config.cpp'; else $(CYGPATH_W) '$(srcdir)/gui/game_total_allocation_config.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/game_total_allocation_config.Tpo $(DEPDIR)/game_total_allocation_config.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='gui/game_total_allocation_config.cpp' object='game_total_allocation_config.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o game_total_allocation_config.obj `if test -f 'gui/game_total_allocation_config.cpp'; then $(CYGPATH_W) 'gui/game_total_allocation_config.cpp'; else $(CYGPATH_W) '$(srcdir)/gui/game_total_allocation_config.cpp'; fi`
+
+game_total_allocation_widget.o: gui/game_total_allocation_widget.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT game_total_allocation_widget.o -MD -MP -MF $(DEPDIR)/game_total_allocation_widget.Tpo -c -o game_total_allocation_widget.o `test -f 'gui/game_total_allocation_widget.cpp' || echo '$(srcdir)/'`gui/game_total_allocation_widget.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/game_total_allocation_widget.Tpo $(DEPDIR)/game_total_allocation_widget.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='gui/game_total_allocation_widget.cpp' object='game_total_allocation_widget.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o game_total_allocation_widget.o `test -f 'gui/game_total_allocation_widget.cpp' || echo '$(srcdir)/'`gui/game_total_allocation_widget.cpp
+
+game_total_allocation_widget.obj: gui/game_total_allocation_widget.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT game_total_allocation_widget.obj -MD -MP -MF $(DEPDIR)/game_total_allocation_widget.Tpo -c -o game_total_allocation_widget.obj `if test -f 'gui/game_total_allocation_widget.cpp'; then $(CYGPATH_W) 'gui/game_total_allocation_widget.cpp'; else $(CYGPATH_W) '$(srcdir)/gui/game_total_allocation_widget.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/game_total_allocation_widget.Tpo $(DEPDIR)/game_total_allocation_widget.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='gui/game_total_allocation_widget.cpp' object='game_total_allocation_widget.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o game_total_allocation_widget.obj `if test -f 'gui/game_total_allocation_widget.cpp'; then $(CYGPATH_W) 'gui/game_total_allocation_widget.cpp'; else $(CYGPATH_W) '$(srcdir)/gui/game_total_allocation_widget.cpp'; fi`
+
+game1v1_config.o: gui/game1v1_config.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT game1v1_config.o -MD -MP -MF $(DEPDIR)/game1v1_config.Tpo -c -o game1v1_config.o `test -f 'gui/game1v1_config.cpp' || echo '$(srcdir)/'`gui/game1v1_config.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/game1v1_config.Tpo $(DEPDIR)/game1v1_config.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='gui/game1v1_config.cpp' object='game1v1_config.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o game1v1_config.o `test -f 'gui/game1v1_config.cpp' || echo '$(srcdir)/'`gui/game1v1_config.cpp
+
+game1v1_config.obj: gui/game1v1_config.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT game1v1_config.obj -MD -MP -MF $(DEPDIR)/game1v1_config.Tpo -c -o game1v1_config.obj `if test -f 'gui/game1v1_config.cpp'; then $(CYGPATH_W) 'gui/game1v1_config.cpp'; else $(CYGPATH_W) '$(srcdir)/gui/game1v1_config.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/game1v1_config.Tpo $(DEPDIR)/game1v1_config.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='gui/game1v1_config.cpp' object='game1v1_config.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o game1v1_config.obj `if test -f 'gui/game1v1_config.cpp'; then $(CYGPATH_W) 'gui/game1v1_config.cpp'; else $(CYGPATH_W) '$(srcdir)/gui/game1v1_config.cpp'; fi`
+
+game1v1_config_dialog.o: gui/game1v1_config_dialog.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT game1v1_config_dialog.o -MD -MP -MF $(DEPDIR)/game1v1_config_dialog.Tpo -c -o game1v1_config_dialog.o `test -f 'gui/game1v1_config_dialog.cpp' || echo '$(srcdir)/'`gui/game1v1_config_dialog.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/game1v1_config_dialog.Tpo $(DEPDIR)/game1v1_config_dialog.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='gui/game1v1_config_dialog.cpp' object='game1v1_config_dialog.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o game1v1_config_dialog.o `test -f 'gui/game1v1_config_dialog.cpp' || echo '$(srcdir)/'`gui/game1v1_config_dialog.cpp
+
+game1v1_config_dialog.obj: gui/game1v1_config_dialog.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT game1v1_config_dialog.obj -MD -MP -MF $(DEPDIR)/game1v1_config_dialog.Tpo -c -o game1v1_config_dialog.obj `if test -f 'gui/game1v1_config_dialog.cpp'; then $(CYGPATH_W) 'gui/game1v1_config_dialog.cpp'; else $(CYGPATH_W) '$(srcdir)/gui/game1v1_config_dialog.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/game1v1_config_dialog.Tpo $(DEPDIR)/game1v1_config_dialog.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='gui/game1v1_config_dialog.cpp' object='game1v1_config_dialog.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o game1v1_config_dialog.obj `if test -f 'gui/game1v1_config_dialog.cpp'; then $(CYGPATH_W) 'gui/game1v1_config_dialog.cpp'; else $(CYGPATH_W) '$(srcdir)/gui/game1v1_config_dialog.cpp'; fi`
+
+game1v1_widget.o: gui/game1v1_widget.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT game1v1_widget.o -MD -MP -MF $(DEPDIR)/game1v1_widget.Tpo -c -o game1v1_widget.o `test -f 'gui/game1v1_widget.cpp' || echo '$(srcdir)/'`gui/game1v1_widget.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/game1v1_widget.Tpo $(DEPDIR)/game1v1_widget.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='gui/game1v1_widget.cpp' object='game1v1_widget.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o game1v1_widget.o `test -f 'gui/game1v1_widget.cpp' || echo '$(srcdir)/'`gui/game1v1_widget.cpp
+
+game1v1_widget.obj: gui/game1v1_widget.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT game1v1_widget.obj -MD -MP -MF $(DEPDIR)/game1v1_widget.Tpo -c -o game1v1_widget.obj `if test -f 'gui/game1v1_widget.cpp'; then $(CYGPATH_W) 'gui/game1v1_widget.cpp'; else $(CYGPATH_W) '$(srcdir)/gui/game1v1_widget.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/game1v1_widget.Tpo $(DEPDIR)/game1v1_widget.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='gui/game1v1_widget.cpp' object='game1v1_widget.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o game1v1_widget.obj `if test -f 'gui/game1v1_widget.cpp'; then $(CYGPATH_W) 'gui/game1v1_widget.cpp'; else $(CYGPATH_W) '$(srcdir)/gui/game1v1_widget.cpp'; fi`
+
+gui_exception.o: gui/gui_exception.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT gui_exception.o -MD -MP -MF $(DEPDIR)/gui_exception.Tpo -c -o gui_exception.o `test -f 'gui/gui_exception.cpp' || echo '$(srcdir)/'`gui/gui_exception.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/gui_exception.Tpo $(DEPDIR)/gui_exception.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='gui/gui_exception.cpp' object='gui_exception.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o gui_exception.o `test -f 'gui/gui_exception.cpp' || echo '$(srcdir)/'`gui/gui_exception.cpp
+
+gui_exception.obj: gui/gui_exception.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT gui_exception.obj -MD -MP -MF $(DEPDIR)/gui_exception.Tpo -c -o gui_exception.obj `if test -f 'gui/gui_exception.cpp'; then $(CYGPATH_W) 'gui/gui_exception.cpp'; else $(CYGPATH_W) '$(srcdir)/gui/gui_exception.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/gui_exception.Tpo $(DEPDIR)/gui_exception.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='gui/gui_exception.cpp' object='gui_exception.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o gui_exception.obj `if test -f 'gui/gui_exception.cpp'; then $(CYGPATH_W) 'gui/gui_exception.cpp'; else $(CYGPATH_W) '$(srcdir)/gui/gui_exception.cpp'; fi`
+
+main_window.o: gui/main_window.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT main_window.o -MD -MP -MF $(DEPDIR)/main_window.Tpo -c -o main_window.o `test -f 'gui/main_window.cpp' || echo '$(srcdir)/'`gui/main_window.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/main_window.Tpo $(DEPDIR)/main_window.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='gui/main_window.cpp' object='main_window.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o main_window.o `test -f 'gui/main_window.cpp' || echo '$(srcdir)/'`gui/main_window.cpp
+
+main_window.obj: gui/main_window.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT main_window.obj -MD -MP -MF $(DEPDIR)/main_window.Tpo -c -o main_window.obj `if test -f 'gui/main_window.cpp'; then $(CYGPATH_W) 'gui/main_window.cpp'; else $(CYGPATH_W) '$(srcdir)/gui/main_window.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/main_window.Tpo $(DEPDIR)/main_window.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='gui/main_window.cpp' object='main_window.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o main_window.obj `if test -f 'gui/main_window.cpp'; then $(CYGPATH_W) 'gui/main_window.cpp'; else $(CYGPATH_W) '$(srcdir)/gui/main_window.cpp'; fi`
+
+main_window_worker_thread.o: gui/main_window_worker_thread.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT main_window_worker_thread.o -MD -MP -MF $(DEPDIR)/main_window_worker_thread.Tpo -c -o main_window_worker_thread.o `test -f 'gui/main_window_worker_thread.cpp' || echo '$(srcdir)/'`gui/main_window_worker_thread.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/main_window_worker_thread.Tpo $(DEPDIR)/main_window_worker_thread.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='gui/main_window_worker_thread.cpp' object='main_window_worker_thread.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o main_window_worker_thread.o `test -f 'gui/main_window_worker_thread.cpp' || echo '$(srcdir)/'`gui/main_window_worker_thread.cpp
+
+main_window_worker_thread.obj: gui/main_window_worker_thread.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT main_window_worker_thread.obj -MD -MP -MF $(DEPDIR)/main_window_worker_thread.Tpo -c -o main_window_worker_thread.obj `if test -f 'gui/main_window_worker_thread.cpp'; then $(CYGPATH_W) 'gui/main_window_worker_thread.cpp'; else $(CYGPATH_W) '$(srcdir)/gui/main_window_worker_thread.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/main_window_worker_thread.Tpo $(DEPDIR)/main_window_worker_thread.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='gui/main_window_worker_thread.cpp' object='main_window_worker_thread.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o main_window_worker_thread.obj `if test -f 'gui/main_window_worker_thread.cpp'; then $(CYGPATH_W) 'gui/main_window_worker_thread.cpp'; else $(CYGPATH_W) '$(srcdir)/gui/main_window_worker_thread.cpp'; fi`
+
+statusbar_game.o: gui/statusbar_game.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT statusbar_game.o -MD -MP -MF $(DEPDIR)/statusbar_game.Tpo -c -o statusbar_game.o `test -f 'gui/statusbar_game.cpp' || echo '$(srcdir)/'`gui/statusbar_game.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/statusbar_game.Tpo $(DEPDIR)/statusbar_game.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='gui/statusbar_game.cpp' object='statusbar_game.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o statusbar_game.o `test -f 'gui/statusbar_game.cpp' || echo '$(srcdir)/'`gui/statusbar_game.cpp
+
+statusbar_game.obj: gui/statusbar_game.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT statusbar_game.obj -MD -MP -MF $(DEPDIR)/statusbar_game.Tpo -c -o statusbar_game.obj `if test -f 'gui/statusbar_game.cpp'; then $(CYGPATH_W) 'gui/statusbar_game.cpp'; else $(CYGPATH_W) '$(srcdir)/gui/statusbar_game.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/statusbar_game.Tpo $(DEPDIR)/statusbar_game.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='gui/statusbar_game.cpp' object='statusbar_game.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o statusbar_game.obj `if test -f 'gui/statusbar_game.cpp'; then $(CYGPATH_W) 'gui/statusbar_game.cpp'; else $(CYGPATH_W) '$(srcdir)/gui/statusbar_game.cpp'; fi`
+
+table_edit_piece.o: gui/table_edit_piece.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT table_edit_piece.o -MD -MP -MF $(DEPDIR)/table_edit_piece.Tpo -c -o table_edit_piece.o `test -f 'gui/table_edit_piece.cpp' || echo '$(srcdir)/'`gui/table_edit_piece.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/table_edit_piece.Tpo $(DEPDIR)/table_edit_piece.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='gui/table_edit_piece.cpp' object='table_edit_piece.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o table_edit_piece.o `test -f 'gui/table_edit_piece.cpp' || echo '$(srcdir)/'`gui/table_edit_piece.cpp
+
+table_edit_piece.obj: gui/table_edit_piece.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT table_edit_piece.obj -MD -MP -MF $(DEPDIR)/table_edit_piece.Tpo -c -o table_edit_piece.obj `if test -f 'gui/table_edit_piece.cpp'; then $(CYGPATH_W) 'gui/table_edit_piece.cpp'; else $(CYGPATH_W) '$(srcdir)/gui/table_edit_piece.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/table_edit_piece.Tpo $(DEPDIR)/table_edit_piece.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='gui/table_edit_piece.cpp' object='table_edit_piece.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o table_edit_piece.obj `if test -f 'gui/table_edit_piece.cpp'; then $(CYGPATH_W) 'gui/table_edit_piece.cpp'; else $(CYGPATH_W) '$(srcdir)/gui/table_edit_piece.cpp'; fi`
+
+stop_watch_label.o: gui/stop_watch_label.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT stop_watch_label.o -MD -MP -MF $(DEPDIR)/stop_watch_label.Tpo -c -o stop_watch_label.o `test -f 'gui/stop_watch_label.cpp' || echo '$(srcdir)/'`gui/stop_watch_label.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/stop_watch_label.Tpo $(DEPDIR)/stop_watch_label.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='gui/stop_watch_label.cpp' object='stop_watch_label.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o stop_watch_label.o `test -f 'gui/stop_watch_label.cpp' || echo '$(srcdir)/'`gui/stop_watch_label.cpp
+
+stop_watch_label.obj: gui/stop_watch_label.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT stop_watch_label.obj -MD -MP -MF $(DEPDIR)/stop_watch_label.Tpo -c -o stop_watch_label.obj `if test -f 'gui/stop_watch_label.cpp'; then $(CYGPATH_W) 'gui/stop_watch_label.cpp'; else $(CYGPATH_W) '$(srcdir)/gui/stop_watch_label.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/stop_watch_label.Tpo $(DEPDIR)/stop_watch_label.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='gui/stop_watch_label.cpp' object='stop_watch_label.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o stop_watch_label.obj `if test -f 'gui/stop_watch_label.cpp'; then $(CYGPATH_W) 'gui/stop_watch_label.cpp'; else $(CYGPATH_W) '$(srcdir)/gui/stop_watch_label.cpp'; fi`
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
@@ -724,7 +1043,7 @@ compiletime.h:
 	date '+#define COMPILETIME "%x %X"' > compiletime.h
 	@echo ' '
 
-gui_glade_obj.o: gui.glade
+glade_obj.o: gui/gui.glade
 	@echo 'turn the xml gui file into an object file to be embedded into the final binary'
 	$(LD) -r -b binary -o $@ $<
 	$(OBJCOPY) --rename-section .data=.rodata,alloc,load,readonly,data,contents $@ $@

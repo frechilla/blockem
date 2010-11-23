@@ -65,22 +65,22 @@
 // has it. This is enough to check whether we are in the windows environment
 // or not
 #ifdef WIN32
-extern const char binary_gui_glade_start[];
-extern const char binary_gui_glade_end[];
-extern int        binary_gui_glade_size[];
+extern const char binary_gui_gui_glade_start[];
+extern const char binary_gui_gui_glade_end[];
+extern int        binary_gui_gui_glade_size[];
 
-#define __BIN_GUI_GLADE_START__ binary_gui_glade_start
-#define __BIN_GUI_GLADE_END__   binary_gui_glade_end
-#define __BIN_GUI_GLADE_SIZE__  binary_gui_glade_size
+#define __BIN_GUI_GLADE_START__ binary_gui_gui_glade_start
+#define __BIN_GUI_GLADE_END__   binary_gui_gui_glade_end
+#define __BIN_GUI_GLADE_SIZE__  binary_gui_gui_glade_size
 
 #else
-extern const char _binary_gui_glade_start[];
-extern const char _binary_gui_glade_end[];
-extern int        _binary_gui_glade_size[];
+extern const char _binary_gui_gui_glade_start[];
+extern const char _binary_gui_gui_glade_end[];
+extern int        _binary_gui_gui_glade_size[];
 
-#define __BIN_GUI_GLADE_START__ _binary_gui_glade_start
-#define __BIN_GUI_GLADE_END__   _binary_gui_glade_end
-#define __BIN_GUI_GLADE_SIZE__  _binary_gui_glade_size
+#define __BIN_GUI_GLADE_START__ _binary_gui_gui_glade_start
+#define __BIN_GUI_GLADE_END__   _binary_gui_gui_glade_end
+#define __BIN_GUI_GLADE_SIZE__  _binary_gui_gui_glade_size
 
 #endif // ifdef WIN32
 
@@ -258,8 +258,8 @@ void I18nInit()
 
 
     // this call must be done whatever the platform it is
-    setlocale (LC_ALL, "");    
-    
+    setlocale (LC_ALL, "");
+
 
 #ifdef WIN32
     // win32 is a bit special again in the call to bindtextdomain
