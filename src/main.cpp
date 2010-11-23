@@ -46,19 +46,19 @@
 // header file created during the make process which saves the current date
 #include "compiletime.h"
 #include "blockem_config.h"
-#include "gui_glade_defs.h"
-#include "gui_main_window.h"
-#include "game1v1.h"
-#include "game_total_allocation.h"
-#include "gui_game1v1_config.h"               // initialise singleton
-#include "gui_game_4players_config.h"         // initialise singleton
-#include "gui_game_total_allocation_config.h" // initialise singleton
-#include "gui_game_challenge_config.h"        // initialise singleton
+#include "game1v1.h"                // 1vs1 and total allocation games are
+#include "game_total_allocation.h"  // available from terminal
 #include "heuristic.h"
+#include "gui/glade_defs.h"
+#include "gui/main_window.h"
+#include "gui/game1v1_config.h"               // initialise singleton
+#include "gui/game_4players_config.h"         // initialise singleton
+#include "gui/game_total_allocation_config.h" // initialise singleton
+#include "gui/game_challenge_config.h"        // initialise singleton
 
 
 // the following code is needed to load the gui into the application.
-// (See big comment in src/gui_glade.h)
+// (See big comment in src/gui/glade_defs.h)
 // objdump in windows and linux is different and they create
 // the following variables different from one another.
 // Windows hasn't got any underscore at the start, while the object in linux

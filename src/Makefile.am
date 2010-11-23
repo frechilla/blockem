@@ -31,7 +31,7 @@ compiletime.h:
 	date '+#define COMPILETIME "%x %X"' > compiletime.h
 	@echo ' '
 
-gui_glade_obj.o: gui.glade
+glade_obj.o: gui/gui.glade
 	@echo 'turn the xml gui file into an object file to be embedded into the final binary'
 	$(LD) -r -b binary -o $@ $<
 	$(OBJCOPY) --rename-section .data=.rodata,alloc,load,readonly,data,contents $@ $@
@@ -39,16 +39,16 @@ gui_glade_obj.o: gui.glade
 
 main.o: compiletime.h
 
-blockem_DEPENDENCIES = gui_glade_obj.o
+blockem_DEPENDENCIES = glade_obj.o
 
 # there is no need for @LIBICONV@:
 # libiconv is used to convert between a given text encoding and the user's 
 # encoding (...) for use on systems which don't have one, or whose implementation 
 # cannot convert from/to Unicode
-blockem_LDADD = gui_glade_obj.o @LIBINTL@ \
+blockem_LDADD = glade_obj.o @LIBINTL@ \
     $(GTKMM_LIBS) $(GTHREAD_LIBS) $(LIBXML_LIBS)
 
-CLEANFILES = gui_glade_obj.o compiletime.h
+CLEANFILES = glade_obj.o compiletime.h
 
 # win32 specific commands
 if OS_WIN32
@@ -61,11 +61,59 @@ blockem_LDADD += blockem_res.o
 endif
 
 
-EXTRA_DIST = \
-gui.glade    \
+EXTRA_DIST =  \
+gui/gui.glade \
 blockem.rc
 
 blockem_SOURCES = \
+gui/dialog_about.cpp \
+gui/dialog_about.h \
+gui/dialog_newgame.cpp \
+gui/dialog_newgame.h \
+gui/dialog_newgame_widget.h \
+gui/dialog_newgame_widget_1v1.cpp \
+gui/dialog_newgame_widget_1v1.h \
+gui/dialog_newgame_widget_4players.cpp \
+gui/dialog_newgame_widget_4players.h \
+gui/dialog_newgame_widget_challenge.cpp \
+gui/dialog_newgame_widget_challenge.h \
+gui/dialog_newgame_widget_totalallocation.cpp \
+gui/dialog_newgame_widget_totalallocation.h \
+gui/drawing_area_board.h \
+gui/drawing_area_board.cpp \
+gui/drawing_area_show_pieces.cpp \
+gui/drawing_area_show_pieces.h   \
+gui/game_4players_config.cpp \
+gui/game_4players_config.h \
+gui/game_4players_widget.cpp \
+gui/game_4players_widget.h \
+gui/game_challenge_config.cpp \
+gui/game_challenge_config.h \
+gui/game_challenge_widget.cpp \
+gui/game_challenge_widget.h \
+gui/game_total_allocation_config.cpp \
+gui/game_total_allocation_config.h \
+gui/game_total_allocation_widget.cpp \
+gui/game_total_allocation_widget.h \
+gui/game1v1_config.cpp \
+gui/game1v1_config.h \
+gui/game1v1_config_dialog.cpp \
+gui/game1v1_config_dialog.h \
+gui/game1v1_widget.cpp \
+gui/game1v1_widget.h \
+gui/glade_defs.h \
+gui/gui_exception.cpp \
+gui/gui_exception.h \
+gui/main_window.cpp \
+gui/main_window.h \
+gui/main_window_worker_thread.cpp \
+gui/main_window_worker_thread.h \
+gui/statusbar_game.cpp \
+gui/statusbar_game.h \
+gui/table_edit_piece.cpp \
+gui/table_edit_piece.h   \
+gui/stop_watch_label.cpp \
+gui/stop_watch_label.h \
 impl/board_impl.h \
 impl/coordinate_impl.h \
 impl/g_blocking_queue_impl.h \
@@ -91,54 +139,6 @@ game_challenge.h \
 game_total_allocation.cpp \
 game_total_allocation.h \
 g_blocking_queue.h \
-gui_dialog_about.cpp \
-gui_dialog_about.h \
-gui_dialog_newgame.cpp \
-gui_dialog_newgame.h \
-gui_dialog_newgame_widget.h \
-gui_dialog_newgame_widget_1v1.cpp \
-gui_dialog_newgame_widget_1v1.h \
-gui_dialog_newgame_widget_4players.cpp \
-gui_dialog_newgame_widget_4players.h \
-gui_dialog_newgame_widget_challenge.cpp \
-gui_dialog_newgame_widget_challenge.h \
-gui_dialog_newgame_widget_totalallocation.cpp \
-gui_dialog_newgame_widget_totalallocation.h \
-gui_drawing_area_board.h \
-gui_drawing_area_board.cpp \
-gui_drawing_area_show_pieces.cpp \
-gui_drawing_area_show_pieces.h   \
-gui_exception.cpp \
-gui_exception.h \
-gui_game_4players_config.cpp \
-gui_game_4players_config.h \
-gui_game_4players_widget.cpp \
-gui_game_4players_widget.h \
-gui_game_challenge_config.cpp \
-gui_game_challenge_config.h \
-gui_game_challenge_widget.cpp \
-gui_game_challenge_widget.h \
-gui_game_total_allocation_config.cpp \
-gui_game_total_allocation_config.h \
-gui_game_total_allocation_widget.cpp \
-gui_game_total_allocation_widget.h \
-gui_game1v1_config.cpp \
-gui_game1v1_config.h \
-gui_game1v1_config_dialog.cpp \
-gui_game1v1_config_dialog.h \
-gui_game1v1_widget.cpp \
-gui_game1v1_widget.h \
-gui_glade_defs.h \
-gui_main_window.cpp \
-gui_main_window.h \
-gui_main_window_worker_thread.cpp \
-gui_main_window_worker_thread.h \
-gui_statusbar_game.cpp \
-gui_statusbar_game.h \
-gui_table_edit_piece.cpp \
-gui_table_edit_piece.h   \
-gui_stop_watch_label.cpp \
-gui_stop_watch_label.h \
 heuristic.cpp \
 heuristic.h \
 piece.cpp \
