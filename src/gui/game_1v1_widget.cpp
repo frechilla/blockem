@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License along
 // with Blockem. If not, see http://www.gnu.org/licenses/.
 //
-/// @file game1v1_widget.cpp
+/// @file game_1v1_widget.cpp
 /// @brief
 ///
 /// @author Faustino Frechilla
@@ -24,6 +24,7 @@
 /// Ref       Who                When         What
 ///           Faustino Frechilla 05-Oct-2010  Original development
 ///           Faustino Frechilla 23-Nov-2010  Moved into gui/ directory
+///           Faustino Frechilla 26-Nov-2010  Renamed to game_1v1_widget.cpp
 /// @endhistory
 ///
 // ============================================================================
@@ -35,8 +36,8 @@
 
 #include <cstdio>    // printf/snprintf (needed for better i18n)
 #include "gettext.h" // i18n
-#include "gui/game1v1_widget.h"
-#include "gui/game1v1_config.h"
+#include "gui/game_1v1_widget.h"
+#include "gui/game_1v1_config.h"
 
 /// maximum size of the string to notify the end of the game
 static const uint32_t GAME_FINISHED_BUFFER_LENGTH = 256;
@@ -774,7 +775,7 @@ void Game1v1Widget::NotifyMoveComputed()
 
     // update score after this set of pieces has been put down
 	UpdateScoreStatus();
-    
+
     // remove the actual piece being edited from the edit piece drawing area
     // and force the edit piece drawing area to be redraw
     m_editPieceTable.SetPiece(e_noPiece);

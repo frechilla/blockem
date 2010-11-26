@@ -83,6 +83,12 @@ gui/drawing_area_board.h \
 gui/drawing_area_board.cpp \
 gui/drawing_area_show_pieces.cpp \
 gui/drawing_area_show_pieces.h   \
+gui/game_1v1_config.cpp \
+gui/game_1v1_config.h \
+gui/game_1v1_config_dialog.cpp \
+gui/game_1v1_config_dialog.h \
+gui/game_1v1_widget.cpp \
+gui/game_1v1_widget.h \
 gui/game_4players_config.cpp \
 gui/game_4players_config.h \
 gui/game_4players_widget.cpp \
@@ -95,12 +101,6 @@ gui/game_total_allocation_config.cpp \
 gui/game_total_allocation_config.h \
 gui/game_total_allocation_widget.cpp \
 gui/game_total_allocation_widget.h \
-gui/game1v1_config.cpp \
-gui/game1v1_config.h \
-gui/game1v1_config_dialog.cpp \
-gui/game1v1_config_dialog.h \
-gui/game1v1_widget.cpp \
-gui/game1v1_widget.h \
 gui/glade_defs.h \
 gui/gui_exception.cpp \
 gui/gui_exception.h \

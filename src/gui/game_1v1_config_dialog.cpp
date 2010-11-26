@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License along
 // with Blockem. If not, see http://www.gnu.org/licenses/.
 //
-/// @file  game1v1_config_dialog.cpp
+/// @file  game_1v1_config_dialog.cpp
 /// @brief
 ///
 /// @author Faustino Frechilla
@@ -27,14 +27,15 @@
 ///           Faustino Frechilla 23-Sep-2010  Renamed to gui_game1v1_config_dialog
 ///           Faustino Frechilla 18-Oct-2010  default button
 ///           Faustino Frechilla 23-Nov-2010  Moved into gui/ directory
+///           Faustino Frechilla 26-Nov-2010  Renamed to game_1v1_config_dialog.cpp
 /// @endhistory
 ///
 // ============================================================================
 
 #include "gettext.h" // i18n
-#include "gui/game1v1_config_dialog.h"
+#include "gui/game_1v1_config_dialog.h"
+#include "gui/game_1v1_config.h"
 #include "gui/glade_defs.h"
-#include "gui/game1v1_config.h"
 #include "game1v1.h" // BOARD_1VS1_ROWS
 #include "piece.h"   // e_numberOfPieces
 

@@ -41,8 +41,8 @@
 
 #include "gui/dialog_about.h"
 #include "gui/dialog_newgame.h"
-#include "gui/game1v1_config_dialog.h"
-#include "gui/game1v1_widget.h"
+#include "gui/game_1v1_config_dialog.h"
+#include "gui/game_1v1_widget.h"
 #include "gui/game_total_allocation_widget.h"
 #include "gui/game_challenge_widget.h"
 #include "gui/game_4players_widget.h"
@@ -82,10 +82,10 @@ private:
 
     /// @brief the challenge game widget
     GameChallengeWidget m_gameChallengeWidget;
-    
+
     /// @brief the 4players game widget
     Game4PlayersWidget m_game4PlayersWidget;
-    
+
     // accel group + menu items
     Glib::RefPtr<Gtk::AccelGroup> m_accelGroup;
     Glib::RefPtr<Gtk::MenuItem> m_gameMenuItem;

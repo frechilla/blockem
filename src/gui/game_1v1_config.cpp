@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License along
 // with Blockem. If not, see http://www.gnu.org/licenses/.
 //
-/// @file  game1v1_config.cpp
+/// @file  game_1v1_config.cpp
 /// @brief
 ///
 /// @author Faustino Frechilla
@@ -24,11 +24,12 @@
 /// Ref       Who                When         What
 ///           Faustino Frechilla 29-Apr-2010  Original development
 ///           Faustino Frechilla 23-Nov-2010  Moved into gui/ directory
+///           Faustino Frechilla 26-Nov-2010  Renamed to game_1v1_config.cpp
 /// @endhistory
 ///
 // ============================================================================
 
-#include "gui/game1v1_config.h"
+#include "gui/game_1v1_config.h"
 
 // colours are here so they can't be accesed from elsewhere
 static const uint8_t DEFAULT_PLAYER1_COLOUR_R  = 31;

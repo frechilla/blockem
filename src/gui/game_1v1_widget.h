@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License along
 // with Blockem. If not, see http://www.gnu.org/licenses/.
 //
-/// @file game1v1_widget.h
+/// @file game_1v1_widget.h
 /// @brief
 ///
 /// @author Faustino Frechilla
@@ -24,6 +24,7 @@
 /// Ref       Who                When         What
 ///           Faustino Frechilla 05-Oct-2010  Original development
 ///           Faustino Frechilla 23-Nov-2010  Moved into gui/ directory
+///           Faustino Frechilla 26-Nov-2010  Renamed to game_1v1_widget.h
 /// @endhistory
 ///
 // ============================================================================
@@ -42,7 +43,7 @@
 #include "gui/stop_watch_label.h"
 #include "gui/table_edit_piece.h"
 #include "gui/statusbar_game.h"
-#include "gui/game1v1_config_dialog.h"
+#include "gui/game_1v1_config_dialog.h"
 #include "game1v1.h"
 #include "coordinate.h"
 #include "piece.h"
@@ -57,15 +58,15 @@ public:
     /// Instantiates the class
     Game1v1Widget();
     virtual ~Game1v1Widget();
-    
+
     /// @brief Recursively hides a widget and any child widgets
     /// stops all glib timers owned by the object
     void hide_all();
 
-    /// @return true if current game is finished (that is, no player can put 
+    /// @return true if current game is finished (that is, no player can put
     ///         down any piece). False otherwise
     bool IsGameFinished() const;
-    
+
     /// Cancels computing thread and sets it to "waiting" state
     /// It is a blocking call (it gets blocked until the thread cancels its
     /// current calculation process)
@@ -204,14 +205,14 @@ private:
 
     /// @brief callback to be called when a button is pressed inside the board
     void BoardDrawingArea_BoardClicked(const Coordinate &, const Piece &, const Player &);
-    
+
     /// @brief callback to be called whenever the worker thread finishes computing a move
     void WorkerThread_computingFinished(
             const Piece              &a_piece,
             const Coordinate         &a_coord,
             Game1v1::eGame1v1Player_t a_playerToMove,
             int32_t                   a_returnValue);
-    
+
     /// @brief requests the worker thread to compute a move
     /// It finishes the app if there's an error communicating with this thread
     /// @param player whose move will be calculated by the worker thread

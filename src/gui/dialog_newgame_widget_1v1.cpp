@@ -31,7 +31,7 @@
 #include "gui/dialog_newgame_widget_1v1.h"
 #include "gettext.h" // i18n
 #include "game1v1.h"
-#include "gui/game1v1_config.h"
+#include "gui/game_1v1_config.h"
 #include "gui/glade_defs.h"
 
 // strings for the user to choose the type of player

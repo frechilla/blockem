@@ -51,7 +51,7 @@
 #include "heuristic.h"
 #include "gui/glade_defs.h"
 #include "gui/main_window.h"
-#include "gui/game1v1_config.h"               // initialise singleton
+#include "gui/game_1v1_config.h"               // initialise singleton
 #include "gui/game_4players_config.h"         // initialise singleton
 #include "gui/game_total_allocation_config.h" // initialise singleton
 #include "gui/game_challenge_config.h"        // initialise singleton

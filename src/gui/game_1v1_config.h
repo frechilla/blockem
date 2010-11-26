@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License along
 // with Blockem. If not, see http://www.gnu.org/licenses/.
 //
-/// @file  game1v1_config.h
+/// @file  game_1v1_config.h
 /// @brief Singleton which stores GUI related configuration data for 1vs1 games
 ///
 /// @author Faustino Frechilla
@@ -24,6 +24,7 @@
 /// Ref       Who                When         What
 ///           Faustino Frechilla 29-Apr-2010  Original development
 ///           Faustino Frechilla 23-Nov-2010  Moved into gui/ directory
+///           Faustino Frechilla 26-Nov-2010  Renamed to game_1v1_config.h
 /// @endhistory
 ///
 // ============================================================================
@@ -51,7 +52,7 @@ public:
         e_playerComputer,
         e_playerHuman,
     } ePlayerType_t;
-    
+
     // consts used to set default values of 1vs1 games. They are declared here
     // so they can be accesed from other files/classes
     static const Heuristic::eHeuristicType_t  DEFAULT_CURRENT_HEURISTIC = Heuristic::e_heuristicInfluenceArea;
