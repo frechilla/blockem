@@ -33,9 +33,9 @@
 #include "gui/drawing_area_show_pieces.h"
 
 
-// minimum size requested. The user won't be able to set the size of the window
+// minimum size requested
 // if it sets the size of this widget to something smaller than this value
-// ican be applied to height or width depending on the way the widget will be used
+// can be applied to height or width depending on the way the widget will be used
 // (vertical or horizontal)
 static const int32_t MINIMUM_WIDGET_SIZE = 360;
 
@@ -44,7 +44,7 @@ static const int32_t PICK_PLAYER_PIECES_ARRAY_NROWS = 7;
 static const int32_t PICK_PLAYER_PIECES_ARRAY_NCOLS = 32;
 
 // sorry for the length of this array (more than 600 characters per line)
-// it helps out the editing when done in this way if you've got an horizontal
+// it helps out the editing when done like this if you've got an horizontal
 // editing bar, though it _might_ be a _bit_ complicated to edit it in a
 // console
 static const ePieceType_t pickPlayerPiecesArray
@@ -107,11 +107,13 @@ DrawingAreaShowPieces::DrawingAreaShowPieces(const Player &a_player, eOrientatio
     {
     case eOrientation_leftToRight:
     case eOrientation_rightToLeft:
+        // horizontal
     	set_size_request(MINIMUM_WIDGET_SIZE, -1);
     	break;
 
     case eOrientation_bottomToTop:
     case eOrientation_topToBottom:
+        // vertical
     	set_size_request(-1, MINIMUM_WIDGET_SIZE);
     	break;
     }
@@ -160,7 +162,7 @@ bool DrawingAreaShowPieces::on_expose_event(GdkEventExpose* event)
 		xc = width  / 2;
 		yc = height / 2;
 		break;
-	}
+	} // horizontal orientation
 
 	case eOrientation_bottomToTop:
 	case eOrientation_topToBottom:
@@ -175,7 +177,8 @@ bool DrawingAreaShowPieces::on_expose_event(GdkEventExpose* event)
 		yc = width  / 2;
 
 		break;
-	}
+	} // vertical orientation
+    
 	} // switch(m_orientation)
 
 	// the sides of the rectangle which contains the pieces

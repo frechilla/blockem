@@ -24,6 +24,7 @@
 /// Ref       Who                When         What
 ///           Faustino Frechilla 17-Nov-2010  Original development
 ///           Faustino Frechilla 23-Nov-2010  Moved into gui/ directory
+///           Faustino Frechilla 12-Jan-2010  non-moving players' pieces shown around the board
 /// @endhistory
 ///
 // ============================================================================
@@ -107,11 +108,23 @@ private:
     /// @brief the total allocation game which will be represented in the window
     Game4Players m_the4PlayersGame; 
 
+    /// @brief the drawing area responsible for showing the state of the board
+    DrawingAreaBoard m_boardDrawingArea;
+
     /// @brief the drawing area where the pieces can be picked up by the user
     DrawingAreaShowPieces m_pickPiecesDrawingArea;
-
-    /// @the drawing area responsible for showing the state of the board
-    DrawingAreaBoard m_boardDrawingArea;
+    
+    /// @brief drawing area where the pieces of an opponent to current player
+    ///        will be shown at the left of the board
+    DrawingAreaShowPieces m_showPiecesDrawingAreaLeft;
+    
+    /// @brief drawing area where the pieces of an opponent to current player
+    ///        will be shown on top of the board
+    DrawingAreaShowPieces m_showPiecesDrawingAreaTop;
+    
+    /// @brief drawing area where the pieces of an opponent to current player
+    ///        will be shown at the right of the board
+    DrawingAreaShowPieces m_showPiecesDrawingAreaRight;
 
     /// @brieftable where the selected piece is edited
     TableEditPiece m_editPieceTable;

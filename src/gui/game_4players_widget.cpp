@@ -49,10 +49,19 @@ Game4PlayersWidget::Game4PlayersWidget():
     m_currentGameFinished(false),
     m_currentMovingPlayer(Game4Players::e_Game4_Player1),
     m_the4PlayersGame(),
-    m_pickPiecesDrawingArea(
+    m_boardDrawingArea(m_the4PlayersGame.GetBoard()),
+    m_pickPiecesDrawingArea(     // player1 shown as current player
         m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player1),
         DrawingAreaShowPieces::eOrientation_leftToRight),
-    m_boardDrawingArea(m_the4PlayersGame.GetBoard()),
+    m_showPiecesDrawingAreaLeft( // player2 shown on the left
+        m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player2),
+        DrawingAreaShowPieces::eOrientation_topToBottom),
+    m_showPiecesDrawingAreaTop(  // player3 shown on top
+        m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player3),
+        DrawingAreaShowPieces::eOrientation_rightToLeft),
+    m_showPiecesDrawingAreaRight( // player4 shown on the right
+        m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player4),
+        DrawingAreaShowPieces::eOrientation_bottomToTop),
     m_editPieceTable(),
     m_statusBar(4, false) // 4 player. Without progress bar (for now)
 {
@@ -149,6 +158,10 @@ void Game4PlayersWidget::BuildGUI()
     this->pack_start(m_boardDrawingArea, true, true);
     this->pack_start(m_hBoxEditPieces, false, true);
     this->pack_start(m_statusBar, false, true);
+    //TODO add show pieces widgets
+    //     m_showPiecesDrawingAreaLeft
+    //     m_showPiecesDrawingAreaTop
+    //     m_showPiecesDrawingAreaRight
 
     // update the score shown in the status bar before setting them up as visible
     // so the widgets take their proper size at GUI startup
@@ -249,10 +262,12 @@ void Game4PlayersWidget::LaunchNewGame()
     // been cancelled
     m_boardDrawingArea.Invalidate();
 
-    // player will be picking next piece
+    // player1 will be picking next piece
     m_pickPiecesDrawingArea.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player1));
-    
-    //TODO player2, 3 and 4 pieces should be shown on some other widgets displayed across the window
+    // the rest of players' pieces will be shown in their corresponding widgets
+    m_showPiecesDrawingAreaLeft.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player2));
+    m_showPiecesDrawingAreaTop.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player3));
+    m_showPiecesDrawingAreaRight.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player4));
     
     // it will be player1's go next. set piece colour to player1's
     uint8_t red   = 0;
@@ -355,7 +370,7 @@ void Game4PlayersWidget::BoardDrawingArea_BoardClicked(
     // Player 2 moves after 1, 3 after 2, 4 after 1 and finally, 1 after 4
     m_currentMovingPlayer = Game4Players::GetNextPlayerType(thisPlayerType);
     int32_t nPlayersChecked = 1;
-    while ((nPlayersChecked <= 4) &&
+    while ((nPlayersChecked <= Game4Players::e_Game4_PlayersCount) &&
            (rules::CanPlayerGo(
                m_the4PlayersGame.GetBoard(), 
                m_the4PlayersGame.GetPlayer(m_currentMovingPlayer)) == false) )
@@ -364,13 +379,60 @@ void Game4PlayersWidget::BoardDrawingArea_BoardClicked(
         nPlayersChecked++;
     }
     
-    if (nPlayersChecked > 4)
+    if (nPlayersChecked > Game4Players::e_Game4_PlayersCount)
     {
+#ifdef DEBUG
+        // we checked all players, m_currentMovingPlayer has been changed
+        // 4 times and it came back to the original value
+        assert(thisPlayerType == m_currentMovingPlayer);
+#endif
+
         // game is finished. No player can put down a piece
         m_statusBar.StopAllStopwatches();
         
-        // current moving player's pieces will be shown. widget must be updated beforehand
+        // current moving player's pieces will be shown on the pick piece area
+        // widget must be updated beforehand
         m_pickPiecesDrawingArea.Invalidate(m_the4PlayersGame.GetPlayer(thisPlayerType));
+        
+        // update also the rest of widgets which show pieces
+        switch (thisPlayerType)
+        {
+        case Game4Players::e_Game4_Player1:
+        {
+            m_showPiecesDrawingAreaLeft.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player2));
+            m_showPiecesDrawingAreaTop.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player3));
+            m_showPiecesDrawingAreaRight.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player4));
+            break;
+        }
+        case Game4Players::e_Game4_Player2:
+        {
+            m_showPiecesDrawingAreaLeft.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player1));
+            m_showPiecesDrawingAreaTop.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player3));
+            m_showPiecesDrawingAreaRight.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player4));
+            break;
+        }
+        case Game4Players::e_Game4_Player3:
+        {
+            m_showPiecesDrawingAreaLeft.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player1));
+            m_showPiecesDrawingAreaTop.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player2));
+            m_showPiecesDrawingAreaRight.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player4));
+            break;
+        }
+        case Game4Players::e_Game4_Player4:
+        {
+            m_showPiecesDrawingAreaLeft.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player1));
+            m_showPiecesDrawingAreaTop.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player2));
+            m_showPiecesDrawingAreaRight.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player3));
+            break;
+        }
+        default:
+        {
+            // WTF??
+#ifdef DEBUG
+            assert(0);
+#endif
+        }
+        } // switch (thisPlayerType)
         
         // notify end of the game
         GameFinished();
@@ -379,7 +441,7 @@ void Game4PlayersWidget::BoardDrawingArea_BoardClicked(
         return;
     }
     
-    // notify the board widget who is the next player top move
+    // notify the board widget who is the next player to move
     m_boardDrawingArea.SetCurrentPlayer(m_the4PlayersGame.GetPlayer(m_currentMovingPlayer));
     
     for (int32_t i = 0; i < nPlayersChecked; i++)
@@ -401,6 +463,46 @@ void Game4PlayersWidget::BoardDrawingArea_BoardClicked(
     // swap pieces being shown in pickPiecesDrawingArea
     // current moving player's pieces will be shown in there
     m_pickPiecesDrawingArea.Invalidate(m_the4PlayersGame.GetPlayer(m_currentMovingPlayer));
+    
+    // update the rest of widgets which show pieces too
+    switch (m_currentMovingPlayer)
+    {
+    case Game4Players::e_Game4_Player1:
+    {
+        m_showPiecesDrawingAreaLeft.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player2));
+        m_showPiecesDrawingAreaTop.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player3));
+        m_showPiecesDrawingAreaRight.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player4));
+        break;
+    }
+    case Game4Players::e_Game4_Player2:
+    {
+        m_showPiecesDrawingAreaLeft.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player1));
+        m_showPiecesDrawingAreaTop.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player3));
+        m_showPiecesDrawingAreaRight.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player4));
+        break;
+    }
+    case Game4Players::e_Game4_Player3:
+    {
+        m_showPiecesDrawingAreaLeft.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player1));
+        m_showPiecesDrawingAreaTop.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player2));
+        m_showPiecesDrawingAreaRight.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player4));
+        break;
+    }
+    case Game4Players::e_Game4_Player4:
+    {
+        m_showPiecesDrawingAreaLeft.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player1));
+        m_showPiecesDrawingAreaTop.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player2));
+        m_showPiecesDrawingAreaRight.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player3));
+        break;
+    }
+    default:
+    {
+        // WTF??
+#ifdef DEBUG
+        assert(0);
+#endif
+    }
+    } // switch (thisPlayerType)
 }
 
 void Game4PlayersWidget::GameFinished()
