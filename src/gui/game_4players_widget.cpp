@@ -64,7 +64,7 @@ Game4PlayersWidget::Game4PlayersWidget():
         DrawingAreaShowPieces::eOrientation_bottomToTop),
     m_editPieceTable(),
     m_gameTable(2, 3),    // 2 rows, 3 columns
-    m_statusBar(4, false) // 4 player. Without progress bar (for now)
+    m_statusBar(4, false) // 4 players. Without progress bar (for now)
 {
     // build up the GUI!
     BuildGUI();

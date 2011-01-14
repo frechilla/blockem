@@ -40,6 +40,9 @@ static const uint32_t SCORE_LABEL_BUFFER_LENGTH = 64;
 /// how often stopwatches are updated
 static const uint32_t STOPWATCH_UPDATE_PERIOD_MILLIS = 500; // 1000 = 1 second
 
+/// space between elements in the bar
+static const uint32_t PIXELS_BETWEEN_ELEMS = 3;
+
 
 StatusBarGame::StatusBarGame(uint32_t a_nPlayers, bool a_progressBarPresent):
     Gtk::VBox(),
@@ -55,11 +58,11 @@ StatusBarGame::StatusBarGame(uint32_t a_nPlayers, bool a_progressBarPresent):
     // add the status bar separator
     this->pack_start(m_barSeparator, true, true);
 
-    // add now the horizontal box ehich contains the different widgets
+    // add now the horizontal box which contains the different widgets
     this->pack_start(m_elementsBox, true, true);
 
     // custom settings for the hbox
-    m_elementsBox.set_spacing(10);
+    m_elementsBox.set_spacing(PIXELS_BETWEEN_ELEMS);
     m_elementsBox.set_homogeneous(false);
 
     if (a_nPlayers > 0)

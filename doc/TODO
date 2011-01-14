@@ -17,13 +17,15 @@ supposed to be integrated in blockem at some point in the future:
  + Convert std::lists to standard arrays in Piece
  + cachegrind to profile (instead of gprof)
  + complete rules_test
- + WARNINGS compiling:
+ + WARNINGS compiling (in release mode, this is, without debug flags passed into ./configure)
+       gui/game_1v1_widget.cpp:491: warning: enumeration value ‘e_Game1v1NoPlayer’ not handled in switch
        game1v1.cpp:510: warning: enumeration value ‘e_Game1v1NoPlayer’ not handled in switch
-       gui_game1v1_widget.cpp:477: warning: enumeration value ‘e_Game1v1NoPlayer’ not handled in switch
-       blockem_challenge_test.cpp: In member function ‘void BlockemChallengeTest::LoadAndCheckValidChallenge1()’:
        blockem_challenge_test.cpp:253: warning: unused variable ‘challengeInfo’
-       blockem_challenge_test.cpp: In member function ‘void BlockemChallengeTest::LoadAndCheckValidChallenge2()’:
        blockem_challenge_test.cpp:320: warning: unused variable ‘challengeInfo’
+       rules_test.cpp:475: warning: unused variable ‘deployableInCoord’
+       rules_test.cpp:515: warning: unused variable ‘deployableInCoord’
+       rules_test.cpp:556: warning: unused variable ‘deployableInCoord’
+       rules_test.cpp:596: warning: unused variable ‘deployableInCoord’
  + Improve blockem wepage. Add some sort of link for people willing to 
    translate blockem
  + Improve GUI appearance. For example, depth is a very technical parameter,

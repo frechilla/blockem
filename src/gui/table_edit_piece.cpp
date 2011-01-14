@@ -46,6 +46,13 @@ static const float EDIT_CIRCLE_LINE_WIDTH = 1.0;
 /// @brief number of squares of the edit piece board
 static const int32_t NSQUARES_EDIT_PIECES_BOARD = 5;
 
+/// @brief number of pixels this widget will occupy in width
+static const int32_t TOTAL_PIXELS_WIDGET_WIDTH = 180;
+
+/// @brief number of pixels of the area where the piece to be edited
+///        is shown. Applied to both width and height
+static const int32_t TOTAL_PIXELS_EDIT_PIECE_AREA = 115;
+
 /// @brief rotate label text
 // i18n Rotate in this context means a transformation of a piece that describes
 // i18n the motion of it around a fixed point
@@ -57,6 +64,7 @@ static const char ROTATE_LABEL_TEXT[] = N_("Rotate");
 // i18n This string MUST be translated using the same downwards way, that is, a
 // i18n new line character (\n) after every character
 static const char MIRROR_LABEL_TEXT[] = N_("M\ni\nr\nr\no\nr");
+
 
 TableEditPiece::TableEditPiece() :
         Gtk::Table(4, 4), //nrows and ncolumns
@@ -75,11 +83,13 @@ TableEditPiece::TableEditPiece() :
 {
 
     // configure the widgets and add them to this object one by one
-    this->set_size_request(180, -1);
+    this->set_size_request(TOTAL_PIXELS_WIDGET_WIDTH, -1);
     this->set_row_spacings(1);
     this->set_col_spacings(1);
 
-    m_editPieceDrawingArea.set_size_request(115, 115);
+    m_editPieceDrawingArea.set_size_request(
+            TOTAL_PIXELS_EDIT_PIECE_AREA, TOTAL_PIXELS_EDIT_PIECE_AREA);
+
     // attach ( Widget& child,
     //          guint left_attach,
     //          guint right_attach,
