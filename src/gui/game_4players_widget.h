@@ -55,7 +55,7 @@ public:
     /// Instantiates the class
     Game4PlayersWidget();
     virtual ~Game4PlayersWidget();
-    
+
     /// @brief Recursively hides a widget and any child widgets
     /// stops all glib timers owned by the object
     void hide_all();
@@ -101,33 +101,49 @@ private:
     ///        in LaunchNewGame and set to true whenever GameFinished is called
     /// it prevents GameFinished code to run twice for the same game
     bool m_currentGameFinished;
-    
+
     /// this variables contains whose go it is
     Game4Players::eGame4_Player_t m_currentMovingPlayer;
 
     /// @brief the total allocation game which will be represented in the window
-    Game4Players m_the4PlayersGame; 
+    Game4Players m_the4PlayersGame;
 
     /// @brief the drawing area responsible for showing the state of the board
     DrawingAreaBoard m_boardDrawingArea;
 
     /// @brief the drawing area where the pieces can be picked up by the user
     DrawingAreaShowPieces m_pickPiecesDrawingArea;
-    
+
     /// @brief drawing area where the pieces of an opponent to current player
     ///        will be shown at the left of the board
     DrawingAreaShowPieces m_showPiecesDrawingAreaLeft;
-    
+
+    /// @brief the table that contains the opponent's pieces shown on the left
+    ///        needed for proper behaviour when window resizing
+    Gtk::HBox m_hBoxOpponentLeft;
+
     /// @brief drawing area where the pieces of an opponent to current player
     ///        will be shown on top of the board
     DrawingAreaShowPieces m_showPiecesDrawingAreaTop;
-    
+
+    /// @brief the table that contains the opponent's pieces shown on top
+    ///        needed for proper behaviour when window resizing
+    Gtk::VBox m_vBoxOpponentTop;
+
     /// @brief drawing area where the pieces of an opponent to current player
     ///        will be shown at the right of the board
     DrawingAreaShowPieces m_showPiecesDrawingAreaRight;
 
+    /// @brief the table that contains the opponent's pieces shown on the right
+    ///        needed for proper behaviour when window resizing
+    Gtk::HBox m_hBoxOpponentRight;
+
     /// @brieftable where the selected piece is edited
     TableEditPiece m_editPieceTable;
+
+    /// @brief table where the board and pieces of those players who are not moving
+    ///        are shown
+    Gtk::Table m_gameTable;
 
     /// @brief the horizontal box where the pieces are picked + edited
     Gtk::HBox m_hBoxEditPieces;
@@ -146,10 +162,10 @@ private:
 
     /// @brief set up the widgets that make up this object and add them into it
     void BuildGUI();
-    
+
     /// @brief callback to be called when a button is pressed inside the board
     void BoardDrawingArea_BoardClicked(const Coordinate &, const Piece &, const Player &);
-    
+
     /// updates the score shown in the status bar
     void UpdateScoreStatus();
 

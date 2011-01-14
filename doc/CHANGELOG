@@ -1,10 +1,10 @@
 : Version 0.3.2
     - Removed "parser error" messages shown at startup when blockem wrongly 
       tries to load a .dtd file as .xml. Blockem will only try to load
-      those files located at $(extension)/blockem/challenges which end up 
-      with ".xml"
+      those files located at $(game-data-folder)/blockem/challenges whose 
+      extension is ".xml"
     - 4 players game added. All players must be humans since there is no
-      AI implemented yet. 
+      AI implemented yet
     - Fixed error transferring starting coords settings from the "new 
       total allocation game dialog" to the actual game engine
     - Stripped out debug information when compiling without all the DEBUG

@@ -24,3 +24,10 @@ supposed to be integrated in blockem at some point in the future:
        blockem_challenge_test.cpp:253: warning: unused variable ‘challengeInfo’
        blockem_challenge_test.cpp: In member function ‘void BlockemChallengeTest::LoadAndCheckValidChallenge2()’:
        blockem_challenge_test.cpp:320: warning: unused variable ‘challengeInfo’
+ + Improve blockem wepage. Add some sort of link for people willing to 
+   translate blockem
+ + Improve GUI appearance. For example, depth is a very technical parameter,
+   far from what a good user interface should look like
+ + It would be really nice to the blockem rules translated into the actual 
+   blockem game so anybody could have a look without browsing to the website
+ + Allow the user to hide non-moving players's pieces

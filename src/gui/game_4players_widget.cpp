@@ -63,6 +63,7 @@ Game4PlayersWidget::Game4PlayersWidget():
         m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player4),
         DrawingAreaShowPieces::eOrientation_bottomToTop),
     m_editPieceTable(),
+    m_gameTable(2, 3),    // 2 rows, 3 columns
     m_statusBar(4, false) // 4 player. Without progress bar (for now)
 {
     // build up the GUI!
@@ -108,7 +109,7 @@ void Game4PlayersWidget::hide_all()
     // stop all glib timers before hiding the widget
     m_boardDrawingArea.CancelLatestPieceDeployedEffect();
     m_statusBar.StopAllStopwatches();
-    
+
     // hide the widget
     Gtk::VBox::hide_all();
 }
@@ -117,51 +118,77 @@ void Game4PlayersWidget::BuildGUI()
 {
     // retrieve colours from 4players game config singleton
     uint8_t red, green, blue;
-    
+
     Game4PlayersConfig::Instance().GetPlayerColour(
         Game4Players::e_Game4_Player1,
         red, green, blue);
     m_the4PlayersGame.SetPlayerColour(
         Game4Players::e_Game4_Player1,
         red, green, blue);
-    
+
     Game4PlayersConfig::Instance().GetPlayerColour(
         Game4Players::e_Game4_Player2,
         red, green, blue);
     m_the4PlayersGame.SetPlayerColour(
         Game4Players::e_Game4_Player2,
         red, green, blue);
-        
+
     Game4PlayersConfig::Instance().GetPlayerColour(
         Game4Players::e_Game4_Player3,
         red, green, blue);
     m_the4PlayersGame.SetPlayerColour(
         Game4Players::e_Game4_Player3,
         red, green, blue);
-        
+
     Game4PlayersConfig::Instance().GetPlayerColour(
         Game4Players::e_Game4_Player4,
         red, green, blue);
     m_the4PlayersGame.SetPlayerColour(
         Game4Players::e_Game4_Player4,
         red, green, blue);
-    
-        
+
+
     // configure hbox edit pieces
     m_hBoxEditPieces.set_spacing(10);
     m_hBoxEditPieces.set_size_request(-1, 200);
     m_hBoxEditPieces.pack_start(m_pickPiecesDrawingArea, true, true);
     m_hBoxEditPieces.pack_start(m_editPieceTable, false, false);
 
+    // configure drawing areas where the pieces of players waiting for
+    // their turns are shown
+    m_hBoxOpponentLeft.set_size_request(100, -1);
+    m_hBoxOpponentLeft.set_homogeneous(false);
+    m_hBoxOpponentLeft.pack_start(m_showPiecesDrawingAreaLeft, true, true, 5); // expand and fill
+
+    m_hBoxOpponentRight.set_size_request(100, -1);
+    m_hBoxOpponentRight.set_homogeneous(false);
+    m_hBoxOpponentRight.pack_start(m_showPiecesDrawingAreaRight, true, true, 5); // expand and fill
+
+    m_vBoxOpponentTop.set_size_request(-1, 100);
+    m_vBoxOpponentTop.set_homogeneous(false);
+    m_vBoxOpponentTop.pack_start(m_showPiecesDrawingAreaTop, true, true, 5); // expand and fill
+
+    // configure table which has the board and the drawing areas where
+    // the pieces of players waiting for their turns are shown
+    // attach ( Widget& child,
+    //          guint left_attach,
+    //          guint right_attach,
+    //          guint top_attach,
+    //          guint bottom_attach,
+    //          AttachOptions xoptions=FILL|EXPAND,
+    //          AttachOptions yoptions=FILL|EXPAND,
+    //          guint xpadding=0,
+    //          guint ypadding=0)
+    m_gameTable.attach(m_vBoxOpponentTop,   1, 2, 0, 1, Gtk::FILL, Gtk::FILL);
+    m_gameTable.attach(m_hBoxOpponentLeft,  0, 1, 1, 2, Gtk::FILL, Gtk::FILL);
+    m_gameTable.attach(m_boardDrawingArea,  1, 2, 1, 2);
+    m_gameTable.attach(m_hBoxOpponentRight, 2, 3, 1, 2, Gtk::FILL, Gtk::FILL);
+
     // add widgets to this table
     // pack_start (Widget& child, bool expand, bool fill, guint padding=0)
-    this->pack_start(m_boardDrawingArea, true, true);
+    this->pack_start(m_gameTable, true, true);
     this->pack_start(m_hBoxEditPieces, false, true);
     this->pack_start(m_statusBar, false, true);
-    //TODO add show pieces widgets
-    //     m_showPiecesDrawingAreaLeft
-    //     m_showPiecesDrawingAreaTop
-    //     m_showPiecesDrawingAreaRight
 
     // update the score shown in the status bar before setting them up as visible
     // so the widgets take their proper size at GUI startup
@@ -265,10 +292,10 @@ void Game4PlayersWidget::LaunchNewGame()
     // player1 will be picking next piece
     m_pickPiecesDrawingArea.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player1));
     // the rest of players' pieces will be shown in their corresponding widgets
-    m_showPiecesDrawingAreaLeft.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player2));
-    m_showPiecesDrawingAreaTop.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player3));
-    m_showPiecesDrawingAreaRight.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player4));
-    
+    m_showPiecesDrawingAreaLeft.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player4));
+    m_showPiecesDrawingAreaTop.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player2));
+    m_showPiecesDrawingAreaRight.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player3));
+
     // it will be player1's go next. set piece colour to player1's
     uint8_t red   = 0;
     uint8_t green = 0;
@@ -291,7 +318,7 @@ void Game4PlayersWidget::LaunchNewGame()
     // reset and force redraw editPieceTable. It'll be set to sensitive
     // or unsensitive depending on the type of player1
     m_editPieceTable.SetPiece(e_noPiece);
-    
+
     // player1 is the one who's got to put a piece next
     m_currentMovingPlayer = Game4Players::e_Game4_Player1;
 
@@ -341,9 +368,9 @@ void Game4PlayersWidget::BoardDrawingArea_BoardClicked(
             return;
         }
     }
-    
+
     // get type of player who clicked on the board
-    Game4Players::eGame4_Player_t thisPlayerType = 
+    Game4Players::eGame4_Player_t thisPlayerType =
         m_the4PlayersGame.GetPlayerType(a_player);
 #ifdef DEBUG
     assert(thisPlayerType == m_currentMovingPlayer);
@@ -351,8 +378,8 @@ void Game4PlayersWidget::BoardDrawingArea_BoardClicked(
 
     // put down current piece before anything else
     m_the4PlayersGame.PutDownPiece(
-        a_piece, 
-        a_coord, 
+        a_piece,
+        a_coord,
         thisPlayerType);
 
     // invalidate the board drawing area to show the new moves
@@ -365,20 +392,20 @@ void Game4PlayersWidget::BoardDrawingArea_BoardClicked(
     // remove the actual piece being edited from the edit piece drawing area
     // and force the edit piece drawing area to be redraw
     m_editPieceTable.SetPiece(e_noPiece);
-    
-    // decide which player will move next. 
+
+    // decide which player will move next.
     // Player 2 moves after 1, 3 after 2, 4 after 1 and finally, 1 after 4
     m_currentMovingPlayer = Game4Players::GetNextPlayerType(thisPlayerType);
     int32_t nPlayersChecked = 1;
     while ((nPlayersChecked <= Game4Players::e_Game4_PlayersCount) &&
            (rules::CanPlayerGo(
-               m_the4PlayersGame.GetBoard(), 
+               m_the4PlayersGame.GetBoard(),
                m_the4PlayersGame.GetPlayer(m_currentMovingPlayer)) == false) )
     {
         m_currentMovingPlayer = Game4Players::GetNextPlayerType(m_currentMovingPlayer);
         nPlayersChecked++;
     }
-    
+
     if (nPlayersChecked > Game4Players::e_Game4_PlayersCount)
     {
 #ifdef DEBUG
@@ -389,33 +416,33 @@ void Game4PlayersWidget::BoardDrawingArea_BoardClicked(
 
         // game is finished. No player can put down a piece
         m_statusBar.StopAllStopwatches();
-        
+
         // current moving player's pieces will be shown on the pick piece area
         // widget must be updated beforehand
         m_pickPiecesDrawingArea.Invalidate(m_the4PlayersGame.GetPlayer(thisPlayerType));
-        
+
         // update also the rest of widgets which show pieces
         switch (thisPlayerType)
         {
         case Game4Players::e_Game4_Player1:
         {
-            m_showPiecesDrawingAreaLeft.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player2));
-            m_showPiecesDrawingAreaTop.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player3));
-            m_showPiecesDrawingAreaRight.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player4));
+            m_showPiecesDrawingAreaLeft.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player4));
+            m_showPiecesDrawingAreaTop.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player2));
+            m_showPiecesDrawingAreaRight.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player3));
             break;
         }
         case Game4Players::e_Game4_Player2:
         {
-            m_showPiecesDrawingAreaLeft.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player1));
-            m_showPiecesDrawingAreaTop.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player3));
-            m_showPiecesDrawingAreaRight.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player4));
+            m_showPiecesDrawingAreaLeft.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player4));
+            m_showPiecesDrawingAreaTop.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player1));
+            m_showPiecesDrawingAreaRight.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player3));
             break;
         }
         case Game4Players::e_Game4_Player3:
         {
-            m_showPiecesDrawingAreaLeft.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player1));
-            m_showPiecesDrawingAreaTop.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player2));
-            m_showPiecesDrawingAreaRight.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player4));
+            m_showPiecesDrawingAreaLeft.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player4));
+            m_showPiecesDrawingAreaTop.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player1));
+            m_showPiecesDrawingAreaRight.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player2));
             break;
         }
         case Game4Players::e_Game4_Player4:
@@ -433,23 +460,23 @@ void Game4PlayersWidget::BoardDrawingArea_BoardClicked(
 #endif
         }
         } // switch (thisPlayerType)
-        
+
         // notify end of the game
         GameFinished();
-        
+
         // no further processing
         return;
     }
-    
+
     // notify the board widget who is the next player to move
     m_boardDrawingArea.SetCurrentPlayer(m_the4PlayersGame.GetPlayer(m_currentMovingPlayer));
-    
+
     for (int32_t i = 0; i < nPlayersChecked; i++)
     {
         // stop current player's stopwatch and start the next one
         m_statusBar.SwapStopwatches();
     }
-    
+
     // update edit piece's colour to next player's
     uint8_t red   = 0;
     uint8_t green = 0;
@@ -459,33 +486,33 @@ void Game4PlayersWidget::BoardDrawingArea_BoardClicked(
         static_cast<float>(red)   / 255,
         static_cast<float>(green) / 255,
         static_cast<float>(blue)  / 255);
-    
+
     // swap pieces being shown in pickPiecesDrawingArea
     // current moving player's pieces will be shown in there
     m_pickPiecesDrawingArea.Invalidate(m_the4PlayersGame.GetPlayer(m_currentMovingPlayer));
-    
+
     // update the rest of widgets which show pieces too
     switch (m_currentMovingPlayer)
     {
     case Game4Players::e_Game4_Player1:
     {
-        m_showPiecesDrawingAreaLeft.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player2));
-        m_showPiecesDrawingAreaTop.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player3));
-        m_showPiecesDrawingAreaRight.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player4));
+        m_showPiecesDrawingAreaLeft.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player4));
+        m_showPiecesDrawingAreaTop.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player2));
+        m_showPiecesDrawingAreaRight.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player3));
         break;
     }
     case Game4Players::e_Game4_Player2:
     {
-        m_showPiecesDrawingAreaLeft.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player1));
-        m_showPiecesDrawingAreaTop.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player3));
-        m_showPiecesDrawingAreaRight.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player4));
+        m_showPiecesDrawingAreaLeft.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player4));
+        m_showPiecesDrawingAreaTop.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player1));
+        m_showPiecesDrawingAreaRight.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player3));
         break;
     }
     case Game4Players::e_Game4_Player3:
     {
-        m_showPiecesDrawingAreaLeft.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player1));
-        m_showPiecesDrawingAreaTop.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player2));
-        m_showPiecesDrawingAreaRight.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player4));
+        m_showPiecesDrawingAreaLeft.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player4));
+        m_showPiecesDrawingAreaTop.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player1));
+        m_showPiecesDrawingAreaRight.Invalidate(m_the4PlayersGame.GetPlayer(Game4Players::e_Game4_Player2));
         break;
     }
     case Game4Players::e_Game4_Player4:
@@ -541,7 +568,7 @@ void Game4PlayersWidget::GameFinished()
         if (player2.IsPieceAvailable(static_cast<ePieceType_t>(i)))
         {
             squaresLeftPlayer2 += player2.m_pieces[i].GetNSquares();
-        }        
+        }
         if (player3.IsPieceAvailable(static_cast<ePieceType_t>(i)))
         {
             squaresLeftPlayer3 += player3.m_pieces[i].GetNSquares();
@@ -562,25 +589,25 @@ void Game4PlayersWidget::GameFinished()
     else if ( (squaresLeftPlayer2 < squaresLeftPlayer1) &&
               (squaresLeftPlayer2 < squaresLeftPlayer3) &&
               (squaresLeftPlayer2 < squaresLeftPlayer4) )
-    
+
     {
         winner = &player2;
     }
     else if ( (squaresLeftPlayer3 < squaresLeftPlayer1) &&
               (squaresLeftPlayer3 < squaresLeftPlayer2) &&
               (squaresLeftPlayer3 < squaresLeftPlayer4) )
-    
+
     {
         winner = &player3;
     }
     else if ( (squaresLeftPlayer4 < squaresLeftPlayer1) &&
               (squaresLeftPlayer4 < squaresLeftPlayer2) &&
               (squaresLeftPlayer4 < squaresLeftPlayer3) )
-    
+
     {
         winner = &player4;
     }
-    
+
     // it will contain the game finished message
     char theMessage[GAME_FINISHED_BUFFER_LENGTH];
     // winner message. It will be empty if there is no winner
@@ -590,7 +617,7 @@ void Game4PlayersWidget::GameFinished()
     {
         uint8_t red, green, blue;
         winner->GetColour(red, green, blue);
-            
+
         snprintf(winnerMessage,
                 WINNER_MESSAGE_LENGTH,
                 // i18n TRANSLATORS: Please, respect the HTML formatting as much as possible
@@ -608,23 +635,23 @@ void Game4PlayersWidget::GameFinished()
     else
     {
         // find out who won. There must have been a draw, but who made it?
-        
+
         // 1st of all calculate the winer score
         int32_t winnerScore;
         winnerScore = std::min(squaresLeftPlayer1, squaresLeftPlayer2);
         winnerScore = std::min(winnerScore, squaresLeftPlayer3);
         winnerScore = std::min(winnerScore, squaresLeftPlayer4);
-        
+
         // find out whose score is equal to this minimum
         snprintf(winnerMessage,
                 WINNER_MESSAGE_LENGTH,
                 // i18n TRANSLATORS: Please, respect the HTML formatting as much as possible
-                // i18n Bear in mind the final %d will be replaced by the winner score 
+                // i18n Bear in mind the final %d will be replaced by the winner score
                 // i18n Thank you for contributing to this project
                 _("It ended in a <b>draw</b>! Two or more player's score is %d\n\n"),
-                winnerScore);        
+                winnerScore);
     }
-    
+
     uint8_t red1, green1, blue1;
     uint8_t red2, green2, blue2;
     uint8_t red3, green3, blue3;
@@ -633,11 +660,11 @@ void Game4PlayersWidget::GameFinished()
     player2.GetColour(red2, green2, blue2);
     player3.GetColour(red3, green3, blue3);
     player4.GetColour(red4, green4, blue4);
-    
+
     snprintf(theMessage,
             GAME_FINISHED_BUFFER_LENGTH,
             // i18n TRANSLATORS: Please, respect formatting as much as possible
-            // i18n Each line contains the name of the player surrounded by 
+            // i18n Each line contains the name of the player surrounded by
             // i18n <span> HTML tags to set up its colour plus the score
             // i18n Thank you for contributing to this project
             _("Final score: \n"
