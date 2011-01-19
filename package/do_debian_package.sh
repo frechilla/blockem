@@ -64,13 +64,13 @@ cat ../../debian/DEBIAN/md5sums | sed -e "s|^[0123456789abcdef]\{32\}  usr\/bin\
 
 # update total size of blockem after installation
 TOTAL_SIZE=`find ./usr/ -type f -exec ls -l '{}' \; | awk 'BEGIN{total=0} {total+=$5} END{print total}'`
-echo $TOTAL_SIZE
+let TOTAL_SIZE=$TOTAL_SIZE/1024
 cat ../../debian/DEBIAN/control | sed -e "s|^Installed-Size: [0123456789]*|Installed-Size: $TOTAL_SIZE|g" > DEBIAN/control
 
 # build the package
-#cd ../..
-#dpkg-deb --build $TMPDIR/debian .
+cd ../..
+dpkg-deb --build $TMPDIR/debian .
 
 # cleaning up ...
-#rm -rf $TMPDIR
+rm -rf $TMPDIR
 
