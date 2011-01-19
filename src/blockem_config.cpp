@@ -195,7 +195,7 @@ bool BlockemConfig::CreateDefaultConfigFile()
     oStr << "      challenges. This unique identifier is used to identify those"        << std::endl;
     oStr << "      challenges that have been completed."                                << std::endl;
     oStr << "    -->"                                                                   << std::endl;
-    oStr << "  </challenges>"                                                           << std::endl;
+    oStr << "  </challenges_completed>"                                                 << std::endl;
     oStr << "</blockem_config>"                                                         << std::endl;
 
     oStr.close();
