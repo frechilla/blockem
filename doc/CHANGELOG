@@ -1,4 +1,4 @@
-: Version 0.3.2
+19/01/2011: Version 0.3.2
     - Removed "parser error" messages shown at startup when blockem wrongly 
       tries to load a .dtd file as .xml. Blockem will only try to load
       those files located at $(game-data-folder)/blockem/challenges whose 
