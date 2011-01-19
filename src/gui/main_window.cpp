@@ -520,13 +520,16 @@ void MainWindow::MenuItemGameNew_Activate()
 
 void MainWindow::MenuItemViewOpponentsPieces_Toggled()
 {
+    // only 1vs1 and 4 players games show the opponents pieces
     if (m_viewOpponentPiecesMenuItem->property_active())
     {
-        // show opponents' pieces
+        m_game1v1Widget.ShowOpponentsPieces(true);
+        m_game4PlayersWidget.ShowOpponentsPieces(true);
     }
     else
     {
-        // hide opponents' pieces
+        m_game1v1Widget.ShowOpponentsPieces(false);
+        m_game4PlayersWidget.ShowOpponentsPieces(false);
     }
 }
 
@@ -716,6 +719,9 @@ void MainWindow::SetupWindowForNewGame(e_blockemGameType_t a_gametype)
 
         // settings menu is clickable in 1vs1 games
         m_settingsPrefsMenuItem->set_sensitive(true);
+        
+        // user can decide whether to show opponent's pieces
+        m_viewOpponentPiecesMenuItem->set_sensitive(true);        
 
         // configure now which game widget will be shown
         // set_visible doesn't work in 2.16 (which is used in windows)
@@ -725,6 +731,12 @@ void MainWindow::SetupWindowForNewGame(e_blockemGameType_t a_gametype)
         m_game4PlayersWidget.hide_all();
 
         m_game1v1Widget.show_all();
+        
+        // hide opponent's pieces if option menu is unselected
+        if (m_viewOpponentPiecesMenuItem->get_active() == false)
+        {            
+            m_game1v1Widget.ShowOpponentsPieces(false);
+        }
 
         break;
     }
@@ -742,6 +754,9 @@ void MainWindow::SetupWindowForNewGame(e_blockemGameType_t a_gametype)
 
         // total allocation games cannot be configured
         m_settingsPrefsMenuItem->set_sensitive(false);
+        
+        // there is no opponent so its pieces can't be shown
+        m_viewOpponentPiecesMenuItem->set_sensitive(false);
 
         // configure now which game widget will be shown
         // set_visible doesn't work in 2.16 (which is used in windows)
@@ -768,6 +783,9 @@ void MainWindow::SetupWindowForNewGame(e_blockemGameType_t a_gametype)
 
         // challenge games cannot be configured
         m_settingsPrefsMenuItem->set_sensitive(false);
+        
+        // there is no opponent so its pieces can't be shown
+        m_viewOpponentPiecesMenuItem->set_sensitive(false);
 
         // configure now which game widget will be shown
         // set_visible doesn't work in 2.16 (which is used in windows)
@@ -792,6 +810,9 @@ void MainWindow::SetupWindowForNewGame(e_blockemGameType_t a_gametype)
 
         // 4players games cannot be configured
         m_settingsPrefsMenuItem->set_sensitive(false);
+        
+        // user can decide whether to show opponent's pieces
+        m_viewOpponentPiecesMenuItem->set_sensitive(true);
 
         // configure now which game widget will be shown
         // set_visible doesn't work in 2.16 (which is used in windows)
@@ -801,6 +822,12 @@ void MainWindow::SetupWindowForNewGame(e_blockemGameType_t a_gametype)
         m_gameChallengeWidget.hide_all();
 
         m_game4PlayersWidget.show_all();
+        
+        // hide opponents' pieces if option menu is unselected
+        if (m_viewOpponentPiecesMenuItem->get_active() == false)
+        {            
+            m_game4PlayersWidget.ShowOpponentsPieces(false);
+        }
 
         break;
     }

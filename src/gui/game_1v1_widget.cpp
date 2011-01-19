@@ -248,6 +248,18 @@ void Game1v1Widget::ShowForbiddenAreaInBoard(Game1v1::eGame1v1Player_t a_game1v1
     }
 }
 
+void Game1v1Widget::ShowOpponentsPieces(bool a_showPieces)
+{
+    if (a_showPieces)
+    {
+        m_hBoxOpponentPieces.show();
+    }
+    else
+    {
+        m_hBoxOpponentPieces.hide();
+    }
+}
+
 void Game1v1Widget::LaunchNewGame()
 {
     if (m_workerThread.IsThreadComputingMove())

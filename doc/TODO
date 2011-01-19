@@ -26,7 +26,7 @@ supposed to be integrated in blockem at some point in the future:
        rules_test.cpp:515: warning: unused variable ‘deployableInCoord’
        rules_test.cpp:556: warning: unused variable ‘deployableInCoord’
        rules_test.cpp:596: warning: unused variable ‘deployableInCoord’
- + Improve blockem wepage. Add some sort of link for people willing to 
+ + Improve blockem webpage. Add some sort of link for people willing to 
    translate blockem
  + Improve GUI appearance. For example, depth is a very technical parameter,
    far from what a good user interface should look like

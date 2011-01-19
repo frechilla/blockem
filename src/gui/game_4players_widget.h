@@ -76,6 +76,10 @@ public:
     /// @param a_playerType. Player whose forbidden area will be shown.
     ///        set to e_Game4_NoPlayer if influence area shouldn't be shown at all
     void ShowForbiddenAreaInBoard(Game4Players::eGame4_Player_t a_playerType);
+    
+    /// @brief shows the pieces of the opponents to the current moving player
+    /// @param true to show the pieces. False to hide them
+    void ShowOpponentsPieces(bool a_showPieces);
 
     /// Access to the fatal error signal private member. Note this signal is
     /// not thread safe so it must be processed by the same thread who

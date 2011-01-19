@@ -266,6 +266,22 @@ void Game4PlayersWidget::ShowForbiddenAreaInBoard(
     }
 }
 
+void Game4PlayersWidget::ShowOpponentsPieces(bool a_showPieces)
+{
+    if (a_showPieces)
+    {
+        m_hBoxOpponentLeft.show();
+        m_vBoxOpponentTop.show();
+        m_hBoxOpponentRight.show();
+    }
+    else
+    {
+        m_hBoxOpponentLeft.hide();
+        m_vBoxOpponentTop.hide();
+        m_hBoxOpponentRight.hide();
+    }
+}
+
 void Game4PlayersWidget::LaunchNewGame()
 {
     m_the4PlayersGame.Reset(

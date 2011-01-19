@@ -6,7 +6,7 @@
     - 4 players game added. All players MUST be humans since there is no
       AI implemented (yet)
     - Pieces of any non-moving players can be hidden from the main view
-      through a menu option. This option can be used to show the board bigger
+      through a menu option. This option can be used to get a bigger board
       while maintaining the window size
     - Fixed error transferring starting coords settings from the "new 
       total allocation game dialog" to the actual game engine

@@ -102,6 +102,10 @@ public:
     /// @brief shows forbidden area of a player on the board
     /// @param a_game1v1Player if it is e_Game1v1NoPlayer no forbidden area will be shown
     void ShowForbiddenAreaInBoard(Game1v1::eGame1v1Player_t a_game1v1Player);
+    
+    /// @brief shows the pieces of the opponent to the current moving player
+    /// @param true to show the pieces. False to hide them
+    void ShowOpponentsPieces(bool a_showPieces);
 
     /// Access to the fatal error signal private member. Note this signal is
     /// not thread safe so it must be processed by the same thread who
