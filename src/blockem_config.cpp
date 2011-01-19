@@ -157,8 +157,10 @@ bool BlockemConfig::CreateDefaultConfigFile()
     // default config file. Includes DTD and comments!
     oStr << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"                                << std::endl;
     oStr << "<!DOCTYPE blockem_config ["                                                << std::endl;
-    oStr << "<!ELEMENT blockem_config (language)>"                                      << std::endl;
-    oStr << "<!ELEMENT language (#PCDATA)>"                                             << std::endl;
+    oStr << "<!ELEMENT blockem_config (language, challenges)>"                          << std::endl;
+    oStr << "  <!ELEMENT language (#PCDATA)>"                                           << std::endl;
+    oStr << "  <!ELEMENT challenges_completed (challenge_name*)>"                       << std::endl;
+    oStr << "    <!ELEMENT challenge_name (#PCDATA)>"                                   << std::endl;
     oStr << "]>"                                                                        << std::endl;
     oStr << ""                                                                          << std::endl;
     oStr << "<blockem_config>"                                                          << std::endl;
@@ -182,6 +184,18 @@ bool BlockemConfig::CreateDefaultConfigFile()
     oStr << "    default will be used."                                                 << std::endl;
     oStr << "  -->"                                                                     << std::endl;
     oStr << "  <language>en_UK</language>"                                              << std::endl;
+    oStr << ""                                                                          << std::endl;
+    oStr << "  <challenges_completed>"                                                  << std::endl;
+    oStr << "    <!--"                                                                  << std::endl;
+    oStr << "      Between the \"challenges_completed\" tags there is a list of"        << std::endl;
+    oStr << "      challenges that have been already completed by the user."            << std::endl;
+    oStr << ""                                                                          << std::endl;
+    oStr << "      As described in file blockem_challenge.dtd every challenge xml"      << std::endl;
+    oStr << "      has to have a \"name\" property which identifies each one of the"    << std::endl;
+    oStr << "      challenges. This unique identifier is used to identify those"        << std::endl;
+    oStr << "      challenges that have been completed."                                << std::endl;
+    oStr << "    -->"                                                                   << std::endl;
+    oStr << "  </challenges>"                                                           << std::endl;
     oStr << "</blockem_config>"                                                         << std::endl;
 
     oStr.close();
