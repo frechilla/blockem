@@ -9,6 +9,58 @@ INCLUDES = -I$(srcdir)/..
 AM_CXXFLAGS = $(GTKMM_CFLAGS) $(GTHREAD_CFLAGS) $(LIBXML_CFLAGS)
 AM_LDFLAGS = 
 
+# files to run tests on challenges
+EXTRA_DIST = \
+challengetest/challenge_opponent_taken_row_invalid.xml \
+challengetest/challenge_board_nrows_invalid.xml \
+challengetest/challenge_challenger_starting_row_no.xml \
+challengetest/challenge_challenger_taken_col_toobig.xml \
+challengetest/challenge_challenger_piece_available_invalid_name_bogus.xml \
+challengetest/challenge_opponent_taken_duplicated_bogus.xml \
+challengetest/challenge_board_no_ncolumns.xml \
+challengetest/challenge_opponent_taken_col_no.xml \
+challengetest/emptyfile.xml \
+challengetest/challenge_challenger_taken_col_invalid.xml \
+challengetest/challenge_board_nrows_negative.xml \
+challengetest/challenge_root_has_empty_name_property.xml \
+challengetest/challenge_challenger_piece_available_invalid.xml \
+challengetest/challenge_challenger_starting_col_invalid.xml \
+challengetest/challenge_challenger_starting_coord_taken_challenger.xml \
+challengetest/challenge_challenger_taken_row_no.xml \
+challengetest/challenge_challenger_starting_row_invalid.xml \
+challengetest/challenge_root_bogus.xml \
+challengetest/challenge_challenger_starting_row_negative.xml \
+challengetest/challenge_challenger_taken_row_negative.xml \
+challengetest/challenge_board_ncolumns_negative.xml \
+challengetest/challenge_syntax_bogus.xml \
+challengetest/challenge_opponent_taken_col_negative.xml \
+challengetest/challenge_challenger_no.xml \
+challengetest/challenge_challenger_starting_col_toobig.xml \
+challengetest/challenge_challenger_taken_row_invalid.xml \
+challengetest/challenge_opponent_taken_row_no.xml \
+challengetest/challenge_opponent_taken_row_toobig.xml \
+challengetest/challenge_opponent_taken_row_negative.xml \
+challengetest/challenge_root_has_no_name_property.xml \
+challengetest/challenge_challenger_taken_col_negative.xml \
+challengetest/challenge_opponent_no.xml \
+challengetest/challenge_taken_duplicated_opponent_challenger.xml \
+challengetest/challenge_board_no_nrows.xml \
+challengetest/challenge_valid1.xml \
+challengetest/challenge_challenger_starting_col_negative.xml \
+challengetest/challenge_challenger_taken_row_toobig.xml \
+challengetest/challenge_valid2.xml \
+challengetest/challenge_challenger_taken_col_no.xml \
+challengetest/challenge_challenger_starting_col_row_no.xml \
+challengetest/challenge_board_ncolumns_invalid.xml \
+challengetest/challenge_opponent_taken_col_invalid.xml \
+challengetest/challenge_challenger_piece_available_no.xml \
+challengetest/challenge_challenger_starting_coord_taken_opponent.xml \
+challengetest/challenge_challenger_starting_row_toobig.xml \
+challengetest/challenge_opponent_taken_col_toobig.xml \
+challengetest/challenge_board_no.xml \
+challengetest/challenge_challenger_starting_col_no.xml \
+challengetest/challenge_challenger_taken_duplicated_bogus.xml
+
 blockemtest_SOURCES = \
 bitwise_test.cpp \
 bitwise_test.h \
@@ -30,7 +82,7 @@ player_test.h \
 rules_test.cpp \
 rules_test.h
 
-# this should be changed at some point. we should be crating a library with the base blockem classes
+# this should be changed at some point. we should be creating a library with the base blockem classes
 # and then add that library to blockemtest_LIBADD
 BLOCKEM_OBJS = \
 ../blockem_challenge.o \

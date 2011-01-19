@@ -10,6 +10,8 @@
       while maintaining the window size
     - Fixed error transferring starting coords settings from the "new 
       total allocation game dialog" to the actual game engine
+    - Fixed error in tar.gz package. Testing .xml files for challenge
+      processing tests had been left out of the package
     - Stripped out debug information when compiling without all the DEBUG
       flags. Binary size has been decreased to less than 10% of the original
       size under GNU/Linux
