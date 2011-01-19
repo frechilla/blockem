@@ -89,11 +89,13 @@ private:
     // accel group + menu items
     Glib::RefPtr<Gtk::AccelGroup> m_accelGroup;
     Glib::RefPtr<Gtk::MenuItem> m_gameMenuItem;
+    Glib::RefPtr<Gtk::MenuItem> m_viewMenuItem;
     Glib::RefPtr<Gtk::MenuItem> m_settingsMenuItem;
     Glib::RefPtr<Gtk::MenuItem> m_helpMenuItem;
     Glib::RefPtr<Gtk::MenuItem> m_newMenuItem;
     Glib::RefPtr<Gtk::MenuItem> m_quitMenuItem;
     Glib::RefPtr<Gtk::MenuItem> m_helpAboutMenuItem;
+    Glib::RefPtr<Gtk::CheckMenuItem> m_viewOpponentPiecesMenuItem;
     Glib::RefPtr<Gtk::MenuItem> m_settingsPrefsMenuItem;
     Glib::RefPtr<Gtk::CheckMenuItem> m_settingsNKPointsMenuItem;
     Glib::RefPtr<Gtk::MenuItem> m_settingsForbiddenAreaMenuItem;
@@ -131,6 +133,9 @@ private:
 
     /// @brief callback to be called when the menuitem Help->about is pressed
     void MenuItemHelpAbout_Activate();
+
+    /// @brief callback to be called when the menuitem View->show rest of players' pieces is toggled
+    void MenuItemViewOpponentsPieces_Toggled();
 
     /// @brief callback to be called when the menuitem Settings->Preferences is pressed
     void MenuItemSettingsPreferences_Activate();

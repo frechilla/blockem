@@ -73,6 +73,26 @@
               </object>
             </child>
             <child>
+              <object class="GtkMenuItem" id="menuitem_view">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">_View</property>
+                <property name="use_underline">True</property>
+                <child type="submenu">
+                  <object class="GtkMenu" id="menu6">
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkCheckMenuItem" id="checkmenuitem_view_opponent_pieces">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Show rest of players' pieces</property>
+                        <property name="use_underline">True</property>
+                        <property name="active">True</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
               <object class="GtkMenuItem" id="menuitem_settings">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">_Settings</property>

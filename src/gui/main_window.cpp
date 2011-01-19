@@ -129,6 +129,13 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
         throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
 
+    m_viewMenuItem = Glib::RefPtr<Gtk::MenuItem>::cast_dynamic(
+            m_gtkBuilder->get_object(GUI_MENU_ITEM_VIEW));
+    if (!m_viewMenuItem)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
     m_settingsMenuItem = Glib::RefPtr<Gtk::MenuItem>::cast_dynamic(
             m_gtkBuilder->get_object(GUI_MENU_ITEM_SETTINGS));
     if (!m_settingsMenuItem)
@@ -153,6 +160,13 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     m_quitMenuItem = Glib::RefPtr<Gtk::MenuItem>::cast_dynamic(
             m_gtkBuilder->get_object(GUI_MENU_ITEM_GAME_QUIT));
     if (!m_quitMenuItem)
+    {
+        throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
+    }
+
+    m_viewOpponentPiecesMenuItem = Glib::RefPtr<Gtk::CheckMenuItem>::cast_dynamic(
+            m_gtkBuilder->get_object(GUI_MENU_ITEM_VIEW_PLAYERS_PIECES));
+    if (!m_viewOpponentPiecesMenuItem)
     {
         throw new GUIException(e_GUIException_GTKBuilderErr, __FILE__, __LINE__);
     }
@@ -313,6 +327,8 @@ MainWindow::MainWindow(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
             sigc::mem_fun(*this, &MainWindow::MenuItemGameQuit_Activate));
     m_helpAboutMenuItem->signal_activate().connect(
             sigc::mem_fun(*this, &MainWindow::MenuItemHelpAbout_Activate));
+    m_viewOpponentPiecesMenuItem->signal_activate().connect(
+            sigc::mem_fun(*this, &MainWindow::MenuItemViewOpponentsPieces_Toggled));
     m_settingsPrefsMenuItem->signal_activate().connect(
             sigc::mem_fun(*this, &MainWindow::MenuItemSettingsPreferences_Activate));
     m_settingsNKPointsMenuItem->signal_toggled().connect(
@@ -502,6 +518,18 @@ void MainWindow::MenuItemGameNew_Activate()
     m_newGameDialog->hide();
 }
 
+void MainWindow::MenuItemViewOpponentsPieces_Toggled()
+{
+    if (m_viewOpponentPiecesMenuItem->property_active())
+    {
+        // show opponents' pieces
+    }
+    else
+    {
+        // hide opponents' pieces
+    }
+}
+
 void MainWindow::MenuItemSettingsViewNKPoints_Toggled()
 {
     if (m_settingsNKPointsMenuItem->property_active())
@@ -679,7 +707,7 @@ void MainWindow::SetupWindowForNewGame(e_blockemGameType_t a_gametype)
         // show player2's menus
         m_settingsForbiddenAreaPlayer2MenuItem->show();
         m_settingsInfluenceAreaPlayer2MenuItem->show();
-        
+
         // hide player3 and player'4 menus
         m_settingsForbiddenAreaPlayer3MenuItem->hide();
         m_settingsForbiddenAreaPlayer4MenuItem->hide();
@@ -805,11 +833,17 @@ void MainWindow::ForceTranslationOfWidgets()
     m_gameMenuItem->set_label(
         _(m_gameMenuItem->get_label().c_str()));
 
+    m_viewMenuItem->set_label(
+            _(m_viewMenuItem->get_label().c_str()));
+
     m_settingsMenuItem->set_label(
         _(m_settingsMenuItem->get_label().c_str()));
 
     m_helpMenuItem->set_label(
         _(m_helpMenuItem->get_label().c_str()));
+
+    m_viewOpponentPiecesMenuItem->set_label(
+            _(m_viewOpponentPiecesMenuItem->get_label().c_str()));
 
     m_settingsNKPointsMenuItem->set_label(
         _(m_settingsNKPointsMenuItem->get_label().c_str()));
