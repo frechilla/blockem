@@ -24,7 +24,7 @@ if [ $# -eq 1 ]; then
         echo "IMPORTANT: make sure you've run the script 'configure' with the following"
         echo "options before building blockem (running make). Otherwise the app won't"
         echo "work properly once the debian package is installed "
-        echo "  './configure --localedir=\"/usr/share/locale\" --datadir=\"/usr/share\"'"
+        echo "  './configure --localedir="/usr/share/locale" --datadir="/usr/share" --bindir="/usr/bin"'"
     else
         echo "bad parameter. Try '$0 --help'"
     fi
@@ -60,12 +60,17 @@ chmod u=rwx,g=rx,o=rx $TMPDIR/debian/usr/bin/blockem
 
 # update the md5sums file
 cd $TMPDIR/debian
-cat DEBIAN/md5sums | sed -e "s|^[0123456789abcdef]\{32\}  usr\/bin\/blockem|`md5sum usr/bin/blockem`|g" > DEBIAN/md5sums
+cat ../../debian/DEBIAN/md5sums | sed -e "s|^[0123456789abcdef]\{32\}  usr\/bin\/blockem|`md5sum usr/bin/blockem`|g" > DEBIAN/md5sums
+
+# update total size of blockem after installation
+TOTAL_SIZE=`find ./usr/ -type f -exec ls -l '{}' \; | awk 'BEGIN{total=0} {total+=$5} END{print total}'`
+echo $TOTAL_SIZE
+cat ../../debian/DEBIAN/control | sed -e "s|^Installed-Size: [0123456789]*|Installed-Size: $TOTAL_SIZE|g" > DEBIAN/control
 
 # build the package
-cd ../..
-dpkg-deb --build $TMPDIR/debian .
+#cd ../..
+#dpkg-deb --build $TMPDIR/debian .
 
 # cleaning up ...
-rm -rf $TMPDIR
+#rm -rf $TMPDIR
 
