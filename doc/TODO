@@ -1,5 +1,8 @@
 This document contains quite a lot of ideas that cross over my mind, which are
-supposed to be integrated in blockem at some point in the future:
+supposed to be integrated in blockem at some point in the future. 
+
+You might find a bigger list of things to do in 
+    http://blockem.sourceforge.net/involved.html#todo
 
  + Save and load game can be used through command line but they are not 
    available in the GUI. Load game code needs a bit more of checking

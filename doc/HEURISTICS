@@ -1,4 +1,8 @@
-CUSTOMISE BLOCKEM ARTIFICIAL INTELLIGENCE
+(Note: Before you read this document you might think of having a look at 
+ http://blockem.sourceforge.net/devel.html for a more readable, and probably
+ more updated, version of it)
+
+WRITING ARTIFICIAL INTELLIGENCE FOR 1vs1 GAMES 
 
   To understand the Artifical intelligence (AI) used in Blockem, a few terms must
 be understood first:
@@ -29,12 +33,15 @@ int32_t EvalFunction(
   Inside a class called Heuristic (in heuristic.h) there's a typedef which 
 defines exactly this interface:
 
-class Heuristic
-{
-    /* ... */
-    typedef int32_t (*EvalFunction_t)(const Board &, const Player &, const Player &);
-    /* ... */
-}
+class Heuristic {
+
+    /* ... */ 
+    
+    typedef int32_t (*EvalFunction_t) 
+            (const Board &, const Player &, const Player &); 
+    
+    /* ... */ 
+}; 
 
   You can easily write a new heuristic and make it available in the blockem GUI. 
 The following explanation applies to blockem version 0.2.0 or higher, where
@@ -54,11 +61,13 @@ the process of adding new heuristics has been improved and simplified.
         int32_t squaresOpponent = 0;
         int32_t rv = 0;
    
-        for (uint8_t rowCount = 0; rowCount < a_board.GetNRows() ; rowCount++)
+        for (uint8_t rowCount = 0; 
+                     rowCount < a_board.GetNRows() ; 
+                     rowCount++)
         {
             for (uint8_t columnCount = 0; 
-                 columnCount <  a_board.GetNColumns(); 
-                 columnCount++)
+                        columnCount <  a_board.GetNColumns(); 
+                        columnCount++)
             {
                 if (a_board.IsPlayerInCoord(rowCount, columnCount, a_playerMe))
                 {
@@ -83,7 +92,9 @@ the process of adding new heuristics has been improved and simplified.
     dialog. It assigns twice as much of importance to create a new nucleation
     point than removing one from the opponent. You could easily adapt this
     heuristic to something that is only focused on stopping the opponent, 
-    or vice-versa
+    or vice-versa. Note that there are a few functions defined in rules.h that 
+    might help you out to write a powerful evaluation function (things like 
+    IsThisANucleationPoint, and so on...) 
 
     int32_t SimpleEvalFunction(
             const Board  &a_board,
@@ -94,11 +105,13 @@ the process of adding new heuristics has been improved and simplified.
         int32_t squaresOpponent = 0;
         int32_t rv = 0;
    
-        for (uint8_t rowCount = 0; rowCount < a_board.GetNRows() ; rowCount++)
+        for (uint8_t rowCount = 0; 
+                     rowCount < a_board.GetNRows() ; 
+                     rowCount++)
         {
             for (uint8_t columnCount = 0; 
-                 columnCount <  a_board.GetNColumns(); 
-                 columnCount++)
+                         columnCount <  a_board.GetNColumns(); 
+                         columnCount++)
             {
                 if (a_board.IsPlayerInCoord(rowCount, columnCount, a_playerMe))
                 {
@@ -119,112 +132,126 @@ the process of adding new heuristics has been improved and simplified.
         return rv;
     }
 
-    Have a look at heuristic.cpp and heuristic.h to see more examples of 
-    already implemented heuristics. There are a few functions defined in 
-    rules.h that might help you out to write a powerful evaluation function 
-    (things like IsThisANucleationPoint, and so on...)
- 
  2) All the available heuristics are added to an array defined in the Heuristic
     class called m_heuristicData. This array is defined in heuristic.h as:
     
-    54     /// types of heuristic
-    56     typedef enum
-    57     {
-    58         e_heuristicStartCount = 0, // this element must be always 0 and must be at the start
-    59 
-    60         e_heuristicNKWeighted = e_heuristicStartCount,
-    61         e_heuristicSimple,
-    62         e_heuristicRandom,
-    63 
-    64         e_heuristicCount, // stores the amount of heuristics. Must be always at the end
-    65     } eHeuristicType_t;
-    66 
-    67     /// heuristic data to be used in the heuristics config array
-    68     typedef struct
-    69     {
-    70         eHeuristicType_t m_type;
-    71         EvalFunction_t m_evalFunction;
-    72         std::string m_name;
-    73         std::string m_description;
-    74     } sHeuristicData_t;
-    75 
-    76     static const sHeuristicData_t m_heuristicData[e_heuristicCount];
-
-    At the top of heuristic.cpp the list of available heuristic is instantiated:
     
-    38 // instantiate the const heuristic data array. Heuristics must be defined here
-    39 // in the same order they are described in Heuristic::eHeuristicType_t in heuristic.h
-    40 const Heuristic::sHeuristicData_t Heuristic::m_heuristicData[e_heuristicCount] =
-    41 {
-    42     {e_heuristicNKWeighted,
-    43      Heuristic::CalculateNKWeighted,
-    44      std::string("NK weighted"),
-    45      std::string("Nucleation points are weighted. The more in the middle in the board a NK point is, the more important it is")
-    46     },
-    47     {e_heuristicSimple,
-    48      Heuristic::CalculateSimple,
-    49      std::string("Simple"),
-    50      std::string("Takes into account only the amount of squares of the deployed pieces")
-    51     },
-    52     {e_heuristicRandom,
-    53      Heuristic::CalculateRandom,
-    54      std::string("Random"),
-    55      std::string("Random heuristic. Evaluation function returns a random value so any heuristic can be checked against it")
-    56     }
-    57 };
+    /// pointer to the heuristic calculator function 
+    typedef int32_t (*EvalFunction_t)(const Board &, const Player &, const Player &); 
     
-    To add a brand new Heuristic in a function called, for example, 
-    "MyCustomisedHeuristic", first of all you must add an entry in the 
-    eHeuristicType_t enum in heuristic.h
-
-    /// types of heuristic
-    typedef enum
-    {
-        e_heuristicStartCount = 0, // this element must be always 0 and must be at the start
-
-        e_heuristicNKWeighted = e_heuristicStartCount,
-        e_heuristicSimple,
-        e_heuristicRandom,
-        e_heuristicMyCustomisedHeuristic, // <-- Your brand new heuristic
-
-        e_heuristicCount, // stores the amount of heuristics. Must be always at the end
-    } eHeuristicType_t;
-
-    And then add it to the m_heuristicData array in heuristic.cpp:
+    /// types of heuristic. If you add a heuristic here you MUST add a proper description 
+    /// to Game1v1Config in the constructor using a Game1v1Config::sHeuristicConfig_t 
+    typedef enum { 
+        e_heuristicStartCount = 0, // this element must be always 0 and must be at the start 
+        
+        e_heuristicInfluenceArea = e_heuristicStartCount, 
+        e_heuristicInfluenceAreaEastwood, 
+        e_heuristicNKWeightedv1, 
+        e_heuristicCentreFocused, 
+        e_heuristicSimple, 
+        e_heuristicRandom, 
+        
+        e_heuristicCount, // stores the amount of heuristics. Must be always at the end 
+    } eHeuristicType_t; 
+    
+    /// heuristic data to be used in the heuristics config array 
+    typedef struct 
+    { 
+        eHeuristicType_t m_type; 
+        EvalFunction_t m_evalFunction; 
+        const char* m_name; 
+        const char* m_description; 
+    } sHeuristicData_t; 
+    
+    static const sHeuristicData_t m_heuristicData[e_heuristicCount]; 
+    
+    
+    At the top of heuristic.cpp the list of available heuristic is instantiated.
+    Note that all strings are defined inside a call to N_(). This call tells 
+    the translation engine (gettext) to mark the string as translatable. 
+    This must be done in your brand new heuristic to ensure its description is
+    translated by the i18n team. 
     
     // instantiate the const heuristic data array. Heuristics must be defined here
     // in the same order they are described in Heuristic::eHeuristicType_t in heuristic.h
     const Heuristic::sHeuristicData_t Heuristic::m_heuristicData[e_heuristicCount] =
     {
-        {e_heuristicNKWeighted,
-         Heuristic::CalculateNKWeighted,
-         std::string("NK weighted"),
-         std::string("Nucleation points are weighted. The more in the middle in the board a NK point is, the more important it is")
+        {e_heuristicInfluenceArea,
+         Heuristic::CalculateInfluenceAreaWeighted,
+         N_("Influence Area"),
+         N_("Uses the influence areas that a user's pieces create on the board to determine the quality of a move")
+        },
+        {e_heuristicInfluenceAreaEastwood,
+         Heuristic::CalculateInfluenceAreaWeightedEastwood,
+         N_("Mr. Eastwood"),
+         N_("Modified version of \"Influence Area\". When in doubt it will try to block you out")
+        },
+        {e_heuristicNKWeightedv1,
+         Heuristic::CalculateNKWeightedv1,
+         N_("NK weighted"),
+         N_("The more Nucleation points the better. NK points are more important in the middle of the board at the beginning")
+        },
+        {e_heuristicCentreFocused,
+         Heuristic::CalculateCentreFocused,
+         N_("Centre focused"),
+         N_("It has a tendency to create nucleation points over the centre of the board")
         },
         {e_heuristicSimple,
          Heuristic::CalculateSimple,
-         std::string("Simple"),
-         std::string("Takes into account only the amount of squares of the deployed pieces")
+         N_("Simple"),
+         N_("Takes into account only the amount of squares of the deployed pieces")
         },
         {e_heuristicRandom,
          Heuristic::CalculateRandom,
-         std::string("Random"),
-         std::string("Random heuristic. Evaluation function returns a random value so any heuristic can be checked against it")
+         N_("Random"),
+         N_("Random heuristic. Evaluation function returns a random value so any heuristic can be checked against it")
         },
-        {e_heuristicMyCustomisedHeuristic,      // as defined in eHeuristicType_t in heuristic.h
-         MyCustomisedHeuristic,                 // pointer to the heuristic function you wrote
-         std::string("MyCustomised"),           // Name of the heuristic. It'll be used in the GUI
-         std::string("This is my brand new...") // Description of your heuristic. It'll also be used in the GUI
-        }
     };
     
+    To add a brand new Heuristic in a function called, for example, 
+    "MyCustomisedHeuristic", first of all you must add an entry in the 
+    eHeuristicType_t enum in heuristic.h
+
+    /* ... */ 
+    typedef enum 
+    { 
+        e_heuristicStartCount = 0, // this element must be always 0 and must be at the start 
+        
+        e_heuristicInfluenceArea = e_heuristicStartCount, 
+        
+        /* ... */ 
+        
+        e_heuristicRandom, 
+        e_heuristicMyCustomisedHeuristic, // <-- Your brand new heuristic 
+        
+        e_heuristicCount, // stores the amount of heuristics. Must be always at the end 
+    } eHeuristicType_t; /* ... */ 
+
+    And then add it to the m_heuristicData array at the top of heuristic.cpp. 
+    Don't forget to write the all strings inside the call to the N_() function. 
+    
+    const Heuristic::sHeuristicData_t Heuristic::m_heuristicData[e_heuristicCount] = 
+    { 
+        /* ... */ 
+        
+        {e_heuristicRandom, 
+         Heuristic::CalculateRandom, 
+         N_("Random"), 
+         N_("Random heuristic. Evaluation function returns a random value so any heuristic can be checked against it") }, 
+        {e_heuristicMyCustomisedHeuristic, // as defined in eHeuristicType_t in heuristic.h 
+         Heuristic::MyCustomisedHeuristic, // pointer to the heuristic function you wrote 
+         N_("MyCustomised"), // Name of the heuristic. It'll be used in the GUI 
+         N_("This is my brand new...") // Description of your heuristic. It'll also be used in the GUI 
+        } 
+    }; 
+    
  3) Save all the changes, recompile blockem and your heuristic will be 
-    magically available to be selected in the "new Game" and the "configuration"
-    menu. You will be able to test your new heuristic against the "random" one,
-    or try to beat it playing blockem in a 1vs1 game
+ magically available to be selected in the "new Game" and the "configuration" 
+ menu. You will be able to test your new heuristic against the "random" one, or
+ try to beat it playing blockem in a 1vs1 game. 
 
 
-UNDERSTANDING DEPTH OF THE SEARCH TREE
+DEPTH OF THE SEARCH TREE
 
   The depth of the search tree defines how many pieces are "virtually" put down 
 by the minmax algorithm to test how good a specific move is. Depth 3 means 
@@ -281,7 +308,7 @@ calculated, but this example shows why you must use the depth parameter with
 a lot of care.
    
    
-STEPS DONE (AND SOME YET TO BE DONE) TO IMPROVE THE HEURISTICS
+IMPROVING PERFORMANCE OF THE HEURISTICS
    
   As it is described in the wikipedia about the alpha-beta prunning, "Further 
 improvement can be achieved without sacrificing accuracy, by using ordering 
@@ -305,11 +332,16 @@ from worse to better (from less likely to do a good move to more likely):
         e_1Piece_BabyPiece   = e_minimumPieceIndex,
         e_2Piece_TwoPiece    = 1,
         e_3Piece_LongPiece   = 2,
+        
         /* ... */
-        e_5Piece_TheUltimate = 20,
-       
-        e_numberOfPieces = 21,
-        e_noPiece = 22,   
+        
+        e_5Piece_SafPiece = 18, 
+        e_5Piece_WPiece = 19, 
+        e_5Piece_Cross = 20, 
+        
+        e_numberOfPieces = 21, 
+        e_noPiece = 22, 
+        
     } ePieceType_t;
 
    
