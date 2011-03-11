@@ -167,11 +167,12 @@ bool BlockemConfig::CreateDefaultConfigFile()
     // default config file. Includes DTD and comments!
     oStr << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"                                << std::endl;
     oStr << "<!DOCTYPE blockem_config ["                                                << std::endl;
-    oStr << "<!ELEMENT blockem_config (language, challenges)>"                          << std::endl;
+    oStr << "<!ELEMENT blockem_config (language?, challenges_completed)>"               << std::endl;
     oStr << "  <!ELEMENT language (#PCDATA)>"                                           << std::endl;
     oStr << "  <!ELEMENT challenges_completed (challenge_name*)>"                       << std::endl;
     oStr << "    <!ELEMENT challenge_name (#PCDATA)>"                                   << std::endl;
     oStr << "]>"                                                                        << std::endl;
+    oStr << ""                                                                          << std::endl;
     oStr << ""                                                                          << std::endl;
     oStr << "<blockem_config>"                                                          << std::endl;
 // the language tag is only needed in win32. No need to add it to the conf
