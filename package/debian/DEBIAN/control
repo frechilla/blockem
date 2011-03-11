@@ -1,10 +1,10 @@
 Package: blockem
-Version: 0.3.2-1
+Version: 0.3.2-2
 Section: games
 Priority: optional
 Maintainer: Faustino Frechilla <frechilla@gmail.com>
 Architecture: i386
-Depends: libc6 (>= 2.1.3), libgtkmm-2.4-1c2a (>= 2.16.0-2), libglibmm-2.4-1c2a (>= 2.20.1-1), libglib2.0-0 (>= 2.20.0)
+Depends: libc6 (>= 2.1.3), libgtkmm-2.4-1c2a (>= 2.16.0-2), libglibmm-2.4-1c2a (>= 2.20.1-1), libglib2.0-0 (>= 2.20.0), libxml2 (>= 2.6.26)
 Installed-Size: 123456789
 Description: The GNU polyominoes board game
  Blockem is a board game which consists on putting down
