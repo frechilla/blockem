@@ -38,6 +38,7 @@
 #include "gui/game_challenge_widget.h"
 #include "gui/game_challenge_config.h"
 #include "rules.h"
+#include "blockem_config.h" // mark challenges as done
 
 /// maximum size of the string to notify the end of the game
 static const uint32_t GAME_FINISHED_BUFFER_LENGTH = 256;
@@ -185,7 +186,7 @@ void GameChallengeWidget::ShowForbiddenAreaInBoard(bool a_show)
 }
 
 void GameChallengeWidget::LaunchNewGame()
-{    
+{
     // this is a new challenge!
     m_theChallengeGame.Reset(GameChallengeConfig::Instance().GetBlockemChallenge());
 
@@ -322,6 +323,11 @@ void GameChallengeWidget::GameFinished()
     char theMessage[GAME_FINISHED_BUFFER_LENGTH];
     if (squaresLeft == 0)
     {
+        // challenger passed this level. Must be saved into the global config
+        BlockemConfig::Instance().SetChallengeCompleted(
+                GameChallengeConfig::Instance().GetBlockemChallenge().GetChallengeName());
+
+        // the congratulations meesage to be passed to whoever listens to the gameFinished signal
         snprintf(theMessage,
             GAME_FINISHED_BUFFER_LENGTH,
             _("Done! You managed to allocate all your pieces"));

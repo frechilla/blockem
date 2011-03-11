@@ -34,3 +34,7 @@ You might find a bigger list of things to do in
  + It would be really nice to the blockem rules translated into the actual 
    blockem game so anybody could have a look without browsing to the website
  + Add a way to mark which challenges are 'completed' by the user
+ + Prevent human beings from setting up all players to start from the same 
+   position in 1vs1 and 4players
+ + WEBSITE: Extend the i18n section. Add a HOWTO section to write challenges.
+   fix css strict validation. screenshots section

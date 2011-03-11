@@ -71,7 +71,7 @@ BlockemConfig::BlockemConfig() throw (std::runtime_error):
 #else
     // $HOME/.blockem/
     char *home;
-    //TODO have a look at Glib::get_home_dir    
+    //TODO have a look at Glib::get_home_dir
     home = getenv("HOME");
 
     m_configFileFull =
@@ -102,12 +102,18 @@ else
     std::cerr << "Loading default settings..." << std::endl;
 }
 #endif // DEBUG_PRINT
-
-#endif // WIN32
 }
 
 BlockemConfig::~BlockemConfig()
 {
+    if (SaveConfigIntoXmlFile() == false)
+    {
+#ifdef DEBUG_PRINT
+        std::cerr << "Could not save current configuration into "
+                  << m_configFileFull
+                  << std::endl;
+#endif
+    }
 }
 
 const std::string& BlockemConfig::GetLanguageISO() const
@@ -117,9 +123,9 @@ const std::string& BlockemConfig::GetLanguageISO() const
 
 bool BlockemConfig::IsChallengeCompleted(const std::string &a_challengeName) const
 {
-    completedChallengesContainer_t::iterator it = 
+    completedChallengesContainer_t::iterator it =
         m_setCompletedChalleges.find(a_challengeName);
-    
+
     return (it != m_setCompletedChalleges.end());
 }
 
@@ -168,6 +174,11 @@ bool BlockemConfig::CreateDefaultConfigFile()
     oStr << "]>"                                                                        << std::endl;
     oStr << ""                                                                          << std::endl;
     oStr << "<blockem_config>"                                                          << std::endl;
+// the language tag is only needed in win32. No need to add it to the conf
+// file if it won't be read. The tag doesn't really do any harm if it
+// stays in a non-win32 platform, but the configuration file would look
+// cleaner without it to a potential reader
+#ifdef WIN32
     oStr << "  <!--"                                                                    << std::endl;
     oStr << "    This is the language blockem will use at startup. If it is changed"    << std::endl;
     oStr << "    using the menu, this option will be overwritten. Bear in mind this"    << std::endl;
@@ -188,6 +199,8 @@ bool BlockemConfig::CreateDefaultConfigFile()
     oStr << "    default will be used."                                                 << std::endl;
     oStr << "  -->"                                                                     << std::endl;
     oStr << "  <language>en_UK</language>"                                              << std::endl;
+#endif
+
     oStr << ""                                                                          << std::endl;
     oStr << "  <!--"                                                                    << std::endl;
     oStr << "    Between the \"challenges_completed\" tags there is a list of"          << std::endl;
@@ -261,7 +274,7 @@ void BlockemConfig::LoadConfigFromXmlFile() throw (std::runtime_error)
             SetLanguageISO(std::string((const char*)strValue));
             xmlFree(strValue);
         }
-        
+
         if ( (cur_node->type == XML_ELEMENT_NODE) &&
              (xmlStrcmp(cur_node->name, (const xmlChar*) "challenges_completed") == 0) )
         {
@@ -276,7 +289,7 @@ void BlockemConfig::LoadConfigFromXmlFile() throw (std::runtime_error)
             // it contains a list of XML items (completed challenges)
             xmlNode* challengeCompleteNode;
             for (challengeCompleteNode = cur_node->children;
-                 challengeCompleteNode != NULL; 
+                 challengeCompleteNode != NULL;
                  challengeCompleteNode = challengeCompleteNode->next)
             {
                 if ( (challengeCompleteNode->type == XML_ELEMENT_NODE) &&
@@ -286,8 +299,8 @@ void BlockemConfig::LoadConfigFromXmlFile() throw (std::runtime_error)
 #ifdef DEBUG_PRINT
                     std::cout << "\t\""
                               << (const char*)challengeCompleteNode->name
-                              << "\" --> \"" 
-                              << (const char*)strValue 
+                              << "\" --> \""
+                              << (const char*)strValue
                               << "\""
                               << std::endl;
 #endif
@@ -305,7 +318,7 @@ void BlockemConfig::LoadConfigFromXmlFile() throw (std::runtime_error)
     xmlCleanupParser();
 }
 
-void BlockemConfig::SaveConfigIntoXmlFile() throw (std::runtime_error)
+bool BlockemConfig::SaveConfigIntoXmlFile()
 {
     // based  on LoadConfigFromXmlFile
     xmlNode* cur_node = NULL;
@@ -316,21 +329,19 @@ void BlockemConfig::SaveConfigIntoXmlFile() throw (std::runtime_error)
     // ensure config file exists
     // What this method does is OVERWRITING the old configuration file with
     // the new settings. Parsing XML in C++ is hell, and this is a way of
-    // easing it a bit.    
+    // easing it a bit.
     if (!g_file_test(m_configFileFull.c_str(), G_FILE_TEST_IS_REGULAR))
     {
-        // A default configuration file should have been created at 
+        // A default configuration file should have been created at
         // startup. If it wasn't we won't be able to overwrite the settings
-        throw new std::runtime_error(
-            std::string("Config file does not exist: ") + m_configFileFull);
+        return false;
     }
 
     // open XML doc and try to parse it
     doc = xmlParseFile(m_configFileFull.c_str());
     if (doc == NULL)
     {
-        throw new std::runtime_error(
-            m_configFileFull + std::string(" could not be parsed"));
+        return false;
     }
 
     // retrieve root element
@@ -343,8 +354,7 @@ void BlockemConfig::SaveConfigIntoXmlFile() throw (std::runtime_error)
     {
         xmlFreeDoc(doc);
         xmlCleanupParser();
-        throw new std::runtime_error(
-            m_configFileFull + std::string(": Root element does not exist or is not called \"blockem_config\""));
+        return false;
     }
 
     // root's children. They are inside a loop to ensure they can be written to the file in any order
@@ -355,44 +365,45 @@ void BlockemConfig::SaveConfigIntoXmlFile() throw (std::runtime_error)
              (xmlStrcmp(cur_node->name, (const xmlChar*) "language") == 0) )
         {
             // xml element called "language"
-            strValue = xmlCharStrdup(m_languageISO.c_string());
+            strValue = xmlCharStrdup(m_languageISO.c_str());
             xmlNodeSetContent(cur_node, strValue);
 #ifdef DEBUG_PRINT
-            std::cout << "Saving \"" 
+            std::cout << "Saving \""
                       << (const char*)cur_node->name
-                      << "\"--> \"" 
-                      << (const char*)strValue 
+                      << "\"--> \""
+                      << (const char*)strValue
                       << "\""
                       << std::endl;
 #endif
             xmlFree(strValue);
         }
-        
+
         if ( (cur_node->type == XML_ELEMENT_NODE) &&
              (xmlStrcmp(cur_node->name, (const xmlChar*) "challenges_completed") == 0) )
         {
             // xml element called "challenges_completed"
             // it contains a list of XML items (completed challenges)
             xmlNode* challengeCompleteNode;
-            
+
             // remove first all complete challenges
             for (challengeCompleteNode = cur_node->children;
-                 challengeCompleteNode != NULL)
+                 challengeCompleteNode != NULL;
+                )
             {
                 xmlNode* next = challengeCompleteNode->next;
                 xmlUnlinkNode(challengeCompleteNode);
                 xmlFreeNodeList(challengeCompleteNode);
                 challengeCompleteNode = next;
             }
-            
+
             completedChallengesContainer_t::const_iterator it;
             for (it =  m_setCompletedChalleges.begin();
                  it != m_setCompletedChalleges.end();
                  it++)
             {
                 // save now the current list of challenges completed
-                challengeCompleteNode = xmlNewNode(NULL, "name");
-                xmlNodeSetContent(challengeCompleteNode, (const xmlChar*) it->c_string());
+                challengeCompleteNode = xmlNewNode(NULL, (const xmlChar*) "name");
+                xmlNodeSetContent(challengeCompleteNode, (const xmlChar*) it->c_str());
                 xmlAddChild(cur_node, challengeCompleteNode);
             }
         }
@@ -400,13 +411,15 @@ void BlockemConfig::SaveConfigIntoXmlFile() throw (std::runtime_error)
 
     // save the document
     xmlSaveFile(m_configFileFull.c_str(), doc);
-    
+
     // free the document
     xmlFreeDoc(doc);
 
     // Free the global variables that may
     // have been allocated by the parser
     xmlCleanupParser();
+
+    return true;
 }
 
 bool BlockemConfig::SetLanguageISO(const std::string &a_lang)
@@ -435,9 +448,9 @@ bool BlockemConfig::SetLanguageISO(const std::string &a_lang)
 
 void BlockemConfig::SetChallengeCompleted(const std::string &a_challengeName)
 {
-    completedChallengesContainer_t::iterator it = 
+    completedChallengesContainer_t::iterator it =
         m_setCompletedChalleges.find(a_challengeName);
-        
+
     if (it != m_setCompletedChalleges.end())
     {
 #ifdef DEBUG_PRINT
@@ -445,6 +458,6 @@ void BlockemConfig::SetChallengeCompleted(const std::string &a_challengeName)
 #endif
         return;
     }
-    
+
     m_setCompletedChalleges.insert(a_challengeName);
 }
