@@ -248,18 +248,20 @@ void I18nInit()
     std::string langEnvironmentStr(
             std::string("LANG=") + BlockemConfig::Instance().GetLanguageISO());
 
+    putenv (langEnvironmentStr.c_str());
+
 #ifdef DEBUG_PRINT
     std::cout << "Setting environment for i18n: \"" << langEnvironmentStr << "\"" << std::endl;
 #endif
+    
+#endif // ifdef WIN32
 
-    putenv (langEnvironmentStr.c_str());
-
-#endif // WIN32
-
+    // get the environment "LANG" from the environment and set LanguageISO into
+    // the global conf
+    BlockemConfig::Instance().SetLanguageISO(std::string(getenv("LANG")));
 
     // this call must be done whatever the platform it is
     setlocale (LC_ALL, "");
-
 
 #ifdef WIN32
     // win32 is a bit special again in the call to bindtextdomain

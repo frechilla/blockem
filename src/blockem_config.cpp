@@ -44,10 +44,11 @@
 /// to this class, so who cares?
 static const char CONFIG_FILE_NAME[] = "blockem.conf";
 
-// defaults for when config file can't be loaded
+/// default language
 static const char  DEFAULT_LANGUAGE[] = "en_UK"; // english from united kingdom as default
 
-/// null-terminated array which contains all valid languages supported by blockem
+/// null-terminated array which contains all valid languages supported by 
+/// blockem
 static const char* g_validLanguagesList[] =
 {
     "en_UK",
@@ -167,7 +168,7 @@ bool BlockemConfig::CreateDefaultConfigFile()
     // default config file. Includes DTD and comments!
     oStr << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"                                << std::endl;
     oStr << "<!DOCTYPE blockem_config ["                                                << std::endl;
-    oStr << "<!ELEMENT blockem_config (language?, challenges_completed)>"               << std::endl;
+    oStr << "<!ELEMENT blockem_config (language, challenges_completed)>"                << std::endl;
     oStr << "  <!ELEMENT language (#PCDATA)>"                                           << std::endl;
     oStr << "  <!ELEMENT challenges_completed (challenge_name*)>"                       << std::endl;
     oStr << "    <!ELEMENT challenge_name (#PCDATA)>"                                   << std::endl;
@@ -175,11 +176,6 @@ bool BlockemConfig::CreateDefaultConfigFile()
     oStr << ""                                                                          << std::endl;
     oStr << ""                                                                          << std::endl;
     oStr << "<blockem_config>"                                                          << std::endl;
-// the language tag is only needed in win32. No need to add it to the conf
-// file if it won't be read. The tag doesn't really do any harm if it
-// stays in a non-win32 platform, but the configuration file would look
-// cleaner without it to a potential reader
-#ifdef WIN32
     oStr << "  <!--"                                                                    << std::endl;
     oStr << "    This is the language blockem will use at startup. If it is changed"    << std::endl;
     oStr << "    using the menu, this option will be overwritten. Bear in mind this"    << std::endl;
@@ -200,8 +196,6 @@ bool BlockemConfig::CreateDefaultConfigFile()
     oStr << "    default will be used."                                                 << std::endl;
     oStr << "  -->"                                                                     << std::endl;
     oStr << "  <language>en_UK</language>"                                              << std::endl;
-#endif
-
     oStr << ""                                                                          << std::endl;
     oStr << "  <!--"                                                                    << std::endl;
     oStr << "    Between the \"challenges_completed\" tags there is a list of"          << std::endl;
@@ -437,11 +431,38 @@ bool BlockemConfig::SetLanguageISO(const std::string &a_lang)
 
         i++;
     }
+    
+    // none of the full localisation worked (language + country)
+    // let's try now if the language is supported (though with a different
+    // country)
+    i = 0;
+    while (g_validLanguagesList[i] != NULL)
+    {
+        std::string tmpValidLang(g_validLanguagesList[i]);
+        
+        if ( (a_lang.find("_") >= 0) && (tmpValidLang.find("_") >= 0) )
+        {
+            // now that the sanity check has been done...            
+            if (a_lang.substr(0, a_lang.find("_")).compare( 
+                    tmpValidLang.substr(0, tmpValidLang.find("_"))) == 0)
+            {
+                // it is a valid language string. Set it and exit
+                m_languageISO = a_lang;
+                return true;
+            }
+        }
+
+        i++;
+    }
 
     // a_lang is not a valid language string. Do nothing (keep the old value)
 #ifdef DEBUG_PRINT
     std::cerr << a_lang << " is not a supported language string" << std::endl;
-    std::cerr << PACKAGE << " will still be using " << m_languageISO << std::endl;
+    std::cerr << PACKAGE 
+              << " will be still using " 
+              << m_languageISO 
+              << " instead"
+              << std::endl;
 #endif
 
     return false;
