@@ -54,6 +54,19 @@ public:
     virtual void SaveCurrentConfigIntoGlobalSettings() const;
 
 private:
+    /// IDs to update starting coords spin buttons and ensure two players
+    /// don't start off the same coordinate
+    typedef enum
+    {
+        e_startingCoord_player1 = 0,
+        e_startingCoord_player2,
+        e_startingCoord_player3,
+        e_startingCoord_player4,
+        
+        e_startingCoord_nPlayers,
+        
+    } eStartingCoordPlayerID_t;
+
     /// @brief used to retrieve the objects from the Glade design
     Glib::RefPtr<Gtk::Builder> m_gtkBuilder;
 
@@ -67,30 +80,38 @@ private:
     /// starting row spin button for player1
     Gtk::SpinButton* m_spinbuttonStartingRowPlayer1;
     Gtk::Adjustment  m_spinbuttonStartingRowPlayer1Adj;
+    int32_t          m_spinbuttonStartingRowPlayer1OldValue;
     /// starting column spin button for player1
     Gtk::SpinButton* m_spinbuttonStartingColumnPlayer1;
     Gtk::Adjustment  m_spinbuttonStartingColumnPlayer1Adj;
+    int32_t          m_spinbuttonStartingColumnPlayer1OldValue;
 
     /// starting row spin button for player2
     Gtk::SpinButton* m_spinbuttonStartingRowPlayer2;
     Gtk::Adjustment  m_spinbuttonStartingRowPlayer2Adj;
+    int32_t          m_spinbuttonStartingRowPlayer2OldValue;
     /// starting column spin button for player2
     Gtk::SpinButton* m_spinbuttonStartingColumnPlayer2;
     Gtk::Adjustment  m_spinbuttonStartingColumnPlayer2Adj;
+    int32_t          m_spinbuttonStartingColumnPlayer2OldValue;
 
     /// starting row spin button for player3
     Gtk::SpinButton* m_spinbuttonStartingRowPlayer3;
     Gtk::Adjustment  m_spinbuttonStartingRowPlayer3Adj;
+    int32_t          m_spinbuttonStartingRowPlayer3OldValue;
     /// starting column spin button for player3
     Gtk::SpinButton* m_spinbuttonStartingColumnPlayer3;
     Gtk::Adjustment  m_spinbuttonStartingColumnPlayer3Adj;
+    int32_t          m_spinbuttonStartingColumnPlayer3OldValue;
 
     /// starting row spin button for player4
     Gtk::SpinButton* m_spinbuttonStartingRowPlayer4;
     Gtk::Adjustment  m_spinbuttonStartingRowPlayer4Adj;
+    int32_t          m_spinbuttonStartingRowPlayer4OldValue;
     /// starting column spin button for player4
     Gtk::SpinButton* m_spinbuttonStartingColumnPlayer4;
     Gtk::Adjustment  m_spinbuttonStartingColumnPlayer4Adj;
+    int32_t          m_spinbuttonStartingColumnPlayer4OldValue;
 
     // labels loaded here because they need to be translated at startup on win32 platform
     // have a look at ForceTranslationOfWidgets
@@ -113,6 +134,32 @@ private:
     void SpinButtonNRows_SignalValueChanged();
     /// @brief callback for whenever the spinbutton for the number of columns is changed
     void SpinButtonNCols_SignalValueChanged();
+    /// @brief callback for whenever the spinbutton for player1's starting row is changed
+    void SpinButtonStartingRowPlayer1_SignalValueChanged();
+    /// @brief callback for whenever the spinbutton for player1's starting col is changed
+    void SpinButtonStartingColPlayer1_SignalValueChanged();
+    /// @brief callback for whenever the spinbutton for player2's starting row is changed
+    void SpinButtonStartingRowPlayer2_SignalValueChanged();
+    /// @brief callback for whenever the spinbutton for player2's starting col is changed
+    void SpinButtonStartingColPlayer2_SignalValueChanged();
+    /// @brief callback for whenever the spinbutton for player3's starting row is changed
+    void SpinButtonStartingRowPlayer3_SignalValueChanged();
+    /// @brief callback for whenever the spinbutton for player3's starting col is changed
+    void SpinButtonStartingColPlayer3_SignalValueChanged();
+    /// @brief callback for whenever the spinbutton for player4's starting row is changed
+    void SpinButtonStartingRowPlayer4_SignalValueChanged();
+    /// @brief callback for whenever the spinbutton for player4's starting col is changed
+    void SpinButtonStartingColPlayer4_SignalValueChanged();
+    
+    /// updates a Gtk::Adj to ensure starting coords are not equal for any
+    /// of the 4 players
+    /// @brief Gtk::Adjustment of the latest spin button clicked by the user 
+    /// @brief old value of the 'a_adj' adjustment
+    /// @brief ID of the player whose spin button has been updated
+    void UpdateStartingCoordValue(
+        Gtk::Adjustment &a_adj,
+        int32_t a_oldAdjValue,
+        eStartingCoordPlayerID_t a_startingCoordPlayerID);    
 
     /// @return player1's starting coordinate configured by the displayed widgets
     void GetStartingCoordPlayer1(Coordinate &a_coord) const;

@@ -247,6 +247,16 @@ NewGameTable1v1::NewGameTable1v1(
     m_spinbuttonStartingColumnPlayer1->set_adjustment(m_spinbuttonStartingColumnPlayer1Adj);
     m_spinbuttonStartingRowPlayer2->set_adjustment(m_spinbuttonStartingRowPlayer2Adj);
     m_spinbuttonStartingColumnPlayer2->set_adjustment(m_spinbuttonStartingColumnPlayer2Adj);
+    // store also curent values as the "old" values to be able to avoid 
+    // the user from setting up a game with all players starting off the same position
+    m_spinbuttonStartingRowPlayer1OldValue = 
+        static_cast<int32_t>(m_spinbuttonStartingRowPlayer1Adj.get_value());
+    m_spinbuttonStartingColumnPlayer1OldValue = 
+        static_cast<int32_t>(m_spinbuttonStartingColumnPlayer1Adj.get_value());
+    m_spinbuttonStartingRowPlayer2OldValue = 
+        static_cast<int32_t>(m_spinbuttonStartingRowPlayer2Adj.get_value());
+    m_spinbuttonStartingColumnPlayer2OldValue = 
+        static_cast<int32_t>(m_spinbuttonStartingColumnPlayer2Adj.get_value());
 
     // adjustments for search tree depth
     m_spinbuttonDepthPlayer1->set_adjustment(m_spinbuttonDepthPlayer1Adj);
@@ -361,6 +371,15 @@ NewGameTable1v1::NewGameTable1v1(
             sigc::mem_fun(*this, &NewGameTable1v1::SpinButtonDepthPlayer1_SignalValueChanged));
     m_spinbuttonDepthPlayer2->signal_value_changed().connect(
             sigc::mem_fun(*this, &NewGameTable1v1::SpinButtonDepthPlayer2_SignalValueChanged));
+    
+    m_spinbuttonStartingRowPlayer1->signal_value_changed().connect(
+            sigc::mem_fun(*this, &NewGameTable1v1::SpinButtonStartingRowPlayer1_SignalValueChanged));
+    m_spinbuttonStartingColumnPlayer1->signal_value_changed().connect(
+            sigc::mem_fun(*this, &NewGameTable1v1::SpinButtonStartingColPlayer1_SignalValueChanged));
+    m_spinbuttonStartingRowPlayer2->signal_value_changed().connect(
+            sigc::mem_fun(*this, &NewGameTable1v1::SpinButtonStartingRowPlayer2_SignalValueChanged));
+    m_spinbuttonStartingColumnPlayer2->signal_value_changed().connect(
+            sigc::mem_fun(*this, &NewGameTable1v1::SpinButtonStartingColPlayer2_SignalValueChanged));
 }
 
 NewGameTable1v1::~NewGameTable1v1()
@@ -381,6 +400,99 @@ bool NewGameTable1v1::on_expose_event (GdkEventExpose* event)
     }
 
     return Gtk::HBox::on_expose_event(event);
+}
+
+void NewGameTable1v1::SpinButtonStartingRowPlayer1_SignalValueChanged()
+{
+    UpdateStartingCoordValue(
+        m_spinbuttonStartingRowPlayer1Adj,
+        m_spinbuttonStartingRowPlayer1OldValue);
+
+    m_spinbuttonStartingRowPlayer1OldValue = 
+        static_cast<int32_t>(m_spinbuttonStartingRowPlayer1Adj.get_value());     
+}
+
+void NewGameTable1v1::SpinButtonStartingColPlayer1_SignalValueChanged()
+{
+    UpdateStartingCoordValue(
+        m_spinbuttonStartingColumnPlayer1Adj,
+        m_spinbuttonStartingColumnPlayer1OldValue);
+    
+    m_spinbuttonStartingColumnPlayer1OldValue = 
+        static_cast<int32_t>(m_spinbuttonStartingColumnPlayer1Adj.get_value());  
+}
+
+void NewGameTable1v1::SpinButtonStartingRowPlayer2_SignalValueChanged()
+{
+    UpdateStartingCoordValue(
+        m_spinbuttonStartingRowPlayer2Adj,
+        m_spinbuttonStartingRowPlayer2OldValue);
+    
+    m_spinbuttonStartingRowPlayer2OldValue = 
+        static_cast<int32_t>(m_spinbuttonStartingRowPlayer2Adj.get_value());
+}
+
+void NewGameTable1v1::SpinButtonStartingColPlayer2_SignalValueChanged()
+{
+    UpdateStartingCoordValue(
+        m_spinbuttonStartingColumnPlayer2Adj,
+        m_spinbuttonStartingColumnPlayer2OldValue);
+    
+    m_spinbuttonStartingColumnPlayer2OldValue = 
+        static_cast<int32_t>(m_spinbuttonStartingColumnPlayer2Adj.get_value()); 
+}
+
+void NewGameTable1v1::UpdateStartingCoordValue(
+    Gtk::Adjustment &a_adj,
+    int32_t a_oldAdjValue)
+{
+    Coordinate player1StartingCoord;
+    Coordinate player2StartingCoord;
+
+    GetPlayer1StartingCoord(player1StartingCoord);
+    GetPlayer2StartingCoord(player2StartingCoord);    
+    
+    if (player1StartingCoord == player2StartingCoord)
+    {
+        int32_t currentValue = static_cast<int32_t>(a_adj.get_value());
+
+        if (a_oldAdjValue > currentValue)
+        {
+            if (static_cast<int32_t>(a_adj.get_lower()) == currentValue)
+            {
+                if (static_cast<int32_t>(a_adj.get_upper()) == a_oldAdjValue)
+                {                    
+                    a_adj.set_value(static_cast<int32_t>(a_adj.get_lower() + 1));
+                }
+                else
+                {
+                    a_adj.set_value(static_cast<int32_t>(a_adj.get_upper()));
+                }
+            }
+            else
+            {
+                a_adj.set_value(currentValue - 1);
+            }
+        }
+        else
+        {
+            if (static_cast<int32_t>(a_adj.get_upper()) == currentValue)
+            {
+                if (static_cast<int32_t>(a_adj.get_lower()) == a_oldAdjValue)
+                {                    
+                    a_adj.set_value(static_cast<int32_t>(a_adj.get_upper() - 1));
+                }
+                else
+                {
+                    a_adj.set_value(static_cast<int32_t>(a_adj.get_lower()));
+                }                
+            }
+            else
+            {
+                a_adj.set_value(currentValue + 1);
+            }            
+        }
+    }
 }
 
 void NewGameTable1v1::SpinButtonDepthPlayer1_SignalValueChanged()

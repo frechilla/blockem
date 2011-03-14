@@ -68,16 +68,20 @@ private:
     /// starting row spin button for player1
     Gtk::SpinButton* m_spinbuttonStartingRowPlayer1;
     Gtk::Adjustment  m_spinbuttonStartingRowPlayer1Adj;
+    int32_t          m_spinbuttonStartingRowPlayer1OldValue;
     /// starting column spin button for player1
     Gtk::SpinButton* m_spinbuttonStartingColumnPlayer1;
     Gtk::Adjustment  m_spinbuttonStartingColumnPlayer1Adj;
+    int32_t          m_spinbuttonStartingColumnPlayer1OldValue;
 
     /// starting row spin button for player2
     Gtk::SpinButton* m_spinbuttonStartingRowPlayer2;
     Gtk::Adjustment  m_spinbuttonStartingRowPlayer2Adj;
+    int32_t          m_spinbuttonStartingRowPlayer2OldValue;
     /// starting column spin button for player2
     Gtk::SpinButton* m_spinbuttonStartingColumnPlayer2;
     Gtk::Adjustment  m_spinbuttonStartingColumnPlayer2Adj;
+    int32_t          m_spinbuttonStartingColumnPlayer2OldValue;
 
     /// AI frame player1
     Gtk::Frame* m_AIFramePlayer1;
@@ -138,8 +142,20 @@ private:
     void ComboHeuristicPlayer2_signalChanged();
     void SpinButtonDepthPlayer1_SignalValueChanged();
     void SpinButtonDepthPlayer2_SignalValueChanged();
+    void SpinButtonStartingRowPlayer1_SignalValueChanged();
+    void SpinButtonStartingColPlayer1_SignalValueChanged();
+    void SpinButtonStartingRowPlayer2_SignalValueChanged();
+    void SpinButtonStartingColPlayer2_SignalValueChanged();
 
     bool on_expose_event (GdkEventExpose* event);
+    
+    /// updates a Gtk::Adj to ensure starting coords are not equal for both
+    /// players
+    /// @brief Gtk::Adjustment of the latest spin button clicked by the user 
+    /// @brief old value of the 'a_adj' adjustment
+    void UpdateStartingCoordValue(
+        Gtk::Adjustment &a_adj,
+        int32_t a_oldAdjValue);
 
     /// @return true if player1 has been set to computer within the dialog
     bool IsPlayer1TypeComputer() const;

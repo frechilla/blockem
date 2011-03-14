@@ -1,3 +1,13 @@
+: Version 0.3.3
+    - Players can't be set to start from the same coordinate in either 1vs1 or
+      4 players games
+    - Blockem keeps track now of the challenges completed by the human user and
+      marks them in the new challenge dialog
+    - The configuration file introduced in 0.3.0 has been now expanded to
+      contain also the challenges that had been succesfully completed by the
+      human user. It is also used now in *nix systems, written in 
+      $HOME/.blockem/blockem.conf
+
 19/01/2011: Version 0.3.2
     - Removed "parser error" messages shown at startup when blockem wrongly 
       tries to load a .dtd file as .xml. Blockem will only try to load

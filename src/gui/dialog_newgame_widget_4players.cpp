@@ -232,12 +232,47 @@ NewGameTable4Players::NewGameTable4Players(
     m_spinbuttonStartingColumnPlayer3->set_adjustment(m_spinbuttonStartingColumnPlayer3Adj);
     m_spinbuttonStartingRowPlayer4->set_adjustment(m_spinbuttonStartingRowPlayer4Adj);
     m_spinbuttonStartingColumnPlayer4->set_adjustment(m_spinbuttonStartingColumnPlayer4Adj);
+    // store also curent values as the "old" values to be able to avoid 
+    // the user from setting up a game with all players starting off the same position
+    m_spinbuttonStartingRowPlayer1OldValue = 
+        static_cast<int32_t>(m_spinbuttonStartingRowPlayer1Adj.get_value());
+    m_spinbuttonStartingColumnPlayer1OldValue = 
+        static_cast<int32_t>(m_spinbuttonStartingColumnPlayer1Adj.get_value());
+    m_spinbuttonStartingRowPlayer2OldValue = 
+        static_cast<int32_t>(m_spinbuttonStartingRowPlayer2Adj.get_value());
+    m_spinbuttonStartingColumnPlayer2OldValue = 
+        static_cast<int32_t>(m_spinbuttonStartingColumnPlayer2Adj.get_value());
+    m_spinbuttonStartingRowPlayer3OldValue = 
+        static_cast<int32_t>(m_spinbuttonStartingRowPlayer3Adj.get_value());
+    m_spinbuttonStartingColumnPlayer3OldValue = 
+        static_cast<int32_t>(m_spinbuttonStartingColumnPlayer3Adj.get_value());
+    m_spinbuttonStartingRowPlayer4OldValue = 
+        static_cast<int32_t>(m_spinbuttonStartingRowPlayer4Adj.get_value());
+    m_spinbuttonStartingColumnPlayer4OldValue = 
+        static_cast<int32_t>(m_spinbuttonStartingColumnPlayer4Adj.get_value());
 
     // connect the signals
     m_spinbuttonNRows->signal_value_changed().connect(
         sigc::mem_fun(*this, &NewGameTable4Players::SpinButtonNRows_SignalValueChanged));
     m_spinbuttonNCols->signal_value_changed().connect(
         sigc::mem_fun(*this, &NewGameTable4Players::SpinButtonNCols_SignalValueChanged));
+        
+    m_spinbuttonStartingRowPlayer1->signal_value_changed().connect(
+            sigc::mem_fun(*this, &NewGameTable4Players::SpinButtonStartingRowPlayer1_SignalValueChanged));
+    m_spinbuttonStartingColumnPlayer1->signal_value_changed().connect(
+            sigc::mem_fun(*this, &NewGameTable4Players::SpinButtonStartingColPlayer1_SignalValueChanged));
+    m_spinbuttonStartingRowPlayer2->signal_value_changed().connect(
+            sigc::mem_fun(*this, &NewGameTable4Players::SpinButtonStartingRowPlayer2_SignalValueChanged));
+    m_spinbuttonStartingColumnPlayer2->signal_value_changed().connect(
+            sigc::mem_fun(*this, &NewGameTable4Players::SpinButtonStartingColPlayer2_SignalValueChanged));
+    m_spinbuttonStartingRowPlayer3->signal_value_changed().connect(
+            sigc::mem_fun(*this, &NewGameTable4Players::SpinButtonStartingRowPlayer3_SignalValueChanged));
+    m_spinbuttonStartingColumnPlayer3->signal_value_changed().connect(
+            sigc::mem_fun(*this, &NewGameTable4Players::SpinButtonStartingColPlayer3_SignalValueChanged));
+    m_spinbuttonStartingRowPlayer4->signal_value_changed().connect(
+            sigc::mem_fun(*this, &NewGameTable4Players::SpinButtonStartingRowPlayer4_SignalValueChanged));
+    m_spinbuttonStartingColumnPlayer4->signal_value_changed().connect(
+            sigc::mem_fun(*this, &NewGameTable4Players::SpinButtonStartingColPlayer4_SignalValueChanged));
 }
 
 NewGameTable4Players::~NewGameTable4Players()
@@ -341,6 +376,153 @@ void NewGameTable4Players::SpinButtonNCols_SignalValueChanged()
     if (currentStartingCol > currentNCols)
     {
         m_spinbuttonStartingColumnPlayer4Adj.set_value(currentNCols);
+    }
+}
+
+void NewGameTable4Players::SpinButtonStartingRowPlayer1_SignalValueChanged()
+{
+    UpdateStartingCoordValue(
+        m_spinbuttonStartingRowPlayer1Adj,
+        m_spinbuttonStartingRowPlayer1OldValue,
+        e_startingCoord_player1);
+        
+    m_spinbuttonStartingRowPlayer1OldValue = 
+        static_cast<int32_t>(m_spinbuttonStartingRowPlayer1Adj.get_value());
+}
+
+void NewGameTable4Players::SpinButtonStartingColPlayer1_SignalValueChanged()
+{
+    UpdateStartingCoordValue(
+        m_spinbuttonStartingColumnPlayer1Adj,
+        m_spinbuttonStartingColumnPlayer1OldValue,
+        e_startingCoord_player1);
+
+    m_spinbuttonStartingColumnPlayer1OldValue = 
+        static_cast<int32_t>(m_spinbuttonStartingColumnPlayer1Adj.get_value());
+}
+
+void NewGameTable4Players::SpinButtonStartingRowPlayer2_SignalValueChanged()
+{
+    UpdateStartingCoordValue(
+        m_spinbuttonStartingRowPlayer2Adj,
+        m_spinbuttonStartingRowPlayer2OldValue,
+        e_startingCoord_player2);
+        
+    m_spinbuttonStartingRowPlayer2OldValue = 
+        static_cast<int32_t>(m_spinbuttonStartingRowPlayer2Adj.get_value());
+}
+
+void NewGameTable4Players::SpinButtonStartingColPlayer2_SignalValueChanged()
+{
+    UpdateStartingCoordValue(
+        m_spinbuttonStartingColumnPlayer2Adj,
+        m_spinbuttonStartingColumnPlayer2OldValue,
+        e_startingCoord_player2);        
+
+    m_spinbuttonStartingColumnPlayer2OldValue = 
+        static_cast<int32_t>(m_spinbuttonStartingColumnPlayer2Adj.get_value());
+}
+
+void NewGameTable4Players::SpinButtonStartingRowPlayer3_SignalValueChanged()
+{
+    UpdateStartingCoordValue(
+        m_spinbuttonStartingRowPlayer3Adj,
+        m_spinbuttonStartingRowPlayer3OldValue,
+        e_startingCoord_player3);        
+
+    m_spinbuttonStartingRowPlayer3OldValue = 
+        static_cast<int32_t>(m_spinbuttonStartingRowPlayer3Adj.get_value());
+}
+
+void NewGameTable4Players::SpinButtonStartingColPlayer3_SignalValueChanged()
+{
+    UpdateStartingCoordValue(
+        m_spinbuttonStartingColumnPlayer3Adj,
+        m_spinbuttonStartingColumnPlayer3OldValue,
+        e_startingCoord_player3);
+
+    m_spinbuttonStartingColumnPlayer3OldValue = 
+        static_cast<int32_t>(m_spinbuttonStartingColumnPlayer3Adj.get_value());
+}
+
+void NewGameTable4Players::SpinButtonStartingRowPlayer4_SignalValueChanged()
+{
+    UpdateStartingCoordValue(
+        m_spinbuttonStartingRowPlayer4Adj,
+        m_spinbuttonStartingRowPlayer4OldValue,
+        e_startingCoord_player4);        
+
+    m_spinbuttonStartingRowPlayer4OldValue = 
+        static_cast<int32_t>(m_spinbuttonStartingRowPlayer4Adj.get_value());
+}
+
+void NewGameTable4Players::SpinButtonStartingColPlayer4_SignalValueChanged()
+{
+    UpdateStartingCoordValue(
+        m_spinbuttonStartingColumnPlayer4Adj,
+        m_spinbuttonStartingColumnPlayer4OldValue,
+        e_startingCoord_player4);
+
+    m_spinbuttonStartingColumnPlayer4OldValue = 
+        static_cast<int32_t>(m_spinbuttonStartingColumnPlayer4Adj.get_value());
+}
+
+void NewGameTable4Players::UpdateStartingCoordValue(
+    Gtk::Adjustment &a_adj, 
+    int32_t a_oldAdjValue,
+    eStartingCoordPlayerID_t a_startingCoordPlayerID)
+{
+    Coordinate startingCoords[e_startingCoord_nPlayers];
+    
+    GetStartingCoordPlayer1(startingCoords[e_startingCoord_player1]);
+    GetStartingCoordPlayer2(startingCoords[e_startingCoord_player2]);
+    GetStartingCoordPlayer3(startingCoords[e_startingCoord_player3]);
+    GetStartingCoordPlayer4(startingCoords[e_startingCoord_player4]);
+    
+    for (int32_t i = 0; i < e_startingCoord_nPlayers; i++)
+    {
+        if ( (i != a_startingCoordPlayerID) && 
+             (startingCoords[i] == startingCoords[a_startingCoordPlayerID]) )
+        {
+            int32_t currentValue = static_cast<int32_t>(a_adj.get_value());
+
+            if (a_oldAdjValue > currentValue)
+            {
+                if (static_cast<int32_t>(a_adj.get_lower()) == currentValue)
+                {
+                    if (static_cast<int32_t>(a_adj.get_upper()) == a_oldAdjValue)
+                    {                    
+                        a_adj.set_value(static_cast<int32_t>(a_adj.get_lower() + 1));
+                    }
+                    else
+                    {
+                        a_adj.set_value(static_cast<int32_t>(a_adj.get_upper()));
+                    }
+                }
+                else
+                {
+                    a_adj.set_value(currentValue - 1);
+                }
+            }
+            else
+            {
+                if (static_cast<int32_t>(a_adj.get_upper()) == currentValue)
+                {
+                    if (static_cast<int32_t>(a_adj.get_lower()) == a_oldAdjValue)
+                    {                    
+                        a_adj.set_value(static_cast<int32_t>(a_adj.get_upper() - 1));
+                    }
+                    else
+                    {
+                        a_adj.set_value(static_cast<int32_t>(a_adj.get_lower()));
+                    }                
+                }
+                else
+                {
+                    a_adj.set_value(currentValue + 1);
+                }            
+            }
+        }
     }
 }
 
