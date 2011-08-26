@@ -47,15 +47,6 @@ static const char CONFIG_FILE_NAME[] = "blockem.conf";
 /// default language
 static const char  DEFAULT_LANGUAGE[] = "en_UK"; // english from united kingdom as default
 
-/// null-terminated array which contains all valid languages supported by 
-/// blockem
-static const char* g_validLanguagesList[] =
-{
-    "en_UK",
-    "es_ES",
-    NULL
-};
-
 
 BlockemConfig::BlockemConfig() throw (std::runtime_error):
     Singleton<BlockemConfig>(),
@@ -192,8 +183,7 @@ bool BlockemConfig::CreateDefaultConfigFile()
     oStr << "      + English (UK):    en_UK"                                            << std::endl;
     oStr << "      + Spanish (Spain): es_ES"                                            << std::endl;
     oStr << ""                                                                          << std::endl;
-    oStr << "    Default is en_UK. If a wrong option (or no option) is specified, "     << std::endl;
-    oStr << "    default will be used."                                                 << std::endl;
+    oStr << "    Default is en_UK"                                                      << std::endl;
     oStr << "  -->"                                                                     << std::endl;
     oStr << "  <language>en_UK</language>"                                              << std::endl;
     oStr << ""                                                                          << std::endl;
@@ -417,55 +407,14 @@ bool BlockemConfig::SaveConfigIntoXmlFile()
     return true;
 }
 
-bool BlockemConfig::SetLanguageISO(const std::string &a_lang)
+void BlockemConfig::SetLanguageISO(const std::string &a_lang)
 {
-    int32_t i = 0;
-    while (g_validLanguagesList[i] != NULL)
-    {
-        if (strcmp(a_lang.c_str(), g_validLanguagesList[i]) == 0)
-        {
-            // it is a valid language string. Set it and exit
-            m_languageISO = a_lang;
-            return true;
-        }
-
-        i++;
-    }
+    // Set the language string and exit
+    m_languageISO = a_lang;
     
-    // none of the full localisation worked (language + country)
-    // let's try now if the language is supported (though with a different
-    // country)
-    i = 0;
-    while (g_validLanguagesList[i] != NULL)
-    {
-        std::string tmpValidLang(g_validLanguagesList[i]);
-        
-        if ( (a_lang.find("_") >= 0) && (tmpValidLang.find("_") >= 0) )
-        {
-            // now that the sanity check has been done...            
-            if (a_lang.substr(0, a_lang.find("_")).compare( 
-                    tmpValidLang.substr(0, tmpValidLang.find("_"))) == 0)
-            {
-                // it is a valid language string. Set it and exit
-                m_languageISO = a_lang;
-                return true;
-            }
-        }
-
-        i++;
-    }
-
-    // a_lang is not a valid language string. Do nothing (keep the old value)
 #ifdef DEBUG_PRINT
-    std::cerr << a_lang << " is not a supported language string" << std::endl;
-    std::cerr << PACKAGE 
-              << " will be still using " 
-              << m_languageISO 
-              << " instead"
-              << std::endl;
+    std::cout << "Language has been set to " << m_languageISO << std::endl;
 #endif
-
-    return false;
 }
 
 void BlockemConfig::SetChallengeCompleted(const std::string &a_challengeName)

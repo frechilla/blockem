@@ -152,7 +152,7 @@ public:
     /// It uses the minimax algorithm with the alpha beta pruning
 	/// @param the heuristic method for the min max algorithm
 	/// @param maximum depth for the search tree
-    /// @param Pplayer whose move will be calculated by MinMAx algorithm
+    /// @param Player whose move will be calculated by MinMAx algorithm
 	/// @param a reference to a piece where the result will be stored
 	/// @param a reference to a Coordinate where the result will be stored
     /// @param parameter with a reference to a variable that could be set
@@ -167,7 +167,7 @@ public:
 	///        if this param is set to Piece(e_noPiece) MinMax won't be able to take into
 	///        account the latest opponent's move to compute the next move. it can also
 	///        be used to add a bit of randomness to the AI behaviour
-	/// @returns value calculated by the evaluation function for the selected configuration
+	/// @return value calculated by the evaluation function for the selected configuration
     int32_t MinMax(
             Heuristic::EvalFunction_t    a_heuristicMethod,
             int32_t                      depth,
@@ -196,7 +196,7 @@ public:
     /// it doesn't check for dodgy games to be loaded, so the function might have unexpected
     /// results if the game saved in a_inStream is not in the expected format
     /// @param the instream that represents the input to be loaded
-    /// @returns true if the loading was correct. False otherwise
+    /// @return true if the loading was correct. False otherwise
     bool LoadGame(std::istream& a_inStream);
 
     /// @brief saves the game into an out_stream
@@ -204,7 +204,7 @@ public:
     /// Board::PrintBoard (BOARD_1VS1_ROWSxBOARD_1VS1_COLUMNS long)
     /// + Player::PrintAvailablePieces() for the player that represents 'me'
     /// + Player::PrintAvailablePieces() for the player that the opponent
-    /// @returns true if the game was saved succesfully. False otherwise
+    /// @return true if the game was saved succesfully. False otherwise
     bool SaveGame(std::ostream& a_outStream);
 
 protected:

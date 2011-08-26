@@ -50,11 +50,8 @@ public:
     /// @return ISO string of the language blockem has been configured to run (for example: "en_UK")
     const std::string& GetLanguageISO() const;
     
-    /// @brief sets ISO string of the language blockem has been configured to run
-    /// it checks if a_lang represents a supported language. If it doesn't nothing
-    /// will be done and the old value will be kept
-    /// @return true if new language was successfully set. False otherwise
-    bool SetLanguageISO(const std::string &a_lang);
+    /// @brief sets the ISO string of the language blockem has been configured to run in
+    void SetLanguageISO(const std::string &a_lang);
     
     /// @return true if the challenge whose name is 'a_challengeName' is marked as completed
     /// @param a_challengeName the name of the challenge requested for checking

@@ -7,6 +7,10 @@
       contain also the challenges that had been succesfully completed by the
       human user. It is also used now in *nix systems, written in 
       $HOME/.blockem/blockem.conf
+    - If block'em is requested to start in a language that is not supported
+      there is no extra handling in software anymore. This behaviour was 
+      preventing new translations for block'em from being properly with the
+      standard software releases
 
 19/01/2011: Version 0.3.2
     - Removed "parser error" messages shown at startup when blockem wrongly 
