@@ -11,6 +11,7 @@
       there is no extra handling in software anymore. This behaviour was 
       preventing new translations for block'em from being properly with the
       standard software releases
+    - Codebase migrated from subversion to git
 
 19/01/2011: Version 0.3.2
     - Removed "parser error" messages shown at startup when blockem wrongly 

@@ -5,10 +5,11 @@ AC_PREREQ([2.65])
 
 m4_define([MAJOR_VERSION], 0)
 m4_define([MINOR_VERSION], 3)
-m4_define([MICRO_VERSION], 2)
+m4_define([MICRO_VERSION], 3)
 m4_define([BLOCKEM_PACKAGE_NAME], [blockem])
 
-define([svnversion], esyscmd([sh -c "svnversion|tr -d '\n'"]))
+# replace %H below with %h to get the short version of the SSH hash
+define([gitcommit], esyscmd([sh -c "git show -s --pretty=\"format:%H\""]))
 
 AC_INIT(
     [BLOCKEM_PACKAGE_NAME], 
@@ -18,7 +19,7 @@ AC_INIT(
 AM_INIT_AUTOMAKE([BLOCKEM_PACKAGE_NAME], [MAJOR_VERSION.MINOR_VERSION.MICRO_VERSION])
 AC_CONFIG_SRCDIR([src/game1v1.cpp])
 AC_CONFIG_HEADERS([config.h])
-AC_DEFINE(SVN_REVISION, "svnversion", [SVN Revision])
+AC_DEFINE(GIT_COMMIT, "gitcommit", [git commit SSH])
 
 # Checks for programs.
 AC_PROG_CXX

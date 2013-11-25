@@ -411,9 +411,9 @@ int main(int argc, char **argv)
     if (g_version)
     {
         // "version" option takes priority. If it set nothing else will be done
-        std::cout << "Blockem, version " << VERSION << " (r" << SVN_REVISION << ")" << std::endl;
+        std::cout << "Blockem, version " << VERSION << " (git commit " << GIT_COMMIT << ")" << std::endl;
         std::cout << "  Compiled " << COMPILETIME << std::endl << std::endl;
-        std::cout << "Copyright (C) 2009-2011 Faustino Frechilla" << std::endl;
+        std::cout << "Copyright (C) 2009-2013 Faustino Frechilla" << std::endl;
         std::cout << "Blockem is open source software, see http://blockem.sourceforge.net/"
                   << std::endl << std::endl;
     }
