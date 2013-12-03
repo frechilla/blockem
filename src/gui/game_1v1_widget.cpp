@@ -673,7 +673,7 @@ void Game1v1Widget::BoardDrawingArea_BoardClicked(
 
         if (topLevelWindow)
         {
-            Gtk::MessageDialog::MessageDialog errorMsg(
+            Gtk::MessageDialog errorMsg(
                     *topLevelWindow,
                     _("Internal Error: Move could not be processed. Please click on the board normally to try again"),
                     true,

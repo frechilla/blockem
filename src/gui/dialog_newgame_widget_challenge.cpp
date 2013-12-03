@@ -353,7 +353,7 @@ void NewGameTableChallenge::ChallengeFileChooser_on_file_set()
 
         if (topLevelWindow)
         {
-            Gtk::MessageDialog::MessageDialog errorMsg(
+            Gtk::MessageDialog errorMsg(
                     *topLevelWindow,
                     exceptionMessage,
                     true,

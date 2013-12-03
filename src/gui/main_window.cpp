@@ -377,7 +377,7 @@ bool MainWindow::MainWindow_DeleteEvent(GdkEventAny*)
 {
     if (m_game1v1Widget.IsComputingMove())
     {
-        Gtk::MessageDialog::MessageDialog exitingMessage(
+        Gtk::MessageDialog exitingMessage(
                 *this,
                 _(MESSAGE_ASK_BEFORE_CLOSE),
                 true,
@@ -403,7 +403,7 @@ void MainWindow::MenuItemGameQuit_Activate()
 {
     if (m_game1v1Widget.IsComputingMove())
     {
-        Gtk::MessageDialog::MessageDialog exitingMessage(
+        Gtk::MessageDialog exitingMessage(
                 *this,
                 _(MESSAGE_ASK_BEFORE_CLOSE),
                 true,
@@ -443,7 +443,7 @@ void MainWindow::MenuItemGameNew_Activate()
             // a message box telling the user he/she can't start a challenge
             // game from an invalid blockem challenge file.
             // afterwards the function will return without hiding the dialog
-            Gtk::MessageDialog::MessageDialog infoMessage(
+            Gtk::MessageDialog infoMessage(
                 *m_newGameDialog,
                 _("A challenge game can't start without a valid blockem challenge file"),
                 true,
@@ -634,7 +634,7 @@ void MainWindow::MenuItemSettingsPreferences_Activate()
     {
         // message for the user to inform his/her calculation was cancelled
         // after the config dialog was hidden
-        Gtk::MessageDialog::MessageDialog infoMessage(
+        Gtk::MessageDialog infoMessage(
                 *this,
                 _("Previous move had to be cancelled before applying new settings"),
                 true,
@@ -655,7 +655,7 @@ void MainWindow::MenuItemHelpAbout_Activate()
 void MainWindow::Notify_FatalError(const std::string& a_msg)
 {
     // show the error message and exit the aplication
-    Gtk::MessageDialog::MessageDialog fatalErrorMessage(
+    Gtk::MessageDialog fatalErrorMessage(
         *this,
         a_msg.c_str(),
         true,
@@ -683,7 +683,7 @@ void MainWindow::Notify_GameFinished(const std::string& a_msg)
     //        MessageType type=MESSAGE_INFO,
     //        ButtonsType buttons=BUTTONS_OK,
     //        bool modal=false)
-    Gtk::MessageDialog::MessageDialog gameOverMessage(
+    Gtk::MessageDialog gameOverMessage(
         *this,
         a_msg.c_str(),
         true,
